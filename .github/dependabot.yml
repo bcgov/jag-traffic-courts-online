@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # Nuget dependencies
+  - package-ecosystem: "nuget"
+    directory: "/src/backend"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "18:00"
+  # npm dependencies - frontend
+  - package-ecosystem: "npm"
+    directory: "/src/frontend"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "18:00"
