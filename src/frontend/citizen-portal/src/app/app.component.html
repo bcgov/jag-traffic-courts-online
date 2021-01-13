@@ -1,4 +1,4 @@
-<app-busy-overlay [busy]="busy">
+<div class="container-fluid">
   <mat-toolbar color="primary">
     <span>
       <img src="/assets/gov_bc_logo.png" alt="Government of BC Logo" />
@@ -10,10 +10,6 @@
   <div class="container">
     <h1 class="m-4">Traffic Courts</h1>
     <br /><br />
-    <a mat-flat-button (click)="onDialog()"> Dialog </a>
-    <a mat-flat-button (click)="onConfirmDialog()"> Confirm Dialog </a>
-    <a mat-flat-button (click)="onTestBusy()"> Test Busy </a>
-    <a mat-flat-button (click)="onToast()"> Toast </a>
   </div>
   <router-outlet></router-outlet>
-</app-busy-overlay>
+</div>
