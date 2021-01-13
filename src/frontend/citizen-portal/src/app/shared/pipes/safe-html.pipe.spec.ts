@@ -1,6 +1,6 @@
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { DomSanitizer, BrowserModule } from '@angular/platform-browser';
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 
 describe('SafeHtmlPipe', () => {
   beforeEach(() => {
