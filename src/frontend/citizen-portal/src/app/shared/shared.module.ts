@@ -17,6 +17,10 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
+import { PageComponent } from './components/page/page.component';
+import { PageFooterComponent } from './components/page-footer/page-footer.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,11 @@ import { DialogContentDirective } from './dialogs/dialog-content.directive';
     YesNoPipe,
     ConfirmDialogComponent,
     DialogContentDirective,
+    PageComponent,
+    PageFooterComponent,
+    PageHeaderComponent,
+    DialogContentDirective,
+    AlertComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +68,11 @@ import { DialogContentDirective } from './dialogs/dialog-content.directive';
     SafeHtmlPipe,
     YesNoPipe,
     DialogContentDirective,
+    PageComponent,
+    PageFooterComponent,
+    PageHeaderComponent,
+    DialogContentDirective,
+    AlertComponent,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

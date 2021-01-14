@@ -1,0 +1,192 @@
+<app-page [busy]="busy">
+  <app-page-header>Traffic Court</app-page-header>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-3">
+      <h1>Part A</h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </p>
+    </section>
+
+    <section class="mb-3">
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Surname of Disputant"
+              formControlName="surname"
+            />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Given Names" formControlName="given" />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Mailing Address"
+              formControlName="mailing"
+            />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="City" formControlName="city" />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Province" formControlName="province" />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Postal Code"
+              mask="S0S 0S0"
+              oninput="this.value = this.value.toUpperCase()"
+              formControlName="postal"
+              [showMaskTyped]="true"
+            />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Home Phone Number"
+              formControlName="homePhone"
+              mask="(000) 000-0000"
+              [showMaskTyped]="true"
+            />
+            <mat-error *ngIf="homePhone.hasError('required')"
+              >Required</mat-error
+            >
+            <mat-error *ngIf="homePhone.hasError('phone')"
+              >Must be a valid phone number</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Work Phone Number"
+              formControlName="workPhone"
+              mask="(000) 000-0000"
+              [showMaskTyped]="true"
+            />
+            <mat-error *ngIf="workPhone.hasError('phone')"
+              >Must be a valid phone number</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Driver's License Number"
+              formControlName="license"
+              mask="0000000"
+              [showMaskTyped]="false"
+            />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Province or State of Driver's License"
+              formControlName="provLicense"
+            />
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Birthdate"
+              [max]="maxDateOfBirth"
+              [matDatepicker]="picker"
+              formControlName="birthdate"
+              readonly
+              (click)="picker.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #picker
+              startView="multi-year"
+              [touchUi]="isMobile"
+            ></mat-datepicker>
+            <mat-error *ngIf="form.get('birthdate').hasError('required')"
+              >Required</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <app-alert type="info" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            A notice of hearing will be mailed to the above address. You MUST
+            notify the Violation Ticket Centre of any new address of change of
+            address in writing.
+          </ng-container>
+        </app-alert>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer (save)="onSubmit()" (back)="onBack()"></app-page-footer>
+</app-page>

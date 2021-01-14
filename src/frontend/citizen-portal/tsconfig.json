@@ -17,7 +17,9 @@
     "paths": {
       "@env/*": ["./environments/*"],
       "@core/*": ["./app/core/*"],
-      "@shared/*": ["./app/shared/*"]
+      "@shared/*": ["./app/shared/*"],
+      "@dashboard/*": ["./app/modules/dashboard/*"],
+      "@dispute/*": ["./app/modules/dispute/*"]
     }
   },
   "angularCompilerOptions": {

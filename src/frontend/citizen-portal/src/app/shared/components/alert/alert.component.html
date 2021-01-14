@@ -1,0 +1,28 @@
+<div role="alert"
+     class="alert"
+     [ngClass]="getType()">
+
+  <div class="d-flex">
+    <ng-container *ngIf="hasIcon()">
+      <mat-icon class="mr-3"
+                [ngClass]="{ 'large': hasTitle() }"
+                [inline]="hasTitle()">{{ icon }}</mat-icon>
+    </ng-container>
+
+    <div class="flex-grow-1">
+      <ng-container *ngIf="hasTitle()">
+        <h2 class="m-0 mt-2 mb-1">
+          <ng-content select=".alert-title"></ng-content>
+        </h2>
+      </ng-container>
+
+      <ng-container *ngIf="alertContentChildren.length">
+        <p class="content">
+          <ng-content #alertContent
+                      select=".alert-content"></ng-content>
+        </p>
+      </ng-container>
+    </div>
+  </div>
+
+</div>

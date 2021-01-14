@@ -8,6 +8,8 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { NgBusyModule } from 'ng-busy';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
+import { DisputeModule } from './modules/dispute/dispute.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,6 +19,8 @@ import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.mo
     BrowserAnimationsModule,
     CoreModule,
     SharedModule,
+    DashboardModule,
+    DisputeModule,
   ],
   exports: [NgBusyModule, NgxMaterialModule],
   providers: [],
