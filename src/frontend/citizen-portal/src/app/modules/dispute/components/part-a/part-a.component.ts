@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ViewportService } from '@core/services/viewport.service';
 import { Subscription } from 'rxjs';
 import moment from 'moment';
-import { FormControlValidators } from '@core/validators/form-control.validators';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 
 export const MINIMUM_AGE = 18;
 
@@ -17,7 +14,7 @@ export const MINIMUM_AGE = 18;
   templateUrl: './part-a.component.html',
   styleUrls: ['./part-a.component.scss'],
 })
-export class PartAComponent implements OnInit {
+export class PartAComponent extends BaseDisputeFormPage implements OnInit {
   public form: FormGroup;
   public busy: Subscription;
   public maxDateOfBirth: moment.Moment;
@@ -25,25 +22,18 @@ export class PartAComponent implements OnInit {
   private MINIMUM_AGE = 18;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private viewportService: ViewportService
+    protected formBuilder: FormBuilder,
+    private viewportService: ViewportService,
+    private mockDisputeService: MockDisputeService
   ) {
+    super(formBuilder);
+
     this.maxDateOfBirth = moment().subtract(this.MINIMUM_AGE, 'years');
   }
 
   public ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      surname: [null, [Validators.required]],
-      given: [null],
-      mailing: [null],
-      postal: [null],
-      city: [null],
-      province: [null],
-      license: [null],
-      provLicense: [null],
-      homePhone: [null, [FormControlValidators.phone]],
-      workPhone: [null, [FormControlValidators.phone]],
-      birthdate: [null, []],
+    this.mockDisputeService.ticket$.subscribe((ticket: Ticket) => {
+      this.form.patchValue(ticket);
     });
   }
 

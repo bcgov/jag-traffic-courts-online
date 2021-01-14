@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormControlValidators } from '@core/validators/form-control.validators';
 import { Subscription } from 'rxjs';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-overview',
@@ -9,21 +9,15 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./overview.component.scss'],
 })
 export class OverviewComponent implements OnInit {
-  public form: FormGroup;
   public busy: Subscription;
 
-  constructor(private formBuilder: FormBuilder) {}
+  public ticket: Ticket;
+
+  constructor(private mockDisputeService: MockDisputeService) {}
 
   public ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      surname: [null, [Validators.required]],
-      given: [null, [Validators.required]],
-      mailing: [null, [Validators.required]],
-      postal: [null],
-      doingBusinessAs: [''],
-      homePhone: [null, [Validators.required, FormControlValidators.phone]],
-      workPhone: [null, [FormControlValidators.phone]],
-      birthdate: [null, []],
+    this.mockDisputeService.ticket$.subscribe((ticket: Ticket) => {
+      this.ticket = ticket;
     });
   }
 
