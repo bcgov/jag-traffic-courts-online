@@ -1,4 +1,4 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/8296f1224ac62318511b/maintainability)](https://codeclimate.com/github/bcgov/jag-traffic-courts-virtualization/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8296f1224ac62318511b/test_coverage)](https://codeclimate.com/github/bcgov/jag-traffic-courts-virtualization/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1b10997fdfad5bc3f42c/maintainability)](https://codeclimate.com/github/bcgov/jag-traffic-courts-online/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/1b10997fdfad5bc3f42c/test_coverage)](https://codeclimate.com/github/bcgov/jag-traffic-courts-online/test_coverage)
 
 # jag-traffic-courts-virtualization
 
