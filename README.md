@@ -6,11 +6,10 @@ Welcome to Traffic Courts Online
 
 ## Project Structure
 
-.
     ├── .github                                 # Contains GitHub Related sources
     ├── infrastructure                          # openshift templates and pipeline
     ├── docs                                    # docs and images
-    ├── src/                                    # application source files
+    ├── src                                    # application source files
     │   └── frontend                            # frontend applications
     │       └── citizen-portal                  # citizen poral
     ├── COMPLIANCE.yaml                         #
