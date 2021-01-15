@@ -21,5 +21,5 @@ Welcome to Traffic Courts Online
 
 | Name                | Description                                  | Doc                                                      |
 | ------------------- | -------------------------------------------- | -------------------------------------------------------- |
-| backend             | all server side services                     |                        |
+| backend             | all server side services                     | backend end api
 | frontend            | all client side applications                 | [README](src/frontend/README.md)                         |
