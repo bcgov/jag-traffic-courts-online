@@ -1,0 +1,17 @@
+version: "2"
+checks:
+  method-lines:
+    config:
+      threshold: 30
+plugins:
+  tslint:
+    enabled: true
+  markdownlint:
+    enabled: true
+  csslint:
+    enabled: true
+exclude_patterns:
+  # Backend File Specific Excludes
+
+  # Frontend Pattern Excludes
+  - "src/frontend/citizen-portal/karma.conf.js"
