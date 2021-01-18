@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { Ticket } from '@shared/models/ticket.model';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 
@@ -16,7 +16,7 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
 
   constructor(
     protected formBuilder: FormBuilder,
-    private mockDisputeService: MockDisputeService
+    private service: DisputeResourceService
   ) {
     super(formBuilder);
   }
@@ -31,7 +31,7 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     //     ],
     //   }
 
-    this.mockDisputeService.ticket$.subscribe((ticket: Ticket) => {
+    this.service.ticket$.subscribe((ticket: Ticket) => {
       this.form.patchValue(ticket);
     });
   }

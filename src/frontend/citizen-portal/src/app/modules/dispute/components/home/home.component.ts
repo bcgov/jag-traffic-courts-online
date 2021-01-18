@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import moment from 'moment';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
+import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +19,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
 
   constructor(
     protected formBuilder: FormBuilder,
-    private mockDisputeService: MockDisputeService
+    private service: DisputeResourceService
   ) {
     super(formBuilder);
 
@@ -31,7 +31,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   protected createFormInstance() {
-    this.mockDisputeService.ticket$.subscribe((ticket: Ticket) => {
+    this.service.ticket$.subscribe((ticket: Ticket) => {
       this.form.patchValue(ticket);
     });
   }
