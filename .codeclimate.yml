@@ -15,3 +15,4 @@ exclude_patterns:
 
   # Frontend Pattern Excludes
   - "src/frontend/citizen-portal/karma.conf.js"
+  - "src/frontend/citizen-portal/shared/components/"
