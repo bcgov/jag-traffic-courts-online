@@ -30,5 +30,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public onSubmit(): void {}
+  public onSubmit(): void {
+    console.log('onSubmit');
+  }
 }

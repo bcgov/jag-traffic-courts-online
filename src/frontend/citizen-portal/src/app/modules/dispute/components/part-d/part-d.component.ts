@@ -30,9 +30,13 @@ export class PartDComponent implements OnInit {
     });
   }
 
-  public onSubmit(): void {}
+  public onSubmit(): void {
+    console.log('onSubmit');
+  }
 
-  public onBack() {}
+  public onBack() {
+    console.log('onBack');
+  }
 
   public get isMobile(): boolean {
     return this.viewportService.isMobile;

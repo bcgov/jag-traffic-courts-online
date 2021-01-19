@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { ViewportService } from '@core/services/viewport.service';
 
@@ -7,9 +7,9 @@ import { DashboardRouteMenuItem } from '../../models/dashboard-menu-item.model';
 @Component({
   selector: 'app-dashboard-route-menu-item',
   templateUrl: './dashboard-route-menu-item.component.html',
-  styleUrls: ['./dashboard-route-menu-item.component.scss']
+  styleUrls: ['./dashboard-route-menu-item.component.scss'],
 })
-export class DashboardRouteMenuItemComponent implements OnInit {
+export class DashboardRouteMenuItemComponent {
   /**
    * @description
    * Whether the dashboard menu items are responsive, and collapse
@@ -32,9 +32,7 @@ export class DashboardRouteMenuItemComponent implements OnInit {
    */
   @Output() route: EventEmitter<DashboardRouteMenuItem>;
 
-  constructor(
-    private viewportService: ViewportService,
-  ) {
+  constructor(private viewportService: ViewportService) {
     this.route = new EventEmitter<DashboardRouteMenuItem>();
   }
 
@@ -49,6 +47,4 @@ export class DashboardRouteMenuItemComponent implements OnInit {
   public onRoute(routeMenuItem: DashboardRouteMenuItem) {
     this.route.emit(routeMenuItem);
   }
-
-  public ngOnInit(): void { }
 }
