@@ -7,10 +7,7 @@ plugins:
   tslint:
     enabled: true
   markdownlint:
-    enabled: true
-    checks:
-      MD013:
-        enabled: false
+    enabled: false
   csslint:
     enabled: true
 exclude_patterns:
