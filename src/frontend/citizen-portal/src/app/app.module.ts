@@ -10,6 +10,7 @@ import { NgBusyModule } from 'ng-busy';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { DisputeModule } from './modules/dispute/dispute.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +24,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     DisputeModule,
   ],
   exports: [NgBusyModule, NgxMaterialModule],
-  providers: [],
+  providers: [MockDisputeService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
