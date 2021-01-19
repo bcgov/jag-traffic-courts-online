@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-page',
   templateUrl: './page.component.html',
-  styleUrls: ['./page.component.scss']
+  styleUrls: ['./page.component.scss'],
 })
-export class PageComponent implements OnInit {
+export class PageComponent {
   @Input() public busy: Subscription;
   @Input() public mode: 'default' | 'full';
 
@@ -14,7 +14,5 @@ export class PageComponent implements OnInit {
     this.mode = 'default';
   }
 
-  ngOnInit(): void {
-  }
-
+  // ngOnInit(): void { }
 }
