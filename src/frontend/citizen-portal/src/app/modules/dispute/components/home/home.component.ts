@@ -22,7 +22,6 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     private service: DisputeResourceService
   ) {
     super(formBuilder);
-
     this.maxViolationDate = moment();
   }
 
