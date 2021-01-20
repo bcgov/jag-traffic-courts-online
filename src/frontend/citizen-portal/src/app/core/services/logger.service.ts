@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoggerService {
-  constructor() { }
+  // constructor() { }
 
   /**
    * @description
@@ -60,9 +60,8 @@ export class LoggerService {
    * @description
    * Prints the logging information, but ONLY if not in production.
    */
-  private print(type: string, params: { msg?: string, data?: any[] }) {
+  private print(type: string, params: { msg?: string; data?: any[] }) {
     if (!environment.production || type === 'error' || type === 'warn') {
-
       const message = this.colorize(type, params.msg);
 
       if (params.msg && params.data.length) {

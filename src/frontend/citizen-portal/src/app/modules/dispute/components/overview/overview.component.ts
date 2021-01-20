@@ -25,7 +25,11 @@ export class OverviewComponent implements OnInit {
     this.nextRoute();
   }
 
-  public onBack() {}
+  public onBack() {
+    console.log('onBack');
+  }
 
-  public nextRoute() {}
+  public nextRoute() {
+    console.log('nextRoute');
+  }
 }

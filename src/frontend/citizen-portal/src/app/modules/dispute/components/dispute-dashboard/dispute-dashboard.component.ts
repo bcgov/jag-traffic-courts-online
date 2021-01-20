@@ -14,7 +14,7 @@ import { Observable, of } from 'rxjs';
 export class DisputeDashboardComponent implements OnInit {
   public dashboardMenuItems: Observable<DashboardMenuItem[]>;
 
-  constructor() {}
+  // constructor() {}
 
   public ngOnInit(): void {
     this.dashboardMenuItems = this.getDashboardMenuItems();
