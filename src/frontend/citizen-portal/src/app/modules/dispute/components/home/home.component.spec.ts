@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { HomeComponent } from './home.component';
 
@@ -11,6 +12,12 @@ describe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       declarations: [HomeComponent],
+      providers: [
+        {
+          provide: MockDisputeService,
+          useClass: MockDisputeService,
+        },
+      ],
     }).compileComponents();
   });
 

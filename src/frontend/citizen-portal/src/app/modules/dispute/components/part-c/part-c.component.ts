@@ -1,37 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { FormControlValidators } from '@core/validators/form-control.validators';
-import { FormGroupValidators } from '@core/validators/form-group.validators';
 import { Subscription } from 'rxjs';
+import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
+import { Ticket } from '@shared/models/ticket.model';
+import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 
 @Component({
   selector: 'app-part-c',
   templateUrl: './part-c.component.html',
   styleUrls: ['./part-c.component.scss'],
 })
-export class PartCComponent implements OnInit {
+export class PartCComponent extends BaseDisputeFormPage implements OnInit {
   public form: FormGroup;
   public busy: Subscription;
 
-  constructor(protected formBuilder: FormBuilder) {}
+  constructor(
+    protected formBuilder: FormBuilder,
+    private service: DisputeResourceService
+  ) {
+    super(formBuilder);
+  }
 
   public ngOnInit(): void {
-    this.form = this.formBuilder.group(
-      {
-        lawyerPresent: [false, [FormControlValidators.requiredBoolean]],
-        interpreterRequired: [false, [FormControlValidators.requiredBoolean]],
-        interpreterLanguage: [null],
-        callWitness: [false, [FormControlValidators.requiredBoolean]],
-      },
-      {
-        validators: [
-          FormGroupValidators.requiredIfTrue(
-            'interpreterRequired',
-            'interpreterLanguage'
-          ),
-        ],
-      }
-    );
+    //   {
+    //     validators: [
+    //       FormGroupValidators.requiredIfTrue(
+    //         'interpreterRequired',
+    //         'interpreterLanguage'
+    //       ),
+    //     ],
+    //   }
+
+    this.service.ticket$.subscribe((ticket: Ticket) => {
+      this.form.patchValue(ticket);
+    });
   }
 
   public onSubmit(): void {

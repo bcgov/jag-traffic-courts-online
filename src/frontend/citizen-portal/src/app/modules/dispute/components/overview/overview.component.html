@@ -1,55 +1,52 @@
 <app-page [busy]="busy">
   <app-page-header>Traffic Court</app-page-header>
 
-  <form [formGroup]="form" novalidate>
-    <section class="mb-3">
-      <h1>Overview</h1>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-    </section>
+  <section class="mb-3">
+    <h1>Overview</h1>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua.
+    </p>
+  </section>
 
-    <section class="mb-3">
-      <div class="row">
-        <div class="col-6 mb-3">Violation Ticket Number</div>
-        <div class="col-6 text-right mb-3">123123-123</div>
+  <section class="mb-3">
+    <div class="row">
+      <div class="col-6 mb-3">Violation Ticket Number</div>
+      <div class="col-6 text-right mb-3">
+        {{ ticket.violationTicketNumber }}
       </div>
-      <div class="row">
-        <div class="col-6 mb-3">Court Location named on the VT</div>
-        <div class="col-6 text-right mb-3">Vancouver Law Courts</div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">Court Location named on the VT</div>
+      <div class="col-6 text-right mb-3">{{ ticket.courtLocation }}</div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">Violation Date</div>
+      <div class="col-6 text-right">
+        {{ ticket.violationDate | date: "mediumDate" }}
+        <!-- | formatDate | default -->
       </div>
-      <div class="row">
-        <div class="col-6 mb-3">Violation Date</div>
-        <div class="col-6 text-right">
-          Jul 7, 2020
-          <!--{{
-            organization?.signingAuthority?.dateOfBirth | formatDate | default
-          }}-->
-        </div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="mb-3">
-      <div class="row">
-        <div class="col">
-          <app-alert type="info" icon="warning">
-            <ng-container #alertContent class="alert-content">
-              <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong
-              ><br />
-              Phone Toll Free: 1-877-661-8026 <br />
-              Forms are available on the website at:
-              <a
-                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
-                target="_blank"
-                >Online Forms</a
-              >
-            </ng-container>
-          </app-alert>
-        </div>
+  <section class="mb-3">
+    <div class="row">
+      <div class="col">
+        <app-alert type="info" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong><br />
+            Phone Toll Free: 1-877-661-8026 <br />
+            Forms are available on the website at:
+            <a
+              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
+              target="_blank"
+              >Online Forms</a
+            >
+          </ng-container>
+        </app-alert>
       </div>
-    </section>
-  </form>
+    </div>
+  </section>
 
   <!--
     [isInitialEnrolment]="isInitialEnrolment"

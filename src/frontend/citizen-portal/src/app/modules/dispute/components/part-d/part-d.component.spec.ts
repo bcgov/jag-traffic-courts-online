@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { PartDComponent } from './part-d.component';
 
@@ -11,6 +12,12 @@ describe('PartDComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       declarations: [PartDComponent],
+      providers: [
+        {
+          provide: MockDisputeService,
+          useClass: MockDisputeService,
+        },
+      ],
     }).compileComponents();
   });
 
