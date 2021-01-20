@@ -12,7 +12,7 @@ plugins:
     enabled: true
 exclude_patterns:
   # Backend File Specific Excludes
-
+  - "src/backend/BcGov.TrafficCourts.Api/Dispute.Web.Test/*"
   # Frontend Pattern Excludes
   - "src/frontend/citizen-portal/karma.conf.js"
   - "src/frontend/citizen-portal/package.json"
