@@ -9,7 +9,9 @@ Welcome to Traffic Courts Online
     ├── .github                                 # Contains GitHub Related sources
     ├── infrastructure                          # openshift templates and pipeline
     ├── docs                                    # docs and images
-    ├── src                                    # application source files
+    ├── src                                     # application source files
+    |   ├── backend                             # backend apis
+    |   |   └── DisputeApi.Web                  # mock dispute api
     │   └── frontend                            # frontend applications
     │       └── citizen-portal                  # citizen poral
     ├── COMPLIANCE.yaml                         #
@@ -19,7 +21,8 @@ Welcome to Traffic Courts Online
 
 ## Apps
 
-| Name                | Description                                  | Doc                                                      |
-| ------------------- | -------------------------------------------- | -------------------------------------------------------- |
-| backend             | all server side services                     |                        |
-| frontend            | all client side applications                 | [README](src/frontend/README.md)                         |
+| Name                | Description                                  | Doc                             |
+| ------------------- | -------------------------------------------- | --------------------------------|
+| backend             | all server side services                     |                                 |
+| disute api          | base dispute api                             | [README](src/backend/README.md)|
+| frontend            | all client side applications                 | [README](src/frontend/README.md)|
