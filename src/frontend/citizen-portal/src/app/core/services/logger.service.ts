@@ -6,7 +6,6 @@ import { environment } from '@env/environment';
   providedIn: 'root',
 })
 export class LoggerService {
-  constructor() {}
 
   /**
    * @description
