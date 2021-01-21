@@ -16,7 +16,7 @@ export class UtilsService {
     @Inject(DOCUMENT) private document: Document,
     private windowRef: WindowRefService
   ) {
-    this.window = windowRef.nativeWindow;
+    this.window = this.windowRef.nativeWindow;
   }
 
   /**
