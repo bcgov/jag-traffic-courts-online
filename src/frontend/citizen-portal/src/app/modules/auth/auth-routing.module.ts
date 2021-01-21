@@ -12,7 +12,6 @@ const routes: Routes = [
       {
         path: AuthRoutes.LANDING,
         component: LandingComponent,
-        data: { title: 'Welcome to Traffic Court Online' },
       },
     ],
   },
