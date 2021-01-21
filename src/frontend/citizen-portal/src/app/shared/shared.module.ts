@@ -8,7 +8,6 @@ import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
 import { NgxProgressModule } from './modules/ngx-progress/ngx-progress.module';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { DefaultPipe } from './pipes/default.pipe';
-import { FirstKeyPipe } from './pipes/first-key.pipe';
 import { FormatDatePipe } from './pipes/format-date.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 import { PostalPipe } from './pipes/postal.pipe';
@@ -26,7 +25,6 @@ import { AlertComponent } from './components/alert/alert.component';
   declarations: [
     CapitalizePipe,
     DefaultPipe,
-    FirstKeyPipe,
     FormatDatePipe,
     PhonePipe,
     PostalPipe,
@@ -60,7 +58,6 @@ import { AlertComponent } from './components/alert/alert.component';
     NgxProgressModule,
     CapitalizePipe,
     DefaultPipe,
-    FirstKeyPipe,
     FormatDatePipe,
     PhonePipe,
     PostalPipe,
