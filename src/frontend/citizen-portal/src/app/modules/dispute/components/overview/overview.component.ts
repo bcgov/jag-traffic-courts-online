@@ -25,11 +25,11 @@ export class OverviewComponent implements OnInit {
     this.nextRoute();
   }
 
-  public onBack() {
-    console.log('onBack');
+  public onBack(): void {
+    // do nothing for now
   }
 
   public nextRoute() {
-    console.log('nextRoute');
+    // do nothing for now
   }
 }

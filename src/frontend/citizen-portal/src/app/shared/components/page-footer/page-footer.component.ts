@@ -23,16 +23,16 @@ export class PageFooterComponent implements OnInit {
     this.back = new EventEmitter<void>();
   }
 
-  public onSave() {
+  public onSave(): void {
     this.save.emit();
   }
 
-  public onSecondaryAction() {
+  public onSecondaryAction(): void {
     // allowed ? this.back.emit() : this.continue.emit();
     this.back.emit();
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     // if (Allowed to go back) {
     this.saveButtonLabel = 'Save and Continue';
     this.secondaryActionButtonLabel = 'Back';

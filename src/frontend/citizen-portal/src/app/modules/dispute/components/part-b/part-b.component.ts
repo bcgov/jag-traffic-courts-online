@@ -30,11 +30,11 @@ export class PartBComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log('onSubmit');
+    // do nothing for now
   }
 
   public onBack() {
-    console.log('onBack');
+    // do nothing for now
   }
 
   public get isMobile(): boolean {

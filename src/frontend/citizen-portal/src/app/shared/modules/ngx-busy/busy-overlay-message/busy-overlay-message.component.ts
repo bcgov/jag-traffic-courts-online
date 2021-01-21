@@ -5,14 +5,15 @@ import { InstanceConfigHolderService } from 'ng-busy';
 @Component({
   selector: 'app-busy-overlay-message',
   templateUrl: './busy-overlay-message.component.html',
-  styleUrls: ['./busy-overlay-message.component.scss']
+  styleUrls: ['./busy-overlay-message.component.scss'],
 })
 export class BusyOverlayMessageComponent {
   constructor(
-    @Inject('instanceConfigHolder') private instanceConfigHolder: InstanceConfigHolderService
-  ) { }
+    @Inject('instanceConfigHolder')
+    private instanceConfigHolder: InstanceConfigHolderService
+  ) {}
 
-  public get message() {
+  public get message(): string {
     return this.instanceConfigHolder.config.message;
   }
 }

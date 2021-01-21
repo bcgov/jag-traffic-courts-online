@@ -49,7 +49,7 @@ export class ToastService {
     message: string,
     action: string = null,
     config: MatSnackBarConfig
-  ) {
+  ): void {
     this.snackBar.open(message, action, config);
   }
 }
