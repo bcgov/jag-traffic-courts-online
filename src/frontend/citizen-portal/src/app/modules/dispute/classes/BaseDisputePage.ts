@@ -20,23 +20,27 @@ export abstract class BaseDisputePage implements IBaseDisputePage {
   }
 
   public routeIndex(currentRoute: string): number {
-    let stepRoutes = this.DisputeRoutes.stepRoutes();
-    return stepRoutes.findIndex((element) => element == currentRoute);
+    const stepRoutes = this.DisputeRoutes.stepRoutes();
+    return stepRoutes.findIndex((element) => element === currentRoute);
   }
 
   public routeNext(currentRoute: string) {
-    let stepRoutes = this.DisputeRoutes.stepRoutes();
+    const stepRoutes = this.DisputeRoutes.stepRoutes();
 
-    let findIndex = stepRoutes.findIndex((element) => element == currentRoute);
+    const findIndex = stepRoutes.findIndex(
+      (element) => element === currentRoute
+    );
     if (findIndex < 0) return;
 
     this.routeTo(stepRoutes[findIndex + 1]);
   }
 
   public routeBack(currentRoute: string) {
-    let stepRoutes = this.DisputeRoutes.stepRoutes();
+    const stepRoutes = this.DisputeRoutes.stepRoutes();
 
-    let findIndex = stepRoutes.findIndex((element) => element == currentRoute);
+    const findIndex = stepRoutes.findIndex(
+      (element) => element === currentRoute
+    );
     if (findIndex <= 0) return;
 
     this.routeTo(stepRoutes[findIndex - 1]);
