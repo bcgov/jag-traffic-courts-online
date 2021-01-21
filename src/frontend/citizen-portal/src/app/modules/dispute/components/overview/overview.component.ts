@@ -29,10 +29,6 @@ export class OverviewComponent implements OnInit {
     // do nothing for now
   }
 
-  public nextRoute(): void {
-    // do nothing for now
-  }
-
   public nextRoute() {
     // do nothing for now
   }
