@@ -70,7 +70,9 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  public onLogout() {}
+  public onLogout() {
+    console.log('onLogout');
+  }
 
   public ngOnInit() {
     if (!this.showMenuItemIcons) {
