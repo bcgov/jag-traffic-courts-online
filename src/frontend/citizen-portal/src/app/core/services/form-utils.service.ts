@@ -103,7 +103,7 @@ export class FormUtilsService {
         hasError = true;
       }
       return acc;
-    }, {} as { [key: string]: any });
+    }, {}); // as { [key: string]: any });
     return hasError ? result : null;
   }
 }

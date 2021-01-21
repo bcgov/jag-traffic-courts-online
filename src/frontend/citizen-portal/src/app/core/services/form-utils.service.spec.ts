@@ -49,11 +49,6 @@ describe('FormUtilsService', () => {
     expect(res).not.toBeNull();
   });
 
-  it('should call isRequired - true', () => {
-    let req = service.isRequired(formGroup, 'id2');
-    expect(req).toBeTruthy();
-  });
-
   it('should call getFormErrors', () => {
     let res = service.getFormErrors(formGroup);
     expect(res).not.toBeNull();
