@@ -20,16 +20,8 @@ export class DisputeDashboardComponent implements OnInit {
 
   private getDashboardMenuItems(): Observable<DashboardMenuItem[]> {
     return of([
-      new DashboardRouteMenuItem('Dispute', DisputeRoutes.HOME, 'people'),
-      new DashboardRouteMenuItem('Part A', DisputeRoutes.PART_A, 'store'),
-      new DashboardRouteMenuItem('Part B', DisputeRoutes.PART_B, 'store'),
-      new DashboardRouteMenuItem('Part C', DisputeRoutes.PART_C, 'store'),
-      new DashboardRouteMenuItem('Part D', DisputeRoutes.PART_D, 'store'),
-      new DashboardRouteMenuItem(
-        'Overview',
-        DisputeRoutes.OVERVIEW,
-        'show_chart'
-      ),
+      new DashboardRouteMenuItem('Dispute', DisputeRoutes.HOME, 'pages'),
+      new DashboardRouteMenuItem('Review', DisputeRoutes.OVERVIEW, 'preview'),
     ]);
   }
 }

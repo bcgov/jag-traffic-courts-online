@@ -1,20 +1,42 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControlValidators } from '@core/validators/form-control.validators';
+import { BaseDisputePage } from './BaseDisputePage';
 
 export interface IBaseDisputeFormPage {
-  form: FormGroup;
+  formStep1: FormGroup;
+  formStep2: FormGroup;
+  formStep3: FormGroup;
+  formStep4: FormGroup;
+  formStep5: FormGroup;
 }
 
-export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
-  form: FormGroup;
+export abstract class BaseDisputeFormPage
+  extends BaseDisputePage
+  implements IBaseDisputeFormPage {
+  formStep1: FormGroup;
+  formStep2: FormGroup;
+  formStep3: FormGroup;
+  formStep4: FormGroup;
+  formStep5: FormGroup;
 
-  constructor(protected formBuilder: FormBuilder) {
-    this.form = this.formBuilder.group({
+  constructor(
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected formBuilder: FormBuilder
+  ) {
+    super(route, router);
+
+    this.formStep1 = this.formBuilder.group({
       id: [null],
       userId: [null],
       violationTicketNumber: [null, [Validators.required]],
       courtLocation: [null],
       violationDate: [null],
+    });
+
+    this.formStep2 = this.formBuilder.group({
+      id: [null],
       surname: [null, [Validators.required]],
       givenNames: [null],
       mailing: [null],
@@ -26,10 +48,24 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
       homePhone: [null, [FormControlValidators.phone]],
       workPhone: [null, [FormControlValidators.phone]],
       birthdate: [null, []],
+    });
+
+    this.formStep3 = this.formBuilder.group({
+      id: [null],
+      surname: [null, [Validators.required]],
+    });
+
+    this.formStep4 = this.formBuilder.group({
+      id: [null],
       lawyerPresent: [false, [FormControlValidators.requiredBoolean]],
       interpreterRequired: [false, [FormControlValidators.requiredBoolean]],
       interpreterLanguage: [null],
       callWitness: [false, [FormControlValidators.requiredBoolean]],
+    });
+
+    this.formStep5 = this.formBuilder.group({
+      id: [null],
+      surname: [null, [Validators.required]],
     });
   }
 }

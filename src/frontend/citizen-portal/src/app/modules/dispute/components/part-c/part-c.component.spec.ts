@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
+import { RouterModule } from '@angular/router';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { PartCComponent } from './part-c.component';
@@ -11,7 +12,11 @@ describe('PartCComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, MatCheckboxModule],
+      imports: [
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        RouterModule.forRoot([]),
+      ],
       declarations: [PartCComponent],
       providers: [
         {

@@ -5,6 +5,11 @@ import { Subscription } from 'rxjs';
 import { Ticket } from '@shared/models/ticket.model';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouteUtils } from '@core/utils/route-utils.class';
+import { FormUtilsService } from '@core/services/form-utils.service';
+import { UtilsService } from '@core/services/utils.service';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-part-d',
@@ -12,29 +17,41 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
   styleUrls: ['./part-d.component.scss'],
 })
 export class PartDComponent extends BaseDisputeFormPage implements OnInit {
-  public form: FormGroup;
   public busy: Subscription;
 
   constructor(
+    protected route: ActivatedRoute,
+    protected router: Router,
     protected formBuilder: FormBuilder,
     private viewportService: ViewportService,
-    private service: DisputeResourceService
+    private service: DisputeResourceService,
+    private formUtilsService: FormUtilsService,
+    private utilsService: UtilsService,
+    private logger: LoggerService
   ) {
-    super(formBuilder);
+    super(route, router, formBuilder);
   }
 
   public ngOnInit(): void {
     this.service.ticket$.subscribe((ticket: Ticket) => {
-      this.form.patchValue(ticket);
+      this.formStep5.patchValue(ticket);
     });
   }
 
   public onSubmit(): void {
-    // do nothing for now
-  }
+    if (this.formUtilsService.checkValidity(this.formStep5)) {
+      this.service.ticket$.next({
+        ...this.service.ticket,
+        ...this.formStep5.value,
+      });
 
-  public onBack(): void {
-    // do nothing for now
+      this.routeNext(RouteUtils.currentRoutePath(this.router.url));
+    } else {
+      this.utilsService.scrollToErrorSection();
+    }
+  }
+  public onBack() {
+    this.routeBack(RouteUtils.currentRoutePath(this.router.url));
   }
 
   public get isMobile(): boolean {
