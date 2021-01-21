@@ -27,9 +27,7 @@ export abstract class BaseDisputePage implements IBaseDisputePage {
   public routeNext(currentRoute: string) {
     const stepRoutes = this.DisputeRoutes.stepRoutes();
 
-    const findIndex = stepRoutes.findIndex(
-      (element) => element === currentRoute
-    );
+    const findIndex = this.routeIndex(currentRoute);
     if (findIndex < 0) return;
 
     this.routeTo(stepRoutes[findIndex + 1]);
@@ -38,9 +36,7 @@ export abstract class BaseDisputePage implements IBaseDisputePage {
   public routeBack(currentRoute: string) {
     const stepRoutes = this.DisputeRoutes.stepRoutes();
 
-    const findIndex = stepRoutes.findIndex(
-      (element) => element === currentRoute
-    );
+    const findIndex = this.routeIndex(currentRoute);
     if (findIndex <= 0) return;
 
     this.routeTo(stepRoutes[findIndex - 1]);
