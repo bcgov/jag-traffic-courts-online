@@ -45,7 +45,7 @@ function initializer(
   providers: [
     {
       provide: KeycloakService,
-      useClass: environment.production ? KeycloakService : MockKeycloakService,
+      useClass: environment.useKeycloak ? KeycloakService : MockKeycloakService,
     },
     {
       provide: APP_INITIALIZER,
