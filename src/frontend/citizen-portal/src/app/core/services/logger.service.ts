@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoggerService {
-  constructor() { }
+  constructor() {}
 
   /**
    * @description
    * General output of logging information.
    */
-  public log(msg: string, ...data: any[]) {
+  public log(msg: string, ...data: any[]): void {
     this.print('log', { msg, data });
   }
 
@@ -20,7 +20,7 @@ export class LoggerService {
    * @description
    * Informative output of logging information.
    */
-  public info(msg: string, ...data: any[]) {
+  public info(msg: string, ...data: any[]): void {
     this.print('info', { msg, data });
   }
 
@@ -28,7 +28,7 @@ export class LoggerService {
    * @description
    * Outputs a warning message.
    */
-  public warn(msg: string, ...data: any[]) {
+  public warn(msg: string, ...data: any[]): void {
     this.print('warn', { msg, data });
   }
 
@@ -36,7 +36,7 @@ export class LoggerService {
    * @description
    * Outputs an error message.
    */
-  public error(msg: string, ...data: any[]) {
+  public error(msg: string, ...data: any[]): void {
     this.print('error', { msg, data });
   }
 
@@ -44,7 +44,7 @@ export class LoggerService {
    * @description
    * Outputs a stack trace.
    */
-  public trace(msg: string, ...data: any[]) {
+  public trace(msg: string, ...data: any[]): void {
     this.print('error', { msg, data });
   }
 
@@ -52,7 +52,7 @@ export class LoggerService {
    * @description
    * Pretty print JSON.
    */
-  public pretty(msg: string, ...data: any[]) {
+  public pretty(msg: string, ...data: any[]): void {
     this.print('log', { msg, data: [JSON.stringify(data, null, '\t')] });
   }
 
@@ -60,9 +60,8 @@ export class LoggerService {
    * @description
    * Prints the logging information, but ONLY if not in production.
    */
-  private print(type: string, params: { msg?: string, data?: any[] }) {
+  private print(type: string, params: { msg?: string; data?: any[] }): void {
     if (!environment.production || type === 'error' || type === 'warn') {
-
       const message = this.colorize(type, params.msg);
 
       if (params.msg && params.data.length) {

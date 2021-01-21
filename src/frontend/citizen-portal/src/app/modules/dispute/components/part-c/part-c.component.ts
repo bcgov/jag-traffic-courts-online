@@ -40,7 +40,7 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     // do nothing for now
   }
 
-  public onBack() {
+  public onBack(): void {
     // do nothing for now
   }
 

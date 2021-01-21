@@ -30,7 +30,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     this.createFormInstance();
   }
 
-  protected createFormInstance() {
+  protected createFormInstance(): void {
     this.service.ticket$.subscribe((ticket: Ticket) => {
       this.form.patchValue(ticket);
     });

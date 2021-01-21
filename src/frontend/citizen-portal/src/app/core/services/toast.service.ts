@@ -2,14 +2,12 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ToastService {
   private duration: number;
 
-  constructor(
-    private snackBar: MatSnackBar
-  ) {
+  constructor(private snackBar: MatSnackBar) {
     this.duration = 3000; // ms
   }
 
@@ -17,11 +15,18 @@ export class ToastService {
    * @description
    * Opens a toast to display success messages.
    */
-  public openSuccessToast(message: string, action: string = null, config: MatSnackBarConfig = null) {
-    const defaultConfig: MatSnackBarConfig = Object.assign({
-      duration: this.duration,
-      extraClasses: ['success']
-    }, config);
+  public openSuccessToast(
+    message: string,
+    action: string = null,
+    config: MatSnackBarConfig = null
+  ): void {
+    const defaultConfig: MatSnackBarConfig = Object.assign(
+      {
+        duration: this.duration,
+        extraClasses: ['success'],
+      },
+      config
+    );
     this.openToast(message, action, defaultConfig);
   }
 
@@ -29,15 +34,26 @@ export class ToastService {
    * @description
    * Opens a toast to display error messages.
    */
-  public openErrorToast(message: string, action: string = null, config: MatSnackBarConfig = null) {
-    const defaultConfig: MatSnackBarConfig = Object.assign({
-      duration: this.duration,
-      extraClasses: ['danger']
-    }, config);
+  public openErrorToast(
+    message: string,
+    action: string = null,
+    config: MatSnackBarConfig = null
+  ): void {
+    const defaultConfig: MatSnackBarConfig = Object.assign(
+      {
+        duration: this.duration,
+        extraClasses: ['danger'],
+      },
+      config
+    );
     this.openToast(message, action, defaultConfig);
   }
 
-  private openToast(message: string, action: string = null, config: MatSnackBarConfig) {
+  private openToast(
+    message: string,
+    action: string = null,
+    config: MatSnackBarConfig
+  ): void {
     this.snackBar.open(message, action, config);
   }
 }

@@ -2,11 +2,11 @@ import { KeycloakService } from 'keycloak-angular';
 import { of } from 'rxjs';
 
 export class MockKeycloakService extends KeycloakService {
-  public init() {
+  public init(): Promise<boolean> {
     return Promise.resolve(true);
   }
 
-  public getKeycloakInstance() {
+  public getKeycloakInstance(): Keycloak.KeycloakInstance {
     return {
       onTokenExpired: () => {},
       loadUserInfo: () => {
