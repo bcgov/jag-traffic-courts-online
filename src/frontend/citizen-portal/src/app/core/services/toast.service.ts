@@ -19,14 +19,12 @@ export class ToastService {
     message: string,
     action: string = null,
     config: MatSnackBarConfig = null
-  ): void {
-    const defaultConfig: MatSnackBarConfig = Object.assign(
-      {
-        duration: this.duration,
-        extraClasses: ['success'],
-      },
-      config
-    );
+  ) {
+    // extraClasses: ['success']
+    const defaultConfig: MatSnackBarConfig = {
+      ...config,
+      duration: this.duration,
+    };
     this.openToast(message, action, defaultConfig);
   }
 
@@ -38,14 +36,12 @@ export class ToastService {
     message: string,
     action: string = null,
     config: MatSnackBarConfig = null
-  ): void {
-    const defaultConfig: MatSnackBarConfig = Object.assign(
-      {
-        duration: this.duration,
-        extraClasses: ['danger'],
-      },
-      config
-    );
+  ) {
+    // extraClasses: ['danger']
+    const defaultConfig: MatSnackBarConfig = {
+      ...config,
+      duration: this.duration,
+    };
     this.openToast(message, action, defaultConfig);
   }
 
