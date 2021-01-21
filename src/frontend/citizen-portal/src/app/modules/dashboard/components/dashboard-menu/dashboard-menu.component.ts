@@ -1,14 +1,15 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { DashboardMenuItem, DashboardRouteMenuItem } from '../../models/dashboard-menu-item.model';
-
-// import { DashboardMenuItem, DashboardRouteMenuItem } from '@lib/modules/dashboard/models/dashboard-menu-item.model';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
+import {
+  DashboardMenuItem,
+  DashboardRouteMenuItem,
+} from '../../models/dashboard-menu-item.model';
 
 @Component({
   selector: 'app-dashboard-menu',
   templateUrl: './dashboard-menu.component.html',
-  styleUrls: ['./dashboard-menu.component.scss']
+  styleUrls: ['./dashboard-menu.component.scss'],
 })
-export class DashboardMenuComponent implements OnInit {
+export class DashboardMenuComponent {
   /**
    * @description
    * Whether the dashboard menu items are responsive, and collapse
@@ -43,6 +44,4 @@ export class DashboardMenuComponent implements OnInit {
   public onAction(dashboardMenuItem: DashboardMenuItem): void {
     this.action.emit(dashboardMenuItem);
   }
-
-  public ngOnInit(): void { }
 }

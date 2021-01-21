@@ -1,0 +1,26 @@
+version: "2"
+checks:
+  method-lines:
+    config:
+      threshold: 40
+plugins:
+  tslint:
+    enabled: true
+  markdownlint:
+    enabled: false
+  csslint:
+    enabled: true
+exclude_patterns:
+  # Backend File Specific Excludes
+
+  # Frontend Pattern Excludes
+  - "src/frontend/citizen-portal/karma.conf.js"
+  - "src/frontend/citizen-portal/package.json"
+  - "src/frontend/citizen-portal/package-lock.json"
+  - "src/frontend/citizen-portal/tsconfig.json"
+  - "src/frontend/citizen-portal/tslint.json"
+  - "src/frontend/citizen-portal/*.spec.*"
+  - "src/frontend/citizen-portal/shared/components/"
+  - "src/frontend/*/src/*.spec.ts"
+  - "src/frontend/*/src/*.component.ts"
+  - "src/frontend/*/src/*/*.component.ts"
