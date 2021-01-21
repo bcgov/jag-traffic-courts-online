@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Inject,
-  ComponentFactoryResolver,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { DialogDefaultOptions } from '../dialog-default-options.model';
@@ -18,7 +12,7 @@ import { DialogContentOutput } from '../dialog-output.model';
   styleUrls: ['./confirm-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConfirmDialogComponent implements OnInit {
+export class ConfirmDialogComponent {
   public options: DialogOptions;
   public dialogContentOutput: DialogContentOutput<any>;
 
@@ -42,8 +36,6 @@ export class ConfirmDialogComponent implements OnInit {
         : true;
     this.dialogRef.close(response);
   }
-
-  public ngOnInit() {}
 
   private getOptions(dialogOptions: DialogOptions) {
     const options: DialogOptions = {

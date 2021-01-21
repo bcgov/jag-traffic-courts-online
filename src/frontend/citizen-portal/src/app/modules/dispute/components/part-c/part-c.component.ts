@@ -36,9 +36,13 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     });
   }
 
-  public onSubmit(): void {}
+  public onSubmit(): void {
+    // do nothing for now
+  }
 
-  public onBack() {}
+  public onBack() {
+    // do nothing for now
+  }
 
   public get interpreterRequired(): FormControl {
     return this.form.get('interpreterRequired') as FormControl;

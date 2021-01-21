@@ -36,5 +36,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     });
   }
 
-  public onSubmit(): void {}
+  public onSubmit(): void {
+    // do nothing for now
+  }
 }

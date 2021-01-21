@@ -29,9 +29,13 @@ export class PartDComponent extends BaseDisputeFormPage implements OnInit {
     });
   }
 
-  public onSubmit(): void {}
+  public onSubmit(): void {
+    // do nothing for now
+  }
 
-  public onBack() {}
+  public onBack() {
+    // do nothing for now
+  }
 
   public get isMobile(): boolean {
     return this.viewportService.isMobile;

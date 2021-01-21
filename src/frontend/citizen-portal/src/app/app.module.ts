@@ -9,8 +9,9 @@ import { SharedModule } from './shared/shared.module';
 import { NgBusyModule } from 'ng-busy';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { DisputeModule } from './modules/dispute/dispute.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { AuthModule } from './modules/auth/auth.module';
+import { DashboardModule } from '@dashboard/dashboard.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +21,7 @@ import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
     BrowserAnimationsModule,
     CoreModule,
     SharedModule,
-    DashboardModule,
+    AuthModule,
     DisputeModule,
   ],
   exports: [NgBusyModule, NgxMaterialModule],
