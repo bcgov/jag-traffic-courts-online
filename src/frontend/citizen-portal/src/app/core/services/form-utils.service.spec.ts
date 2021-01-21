@@ -35,7 +35,7 @@ describe('FormUtilsService', () => {
   });
 
   it('should call checkValidity', () => {
-    let val = service.checkValidity(formGroup);
+    const val = service.checkValidity(formGroup);
     expect(val).toBeFalse();
   });
 
@@ -45,12 +45,12 @@ describe('FormUtilsService', () => {
   });
 
   it('should call resetAndClearValidators', () => {
-    let res = service.resetAndClearValidators(formGroup);
+    const res = service.resetAndClearValidators(formGroup);
     expect(res).not.toBeNull();
   });
 
   it('should call getFormErrors', () => {
-    let res = service.getFormErrors(formGroup);
+    const res = service.getFormErrors(formGroup);
     expect(res).not.toBeNull();
   });
 });
