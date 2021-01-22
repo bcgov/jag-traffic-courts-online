@@ -25,11 +25,11 @@ namespace DisputeApi.Web.Test.Utils
 
         public static void VerifyLog<T>(this Mock<ILogger<T>> loggerMock, LogLevel level, string message, string failMessage = null)
         {
-            loggerMock.VerifyLog(level, message, Times.Once(), failMessage);
+            loggerMock.VerifyLog(level, message, Times.Once());
         }
-        public static void VerifyLog<T>(this Mock<ILogger<T>> loggerMock, LogLevel level, string message, Times times, string failMessage = null)
+        public static void VerifyLog<T>(this Mock<ILogger<T>> loggerMock, LogLevel level, string message, Times times)
         {
-            loggerMock.Verify(l => l.Log<Object>(level, It.IsAny<EventId>(), It.Is<Object>(o => o.ToString() == message), null, (Func<Object, Exception, string>)It.IsAny<object>()), times, failMessage);
+            loggerMock.Verify(l => l.Log<Object>(level, It.IsAny<EventId>(), It.Is<Object>(o => o.ToString() == message), null, (Func<Object, Exception, string>)It.IsAny<object>()), times, message);
         }
     }
 }
