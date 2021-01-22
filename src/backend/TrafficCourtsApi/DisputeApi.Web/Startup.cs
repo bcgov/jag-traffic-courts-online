@@ -79,7 +79,7 @@ namespace DisputeApi.Web
         /// https://github.com/RicoSuter/NSwag
         /// </summary>
         /// <param name="services"></param>
-        public void ConfigureOpenApi(IServiceCollection services)
+        private void ConfigureOpenApi(IServiceCollection services)
         {
 
             services.AddSwaggerDocument(config =>
