@@ -5,11 +5,7 @@ export class RouteUtils {
   private router: Router;
   private baseRoutePath: string;
 
-  constructor(
-    route: ActivatedRoute,
-    router: Router,
-    baseRoutePath: string
-  ) {
+  constructor(route: ActivatedRoute, router: Router, baseRoutePath: string) {
     this.route = route;
     this.router = router;
     this.baseRoutePath = baseRoutePath;
@@ -20,13 +16,14 @@ export class RouteUtils {
    * Determine the current module route path, or provide a default
    * if the current route path is the module path.
    */
-  public static currentModulePath(route: ActivatedRoute, defaultRoutePath: string = '/'): string {
+  public static currentModulePath(
+    route: ActivatedRoute,
+    defaultRoutePath: string = '/'
+  ): string {
     const urlSegments = route.snapshot.url;
 
     // Prevent cyclical routing
-    return (urlSegments.length > 1)
-      ? urlSegments[0].path
-      : defaultRoutePath;
+    return urlSegments.length > 1 ? urlSegments[0].path : defaultRoutePath;
   }
 
   /**
@@ -36,25 +33,31 @@ export class RouteUtils {
    */
   public static currentRoutePath(url: string) {
     // Truncate query parameters
-    return url.split('?')
-      .shift()
-      // List the remaining URI params
-      .split('/')
-      // Remove URI params that are numbers
-      .filter(p => !/^\d+$/.test(p))
-      // Remove blacklisted URI params
-      .filter(p => !['new'].includes(p))
-      .pop(); // Current route is the last index
+    return (
+      url
+        .split('?')
+        .shift()
+        // List the remaining URI params
+        .split('/')
+        // Remove URI params that are numbers
+        .filter((p) => !/^\d+$/.test(p))
+        // Remove certain URI params
+        .filter((p) => !['new'].includes(p))
+        .pop()
+    ); // Current route is the last index
   }
 
   /**
    * @description
    * Route from a base route.
    */
-  public routeTo(routePath: string | (string | number)[], navigationExtras: NavigationExtras = {}): void {
-    const commands = (Array.isArray(routePath)) ? routePath : [routePath];
+  public routeTo(
+    routePath: string | (string | number)[],
+    navigationExtras: NavigationExtras = {}
+  ): void {
+    const commands = Array.isArray(routePath) ? routePath : [routePath];
     this.router.navigate(commands, {
-      ...navigationExtras
+      ...navigationExtras,
     });
   }
 
@@ -62,10 +65,13 @@ export class RouteUtils {
    * @description
    * Route relative to the active route.
    */
-  public routeRelativeTo(routePath: string | (string | number)[], navigationExtras: NavigationExtras = {}) {
+  public routeRelativeTo(
+    routePath: string | (string | number)[],
+    navigationExtras: NavigationExtras = {}
+  ) {
     this.routeTo(routePath, {
       relativeTo: this.route.parent,
-      ...navigationExtras
+      ...navigationExtras,
     });
   }
 
@@ -74,11 +80,16 @@ export class RouteUtils {
    * Route within a specified base path, for example within a
    * module, otherwise uses root.
    */
-  public routeWithin(routePath: string | (string | number)[], navigationExtras: NavigationExtras = {}) {
-    let commands = (Array.isArray(routePath)) ? routePath : [routePath];
-    commands = (this.baseRoutePath) ? [this.baseRoutePath, ...commands] : commands;
+  public routeWithin(
+    routePath: string | (string | number)[],
+    navigationExtras: NavigationExtras = {}
+  ) {
+    let commands = Array.isArray(routePath) ? routePath : [routePath];
+    commands = this.baseRoutePath
+      ? [this.baseRoutePath, ...commands]
+      : commands;
     this.routeTo(commands, {
-      ...navigationExtras
+      ...navigationExtras,
     });
   }
 

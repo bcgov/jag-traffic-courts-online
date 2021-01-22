@@ -50,10 +50,8 @@ export class UtilsService {
     );
 
     if (firstElementWithError) {
-      const element =
-        firstElementWithError.closest('section') == null
-          ? firstElementWithError
-          : firstElementWithError.closest('section');
+      const section = firstElementWithError.closest('section');
+      const element = section == null ? firstElementWithError : section;
 
       this.scrollTo(element);
     } else {

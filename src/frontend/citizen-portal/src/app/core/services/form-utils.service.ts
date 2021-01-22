@@ -38,17 +38,17 @@ export class FormUtilsService {
   public setValidators(
     control: FormControl | FormGroup,
     validators: ValidatorFn | ValidatorFn[],
-    blacklist: string[] = []
+    blocklist: string[] = []
   ): void {
     if (control instanceof FormGroup) {
       // Assumes that FormGroups will not be deeply nested
       Object.keys(control.controls).forEach((key: string) => {
-        // Skip blacklisted keys from having validators updated
-        if (!blacklist.includes(key)) {
+        // Skip blocklisted keys from having validators updated
+        if (!blocklist.includes(key)) {
           this.setValidators(
             control.controls[key] as FormControl,
             validators,
-            blacklist
+            blocklist
           );
         }
       });
@@ -64,12 +64,12 @@ export class FormUtilsService {
    */
   public resetAndClearValidators(
     control: FormControl | FormGroup,
-    blacklist: string[] = []
+    blocklist: string[] = []
   ): void {
     if (control instanceof FormGroup) {
       // Assumes that FormGroups will not be deeply nested
       Object.keys(control.controls).forEach((key: string) => {
-        if (!blacklist.includes(key)) {
+        if (!blocklist.includes(key)) {
           this.resetAndClearValidators(control.controls[key] as FormControl);
         }
       });
