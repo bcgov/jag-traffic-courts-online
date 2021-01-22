@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-busy-loading',
   templateUrl: './busy-loading.component.html',
-  styleUrls: ['./busy-loading.component.scss']
+  styleUrls: ['./busy-loading.component.scss'],
 })
 export class BusyLoadingComponent {
   @Input() busy: Subscription;
@@ -21,7 +21,7 @@ export class BusyLoadingComponent {
    * @description
    * Get the text alignment CSS class.
    */
-  public getTextAlignment() {
+  public getTextAlignment(): string {
     return `text-${this.align}`;
   }
 }

@@ -1,0 +1,72 @@
+@import "palette";
+@import "bootstrap/bootstrap-imports";
+
+div.container {
+  margin-top: 1.5rem;
+
+  @include media-breakpoint-up(sm) {
+    margin-top: 2rem;
+  }
+
+  @include media-breakpoint-up(md) {
+    margin-bottom: 4rem;
+  }
+}
+
+.logo {
+  padding-bottom: 1.25rem;
+
+  @include media-breakpoint-up(sm) {
+    padding-bottom: 1.5rem;
+  }
+}
+
+.header {
+  h1 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+
+    @include media-breakpoint-up(sm) {
+      font-size: 1.5rem;
+    }
+    @include media-breakpoint-up(md) {
+      font-size: 2rem;
+    }
+    &:only-child {
+      margin-bottom: 2.25rem;
+    }
+  }
+
+  p {
+    font-style: italic;
+    margin-bottom: 2.25rem;
+
+    @include media-breakpoint-up(md) {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.mat-flat-button {
+  width: 100%;
+  min-width: 220px;
+
+  @include media-breakpoint-up(md) {
+    width: 300px;
+  }
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  &.light {
+    background-color: theme-palette(blue, light);
+    color: white;
+  }
+}
+
+a {
+  color: theme-palette(blue);
+}

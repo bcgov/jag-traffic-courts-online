@@ -61,7 +61,7 @@ export class ViewportService {
    * @description
    * Gets the observable for subscribing to the viewport onresize event.
    */
-  public onResize() {
+  public onResize(): Observable<DeviceResolution> {
     if (this.viewport === null) {
       this.setupViewportListener();
     }
@@ -73,7 +73,7 @@ export class ViewportService {
    * @description
    * Setups the observable and viewport onresize event listener.
    */
-  private setupViewportListener() {
+  private setupViewportListener(): void {
     this.viewport = new Observable((observer) => {
       this.window.addEventListener('resize', (event) => {
         this.ngZone.run(() => observer.next(this.getDevice()));

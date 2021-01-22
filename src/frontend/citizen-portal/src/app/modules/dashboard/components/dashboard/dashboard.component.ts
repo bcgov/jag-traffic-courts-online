@@ -70,11 +70,11 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  public onLogout() {
-    console.log('onLogout');
+  public onLogout(): void {
+    // do nothing for now
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     if (!this.showMenuItemIcons) {
       // Cannot be responsive icons are not being shown
       this.responsiveMenuItems = false;

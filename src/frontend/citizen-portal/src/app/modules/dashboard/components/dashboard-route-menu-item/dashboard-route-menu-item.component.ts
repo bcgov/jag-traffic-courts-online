@@ -44,7 +44,7 @@ export class DashboardRouteMenuItemComponent {
     return this.viewportService.isDesktop || this.viewportService.isWideDesktop;
   }
 
-  public onRoute(routeMenuItem: DashboardRouteMenuItem) {
+  public onRoute(routeMenuItem: DashboardRouteMenuItem): void {
     this.route.emit(routeMenuItem);
   }
 }

@@ -6,6 +6,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./page-header.component.scss'],
 })
 export class PageHeaderComponent {
-  // constructor() { }
-  // public ngOnInit() {}
 }

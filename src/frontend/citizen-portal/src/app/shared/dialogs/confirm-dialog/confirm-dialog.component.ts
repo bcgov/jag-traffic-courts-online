@@ -29,7 +29,7 @@ export class ConfirmDialogComponent {
     this.dialogContentOutput = null;
   }
 
-  public onConfirm() {
+  public onConfirm(): void {
     const response =
       this.dialogContentOutput !== null
         ? { output: this.dialogContentOutput }
@@ -37,9 +37,7 @@ export class ConfirmDialogComponent {
     this.dialogRef.close(response);
   }
 
-  // public ngOnInit() {}
-
-  private getOptions(dialogOptions: DialogOptions) {
+  private getOptions(dialogOptions: DialogOptions): DialogOptions {
     const options: DialogOptions = {
       actionType: 'primary',
       actionText: 'Confirm',
