@@ -4,10 +4,7 @@ using DisputeApi.Web.Test.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DisputeApi.Web.Test.Features.Tickets.Services
@@ -15,7 +12,7 @@ namespace DisputeApi.Web.Test.Features.Tickets.Services
     public class TicketServiceTest
     {
         private TicketService _sut;
-          private readonly Mock<ILogger<TicketService>> _loggerMock = LoggerServiceMock.LoggerMock<TicketService>();
+        private readonly Mock<ILogger<TicketService>> _loggerMock = LoggerServiceMock.LoggerMock<TicketService>();
 
         [SetUp]
         public void SetUp()

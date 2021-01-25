@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DisputeApi.Web.Features.Tickets.Configuration
 {
-    public class TicketServiceConfiguration
+    public static class TicketServiceConfigurationExtension
     {
-        public static void AddTicketService(IServiceCollection collection)
+        public static void AddTicketService(this IServiceCollection collection)
         {
             collection.AddTransient<ITicketService, TicketService>();
         }
