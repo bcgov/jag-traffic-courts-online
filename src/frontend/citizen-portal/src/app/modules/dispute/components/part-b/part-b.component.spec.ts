@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { PartBComponent } from './part-b.component';
@@ -10,7 +11,7 @@ describe('PartBComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, RouterModule.forRoot([])],
       declarations: [PartBComponent],
       providers: [
         {

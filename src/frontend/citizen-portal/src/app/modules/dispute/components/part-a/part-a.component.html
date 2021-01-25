@@ -1,7 +1,7 @@
 <app-page [busy]="busy">
   <app-page-header>Violation Ticket Notice of Dispute</app-page-header>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+  <form (ngSubmit)="onSubmit()" [formGroup]="formStep2" novalidate>
     <section class="mb-3">
       <h1>Part A</h1>
       <p>
@@ -17,7 +17,7 @@
 
     <section class="mb-3">
       <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input
               matInput
@@ -27,10 +27,8 @@
             <mat-error>Required</mat-error>
           </mat-form-field>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input
               matInput
@@ -56,16 +54,14 @@
       </div>
 
       <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input matInput placeholder="City" formControlName="city" />
             <mat-error>Required</mat-error>
           </mat-form-field>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input matInput placeholder="Province" formControlName="province" />
             <mat-error>Required</mat-error>
@@ -90,7 +86,7 @@
       </div>
 
       <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input
               matInput
@@ -107,10 +103,8 @@
             >
           </mat-form-field>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input
               matInput
@@ -127,7 +121,7 @@
       </div>
 
       <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input
               matInput
@@ -139,10 +133,8 @@
             <mat-error>Required</mat-error>
           </mat-form-field>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col">
+        <div class="col-lg-6">
           <mat-form-field class="w-100">
             <input
               matInput
@@ -175,7 +167,7 @@
               startView="multi-year"
               [touchUi]="isMobile"
             ></mat-datepicker>
-            <mat-error *ngIf="form.get('birthdate').hasError('required')"
+            <mat-error *ngIf="formStep2.get('birthdate').hasError('required')"
               >Required</mat-error
             >
           </mat-form-field>

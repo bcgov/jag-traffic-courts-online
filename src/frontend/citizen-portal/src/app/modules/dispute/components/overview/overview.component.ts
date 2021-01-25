@@ -20,16 +20,4 @@ export class OverviewComponent implements OnInit {
       this.ticket = ticket;
     });
   }
-
-  public onSubmit(): void {
-    this.nextRoute();
-  }
-
-  public onBack(): void {
-    // do nothing for now
-  }
-
-  public nextRoute() {
-    // do nothing for now
-  }
 }
