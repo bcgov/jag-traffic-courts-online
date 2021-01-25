@@ -29,7 +29,7 @@ namespace DisputeApi.Web
             services.AddControllers();
             ConfigureOpenApi(services);
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
-            TicketServiceConfiguration.AddTicketService(services);
+            services.AddTicketService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

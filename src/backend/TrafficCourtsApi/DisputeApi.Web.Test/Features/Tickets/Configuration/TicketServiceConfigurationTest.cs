@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace DisputeApi.Web.Test.Features.Tickets.Configuration
 {
-    public class TicketServiceConfigurationTest
+    public class TicketServiceConfigurationExtensionTest
     {
         [Test]
         public void should_register_necessary_service()
         {
             var services = new ServiceCollection();
-            TicketServiceConfiguration.AddTicketService(services);
+            services.AddTicketService();
             Assert.IsTrue(services.Any(x => x.ServiceType == typeof(ITicketService)));
         }
     }

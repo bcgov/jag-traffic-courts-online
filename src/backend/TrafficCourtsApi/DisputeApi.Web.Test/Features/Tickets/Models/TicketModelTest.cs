@@ -10,8 +10,7 @@ namespace DisputeApi.Web.Test.Features.Tickets.Models
         public void can_create_class()
         {
             var ticket = new Ticket { Id = "Id", Description ="Description" };
-            Assert.IsNotNull(ticket);
-
+            Assert.DoesNotThrow(() => new Ticket { Id = "Id", Description = "Description" });
             Assert.AreEqual(ticket.Id, "Id");
             Assert.AreEqual(ticket.Description, "Description");
         }
