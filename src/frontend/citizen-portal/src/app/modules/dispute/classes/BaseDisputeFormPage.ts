@@ -78,7 +78,8 @@ export abstract class BaseDisputeFormPage
 
   private getTicket(): void {
     this.disputeResource.ticket().subscribe((response) => {
-      this.disputeService.ticket$.next(response['result']);
+      const key = 'result';
+      this.disputeService.ticket$.next(response[key]);
     });
   }
 }

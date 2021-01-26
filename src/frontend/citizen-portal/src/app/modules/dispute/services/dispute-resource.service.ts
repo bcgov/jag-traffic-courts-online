@@ -10,19 +10,19 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class DisputeResourceService {
-
   private baseUrl = environment.apiUrl;
 
-  constructor(private httpClient: HttpClient,
-    private logger: LoggerService) {}
+  constructor(private httpClient: HttpClient, private logger: LoggerService) {}
 
   public ticket(): Observable<Ticket> {
-    return this.httpClient.get<any>(this.baseUrl + "/ticket")
-      .pipe(
-        catchError((error: any) => {
-          this.logger.error('[Dispute] DisputeResource::ticket error has occurred: ', error);
-          throw error;
-        })
-      );
+    return this.httpClient.get<any>(this.baseUrl + '/ticket').pipe(
+      catchError((error: any) => {
+        this.logger.error(
+          '[Dispute] DisputeResource::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
   }
 }
