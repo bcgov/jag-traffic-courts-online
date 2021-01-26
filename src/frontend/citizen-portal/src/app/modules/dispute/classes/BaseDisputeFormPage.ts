@@ -1,6 +1,10 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControlValidators } from '@core/validators/form-control.validators';
+import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import { map, tap } from 'rxjs/operators';
 import { BaseDisputePage } from './BaseDisputePage';
 
 export interface IBaseDisputeFormPage {
@@ -23,9 +27,14 @@ export abstract class BaseDisputeFormPage
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
-    protected formBuilder: FormBuilder
+    protected formBuilder: FormBuilder,
+    protected disputeService: DisputeService,
+    protected disputeResource: DisputeResourceService
   ) {
     super(route, router);
+
+    // TODO Put in here for now.
+    this.getTicket();
 
     this.formStep1 = this.formBuilder.group({
       id: [null],
@@ -66,6 +75,13 @@ export abstract class BaseDisputeFormPage
     this.formStep5 = this.formBuilder.group({
       id: [null],
       surname: [null, [Validators.required]],
+    });
+  }
+
+  private getTicket(): void {
+    this.disputeResource.ticket().subscribe( response => {
+      console.log(response['result']);
+      this.disputeService.ticket$.next(response['result']);
     });
   }
 }

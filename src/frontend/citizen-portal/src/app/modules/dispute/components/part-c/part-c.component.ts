@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { Ticket } from '@shared/models/ticket.model';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +8,8 @@ import { RouteUtils } from '@core/utils/route-utils.class';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { UtilsService } from '@core/services/utils.service';
 import { LoggerService } from '@core/services/logger.service';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 
 @Component({
   selector: 'app-part-c',
@@ -22,12 +23,13 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
-    private service: DisputeResourceService,
+    protected disputeService: DisputeService,
+    protected disputeResource: DisputeResourceService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
-    private logger: LoggerService
+    private logger: LoggerService,
   ) {
-    super(route, router, formBuilder);
+    super(route, router, formBuilder, disputeService, disputeResource);
   }
 
   public ngOnInit(): void {
@@ -40,15 +42,15 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     //     ],
     //   }
 
-    this.service.ticket$.subscribe((ticket: Ticket) => {
+    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep4.patchValue(ticket);
     });
   }
 
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.formStep4)) {
-      this.service.ticket$.next({
-        ...this.service.ticket,
+      this.disputeService.ticket$.next({
+        ...this.disputeService.ticket,
         ...this.formStep4.value,
       });
 

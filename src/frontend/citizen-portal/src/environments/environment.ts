@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   version: '1.0.0',
   useKeycloak: false,
+  useMockServices: true,
   keycloakConfig: {
     config: {
       url: 'http://localhost:8080/auth',
