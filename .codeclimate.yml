@@ -3,6 +3,11 @@ checks:
   method-lines:
     config:
       threshold: 40
+  similar-code:
+    enabled: false
+  complex-logic:
+    config:
+      threshold: 10
 plugins:
   tslint:
     enabled: true
