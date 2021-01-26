@@ -1,23 +1,28 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/logger.service';
+import { environment } from '@env/environment';
 import { Ticket } from '@shared/models/ticket.model';
-import { BehaviorSubject } from 'rxjs';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisputeResourceService {
-  private _ticket: BehaviorSubject<Ticket>;
+  private baseUrl = environment.apiUrl;
 
-  constructor(private service: MockDisputeService) {
-    this._ticket = new BehaviorSubject<Ticket>(this.service.ticket);
-  }
+  constructor(private httpClient: HttpClient, private logger: LoggerService) {}
 
-  public get ticket$(): BehaviorSubject<Ticket> {
-    return this._ticket;
-  }
-
-  public get ticket(): Ticket {
-    return this._ticket.value;
+  public ticket(): Observable<Ticket> {
+    return this.httpClient.get<any>(this.baseUrl + '/ticket').pipe(
+      catchError((error: any) => {
+        this.logger.error(
+          '[Dispute] DisputeResource::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
   }
 }

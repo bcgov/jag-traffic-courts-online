@@ -3,6 +3,14 @@ checks:
   method-lines:
     config:
       threshold: 40
+  similar-code:
+    enabled: false
+  complex-logic:
+    config:
+      threshold: 10
+  method-complexity:
+    config:
+      threshold: 10
 plugins:
   tslint:
     enabled: true
@@ -19,7 +27,8 @@ exclude_patterns:
   - "src/frontend/citizen-portal/package-lock.json"
   - "src/frontend/citizen-portal/tsconfig.json"
   - "src/frontend/citizen-portal/tslint.json"
-  - "src/frontend/citizen-portal/*.spec.*"
+  - "src/frontend/citizen-portal/**/*.spec.*"
+  - "src/frontend/citizen-portal/tests/"
   - "src/frontend/citizen-portal/shared/components/"
   - "src/frontend/*/src/*.spec.ts"
   - "src/frontend/*/src/*.component.ts"

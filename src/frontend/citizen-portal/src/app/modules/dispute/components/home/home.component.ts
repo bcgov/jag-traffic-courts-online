@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription, timer } from 'rxjs';
-
-import moment from 'moment';
-import { Ticket } from '@shared/models/ticket.model';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormUtilsService } from '@core/services/form-utils.service';
+import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
+import { UtilsService } from '@core/services/utils.service';
+import { RouteUtils } from '@core/utils/route-utils.class';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
-import { RouteUtils } from '@core/utils/route-utils.class';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '@core/services/toast.service';
-import { LoggerService } from '@core/services/logger.service';
-import { FormUtilsService } from '@core/services/form-utils.service';
-import { UtilsService } from '@core/services/utils.service';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import moment from 'moment';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -26,31 +26,28 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
-    private service: DisputeResourceService,
+    protected disputeService: DisputeService,
+    protected disputeResource: DisputeResourceService,
     private toastService: ToastService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
   ) {
-    super(route, router, formBuilder);
+    super(route, router, formBuilder, disputeService, disputeResource);
 
     this.maxViolationDate = moment();
   }
 
   public ngOnInit(): void {
-    this.createFormInstance();
-  }
-
-  protected createFormInstance(): void {
-    this.service.ticket$.subscribe((ticket: Ticket) => {
+    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep1.patchValue(ticket);
     });
   }
 
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.formStep1)) {
-      this.service.ticket$.next({
-        ...this.service.ticket,
+      this.disputeService.ticket$.next({
+        ...this.disputeService.ticket,
         ...this.formStep1.value,
       });
 

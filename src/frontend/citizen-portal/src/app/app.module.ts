@@ -11,7 +11,8 @@ import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.mo
 import { DisputeModule } from './modules/dispute/dispute.module';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { DashboardModule } from '@dashboard/dashboard.module';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,9 +24,16 @@ import { DashboardModule } from '@dashboard/dashboard.module';
     SharedModule,
     AuthModule,
     DisputeModule,
+    HttpClientModule
   ],
   exports: [NgBusyModule, NgxMaterialModule],
-  providers: [MockDisputeService],
+  providers: [MockDisputeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BackendHttpInterceptor,
+      multi: true
+    }
+   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

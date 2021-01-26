@@ -20,12 +20,7 @@ describe('DisputeResourceService', () => {
   });
 
   it('should get ticket', () => {
-    const ticket = service.ticket;
-    expect(ticket).toBeDefined();
-  });
-
-  it('should get ticket observable', () => {
-    const ticket = service.ticket$;
+    const ticket = service.ticket();
     expect(ticket).toBeDefined();
   });
 });

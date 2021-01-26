@@ -1,7 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DisputeService } from '@dispute/services/dispute.service';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
-
 import { OverviewComponent } from './overview.component';
 
 describe('OverviewComponent', () => {
@@ -10,11 +11,11 @@ describe('OverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
+      imports: [HttpClientTestingModule, ReactiveFormsModule],
       declarations: [OverviewComponent],
       providers: [
         {
-          provide: MockDisputeService,
+          provide: DisputeService,
           useClass: MockDisputeService,
         },
       ],
