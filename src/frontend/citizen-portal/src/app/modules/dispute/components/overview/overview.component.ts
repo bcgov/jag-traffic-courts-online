@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { Ticket } from '@shared/models/ticket.model';
 import { DisputeService } from '@dispute/services/dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
@@ -13,10 +13,10 @@ export class OverviewComponent implements OnInit {
 
   public ticket: Ticket;
 
-  constructor(private service: DisputeService) {}
+  constructor(private disputeService: DisputeService) {}
 
   public ngOnInit(): void {
-    this.service.ticket$.subscribe((ticket: Ticket) => {
+    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.ticket = ticket;
     });
   }

@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ViewportService } from '@core/services/viewport.service';
-import { Subscription } from 'rxjs';
-import moment from 'moment';
-import { Ticket } from '@shared/models/ticket.model';
-import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteUtils } from '@core/utils/route-utils.class';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { DisputeService } from '@dispute/services/dispute.service';
+import { ViewportService } from '@core/services/viewport.service';
+import { RouteUtils } from '@core/utils/route-utils.class';
+import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import moment from 'moment';
+import { Subscription } from 'rxjs';
 
 export const MINIMUM_AGE = 18;
 
@@ -35,7 +35,7 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
     private viewportService: ViewportService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
-    private logger: LoggerService,
+    private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
 

@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription, timer } from 'rxjs';
-
-import moment from 'moment';
-import { Ticket } from '@shared/models/ticket.model';
-import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
-import { RouteUtils } from '@core/utils/route-utils.class';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '@core/services/toast.service';
-import { LoggerService } from '@core/services/logger.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
+import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
-import { DisputeService } from '@dispute/services/dispute.service';
+import { RouteUtils } from '@core/utils/route-utils.class';
+import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import moment from 'moment';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +31,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     private toastService: ToastService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
-    private logger: LoggerService,
+    private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
 
@@ -40,10 +39,6 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.createFormInstance();
-  }
-
-  protected createFormInstance(): void {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep1.patchValue(ticket);
     });

@@ -1,9 +1,12 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
-
 import { PartCComponent } from './part-c.component';
 
 describe('PartCComponent', () => {
@@ -13,14 +16,16 @@ describe('PartCComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         ReactiveFormsModule,
-        MatCheckboxModule,
         RouterModule.forRoot([]),
+        BrowserAnimationsModule,
+        NgxMaterialModule,
       ],
       declarations: [PartCComponent],
       providers: [
         {
-          provide: MockDisputeService,
+          provide: DisputeService,
           useClass: MockDisputeService,
         },
       ],

@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { Ticket } from '@shared/models/ticket.model';
-import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteUtils } from '@core/utils/route-utils.class';
 import { FormUtilsService } from '@core/services/form-utils.service';
-import { UtilsService } from '@core/services/utils.service';
 import { LoggerService } from '@core/services/logger.service';
-import { DisputeService } from '@dispute/services/dispute.service';
+import { UtilsService } from '@core/services/utils.service';
+import { RouteUtils } from '@core/utils/route-utils.class';
+import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
+import { DisputeService } from '@dispute/services/dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-part-c',
@@ -33,14 +33,6 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
-    //   {
-    //     validators: [
-    //       FormGroupValidators.requiredIfTrue(
-    //         'interpreterRequired',
-    //         'interpreterLanguage'
-    //       ),
-    //     ],
-    //   }
 
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep4.patchValue(ticket);
