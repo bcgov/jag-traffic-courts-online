@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpResponse
+  HttpResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '@env/environment';
@@ -14,16 +14,20 @@ import { LoggerService } from '@core/services/logger.service';
 
 @Injectable()
 export class BackendHttpInterceptor implements HttpInterceptor {
+  constructor(
+    private mockDisputeService: MockDisputeService,
+    private logger: LoggerService
+  ) {}
 
-  constructor(private mockDisputeService: MockDisputeService, private logger: LoggerService) {}
-
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
+  intercept(
+    request: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
     if (environment.useMockServices) {
-      if (request.method === "GET") {
+      if (request.method === 'GET') {
         const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
-        if (currentRoutePath === "ticket") {
+        if (currentRoutePath === 'ticket') {
           const result = this.mockDisputeService.ticket;
           return of(new HttpResponse({ status: 200, body: { result } }));
         }
