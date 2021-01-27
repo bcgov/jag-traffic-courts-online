@@ -1,18 +1,18 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
+import { NgBusyModule } from 'ng-busy';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
-import { NgBusyModule } from 'ng-busy';
-import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
-import { DisputeModule } from './modules/dispute/dispute.module';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
+import { DisputeModule } from './modules/dispute/dispute.module';
+import { SurveyJsModule } from './modules/survey-js/survey-js.module';
+import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,16 +24,18 @@ import { BackendHttpInterceptor } from '@core/interceptors/backend-http.intercep
     SharedModule,
     AuthModule,
     DisputeModule,
-    HttpClientModule
+    HttpClientModule,
+    SurveyJsModule,
   ],
   exports: [NgBusyModule, NgxMaterialModule],
-  providers: [MockDisputeService,
+  providers: [
+    MockDisputeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BackendHttpInterceptor,
-      multi: true
-    }
-   ],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
