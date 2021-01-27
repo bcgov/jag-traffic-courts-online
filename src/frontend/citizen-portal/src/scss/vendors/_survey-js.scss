@@ -1,0 +1,37 @@
+@import "palette";
+
+.card-footer {
+  padding: 0.75rem 1.25rem;
+  background-color: transparent;
+  border-top: 1px solid theme-palette(yellow);
+}
+
+.sv_next_btn,
+.sv_prev_btn {
+  background-color: theme-palette(blue);
+  color: #fff;
+}
+
+.btn:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.sv_complete_btn:hover {
+  color: theme-palette(blue);
+}
+
+.sv_main .sv_container .sv_next_btn,
+.sv_main .sv_container .sv_complete_btn {
+  float: right;
+}
+
+.progress-bar {
+  background-color: theme-palette(yellow);
+}
+
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}

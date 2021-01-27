@@ -12,23 +12,43 @@
     <div class="col-lg-9">
       <div class="header">
         <h1>Traffic Court Online</h1>
+        <h2 class="mt-4">Search for your ticket</h2>
       </div>
+      <mat-form-field style="width: 300px">
+        <mat-label>Violation Ticket Number</mat-label>
+        <input matInput type="text" />
+        <button mat-button matSuffix mat-icon-button aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+        <button
+          mat-button
+          matSuffix
+          mat-flat-button
+          style="width: unset; min-width: unset"
+          color="primary"
+          routerLink="/dispute/home"
+          aria-label="Search"
+        >
+          <mat-icon>search</mat-icon>
+        </button> </mat-form-field
+      ><br /><br /><br />
+
       <button
         mat-flat-button
         color="primary"
         class="large"
         routerLink="/dispute/home"
       >
-        Begin Dispute
+        Enter Dispute</button
+      ><br /><br /><br />
+      <button
+        mat-flat-button
+        color="primary"
+        class="large"
+        routerLink="/survey/home"
+      >
+        Take the Survey
       </button>
     </div>
-    <button
-      mat-flat-button
-      color="primary"
-      class="large"
-      routerLink="/survey/home"
-    >
-      Survey
-    </button>
   </div>
 </div>

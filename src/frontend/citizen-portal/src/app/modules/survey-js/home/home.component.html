@@ -1,7 +1,15 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-lg-9">
+    <div class="col-md-12 col-lg-10">
+      <h1>Traffic Court Online Survey</h1>
       <div id="surveyContainer"></div>
+      <button
+        [hidden]="!isComplete"
+        class="btn sv_next_btn mt-4"
+        routerLink="/"
+      >
+        Return Home
+      </button>
     </div>
   </div>
 </div>
