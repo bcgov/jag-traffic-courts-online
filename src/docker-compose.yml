@@ -7,8 +7,8 @@ services:
     container_name: splunk
     environment:
       - SPLUNK_START_ARGS=--accept-license
-      - SPLUNK_HEC_TOKEN=traffic
-      - SPLUNK_PASSWORD
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
     ports:
       - 8000:8000
       - 8088:8088
