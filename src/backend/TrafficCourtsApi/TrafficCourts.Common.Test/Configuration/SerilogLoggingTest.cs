@@ -1,7 +1,8 @@
 using NUnit.Framework;
 using Serilog;
+using TrafficCourts.Common.Configuration;
 
-namespace TrafficCourts.Common.Configuration.Test
+namespace TrafficCourts.Common.Test.Configuration
 {
     [TestFixture]
     public class SerilogLoggingTest

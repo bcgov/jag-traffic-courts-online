@@ -8,8 +8,9 @@ using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.TestCorrelator;
+using TrafficCourts.Common.Configuration;
 
-namespace TrafficCourts.Common.Configuration.Test
+namespace TrafficCourts.Common.Test.Configuration
 {
     [TestFixture]
     public class SplunkEventCollectorTest
@@ -55,8 +56,7 @@ namespace TrafficCourts.Common.Configuration.Test
                 Assert.NotNull(logEvent.RenderMessage()); // assert anything about this message?
             }
         }
-
-
+        
         [Test]
         [Ignore("Having troubles with Serilog reading the configuration and also our reading of the configuration")]
         public void Configure_will_configure_EventCollector_if_url_and_token_are_available()
@@ -92,45 +92,6 @@ namespace TrafficCourts.Common.Configuration.Test
 
             configurationValues.VerifyGet(_ => _["Splunk:Url"], Times.Once);
             configurationValues.VerifyGet(_ => _["Splunk:Token"], Times.Once);
-        }
-    }
-
-    public class UnitTestConfigurationSource : IConfigurationSource
-    {
-        private readonly IDictionary<string, string> _values;
-
-        public UnitTestConfigurationSource(IDictionary<string, string> values)
-        {
-            _values = values ?? new Dictionary<string, string>();
-        }
-
-        public IConfigurationProvider Build(IConfigurationBuilder builder)
-        {
-            return new UnitTestConfigurationProvider(_values);
-        }
-    }
-
-    public class UnitTestConfigurationProvider : ConfigurationProvider
-    {
-        private readonly IDictionary<string, string> _values;
-
-        public UnitTestConfigurationProvider(IDictionary<string, string> values)
-        {
-            _values = values ;
-        }
-
-        public override void Load()
-        {
-            Data = _values;
-        }
-    }
-
-    public static class UnitTestExtensions
-    {
-        public static IConfigurationBuilder AddUnitTestValues(this IConfigurationBuilder configurationBuilder, IDictionary<string,string> values = null)
-        {
-            configurationBuilder.Add(new UnitTestConfigurationSource(values));
-            return configurationBuilder;
         }
     }
 }
