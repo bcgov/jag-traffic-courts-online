@@ -50,7 +50,7 @@ ng build --prod
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.x. Refer to the Angular CLI documentation for the available commands, but the most used commands during development will be:
 
-1. `ng install` to install any packages that the application depends on.
+1. `npm install` to install any packages that the application depends on.
 1. `ng serve -o` to serve your application locally in memory during development at `http://localhost:4200` through the default browser, which watches for changes, recompiles, and automatically refresh the application in the browser
 1. `ng build` to build the application, which is stored in `/dist` directory. Use the `--prod` flag for a production build, which significantly decreases the size of the application
 1. `ng g <blueprint>` to create code scaffolding for a directive, pipe, service, class, guard, interface, enum, and module
