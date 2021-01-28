@@ -15,13 +15,12 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     Survey.StylesManager.applyTheme('bootstrap');
 
-    let survey = new Survey.Model(this.json);
+    const survey = new Survey.Model(this.json);
     Survey.SurveyNG.render('surveyContainer', { model: survey });
 
-    const scope = this;
-    survey.onComplete.add(function (result) {
-      scope.isComplete = true;
-      scope.logger.info('Result JSON:', JSON.stringify(result.data, null, 3));
+    survey.onComplete.add((result) => {
+      this.isComplete = true;
+      this.logger.info('Result JSON:', JSON.stringify(result.data, null, 3));
     });
   }
 
