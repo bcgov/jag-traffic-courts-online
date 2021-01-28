@@ -20,7 +20,8 @@
       "@core/*": ["./app/core/*"],
       "@shared/*": ["./app/shared/*"],
       "@dashboard/*": ["./app/modules/dashboard/*"],
-      "@dispute/*": ["./app/modules/dispute/*"]
+      "@dispute/*": ["./app/modules/dispute/*"],
+      "@survey/*": ["./app/modules/survey-js/*"]
     }
   },
   "angularCompilerOptions": {

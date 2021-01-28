@@ -1,7 +1,7 @@
 // Load the applications palette and theme
-@import './palette';
-@import './font';
-@import './variables';
+@import "./palette";
+@import "./font";
+@import "./variables";
 
 // ---
 // MATERIAL
@@ -10,7 +10,7 @@
 // Material provides a API and default theming for typography and associated
 // material components, which are used throughout the application. Material
 // represents the backbone of application theming.
-@import './material/material';
+@import "./material/material";
 
 // ---
 // BOOTSTRAP
@@ -20,12 +20,11 @@
 // components, which include responsive images, grids, and tables, as well as
 // including normalize, and utilities. Nav, and navbar for components are
 // included for prototyping, but will be removed.
-@import './bootstrap/bootstrap';
+@import "./bootstrap/bootstrap";
 
 // ---
 // VENDORS
 // ---
 
 // Vendors is used to include customized vendor styles into the application.
-@import './vendors/vendors';
-
+@import "./vendors/vendors";

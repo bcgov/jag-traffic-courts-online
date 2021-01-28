@@ -9,4 +9,6 @@ export const busyConfig: BusyConfig = {
   minDuration: 600,
   disableAnimation: true,
   wrapperClass: 'ng-busy',
+  templateNgStyle: {},
+  message: '',
 };
