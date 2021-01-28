@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import * as Survey from 'survey-angular';
 
@@ -11,15 +10,16 @@ import * as Survey from 'survey-angular';
 export class HomeComponent implements OnInit {
   public isComplete: boolean = false;
 
-  constructor(private router: Router, private logger: LoggerService) {}
+  constructor(private logger: LoggerService) {}
 
   ngOnInit() {
     Survey.StylesManager.applyTheme('bootstrap');
-    let model = new Survey.Model(this.json);
-    Survey.SurveyNG.render('surveyContainer', { model: model });
+
+    let survey = new Survey.Model(this.json);
+    Survey.SurveyNG.render('surveyContainer', { model: survey });
 
     const scope = this;
-    model.onComplete.add(function (result) {
+    survey.onComplete.add(function (result) {
       scope.isComplete = true;
       scope.logger.info('Result JSON:', JSON.stringify(result.data, null, 3));
     });
@@ -40,14 +40,14 @@ export class HomeComponent implements OnInit {
             name: 'birthdate',
             type: 'text',
             inputType: 'date',
-            title: 'Text Date',
+            title: 'What is your birth date?',
             isRequired: false,
           },
           {
             name: 'emailaddr',
             type: 'text',
             inputType: 'email',
-            title: 'Text Email',
+            title: 'What is your email address?',
             placeHolder: '',
             isRequired: false,
             validators: [
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
         ],
       },
       {
-        title: 'Title for set of questions',
+        title: 'Page 2 Set of Questions',
         questions: [
           {
             type: 'checkbox',
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
           {
             type: 'dropdown',
             name: 'cars',
-            title: 'Dropdown',
+            title: 'What type of car do you drive?',
             isRequired: false,
             hasNone: true,
             hasOther: true,
@@ -90,7 +90,7 @@ export class HomeComponent implements OnInit {
           {
             type: 'checkbox',
             name: 'car',
-            title: 'Checkbox',
+            title: 'Car checkbox',
             hasSelectAll: true,
             isRequired: false,
             hasNone: true,
@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit {
           {
             type: 'radiogroup',
             name: 'carss',
-            title: 'Radiogroup',
+            title: 'Car radiogroup',
             isRequired: false,
             colCount: 4,
             choices: [
@@ -130,13 +130,13 @@ export class HomeComponent implements OnInit {
             type: 'boolean',
             name: 'bool',
             title: 'Boolean',
-            label: 'Are you 21 or older?',
+            label: 'Are you 18 or older?',
             isRequired: false,
           },
           {
             type: 'matrix',
             name: 'Quality',
-            title: 'Matrix',
+            title: 'The product',
             columns: [
               {
                 value: 1,
