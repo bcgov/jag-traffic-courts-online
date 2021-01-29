@@ -13,7 +13,7 @@ jobs:
         with:
           dotnet-version: 5.0.101
       - name: Build TrafficCourtsApi
-        run: dotnet build --configuration
+        run: dotnet build
         working-directory: ./src/backend/TrafficCourtsApi
       - name: Test TrafficCourtsApi
         run: dotnet test
