@@ -33,3 +33,6 @@ Generated\ Files/
 # NUNIT
 *.VisualState.xml
 TestResult.xml
+
+# Docker Environment Files
+.env
