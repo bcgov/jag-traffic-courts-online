@@ -31,5 +31,6 @@ exclude_patterns:
   - "src/frontend/citizen-portal/tests/"
   - "src/frontend/citizen-portal/shared/components/"
   - "src/frontend/*/src/*.spec.ts"
+  - "src/frontend/*/src/*/*/*.spec.ts"
   - "src/frontend/*/src/*.component.ts"
-  - "src/frontend/*/src/*/*.component.ts"
+  - "src/frontend/*/src/*/*/*.component.ts"
