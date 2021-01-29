@@ -36,3 +36,6 @@ TestResult.xml
 
 # Docker Environment Files
 .env
+
+#RESHARPER
+src\backend\TrafficCourtsApi\TrafficCourts.Api.sln.DotSettings
