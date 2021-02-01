@@ -28,3 +28,23 @@ Welcome to Traffic Courts Online
 | backend             | all server side services                     |                                 |
 | disute api          | base dispute api                             | [README](src/backend/README.md)|
 | frontend            | all client side applications                 | [README](src/frontend/README.md)|
+
+
+# Splunk Docker Examples
+
+https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
+
+# Run docker-compose
+
+Copy the `.env.template` to `.env` and then run docker-compose up.
+Add the configuration for token and password for splunk.
+Default user is `admin`. Password is what is configured in `.env`
+
+```
+docker-compose up
+```
+
+To remove services run (all services and networking)
+```
+docker-compose down
+```
