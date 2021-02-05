@@ -18,9 +18,9 @@ jobs:
       steps:
         - uses: actions/checkout@v2
 
-#        # Get Code Climate binary
-#        - name: Download Code Climate Binary
-#          run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        # Get Code Climate binary
+        - name: Download Code Climate Binary
+          run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
 #
 #        # Permissions applied to the Code Climate Executable
 #        - name: Apply executable perms to Code Climate Binary
