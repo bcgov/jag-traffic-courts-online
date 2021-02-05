@@ -1,0 +1,118 @@
+name: Generate/Upload all Coverage Reports
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  frontend:
+    env:
+      FILE_COUNTER: 0
+      CC_TEST_REPORTER_ID: 8a4068fec71e2ce84714008f57ea6548614c380821df800ed611c2afc6a42d93
+      ACTION_DEBUG: true
+
+      name: Create, format and upload Javascript coverage artifact
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+
+        # Get Code Climate binary
+        - name: Download Code Climate Binary
+          run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+
+        # Permissions applied to the Code Climate Executable
+        - name: Apply executable perms to Code Climate Binary
+          run: chmod +x ./cc-test-reporter
+
+        # Before build
+        - name: Before build
+          run: ./cc-test-reporter before-build
+
+        # Set required Git env vars for either pull request
+        - name: Set ENV for codeclimate (pull_request)
+          run: |
+            echo "GIT_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+            echo "GIT_COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+            #echo "::set-env name=GIT_BRANCH::${{ github.event.pull_request.head.ref }}"
+            #echo "::set-env name=GIT_COMMIT_SHA::${{ github.event.pull_request.head.sha }}"
+          if: github.event_name == 'pull_request'
+
+        # Set required Git env vars for a push to master
+        - name: Set ENV for codeclimate (push)
+          run: |
+            echo "GIT_BRANCH=$GITHUB_REF" >> GITHUB_ENV
+            echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> GITHUB_ENV
+            #echo "::set-env name=GIT_BRANCH::$GITHUB_REF"
+            #echo "::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA"
+          if: github.event_name == 'push'
+
+        # Trimming the ref to master in order to publish correct report (paambaati)
+        - name: Set ref/head/master to master
+          run: |
+            echo "GIT_BRANCH=master" >> $GITHUB_ENV
+            #echo "::set-env name=GIT_BRANCH::master"
+          if: env.GIT_BRANCH == 'refs/heads/master'
+
+        # Figure out where yarn is caching things
+        - name: Yarn Cache
+          run: yarn cache dir
+
+        # Implement Caching Action for Yarn Project
+        - name: Cache node modules
+          uses: actions/cache@v2
+          env:
+            cache-name: cache-node-modules
+          with:
+            # YARN cache files are stored in `/home/runner/.cache/yarn/v6` on git actions
+            path: /home/runner/.cache/yarn/v6
+            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.os }}-build-${{ env.cache-name }}-
+              ${{ runner.os }}-build-
+              ${{ runner.os }}-
+
+        # Run Yarn Install - citizen Portal
+        - name: Run Yarn Install - citizen Portal
+          run: yarn --cwd src/frontend/citizen-portal install
+
+        # Check lint version
+        - name: Run lint - citizen Portal
+          run: yarn --cwd src/frontend/citizen-portal run lint -v
+
+        # Run lint - citizen Portal
+        - name: Run lint - citizen Portal
+          run: yarn --cwd src/frontend/citizen-portal run lint
+
+        # Yarn Coverage - citizen Portal
+        - name: Run Yarn Coverage - citizen Portal
+          run: yarn --cwd /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal coverage
+
+        # Formatting the FRONTEND coverage report
+        - name: Format the FRONTEND coverage report
+          run: |
+            ./cc-test-reporter format-coverage -t lcov -o coverage/frontend-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/lcov.info
+
+        # List all formatted files in coverage directory
+        - name: WHERE AM I - FORMATTED?
+          run: |
+            ls ${{ github.workspace }}/coverage
+          if: ${{ env.ACTION_DEBUG }}
+
+        # Count of all total coverage files available
+        - name: Count files present
+          run: |
+            echo "FILE_COUNTER=$(ls -1q ./coverage | wc -l )" >> $GITHUB_ENV
+            #echo "::set-env name=FILE_COUNTER::$(ls -1q ./coverage | wc -l )"
+
+        # Sum the coverage reports
+        - name: Summing the coverage reports generated
+          run: ./cc-test-reporter sum-coverage coverage/*-codeclimate.json -p ${{ env.FILE_COUNTER }} -o coverage/total-codeclimate.json
+
+        # Upload JSON for debugging purposes
+        - name: Upload JSON for debugging purposes
+          uses: actions/upload-artifact@v2
+          with:
+            name: summed-yarn-coverage-report
+            path: coverage/total-codeclimate.json
