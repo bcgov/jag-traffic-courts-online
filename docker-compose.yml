@@ -1,55 +1,40 @@
 version: "3.8"
 
 services:
-#############################################################################################
-###                           TrafficCourt api backend app                                ###
-#############################################################################################
-  TrafficCourt-api:
-    container_name: TrafficCourt-api
-    hostname: TrafficCourt-api
-    build:
-      context: ./src/backend/TrafficCourtsApi
-      args:
-        - SERVICE_NAME=TrafficCourt-api
-        - MVN_PROFILE=${MVN_PROFILE:-demo}
-        - SKIP_TESTS=true
-        - STARTERS_V=v0.1.8
-    ports:
-      - "8080:8080"
-    environment:
-      
-    networks:
-      - fisu-net
-  
-#############################################################################################
-###                                 TrafficCourt FRONTEND                                 ###
-#############################################################################################
-  TrafficCourt-frontend:
-    stdin_open: true
-    container_name: TrafficCourt-frontend
-    build:
-      context: ./src/frontend/citizen-portal
-      dockerfile: Dockerfile.legacy
-      args:
-        - SERVICE_NAME=TrafficCourt-frontend
-    ports:
-      - 3000:3000
-    environment:
+
+# #############################################################################################
+# ###                                 TrafficCourt FRONTEND                                 ###
+# #############################################################################################
+#   citizen-portal:
+#     # stdin_open: true
+#     container_name: citizen-portal
+#     build:
+#       context: ./src/frontend/citizen-portal
+#       dockerfile: Dockerfile.legacy
+#       args:
+#         - SERVICE_NAME=citizen-portal
+#     ports:
+#       - 4200:4200
+#     networks:
+#       - traffic-court-net
+#     # environment:
 
 #############################################################################################
 ###                                 TrafficCourt DEMO                                     ###
 #############################################################################################  
-  TrafficCourt-demo:    
-    stdin_open: true
-    container_name: TrafficCourt-demo
+  citizen-portal:
+    container_name: citizen-portal
     build:
       context: ./src/frontend/citizen-portal
-      args:
-        - SERVICE_NAME=TrafficCourt-demo
-    environment:
-      
+    command: "nginx -g 'daemon off;'"
+      # environment:        
+    restart: always
     ports:
-      - 3001:8080
+      - "4201:4201"
+    expose:
+      - "4201"
+    networks:
+      - traffic-court-net
 
 #############################################################################################
 ###                                  KEYCLOAK                                             ###
@@ -67,19 +52,19 @@ services:
     ports:
       - 8081:8080
     networks:
-      - fisu-net
+      - traffic-court-net
 
-#############################################################################################
-###                                  KEYCLOAK CONFIG                                      ###
-#############################################################################################  
-  keycloak-config:
-    build:
-      context: ./infrastructure/keycloak
-      args:
-        - KEYCLOAK_URL=http://keycloak:8080
-    command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
-    networks:
-      - fisu-net
+# #############################################################################################
+# ###                                  KEYCLOAK CONFIG                                      ###
+# #############################################################################################  
+#   keycloak-config:
+#     build:
+#       context: ./infrastructure/keycloak
+#       args:
+#         - KEYCLOAK_URL=http://keycloak:8080
+#     command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
+#     networks:
+#       - traffic-court-net
 
 #############################################################################################
 ###                                  SPLUNK                                               ###
@@ -94,3 +79,9 @@ services:
     ports:
       - 8000:8000
       - 8088:8088
+    networks:
+      - traffic-court-net
+  
+networks:
+  traffic-court-net:
+    driver: "bridge"    

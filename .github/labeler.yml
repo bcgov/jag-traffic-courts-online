@@ -1,0 +1,12 @@
+  
+# Add 'Citizens Portal' to changes in citizen portal
+'Citizens Portal':
+  - src/frontend/citizen-portal/**/*
+
+# Add 'Traffic Courts' to changes in traffic court api
+'Traffic Courts API':
+  - src/backend/TrafficCourtsApi/**/*
+
+# Add 'DevOps' to changes in openshift folder
+'DevOps':
+  - infrastructure/**/*

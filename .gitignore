@@ -36,3 +36,6 @@ TestResult.xml
 
 # Docker Environment Files
 .env
+
+#RESHARPER
+.DotSettings
