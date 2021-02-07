@@ -20,6 +20,7 @@ import { UtilsService } from '@core/services/utils.service';
 export class StartComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public maxViolationDate: moment.Moment;
+  public pageMode: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -35,6 +36,7 @@ export class StartComponent extends BaseDisputeFormPage implements OnInit {
     super(route, router, formBuilder, disputeService, disputeResource);
 
     this.maxViolationDate = moment();
+    this.pageMode="full";
   }
 
   ngOnInit(): void {
