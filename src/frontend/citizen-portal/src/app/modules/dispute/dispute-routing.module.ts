@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DisputeRoutes } from './dispute.routes';
 import { HomeComponent } from './components/home/home.component';
+import { StartComponent } from './components/start/start.component';
 import { DisputeDashboardComponent } from './components/dispute-dashboard/dispute-dashboard.component';
 import { PartAComponent } from './components/part-a/part-a.component';
 import { PartBComponent } from './components/part-b/part-b.component';
@@ -14,6 +15,10 @@ const routes: Routes = [
     path: DisputeRoutes.DISPUTE,
     component: DisputeDashboardComponent,
     children: [
+      {
+        path: DisputeRoutes.START,
+        component: StartComponent,
+      },
       {
         path: DisputeRoutes.HOME,
         component: HomeComponent,

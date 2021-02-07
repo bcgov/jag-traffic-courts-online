@@ -1,0 +1,20 @@
+<app-page [busy]="busy">
+    <app-page-header>Traffic Court Online</app-page-header>
+    <mat-horizontal-stepper #disputeStepper linear>
+        <mat-step label="Step 1" [stepControl]="part_a.formStep2">
+            <app-part-a #part_a ></app-part-a>
+        </mat-step>
+
+        <mat-step label="Step 2" [stepControl]="part_b.formStep3">
+            <app-part-b #part_b></app-part-b>
+        </mat-step>
+
+        <mat-step label="Step 3" optional completed=false>
+            <app-part-c></app-part-c>
+        </mat-step>
+
+        <mat-step label="Step 4" completed=false>
+            <app-part-d></app-part-d>
+        </mat-step>
+    </mat-horizontal-stepper>
+</app-page>
