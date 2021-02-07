@@ -12,13 +12,14 @@ export class DisputeRoutes {
 
   public static stepRoutes(): string[] {
     return [
+      DisputeRoutes.START,
+      DisputeRoutes.OVERVIEW,
       DisputeRoutes.HOME,
       DisputeRoutes.PART_A,
       DisputeRoutes.PART_B,
       DisputeRoutes.PART_C,
       DisputeRoutes.PART_D,
-      DisputeRoutes.OVERVIEW,
-      DisputeRoutes.START,
+
     ];
   }
   public static routePath(route: string): string {

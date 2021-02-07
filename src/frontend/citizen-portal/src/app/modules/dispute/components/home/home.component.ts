@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -21,6 +22,8 @@ import { Subscription, timer } from 'rxjs';
 export class HomeComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public maxViolationDate: moment.Moment;
+  public nextBtnLabel : string;
+  @Input() public stepper: MatStepper;
 
   constructor(
     protected route: ActivatedRoute,
@@ -42,6 +45,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep1.patchValue(ticket);
     });
+    this.nextBtnLabel="Next";
   }
 
   public onSubmit(): void {
@@ -54,7 +58,8 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
       const source = timer(1000);
       this.busy = source.subscribe((val) => {
         this.toastService.openSuccessToast('Information has been saved');
-        this.routeNext(RouteUtils.currentRoutePath(this.router.url));
+        //this.routeNext(RouteUtils.currentRoutePath(this.router.url));
+        this.stepper.next();
       });
     } else {
       this.utilsService.scrollToErrorSection();

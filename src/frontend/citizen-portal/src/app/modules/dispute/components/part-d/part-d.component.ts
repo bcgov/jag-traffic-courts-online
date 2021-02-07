@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -19,6 +20,8 @@ import { Subscription } from 'rxjs';
 })
 export class PartDComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
+  @Input() public stepper: MatStepper;
+  public nextBtnLabel: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -32,6 +35,7 @@ export class PartDComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService,
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
+    this.nextBtnLabel = "Complete"
   }
 
   public ngOnInit(): void {
@@ -46,14 +50,15 @@ export class PartDComponent extends BaseDisputeFormPage implements OnInit {
         ...this.disputeService.ticket,
         ...this.formStep5.value,
       });
-
+      //this.stepper.next();
       this.routeNext(RouteUtils.currentRoutePath(this.router.url));
     } else {
       this.utilsService.scrollToErrorSection();
     }
   }
   public onBack() {
-    this.routeBack(RouteUtils.currentRoutePath(this.router.url));
+    //this.routeBack(RouteUtils.currentRoutePath(this.router.url));
+    this.stepper.previous();
   }
 
   public get isMobile(): boolean {

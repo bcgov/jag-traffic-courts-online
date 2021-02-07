@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -18,7 +19,9 @@ import { Subscription } from 'rxjs';
 })
 export class PartCComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
-
+  @Input() public stepper: MatStepper;
+  public nextBtnLabel: string;
+   
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -30,6 +33,7 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService,
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
+    this.nextBtnLabel = "Next"
   }
 
   public ngOnInit(): void {
@@ -45,15 +49,16 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
         ...this.disputeService.ticket,
         ...this.formStep4.value,
       });
-
-      this.routeNext(RouteUtils.currentRoutePath(this.router.url));
+      this.stepper.next();
+      //this.routeNext(RouteUtils.currentRoutePath(this.router.url));
     } else {
       this.utilsService.scrollToErrorSection();
     }
   }
 
   public onBack() {
-    this.routeBack(RouteUtils.currentRoutePath(this.router.url));
+    this.stepper.previous();
+    //this.routeBack(RouteUtils.currentRoutePath(this.router.url));
   }
 
   public get interpreterRequired(): FormControl {
