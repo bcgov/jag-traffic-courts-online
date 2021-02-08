@@ -45,7 +45,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep1.patchValue(ticket);
     });
-    this.nextBtnLabel='Next';
+    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {
@@ -58,7 +58,6 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
       const source = timer(1000);
       this.busy = source.subscribe((val) => {
         this.toastService.openSuccessToast('Information has been saved');
-        //this.routeNext(RouteUtils.currentRoutePath(this.router.url));
         this.stepper.next();
       });
     } else {

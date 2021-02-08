@@ -35,7 +35,7 @@ export class PartDComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService,
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-    this.nextBtnLabel = 'Complete'
+    this.nextBtnLabel = 'Complete';
   }
 
   public ngOnInit(): void {

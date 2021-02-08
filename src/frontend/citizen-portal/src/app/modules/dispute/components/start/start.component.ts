@@ -36,10 +36,9 @@ export class StartComponent extends BaseDisputeFormPage implements OnInit {
     super(route, router, formBuilder, disputeService, disputeResource);
 
     this.maxViolationDate = moment();
-    this.pageMode='full';
+    this.pageMode = 'full';
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
 }
