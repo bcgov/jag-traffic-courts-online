@@ -26,7 +26,7 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public maxDateOfBirth: moment.Moment;
   public nextBtnLabel : string;
-   @Input() public stepper: MatStepper;
+  @Input() public stepper: MatStepper;
   private MINIMUM_AGE = 18;
 
   constructor(
@@ -41,7 +41,7 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-    this.nextBtnLabel = "Next";
+    this.nextBtnLabel = 'Next';
     this.maxDateOfBirth = moment().subtract(this.MINIMUM_AGE, 'years');
   }
 
@@ -58,7 +58,6 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
         ...this.formStep2.value,
       });
       this.stepper.next();
-      //this.routeNext(RouteUtils.currentRoutePath(this.router.url));
     } else {
       this.utilsService.scrollToErrorSection();
     }
@@ -66,7 +65,6 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
 
   public onBack() {
     this.stepper.previous();
-    //this.routeBack(RouteUtils.currentRoutePath(this.router.url));
   }
 
   public get isMobile(): boolean {
