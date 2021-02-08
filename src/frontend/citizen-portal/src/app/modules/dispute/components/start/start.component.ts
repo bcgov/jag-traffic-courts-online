@@ -39,6 +39,8 @@ export class StartComponent extends BaseDisputeFormPage implements OnInit {
     this.pageMode = 'full';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    //
+  }
 
 }
