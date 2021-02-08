@@ -1,6 +1,7 @@
 export class AuthRoutes {
   public static AUTH = 'auth';
   public static LANDING = 'landing';
+  public static FIND = 'find';
 
   public static MODULE_PATH = AuthRoutes.AUTH;
 

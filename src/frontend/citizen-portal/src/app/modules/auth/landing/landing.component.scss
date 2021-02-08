@@ -13,6 +13,11 @@ div.container {
   }
 }
 
+.icon-display {
+  font-size: 13em;
+  color: rgb(200, 240, 238); //theme-palette(grey, light);
+}
+
 .logo {
   padding-bottom: 1.25rem;
 
@@ -23,8 +28,8 @@ div.container {
 
 .header {
   h1 {
-    font-size: 1.1rem;
-    margin-bottom: 0.3rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
 
     @include media-breakpoint-up(sm) {
       font-size: 1.5rem;
@@ -69,4 +74,120 @@ div.container {
 
 a {
   color: theme-palette(blue);
+}
+
+.steps {
+  background-repeat: no-repeat;
+  background-position-y: 20px;
+
+  .step-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &.step-1 {
+    // background-image: url("/assets/step_1.mobile.svg");
+    background-position-x: 14px;
+    background-size: 36px auto;
+  }
+  &.step-2 {
+    // background-image: url("/assets/step_2.mobile.svg");
+    background-position-x: 11px;
+    background-size: 50px auto;
+  }
+  &.step-3 {
+    // background-image: url("/assets/step_3.mobile.svg");
+    background-position-x: 13px;
+    background-size: 45px auto;
+  }
+
+  .content {
+    line-height: 1.75rem;
+
+    &.has-step-background {
+      // Provide space for background image of step #
+      padding-left: 3.75rem;
+      padding-right: 1.25rem;
+    }
+
+    h2 {
+      color: theme-palette(blue, light);
+    }
+
+    a {
+      font-weight: bold;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+  }
+
+  .info-graphic {
+    padding-top: 1.2rem;
+    padding-bottom: 2.7rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .steps {
+    background-position-y: 100px;
+
+    .step-container {
+      flex-direction: column-reverse;
+    }
+
+    &.step-1,
+    &.step-2,
+    &.step-3 {
+      background-position-x: 95%;
+    }
+
+    .content {
+      &.has-step-background {
+        // Remove spacing for background image of step #
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      h2 {
+        // Decrease slightly to reduce line wrapping
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-only(md) {
+  .steps .info-graphic {
+    padding-bottom: 4rem;
+
+    img {
+      width: 125px;
+      height: auto;
+    }
+  }
+}
+
+@include media-breakpoint-only(lg) {
+  .steps {
+    .info-graphic {
+      padding-bottom: 3rem;
+
+      img {
+        width: 145px;
+        height: auto;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .steps {
+    &.step-1 {
+      background-size: 46px auto;
+    }
+    &.step-2,
+    &.step-3 {
+      background-size: 85px auto;
+    }
+  }
 }
