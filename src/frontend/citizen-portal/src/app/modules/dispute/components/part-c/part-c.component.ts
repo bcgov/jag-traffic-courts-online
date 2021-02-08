@@ -33,7 +33,7 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService,
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-    this.nextBtnLabel = "Next"
+    this.nextBtnLabel = 'Next';
   }
 
   public ngOnInit(): void {
@@ -50,15 +50,13 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
         ...this.formStep4.value,
       });
       this.stepper.next();
-      //this.routeNext(RouteUtils.currentRoutePath(this.router.url));
     } else {
       this.utilsService.scrollToErrorSection();
     }
   }
 
   public onBack() {
-    this.stepper.previous();
-    //this.routeBack(RouteUtils.currentRoutePath(this.router.url));
+    this.stepper.previous();   
   }
 
   public get interpreterRequired(): FormControl {

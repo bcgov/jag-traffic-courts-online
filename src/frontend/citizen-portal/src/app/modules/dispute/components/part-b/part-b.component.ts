@@ -35,7 +35,7 @@ export class PartBComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-    this.nextBtnLabel = "Next";
+    this.nextBtnLabel = 'Next';
   }
 
   public ngOnInit(): void {
@@ -51,7 +51,6 @@ export class PartBComponent extends BaseDisputeFormPage implements OnInit {
         ...this.formStep3.value,
       });
       this.stepper.next();
-      //this.routeNext(RouteUtils.currentRoutePath(this.router.url));
     } else {
       this.utilsService.scrollToErrorSection();
     }
@@ -59,7 +58,6 @@ export class PartBComponent extends BaseDisputeFormPage implements OnInit {
 
   public onBack() {
     this.stepper.previous();
-    //this.routeBack(RouteUtils.currentRoutePath(this.router.url));
   }
 
   public get isMobile(): boolean {

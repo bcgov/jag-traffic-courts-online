@@ -45,7 +45,7 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep1.patchValue(ticket);
     });
-    this.nextBtnLabel="Next";
+    this.nextBtnLabel='Next';
   }
 
   public onSubmit(): void {
