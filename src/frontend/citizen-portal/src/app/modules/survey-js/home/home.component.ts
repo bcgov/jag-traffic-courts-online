@@ -14,7 +14,7 @@ import * as widgets from 'surveyjs-widgets';
   providers: [FormatDatePipe],
 })
 export class HomeComponent implements OnInit {
-  public isComplete: boolean = false;
+  public isComplete = false;
 
   constructor(
     private logger: LoggerService,
