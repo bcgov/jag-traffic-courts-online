@@ -176,10 +176,6 @@ export const CourtLocations = [
     name: 'Houston Provincial Court',
   },
   {
-    id: '117.0001',
-    name: "Hudson's Hope Provincial Court",
-  },
-  {
     id: '81.0001',
     name: 'Invermere Law Courts',
   },
