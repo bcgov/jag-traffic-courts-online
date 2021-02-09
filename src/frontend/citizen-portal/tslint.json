@@ -87,7 +87,7 @@
       "call-signature"
     ],
     "typedef-whitespace": [
-      true,
+      false,
       {
         "call-signature": "nospace",
         "index-signature": "nospace",
