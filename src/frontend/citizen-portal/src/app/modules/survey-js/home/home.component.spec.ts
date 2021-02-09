@@ -1,4 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { SurveyResourceService } from '@survey/services/survey-resource.service';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { HomeComponent } from './home.component';
 
@@ -8,9 +12,10 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientTestingModule, RouterModule.forRoot([])],
+      declarations: [HomeComponent],
+      providers: [MockDisputeService, SurveyResourceService],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,54 +1,97 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-lg-3">
+    <div class="col-lg-2">
       <div class="logo">
         <img
           src="/assets/traffic-light.jpg"
-          style="width: 150px"
+          style="width: 100px"
           alt="Traffic Court Logo"
         />
       </div>
     </div>
-    <div class="col-lg-9">
-      <div class="header">
-        <h1>Traffic Court Online</h1>
-        <h2 class="mt-4">Search for your ticket</h2>
-      </div>
-      <mat-form-field style="width: 300px">
-        <mat-label>Violation Ticket Number</mat-label>
-        <input matInput type="text" />
-        <button mat-button matSuffix mat-icon-button aria-label="Clear">
-          <mat-icon>close</mat-icon>
-        </button>
-        <button
-          mat-button
-          matSuffix
-          mat-flat-button
-          style="width: unset; min-width: unset"
-          color="primary"
-          routerLink="/dispute/home"
-          aria-label="Search"
-        >
-          <mat-icon>search</mat-icon>
-        </button> </mat-form-field
-      ><br /><br /><br />
 
-      <button
-        mat-flat-button
-        color="primary"
-        class="large"
-        routerLink="/dispute/start"
-      >
-        Enter Dispute</button
-      ><br /><br /><br />
-      <button
-        mat-flat-button
-        color="primary"
-        class="large"
-        routerLink="/survey/home"
-      >
-        Take the Survey
-      </button>
+    <div class="col-lg-10">
+      <div class="col-sm-12 header">
+        <h1>Traffic Court Online</h1>
+        <p>The tool for resolving your Violation Ticket issues</p>
+      </div>
+      <div class="col-sm-12">
+        <div class="row actions">
+          <div class="col col-md-auto">
+            <button
+              mat-flat-button
+              color="primary"
+              class="large"
+              routerLink="/auth/find"
+            >
+              I have my ticket
+            </button>
+          </div>
+          <div class="col col-md-auto">
+            <button
+              mat-flat-button
+              color="primary"
+              class="large light"
+              routerLink="/auth/find"
+            >
+              I do not have my ticket
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <button
+              mat-flat-button
+              color="secondary"
+              class="large"
+              routerLink="/survey/home"
+            >
+              Take the Survey
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 steps step-1">
+      <div class="step-container">
+        <section class="content has-step-background">
+          <h2>Find your Violation Ticket</h2>
+
+          <p>Step 1... let's find your Violation Ticket</p>
+        </section>
+
+        <div class="info-graphic">
+          <mat-icon class="icon-display">event_note</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 steps step-2">
+      <div class="step-container">
+        <section class="content has-step-background">
+          <h2>View the Dispute Options</h2>
+
+          <p>
+            Step 2... let's see if we can resolve the dispute quickly and easily
+          </p>
+        </section>
+
+        <div class="info-graphic">
+          <mat-icon class="icon-display">info</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4 steps step-3">
+      <div class="step-container">
+        <section class="content has-step-background">
+          <h2>Proceed to Court</h2>
+
+          <p>Step 3... if the options do not solve your dispute</p>
+        </section>
+
+        <div class="info-graphic">
+          <mat-icon class="icon-display">festival</mat-icon>
+        </div>
+      </div>
     </div>
   </div>
 </div>
