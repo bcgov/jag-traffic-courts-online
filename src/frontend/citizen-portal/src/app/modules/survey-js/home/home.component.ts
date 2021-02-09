@@ -8,22 +8,7 @@ import * as Survey from 'survey-angular';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public isComplete: boolean = false;
-
-  constructor(private logger: LoggerService) {}
-
-  ngOnInit() {
-    Survey.StylesManager.applyTheme('bootstrap');
-
-    const survey = new Survey.Model(this.json);
-    Survey.SurveyNG.render('surveyContainer', { model: survey });
-
-    survey.onComplete.add((result) => {
-      this.isComplete = true;
-      this.logger.info('Result JSON:', JSON.stringify(result.data, null, 3));
-    });
-  }
-
+  public isComplete = false;
   public json: any = {
     showProgressBar: 'top',
     pages: [
@@ -246,4 +231,18 @@ export class HomeComponent implements OnInit {
     ], // pages
     completedHtml: '<p><h3>Thank you for completing the survey!</h3></p>',
   };
+
+  constructor(private logger: LoggerService) {}
+
+  ngOnInit() {
+    Survey.StylesManager.applyTheme('bootstrap');
+
+    const survey = new Survey.Model(this.json);
+    Survey.SurveyNG.render('surveyContainer', { model: survey });
+
+    survey.onComplete.add((result) => {
+      this.isComplete = true;
+      this.logger.info('Result JSON:', JSON.stringify(result.data, null, 3));
+    });
+  }
 }
