@@ -77,9 +77,9 @@ jobs:
       - name: Run Yarn Install - citizen Portal
         run: yarn --cwd src/frontend/citizen-portal install
 
-      # Check lint version
-      - name: Run lint - citizen Portal
-        run: yarn --cwd src/frontend/citizen-portal run lint -v
+#      # Check lint version
+#      - name: Run lint - citizen Portal
+#        run: yarn --cwd src/frontend/citizen-portal run lint -v
 
       # Run lint - citizen Portal
       - name: Run lint - citizen Portal
