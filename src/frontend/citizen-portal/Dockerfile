@@ -9,9 +9,12 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json yarn.lock ./
 
 RUN npm install
+RUN npm audit fix
 
 COPY . .
 
+RUN rm -rf dist
+RUN yarn cache clean
 RUN yarn build-dev
 
 FROM nginx
@@ -21,7 +24,7 @@ FROM nginx:1.19-alpine
 RUN rm -rf /usr/share/nginx/html/
 COPY --from=build-deps /usr/src/app/dist/citizen-portal /usr/share/nginx/html
 
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm -rf /etc/nginx/conf.d/default.conf
 COPY --from=build-deps /usr/src/app/nginx.conf /etc/nginx/conf.d/default.conf
 
 

@@ -13,7 +13,7 @@ services:
       - USE_MOCK_SERVICES=false
       - USE_KEYCLOAK=true
       - API_URL=http://localhost:4300/api
-      - KEYCLOAK_URL=http://localhost:8081/auth
+      - KEYCLOAK_URL=http://keycloak:8081/auth
       - KEYCLOAK_REALM=traffic-court
       - KEYCLOAK_CLIENT_ID=test
     command: "nginx -g 'daemon off;'"     

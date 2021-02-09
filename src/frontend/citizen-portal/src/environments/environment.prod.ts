@@ -1,18 +1,18 @@
+
 export const environment = {
   production: true,
-  environmentName: "production",
   version: '1.0.0',
-  useKeycloak: true,
-  useMockServices: false,
+  useKeycloak: false,
+  useMockServices: true,
   apiUrl: 'http://localhost:4300/api',
   keycloakConfig: {
     config: {
-      url: 'http://localhost:8080/auth',
-      realm: 'tco',
-      clientId: 'tco-client',
+      url: 'http://localhost:8081/auth',
+      realm: 'traffic-court',
+      clientId: 'test',
     },
     initOptions: {
       onLoad: 'check-sso',
     },
-  }
+  },
 };
