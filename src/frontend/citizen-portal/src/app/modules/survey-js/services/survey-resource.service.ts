@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApiHttpResponse } from '@core/models/api-http-response.model';
+import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
 import { environment } from '@env/environment';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { Ticket } from '@shared/models/ticket.model';
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -13,35 +14,46 @@ export class SurveyResourceService {
   private baseUrl = environment.apiUrl;
 
   constructor(
-    private httpClient: HttpClient,
-    private mockDisputeService: MockDisputeService,
+    private apiResource: ApiResource,
     private logger: LoggerService
   ) {}
 
-  public ticket(): Observable<any> {
-    return of(this.mockDisputeService.ticket);
-  }
-
-  public test(info: string): Observable<any> {
-    if (info === 'AE11111111') {
-      // return of({ success: false });
-
-      return this.httpClient.get<any>(this.baseUrl + '/bad').pipe(
-        catchError((error: any) => {
-          this.logger.error(
-            '[Survey] SurveyResourceService::error has occurred: ',
-            error
-          );
-          throw error;
-        })
-      );
-    }
-
-    // return of({ success: true });
-    return this.httpClient.get<any>(this.baseUrl + '/good').pipe(
+  public getTicket(): Observable<Ticket> {
+    return this.apiResource.get<Ticket>('ticket').pipe(
+      map((response: ApiHttpResponse<Ticket>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[Survey] SurveyResourceService::error has occurred: ',
+          '[GetTicket] DisputeResourceService::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public createTicket(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('createTicket', ticket);
+
+    return this.apiResource.post<Ticket>('ticket').pipe(
+      map((response: ApiHttpResponse<Ticket>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[CreateTicket] DisputeResourceService::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public updateTicket(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('updateTicket', ticket);
+
+    return this.apiResource.put<Ticket>('ticket').pipe(
+      map((response: ApiHttpResponse<Ticket>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[UpdateTicket] DisputeResourceService::ticket error has occurred: ',
           error
         );
         throw error;

@@ -5,6 +5,7 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpResponse,
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '@env/environment';
@@ -24,20 +25,60 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (environment.useMockServices) {
-      if (request.method === 'GET') {
-        const currentRoutePath = RouteUtils.currentRoutePath(request.url);
-        this.logger.info('currentRoutePath', currentRoutePath);
+      const ticket = this.mockDisputeService.ticket;
+      const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
-        if (currentRoutePath === 'ticket') {
-          const result = this.mockDisputeService.ticket;
-          return of(new HttpResponse({ status: 200, body: { result } }));
-        } else if (currentRoutePath === 'good') {
-          return of(new HttpResponse({ status: 200, body: { success: true } }));
-        } else if (currentRoutePath === 'bad') {
-          return of(
-            new HttpResponse({ status: 200, body: { success: false } })
-          );
-        }
+      this.logger.info(
+        'BackendHttpInterceptor',
+        request.method,
+        currentRoutePath
+      );
+
+      switch (request.method) {
+        case 'GET':
+          if (currentRoutePath === 'ticket') {
+            return of(
+              new HttpResponse({ status: 200, body: { result: ticket } })
+            );
+          } else {
+            throw new HttpErrorResponse({
+              error: 'Mock Bad Request',
+              status: 400,
+            });
+          }
+          break;
+
+        case 'PUT':
+          if (currentRoutePath === 'ticket') {
+            return of(
+              new HttpResponse({ status: 200, body: { result: ticket } })
+            );
+          } else {
+            throw new HttpErrorResponse({
+              error: 'Mock Bad Request',
+              status: 400,
+            });
+          }
+          break;
+
+        case 'POST':
+          if (currentRoutePath === 'ticket') {
+            return of(
+              new HttpResponse({ status: 201, body: { result: ticket } })
+            );
+          } else {
+            throw new HttpErrorResponse({
+              error: 'Mock Bad Request',
+              status: 400,
+            });
+          }
+          break;
+
+        default:
+          throw new HttpErrorResponse({
+            error: 'Mock Bad Request',
+            status: 400,
+          });
       }
     }
 
