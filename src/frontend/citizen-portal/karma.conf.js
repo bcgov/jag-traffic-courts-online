@@ -22,12 +22,6 @@ module.exports = function (config) {
       dir: require("path").join(__dirname, "./coverage/citizen-portal"),
       reports: ["html", "lcovonly", "text-summary"],
       fixWebpackSourcePaths: true,
-        thresholds: {
-          statements: 70,
-          lines: 60,
-          branches: 40,
-          functions: 60
-        }
     },
     reporters: ["progress", "kjhtml"],
     port: 9876,
