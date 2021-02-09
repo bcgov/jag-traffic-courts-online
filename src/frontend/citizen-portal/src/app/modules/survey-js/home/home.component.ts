@@ -28,19 +28,19 @@ export class HomeComponent implements OnInit {
 
     widgets.inputmask(Survey);
 
-    const survey = new Survey.Model(SurveyJson);
+    const tcoSurvey = new Survey.Model(SurveyJson);
     Survey.SurveyNG.render('surveyContainer', {
-      model: survey,
+      model: tcoSurvey,
     });
 
     // let ticketYn = survey.getValue('ticketYn');
     // survey.setValue('disputeYn', false);
     // survey.focusQuestion("disputeYn");
 
-    survey.onComplete.add((survey) => {
+    tcoSurvey.onComplete.add((survey) => {
       this.logger.info('Survey JSON:', JSON.stringify(survey.data, null, 3));
 
-      let payYn = survey.getValue('payYn');
+      const payYn = survey.getValue('payYn');
       if (payYn) {
         console.log('go', payYn);
         this.route.navigate(['/']);
@@ -50,45 +50,49 @@ export class HomeComponent implements OnInit {
       this.isComplete = true;
     });
 
-    survey.onValidateQuestion.add((survey, options) => {
+    tcoSurvey.onValidateQuestion.add((survey, options) => {
       this.surveyValidateQuestion(survey, options);
     });
 
-    survey.onCurrentPageChanged.add((survey, options) => {
-      this.logger.info(
-        'onCurrentPageChanged',
-        survey.currentPage.name,
-        JSON.stringify(survey.data, null, 3)
-      );
-
-      let pageName = survey.currentPage.name;
-      if (pageName === 'page2') {
-        this.surveyResource.ticket().subscribe((response) => {
-          survey.setValue(
-            'info_violationTicketNumber',
-            response.violationTicketNumber
-          );
-
-          survey.setValue(
-            'info_violationDate',
-            this.formatDatePipe.transform(response.violationDate)
-          );
-          survey.setValue('info_courtLocation', response.courtLocation);
-          survey.setValue('info_surname', response.surname);
-          survey.setValue('info_givenNames', response.givenNames);
-        });
-      }
+    tcoSurvey.onCurrentPageChanged.add((survey, options) => {
+      this.surveyCurrentPageChanged(survey);
     });
+  }
+
+  public surveyCurrentPageChanged(survey: Survey.SurveyModel): void {
+    this.logger.info(
+      'surveyCurrentPageChanged',
+      survey.currentPage.name,
+      JSON.stringify(survey.data, null, 3)
+    );
+
+    const pageName = survey.currentPage.name;
+    if (pageName === 'page2') {
+      this.surveyResource.ticket().subscribe((response) => {
+        survey.setValue(
+          'info_violationTicketNumber',
+          response.violationTicketNumber
+        );
+
+        survey.setValue(
+          'info_violationDate',
+          this.formatDatePipe.transform(response.violationDate)
+        );
+        survey.setValue('info_courtLocation', response.courtLocation);
+        survey.setValue('info_surname', response.surname);
+        survey.setValue('info_givenNames', response.givenNames);
+      });
+    }
   }
 
   public surveyValidateQuestion(
     survey: Survey.SurveyModel,
     options: any
   ): void {
-    if (options.name == 'violationTicketNumber') {
+    if (options.name === 'violationTicketNumber') {
       this.logger.info('surveyValidateQuestion', options);
 
-      var violationTicketNumber = options.value;
+      const violationTicketNumber = options.value;
       this.surveyResource.test(violationTicketNumber).subscribe((response) => {
         const key = 'success';
         if (!response[key]) {

@@ -66,7 +66,7 @@ export const SurveyJson = {
               type: 'html',
               name: 'ticket_info',
               html:
-                "<article class='intro'>    <h1 class='intro__heading intro__heading--income title'> Violation Ticket Information </h1>    <div class='intro__body wysiwyg'>       <p>Here is a summary of your ticket information.         </div> </article>",
+                '<article class="intro">    <h1 class="intro__heading intro__heading--income title"> Violation Ticket Information </h1>    <div class=intro__body wysiwyg">       <p>Here is a summary of your ticket information.         </div> </article>',
             },
             {
               name: 'info_violationTicketNumber',

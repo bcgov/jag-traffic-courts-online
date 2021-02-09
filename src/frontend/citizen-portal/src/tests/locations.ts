@@ -31,7 +31,7 @@ export const CourtLocations = [
   { id: 30, name: 'Grand Forks' },
   { id: 31, name: 'Hazelton' },
   { id: 32, name: 'Houston' },
-  { id: 33, name: "Hudson's Hope" },
+  { id: 33, name: 'Hudsons Hope' },
   { id: 34, name: 'Invermere' },
   { id: 35, name: 'Kamloops' },
   { id: 36, name: 'Kelowna' },
