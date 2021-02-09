@@ -26,10 +26,17 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     if (environment.useMockServices) {
       if (request.method === 'GET') {
         const currentRoutePath = RouteUtils.currentRoutePath(request.url);
+        this.logger.info('currentRoutePath', currentRoutePath);
 
         if (currentRoutePath === 'ticket') {
           const result = this.mockDisputeService.ticket;
           return of(new HttpResponse({ status: 200, body: { result } }));
+        } else if (currentRoutePath === 'good') {
+          return of(new HttpResponse({ status: 200, body: { success: true } }));
+        } else if (currentRoutePath === 'bad') {
+          return of(
+            new HttpResponse({ status: 200, body: { success: false } })
+          );
         }
       }
     }
