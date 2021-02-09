@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  environmentName: "local-dev",
+  environmentName: "demo",
   version: '1.0.0',
   useKeycloak: false,
   useMockServices: true,

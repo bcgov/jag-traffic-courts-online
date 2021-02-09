@@ -7,7 +7,7 @@ import {
   KeycloakOptions,
 } from 'keycloak-angular';
 
-import { environment } from '@env/environment';
+import { environment } from '@env/environment.dev';
 import { ToastService } from '@core/services/toast.service';
 import { MockKeycloakService } from 'tests/mocks/mock-keycloak.service';
 

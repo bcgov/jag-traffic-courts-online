@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  environmentName: "local-dev",
+  environmentName: "development",
   version: '1.0.0',
-  useKeycloak: false,
-  useMockServices: true,
+  useKeycloak: true,
+  useMockServices: false,
   apiUrl: 'http://localhost:4300/api',
   keycloakConfig: {
     config: {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
-import { environment } from '@env/environment';
+import { environment } from '@env/environment.dev';
 import { Ticket } from '@shared/models/ticket.model';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';

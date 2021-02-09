@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0 --poll=500",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prod-build": "ng build --prod --build-optimizer",
+    "prod-build-dev": "ng build --prod --configuration=dev --build-optimizer",
+    "prod-build-demo": "ng build --prod --configuration=demo --build-optimizer"
   },
   "private": true,
   "dependencies": {
@@ -32,6 +35,7 @@
     "rxjs": "~6.6.0",
     "survey-angular": "^1.7.19",
     "tslib": "^2.0.0",
+    "yarn": "^1.22.10",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
