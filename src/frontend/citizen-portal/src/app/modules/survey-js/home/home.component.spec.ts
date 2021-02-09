@@ -1,7 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { DisputeService } from '@dispute/services/dispute.service';
 import { SurveyResourceService } from '@survey/services/survey-resource.service';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
