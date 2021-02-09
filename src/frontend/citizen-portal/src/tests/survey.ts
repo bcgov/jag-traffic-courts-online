@@ -1,6 +1,4 @@
 export const SurveyJson = {
-  progressBarType: 'buttons',
-
   showProgressBar: 'top',
   pages: [
     {
@@ -24,15 +22,6 @@ export const SurveyJson = {
               title: 'Boolean',
               label: 'Do you have a violation ticket?',
               isRequired: true,
-            },
-            {
-              type: 'dropdown',
-              renderAs: 'select2',
-              choicesByUrl: {
-                url: 'https://restcountries.eu/rest/v2/all',
-              },
-              name: 'countries',
-              title: 'Which country do you live in?',
             },
             {
               type: 'text',

@@ -20,7 +20,7 @@ describe('SurveyResourceService', () => {
   });
 
   it('should get ticket', () => {
-    const ticket = service.ticket('test');
+    const ticket = service.ticket();
     expect(ticket).toBeDefined();
   });
 });
