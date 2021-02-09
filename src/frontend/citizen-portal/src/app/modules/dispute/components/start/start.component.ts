@@ -34,8 +34,6 @@ export class StartComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-
-    this.maxViolationDate = moment();
     this.pageMode = 'full';
   }
 
