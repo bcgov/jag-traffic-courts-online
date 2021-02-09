@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -10,6 +11,7 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
+
 import moment from 'moment';
 import { Subscription } from 'rxjs';
 
@@ -23,7 +25,8 @@ export const MINIMUM_AGE = 18;
 export class PartAComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public maxDateOfBirth: moment.Moment;
-
+  public nextBtnLabel : string;
+  @Input() public stepper: MatStepper;
   private MINIMUM_AGE = 18;
 
   constructor(
@@ -38,7 +41,7 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-
+    this.nextBtnLabel = 'Next';
     this.maxDateOfBirth = moment().subtract(this.MINIMUM_AGE, 'years');
   }
 
@@ -54,15 +57,14 @@ export class PartAComponent extends BaseDisputeFormPage implements OnInit {
         ...this.disputeService.ticket,
         ...this.formStep2.value,
       });
-
-      this.routeNext(RouteUtils.currentRoutePath(this.router.url));
+      this.stepper.next();
     } else {
       this.utilsService.scrollToErrorSection();
     }
   }
 
   public onBack() {
-    this.routeBack(RouteUtils.currentRoutePath(this.router.url));
+    this.stepper.previous();
   }
 
   public get isMobile(): boolean {

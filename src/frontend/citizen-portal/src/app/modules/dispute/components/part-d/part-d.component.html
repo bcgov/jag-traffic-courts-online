@@ -1,4 +1,4 @@
-<app-page [busy]="busy">
+
   <app-page-header>Violation Ticket Notice of Dispute</app-page-header>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="formStep5" novalidate>
@@ -25,6 +25,6 @@
       </div>
     </section>
   </form>
+ 
+  <app-page-footer [saveButtonLabel]="nextBtnLabel" (save)="onSubmit()" (back)="onBack()"></app-page-footer>
 
-  <app-page-footer (save)="onSubmit()" (back)="onBack()"></app-page-footer>
-</app-page>
