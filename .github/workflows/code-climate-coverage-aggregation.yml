@@ -91,7 +91,7 @@ jobs:
 
       # Format coverage
       - name: Formatting the coverage report
-        run: ./cc-test-reporter format-coverage -t lcov .coverage/lcov.info
+        run: ./cc-test-reporter format-coverage -t lcov /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
 
       # Upload coverage
       - name: Uploading the report to code climate
