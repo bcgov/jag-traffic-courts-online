@@ -89,10 +89,14 @@ jobs:
       - name: Run Yarn Coverage - citizen Portal
         run: yarn --cwd /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal coverage
 
+      # Copying the lcov.info file to main citizen portal path
+      - name: Copy lcov.info to correct path
+        run: cp ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info ${{github.workspace}}/src/frontend/citizen-portal
+
       # Formatting the FRONTEND coverage report
       - name: Format the FRONTEND coverage report
         run: |
-          ./cc-test-reporter format-coverage -t lcov -o coverage/frontend-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+          ./cc-test-reporter format-coverage -t lcov -o coverage/frontend-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/lcov.info
 
       # List all formatted files in coverage directory
       - name: WHERE AM I - FORMATTED?
