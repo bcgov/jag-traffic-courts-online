@@ -5,36 +5,40 @@ services:
 # #############################################################################################
 # ###                                 TrafficCourt FRONTEND                                 ###
 # #############################################################################################
-#   citizen-portal:
-#     # stdin_open: true
-#     container_name: citizen-portal
-#     build:
-#       context: ./src/frontend/citizen-portal
-#       dockerfile: Dockerfile.legacy
-#       args:
-#         - SERVICE_NAME=citizen-portal
-#     ports:
-#       - 4200:4200
-#     networks:
-#       - traffic-court-net
-#     # environment:
+  citizen-portal:
+    container_name: citizen-portal
+    build:
+      context: ./src/frontend/citizen-portal
+    environment: 
+      - USE_MOCK_SERVICES=false
+      - USE_KEYCLOAK=true
+      - API_URL=http://localhost:4300/api
+      - KEYCLOAK_URL=http://localhost:8081/auth
+      - KEYCLOAK_REALM=traffic-court
+      - KEYCLOAK_CLIENT_ID=test
+    command: "nginx -g 'daemon off;'"     
+    restart: always
+    ports:
+      - "4201:80"
+    networks:
+      - traffic-court-net
 
 #############################################################################################
 ###                                 TrafficCourt DEMO                                     ###
 #############################################################################################  
-  # citizen-portal:
-  #   container_name: citizen-portal
-  #   build:
-  #     context: ./src/frontend/citizen-portal
-  #   command: "nginx -g 'daemon off;'"
-  #     # environment:        
-  #   restart: always
-  #   ports:
-  #     - "4201:4201"
-  #   expose:
-  #     - "4201"
-  #   networks:
-  #     - traffic-court-net
+  citizen-portal-demo:
+    container_name: citizen-portal-demo
+    build:
+      context: ./src/frontend/citizen-portal
+    environment: 
+      - USE_MOCK_SERVICES=true
+      - USE_KEYCLOAK=false
+    command: "nginx -g 'daemon off;'"     
+    restart: always
+    ports:
+      - "4200:80"
+    networks:
+      - traffic-court-net
 
 #############################################################################################
 ###                                  KEYCLOAK                                             ###
