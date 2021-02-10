@@ -39,3 +39,7 @@ TestResult.xml
 
 #RESHARPER
 .DotSettings
+
+
+# dependencies
+/node_modules
