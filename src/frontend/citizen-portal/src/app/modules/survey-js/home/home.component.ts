@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
 
     const pageName = survey.currentPage.name;
     if (pageName === 'page2') {
-      this.surveyResource.ticket().subscribe((response) => {
+      this.surveyResource.getTicket().subscribe((response) => {
         survey.setValue(
           'info_violationTicketNumber',
           response.violationTicketNumber
@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit {
 
         survey.setValue(
           'info_violationDate',
-          this.formatDatePipe.transform(response.violationDate)
+          this.formatDatePipe.transform(response.violationDate?.toString())
         );
         survey.setValue('info_courtLocation', response.courtLocation);
         survey.setValue('info_surname', response.surname);
@@ -92,10 +92,9 @@ export class HomeComponent implements OnInit {
     if (options.name === 'violationTicketNumber') {
       this.logger.info('surveyValidateQuestion', options);
 
-      const violationTicketNumber = options.value;
-      this.surveyResource.test(violationTicketNumber).subscribe((response) => {
-        const key = 'success';
-        if (!response[key]) {
+      // const violationTicketNumber = options.value;
+      this.surveyResource.getTicket().subscribe((response) => {
+        if (!response) {
           options.error = 'There was a problem finding your ticket';
           this.logger.info('surveyValidateQuestion after', options);
 
