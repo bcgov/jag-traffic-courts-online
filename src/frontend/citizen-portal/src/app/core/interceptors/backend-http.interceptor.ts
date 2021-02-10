@@ -7,7 +7,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { environment } from '@env/environment.dev';
+import { environment } from '@env/environment';
 import { RouteUtils } from '@core/utils/route-utils.class';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
