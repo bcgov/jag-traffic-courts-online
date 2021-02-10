@@ -95,4 +95,4 @@ jobs:
 
       # Completing the after-build
       - name: After-Build and Uploading the report to code climate
-        run: ./cc-test-reporter after-build -t lcov ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+        run: ./cc-test-reporter after-build -d -t lcov ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
