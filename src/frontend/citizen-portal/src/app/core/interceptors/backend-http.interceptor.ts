@@ -30,7 +30,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       this.logger.info(
         'BackendHttpInterceptor',
-        request.method,currentRoutePath
+        request.method,
+        currentRoutePath
       );
 
       if (currentRoutePath !== 'ticket')
@@ -45,9 +46,9 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         case 'GET':
         case 'PUT':
         case 'POST':
-            return of(
-              new HttpResponse({ status: 200, body: { result: ticket } })
-            );
+          return of(
+            new HttpResponse({ status: 200, body: { result: ticket } })
+          );
         break;
         default:
           throw new HttpErrorResponse({
