@@ -28,52 +28,22 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       const ticket = this.mockDisputeService.ticket;
       const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
-      this.logger.info(
-        'BackendHttpInterceptor',
-        request.method,
-        currentRoutePath
-      );
+      this.logger.info('BackendHttpInterceptor', request.method,currentRoutePath );
+
+      if (currentRoutePath !== 'ticket')
+      {
+        throw new HttpErrorResponse({
+        error: 'Mock Bad Request',
+        status: 400,
+      });
+    }
 
       switch (request.method) {
-        case 'GET':
-          if (currentRoutePath === 'ticket') {
+        case 'GET' || 'PUT' || 'POST':
             return of(
               new HttpResponse({ status: 200, body: { result: ticket } })
             );
-          } else {
-            throw new HttpErrorResponse({
-              error: 'Mock Bad Request',
-              status: 400,
-            });
-          }
           break;
-
-        case 'PUT':
-          if (currentRoutePath === 'ticket') {
-            return of(
-              new HttpResponse({ status: 200, body: { result: ticket } })
-            );
-          } else {
-            throw new HttpErrorResponse({
-              error: 'Mock Bad Request',
-              status: 400,
-            });
-          }
-          break;
-
-        case 'POST':
-          if (currentRoutePath === 'ticket') {
-            return of(
-              new HttpResponse({ status: 201, body: { result: ticket } })
-            );
-          } else {
-            throw new HttpErrorResponse({
-              error: 'Mock Bad Request',
-              status: 400,
-            });
-          }
-          break;
-
         default:
           throw new HttpErrorResponse({
             error: 'Mock Bad Request',
