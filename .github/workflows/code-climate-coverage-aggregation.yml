@@ -90,6 +90,10 @@ jobs:
         run: yarn --cwd /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal coverage
 
       # Format coverage
+      - name: copy .ts files
+        run: cp  ${{github.workspace}}/src/frontend/citizen-portal/src/polyfills.ts ${{github.workspace}}/src
+
+      # Format coverage
       - name: Formatting the coverage report
         run: ./cc-test-reporter format-coverage -t lcov /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
 
