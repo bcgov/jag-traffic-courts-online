@@ -89,10 +89,10 @@ jobs:
       - name: Run Yarn Coverage - citizen Portal
         run: yarn --cwd /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal coverage
 
-      # Copying the lcov.info file to main citizen portal path
-      - name: Copy lcov.info to correct path
-        run: cp ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info ${{github.workspace}}/src/frontend/citizen-portal/coverage
+      # Format coverage
+      - name: Formatting the coverage report
+        run: ./cc-test-reporter format-coverage -t lcov .coverage/lcov.info
 
-      # Completing the after-build
-      - name: After-Build and Uploading the report to code climate
-        run: ./cc-test-reporter after-build -d -t lcov -p ${{github.workspace}}/src/frontend/citizen-portal ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+      # Upload coverage
+      - name: Uploading the report to code climate
+        run: ./cc-test-reporter upload-coverage
