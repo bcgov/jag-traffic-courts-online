@@ -77,10 +77,6 @@ jobs:
       - name: Run Yarn Install - citizen Portal
         run: yarn --cwd src/frontend/citizen-portal install
 
-      # Check lint version
-#      - name: Run lint - citizen Portal
-#        run: yarn --cwd src/frontend/citizen-portal run lint -v
-
       # Run lint - citizen Portal
       - name: Run lint - citizen Portal
         run: yarn --cwd src/frontend/citizen-portal run lint
@@ -89,14 +85,14 @@ jobs:
       - name: Run Yarn Coverage - citizen Portal
         run: yarn --cwd /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal coverage
 
-      # Format coverage
-      - name: Copy files to Current Working Directory
+      # Copy .ts files to Current Working Directory as they are referred by lcov.info
+      - name: Copy .ts files to Current Working Directory
         run: cp -r ${{github.workspace}}/src/frontend/citizen-portal/src/. ${{github.workspace}}/src
 
-      # Format coverage
-      - name: Formatting the coverage report
+      # Formatting the Frontend Citizen Portal Coverage Report
+      - name: Format the Frontend Citizen Portal coverage report
         run: ./cc-test-reporter format-coverage -t lcov ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
 
-      # Upload coverage
-      - name: Uploading the report to code climate
+      # Uploading the Frontend Citizen Portal Coverage Report
+      - name: Uploading the Coverage Report to Code Climate
         run: ./cc-test-reporter upload-coverage
