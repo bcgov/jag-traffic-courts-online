@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KEYCLOAK_REALM_URL="$KEYCLOAK_URL/auth/admin/realms/Traffic-Court-Hub"
+KEYCLOAK_REALM_URL="$KEYCLOAK_URL/auth/admin/realms/traffic-court"
 USERNAME="bobross"
 ADMIN_GROUP="traffic-court-admin"
 

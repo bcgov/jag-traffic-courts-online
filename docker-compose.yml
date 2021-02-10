@@ -22,19 +22,19 @@ services:
 #############################################################################################
 ###                                 TrafficCourt DEMO                                     ###
 #############################################################################################  
-  citizen-portal:
-    container_name: citizen-portal
-    build:
-      context: ./src/frontend/citizen-portal
-    command: "nginx -g 'daemon off;'"
-      # environment:        
-    restart: always
-    ports:
-      - "4201:4201"
-    expose:
-      - "4201"
-    networks:
-      - traffic-court-net
+  # citizen-portal:
+  #   container_name: citizen-portal
+  #   build:
+  #     context: ./src/frontend/citizen-portal
+  #   command: "nginx -g 'daemon off;'"
+  #     # environment:        
+  #   restart: always
+  #   ports:
+  #     - "4201:4201"
+  #   expose:
+  #     - "4201"
+  #   networks:
+  #     - traffic-court-net
 
 #############################################################################################
 ###                                  KEYCLOAK                                             ###
@@ -57,14 +57,14 @@ services:
 # #############################################################################################
 # ###                                  KEYCLOAK CONFIG                                      ###
 # #############################################################################################  
-#   keycloak-config:
-#     build:
-#       context: ./infrastructure/keycloak
-#       args:
-#         - KEYCLOAK_URL=http://keycloak:8080
-#     command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
-#     networks:
-#       - traffic-court-net
+  keycloak-config:
+    build:
+      context: ./infrastructure/keycloak
+      args:
+        - KEYCLOAK_URL=http://keycloak:8080
+    command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
+    networks:
+      - traffic-court-net
 
 #############################################################################################
 ###                                  SPLUNK                                               ###

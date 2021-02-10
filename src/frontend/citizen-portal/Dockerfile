@@ -9,16 +9,16 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 RUN npm install @angular/cli -g --silent
-RUN npm ci
+RUN npm install yarn
 
 COPY . .
 
-RUN ng build --prod
+RUN yarn 
 
 FROM nginx
 
 FROM nginx:1.19-alpine
-COPY --from=build-deps /usr/src/app/dist/xapp-angular-frontend /usr/share/nginx/html
+COPY --from=build-deps /usr/src/app/dist/citizen-portal /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 

@@ -3,20 +3,20 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  environmentName: "demo",
-  version: '1.0.0',
-  useKeycloak: false,
-  useMockServices: true,
-  apiUrl: 'http://localhost:4300/api',
+  production: window["env"]["production"] ,
+  environmentName: window["env"]["environmentName"] ,
+  version: window["env"]["version"],
+  useKeycloak: window["env"]["useKeycloak"],
+  useMockServices: window["env"]["useMockServices"],
+  apiUrl: window["env"]["apiUrl"] ,
   keycloakConfig: {
     config: {
-      url: 'http://localhost:8080/auth',
-      realm: 'tco',
-      clientId: 'tco-client',
+      url: window["env"]["keycloakURL"],
+      realm: window["env"]["keycloackRealm"],
+      clientId: window["env"]["keycloakCClientId"],
     },
     initOptions: {
-      onLoad: 'check-sso',
+      onLoad: window["env"]["keycloakOptionsOnLoad"],
     },
   },
 };
