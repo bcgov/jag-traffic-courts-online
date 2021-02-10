@@ -49,7 +49,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
           return of(
             new HttpResponse({ status: 200, body: { result: ticket } })
           );
-        break;
+          break;
         default:
           throw new HttpErrorResponse({
             error: 'Mock Bad Request',
