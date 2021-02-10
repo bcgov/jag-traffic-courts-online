@@ -93,30 +93,6 @@ jobs:
       - name: Copy lcov.info to correct path
         run: cp ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info ${{github.workspace}}/src/frontend/citizen-portal
 
-      # Formatting the FRONTEND coverage report
-      - name: Format the FRONTEND coverage report
-        run: |
-          ./cc-test-reporter format-coverage -t lcov -o coverage/frontend-codeclimate.json -p ${{github.workspace}}/src/frontend/citizen-portal ${{github.workspace}}/src/frontend/citizen-portal/lcov.info
-
-      # List all formatted files in coverage directory
-      - name: WHERE AM I - FORMATTED?
-        run: |
-          ls ${{ github.workspace }}/coverage
-        if: ${{ env.ACTION_DEBUG }}
-
-      # Count of all total coverage files available
-      - name: Count files present
-        run: |
-          echo "FILE_COUNTER=$(ls -1q ./coverage | wc -l )" >> $GITHUB_ENV
-          #echo "::set-env name=FILE_COUNTER::$(ls -1q ./coverage | wc -l )"
-
-      # Sum the coverage reports
-      - name: Summing the coverage reports generated
-        run: ./cc-test-reporter sum-coverage coverage/*-codeclimate.json -p ${{ env.FILE_COUNTER }} -o coverage/total-codeclimate.json
-
-      # Upload JSON for debugging purposes
-      - name: Upload JSON for debugging purposes
-        uses: actions/upload-artifact@v2
-        with:
-          name: summed-yarn-coverage-report
-          path: coverage/total-codeclimate.json
+      # Completing the after-build
+      - name: After-Build and Uploading the report to code climate
+        run: ./cc-test-reporter after-build -t lcov ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
