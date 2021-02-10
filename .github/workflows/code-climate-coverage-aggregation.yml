@@ -91,8 +91,8 @@ jobs:
 
       # Copying the lcov.info file to main citizen portal path
       - name: Copy lcov.info to correct path
-        run: cp ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info ${{github.workspace}}/src/frontend/citizen-portal
+        run: cp ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info ${{github.workspace}}/src/frontend/citizen-portal/coverage
 
       # Completing the after-build
       - name: After-Build and Uploading the report to code climate
-        run: ./cc-test-reporter after-build -d -t lcov ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+        run: ./cc-test-reporter after-build -d -t lcov -p ${{github.workspace}}/src/frontend/citizen-portal ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
