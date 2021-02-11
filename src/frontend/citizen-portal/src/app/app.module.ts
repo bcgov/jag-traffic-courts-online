@@ -7,6 +7,7 @@ import { NgBusyModule } from 'ng-busy';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DisputeModule } from './modules/dispute/dispute.module';
@@ -22,6 +23,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     CoreModule,
     SharedModule,
+    ConfigModule,
     AuthModule,
     DisputeModule,
     HttpClientModule,

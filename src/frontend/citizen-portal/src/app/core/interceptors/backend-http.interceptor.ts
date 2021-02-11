@@ -12,6 +12,7 @@ import { environment } from '@env/environment';
 import { RouteUtils } from '@core/utils/route-utils.class';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
+import { MockConfig } from 'tests/mocks/mock-config';
 
 @Injectable()
 export class BackendHttpInterceptor implements HttpInterceptor {
@@ -25,36 +26,51 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (environment.useMockServices) {
-      const ticket = this.mockDisputeService.ticket;
       const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
-      this.logger.info(
-        'BackendHttpInterceptor',
-        request.method,
-        currentRoutePath
-      );
-
-      if (currentRoutePath !== 'ticket')
-      {
+      if (currentRoutePath !== 'ticket' && currentRoutePath !== 'lookups') {
         throw new HttpErrorResponse({
-        error: 'Mock Bad Request',
-        status: 400,
+          error: 'Mock Bad Request: ${currentRoutePath} ${request.method} ',
+          status: 400,
         });
       }
 
-      switch (request.method) {
-        case 'GET':
-        case 'PUT':
-        case 'POST':
-          return of(
-            new HttpResponse({ status: 200, body: { result: ticket } })
-          );
-          break;
-        default:
-          throw new HttpErrorResponse({
-            error: 'Mock Bad Request',
-            status: 400,
-          });
+      // Handle 'ticket' requests
+      if (currentRoutePath === 'ticket') {
+        const ticket = this.mockDisputeService.ticket;
+
+        switch (request.method) {
+          case 'GET':
+          case 'PUT':
+          case 'POST':
+            return of(
+              new HttpResponse({ status: 200, body: { result: ticket } })
+            );
+            break;
+          default:
+            throw new HttpErrorResponse({
+              error: 'Mock Bad Request: ${currentRoutePath} ${request.method} ',
+              status: 400,
+            });
+        }
+
+        // Handle 'lookups' requests
+      } else if (currentRoutePath === 'lookups') {
+        switch (request.method) {
+          case 'GET':
+            return of(
+              new HttpResponse({
+                status: 200,
+                body: { result: MockConfig.get() },
+              })
+            );
+            break;
+          default:
+            throw new HttpErrorResponse({
+              error: 'Mock Bad Request: ${currentRoutePath} ${request.method} ',
+              status: 400,
+            });
+        }
       }
     }
     return next.handle(request);
