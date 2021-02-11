@@ -29,9 +29,8 @@ COPY --from=build-deps /usr/src/app/nginx.conf /etc/nginx/conf.d/default.conf
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx
 RUN chmod g+rwx /usr/share/nginx/html/
 
-# Add bash
-RUN apk add --no-cache bash
-EXPOSE 80
+
+EXPOSE 8080
 
 RUN printenv
-CMD ["/bin/bash", "-c", "nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "nginx -g 'daemon off;'"]

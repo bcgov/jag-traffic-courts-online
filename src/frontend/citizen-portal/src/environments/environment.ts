@@ -4,11 +4,11 @@ export const environment = {
     environmentName: "demo",
     version: "1.0.0",
     useKeycloak: "false",
-    useMockServices: "false",
+    useMockServices: "true",
     apiUrl: "http://localhost:4300/api",
     keycloakConfig: {
         config: {
-          url: "http://localhost:8081/auth",
+          url: "http://keycloak:8081/auth",
           realm: "traffic-court",
           clientId: "test",
         },
