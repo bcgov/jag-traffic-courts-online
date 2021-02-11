@@ -30,7 +30,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       if (currentRoutePath !== 'ticket' && currentRoutePath !== 'lookups') {
         throw new HttpErrorResponse({
-          error: 'Mock Bad Request: ${currentRoutePath} ${request.method} ',
+          error: 'Mock Bad Request',
           status: 400,
         });
       }
@@ -49,7 +49,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
             break;
           default:
             throw new HttpErrorResponse({
-              error: 'Mock Bad Request: ${currentRoutePath} ${request.method} ',
+              error: 'Mock Bad Request',
               status: 400,
             });
         }
@@ -67,7 +67,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
             break;
           default:
             throw new HttpErrorResponse({
-              error: 'Mock Bad Request: ${currentRoutePath} ${request.method} ',
+              error: 'Mock Bad Request',
               status: 400,
             });
         }
