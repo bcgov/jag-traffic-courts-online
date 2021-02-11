@@ -1,7 +1,8 @@
+import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { Ticket } from '@shared/models/ticket.model';
 import * as faker from 'faker';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 
 export class MockDisputeService {
   private _ticket: BehaviorSubject<Ticket>;
@@ -12,7 +13,14 @@ export class MockDisputeService {
     this._ticket = new BehaviorSubject<Ticket>({
       id: ticketId,
       userId: faker.random.uuid(),
-      violationTicketNumber: faker.finance.routingNumber(),
+      violationTicketNumber:
+        'AE' +
+        faker.random
+          .number({
+            min: 10000000,
+            max: 99999999,
+          })
+          .toString(),
       courtLocation: faker.address.city(1),
       violationDate: faker.date.recent(),
       surname: faker.name.lastName(),
@@ -44,5 +52,9 @@ export class MockDisputeService {
 
   public get ticket(): Ticket {
     return this._ticket.value;
+  }
+
+  public get httpTicket(): ApiHttpResponse<Ticket> {
+    return new ApiHttpResponse(200, null, this._ticket.value);
   }
 }

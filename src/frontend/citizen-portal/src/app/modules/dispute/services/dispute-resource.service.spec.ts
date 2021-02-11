@@ -20,7 +20,7 @@ describe('DisputeResourceService', () => {
   });
 
   it('should get ticket', () => {
-    const ticket = service.ticket();
+    const ticket = service.getTicket();
     expect(ticket).toBeDefined();
   });
 });

@@ -1,24 +1,56 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApiHttpResponse } from '@core/models/api-http-response.model';
+import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
-import { environment } from '@env/environment';
 import { Ticket } from '@shared/models/ticket.model';
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisputeResourceService {
-  private baseUrl = environment.apiUrl;
+  constructor(
+    private apiResource: ApiResource,
+    private logger: LoggerService
+  ) {}
 
-  constructor(private httpClient: HttpClient, private logger: LoggerService) {}
-
-  public ticket(): Observable<Ticket> {
-    return this.httpClient.get<any>(this.baseUrl + '/ticket').pipe(
+  public getTicket(): Observable<Ticket> {
+    return this.apiResource.get<Ticket>('ticket').pipe(
+      map((response: ApiHttpResponse<Ticket>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[Dispute] DisputeResource::ticket error has occurred: ',
+          '[GetTicket] DisputeResourceService::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public createTicket(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('createTicket', ticket);
+
+    return this.apiResource.post<Ticket>('ticket').pipe(
+      map((response: ApiHttpResponse<Ticket>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[CreateTicket] DisputeResourceService::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public updateTicket(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('updateTicket', ticket);
+
+    return this.apiResource.put<Ticket>('ticket').pipe(
+      map((response: ApiHttpResponse<Ticket>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[UpdateTicket] DisputeResourceService::ticket error has occurred: ',
           error
         );
         throw error;

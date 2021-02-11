@@ -22,7 +22,7 @@ import { Subscription, timer } from 'rxjs';
 export class HomeComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public maxViolationDate: moment.Moment;
-  public nextBtnLabel : string;
+  public nextBtnLabel: string;
   @Input() public stepper: MatStepper;
 
   constructor(
