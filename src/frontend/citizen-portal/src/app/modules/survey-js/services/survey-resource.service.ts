@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
+import { environment } from '@env/environment';
 import { Ticket } from '@shared/models/ticket.model';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DisputeResourceService {
+export class SurveyResourceService {
+  private baseUrl = environment.apiUrl;
+
   constructor(
     private apiResource: ApiResource,
     private logger: LoggerService

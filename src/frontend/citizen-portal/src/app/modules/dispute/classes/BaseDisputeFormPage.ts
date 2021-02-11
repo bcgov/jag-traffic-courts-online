@@ -77,9 +77,8 @@ export abstract class BaseDisputeFormPage
   }
 
   private getTicket(): void {
-    this.disputeResource.ticket().subscribe((response) => {
-      const key = 'result';
-      this.disputeService.ticket$.next(response[key]);
+    this.disputeResource.getTicket().subscribe((response) => {
+      this.disputeService.ticket$.next(response);
     });
   }
 }

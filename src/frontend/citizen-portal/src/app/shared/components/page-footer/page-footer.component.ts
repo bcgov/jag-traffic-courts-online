@@ -12,8 +12,8 @@ export class PageFooterComponent implements OnInit {
   @Output() public continue: EventEmitter<void>;
   @Output() public back: EventEmitter<void>;
 
-  public saveButtonLabel: string;
-  public secondaryActionButtonLabel: string;
+  @Input() public saveButtonLabel: string;
+  @Input() public secondaryActionButtonLabel: string;
 
   constructor() {
     this.hasSecondaryAction = true;
@@ -21,6 +21,8 @@ export class PageFooterComponent implements OnInit {
     this.save = new EventEmitter<void>();
     this.continue = new EventEmitter<void>();
     this.back = new EventEmitter<void>();
+    this.saveButtonLabel = 'Save and Continue';
+    this.secondaryActionButtonLabel = 'Back';
   }
 
   public onSave(): void {
@@ -34,8 +36,6 @@ export class PageFooterComponent implements OnInit {
 
   public ngOnInit(): void {
     // if (Allowed to go back) {
-    this.saveButtonLabel = 'Save and Continue';
-    this.secondaryActionButtonLabel = 'Back';
     // } else {
     // this.saveButtonLabel = 'Continue';
     // this.hasSecondaryAction = false;

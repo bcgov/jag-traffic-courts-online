@@ -9,7 +9,8 @@
     "build-prod": "npm run configure -- --environment=prod && ng build --source-map=false --build-optimizer",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "coverage": "ng test --browsers=ChromeHeadless --watch=false --code-coverage"
   },
   "private": true,
   "dependencies": {
@@ -34,7 +35,8 @@
     "ngx-mask": "^11.1.4",
     "ngx-progressbar": "^6.1.0",
     "rxjs": "~6.6.0",
-    "survey-angular": "^1.7.19",
+    "survey-angular": "^1.8.29",
+    "surveyjs-widgets": "^1.8.29",
     "tslib": "^2.0.0",
     "yargs": "^16.2.0",
     "yarn": "^1.22.10",
