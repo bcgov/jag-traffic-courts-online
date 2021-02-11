@@ -14,7 +14,7 @@ import * as widgets from 'surveyjs-widgets';
   providers: [FormatDatePipe],
 })
 export class HomeComponent implements OnInit {
-  public isComplete: boolean = false;
+  public isComplete = false;
 
   constructor(
     private logger: LoggerService,
@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     Survey.StylesManager.applyTheme('bootstrap');
-
     widgets.inputmask(Survey);
 
     const tcoSurvey = new Survey.Model(SurveyJson);
