@@ -19,23 +19,22 @@ const targetPath = isProduction ? `./src/environments/environment.prod.ts` : `./
 
 const environmentFileContent = `
 export const environment = {
-    production: ${isProduction},
-    environmentName: "${process.env.ENVIRONMENT}",
-    version: "${process.env.VERSION}",
-    useKeycloak: "${process.env.USE_KEYCLOAK}",
-    useMockServices: "${process.env.USE_MOCK_SERVICES}",
-    apiUrl: "${process.env.API_URL}",
-    keycloakConfig: {
-        config: {
-          url: "${process.env.KEYCLOAK_URL}",
-          realm: "${process.env.KEYCLOAK_REALM}",
-          clientId: "${process.env.KEYCLOAK_CLIENT_ID}",
-        },
-        initOptions: {
-          onLoad: "${process.env.KEYCLOAK_INIT_OPTIONS}",
-        },
-      }
-}`
+  production: ${isProduction},
+  version: '${process.env.VERSION}',
+  useKeycloak: ${process.env.USE_KEYCLOAK},
+  useMockServices: ${process.env.USE_MOCK_SERVICES},
+  apiUrl: '${process.env.API_URL}',
+  keycloakConfig: {
+    config: {
+      url: '${process.env.KEYCLOAK_URL}',
+      realm: '${process.env.KEYCLOAK_REALM}',
+      clientId: '${process.env.KEYCLOAK_CLIENT_ID}',
+    },
+    initOptions: {
+      onLoad: '${process.env.KEYCLOAK_INIT_OPTIONS}',
+    },
+  },
+};`
 
 writeFile(targetPath, environmentFileContent, function(err){
     if (err){
