@@ -1,12 +1,13 @@
 {
   "name": "citizen-portal",
   "version": "0.0.0",
+  "sideEffects": false,
   "scripts": {
     "ng": "ng",
     "configure": "ts-node setenv.ts",
     "start": "npm run configure -- --environment=dev && ng serve --host 0.0.0.0 --poll=500 --port=4000",
-    "build-dev": "npm run configure -- --environment=dev && ng build --source-map=false --build-optimizer",
-    "build-prod": "npm run configure -- --environment=prod && ng build --source-map=false --build-optimizer",
+    "build-dev": "npm run configure -- --environment=dev && ng build --source-map=false",
+    "build-prod": "npm run configure -- --environment=prod && ng build --prod  --source-map",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
