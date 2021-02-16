@@ -1,6 +1,9 @@
+import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
-import { of } from 'rxjs';
 
+@Injectable({
+  providedIn: 'root',
+})
 export class MockKeycloakService extends KeycloakService {
   public init(): Promise<boolean> {
     return Promise.resolve(true);

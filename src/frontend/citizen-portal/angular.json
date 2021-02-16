@@ -36,6 +36,11 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/scss"]
             },
+            "allowedCommonJsDependencies": [
+              "surveyjs-widgets",
+              "keycloak-js",
+              "faker"
+            ],
             "scripts": []
           },
           "configurations": {
