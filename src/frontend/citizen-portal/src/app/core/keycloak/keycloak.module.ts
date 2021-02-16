@@ -10,6 +10,7 @@ import {
 import { environment } from '@env/environment';
 import { ToastService } from '@core/services/toast.service';
 import { MockKeycloakService } from 'tests/mocks/mock-keycloak.service';
+import { ConfigService } from '@config/config.service';
 
 function initializer(
   keycloak: KeycloakService,
@@ -34,6 +35,10 @@ function initializer(
     };
 
     if (authenticated) {
+      // Ensure configuration is populated before the application
+      // is fully initialized to prevent race conditions
+      await injector.get(ConfigService).load().toPromise();
+
       // Force refresh to begin expiry timer.
       keycloak.updateToken(-1);
     }

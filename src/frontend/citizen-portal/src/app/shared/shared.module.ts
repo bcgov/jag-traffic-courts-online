@@ -20,6 +20,7 @@ import { PageComponent } from './components/page/page.component';
 import { PageFooterComponent } from './components/page-footer/page-footer.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { ConfigModule } from 'app/config/config.module';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { AlertComponent } from './components/alert/alert.component';
     NgxMaterialModule,
     NgxMaskModule.forRoot(),
     NgxProgressModule,
+    ConfigModule,
   ],
   exports: [
     CommonModule,
@@ -70,6 +72,7 @@ import { AlertComponent } from './components/alert/alert.component';
     PageHeaderComponent,
     DialogContentDirective,
     AlertComponent,
+    ConfigModule,
   ],
   entryComponents: [ConfirmDialogComponent],
 })
