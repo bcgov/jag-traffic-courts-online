@@ -29,7 +29,7 @@ CREATE_USER_STATUS=$(curl -s -o /dev/null -w '%{http_code}' \
     --data-raw '{
                     "firstName": "bob",
                     "lastName": "ross",
-                    "email": "bobross@paintit.com",
+                    "email": "bobross@example.com",
                     "enabled": "true",
                     "username": "bobross",
                     "attributes": {
