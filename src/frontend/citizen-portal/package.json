@@ -1,10 +1,13 @@
 {
   "name": "citizen-portal",
   "version": "0.0.0",
+  "sideEffects": false,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "configure": "ts-node setenv.ts",
+    "start": "npm run configure -- --environment=dev && ng serve --host 0.0.0.0 --poll=500 --port=4000",
+    "build-dev": "npm run configure -- --environment=dev && ng build --source-map=false",
+    "build-prod": "npm run configure -- --environment=prod && ng build --prod  --source-map",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -24,6 +27,8 @@
     "@angular/platform-browser-dynamic": "~11.0.8",
     "@angular/router": "~11.0.8",
     "bootstrap": "^4.5.3",
+    "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
     "keycloak-angular": "^8.1.0",
     "keycloak-js": "^12.0.2",
     "moment": "^2.29.1",
@@ -34,6 +39,8 @@
     "survey-angular": "^1.8.29",
     "surveyjs-widgets": "^1.8.29",
     "tslib": "^2.0.0",
+    "yargs": "^16.2.0",
+    "yarn": "^1.22.10",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
