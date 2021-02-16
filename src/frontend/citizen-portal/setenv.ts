@@ -10,7 +10,7 @@ const isProduction = environment === 'prod';
 if (!process.env.API_URL || !process.env.KEYCLOAK_CLIENT_ID || !process.env.KEYCLOAK_URL || !process.env.KEYCLOAK_REALM || !process.env.USE_KEYCLOAK 
     || !process.env.USE_MOCK_SERVICES)
     {
-        console.error('All the required environment variables were not provided!')
+        console.error('All the required environment variables were not provided!');
         process.exit(-1);
     }
 
@@ -34,7 +34,7 @@ export const environment = {
       onLoad: '${process.env.KEYCLOAK_INIT_OPTIONS}',
     },
   },
-};`
+};`;
 
 writeFile(targetPath, environmentFileContent, function(err){
     if (err){
