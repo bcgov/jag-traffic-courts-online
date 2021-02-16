@@ -12,17 +12,33 @@ This directory contains application source code for the citizens and partner por
 | ------------------- | -------------------------------------------- | -------------------------------------------------------- |
 | citizen-portal      | citizen portal                               |  [README](citizen-portal/README.md)                        |
 
-Set environment variables using tempalte
+1.) Set environment variables(.env)file  using template shown in .env.template
 
-Run locally
-npm install
-yarn start
+2.) Running application locally enter following command in Bash:
 
-Run services via docker
-docker compse up
+Pre-requisites:
+    1.) Make sure you have Yarn and NPM CLI working
 
-If (there is error ) An unhandled exception occurred: Call retries were exceeded
+After fullfiling all the pre-requisites enter the command:
+
+    npm install
+then
+    yarn start
+
+3.)Running application services via docker:
+
+Pre-requisites:
+    1.) Install Docker Hub on Desktop
+    2.) Install Docker CLI
+    3.) Verify Docker Daemon is up and running in the backend
+
+After fullfiling all the pre-requisites enter the command:
+    docker-compose up --build
+
+4.) Upon successful completion trying launching each of the services in the browser. THere might be some problems opening the front end service with ZScaler. Try Enabling/Disabling. Also recommended browser to test is Microsoft Edge. There may be difficulties in Google Chrome.
+
+5.)If (there is error ) An unhandled exception occurred: Call retries were exceeded
 See "/tmp/ng-5vKGPg/angular-errors.log" for further details.
 error Command failed with exit code 127.
 
-increase Docker memory
+Increase Docker memory from Docker Hub
