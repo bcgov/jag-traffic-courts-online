@@ -96,3 +96,24 @@ jobs:
       # Uploading the Frontend Citizen Portal Coverage Report
       - name: Uploading the Coverage Report to Code Climate
         run: ./cc-test-reporter upload-coverage
+
+  backend:
+    env:
+      FILE_COUNTER: 0
+      CC_TEST_REPORTER_ID: 8a4068fec71e2ce84714008f57ea6548614c380821df800ed611c2afc6a42d93
+      ACTION_DEBUG: true
+
+    name: Create, format and upload .NET coverage artifact
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Install .net in Linux Environment
+      - name: Install .NET in Linux Environment
+        run: sudo apt-get install -y dotnet-runtime-5.0
+
+      # Run the .NET Coverage report for DisputeAPI
+      - name: Generate .NET Code Coverage - DisputeAPI
+        run: dotnet test --collect:"XPlat Code Coverage" src/backend/TrafficCourtsApi/DisputeApi.Web.Test
+
+
