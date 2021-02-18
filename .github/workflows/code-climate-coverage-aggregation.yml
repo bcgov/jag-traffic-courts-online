@@ -91,11 +91,14 @@ jobs:
 
       # Formatting the Frontend Citizen Portal Coverage Report
       - name: Format the Frontend Citizen Portal coverage report
-        run: ./cc-test-reporter format-coverage -t lcov ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
 
-      # Uploading the Frontend Citizen Portal Coverage Report
-      - name: Uploading the Coverage Report to Code Climate
-        run: ./cc-test-reporter upload-coverage
+      # Upload JSON for debugging purposes
+      - name: Upload JSON for debugging purposes
+        uses: actions/upload-artifact@v2
+        with:
+          name: summed-yarn-coverage-report
+          path: coverage/citizen-portal-codeclimate.json
 
   backend:
     env:
@@ -151,7 +154,14 @@ jobs:
 
       # Formatting the DisputeAPI Coverage Report
       - name: Format the DisputeAPI Coverage Report
-        run: ./cc-test-reporter format-coverage -t cobertura ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/TestResults/**/coverage.cobertura.xml
+        run: ./cc-test-reporter format-coverage -t cobertura -o coverage/dispute-api-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/TestResults/**/coverage.cobertura.xml
+
+      # Upload JSON for debugging purposes
+      - name: Upload JSON for debugging purposes
+        uses: actions/upload-artifact@v2
+        with:
+          name: summed-yarn-coverage-report
+          path: coverage/dispute-api-codeclimate.json
 
 
 
