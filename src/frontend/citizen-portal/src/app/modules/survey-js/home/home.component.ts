@@ -29,6 +29,9 @@ export class HomeComponent implements OnInit {
     Survey.StylesManager.applyTheme('bootstrap');
     widgets.inputmask(Survey);
 
+    Survey.defaultBootstrapCss.signaturepad.clearButton =
+      'btn btn-outline-secondary';
+
     const tcoSurvey = new Survey.Model(SurveyJson);
     Survey.SurveyNG.render('surveyContainer', {
       model: tcoSurvey,
@@ -130,13 +133,26 @@ export class HomeComponent implements OnInit {
           let question = survey.getQuestionByName(
             'alert_info_count' + cnt.countNo
           );
-          question.html =
-            '<div class="alert alert-primary"><h1>Count #' +
-            cnt.countNo +
-            '<small>' +
-            cnt.description +
-            '</small>';
-          '</h1>' + '</div>';
+          if (cnt.countNo === 1) {
+            question.html =
+              '<div class="alert alert-primary"><h1 class="alert-heading">Count Information</h1>' +
+              '<p class="mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit,' +
+              'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,' +
+              'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><hr>' +
+              '<h1 class="alert-heading">Count #' +
+              cnt.countNo +
+              '<small>' +
+              cnt.description +
+              '</small></h1>' +
+              '</div>';
+          } else {
+            question.html =
+              '<div class="alert alert-primary"><h1 class="alert-heading">Count #' +
+              cnt.countNo +
+              '<small>' +
+              cnt.description +
+              '</small></h1></div>';
+          }
         });
       });
     }

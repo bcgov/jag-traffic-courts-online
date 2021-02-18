@@ -50,8 +50,10 @@ export const SurveyJson = {
             {
               type: 'html',
               name: 'alert_info',
-              html:
-                '<div class="alert alert-primary"><h1>Violation Ticket Information</h1><div>Here is a summary of your ticket information.</div></div>',
+              html: `<div class="alert alert-primary">
+                <h1 class="alert-heading">Violation Ticket Information</h1>
+                <p class="mt-2 mb-0">Here is a summary of your ticket information.</p>
+                </div>`,
             },
             {
               name: 'info_violationTicketNumber',
@@ -389,8 +391,12 @@ export const SurveyJson = {
         {
           type: 'html',
           name: 'alert_info',
-          html:
-            '<div class="alert alert-primary"><h1>Court Hearing Information</h1><div>Please answer the following.</div></div>',
+          html: `<div class="alert alert-primary">
+          <h1 class="alert-heading">Court Hearing Information</h1>
+          <p class="mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </div>`,
         },
         {
           type: 'radiogroup',
@@ -482,6 +488,19 @@ export const SurveyJson = {
             },
           ],
           colCount: 0,
+        },
+      ],
+    },
+    {
+      name: 'pageConfirmation',
+      elements: [
+        {
+          type: 'signaturepad',
+          name: 'signature',
+          width: 500,
+          title:
+            'Please sign below declaring that the previous information is correct.',
+          description: 'Signature of Disputant/Agent',
         },
       ],
     },

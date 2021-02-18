@@ -24,8 +24,6 @@ export interface Ticket {
 
 export interface Count {
   countNo: number;
-  actCode: string;
-  section: string;
-  subSection: string;
+  statuteId: number;
   description: string;
 }

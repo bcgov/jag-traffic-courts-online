@@ -46,17 +46,13 @@ export class MockDisputeService {
       counts: [
         {
           countNo: 1,
-          actCode: 'MVA',
-          section: '146',
-          subSection: '1',
-          description: 'MVA 146 (1) - Speed in municipality',
+          statuteId: 19149,
+          description: 'MVA 146(1) Speed in outside municipality',
         },
         {
           countNo: 2,
-          actCode: 'MVA',
-          section: '73',
-          subSection: '1',
-          description: 'MVA 73 (1) - Fail to stop for police',
+          statuteId: 19742,
+          description: 'MVA 73(1) Fail to Stop for Police',
         },
       ],
     });
