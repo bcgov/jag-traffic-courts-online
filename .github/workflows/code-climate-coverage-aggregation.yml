@@ -144,9 +144,9 @@ jobs:
       # Trimming the ref to master in order to publish correct report (paambaati)
       - name: Set ref/head/master to master
         run: |
-          echo "GIT_BRANCH=master" >> $GITHUB_ENV
-          #echo "::set-env name=GIT_BRANCH::master"
-        if: env.GIT_BRANCH == 'refs/heads/master'
+          echo "GIT_BRANCH=main" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::main"
+        if: env.GIT_BRANCH == 'refs/heads/main'
 
       # Run the .NET Coverage report for DisputeAPI
       - name: Generate .NET Code Coverage - DisputeAPI
@@ -203,9 +203,9 @@ jobs:
       # Trimming the ref to master in order to publish correct report (paambaati)
       - name: Set ref/head/master to master
         run: |
-          echo "GIT_BRANCH=master" >> $GITHUB_ENV
-          #echo "::set-env name=GIT_BRANCH::master"
-        if: env.GIT_BRANCH == 'refs/heads/master'
+          echo "GIT_BRANCH=main" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::main"
+        if: env.GIT_BRANCH == 'refs/heads/main'
 
       # Make Directory for downloaded files
       - name: Make directory
