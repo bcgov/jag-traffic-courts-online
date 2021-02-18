@@ -108,12 +108,50 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Install .net in Linux Environment
-      - name: Install .NET in Linux Environment
-        run: sudo apt-get install -y dotnet-runtime-5.0
+      # Get Code Climate binary
+      - name: Download Code Climate Binary
+        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+
+      # Permissions applied to the Code Climate Executable
+      - name: Apply executable perms to Code Climate Binary
+        run: chmod +x ./cc-test-reporter
+
+      # Before build
+      - name: Before build
+        run: ./cc-test-reporter before-build
+
+      # Set required Git env vars for either pull request
+      - name: Set ENV for codeclimate (pull_request)
+        run: |
+          echo "GIT_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::${{ github.event.pull_request.head.ref }}"
+          #echo "::set-env name=GIT_COMMIT_SHA::${{ github.event.pull_request.head.sha }}"
+        if: github.event_name == 'pull_request'
+
+      # Set required Git env vars for a push to master
+      - name: Set ENV for codeclimate (push)
+        run: |
+          echo "GIT_BRANCH=$GITHUB_REF" >> GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::$GITHUB_REF"
+          #echo "::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA"
+        if: github.event_name == 'push'
+
+      # Trimming the ref to master in order to publish correct report (paambaati)
+      - name: Set ref/head/master to master
+        run: |
+          echo "GIT_BRANCH=master" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::master"
+        if: env.GIT_BRANCH == 'refs/heads/master'
 
       # Run the .NET Coverage report for DisputeAPI
       - name: Generate .NET Code Coverage - DisputeAPI
-        run: dotnet test --collect:"XPlat Code Coverage" src/backend/TrafficCourtsApi/DisputeApi.Web.Test
+        run: dotnet test --collect:"XPlat Code Coverage" ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test
+
+      # Formatting the DisputeAPI Coverage Report
+      - name: Format the DisputeAPI Coverage Report
+        run: ./cc-test-reporter format-coverage -t cobertura ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/TestResults/**/coverage.cobertura.xml
+
 
 
