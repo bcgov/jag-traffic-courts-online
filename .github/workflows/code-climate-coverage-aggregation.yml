@@ -97,7 +97,7 @@ jobs:
       - name: Upload JSON for debugging purposes
         uses: actions/upload-artifact@v2
         with:
-          name: summed-yarn-coverage-report
+          name: citizen-portal-coverage-report
           path: coverage/citizen-portal-codeclimate.json
 
   backend:
@@ -160,8 +160,109 @@ jobs:
       - name: Upload JSON for debugging purposes
         uses: actions/upload-artifact@v2
         with:
-          name: summed-yarn-coverage-report
+          name: dispute-api-coverage-report
           path: coverage/dispute-api-codeclimate.json
+
+  aggregation:
+    name: Aggregate Spring Boot and Javascript reports
+    needs: [ frontend, backend ]
+    env:
+      CC_TEST_REPORTER_ID: 8a4068fec71e2ce84714008f57ea6548614c380821df800ed611c2afc6a42d93
+    runs-on: ubuntu-latest
+    steps:
+      # Get Code Climate binary
+      - name: Download Code Climate Binary
+        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+
+      # Permissions applied to the Code Climate Executable
+      - name: Apply executable perms to Code Climate Binary
+        run: chmod +x ./cc-test-reporter
+
+      # Before build
+      - name: Before build
+        run: ./cc-test-reporter before-build
+
+      # Set required Git env vars for either pull request
+      - name: Set ENV for codeclimate (pull_request)
+        run: |
+          echo "GIT_BRANCH=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::${{ github.event.pull_request.head.ref }}"
+          #echo "::set-env name=GIT_COMMIT_SHA::${{ github.event.pull_request.head.sha }}"
+        if: github.event_name == 'pull_request'
+
+      # Set required Git env vars for a push to master
+      - name: Set ENV for codeclimate (push)
+        run: |
+          echo "GIT_BRANCH=$GITHUB_REF" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::$GITHUB_REF"
+          #echo "::set-env name=GIT_COMMIT_SHA::$GITHUB_SHA"
+        if: github.event_name == 'push'
+
+      # Trimming the ref to master in order to publish correct report (paambaati)
+      - name: Set ref/head/master to master
+        run: |
+          echo "GIT_BRANCH=master" >> $GITHUB_ENV
+          #echo "::set-env name=GIT_BRANCH::master"
+        if: env.GIT_BRANCH == 'refs/heads/master'
+
+      # Make Directory for downloaded files
+      - name: Make directory
+        run: mkdir coverage-reports
+
+      # Download Citizen Portal coverage report
+      - name: Download javascript coverage report
+        uses: actions/download-artifact@v1
+        with:
+          name: citizen-portal-coverage-report
+
+      # See what is inside
+      - name: List items inside citizen portal coverage report object
+        run: |
+          ls citizen-portal-coverage-report
+
+      # Copy Citizen Portal Coverage to outside directory
+      - name: Copy Citizen Portal Coverage to directory
+        run: |
+          cp citizen-portal-coverage-report/citizen-portal-codeclimate.json coverage-reports/citizen-portal-codeclimate.json
+
+      # Download Backend coverage report
+      - name: Download Backend coverage report
+        uses: actions/download-artifact@v1
+        with:
+          name: dispute-api-coverage-report
+
+      # See what is inside
+      - name: List items inside java coverage report object
+        run: |
+          ls dispute-api-coverage-report
+
+      # Copy total java to outside directory
+      - name: Copy Java Coverage to directory
+        run: |
+          cp dispute-api-coverage-report/dispute-api-codeclimate.json coverage-reports/dispute-api-codeclimate.json
+
+      # See what is inside coverage
+      - name: List items inside java coverage report object
+        run: |
+          ls coverage-reports
+
+      # Sum the coverage reports
+      - name: Summing the coverage reports generated
+        run: ./cc-test-reporter sum-coverage coverage-reports/*-codeclimate.json -p 2 -o coverage-reports/total-codeclimate.json
+
+      # Upload JSON for debugging purposes
+      - name: Upload JSON for debugging purposes
+        uses: actions/upload-artifact@v2
+        with:
+          name: summed-total-coverage-report
+          path: coverage-reports/total-codeclimate.json
+
+      # Upload total coverage report to Code Climate
+      - name: Upload coverage report to Code Climate
+        run: ./cc-test-reporter upload-coverage -d -i coverage-reports/total-codeclimate.json
+
 
 
 
