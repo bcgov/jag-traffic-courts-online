@@ -6,22 +6,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TicketService.DBContexts;
 
-namespace DisputeApi.Web.Features.TicketService
+namespace DisputeApi.Web.Features.TicketService.Service
 {
 
-    public interface ITicketService
+    public interface ITicketsService
     {
         Task<string> SaveTicket(Ticket ticket);
         Task<IQueryable<Ticket>> GetTickets();
     }
 
-    public class TicketService : ITicketService
+    public class TicketsService : ITicketsService
     {
-        private readonly ILogger<TicketService> _logger;
+        private readonly ILogger<TicketsService> _logger;
 
         private readonly TicketContext _context;
 
-        public TicketService(ILogger<TicketService> logger, TicketContext context)
+        public TicketsService(ILogger<TicketsService> logger, TicketContext context)
         {
             _logger = logger;
             _context = context;

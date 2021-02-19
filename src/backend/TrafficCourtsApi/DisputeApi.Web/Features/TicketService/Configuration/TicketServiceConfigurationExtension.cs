@@ -1,5 +1,5 @@
 ﻿
-using DisputeApi.Web.Features.TicketService;
+using DisputeApi.Web.Features.TicketService.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DisputeApi.Web.Features.TicketService.Configuration
@@ -11,7 +11,7 @@ namespace DisputeApi.Web.Features.TicketService.Configuration
     {
         public static void AddTicketService(this IServiceCollection collection)
         {
-            collection.AddTransient<ITicketService, TicketService>();
+            collection.AddTransient<ITicketsService, TicketsService>();
         }
     }
 }

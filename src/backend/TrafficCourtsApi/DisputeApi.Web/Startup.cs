@@ -41,7 +41,7 @@ namespace DisputeApi.Web
         {
             // Serilog middleware will not time or log components that appear before it in the pipeline
             // This can be utilized to exclude noisy handlers from logging, such as UseStaticFiles(), by placing UseSerilogRequestLogging() after them
-            // app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging();
 
             if (env.IsDevelopment())
             {
