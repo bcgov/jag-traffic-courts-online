@@ -244,7 +244,7 @@ jobs:
           cp backend-coverage-report/backend-codeclimate.json coverage-reports/backend-codeclimate.json
 
       # See what is inside coverage
-      - name: List items inside java coverage report object
+      - name: List items inside coverage-reports folder
         run: |
           ls coverage-reports
 
@@ -262,6 +262,3 @@ jobs:
       # Upload total coverage report to Code Climate
       - name: Upload coverage report to Code Climate
         run: ./cc-test-reporter upload-coverage -i coverage-reports/total-codeclimate.json
-
-
-
