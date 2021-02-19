@@ -1,10 +1,10 @@
-﻿using DisputeApi.Web.Features.Tickets.Configuration;
-using DisputeApi.Web.Features.Tickets.Services;
+﻿using DisputeApi.Web.Features.TicketService.Configuration;
+using DisputeApi.Web.Features.TicketService.Service;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Linq;
 
-namespace DisputeApi.Web.Test.Features.Tickets.Configuration
+namespace DisputeApi.Web.Test.Features.TicketService.Configuration
 {
     public class TicketServiceConfigurationExtensionTest
     {
@@ -13,7 +13,7 @@ namespace DisputeApi.Web.Test.Features.Tickets.Configuration
         {
             var services = new ServiceCollection();
             services.AddTicketService();
-            Assert.IsTrue(services.Any(x => x.ServiceType == typeof(ITicketService)));
+            Assert.IsTrue(services.Any(x => x.ServiceType == typeof(ITicketsService)));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using DisputeApi.Web.Features.Tickets.Services;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag.Generation;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using System.Net;
+using DisputeApi.Web.Features.TicketService.Service;
 
 namespace DisputeApi.Web.Test
 {
@@ -40,9 +40,9 @@ namespace DisputeApi.Web.Test
             var webHost = Microsoft.AspNetCore.WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build();
             Assert.IsNotNull(webHost);
             Assert.IsNotNull(webHost.Services.GetService<HealthCheckService>());
-            Assert.IsNotNull(webHost.Services.GetService<ITicketService>());
+            Assert.IsNotNull(webHost.Services.GetService<ITicketsService>());
             Assert.IsNotNull(webHost.Services.GetService<IOpenApiDocumentGenerator>());
-           
+
         }
         [Test]
         public void configure_services_should_inject_services()
@@ -51,12 +51,11 @@ namespace DisputeApi.Web.Test
             var target = new Startup();
             target.ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
-
             Assert.IsNotNull(serviceProvider);
             Assert.IsTrue(services.Count > 0);
 
         }
     }
 
-   
+
 }
