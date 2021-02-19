@@ -25,11 +25,27 @@ namespace DisputeApi.Web.Test.Features.TicketService.Services
         }
 
         [Test]
-        public async Task return_get_tickets()
+        public async Task get_tickets()
         {
             var result = await _service.GetTickets();
             Assert.IsInstanceOf<IQueryable<Ticket>>(result);
             _loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
+        }
+
+        [Test]
+        public async Task save_ticket()
+        {
+            var ticket = new Ticket
+            {
+                TicketNumber = 11235,
+                Name = "Jane Doe",
+                DateOfIssue = "11-12-2003",
+                TimeOfIssue = "12:24",
+                DriversLicence = "L2323G8"
+            };
+            var result = await _service.SaveTicket(ticket);
+            Assert.IsInstanceOf<Ticket>(result);
+            _loggerMock.VerifyLog(LogLevel.Information, "Saving mock ticket", Times.Once());
         }
     }
 }

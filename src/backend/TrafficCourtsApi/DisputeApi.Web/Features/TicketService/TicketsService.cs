@@ -1,7 +1,6 @@
 ﻿
 using DisputeApi.Web.Features.TicketService.Models;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TicketService.DBContexts;
@@ -11,7 +10,7 @@ namespace DisputeApi.Web.Features.TicketService.Service
 
     public interface ITicketsService
     {
-        Task<string> SaveTicket(Ticket ticket);
+        Task<Ticket> SaveTicket(Ticket ticket);
         Task<IQueryable<Ticket>> GetTickets();
     }
 
@@ -38,19 +37,18 @@ namespace DisputeApi.Web.Features.TicketService.Service
                 _context.SaveChanges();
             }
         }
-        public async Task<string> SaveTicket(Ticket ticket)
+        public async Task<Ticket> SaveTicket(Ticket ticket)
         {
-            _logger.LogInformation("Returning list of mock tickets");
-            // return await Task.FromResult(new List<Ticket> { new Ticket { Id = "BCT111111111", Description = "Traffic Violation 1" }, new Ticket { Id = "BCT222222222", Description = "Traffic Violation 1" } }.AsQueryable());
+            _logger.LogInformation("Saving mock ticket");
             _context.Tickets.Add(ticket);
             _context.SaveChanges();
-            return "Success";
+            return await Task.FromResult(ticket);
         }
 
         public async Task<IQueryable<Ticket>> GetTickets()
         {
             _logger.LogInformation("Returning list of mock tickets");
-            return _context.Tickets;
+            return await Task.FromResult(_context.Tickets);
         }
     }
 }

@@ -25,9 +25,9 @@ namespace DisputeApi.Web.Features.TicketService.Controller
         [HttpPost]
         [Route("savetickets")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
         [OpenApiTag("Dispute API")]
-        public async Task<IActionResult> SaveTickets([FromBody] Ticket ticket)
+        public async Task<IActionResult> SaveTicket([FromBody] Ticket ticket)
         {
             return Ok(await _ticketsService.SaveTicket(ticket));
         }
