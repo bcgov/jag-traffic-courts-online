@@ -106,7 +106,7 @@ jobs:
       CC_TEST_REPORTER_ID: 8a4068fec71e2ce84714008f57ea6548614c380821df800ed611c2afc6a42d93
       ACTION_DEBUG: true
 
-    name: Create, format and upload .NET coverage artifact
+    name: Create, format and upload .NET Backend coverage artifact
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -148,23 +148,23 @@ jobs:
           #echo "::set-env name=GIT_BRANCH::main"
         if: env.GIT_BRANCH == 'refs/heads/main'
 
-      # Run the .NET Coverage report for DisputeAPI
+      # Run the .NET Coverage report for Backend - DisputeAPI & TrafficCourts
       - name: Generate .NET Code Coverage - DisputeAPI
         run: dotnet test ${{github.workspace}}/src/backend/TrafficCourtsApi /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
-      # Formatting the DisputeAPI Coverage Report
+      # Formatting the Backend Coverage Report
       - name: Format the DisputeAPI Coverage Report
-        run: ./cc-test-reporter format-coverage -t lcov -o coverage/dispute-api-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/coverage.info
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/backend-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/coverage.info
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
         uses: actions/upload-artifact@v2
         with:
-          name: dispute-api-coverage-report
-          path: coverage/dispute-api-codeclimate.json
+          name: backend-coverage-report
+          path: coverage/backend-codeclimate.json
 
   aggregation:
-    name: Aggregate Spring Boot and Javascript reports
+    name: Aggregate Javascript and .NET Coverage reports
     needs: [ frontend, backend ]
     env:
       CC_TEST_REPORTER_ID: 8a4068fec71e2ce84714008f57ea6548614c380821df800ed611c2afc6a42d93
@@ -231,17 +231,17 @@ jobs:
       - name: Download Backend coverage report
         uses: actions/download-artifact@v1
         with:
-          name: dispute-api-coverage-report
+          name: backend-coverage-report
 
       # See what is inside
-      - name: List items inside java coverage report object
+      - name: List items inside .NET coverage report object
         run: |
-          ls dispute-api-coverage-report
+          ls backend-coverage-report
 
       # Copy total java to outside directory
-      - name: Copy Java Coverage to directory
+      - name: Copy .NET Coverage to directory
         run: |
-          cp dispute-api-coverage-report/dispute-api-codeclimate.json coverage-reports/dispute-api-codeclimate.json
+          cp backend-coverage-report/backend-codeclimate.json coverage-reports/backend-codeclimate.json
 
       # See what is inside coverage
       - name: List items inside java coverage report object
