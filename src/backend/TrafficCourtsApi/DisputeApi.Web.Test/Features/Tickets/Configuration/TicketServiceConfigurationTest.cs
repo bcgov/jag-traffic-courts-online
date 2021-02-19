@@ -1,5 +1,5 @@
-﻿using DisputeApi.Web.Features.Tickets.Configuration;
-using DisputeApi.Web.Features.Tickets.Services;
+﻿using DisputeApi.Web.Features.TicketService.Configuration;
+using DisputeApi.Web.Features.TicketService;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Linq;

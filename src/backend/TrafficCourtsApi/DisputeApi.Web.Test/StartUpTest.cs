@@ -1,5 +1,4 @@
-﻿using DisputeApi.Web.Features.Tickets.Services;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag.Generation;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using System.Net;
+using DisputeApi.Web.Features.TicketService;
 
 namespace DisputeApi.Web.Test
 {

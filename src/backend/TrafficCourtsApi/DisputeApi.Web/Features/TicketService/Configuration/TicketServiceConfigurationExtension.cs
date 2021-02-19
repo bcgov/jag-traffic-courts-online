@@ -1,7 +1,8 @@
-﻿using DisputeApi.Web.Features.Tickets.Services;
+﻿
+using DisputeApi.Web.Features.TicketService;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DisputeApi.Web.Features.Tickets.Configuration
+namespace DisputeApi.Web.Features.TicketService.Configuration
 {
     /// <summary>
     /// Extension to inject ticket configuration service in service collection

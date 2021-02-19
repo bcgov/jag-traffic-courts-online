@@ -1,4 +1,4 @@
-using DisputeApi.Web.Features.Tickets.Configuration;
+using Microsoft.EntityFrameworkCore;
 using DisputeApi.Web.Health;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +13,8 @@ using NSwag;
 using System;
 using System.Collections.Generic;
 using Serilog;
+using DisputeApi.Web.Features.TicketService.Configuration;
+using DisputeApi.Web.Features.TicketService.DBContexts;
 
 namespace DisputeApi.Web
 {
@@ -27,6 +29,7 @@ namespace DisputeApi.Web
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
 
+            services.AddDbContext<TicketContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers();
             ConfigureOpenApi(services);
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
@@ -38,8 +41,8 @@ namespace DisputeApi.Web
         {
             // Serilog middleware will not time or log components that appear before it in the pipeline
             // This can be utilized to exclude noisy handlers from logging, such as UseStaticFiles(), by placing UseSerilogRequestLogging() after them
-            app.UseSerilogRequestLogging();
-            
+            // app.UseSerilogRequestLogging();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -93,13 +96,13 @@ namespace DisputeApi.Web
                 config.PostProcess = document =>
                 {
                     document.Info.Version = "V0.1";
-                    document.Info.Description = "Dispuste API";
-                    document.Info.Title = "Dispuste API";
+                    document.Info.Description = "Dispute API";
+                    document.Info.Title = "Dispute API";
                     document.Tags = new List<OpenApiTag>()
                     {
                         new OpenApiTag() {
-                            Name = "Dispuste API",
-                            Description = "Dispuste API"
+                            Name = "Dispute API",
+                            Description = "Dispute API"
                         }
                     };
                 };

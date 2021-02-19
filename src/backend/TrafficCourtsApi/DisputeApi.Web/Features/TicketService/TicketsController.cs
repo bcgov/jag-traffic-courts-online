@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using DisputeApi.Web.Features.Tickets.Models;
-using DisputeApi.Web.Features.Tickets.Services;
+using DisputeApi.Web.Features.TicketService.Models;
+using DisputeApi.Web.Features.TicketService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,13 +23,23 @@ namespace DisputeApi.Web.Features
         }
 
         [HttpPost]
-        [Route("listtickets")]
+        [Route("savetickets")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
         [OpenApiTag("Dispute API")]
-        public async Task<IActionResult> GetListOfTickets()
+        public async Task<IActionResult> SaveTickets([FromBody] Ticket ticket)
         {
-            return Ok(await _ticketService.ListTickets());
+            return Ok(await _ticketService.SaveTicket(ticket));
+        }
+
+        [HttpGet]
+        [Route("getTickets")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
+        [OpenApiTag("Dispute API")]
+        public async Task<IActionResult> GetTickets()
+        {
+            return Ok(await _ticketService.GetTickets());
         }
     }
 }
