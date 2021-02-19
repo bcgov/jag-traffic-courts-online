@@ -150,11 +150,11 @@ jobs:
 
       # Run the .NET Coverage report for DisputeAPI
       - name: Generate .NET Code Coverage - DisputeAPI
-        run: dotnet test --collect:"XPlat Code Coverage" ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test
+        run: dotnet test ${{github.workspace}}/src/backend/TrafficCourtsApi //p:CollectCoverage=true //p:CoverletOutputFormat=lcov
 
       # Formatting the DisputeAPI Coverage Report
       - name: Format the DisputeAPI Coverage Report
-        run: ./cc-test-reporter format-coverage -t cobertura -o coverage/dispute-api-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/TestResults/**/coverage.cobertura.xml
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/dispute-api-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourtsApi/DisputeApi.Web.Test/coverage.info
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
