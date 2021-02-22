@@ -37,25 +37,12 @@ namespace DisputeApi.Web.Test.Features.TicketService.Services
         {
             var ticket = new Ticket
             {
-                Id = 1,
-                UserId = "User123",
-                ViolationTicketNumber = "AX87878888",
-                CourtLocation = "Victoria",
-                ViolationDate = "11-12-2002 12:23",
+                Id = 2,
+                UserId = "User125",
+                ViolationTicketNumber = "AX87877777",
+                ViolationDate = "11-11-2002 12:23",
                 SurName = "Smith",
-                GivenNames = "John",
-                Mailing = "Mailing",
-                Postal = "V0W0A0",
-                City = "Victoria",
-                Province = "BC",
-                Licence = "L2323G7",
-                ProvLicense = "L34343G64",
-                HomePhone = "2434332233",
-                WorkPhone = "3345553344",
-                Birthdate = "12-12-2002",
-                LawyerPresent = true,
-                InterpreterRequired = false,
-                CallWitness = false
+                GivenNames = "Tim"
             };
             var result = await _service.SaveTicket(ticket);
             Assert.IsInstanceOf<Ticket>(result);

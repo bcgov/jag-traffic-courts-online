@@ -33,22 +33,23 @@ namespace DisputeApi.Web.Test.Features.TicketService
             {
                 Id = 1,
                 UserId = "User123",
-                ViolationTicketNumber = "AX87878888",
-                CourtLocation = "Victoria",
-                ViolationDate = "11-12-2002 12:23",
+                ViolationTicketNumber = "LM87878888",
+                CourtLocation = "Nanaimo",
+                ViolationDate = "11-10-2002 12:23",
                 SurName = "Smith",
-                GivenNames = "John",
+                GivenNames = "Will",
                 Mailing = "Mailing",
-                Postal = "V0W0A0",
+                Postal = "V1W0A1",
                 City = "Victoria",
                 Province = "BC",
-                Licence = "L2323G7",
-                ProvLicense = "L34343G64",
-                HomePhone = "2434332233",
-                WorkPhone = "3345553344",
-                Birthdate = "12-12-2002",
-                LawyerPresent = true,
-                InterpreterRequired = false,
+                Licence = "R2323G7",
+                ProvLicense = "R34343G64",
+                HomePhone = "2434552233",
+                WorkPhone = "3343353344",
+                Birthdate = "11-12-2002",
+                LawyerPresent = false,
+                InterpreterRequired = true,
+                InterpreterLanguage = "French",
                 CallWitness = false
             };
             _ticketsServiceMock.Setup(x => x.GetTickets()).Returns(
@@ -67,24 +68,11 @@ namespace DisputeApi.Web.Test.Features.TicketService
             var ticket = new Ticket
             {
                 Id = 2,
-                UserId = "User123",
-                ViolationTicketNumber = "AX87878888",
-                CourtLocation = "Victoria",
-                ViolationDate = "11-12-2002 12:23",
+                UserId = "User14",
+                ViolationTicketNumber = "BC87878888",
+                ViolationDate = "11-11-2002 12:23",
                 SurName = "Smith",
                 GivenNames = "Tim",
-                Mailing = "Mailing",
-                Postal = "V0W0A0",
-                City = "Victoria",
-                Province = "BC",
-                Licence = "L2323G7",
-                ProvLicense = "L34343G64",
-                HomePhone = "2434332233",
-                WorkPhone = "3345553344",
-                Birthdate = "12-12-2002",
-                LawyerPresent = true,
-                InterpreterRequired = false,
-                CallWitness = false
             };
 
             _ticketsServiceMock.Setup(x => x.SaveTicket(ticket)).Returns(Task.FromResult(
