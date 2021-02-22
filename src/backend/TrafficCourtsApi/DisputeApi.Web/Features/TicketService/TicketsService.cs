@@ -24,18 +24,6 @@ namespace DisputeApi.Web.Features.TicketService.Service
         {
             _logger = logger;
             _context = context;
-            if (!_context.Tickets.Any())
-            {
-                _context.Tickets.Add(new Ticket
-                {
-                    TicketNumber = 11234,
-                    Name = "John Doe",
-                    DateOfIssue = "11-12-2002",
-                    TimeOfIssue = "12:23",
-                    DriversLicence = "L2323G7"
-                });
-                _context.SaveChanges();
-            }
         }
         public async Task<Ticket> SaveTicket(Ticket ticket)
         {
