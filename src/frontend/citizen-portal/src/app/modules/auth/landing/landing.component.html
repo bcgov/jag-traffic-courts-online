@@ -1,19 +1,27 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-lg-2">
-      <div class="logo">
-        <img
-          src="/assets/traffic-light.jpg"
-          style="width: 100px"
-          alt="Traffic Court Logo"
-        />
-      </div>
+    <div class="col-md-2 logo">
+      <img
+        src="/assets/traffic-light.jpg"
+        style="width: 120px"
+        alt="Traffic Court Logo"
+      />
     </div>
-
-    <div class="col-lg-10">
+    <div class="col-md-7">
       <div class="col-sm-12 header">
         <h1>Traffic Court Online</h1>
         <p>The tool for resolving your Violation Ticket issues</p>
+      </div>
+      <div class="col-sm-12">
+        <p>
+          Begin the process by initiating a dispute. You will be guided by a
+          self resolution wizard.
+        </p>
+        <p>
+          If you are not currently signed in with your BC Services card, you
+          will first be asked sign in or register.
+        </p>
+        <br />
       </div>
       <div class="col-sm-12">
         <div class="row actions">
@@ -22,9 +30,9 @@
               mat-flat-button
               color="primary"
               class="large"
-              routerLink="/auth/find"
+              routerLink="/survey/home"
             >
-              I have my ticket
+              Initiate Dispute
             </button>
           </div>
           <div class="col col-md-auto">
@@ -32,64 +40,81 @@
               mat-flat-button
               color="primary"
               class="large light"
-              routerLink="/auth/find"
-            >
-              I do not have my ticket
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <button
-              mat-flat-button
-              color="secondary"
-              class="large"
               routerLink="/survey/home"
             >
-              Take the Survey
+              Update Dispute Information
             </button>
           </div>
         </div>
       </div>
     </div>
+    <div class="col-md-3">
+      <div class="col col-md-auto">
+        <button
+          mat-flat-button
+          color="accent"
+          class="large"
+          routerLink="/auth/find"
+        >
+          <a
+            href="https://pay.gov.bc.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pay Ticket (PayBC)
+          </a>
+        </button>
+      </div>
+    </div>
     <div class="col-sm-12 col-md-4 steps step-1">
       <div class="step-container">
         <section class="content has-step-background">
-          <h2>Find your Violation Ticket</h2>
+          <h2>BC Services Card</h2>
 
-          <p>Step 1... let's find your Violation Ticket</p>
+          <p>
+            Set up your BC Services Card if you haven't done so already (this is
+            a one-time process).
+          </p>
         </section>
 
         <div class="info-graphic">
-          <mat-icon class="icon-display">event_note</mat-icon>
+          <img src="/assets/step_1_image.svg" alt="Step 1" />
         </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-4 steps step-2">
       <div class="step-container">
         <section class="content has-step-background">
-          <h2>View the Dispute Options</h2>
+          <h2>Self Resolution Wizard</h2>
 
           <p>
-            Step 2... let's see if we can resolve the dispute quickly and easily
+            Once your BC Services Card is setup, understand the process by
+            following the self resolution wizard.
           </p>
         </section>
 
         <div class="info-graphic">
-          <mat-icon class="icon-display">info</mat-icon>
+          <img src="/assets/step_2_image.svg" alt="Step 2" />
         </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-4 steps step-3">
       <div class="step-container">
         <section class="content has-step-background">
-          <h2>Proceed to Court</h2>
+          <h2>Violation Ticket Resolution</h2>
 
-          <p>Step 3... if the options do not solve your dispute</p>
+          <p>
+            Upon finishing the self resolution wizard, your ticket should be
+            resolved or ready to be disputed in court.
+          </p>
         </section>
 
         <div class="info-graphic">
+          <!--
           <mat-icon class="icon-display">festival</mat-icon>
+          -->
+
+          <img src="/assets/step_3_image.svg" alt="Step 3" />
         </div>
       </div>
     </div>

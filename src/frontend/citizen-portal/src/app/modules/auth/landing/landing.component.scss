@@ -21,8 +21,8 @@ div.container {
 .logo {
   padding-bottom: 1.25rem;
 
-  @include media-breakpoint-up(sm) {
-    padding-bottom: 1.5rem;
+  @include media-breakpoint-down(sm) {
+    display: none;
   }
 }
 
@@ -56,9 +56,9 @@ div.container {
   width: 100%;
   min-width: 220px;
 
-  @include media-breakpoint-up(md) {
-    width: 300px;
-  }
+  // @include media-breakpoint-up(md) {
+  //   width: 300px;
+  // }
 
   &.large {
     height: 46px;
@@ -86,17 +86,17 @@ a {
   }
 
   &.step-1 {
-    // background-image: url("/assets/step_1.mobile.svg");
+    background-image: url("/assets/step_1.mobile.svg");
     background-position-x: 14px;
     background-size: 36px auto;
   }
   &.step-2 {
-    // background-image: url("/assets/step_2.mobile.svg");
+    background-image: url("/assets/step_2.mobile.svg");
     background-position-x: 11px;
     background-size: 50px auto;
   }
   &.step-3 {
-    // background-image: url("/assets/step_3.mobile.svg");
+    background-image: url("/assets/step_3.mobile.svg");
     background-position-x: 13px;
     background-size: 45px auto;
   }
@@ -124,6 +124,7 @@ a {
   .info-graphic {
     padding-top: 1.2rem;
     padding-bottom: 2.7rem;
+    text-align: center;
   }
 }
 
@@ -163,6 +164,25 @@ a {
     img {
       width: 125px;
       height: auto;
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .steps {
+    &.step-1 {
+      background-image: url("/assets/step_1.svg");
+      background-position-x: 86%;
+    }
+    &.step-2 {
+      background-image: url("/assets/step_2.svg");
+    }
+    &.step-3 {
+      background-image: url("/assets/step_3.svg");
+    }
+    &.step-2,
+    &.step-3 {
+      background-size: 65px auto;
     }
   }
 }
