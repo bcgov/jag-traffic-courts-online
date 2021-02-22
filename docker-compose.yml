@@ -3,6 +3,24 @@ version: "3.8"
 services:
 
 # #############################################################################################
+# ###                                 TrafficCourt BACKEND                                  ###
+# #############################################################################################
+  dispute-api:
+    build:
+      context: ./src/backend/TrafficCourtsApi
+      args:
+        PROJECT_NAME: DisputeApi.Web        
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development    
+      SPLUNK_COLLECTOR_URL: https://localhost:8088/services/collector/event
+      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
+    ports:
+      - "5000:80"
+    restart: always
+    networks:
+      - traffic-court-net
+
+# #############################################################################################
 # ###                                 TrafficCourt FRONTEND                                 ###
 # #############################################################################################
   citizen-portal:
@@ -12,7 +30,7 @@ services:
     environment: 
       - USE_MOCK_SERVICES=false
       - USE_KEYCLOAK=true
-      - API_URL=http://localhost:4300/api
+      - API_URL=http://localhost:5000/api
       - KEYCLOAK_URL=http://keycloak:8081/auth
       - KEYCLOAK_REALM=traffic-court
       - KEYCLOAK_CLIENT_ID=test
@@ -61,14 +79,14 @@ services:
 # #############################################################################################
 # ###                                  KEYCLOAK CONFIG                                      ###
 # #############################################################################################  
-  keycloak-config:
-    build:
-      context: ./infrastructure/keycloak
-      args:
-        - KEYCLOAK_URL=http://keycloak:8080
-    command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
-    networks:
-      - traffic-court-net
+  # keycloak-config:
+  #   build:
+  #     context: ./infrastructure/keycloak
+  #     args:
+  #       - KEYCLOAK_URL=http://keycloak:8080
+  #   command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
+  #   networks:
+  #     - traffic-court-net
 
 #############################################################################################
 ###                                  SPLUNK                                               ###
