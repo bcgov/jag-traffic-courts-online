@@ -37,7 +37,7 @@ namespace DisputeApi.Web.Test.Features.TicketService.Services
         {
             var ticket = new Ticket
             {
-                Id = 2,
+                Id = 3,
                 UserId = "User125",
                 ViolationTicketNumber = "AX87877777",
                 ViolationDate = "11-11-2002 12:23",

@@ -11,9 +11,9 @@ namespace DisputeApi.Web.Test.Features.TicketService.Models
         {
             var ticket = new Ticket
             {
-                Id = 1,
+                Id = 1001,
                 UserId = "User123",
-                ViolationTicketNumber = "AX87878888",
+                ViolationTicketNumber = "GX87878888",
                 CourtLocation = "Victoria",
                 ViolationDate = "11-12-2002 12:23",
                 SurName = "Smith",
