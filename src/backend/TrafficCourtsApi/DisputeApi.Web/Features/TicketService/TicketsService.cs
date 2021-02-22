@@ -28,24 +28,24 @@ namespace DisputeApi.Web.Features.TicketService.Service
             {
                 _context.Tickets.Add(new Ticket
                 {
-                    Id = 0001,
-                    UserId = "nouser",
+                    Id = 0002,
+                    UserId = "nouser56",
                     ViolationTicketNumber = "AH135699",
                     CourtLocation = "Saanich",
-                    ViolationDate = "09-09-2009 12:23",
+                    ViolationDate = "09-09-2009 11:21",
                     SurName = "Hope",
                     GivenNames = "Bob",
                     Mailing = "PO 8908",
                     Postal = "V0X0B0",
                     City = "Saanich",
-                    Province = "BC",
-                    Licence = "L2523G7",
-                    ProvLicense = "L34543G64",
-                    HomePhone = "2437772233",
-                    WorkPhone = "3349993344",
+                    Province = "British Columbia",
+                    Licence = "C2523G7",
+                    ProvLicense = "C34543G64",
+                    HomePhone = "3437772233",
+                    WorkPhone = "2349993344",
                     Birthdate = "06-06-2006",
                     LawyerPresent = false,
-                    InterpreterRequired = false,
+                    InterpreterRequired = true,
                     CallWitness = true
                 });
                 _context.SaveChanges();
