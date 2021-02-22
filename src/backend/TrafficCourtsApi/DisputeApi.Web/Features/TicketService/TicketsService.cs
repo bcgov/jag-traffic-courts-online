@@ -28,25 +28,25 @@ namespace DisputeApi.Web.Features.TicketService.Service
             {
                 _context.Tickets.Add(new Ticket
                 {
-                    Id = 1,
-                    UserId = "User123",
-                    ViolationTicketNumber = "AX87878888",
-                    CourtLocation = "Victoria",
-                    ViolationDate = "11-12-2002 12:23",
-                    SurName = "Smith",
-                    GivenNames = "John",
-                    Mailing = "Mailing",
-                    Postal = "V0W0A0",
-                    City = "Victoria",
+                    Id = 0001,
+                    UserId = "nouser",
+                    ViolationTicketNumber = "AH135699",
+                    CourtLocation = "Saanich",
+                    ViolationDate = "09-09-2009 12:23",
+                    SurName = "Hope",
+                    GivenNames = "Bob",
+                    Mailing = "PO 8908",
+                    Postal = "V0X0B0",
+                    City = "Saanich",
                     Province = "BC",
-                    Licence = "L2323G7",
-                    ProvLicense = "L34343G64",
-                    HomePhone = "2434332233",
-                    WorkPhone = "3345553344",
-                    Birthdate = "12-12-2002",
-                    LawyerPresent = true,
+                    Licence = "L2523G7",
+                    ProvLicense = "L34543G64",
+                    HomePhone = "2437772233",
+                    WorkPhone = "3349993344",
+                    Birthdate = "06-06-2006",
+                    LawyerPresent = false,
                     InterpreterRequired = false,
-                    CallWitness = false
+                    CallWitness = true
                 });
                 _context.SaveChanges();
             }
