@@ -32,19 +32,9 @@ namespace DisputeApi.Web.Test.Features.TicketService
                 Id = 1,
                 UserId = "User123",
                 ViolationTicketNumber = "LM87878888",
-                CourtLocation = "Nanaimo",
                 ViolationDate = "11-10-2002 12:23",
                 SurName = "Smith",
-                GivenNames = "Will",
-                Mailing = "Mailing",
-                Postal = "V1W0A1",
-                City = "Victoria",
-                Province = "BC",
-                Licence = "R2323G7",
-                ProvLicense = "R34343G64",
-                HomePhone = "2434552233",
-                WorkPhone = "3343353344",
-                Birthdate = "11-12-2002"
+                GivenNames = "Will"
             };
             _ticketsServiceMock.Setup(x => x.GetTickets()).Returns(
               Task.FromResult(new List<Ticket> { ticket }.AsQueryable()));
