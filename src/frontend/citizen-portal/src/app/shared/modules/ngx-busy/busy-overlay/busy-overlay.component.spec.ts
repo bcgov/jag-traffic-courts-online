@@ -29,7 +29,7 @@ describe('BusyOverlayComponent', () => {
   });
 
   it('should emit started', () => {
-    const component = fixture.componentInstance;
+    component = fixture.componentInstance;
     spyOn(component.started, 'emit');
 
     component.onBusyStart(true);
@@ -39,7 +39,7 @@ describe('BusyOverlayComponent', () => {
   });
 
   it('should emit started', () => {
-    const component = fixture.componentInstance;
+    component = fixture.componentInstance;
     spyOn(component.stopped, 'emit');
 
     component.onBusyStop(true);
