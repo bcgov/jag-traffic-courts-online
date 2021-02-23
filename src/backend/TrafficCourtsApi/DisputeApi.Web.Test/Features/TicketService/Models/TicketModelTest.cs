@@ -26,10 +26,7 @@ namespace DisputeApi.Web.Test.Features.TicketService.Models
                 ProvLicense = "L34343G64",
                 HomePhone = "2434332233",
                 WorkPhone = "3345553344",
-                Birthdate = "12-12-2002",
-                LawyerPresent = true,
-                InterpreterRequired = false,
-                CallWitness = false
+                Birthdate = "12-12-2002"
             };
             Assert.AreEqual(ticket.GivenNames, "John");
             Assert.AreEqual(ticket.Licence, "L2323G7");

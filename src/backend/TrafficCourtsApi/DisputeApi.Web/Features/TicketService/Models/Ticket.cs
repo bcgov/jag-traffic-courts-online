@@ -22,9 +22,5 @@ namespace DisputeApi.Web.Features.TicketService.Models
         public string HomePhone { get; set; }
         public string WorkPhone { get; set; }
         public string Birthdate { get; set; }
-        public bool LawyerPresent { get; set; }
-        public bool InterpreterRequired { get; set; }
-        public string InterpreterLanguage { get; set; }
-        public bool CallWitness { get; set; }
     }
 }

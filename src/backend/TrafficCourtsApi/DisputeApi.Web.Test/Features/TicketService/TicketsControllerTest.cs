@@ -1,6 +1,4 @@
-﻿using DisputeApi.Web.Features;
-using DisputeApi.Web.Features.TicketService.Models;
-using DisputeApi.Web.Features.TicketService;
+﻿using DisputeApi.Web.Features.TicketService.Models;
 using DisputeApi.Web.Features.TicketService.Controller;
 using DisputeApi.Web.Features.TicketService.Service;
 using DisputeApi.Web.Test.Utils;
@@ -46,11 +44,7 @@ namespace DisputeApi.Web.Test.Features.TicketService
                 ProvLicense = "R34343G64",
                 HomePhone = "2434552233",
                 WorkPhone = "3343353344",
-                Birthdate = "11-12-2002",
-                LawyerPresent = false,
-                InterpreterRequired = true,
-                InterpreterLanguage = "French",
-                CallWitness = false
+                Birthdate = "11-12-2002"
             };
             _ticketsServiceMock.Setup(x => x.GetTickets()).Returns(
               Task.FromResult(new List<Ticket> { ticket }.AsQueryable()));
