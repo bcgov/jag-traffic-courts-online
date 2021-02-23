@@ -17,6 +17,14 @@ export const SurveyJson = {
           type: 'panel',
           elements: [
             {
+              type: 'html',
+              name: 'alert_info',
+              html: `<div class="alert alert-primary">
+                <h1 class="alert-heading">Violation Ticket Lookup</h1>
+                <p class="mt-2 mb-0">Find your Violation Ticket by entering the Violation Ticket Number and Time.</p>
+                </div>`,
+            },
+            {
               type: 'text',
               inputFormat: 'AA99999999',
               name: 'violationTicketNumber',
@@ -52,7 +60,8 @@ export const SurveyJson = {
               name: 'alert_info',
               html: `<div class="alert alert-primary">
                 <h1 class="alert-heading">Violation Ticket Information</h1>
-                <p class="mt-2 mb-0">Here is a summary of your ticket information.</p>
+                <p class="mt-2 mb-0">Here is a summary of your ticket information.
+                Ensure that the specifics of the ticket are correct.</p>
                 </div>`,
             },
             {
@@ -153,7 +162,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count1A',
               visibleIf: '{count1} = "A"',
-              title: 'I would like to make the following request(s):',
+              title: 'Which requests would you like to make?',
               isRequired: true,
               choices: [
                 {
@@ -170,7 +179,9 @@ export const SurveyJson = {
               type: 'comment',
               name: 'count1_reduction_reason',
               title:
-                'Reasons for a Reduction in the Ticketed Amount(s) (Must not contain a defence of the allegation)',
+                'What are your reasons for a reduction in the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
               isRequired: true,
               visibleIf: '{count1} = "A" and {count1A} contains "A1"',
             },
@@ -178,7 +189,9 @@ export const SurveyJson = {
               type: 'comment',
               name: 'count1_time_reason',
               title:
-                'Reasons for Time to Pay the Ticketed Amount(s) (Must not contain a defence of the allegation)',
+                'What are your reasons for requiring more time to pay the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
               isRequired: true,
               visibleIf: '{count1} = "A" and {count1A} contains "A2"',
             },
@@ -186,7 +199,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count1B',
               visibleIf: '{count1} = "B"',
-              title: 'I want to appear for following reason(s):',
+              title: 'Why do you want to appear?',
               isRequired: true,
               choices: [
                 {
@@ -243,7 +256,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count2A',
               visibleIf: '{count2} = "A"',
-              title: 'I would like to make the following request(s):',
+              title: 'Which requests would you like to make?',
               isRequired: true,
               choices: [
                 {
@@ -260,7 +273,9 @@ export const SurveyJson = {
               type: 'comment',
               name: 'count2_reduction_reason',
               title:
-                'Reasons for a Reduction in the Ticketed Amount(s) (Must not contain a defence of the allegation)',
+                'What are your reasons for a reduction in the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
               isRequired: true,
               visibleIf: '{count2} = "A" and {count2A} contains "A1"',
             },
@@ -268,7 +283,9 @@ export const SurveyJson = {
               type: 'comment',
               name: 'count2_time_reason',
               title:
-                'Reasons for Time to Pay the Ticketed Amount(s) (Must not contain a defence of the allegation)',
+                'What are your reasons for requiring more time to pay the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
               isRequired: true,
               visibleIf: '{count2} = "A" and {count2A} contains "A2"',
             },
@@ -276,7 +293,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count2B',
               visibleIf: '{count2} = "B"',
-              title: 'I want to appear for following reason(s):',
+              title: 'Why do you want to appear?',
               isRequired: true,
               choices: [
                 {
@@ -333,7 +350,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count3A',
               visibleIf: '{count3} = "A"',
-              title: 'I would like to make the following request(s):',
+              title: 'Which requests would you like to make?',
               isRequired: true,
               choices: [
                 {
@@ -350,7 +367,9 @@ export const SurveyJson = {
               type: 'comment',
               name: 'count3_reduction_reason',
               title:
-                'Reasons for a Reduction in the Ticketed Amount(s) (Must not contain a defence of the allegation)',
+                'What are your reasons for a reduction in the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
               isRequired: true,
               visibleIf: '{count3} = "A" and {count3A} contains "A1"',
             },
@@ -358,7 +377,9 @@ export const SurveyJson = {
               type: 'comment',
               name: 'count3_time_reason',
               title:
-                'Reasons for Time to Pay the Ticketed Amount(s) (Must not contain a defence of the allegation)',
+                'What are your reasons for requiring more time to pay the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
               isRequired: true,
               visibleIf: '{count3} = "A" and {count3A} contains "A2"',
             },
@@ -366,7 +387,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count3B',
               visibleIf: '{count3} = "B"',
-              title: 'I want to appear for following reason(s):',
+              title: 'Why do you want to appear?',
               isRequired: true,
               choices: [
                 {
@@ -392,10 +413,9 @@ export const SurveyJson = {
           type: 'html',
           name: 'alert_info',
           html: `<div class="alert alert-primary">
-          <h1 class="alert-heading">Court Hearing Information</h1>
-          <p class="mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <h1 class="alert-heading">Disputing your Ticket in Court</h1>
+          <p class="mt-2 mb-0">Based upon your answers to the previous questions, you have decided to dispute your ticket in Court.
+          Please answer the following questions.</p>
           </div>`,
         },
         {

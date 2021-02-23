@@ -11,6 +11,15 @@ div.container {
   @include media-breakpoint-up(md) {
     margin-bottom: 4rem;
   }
+
+  a {
+    color: theme-palette(blue, light);
+    white-space: nowrap;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .icon-display {
@@ -38,13 +47,13 @@ div.container {
       font-size: 2rem;
     }
     &:only-child {
-      margin-bottom: 2.25rem;
+      margin-bottom: 1.75rem;
     }
   }
 
   p {
     font-style: italic;
-    margin-bottom: 2.25rem;
+    margin-bottom: 1.75rem;
 
     @include media-breakpoint-up(md) {
       font-size: 1.2rem;
@@ -70,10 +79,6 @@ div.container {
     background-color: theme-palette(blue, light);
     color: white;
   }
-}
-
-a {
-  color: theme-palette(blue);
 }
 
 .steps {
@@ -113,19 +118,21 @@ a {
     h2 {
       color: theme-palette(blue, light);
     }
-
-    a {
-      font-weight: bold;
-      text-decoration: underline;
-      white-space: nowrap;
-    }
   }
 
   .info-graphic {
     padding-top: 1.2rem;
     padding-bottom: 2.7rem;
     text-align: center;
+
+    &.clickable {
+      cursor: pointer;
+    }
   }
+}
+
+.anchor-button {
+  color: white !important;
 }
 
 @include media-breakpoint-up(md) {

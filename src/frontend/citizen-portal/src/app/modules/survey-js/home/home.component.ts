@@ -46,7 +46,6 @@ export class HomeComponent implements OnInit {
 
       const payYn = survey.getValue('payYn');
       if (payYn) {
-        console.log('go', payYn);
         this.route.navigate(['/']);
         return;
       }
@@ -135,11 +134,9 @@ export class HomeComponent implements OnInit {
           );
           if (cnt.countNo === 1) {
             question.html =
-              '<div class="alert alert-primary"><h1 class="alert-heading">Count Information</h1>' +
-              '<p class="mt-2 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit,' +
-              'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,' +
-              'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><hr>' +
-              '<h1 class="alert-heading">Count #' +
+              '<div class="alert alert-primary"><h1 class="alert-heading">Violation Ticket Counts</h1>' +
+              '<p class="mt-2 mb-0">Look at each of the counts on your ticket and please answer the following questions.</p></div>' +
+              '<br/><br/><div class="alert alert-primary"><h1 class="alert-heading">Count #' +
               cnt.countNo +
               '<small>' +
               cnt.description +
