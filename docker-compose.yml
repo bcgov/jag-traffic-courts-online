@@ -30,7 +30,7 @@ services:
     environment: 
       - USE_MOCK_SERVICES=false
       - USE_KEYCLOAK=true
-      - API_URL=http://localhost:5000/api
+      - API_URL=http://dispute-api:5000/api
       - KEYCLOAK_URL=http://keycloak:8081/auth
       - KEYCLOAK_REALM=traffic-court
       - KEYCLOAK_CLIENT_ID=test
@@ -79,14 +79,14 @@ services:
 # #############################################################################################
 # ###                                  KEYCLOAK CONFIG                                      ###
 # #############################################################################################  
-  # keycloak-config:
-  #   build:
-  #     context: ./infrastructure/keycloak
-  #     args:
-  #       - KEYCLOAK_URL=http://keycloak:8080
-  #   command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
-  #   networks:
-  #     - traffic-court-net
+  keycloak-config:
+    build:
+      context: ./infrastructure/keycloak
+      args:
+        - KEYCLOAK_URL=http://keycloak:8080
+    command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s -wait-retry-interval 10s /tmp/createuser.sh"
+    networks:
+      - traffic-court-net
 
 #############################################################################################
 ###                                  SPLUNK                                               ###
