@@ -44,12 +44,6 @@ export class HomeComponent implements OnInit {
     tcoSurvey.onComplete.add((survey) => {
       this.logger.info('Survey JSON:', JSON.stringify(survey.data, null, 3));
 
-      const payYn = survey.getValue('payYn');
-      if (payYn) {
-        this.route.navigate(['/']);
-        return;
-      }
-
       this.isComplete = true;
     });
 
