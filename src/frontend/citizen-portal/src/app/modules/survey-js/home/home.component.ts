@@ -125,11 +125,11 @@ export class HomeComponent implements OnInit {
             this.phonePipe.transform(response.workPhone)
         );
 
-        let numberOfCounts = response.counts?.length;
+        const numberOfCounts = response.counts?.length;
         survey.setValue('numberOfCounts', response.counts?.length);
 
         response.counts.forEach((cnt) => {
-          let question = survey.getQuestionByName(
+          const question = survey.getQuestionByName(
             'alert_info_count' + cnt.countNo
           );
           if (cnt.countNo === 1) {
