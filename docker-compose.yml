@@ -12,7 +12,7 @@ services:
         PROJECT_NAME: DisputeApi.Web        
     environment:
       ASPNETCORE_ENVIRONMENT: Development    
-      SPLUNK_COLLECTOR_URL: https://splunk:8088/services/collector/event
+      SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
       SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
     ports:
       - "5000:80"
