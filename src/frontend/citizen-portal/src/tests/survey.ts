@@ -17,38 +17,31 @@ export const SurveyJson = {
           type: 'panel',
           elements: [
             {
-              type: 'boolean',
-              name: 'ticketYn',
-              title: 'Boolean',
-              label: 'Do you have a violation ticket?',
-              isRequired: true,
-            },
-            {
-              type: 'text',
-              inputFormat: '9999999',
-              name: 'driverLicenseNumber',
-              visibleIf: '{ticketYn} = false',
-              title: 'What is your Drivers License Number',
-              isRequired: true,
+              type: 'html',
+              name: 'alert_info',
+              html: `<div class="alert alert-primary">
+                <h1 class="alert-heading">Violation Ticket Lookup</h1>
+                <p class="mt-2 mb-0">Find your Violation Ticket by entering the Violation Ticket Number and Time.</p>
+                </div>`,
             },
             {
               type: 'text',
               inputFormat: 'AA99999999',
               name: 'violationTicketNumber',
-              visibleIf: '{ticketYn} = true',
               title: 'What is the Violation Ticket Number',
               autoComplete: 'off',
               description:
                 'A Violation Ticket Number is 2 letters and 8 numbers. For example, AB12345678.',
-              isRequired: true,
+              isRequired: false,
+              hideNumber: true,
             },
             {
               type: 'text',
               name: 'ticketTime',
               title: 'What is the Time of the Ticket',
-              visibleIf: '{ticketYn} = true',
-              isRequired: true,
               inputType: 'time',
+              isRequired: false,
+              hideNumber: true,
             },
           ],
           startWithNewLine: false,
@@ -64,9 +57,12 @@ export const SurveyJson = {
           elements: [
             {
               type: 'html',
-              name: 'ticket_info',
-              html:
-                '<article class="intro">    <h1 class="intro__heading intro__heading--income title"> Violation Ticket Information </h1>    <div class=intro__body wysiwyg">       <p>Here is a summary of your ticket information.         </div> </article>',
+              name: 'alert_info',
+              html: `<div class="alert alert-primary">
+                <h1 class="alert-heading">Violation Ticket Information</h1>
+                <p class="mt-2 mb-0">Here is a summary of your ticket information.
+                Ensure that the specifics of the ticket are correct.</p>
+                </div>`,
             },
             {
               name: 'info_violationTicketNumber',
@@ -92,109 +88,443 @@ export const SurveyJson = {
               readOnly: true,
             },
             {
-              name: 'info_surname',
-              type: 'text',
-              title: 'Surname',
+              name: 'info_party',
+              type: 'comment',
+              title: 'Personal Information',
               hideNumber: true,
               readOnly: true,
             },
             {
-              name: 'info_givenNames',
-              type: 'text',
-              title: 'Given',
-              startWithNewLine: false,
+              name: 'info_address',
+              type: 'comment',
+              title: 'Address Information',
               hideNumber: true,
               readOnly: true,
             },
+            {
+              type: 'radiogroup',
+              name: 'correctYn',
+              title: 'Is the information displayed above correct?',
+              isRequired: false,
+              choices: [
+                {
+                  value: 'Y',
+                  text: 'Yes',
+                },
+                {
+                  value: 'N',
+                  text: 'No',
+                },
+              ],
+              colCount: 0,
+            },
           ],
-        },
-        {
-          type: 'boolean',
-          name: 'disputeYn',
-          title: 'Would you like to dispute this violation ticket?',
-          isRequired: true,
         },
       ],
     },
     {
-      name: 'page3',
+      name: 'pageCount1',
+      visibleIf: '{numberOfCounts} > 0',
       elements: [
         {
-          type: 'boolean',
-          name: 'financialYn',
-          title: 'Boolean',
-          visibleIf: '{disputeYn} = true',
-          label: 'Are you disputing the ticket for financial reasons?',
-          isRequired: true,
+          type: 'panel',
+          name: 'panel_count1',
+          elements: [
+            {
+              type: 'html',
+              name: 'alert_info_count1',
+              html: '',
+            },
+            {
+              type: 'radiogroup',
+              name: 'count1',
+              title: 'For this count, which do you agree?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'A',
+                  text:
+                    'I agree that I committed this offence, and I do not want to appear in court',
+                },
+                {
+                  value: 'B',
+                  text:
+                    'I agree that I committed this offence, and I want to appear in court',
+                },
+                {
+                  value: 'C',
+                  text:
+                    'I do not agree that I committed this offence (allegation)',
+                },
+              ],
+            },
+            {
+              type: 'checkbox',
+              name: 'count1A',
+              visibleIf: '{count1} = "A"',
+              title: 'Which requests would you like to make?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'A1',
+                  text: 'I request a reduction of the ticketed amount: and/or',
+                },
+                {
+                  value: 'A2',
+                  text: 'I request time to pay the ticketed amount',
+                },
+              ],
+            },
+            {
+              type: 'comment',
+              name: 'count1_reduction_reason',
+              title:
+                'What are your reasons for a reduction in the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
+              isRequired: true,
+              visibleIf: '{count1} = "A" and {count1A} contains "A1"',
+            },
+            {
+              type: 'comment',
+              name: 'count1_time_reason',
+              title:
+                'What are your reasons for requiring more time to pay the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
+              isRequired: true,
+              visibleIf: '{count1} = "A" and {count1A} contains "A2"',
+            },
+            {
+              type: 'checkbox',
+              name: 'count1B',
+              visibleIf: '{count1} = "B"',
+              title: 'Why do you want to appear?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'B1',
+                  text: 'To request a reduction of the ticketed amount: and/or',
+                },
+                {
+                  value: 'B2',
+                  text: 'To request time to pay the ticketed amount',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'pageCount2',
+      visibleIf: '{numberOfCounts} > 1',
+      elements: [
+        {
+          type: 'panel',
+          name: 'panel_count2',
+          elements: [
+            {
+              type: 'html',
+              name: 'alert_info_count2',
+              html: '',
+            },
+            {
+              type: 'radiogroup',
+              name: 'count2',
+              title: 'For this count, which do you agree?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'A',
+                  text:
+                    'I agree that I committed this offence, and I do not want to appear in court',
+                },
+                {
+                  value: 'B',
+                  text:
+                    'I agree that I committed this offence, and I want to appear in court',
+                },
+                {
+                  value: 'C',
+                  text:
+                    'I do not agree that I committed this offence (allegation)',
+                },
+              ],
+            },
+            {
+              type: 'checkbox',
+              name: 'count2A',
+              visibleIf: '{count2} = "A"',
+              title: 'Which requests would you like to make?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'A1',
+                  text: 'I request a reduction of the ticketed amount: and/or',
+                },
+                {
+                  value: 'A2',
+                  text: 'I request time to pay the ticketed amount',
+                },
+              ],
+            },
+            {
+              type: 'comment',
+              name: 'count2_reduction_reason',
+              title:
+                'What are your reasons for a reduction in the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
+              isRequired: true,
+              visibleIf: '{count2} = "A" and {count2A} contains "A1"',
+            },
+            {
+              type: 'comment',
+              name: 'count2_time_reason',
+              title:
+                'What are your reasons for requiring more time to pay the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
+              isRequired: true,
+              visibleIf: '{count2} = "A" and {count2A} contains "A2"',
+            },
+            {
+              type: 'checkbox',
+              name: 'count2B',
+              visibleIf: '{count2} = "B"',
+              title: 'Why do you want to appear?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'B1',
+                  text: 'To request a reduction of the ticketed amount: and/or',
+                },
+                {
+                  value: 'B2',
+                  text: 'To request time to pay the ticketed amount',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'pageCount3',
+      visibleIf: '{numberOfCounts} > 2',
+      elements: [
+        {
+          type: 'panel',
+          name: 'panel_count3',
+          elements: [
+            {
+              type: 'html',
+              name: 'alert_info_count3',
+              html: '',
+            },
+            {
+              type: 'radiogroup',
+              name: 'count3',
+              title: 'For this count, which do you agree?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'A',
+                  text:
+                    'I agree that I committed this offence, and I do not want to appear in court',
+                },
+                {
+                  value: 'B',
+                  text:
+                    'I agree that I committed this offence, and I want to appear in court',
+                },
+                {
+                  value: 'C',
+                  text:
+                    'I do not agree that I committed this offence (allegation)',
+                },
+              ],
+            },
+            {
+              type: 'checkbox',
+              name: 'count3A',
+              visibleIf: '{count3} = "A"',
+              title: 'Which requests would you like to make?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'A1',
+                  text: 'I request a reduction of the ticketed amount: and/or',
+                },
+                {
+                  value: 'A2',
+                  text: 'I request time to pay the ticketed amount',
+                },
+              ],
+            },
+            {
+              type: 'comment',
+              name: 'count3_reduction_reason',
+              title:
+                'What are your reasons for a reduction in the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
+              isRequired: true,
+              visibleIf: '{count3} = "A" and {count3A} contains "A1"',
+            },
+            {
+              type: 'comment',
+              name: 'count3_time_reason',
+              title:
+                'What are your reasons for requiring more time to pay the ticketed amount(s)?',
+              description:
+                'This reason must not contain a defence of the allegation',
+              isRequired: true,
+              visibleIf: '{count3} = "A" and {count3A} contains "A2"',
+            },
+            {
+              type: 'checkbox',
+              name: 'count3B',
+              visibleIf: '{count3} = "B"',
+              title: 'Why do you want to appear?',
+              isRequired: true,
+              choices: [
+                {
+                  value: 'B1',
+                  text: 'To request a reduction of the ticketed amount: and/or',
+                },
+                {
+                  value: 'B2',
+                  text: 'To request time to pay the ticketed amount',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'pageCourtInfo',
+      visibleIf:
+        '({count1} and {count1} != "A") or ({count2} and {count2} != "A") or ({count3} and {count3} != "A")',
+      elements: [
+        {
+          type: 'html',
+          name: 'alert_info',
+          html: `<div class="alert alert-primary">
+          <h1 class="alert-heading">Disputing your Ticket in Court</h1>
+          <p class="mt-2 mb-0">Based upon your answers to the previous questions, you have decided to dispute your ticket in Court.
+          Please answer the following questions.</p>
+          </div>`,
         },
         {
-          type: 'checkbox',
-          name: 'disputeReason',
-          visibleIf: '{disputeYn} = true and {financialYn} = false',
-          title: 'Why do you want to dispute the ticket?',
+          type: 'radiogroup',
+          name: 'lawyerYn',
+          title: 'Do you intend to be represented at the hearing by a lawyer?',
           isRequired: true,
-          hasOther: true,
-          colCount: 4,
           choices: [
             {
-              value: 'choice1',
-              text: 'I am innocent',
+              value: 'Y',
+              text: 'Yes',
             },
             {
-              value: 'choice2',
-              text: 'Not my fault, I was distracted',
+              value: 'N',
+              text: 'No',
+            },
+          ],
+          colCount: 0,
+        },
+        {
+          type: 'radiogroup',
+          name: 'interpreterYn',
+          title: 'Do you require an interpreter at the hearing?',
+          isRequired: true,
+          choices: [
+            {
+              value: 'Y',
+              text: 'Yes',
             },
             {
-              value: 'choice3',
-              text: 'The weather impaired my vision',
+              value: 'N',
+              text: 'No',
+            },
+          ],
+          colCount: 0,
+        },
+        {
+          type: 'dropdown',
+          name: 'interpreterLang',
+          title: 'Language',
+          visibleIf: '{interpreterYn} = "Y"',
+          choices: [
+            {
+              value: 'L1',
+              text: 'Spanish',
             },
             {
-              value: 'choice4',
-              text: 'I forgot to wear my glasses',
-            },
-            {
-              value: 'choice5',
-              text: 'I have witnesses that can help my case',
+              value: 'L2',
+              text: 'French',
             },
           ],
         },
         {
-          type: 'boolean',
-          name: 'createCaseYn',
-          title: 'Boolean',
-          visibleIf:
-            '{disputeYn} = true and {financialYn} = false and {disputeReason.length} > 0',
-          label: 'Would you like to create a court date?',
+          type: 'radiogroup',
+          name: 'witnessYn',
+          title: 'Do you intend to call a witness at the hearing?',
           isRequired: true,
+          choices: [
+            {
+              value: 'Y',
+              text: 'Yes',
+            },
+            {
+              value: 'N',
+              text: 'No',
+            },
+          ],
+          colCount: 0,
         },
+      ],
+    },
+    {
+      name: 'pageNoCourt',
+      visibleIf:
+        '({count1} == "A" or !{count1}) and ({count2} == "A" or !{count2}) and ({count3} == "A" or !{count3})',
+      elements: [
         {
-          type: 'boolean',
-          name: 'moreTimeYn',
-          title: 'Boolean',
-          visibleIf: '{disputeYn} = true and {financialYn} = true',
-          label: 'Do you need more time to pay the fine?',
+          type: 'radiogroup',
+          name: 'xxYn',
+          title: 'What is next?',
           isRequired: true,
+          choices: [
+            {
+              value: 'Y',
+              text: 'Yes',
+            },
+            {
+              value: 'N',
+              text: 'No',
+            },
+          ],
+          colCount: 0,
         },
+      ],
+    },
+    {
+      name: 'pageConfirmation',
+      elements: [
         {
-          type: 'boolean',
-          name: 'installmentsYn',
-          title: 'Boolean',
-          visibleIf:
-            '{disputeYn} = true and {financialYn} = true and {moreTimeYn} = true',
-          label: 'Would you like to pay in installments?',
-          isRequired: true,
-        },
-        {
-          type: 'boolean',
-          name: 'payYn',
-          title: 'Boolean',
-          visibleIf:
-            '{disputeYn} = true and {financialYn} = true and {installmentsYn} = true',
-          label: 'Would you like to pay the first installment now?',
-          isRequired: true,
+          type: 'signaturepad',
+          name: 'signature',
+          width: 500,
+          title:
+            'Please sign below declaring that the previous information is correct.',
+          description: 'Signature of Disputant/Agent',
         },
       ],
     },
   ],
-  completedHtml: '<p><h3>Thank you for completing the survey!</h3></p>',
+  completedHtml:
+    '<p><h3>Your Violation Ticket information has been submitted.</h3></p>',
 };

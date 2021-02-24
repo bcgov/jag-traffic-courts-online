@@ -8,9 +8,8 @@ describe('DashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ]
-    })
-    .compileComponents();
+      declarations: [DashboardComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +20,17 @@ describe('DashboardComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should isMobile', () => {
+    expect(typeof component.isMobile).toEqual('boolean');
+  });
+
+  it('should isDesktop', () => {
+    expect(typeof component.isDesktop).toEqual('boolean');
+  });
+
+  it('should check username', () => {
+    expect(component.username).toEqual('Joe Smith');
   });
 });

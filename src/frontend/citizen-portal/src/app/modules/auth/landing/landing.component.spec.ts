@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
 
 import { LandingComponent } from './landing.component';
 
@@ -8,9 +9,9 @@ describe('LandingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LandingComponent ]
-    })
-    .compileComponents();
+      imports: [RouterModule.forRoot([])],
+      declarations: [LandingComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

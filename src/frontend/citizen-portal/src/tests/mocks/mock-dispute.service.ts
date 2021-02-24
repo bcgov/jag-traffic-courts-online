@@ -2,7 +2,7 @@ import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { Ticket } from '@shared/models/ticket.model';
 import * as faker from 'faker';
 
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
   private _ticket: BehaviorSubject<Ticket>;
@@ -38,11 +38,23 @@ export class MockDisputeService {
       provLicense: 'BC',
       homePhone: faker.phone.phoneNumber('250#######'),
       workPhone: faker.phone.phoneNumber('250#######'),
-      birthdate: null, // faker.date.past(1),
+      birthdate: faker.date.past(60, new Date(2001, 0, 1)),
       lawyerPresent: faker.random.boolean(),
       interpreterRequired: true,
       interpreterLanguage: faker.random.word(),
       callWitness: faker.random.boolean(),
+      counts: [
+        {
+          countNo: 1,
+          statuteId: 19149,
+          description: 'MVA 146(1) Speed in outside municipality',
+        },
+        {
+          countNo: 2,
+          statuteId: 19742,
+          description: 'MVA 73(1) Fail to Stop for Police',
+        },
+      ],
     });
   }
 

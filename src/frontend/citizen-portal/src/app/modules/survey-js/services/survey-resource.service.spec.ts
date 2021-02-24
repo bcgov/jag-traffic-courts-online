@@ -6,6 +6,7 @@ import { SurveyResourceService } from './survey-resource.service';
 
 describe('SurveyResourceService', () => {
   let service: SurveyResourceService;
+  let mock: MockDisputeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -13,6 +14,7 @@ describe('SurveyResourceService', () => {
       providers: [MockDisputeService],
     });
     service = TestBed.inject(SurveyResourceService);
+    mock = TestBed.inject(MockDisputeService);
   });
 
   it('should create', () => {
@@ -21,6 +23,16 @@ describe('SurveyResourceService', () => {
 
   it('should get ticket', () => {
     const ticket = service.getTicket();
+    expect(ticket).toBeDefined();
+  });
+
+  it('should create ticket', () => {
+    const ticket = service.createTicket(mock.ticket);
+    expect(ticket).toBeDefined();
+  });
+
+  it('should update ticket', () => {
+    const ticket = service.updateTicket(mock.ticket);
     expect(ticket).toBeDefined();
   });
 });
