@@ -39,6 +39,10 @@ export class ConfigService implements IConfigService {
     return [...this.configuration.statuses].sort(this.sortConfigByName());
   }
 
+  public get statutes(): Config<number>[] {
+    return [...this.configuration.statutes].sort(this.sortConfigByName());
+  }
+
   /**
    * @description
    * Load the runtime configuration.

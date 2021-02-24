@@ -9,24 +9,20 @@ describe('BusyOverlayMessageComponent', () => {
   let component: BusyOverlayMessageComponent;
   let fixture: ComponentFixture<BusyOverlayMessageComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule(
-      {
-        imports: [
-          NgBusyModule.forRoot(busyConfig)
-        ],
-        declarations: [
-          BusyOverlayMessageComponent
-        ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [NgBusyModule.forRoot(busyConfig)],
+        declarations: [BusyOverlayMessageComponent],
         providers: [
           {
             provide: 'instanceConfigHolder',
-            useClass: InstanceConfigHolderService
-          }
-        ]
-      }
-    ).compileComponents();
-  }));
+            useClass: InstanceConfigHolderService,
+          },
+        ],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BusyOverlayMessageComponent);
