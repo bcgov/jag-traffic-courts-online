@@ -1,4 +1,4 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
@@ -69,16 +69,26 @@ export abstract class BaseDisputeFormPage
 
     this.formStep5 = this.formBuilder.group({
       id: [null],
-      surname: [null, [Validators.required]],
+      count: [null],
+      count1A: [null],
+      count1A1: [null],
+      count1A2: [null],
+      surname: [null],
+      reductionReason: [null],
+      timeReason: [null],
+      count1B1: [null],
+      count1B2: [null],
+      counts: new FormArray([]),
     });
 
     // TODO Put in here for now.... move later
-    this.getTicket();
+    // this.getTicket();
+    // console.log('GET TICKET');
   }
 
   private getTicket(): void {
-    this.disputeResource.getTicket().subscribe((response) => {
-      this.disputeService.ticket$.next(response);
-    });
+    // this.disputeResource.getTicket().subscribe((response) => {
+    //   this.disputeService.ticket$.next(response);
+    // });
   }
 }

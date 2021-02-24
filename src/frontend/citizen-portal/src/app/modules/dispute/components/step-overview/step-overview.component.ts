@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { MatStepper } from '@angular/material/stepper';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
+  selector: 'app-step-overview',
+  templateUrl: './step-overview.component.html',
+  styleUrls: ['./step-overview.component.scss'],
 })
-export class OverviewComponent implements OnInit {
-  public busy: Subscription;
+export class StepOverviewComponent implements OnInit {
+  @Input() public stepper: MatStepper;
 
+  public busy: Subscription;
   public ticket: Ticket;
 
   constructor(private disputeService: DisputeService) {}

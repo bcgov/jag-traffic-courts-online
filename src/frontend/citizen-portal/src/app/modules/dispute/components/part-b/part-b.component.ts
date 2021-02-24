@@ -19,8 +19,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./part-b.component.scss'],
 })
 export class PartBComponent extends BaseDisputeFormPage implements OnInit {
-  public busy: Subscription;
   @Input() public stepper: MatStepper;
+
+  public busy: Subscription;
   public nextBtnLabel: string;
 
   constructor(

@@ -13,14 +13,16 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { UtilsService } from '@core/services/utils.service';
 
 @Component({
-  selector: 'app-start',
-  templateUrl: './start.component.html',
-  styleUrls: ['./start.component.scss']
+  selector: 'app-stepper',
+  templateUrl: './stepper.component.html',
+  styleUrls: ['./stepper.component.scss'],
 })
-export class StartComponent extends BaseDisputeFormPage implements OnInit {
+export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public maxViolationDate: moment.Moment;
   public pageMode: string;
+
+  public newSteps: [];
 
   constructor(
     protected route: ActivatedRoute,
@@ -40,7 +42,9 @@ export class StartComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   ngOnInit(): void {
-    //
+    this.disputeService.steps$.subscribe((stepData) => {
+      console.log('STEPS$', stepData);
+      this.newSteps = stepData;
+    });
   }
-
 }

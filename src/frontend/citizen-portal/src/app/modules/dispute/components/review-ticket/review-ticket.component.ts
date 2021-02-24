@@ -4,25 +4,29 @@ import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
-import { ViewportService } from '@core/services/viewport.service';
-import { RouteUtils } from '@core/utils/route-utils.class';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
-import { Subscription } from 'rxjs';
+import moment from 'moment';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
-  selector: 'app-part-d',
-  templateUrl: './part-d.component.html',
-  styleUrls: ['./part-d.component.scss'],
+  selector: 'app-review-ticket',
+  templateUrl: './review-ticket.component.html',
+  styleUrls: ['./review-ticket.component.scss'],
 })
-export class PartDComponent extends BaseDisputeFormPage implements OnInit {
+export class ReviewTicketComponent
+  extends BaseDisputeFormPage
+  implements OnInit {
   @Input() public stepper: MatStepper;
 
   public busy: Subscription;
+  public maxViolationDate: moment.Moment;
   public nextBtnLabel: string;
+  public ticket: Ticket;
 
   constructor(
     protected route: ActivatedRoute,
@@ -30,37 +34,43 @@ export class PartDComponent extends BaseDisputeFormPage implements OnInit {
     protected formBuilder: FormBuilder,
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
-    private viewportService: ViewportService,
+    private toastService: ToastService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-    this.nextBtnLabel = 'Complete';
+
+    this.maxViolationDate = moment();
   }
 
   public ngOnInit(): void {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.formStep5.patchValue(ticket);
+      this.formStep1.patchValue(ticket);
+      this.ticket = ticket;
     });
+    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.formStep5)) {
+    if (this.formUtilsService.checkValidity(this.formStep1)) {
       this.disputeService.ticket$.next({
         ...this.disputeService.ticket,
-        ...this.formStep5.value,
+        ...this.formStep1.value,
       });
-      this.stepper.next();
+
+      let steps = this.disputeService.steps$.value;
+      steps.push({ title: 'Part B', value: null, pageName: 3 });
+      steps.push({ title: 'Part C', value: null, pageName: 4 });
+      this.disputeService.steps$.next(steps);
+
+      const source = timer(1000);
+      this.busy = source.subscribe((val) => {
+        this.toastService.openSuccessToast('Information has been saved');
+        this.stepper.next();
+      });
     } else {
       this.utilsService.scrollToErrorSection();
     }
-  }
-  public onBack() {
-    this.stepper.previous();
-  }
-
-  public get isMobile(): boolean {
-    return this.viewportService.isMobile;
   }
 }

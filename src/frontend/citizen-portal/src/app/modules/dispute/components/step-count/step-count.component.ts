@@ -4,26 +4,25 @@ import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
+import { ViewportService } from '@core/services/viewport.service';
 import { RouteUtils } from '@core/utils/route-utils.class';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
-import moment from 'moment';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-step-count',
+  templateUrl: './step-count.component.html',
+  styleUrls: ['./step-count.component.scss'],
 })
-export class HomeComponent extends BaseDisputeFormPage implements OnInit {
-  public busy: Subscription;
-  public maxViolationDate: moment.Moment;
-  public nextBtnLabel: string;
+export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
+
+  public busy: Subscription;
+  public nextBtnLabel: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -31,37 +30,38 @@ export class HomeComponent extends BaseDisputeFormPage implements OnInit {
     protected formBuilder: FormBuilder,
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
-    private toastService: ToastService,
+    private viewportService: ViewportService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-
-    this.maxViolationDate = moment();
+    this.nextBtnLabel = 'Next';
   }
 
   public ngOnInit(): void {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.formStep1.patchValue(ticket);
+      this.formStep5.patchValue(ticket);
     });
-    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.formStep1)) {
+    if (this.formUtilsService.checkValidity(this.formStep5)) {
       this.disputeService.ticket$.next({
         ...this.disputeService.ticket,
-        ...this.formStep1.value,
+        ...this.formStep5.value,
       });
 
-      const source = timer(1000);
-      this.busy = source.subscribe((val) => {
-        this.toastService.openSuccessToast('Information has been saved');
-        this.stepper.next();
-      });
+      this.stepper.next();
     } else {
       this.utilsService.scrollToErrorSection();
     }
+  }
+  public onBack() {
+    this.stepper.previous();
+  }
+
+  public get isMobile(): boolean {
+    return this.viewportService.isMobile;
   }
 }

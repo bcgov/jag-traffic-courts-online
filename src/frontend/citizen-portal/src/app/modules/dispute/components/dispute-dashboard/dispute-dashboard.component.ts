@@ -20,7 +20,7 @@ export class DisputeDashboardComponent implements OnInit {
 
   private getDashboardMenuItems(): Observable<DashboardMenuItem[]> {
     return of([
-      new DashboardRouteMenuItem('Dispute', DisputeRoutes.START, 'pages'),
+      new DashboardRouteMenuItem('Dispute', DisputeRoutes.STEPPER, 'pages'),
       new DashboardRouteMenuItem('Review', DisputeRoutes.OVERVIEW, 'preview'),
     ]);
   }

@@ -3,7 +3,8 @@ export interface Ticket {
   userId: string;
   violationTicketNumber: string;
   courtLocation: string;
-  violationDate: Date;
+  violationDate: string;
+  violationTime: string;
   surname: string;
   givenNames: string;
   mailing: string;

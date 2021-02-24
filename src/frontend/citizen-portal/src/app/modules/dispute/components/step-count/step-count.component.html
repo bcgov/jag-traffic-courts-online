@@ -1,0 +1,83 @@
+<app-page [busy]="busy">
+  <form (ngSubmit)="onSubmit()" [formGroup]="formStep5" novalidate>
+    <section class="mb-3">
+      <p>Counts</p>
+    </section>
+
+    <section class="mb-3">
+      <div class="row">
+        <div class="col">
+          <label>For this count, which do you agree?</label>
+          <mat-radio-group formControlName="count" class="w-100">
+            <mat-radio-button value="A"
+              >I agree that I committed this offence, and I do not want to
+              appear in court</mat-radio-button
+            >
+            <mat-radio-button value="B"
+              >I agree that I committed this offence, and I want to appear in
+              court</mat-radio-button
+            >
+            <mat-radio-button value="C"
+              >I do not agree that I committed this offence
+              (allegation)</mat-radio-button
+            >
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Which requests would you like to make?</label>
+          <mat-checkbox formControlName="count1A1" color="primary"
+            >I request a reduction of the ticketed amount: and/or</mat-checkbox
+          >
+          <mat-checkbox formControlName="count1A2" color="primary"
+            >I request time to pay the ticketed amount</mat-checkbox
+          >
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <label
+              >What are your reasons for a reduction in the ticketed
+              amount(s)?</label
+            >
+            <textarea matInput formControlName="reductionReason"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <label
+              >What are your reasons for requiring more time to pay the ticketed
+              amount(s)?</label
+            >
+            <textarea matInput formControlName="timeReason"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Why do you want to appear?</label>
+          <mat-checkbox formControlName="count1B1" color="primary"
+            >To request a reduction of the ticketed amount: and/or</mat-checkbox
+          >
+          <mat-checkbox formControlName="count1B2" color="primary"
+            >To request time to pay the ticketed amount</mat-checkbox
+          >
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    [saveButtonLabel]="nextBtnLabel"
+    (save)="onSubmit()"
+    (back)="onBack()"
+  ></app-page-footer>
+</app-page>

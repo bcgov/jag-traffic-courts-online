@@ -1,9 +1,6 @@
-
-  <app-page-header>Violation Ticket Notice of Dispute</app-page-header>
-
+<app-page [busy]="busy">
   <form (ngSubmit)="onSubmit()" [formGroup]="formStep5" novalidate>
     <section class="mb-3">
-      <h1>Part D</h1>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua.
@@ -25,6 +22,10 @@
       </div>
     </section>
   </form>
- 
-  <app-page-footer [saveButtonLabel]="nextBtnLabel" (save)="onSubmit()" (back)="onBack()"></app-page-footer>
 
+  <app-page-footer
+    [saveButtonLabel]="nextBtnLabel"
+    (save)="onSubmit()"
+    (back)="onBack()"
+  ></app-page-footer>
+</app-page>

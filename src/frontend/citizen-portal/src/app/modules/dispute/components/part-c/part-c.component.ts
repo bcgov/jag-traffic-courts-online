@@ -18,10 +18,11 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./part-c.component.scss'],
 })
 export class PartCComponent extends BaseDisputeFormPage implements OnInit {
-  public busy: Subscription;
   @Input() public stepper: MatStepper;
+
+  public busy: Subscription;
   public nextBtnLabel: string;
-   
+
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -30,14 +31,13 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeResource: DisputeResourceService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
-    private logger: LoggerService,
+    private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
     this.nextBtnLabel = 'Next';
   }
 
   public ngOnInit(): void {
-
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.formStep4.patchValue(ticket);
     });
@@ -56,7 +56,7 @@ export class PartCComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public onBack() {
-    this.stepper.previous();   
+    this.stepper.previous();
   }
 
   public get interpreterRequired(): FormControl {

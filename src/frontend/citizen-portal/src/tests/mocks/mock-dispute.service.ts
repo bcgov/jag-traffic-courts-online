@@ -22,7 +22,8 @@ export class MockDisputeService {
           })
           .toString(),
       courtLocation: faker.address.city(1),
-      violationDate: faker.date.recent(),
+      violationDate: faker.date.recent().toString(),
+      violationTime: '14:36',
       surname: faker.name.lastName(),
       givenNames: faker.name.firstName(),
       mailing: faker.address.streetAddress(),

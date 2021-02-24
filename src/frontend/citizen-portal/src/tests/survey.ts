@@ -7,7 +7,7 @@ export const SurveyJson = {
         {
           type: 'image',
           name: 'first_page_image',
-          imageLink: '/assets/traffic-light.jpg',
+          imageLink: '/assets/traffic_light.jpg',
           imageFit: 'none',
           imageHeight: 426,
           imageWidth: 400,

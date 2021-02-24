@@ -23,10 +23,11 @@ export const MINIMUM_AGE = 18;
   styleUrls: ['./part-a.component.scss'],
 })
 export class PartAComponent extends BaseDisputeFormPage implements OnInit {
+  @Input() public stepper: MatStepper;
+
   public busy: Subscription;
   public maxDateOfBirth: moment.Moment;
-  public nextBtnLabel : string;
-  @Input() public stepper: MatStepper;
+  public nextBtnLabel: string;
   private MINIMUM_AGE = 18;
 
   constructor(
