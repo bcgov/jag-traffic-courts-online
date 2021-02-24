@@ -1,97 +1,157 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-lg-2">
-      <div class="logo">
-        <img
-          src="/assets/traffic-light.jpg"
-          style="width: 100px"
-          alt="Traffic Court Logo"
-        />
-      </div>
+    <div class="col-md-2 logo">
+      <img
+        src="/assets/traffic-light.jpg"
+        style="width: 120px"
+        alt="Traffic Court Logo"
+      />
     </div>
-
-    <div class="col-lg-10">
+    <div class="col-md-7">
       <div class="col-sm-12 header">
-        <h1>Traffic Court Online</h1>
-        <p>The tool for resolving your Violation Ticket issues</p>
+        <h1>BC Traffic Court Online</h1>
       </div>
       <div class="col-sm-12">
+        <p>
+          The online tool for submitting and resolving your BC Violation Ticket
+          disputes
+        </p>
+        <p>
+          If you are not currently signed in with your BC Services card, you
+          will first be asked sign in or go through the BC Services card
+          registration process.
+        </p>
+        <p>
+          If you would like to simply pay for your ticket, please click on the
+          'Pay Ticket (PayBC)' button.
+        </p>
+      </div>
+      <div class="col-sm-12 mt-4">
         <div class="row actions">
-          <div class="col col-md-auto">
+          <div class="col col-md-6">
             <button
               mat-flat-button
               color="primary"
               class="large"
-              routerLink="/auth/find"
+              routerLink="/survey/home"
             >
-              I have my ticket
+              Initiate Dispute
             </button>
           </div>
-          <div class="col col-md-auto">
+          <div class="col col-md-6">
             <button
               mat-flat-button
               color="primary"
               class="large light"
               routerLink="/auth/find"
             >
-              I do not have my ticket
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <button
-              mat-flat-button
-              color="secondary"
-              class="large"
-              routerLink="/survey/home"
-            >
-              Take the Survey
+              Update Dispute Information
             </button>
           </div>
         </div>
       </div>
     </div>
+    <div class="col-md-3">
+      <div class="col col-md-auto">
+        <button mat-flat-button color="accent" class="large">
+          <a
+            href="https://pay.gov.bc.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pay Ticket (PayBC)
+          </a>
+        </button>
+      </div>
+    </div>
     <div class="col-sm-12 col-md-4 steps step-1">
       <div class="step-container">
-        <section class="content has-step-background">
-          <h2>Find your Violation Ticket</h2>
+        <section class="content has-step-background mr-4 ml-4">
+          <h2>
+            <a routerLink="/survey/home" class="step-anchor"
+              >Initiate Dispute</a
+            >
+          </h2>
 
-          <p>Step 1... let's find your Violation Ticket</p>
+          <p>
+            Login using your BC Services card and initiate the online resolution
+            process.
+          </p>
         </section>
 
-        <div class="info-graphic">
-          <mat-icon class="icon-display">event_note</mat-icon>
+        <div class="info-graphic clickable" (click)="onStep1()">
+          <img src="/assets/step_1_image.svg" alt="Step 1" />
         </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-4 steps step-2">
       <div class="step-container">
-        <section class="content has-step-background">
-          <h2>View the Dispute Options</h2>
+        <section class="content has-step-background mr-4 ml-4">
+          <h2>Violation Ticket Lookup</h2>
 
           <p>
-            Step 2... let's see if we can resolve the dispute quickly and easily
+            Find your Violation Ticket and ensure that the specifics of the
+            ticket are correct. Through our step-by-step process, you can
+            indicate your preferences and how you would like the ticket to be
+            disputed.
           </p>
         </section>
 
         <div class="info-graphic">
-          <mat-icon class="icon-display">info</mat-icon>
+          <img src="/assets/step_2_image.svg" alt="Step 2" />
         </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-4 steps step-3">
       <div class="step-container">
-        <section class="content has-step-background">
-          <h2>Proceed to Court</h2>
+        <section class="content has-step-background mr-4 ml-4">
+          <h2>Violation Ticket Resolution</h2>
 
-          <p>Step 3... if the options do not solve your dispute</p>
+          <p>
+            Submit your resolution or save the details until you are ready to
+            proceed with the resolution process. You have 365 days to dispute
+            your ticket from the date the ticket was issued.
+          </p>
         </section>
 
         <div class="info-graphic">
-          <mat-icon class="icon-display">festival</mat-icon>
+          <img src="/assets/step_3_image.svg" alt="Step 3" />
         </div>
       </div>
+    </div>
+    <div class="col-md-12 steps">
+      <hr />
+      <section class="content mt-4 mr-4 ml-4">
+        <h2>
+          <a
+            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Self Resolution Wizard</a
+          >
+        </h2>
+
+        <div class="row actions">
+          <div class="col col-md-8">
+            <p>
+              Interact with an online wizard and explore reasons behind your
+              ticket. The online wizard will take you through multiple options
+              demonstrated through text, videos and images.
+            </p>
+          </div>
+          <div class="col-md-4">
+            <button mat-flat-button color="primary" class="large light">
+              <a
+                class="anchor-button"
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Explore My Options</a
+              >
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </div>
