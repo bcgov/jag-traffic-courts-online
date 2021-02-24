@@ -35,8 +35,7 @@ Welcome to Traffic Courts Online
 https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
 
 # Run docker-compose
-
-Copy the `.env.template` to `.env` and then run docker-compose up.
+Create `.env` files according to the instructions mentioned in the `env.template` and then run docker-compose up.
 Add the configuration for token and password for splunk.
 Default user is `admin`. Password is what is configured in `.env`
 
