@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TicketService.Models;
 using DisputeApi.Web.Features.TicketService.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,7 @@ namespace DisputeApi.Web.Features.TicketService.Controller
             _ticketsService = ticketsService;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("saveticket")]
         [Produces("application/json")]
@@ -32,6 +34,7 @@ namespace DisputeApi.Web.Features.TicketService.Controller
             return Ok(await _ticketsService.SaveTicket(ticket));
         }
 
+        [Authorize]
         [HttpGet]
         [Route("getTickets")]
         [Produces("application/json")]

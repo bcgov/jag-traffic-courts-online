@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.DependencyInjection;
-using NSwag.Generation;
-using NUnit.Framework;
+﻿using System.Net;
 using System.Threading.Tasks;
+using DisputeApi.Web.Features.TicketService.Service;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using System.Net;
-using DisputeApi.Web.Features.TicketService.Service;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using NSwag.Generation;
+using NUnit.Framework;
 
 namespace DisputeApi.Web.Test
 {
@@ -48,7 +48,7 @@ namespace DisputeApi.Web.Test
         public void configure_services_should_inject_services()
         {
             IServiceCollection services = new ServiceCollection();
-            var target = new Startup();
+            var target = new Startup(null);
             target.ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
             Assert.IsNotNull(serviceProvider);
