@@ -28,11 +28,12 @@ namespace DisputeApi.Web.Features.TicketService.Service
             {
                 _context.Tickets.Add(new Ticket
                 {
-                    TicketNumber = 11234,
-                    Name = "John Doe",
-                    DateOfIssue = "11-12-2002",
-                    TimeOfIssue = "12:23",
-                    DriversLicence = "L2323G7"
+                    Id = 0002,
+                    UserId = "nouser56",
+                    ViolationTicketNumber = "AH135699",
+                    ViolationDate = "09-09-2009 11:21",
+                    SurName = "Hope",
+                    GivenNames = "Bob"
                 });
                 _context.SaveChanges();
             }
