@@ -1,1 +1,75 @@
-<p>step-review-ticket works!</p>
+<app-page [busy]="busy">
+  <section class="mb-3">
+    <h3>Violation Ticket Information</h3>
+    <div class="row">
+      <div class="col-6 mb-3">Violation Ticket Number</div>
+      <div class="col-6 text-right mb-3">
+        {{ ticket?.violationTicketNumber }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">Court Location named on the VT</div>
+      <div class="col-6 text-right mb-3">{{ ticket?.courtLocation }}</div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">Violation Date</div>
+      <div class="col-6 text-right">
+        {{ ticket?.violationDate | formatDate | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">Violation Time</div>
+      <div class="col-6 text-right">
+        {{ ticket?.violationTime | default }}
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-3">
+    <h3>Personal Information</h3>
+    <div class="row">
+      <div class="col-6 mb-3">Name</div>
+      <div class="col-6 text-right mb-3">
+        {{ ticket?.givenNames }} {{ ticket?.surname }}
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-3">
+    <h3>Address Information</h3>
+    <div class="row">
+      <div class="col-6 mb-3">Street Address</div>
+      <div class="col-6 text-right mb-3">
+        {{ ticket?.mailing }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">City</div>
+      <div class="col-6 text-right mb-3">
+        {{ ticket?.city }}
+      </div>
+    </div>
+  </section>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="formStepReview" novalidate>
+    <section class="mb-3">
+      <div class="row">
+        <div class="col">
+          <label>Is the above information correct?</label>
+          <mat-radio-group formControlName="infoCorrect" class="w-100">
+            <p>
+              <mat-radio-button value="Y">Yes</mat-radio-button>
+            </p>
+            <p><mat-radio-button value="N">No</mat-radio-button></p>
+          </mat-radio-group>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    (save)="onSubmit()"
+    [hasSecondaryAction]="false"
+    [saveButtonLabel]="nextBtnLabel"
+  ></app-page-footer>
+</app-page>

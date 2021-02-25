@@ -40,10 +40,10 @@ export class MockDisputeService {
       homePhone: faker.phone.phoneNumber('250#######'),
       workPhone: faker.phone.phoneNumber('250#######'),
       birthdate: faker.date.past(60, new Date(2001, 0, 1)),
-      lawyerPresent: faker.random.boolean(),
-      interpreterRequired: true,
-      interpreterLanguage: faker.random.word(),
-      callWitness: faker.random.boolean(),
+      lawyerPresent: false,
+      interpreterRequired: false,
+      interpreterLanguage: null,
+      callWitness: false,
       counts: [
         {
           countNo: 1,

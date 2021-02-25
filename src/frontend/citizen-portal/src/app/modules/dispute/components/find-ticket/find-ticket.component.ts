@@ -17,8 +17,28 @@ export class FindTicketComponent {
 
   public onSearch(): void {
     this.disputeResource.getTicket().subscribe((response) => {
-      console.log('ON SEARCH');
+      console.log('ON SEARCH', response);
+
       this.disputeService.ticket$.next(response);
+
+      // let steps = [];
+      // steps.push({ title: 'Review', value: null, pageName: 1 });
+
+      // let index = 0;
+      // response.counts.forEach((cnt) => {
+      //   steps.push({
+      //     title: 'Count #' + cnt.countNo,
+      //     description: cnt.description,
+      //     value: index,
+      //     pageName: 2,
+      //   });
+      //   index++;
+      // });
+
+      // steps.push({ title: 'Court', value: null, pageName: 3 });
+      // steps.push({ title: 'Overview', value: null, pageName: 5 });
+      // this.disputeService.steps$.next(steps);
+
       this.route.navigate(['/dispute/stepper']);
     });
   }

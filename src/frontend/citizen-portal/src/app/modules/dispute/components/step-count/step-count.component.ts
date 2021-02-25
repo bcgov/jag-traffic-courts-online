@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -20,8 +20,10 @@ import { Subscription } from 'rxjs';
 })
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
+  @Input() public step: any;
 
   public busy: Subscription;
+  public formGroupCount: FormGroup;
   public nextBtnLabel: string;
 
   constructor(
@@ -40,17 +42,33 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.formStep5.patchValue(ticket);
-    });
+    this.formGroupCount = this.formCounts.at(this.step.value) as FormGroup;
   }
 
   public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.formStep5)) {
-      this.disputeService.ticket$.next({
-        ...this.disputeService.ticket,
-        ...this.formStep5.value,
+    console.log('formCounts length', this.formCounts.length);
+
+    // this.formCounts.forEach((cnt) => {
+    // });
+
+    let steps = this.disputeService.steps$.value;
+    const exists = steps.some((step) => step.pageName === 3);
+    if (!exists) {
+      steps.splice(steps.length - 1, 0, {
+        title: 'Court',
+        value: null,
+        pageName: 3,
       });
+      this.disputeService.steps$.next(steps);
+    }
+
+    // '({count1} and {count1} != "A") or ({count2} and {count2} != "A") or ({count3} and {count3} != "A")',
+
+    if (this.formUtilsService.checkValidity(this.formGroupCount)) {
+      // this.disputeService.ticket$.next({
+      //   ...this.disputeService.ticket,
+      //   ...this.formCounts.value,
+      // });
 
       this.stepper.next();
     } else {
@@ -63,5 +81,25 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public get isMobile(): boolean {
     return this.viewportService.isMobile;
+  }
+
+  public get count(): FormControl {
+    return this.formGroupCount.get('count') as FormControl;
+  }
+
+  public get count1A1(): FormControl {
+    return this.formGroupCount.get('count1A1') as FormControl;
+  }
+
+  public get count1A2(): FormControl {
+    return this.formGroupCount.get('count1A2') as FormControl;
+  }
+
+  public get count1B1(): FormControl {
+    return this.formGroupCount.get('count1B1') as FormControl;
+  }
+
+  public get count1B2(): FormControl {
+    return this.formGroupCount.get('count1B2') as FormControl;
   }
 }

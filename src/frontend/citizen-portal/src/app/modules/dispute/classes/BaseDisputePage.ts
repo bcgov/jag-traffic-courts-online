@@ -2,7 +2,6 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DisputeRoutes } from '../dispute.routes';
 
-
 export interface IBaseDisputePage {
   busy: Subscription;
   DisputeRoutes: DisputeRoutes;
@@ -19,32 +18,32 @@ export abstract class BaseDisputePage implements IBaseDisputePage {
     this.isComplete = true;
   }
 
-  public routeIndex(currentRoute: string): number {
-    const stepRoutes = this.DisputeRoutes.stepRoutes();
-    return stepRoutes.findIndex((element) => element === currentRoute);
-  }
+  // public routeIndex(currentRoute: string): number {
+  //   const stepRoutes = this.DisputeRoutes.stepRoutes();
+  //   return stepRoutes.findIndex((element) => element === currentRoute);
+  // }
 
-  public routeNext(currentRoute: string) {
-    const stepRoutes = this.DisputeRoutes.stepRoutes();
+  // public routeNext(currentRoute: string) {
+  //   const stepRoutes = this.DisputeRoutes.stepRoutes();
 
-    const findIndex = this.routeIndex(currentRoute);
-    if (findIndex < 0) {
-      return;
-    }
+  //   const findIndex = this.routeIndex(currentRoute);
+  //   if (findIndex < 0) {
+  //     return;
+  //   }
 
-    this.routeTo(stepRoutes[findIndex + 1]);
-  }
+  //   this.routeTo(stepRoutes[findIndex + 1]);
+  // }
 
-  public routeBack(currentRoute: string) {
-    const stepRoutes = this.DisputeRoutes.stepRoutes();
+  // public routeBack(currentRoute: string) {
+  //   const stepRoutes = this.DisputeRoutes.stepRoutes();
 
-    const findIndex = this.routeIndex(currentRoute);
-    if (findIndex <= 0) {
-      return;
-    }
+  //   const findIndex = this.routeIndex(currentRoute);
+  //   if (findIndex <= 0) {
+  //     return;
+  //   }
 
-    this.routeTo(stepRoutes[findIndex - 1]);
-  }
+  //   this.routeTo(stepRoutes[findIndex - 1]);
+  // }
 
   public routeTo(
     routePath: DisputeRoutes,

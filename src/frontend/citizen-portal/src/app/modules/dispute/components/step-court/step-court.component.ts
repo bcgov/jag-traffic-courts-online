@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -14,11 +14,11 @@ import { Ticket } from '@shared/models/ticket.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-part-d',
-  templateUrl: './part-d.component.html',
-  styleUrls: ['./part-d.component.scss'],
+  selector: 'app-step-court',
+  templateUrl: './step-court.component.html',
+  styleUrls: ['./step-court.component.scss'],
 })
-export class PartDComponent extends BaseDisputeFormPage implements OnInit {
+export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
 
   public busy: Subscription;
@@ -36,31 +36,36 @@ export class PartDComponent extends BaseDisputeFormPage implements OnInit {
     private logger: LoggerService
   ) {
     super(route, router, formBuilder, disputeService, disputeResource);
-    this.nextBtnLabel = 'Complete';
+    this.nextBtnLabel = 'Next';
   }
 
   public ngOnInit(): void {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.formStep5.patchValue(ticket);
+      this.formStepCourt.patchValue(ticket);
     });
   }
 
   public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.formStep5)) {
-      this.disputeService.ticket$.next({
-        ...this.disputeService.ticket,
-        ...this.formStep5.value,
-      });
-      this.stepper.next();
-    } else {
-      this.utilsService.scrollToErrorSection();
-    }
+    // if (this.formUtilsService.checkValidity(this.formStepCourt)) {
+    //   this.disputeService.ticket$.next({
+    //     ...this.disputeService.ticket,
+    //     ...this.formStepCourt.value,
+    //   });
+    this.stepper.next();
+    // } else {
+    //   this.utilsService.scrollToErrorSection();
+    // }
   }
+
   public onBack() {
     this.stepper.previous();
   }
 
   public get isMobile(): boolean {
     return this.viewportService.isMobile;
+  }
+
+  public get interpreterRequired(): FormControl {
+    return this.formStepCourt.get('interpreterRequired') as FormControl;
   }
 }

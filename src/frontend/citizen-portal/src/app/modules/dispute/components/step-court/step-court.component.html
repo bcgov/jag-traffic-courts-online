@@ -1,9 +1,10 @@
 <app-page [busy]="busy">
-  <form (ngSubmit)="onSubmit()" [formGroup]="formStep4" novalidate>
+  <form (ngSubmit)="onSubmit()" [formGroup]="formStepCourt" novalidate>
     <section class="mb-3">
+      <h1>Disputing your Ticket in Court</h1>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        Based upon your answers to the previous questions, you have decided to
+        dispute your ticket in Court. Please answer the following questions.
       </p>
     </section>
 
@@ -22,13 +23,14 @@
           <mat-checkbox class="mr-4 mb-2" formControlName="interpreterRequired">
             I require a speaking interpreter at the hearing.
           </mat-checkbox>
-          <mat-error *ngIf="formStep5.hasError('requiredIfTrue')">
+          <!--
+          <mat-error *ngIf="formStepCourt.hasError('requiredIfTrue')">
             Required
-          </mat-error>
+          </mat-error>-->
         </div>
       </div>
 
-      <div class="row" [hidden]="!interpreterRequired.value">
+      <div class="row" *ngIf="interpreterRequired.value">
         <div class="col">
           <mat-form-field class="w-100">
             <input

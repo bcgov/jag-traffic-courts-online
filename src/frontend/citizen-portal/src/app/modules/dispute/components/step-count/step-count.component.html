@@ -1,7 +1,9 @@
 <app-page [busy]="busy">
-  <form (ngSubmit)="onSubmit()" [formGroup]="formStep5" novalidate>
+  <form (ngSubmit)="onSubmit()" [formGroup]="formGroupCount" novalidate>
     <section class="mb-3">
-      <p>Counts</p>
+      <h1>{{ step.title }}</h1>
+      <p>{{ step.description }}</p>
+      <hr />
     </section>
 
     <section class="mb-3">
@@ -25,7 +27,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="count.value === 'A'">
         <div class="col">
           <label>Which requests would you like to make?</label>
           <mat-checkbox formControlName="count1A1" color="primary"
@@ -37,7 +39,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="count.value === 'A' && count1A1.value">
         <div class="col">
           <mat-form-field class="w-100">
             <label
@@ -49,7 +51,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="count.value === 'A' && count1A2.value">
         <div class="col">
           <mat-form-field class="w-100">
             <label
@@ -61,7 +63,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="count.value === 'B'">
         <div class="col">
           <label>Why do you want to appear?</label>
           <mat-checkbox formControlName="count1B1" color="primary"

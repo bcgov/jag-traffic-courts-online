@@ -11,6 +11,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { UtilsService } from '@core/services/utils.service';
+import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-stepper',
@@ -22,7 +23,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   public maxViolationDate: moment.Moment;
   public pageMode: string;
 
-  public newSteps: [];
+  public newSteps: any[];
 
   constructor(
     protected route: ActivatedRoute,
@@ -39,6 +40,27 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
 
     this.maxViolationDate = moment();
     this.pageMode = 'full';
+
+    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
+      let steps = [];
+      steps.push({ title: 'Review', value: null, pageName: 1 });
+
+      let index = 0;
+      ticket.counts.forEach((cnt) => {
+        steps.push({
+          title: 'Count #' + cnt.countNo,
+          description: cnt.description,
+          value: index,
+          pageName: 2,
+        });
+        index++;
+      });
+
+      // steps.push({ title: 'Court', value: null, pageName: 3 });
+      steps.push({ title: 'Overview', value: null, pageName: 5 });
+
+      this.disputeService.steps$.next(steps);
+    });
   }
 
   ngOnInit(): void {

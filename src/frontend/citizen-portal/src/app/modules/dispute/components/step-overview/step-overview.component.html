@@ -1,8 +1,9 @@
 <app-page [busy]="busy">
   <section class="mb-3">
+    <h2>Violation Ticket Overiew</h2>
     <p>
-      Please review the following information. Once it has been submitted, it
-      cannot be updated.
+      Please review the following information. You can go back to any step to
+      update the information.
     </p>
   </section>
 
@@ -15,13 +16,14 @@
     </div>
     <div class="row">
       <div class="col-6 mb-3">Court Location named on the VT</div>
-      <div class="col-6 text-right mb-3">{{ ticket?.courtLocation }}</div>
+      <div class="col-6 text-right mb-3">
+        {{ ticket?.courtLocation | default }}
+      </div>
     </div>
     <div class="row">
       <div class="col-6 mb-3">Violation Date</div>
       <div class="col-6 text-right">
-        {{ ticket?.violationDate | date: "mediumDate" }}
-        <!-- | formatDate | default -->
+        {{ ticket?.violationDate | date: "mediumDate" | default }}
       </div>
     </div>
   </section>
@@ -29,16 +31,10 @@
   <section class="mb-3">
     <div class="row">
       <div class="col">
-        <app-alert type="info" icon="warning">
+        <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
-            <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong><br />
-            Phone Toll Free: 1-877-661-8026 <br />
-            Forms are available on the website at:
-            <a
-              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
-              target="_blank"
-              >Online Forms</a
-            >
+            <strong>VIOLATION TICKET SUBMISSION</strong><br />
+            Once it has been submitted, it cannot be updated.
           </ng-container>
         </app-alert>
       </div>

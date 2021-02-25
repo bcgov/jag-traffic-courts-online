@@ -6,21 +6,18 @@ import { DisputeService } from '@dispute/services/dispute.service';
 import { BaseDisputePage } from './BaseDisputePage';
 
 export interface IBaseDisputeFormPage {
-  formStep1: FormGroup;
-  formStep2: FormGroup;
-  formStep3: FormGroup;
-  formStep4: FormGroup;
-  formStep5: FormGroup;
+  formStepReview: FormGroup;
+  formCounts: FormArray;
+  formStepCourt: FormGroup;
 }
 
 export abstract class BaseDisputeFormPage
   extends BaseDisputePage
   implements IBaseDisputeFormPage {
-  formStep1: FormGroup;
-  formStep2: FormGroup;
-  formStep3: FormGroup;
-  formStep4: FormGroup;
-  formStep5: FormGroup;
+  public formStepReview: FormGroup;
+  public formCounts: FormArray;
+  public formStepCourt: FormGroup;
+  // public formStepCount: FormGroup;
 
   constructor(
     protected route: ActivatedRoute,
@@ -31,43 +28,26 @@ export abstract class BaseDisputeFormPage
   ) {
     super(route, router);
 
-    this.formStep1 = this.formBuilder.group({
+    this.formStepReview = this.formBuilder.group({
       id: [null],
       userId: [null],
-      violationTicketNumber: [null, [Validators.required]],
+      violationTicketNumber: [null],
       courtLocation: [null],
       violationDate: [null],
+      infoCorrect: [null],
     });
 
-    this.formStep2 = this.formBuilder.group({
+    this.formStepCourt = this.formBuilder.group({
       id: [null],
       surname: [null, [Validators.required]],
-      givenNames: [null],
-      mailing: [null],
-      postal: [null],
-      city: [null],
-      province: [null],
-      license: [null],
-      provLicense: [null],
-      homePhone: [null, [FormControlValidators.phone]],
-      workPhone: [null, [FormControlValidators.phone]],
-      birthdate: [null, []],
-    });
-
-    this.formStep3 = this.formBuilder.group({
-      id: [null],
-      surname: [null, [Validators.required]],
-    });
-
-    this.formStep4 = this.formBuilder.group({
-      id: [null],
-      lawyerPresent: [false, [FormControlValidators.requiredBoolean]],
-      interpreterRequired: [false, [FormControlValidators.requiredBoolean]],
+      lawyerPresent: [false],
+      interpreterRequired: [false],
       interpreterLanguage: [null],
-      callWitness: [false, [FormControlValidators.requiredBoolean]],
+      callWitness: [false],
     });
 
-    this.formStep5 = this.formBuilder.group({
+    this.formCounts = this.formBuilder.array([]);
+    const countGroup = this.formBuilder.group({
       id: [null],
       count: [null],
       count1A: [null],
@@ -78,17 +58,10 @@ export abstract class BaseDisputeFormPage
       timeReason: [null],
       count1B1: [null],
       count1B2: [null],
-      counts: new FormArray([]),
     });
 
-    // TODO Put in here for now.... move later
-    // this.getTicket();
-    // console.log('GET TICKET');
-  }
-
-  private getTicket(): void {
-    // this.disputeResource.getTicket().subscribe((response) => {
-    //   this.disputeService.ticket$.next(response);
-    // });
+    this.formCounts.push(countGroup);
+    this.formCounts.push(countGroup);
+    this.formCounts.push(countGroup);
   }
 }

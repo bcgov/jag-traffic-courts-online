@@ -5,47 +5,25 @@
       <ng-template matStepLabel>{{ step.title }}</ng-template>
 
       <div *ngIf="step.pageName === 1">
-        <app-review-ticket [stepper]="disputeStepper"></app-review-ticket>
+        <app-step-review-ticket
+          [stepper]="disputeStepper"
+        ></app-step-review-ticket>
       </div>
 
       <div *ngIf="step.pageName === 2">
-        <app-step-count [stepper]="disputeStepper"></app-step-count>
+        <app-step-count
+          [stepper]="disputeStepper"
+          [step]="step"
+        ></app-step-count>
       </div>
 
       <div *ngIf="step.pageName === 3">
-        <app-part-c #partC [stepper]="disputeStepper"></app-part-c>
-      </div>
-
-      <div *ngIf="step.pageName === 4">
-        <app-part-d #partD [stepper]="disputeStepper"></app-part-d>
+        <app-step-court [stepper]="disputeStepper"></app-step-court>
       </div>
 
       <div *ngIf="step.pageName === 5">
         <app-step-overview [stepper]="disputeStepper"></app-step-overview>
       </div>
     </mat-step>
-
-    <!--
-        <app-part-a #partA [stepper]="disputeStepper"></app-part-a>
-    <mat-step label="Review Ticket Information" [stepControl]="home.formStep1">
-      <app-home #home [stepper]="disputeStepper"></app-home>
-    </mat-step>
-
-    <mat-step label="Part A" [stepControl]="partA.formStep2">
-      <app-part-a #partA [stepper]="disputeStepper"></app-part-a>
-    </mat-step>
-
-    <mat-step label="Part B" [stepControl]="partB.formStep3">
-      <app-part-b #partB [stepper]="disputeStepper"></app-part-b>
-    </mat-step>
-
-    <mat-step label="Part C" optional>
-      <app-part-c #partC [stepper]="disputeStepper"></app-part-c>
-    </mat-step>
-
-    <mat-step label="Part D">
-      <app-part-d [stepper]="disputeStepper"></app-part-d>
-    </mat-step>
--->
   </mat-horizontal-stepper>
 </app-page>
