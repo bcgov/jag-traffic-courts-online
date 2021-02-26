@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using DisputeApi.Web.Features.TokenService.Models;
 using DisputeApi.Web.Features.TokenService.Service;
 using DisputeApi.Web.Test.Utils;
+using DisputeApi.Web.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 
@@ -19,14 +21,14 @@ namespace DisputeApi.Web.Test.Features.TokenService.Services
         [SetUp]
         public void SetUp()
         {
-            var inMemorySettings = new Dictionary<string, string> {
-                {"Jwt.TokenKey", "sdfsdfsdw233434224334"}, {"Jwt.Expiry", "700"}
+            AppSettings app = new AppSettings()
+            {
+                JwtExpiry = 800,
+                JwtTokenKey = "rtete45354534534vnvng"
             };
-
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
-            _service = new TokensService(_loggerMock.Object, configuration);
+            var appSettingsMock = new Mock<IOptions<AppSettings>>();
+            appSettingsMock.Setup(ap => ap.Value).Returns(app);
+            _service = new TokensService(_loggerMock.Object, appSettingsMock.Object);
         }
 
         [Test]

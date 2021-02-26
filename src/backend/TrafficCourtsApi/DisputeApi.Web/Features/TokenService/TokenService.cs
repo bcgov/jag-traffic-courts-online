@@ -5,8 +5,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TokenService.Models;
-using Microsoft.Extensions.Configuration;
+using DisputeApi.Web.Utils;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DisputeApi.Web.Features.TokenService.Service
@@ -20,13 +21,13 @@ namespace DisputeApi.Web.Features.TokenService.Service
     {
 
         private readonly ILogger<TokensService> _logger;
-        private readonly IConfiguration _config;
+        private readonly AppSettings _appSettings;
         private readonly SymmetricSecurityKey _key;
-        public TokensService(ILogger<TokensService> logger, IConfiguration config)
+        public TokensService(ILogger<TokensService> logger, IOptions<AppSettings> appSettings)
         {
-            _config = config;
+            _appSettings = appSettings.Value;
             _logger = logger;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt.TokenKey"]));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JwtTokenKey));
         }
         public Task<Token> CreateToken()
         {
@@ -39,7 +40,7 @@ namespace DisputeApi.Web.Features.TokenService.Service
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(int.Parse(_config["Jwt.Expiry"])),
+                Expires = DateTime.Now.AddMinutes(_appSettings.JwtExpiry),
                 SigningCredentials = creds
             };
 

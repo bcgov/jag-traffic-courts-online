@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TicketService.Service;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +20,10 @@ namespace DisputeApi.Web.Test
     {
         private WebApplicationFactory<Startup> WebAppFactoryObj;
 
+        private Dictionary<string, string> inMemorySettings = new Dictionary<string, string> {
+                {"AppSettings.JwtTokenKey", "sdfsdfsdw233434224334"}, {"AppSettings.JwtExpiry", "7000"}
+        };
+
         [SetUp]
         public void SetUp()
         {
@@ -25,6 +32,10 @@ namespace DisputeApi.Web.Test
                     builder =>
                     {
                         builder.ConfigureTestServices(services => { });
+                        builder.ConfigureAppConfiguration((context, config) =>
+                        {
+                            config.AddInMemoryCollection(inMemorySettings);
+                        });
                     });
         }
 
@@ -33,7 +44,7 @@ namespace DisputeApi.Web.Test
         {
             using var httpClient = WebAppFactoryObj.CreateClient();
             var response = await httpClient.GetAsync("health");
-            //Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
@@ -49,10 +60,6 @@ namespace DisputeApi.Web.Test
         [Test]
         public void configure_services_should_inject_services()
         {
-            var inMemorySettings = new Dictionary<string, string> {
-                {"Jwt.TokenKey", "sdfsdfsdw233434224334"}, {"Jwt.Expiry", "7000"}
-            };
-
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
                 .Build();

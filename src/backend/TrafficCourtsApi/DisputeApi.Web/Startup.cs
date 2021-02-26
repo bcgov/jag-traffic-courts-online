@@ -5,6 +5,7 @@ using DisputeApi.Web.Features.TicketService.Configuration;
 using DisputeApi.Web.Features.TicketService.DBContexts;
 using DisputeApi.Web.Features.TokenService.Configuration;
 using DisputeApi.Web.Health;
+using DisputeApi.Web.Utils;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,7 @@ namespace DisputeApi.Web
 {
     public class Startup
     {
-        private readonly IConfiguration _config;
+        private IConfiguration _config;
         public Startup(IConfiguration config)
         {
             _config = config;
@@ -40,6 +41,7 @@ namespace DisputeApi.Web
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
 
+            services.Configure<AppSettings>(_config.GetSection("AppSettings"));
             services.AddDbContext<TicketContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers();
             ConfigureOpenApi(services);
@@ -47,15 +49,15 @@ namespace DisputeApi.Web
             services.AddTicketService();
             services.AddTokenService();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt.TokenKey"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+             {
+                 options.TokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuerSigningKey = true,
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings").GetSection("JwtTokenKey").Value)),
+                     ValidateIssuer = false,
+                     ValidateAudience = false
+                 };
+             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,8 +93,6 @@ namespace DisputeApi.Web
             app.UseRouting();
 
             app.UseOpenApi();
-
-            // Add use Cors here
 
             app.UseAuthentication();
             app.UseAuthorization();
