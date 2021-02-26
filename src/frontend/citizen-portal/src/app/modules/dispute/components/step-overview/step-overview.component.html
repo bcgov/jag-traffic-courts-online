@@ -1,43 +1,64 @@
-<app-page [busy]="busy">
-  <section class="mb-3">
-    <h2>Violation Ticket Overiew</h2>
-    <p>
-      Please review the following information. You can go back to any step to
-      update the information.
-    </p>
-  </section>
+<!--<app-page [busy]="busy">
+</app-page>
+-->
+<section class="mb-3">
+  <h1>Violation Ticket Overiew</h1>
+  <p>
+    Please review the following information. You can go back to any step to
+    update the information.
+  </p>
+</section>
 
-  <section class="mb-3">
-    <div class="row">
-      <div class="col-6 mb-3">Violation Ticket Number</div>
-      <div class="col-6 text-right mb-3">
-        {{ ticket?.violationTicketNumber }}
-      </div>
+<section class="mb-3">
+  <div class="row">
+    <div class="col-6 mb-3">Violation Ticket Number</div>
+    <div class="col-6 text-right mb-3">
+      {{ ticket?.violationTicketNumber }}
     </div>
-    <div class="row">
-      <div class="col-6 mb-3">Court Location named on the VT</div>
-      <div class="col-6 text-right mb-3">
-        {{ ticket?.courtLocation | default }}
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-6 mb-3">Court Location named on the VT</div>
+    <div class="col-6 text-right mb-3">
+      {{ ticket?.courtLocation | default }}
     </div>
-    <div class="row">
-      <div class="col-6 mb-3">Violation Date</div>
-      <div class="col-6 text-right">
-        {{ ticket?.violationDate | date: "mediumDate" | default }}
-      </div>
+  </div>
+  <div class="row">
+    <div class="col-6 mb-3">Violation Date</div>
+    <div class="col-6 text-right">
+      {{ ticket?.violationDate | date: "mediumDate" | default }}
     </div>
-  </section>
+  </div>
+</section>
 
+<form (ngSubmit)="onSubmit()" [formGroup]="formStepOverview" novalidate>
   <section class="mb-3">
     <div class="row">
       <div class="col">
-        <app-alert type="warning" icon="warning">
-          <ng-container #alertContent class="alert-content">
-            <strong>VIOLATION TICKET SUBMISSION</strong><br />
-            Once it has been submitted, it cannot be updated.
-          </ng-container>
-        </app-alert>
+        <mat-checkbox class="mr-4 mb-2" formControlName="certifyCorrect">
+          I certify that all information provided is true and complete. I
+          understand it is an offence under the law to knowingly provide false
+          or misleading information.
+        </mat-checkbox>
       </div>
     </div>
   </section>
-</app-page>
+</form>
+
+<section class="mb-3">
+  <div class="row">
+    <div class="col">
+      <app-alert type="warning" icon="warning">
+        <ng-container #alertContent class="alert-content">
+          <strong>VIOLATION TICKET SUBMISSION</strong><br />
+          Once it has been submitted, it cannot be updated.
+        </ng-container>
+      </app-alert>
+    </div>
+  </div>
+</section>
+
+<app-page-footer
+  [saveButtonLabel]="nextBtnLabel"
+  (save)="onSubmit()"
+  (back)="onBack()"
+></app-page-footer>

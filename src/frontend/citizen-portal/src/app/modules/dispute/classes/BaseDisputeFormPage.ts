@@ -9,6 +9,7 @@ export interface IBaseDisputeFormPage {
   formStepReview: FormGroup;
   formCounts: FormArray;
   formStepCourt: FormGroup;
+  formStepOverview: FormGroup;
 }
 
 export abstract class BaseDisputeFormPage
@@ -17,7 +18,7 @@ export abstract class BaseDisputeFormPage
   public formStepReview: FormGroup;
   public formCounts: FormArray;
   public formStepCourt: FormGroup;
-  // public formStepCount: FormGroup;
+  public formStepOverview: FormGroup;
 
   constructor(
     protected route: ActivatedRoute,
@@ -44,6 +45,11 @@ export abstract class BaseDisputeFormPage
       interpreterRequired: [false],
       interpreterLanguage: [null],
       callWitness: [false],
+    });
+
+    this.formStepOverview = this.formBuilder.group({
+      id: [null],
+      certifyCorrect: [false],
     });
 
     this.formCounts = this.formBuilder.array([]);

@@ -1,5 +1,8 @@
 <app-page [busy]="busy">
   <section class="mb-3">
+    <h1>Violation Ticket Review</h1>
+  </section>
+  <section class="mb-3">
     <h3>Violation Ticket Information</h3>
     <div class="row">
       <div class="col-6 mb-3">Violation Ticket Number</div>
@@ -55,12 +58,12 @@
     <section class="mb-3">
       <div class="row">
         <div class="col">
-          <label>Is the above information correct?</label>
+          <h2>Is the above information correct?</h2>
           <mat-radio-group formControlName="infoCorrect" class="w-100">
             <p>
               <mat-radio-button value="Y">Yes</mat-radio-button>
+              <mat-radio-button class="ml-4" value="N">No</mat-radio-button>
             </p>
-            <p><mat-radio-button value="N">No</mat-radio-button></p>
           </mat-radio-group>
         </div>
       </div>

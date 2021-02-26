@@ -48,7 +48,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       let index = 0;
       ticket.counts.forEach((cnt) => {
         steps.push({
-          title: 'Count #' + cnt.countNo,
+          title: 'Offence #' + cnt.countNo,
           description: cnt.description,
           value: index,
           pageName: 2,
