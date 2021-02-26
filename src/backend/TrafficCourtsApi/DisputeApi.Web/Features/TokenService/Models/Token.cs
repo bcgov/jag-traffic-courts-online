@@ -1,4 +1,4 @@
-namespace DisputeApi.Web.Features.TokenService.Model
+namespace DisputeApi.Web.Features.TokenService.Models
 {
     public class Token
     {

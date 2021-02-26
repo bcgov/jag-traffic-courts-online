@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using DisputeApi.Web.Features.TokenService.Model;
+using DisputeApi.Web.Features.TokenService.Models;
 using DisputeApi.Web.Features.TokenService.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
