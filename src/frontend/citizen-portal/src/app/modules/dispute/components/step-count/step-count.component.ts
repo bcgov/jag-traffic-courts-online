@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ViewportService } from '@core/services/viewport.service';
-import { RouteUtils } from '@core/utils/route-utils.class';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
+import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
@@ -21,10 +21,16 @@ import { Subscription } from 'rxjs';
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
   @Input() public step: any;
+  @Output() public stepSave: EventEmitter<{
+    stepper: MatStepper;
+    formGroup: FormGroup;
+    formArray: FormArray;
+  }> = new EventEmitter();
 
   public busy: Subscription;
-  public formGroupCount: FormGroup;
+  // public formGroupCount: FormGroup;
   public nextBtnLabel: string;
+  public ticket: Ticket;
 
   constructor(
     protected route: ActivatedRoute,
@@ -32,45 +38,63 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     protected formBuilder: FormBuilder,
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
+    protected disputeFormStateService: DisputeFormStateService,
     private viewportService: ViewportService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
   ) {
-    super(route, router, formBuilder, disputeService, disputeResource);
+    super(
+      route,
+      router,
+      formBuilder,
+      disputeService,
+      disputeResource,
+      disputeFormStateService
+    );
     this.nextBtnLabel = 'Next';
   }
 
-  public ngOnInit(): void {
-    this.formGroupCount = this.formCounts.at(this.step.value) as FormGroup;
+  public ngOnInit() {
+    this.createFormInstance();
+    // this.patchForm();
+    this.initForm();
+    this.nextBtnLabel = 'Next';
   }
 
-  public onSubmit(): void {
-    console.log('formCounts length', this.formCounts.length);
+  protected createFormInstance() {
+    this.form = this.disputeFormStateService.getStepCountForm(this.step.value);
+    console.log('StepCountComponent form', this.form.value);
+  }
 
+  protected initForm() {
+    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
+      this.ticket = ticket;
+      this.form.patchValue(ticket);
+    });
+  }
+  public onSubmit(): void {
+    // console.log('formCounts', this.formCounts.value);
     // this.formCounts.forEach((cnt) => {
     // });
-
-    let steps = this.disputeService.steps$.value;
-    const exists = steps.some((step) => step.pageName === 3);
-    if (!exists) {
-      steps.splice(steps.length - 1, 0, {
-        title: 'Court',
-        value: null,
-        pageName: 3,
-      });
-      this.disputeService.steps$.next(steps);
-    }
-
+    //TODO fix this
+    // let steps = this.disputeService.steps$.value;
+    // const exists = steps.some((step) => step.pageName === 3);
+    // if (!exists) {
+    //   steps.splice(steps.length - 1, 0, {
+    //     title: 'Court',
+    //     value: null,
+    //     pageName: 3,
+    //   });
+    //   this.disputeService.steps$.next(steps);
+    // }
     // '({count1} and {count1} != "A") or ({count2} and {count2} != "A") or ({count3} and {count3} != "A")',
-
-    if (this.formUtilsService.checkValidity(this.formGroupCount)) {
-      // this.disputeService.ticket$.next({
-      //   ...this.disputeService.ticket,
-      //   ...this.formCounts.value,
-      // });
-
-      this.stepper.next();
+    if (this.formUtilsService.checkValidity(this.form)) {
+      this.stepSave.emit({
+        stepper: this.stepper,
+        formGroup: this.form,
+        formArray: null,
+      });
     } else {
       this.utilsService.scrollToErrorSection();
     }
@@ -84,22 +108,22 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public get count(): FormControl {
-    return this.formGroupCount.get('count') as FormControl;
+    return this.form.get('count') as FormControl;
   }
 
   public get count1A1(): FormControl {
-    return this.formGroupCount.get('count1A1') as FormControl;
+    return this.form.get('count1A1') as FormControl;
   }
 
   public get count1A2(): FormControl {
-    return this.formGroupCount.get('count1A2') as FormControl;
+    return this.form.get('count1A2') as FormControl;
   }
 
   public get count1B1(): FormControl {
-    return this.formGroupCount.get('count1B1') as FormControl;
+    return this.form.get('count1B1') as FormControl;
   }
 
   public get count1B2(): FormControl {
-    return this.formGroupCount.get('count1B2') as FormControl;
+    return this.form.get('count1B2') as FormControl;
   }
 }

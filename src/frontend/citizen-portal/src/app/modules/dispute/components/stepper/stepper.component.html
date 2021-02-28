@@ -1,12 +1,13 @@
 <app-page [busy]="busy" [mode]="pageMode">
   <app-page-header>BC Traffic Court Online</app-page-header>
-  <mat-horizontal-stepper #disputeStepper linear>
-    <mat-step *ngFor="let step of newSteps; let i = index">
+  <mat-vertical-stepper #disputeStepper linear>
+    <mat-step *ngFor="let step of disputeSteps; let i = index">
       <ng-template matStepLabel>{{ step.title }}</ng-template>
 
       <div *ngIf="step.pageName === 1">
         <app-step-review-ticket
           [stepper]="disputeStepper"
+          (stepSave)="onStepSave($event)"
         ></app-step-review-ticket>
       </div>
 
@@ -14,16 +15,23 @@
         <app-step-count
           [stepper]="disputeStepper"
           [step]="step"
+          (stepSave)="onStepSave($event)"
         ></app-step-count>
       </div>
 
       <div *ngIf="step.pageName === 3">
-        <app-step-court [stepper]="disputeStepper"></app-step-court>
+        <app-step-court
+          [stepper]="disputeStepper"
+          (stepSave)="onStepSave($event)"
+        ></app-step-court>
       </div>
 
       <div *ngIf="step.pageName === 5">
-        <app-step-overview [stepper]="disputeStepper"></app-step-overview>
+        <app-step-overview
+          [stepper]="disputeStepper"
+          (stepSave)="onStepSave($event)"
+        ></app-step-overview>
       </div>
     </mat-step>
-  </mat-horizontal-stepper>
+  </mat-vertical-stepper>
 </app-page>
