@@ -1,7 +1,7 @@
 <app-page [busy]="busy">
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section class="mb-3">
-      <h1>Violation Ticket {{ step.title }}</h1>
+      <h1>{{ step.title }}</h1>
       <p>{{ step.description }}</p>
       <hr />
     </section>

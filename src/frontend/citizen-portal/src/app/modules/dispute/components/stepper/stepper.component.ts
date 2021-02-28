@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
-import moment from 'moment';
 
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
@@ -52,12 +51,16 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       console.log('ticket', ticket);
 
       let steps = [];
-      steps.push({ title: 'Review', value: null, pageName: 1 });
+      steps.push({
+        title: 'Violation Ticket Review',
+        value: null,
+        pageName: 1,
+      });
 
       let index = 0;
       ticket.counts.forEach((cnt) => {
         steps.push({
-          title: 'Offence #' + cnt.countNo,
+          title: 'Offence #' + cnt.countNo + ' Review ',
           description: cnt.description,
           statuteId: cnt.statuteId,
           value: index,
@@ -66,9 +69,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
         index++;
       });
 
-      steps.push({ title: 'Court', value: null, pageName: 3 });
-      steps.push({ title: 'Overview', value: null, pageName: 5 });
-      console.log('steps', steps);
+      steps.push({ title: 'Dispute Overview', value: null, pageName: 5 });
 
       this.disputeService.steps$.next(steps);
     });
@@ -91,33 +92,40 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       numberOfSteps,
       'currentStep',
       currentStep
-      // 'formGroup',
-      // $event.formGroup.value
     );
 
-    // console.log('formGroup', $event.formGroup.value);
-    // console.log('formCounts', this.formCounts.value);
-    // if ($event.formArray) {
-    //   console.log('formArray', $event.formArray.value);
-    // }
+    const count1 = this.disputeFormStateService.stepCount1Form.controls.count
+      .value;
+    const count2 = this.disputeFormStateService.stepCount2Form.controls.count
+      .value;
+    const count3 = this.disputeFormStateService.stepCount3Form.controls.count
+      .value;
+    const showCourtPage =
+      (count1 && count1 != 'A') ||
+      (count2 && count2 != 'A') ||
+      (count3 && count3 != 'A')
+        ? true
+        : false;
 
-    // this.formCounts.forEach((cnt) => {
-    // });
-    //TODO fix this
-    // let steps = this.disputeService.steps$.value;
-    // const exists = steps.some((step) => step.pageName === 3);
-    // if (!exists) {
-    //   // Check if the 'Court' step should be added
+    let steps = this.disputeService.steps$.value;
+    const courtPageExists = steps.some((step) => step.pageName === 3);
 
-    //   steps.splice(steps.length - 1, 0, {
-    //     title: 'Court',
-    //     value: null,
-    //     pageName: 3,
-    //   });
-    //   this.disputeService.steps$.next(steps);
-    // }
-
-    // '({count1} and {count1} != "A") or ({count2} and {count2} != "A") or ({count3} and {count3} != "A")',
+    if (showCourtPage && !courtPageExists) {
+      // Check if the 'Court' step should be added
+      steps.splice(steps.length - 1, 0, {
+        title: 'Court Information',
+        value: null,
+        pageName: 3,
+      });
+      this.disputeService.steps$.next(steps);
+    } else if (!showCourtPage && courtPageExists) {
+      for (var i = 0; i < steps.length; i++) {
+        if (steps[i].pageName === 3) {
+          steps.splice(i, 1);
+          i--;
+        }
+      }
+    }
 
     const source = timer(1000);
     this.busy = source.subscribe((val) => {

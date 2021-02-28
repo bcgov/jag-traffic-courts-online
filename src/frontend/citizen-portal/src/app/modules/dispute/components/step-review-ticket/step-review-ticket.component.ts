@@ -11,7 +11,6 @@ import { DisputeFormStateService } from '@dispute/services/dispute-form-state.se
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
-import moment from 'moment';
 import { Subscription } from 'rxjs';
 
 @Component({
