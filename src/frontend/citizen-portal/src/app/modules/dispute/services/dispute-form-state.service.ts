@@ -3,7 +3,6 @@ import {
   FormBuilder,
   Validators,
   FormGroup,
-  FormArray,
   AbstractControl,
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
@@ -31,6 +30,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     else if (countIndex === 1) return this.stepCount2Form;
     else if (countIndex === 2) return this.stepCount3Form;
   }
+
   /**
    * @description
    * Convert JSON into reactive form abstract controls, which can
@@ -44,9 +44,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     dispute: Dispute,
     forcePatch: boolean = false
   ): Promise<void> {
-    // Store required enrolment identifiers not captured in forms
-    // this.disputeId = dispute?.id;
-    // this.userId = dispute?.userId;
+    // Store required dispute identifiers not captured in forms
 
     super.setForm(dispute, forcePatch);
   }
@@ -56,7 +54,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
    * Convert reactive form abstract controls into JSON.
    */
   public get json(): Dispute {
-    const id = 111;
     const stepReview = this.stepReviewForm.getRawValue();
     const stepCount1 = this.stepCount1Form.getRawValue();
     const stepCount2 = this.stepCount2Form.getRawValue();
@@ -132,7 +129,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
   private buildStepReviewForm(): FormGroup {
     return this.fb.group({
       id: [null],
-      infoCorrect: [null, [Validators.required]],
+      infoCorrect: [null],
     });
   }
 
@@ -150,17 +147,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
       count1B1: [null],
       count1B2: [null],
     });
-
-    // let countFormGroup = this.fb.group({
-    //   counts: this.fb.array([]),
-    // });
-
-    // const counts = countFormGroup.get('counts') as FormArray;
-    // counts.push(singleCountForm);
-    // counts.push(singleCountForm);
-    // counts.push(singleCountForm);
-
-    // return countFormGroup;
   }
 
   private buildStepCourtForm(): FormGroup {

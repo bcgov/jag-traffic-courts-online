@@ -12,6 +12,10 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { UtilsService } from '@core/services/utils.service';
 import { Ticket } from '@shared/models/ticket.model';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-stepper',
@@ -21,7 +25,6 @@ import { DisputeFormStateService } from '@dispute/services/dispute-form-state.se
 export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public pageMode: string;
-
   public disputeSteps: any[];
 
   constructor(
@@ -32,6 +35,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
     private toastService: ToastService,
+    private dialog: MatDialog,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
@@ -48,7 +52,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     this.pageMode = 'full';
 
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      console.log('ticket', ticket);
+      this.logger.info('ticket', ticket);
 
       let steps = [];
       steps.push({
@@ -58,7 +62,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       });
 
       let index = 0;
-      ticket.counts.forEach((cnt) => {
+      ticket?.counts.forEach((cnt) => {
         steps.push({
           title: 'Offence #' + cnt.countNo + ' Review ',
           description: cnt.description,
@@ -81,18 +85,11 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     });
   }
 
-  public onStepSave($event): void {
-    console.log('json', this.disputeFormStateService.json);
+  public onStepSave(stepper: MatStepper): void {
+    this.logger.info('Dispute Data:', this.disputeFormStateService.json);
 
-    const numberOfSteps = $event.stepper.steps.length;
-    const currentStep = $event.stepper.selectedIndex + 1;
-
-    this.logger.info(
-      'numberOfSteps',
-      numberOfSteps,
-      'currentStep',
-      currentStep
-    );
+    const numberOfSteps = stepper.steps.length;
+    const currentStep = stepper.selectedIndex + 1;
 
     const count1 = this.disputeFormStateService.stepCount1Form.controls.count
       .value;
@@ -127,16 +124,49 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       }
     }
 
+    if (numberOfSteps === currentStep) {
+      // on the last step
+      this.submitDispute();
+    } else {
+      this.saveStep(stepper);
+    }
+  }
+
+  /**
+   * @description
+   * Save the data on the current step
+   */
+  private saveStep(stepper: MatStepper): void {
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      if (numberOfSteps === currentStep) {
-        // on last step
-        this.toastService.openSuccessToast('Dispute has been submitted');
-        this.router.navigate(['/']);
-      } else {
-        this.toastService.openSuccessToast('Information has been saved');
-        $event.stepper.next();
-      }
+      this.toastService.openSuccessToast('Information has been saved');
+      stepper.next();
     });
+  }
+
+  /**
+   * @description
+   * Submit the dispute
+   */
+  private submitDispute(): void {
+    const data: DialogOptions = {
+      title: 'Submit Dispute',
+      message:
+        'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
+      actionText: 'Submit Dispute',
+    };
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data })
+      .afterClosed()
+      .subscribe((response: boolean) => {
+        if (response) {
+          const source = timer(1000);
+          this.busy = source.subscribe((val) => {
+            this.toastService.openSuccessToast('Dispute has been submitted');
+            this.router.navigate(['/']);
+          });
+        }
+      });
   }
 }

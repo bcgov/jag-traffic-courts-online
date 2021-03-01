@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { StepCountComponent } from './step-count.component';
 
@@ -8,9 +11,13 @@ describe('StepCountComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StepCountComponent ]
-    })
-    .compileComponents();
+      imports: [
+        RouterModule.forRoot([]),
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+      ],
+      declarations: [StepCountComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

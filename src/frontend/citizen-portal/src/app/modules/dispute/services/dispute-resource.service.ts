@@ -28,14 +28,14 @@ export class DisputeResourceService {
     );
   }
 
-  public createTicket(ticket: Ticket): Observable<Ticket> {
-    this.logger.info('createTicket', ticket);
+  public createDispute(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('createDispute', ticket);
 
     return this.apiResource.post<Ticket>('ticket').pipe(
       map((response: ApiHttpResponse<Ticket>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[CreateTicket] DisputeResourceService::ticket error has occurred: ',
+          '[createDispute] DisputeResourceService::ticket error has occurred: ',
           error
         );
         throw error;
@@ -43,14 +43,14 @@ export class DisputeResourceService {
     );
   }
 
-  public updateTicket(ticket: Ticket): Observable<Ticket> {
-    this.logger.info('updateTicket', ticket);
+  public updateDispute(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('updateDispute', ticket);
 
     return this.apiResource.put<Ticket>('ticket').pipe(
       map((response: ApiHttpResponse<Ticket>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[UpdateTicket] DisputeResourceService::ticket error has occurred: ',
+          '[updateDispute] DisputeResourceService::ticket error has occurred: ',
           error
         );
         throw error;

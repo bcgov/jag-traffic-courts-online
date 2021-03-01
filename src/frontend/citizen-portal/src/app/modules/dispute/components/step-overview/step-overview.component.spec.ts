@@ -1,4 +1,11 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
+import { DefaultPipe } from '@shared/pipes/default.pipe';
 
 import { StepOverviewComponent } from './step-overview.component';
 
@@ -8,9 +15,16 @@ describe('StepOverviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StepOverviewComponent ]
-    })
-    .compileComponents();
+      imports: [
+        RouterModule.forRoot([]),
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MatDialogModule,
+        MatSnackBarModule,
+        MatCheckboxModule,
+      ],
+      declarations: [StepOverviewComponent, DefaultPipe],
+    }).compileComponents();
   });
 
   beforeEach(() => {

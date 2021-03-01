@@ -1,17 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-step-review-ticket',
@@ -22,13 +20,8 @@ export class StepReviewTicketComponent
   extends BaseDisputeFormPage
   implements OnInit {
   @Input() public stepper: MatStepper;
-  @Output() public stepSave: EventEmitter<{
-    stepper: MatStepper;
-    formGroup: FormGroup;
-    formArray: FormArray;
-  }> = new EventEmitter();
+  @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
-  public busy: Subscription;
   public nextBtnLabel: string;
   public ticket: Ticket;
   public isSubmitted = false;
@@ -40,7 +33,6 @@ export class StepReviewTicketComponent
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
-    private toastService: ToastService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
@@ -56,40 +48,20 @@ export class StepReviewTicketComponent
   }
 
   public ngOnInit() {
-    this.createFormInstance();
-    // this.patchForm();
-    this.initForm();
-    this.nextBtnLabel = 'Next';
-  }
-
-  protected createFormInstance() {
     this.form = this.disputeFormStateService.stepReviewForm;
-    console.log('StepReviewTicketComponent form', this.form.value);
-  }
 
-  protected initForm() {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.ticket = ticket;
       this.form.patchValue(ticket);
     });
 
-    // if (!this.enrolmentService.enrolment) {
-    //   this.getUser$()
-    //     .subscribe((enrollee: Enrollee) => {
-    //       this.dateOfBirth.enable();
-    //       this.form.patchValue(enrollee);
-    //     });
-    // }
+    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {
     this.isSubmitted = true;
     if (this.formUtilsService.checkValidity(this.form)) {
-      this.stepSave.emit({
-        stepper: this.stepper,
-        formGroup: this.form,
-        formArray: null,
-      });
+      this.stepSave.emit(this.stepper);
     } else {
       this.utilsService.scrollToErrorSection();
     }

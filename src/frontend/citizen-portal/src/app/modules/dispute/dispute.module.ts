@@ -5,7 +5,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { SharedModule } from '@shared/shared.module';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { DisputeRoutingModule } from './dispute-routing.module';
-import { DisputeDashboardComponent } from './components/dispute-dashboard/dispute-dashboard.component';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
@@ -16,7 +15,6 @@ import { StepCourtComponent } from './components/step-court/step-court.component
 
 @NgModule({
   declarations: [
-    DisputeDashboardComponent,
     FindTicketComponent,
     StepperComponent,
     DisputePageComponent,

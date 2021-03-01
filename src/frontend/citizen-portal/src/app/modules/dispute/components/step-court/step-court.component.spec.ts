@@ -1,4 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { RouterModule } from '@angular/router';
 
 import { StepCourtComponent } from './step-court.component';
 
@@ -8,9 +12,14 @@ describe('StepCourtComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StepCourtComponent ]
-    })
-    .compileComponents();
+      imports: [
+        RouterModule.forRoot([]),
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+        MatCheckboxModule,
+      ],
+      declarations: [StepCourtComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

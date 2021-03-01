@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit {
         const numberOfCounts = response.counts?.length;
         survey.setValue('numberOfCounts', response.counts?.length);
 
-        response.counts.forEach((cnt) => {
+        response?.counts.forEach((cnt) => {
           const question = survey.getQuestionByName(
             'alert_info_count' + cnt.countNo
           );

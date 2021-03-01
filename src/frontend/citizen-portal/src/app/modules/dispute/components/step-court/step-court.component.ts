@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -11,7 +11,6 @@ import { DisputeFormStateService } from '@dispute/services/dispute-form-state.se
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-step-court',
@@ -20,13 +19,8 @@ import { Subscription } from 'rxjs';
 })
 export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
-  @Output() public stepSave: EventEmitter<{
-    stepper: MatStepper;
-    formGroup: FormGroup;
-    formArray: FormArray;
-  }> = new EventEmitter();
+  @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
-  public busy: Subscription;
   public nextBtnLabel: string;
   public ticket: Ticket;
 
@@ -53,31 +47,19 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit() {
-    this.createFormInstance();
-    // this.patchForm();
-    this.initForm();
-    this.nextBtnLabel = 'Next';
-  }
-
-  protected createFormInstance() {
     this.form = this.disputeFormStateService.stepCourtForm;
-    console.log('StepCourtComponent form', this.form.value);
-  }
 
-  protected initForm() {
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.ticket = ticket;
       this.form.patchValue(ticket);
     });
+
+    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
-      this.stepSave.emit({
-        stepper: this.stepper,
-        formGroup: this.form,
-        formArray: null,
-      });
+      this.stepSave.emit(this.stepper);
     } else {
       this.utilsService.scrollToErrorSection();
     }
