@@ -3,6 +3,7 @@ package stepDefinitions.frontendstepdefinitions;
 import java.util.concurrent.TimeUnit;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -32,24 +33,25 @@ public class Steps {
 		options.setPageLoadStrategy(PageLoadStrategy.NONE);
         driver = new ChromeDriver(options);
         
-        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
-        driver.manage().timeouts().setScriptTimeout(120, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
         driver.manage().deleteAllCookies();
 	}
 	
 	@When("User navigates to BC Traffic Courts Online Website")
 	public void user_navigates_to_bc_traffic_courts_online_website() {
-	    // Write code here that turns the phrase above into concrete actions
 	    driver.get("http://localhost:4200/");
 	}
 	@When("User clicks on Initiate Dispute Option")
 	public void user_clicks_on_initiate_dispute_option() {
-	    // Write code here that turns the phrase above into concrete actions
-	    
+	    driver.findElement(By.xpath("/html/body/app-root/div/app-auth/app-landing/div/div/div[2]/div[3]/div/div[1]/button")).click();
 	}
 	@When("User Enters the Violation Ticket Details")
 	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
 	    // Write code here that turns the phrase above into concrete actions
+//		driver.findElement(By.xpath("//input[@id='sq_138i']")).sendKeys("ABCD1234");
+//		driver.findElement(By.xpath("//input[@id='sq_139i']")).sendKeys("01022");
+		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 	}
 	@When("User Signs and Clicks on Complete Option")
 	public void user_signs_and_clicks_on_complete_option() {
