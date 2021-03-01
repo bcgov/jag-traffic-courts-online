@@ -15,10 +15,22 @@ public class Steps {
 	@Given("User has successfully launched the web browser")
 	public void user_had_successfully_launched_the_web_browser() {
 	    // Write code here that turns the phrase above into concrete actions
-        System.setProperty("webdriver.chrome.driver","C:\\chromedriver_win32\\chromedriver.exe");
+//        System.setProperty("webdriver.chrome.driver","C:\\chromedriver_win32\\chromedriver.exe");
+		String browser = System.getProperty("BROWSER");
+		WebDriverManager.chromedriver().setup();
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("enable-automation");
+		options.addArguments("--no-sandbox");
+		options.addArguments("--disable-dev-shm-usage");
+		options.addArguments("--headless");
+		options.addArguments("--window-size=1920,1080");
+		options.addArguments("--disable-extensions");
+		options.addArguments("--dns-prefetch-disable");
+		options.addArguments("--disable-gpu");
+		options.setPageLoadStrategy(PageLoadStrategy.NONE);
         driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//        driver.manage().window().maximize();
+//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
 	
 	@When("User navigates to BC Traffic Courts Online Website")
