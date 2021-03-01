@@ -18,7 +18,6 @@ public class Steps {
 	@Given("User has successfully launched the web browser")
 	public void user_had_successfully_launched_the_web_browser() {
 	    // Write code here that turns the phrase above into concrete actions
-//        System.setProperty("webdriver.chrome.driver","C:\\chromedriver_win32\\chromedriver.exe");
 		String browser = System.getProperty("BROWSER");
 		WebDriverManager.chromedriver().setup();
 		ChromeOptions options = new ChromeOptions();
@@ -31,9 +30,7 @@ public class Steps {
 		options.addArguments("--dns-prefetch-disable");
 		options.addArguments("--disable-gpu");
 		options.setPageLoadStrategy(PageLoadStrategy.NONE);
-        driver = new ChromeDriver();
-//        driver.manage().window().maximize();
-//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver = new ChromeDriver(options);
         
         driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
         driver.manage().timeouts().setScriptTimeout(120, TimeUnit.SECONDS);
