@@ -26,8 +26,8 @@ jobs:
       - name: Run Frontend UI
         run: |
           cd src/frontend/citizen-portal
-          npm install
-          npm install -g @angular/cli
+          sudo npm install
+          sudo npm install -g @angular/cli
           ng serve
           cd -
 
