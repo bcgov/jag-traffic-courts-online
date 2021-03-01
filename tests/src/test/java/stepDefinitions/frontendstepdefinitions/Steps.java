@@ -1,9 +1,12 @@
 package stepDefinitions.frontendstepdefinitions;
 
 import java.util.concurrent.TimeUnit;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -31,6 +34,10 @@ public class Steps {
         driver = new ChromeDriver();
 //        driver.manage().window().maximize();
 //        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        
+        driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+        driver.manage().timeouts().setScriptTimeout(120, TimeUnit.SECONDS);
+        driver.manage().deleteAllCookies();
 	}
 	
 	@When("User navigates to BC Traffic Courts Online Website")
