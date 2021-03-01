@@ -1,8 +1,18 @@
 # base image
 FROM node:10.16 as build-deps
+RUN printenv
 
 # set working directory
+ARG USE_MOCK_SERVICES
+ARG USE_KEYCLOAK
+ARG API_URL
+ARG KEYCLOAK_URL
+ARG KEYCLOAK_REALM
+ARG KEYCLOAK_CLIENT_ID
+RUN printenv
+
 ENV NODE_ROOT /usr/src/app
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 

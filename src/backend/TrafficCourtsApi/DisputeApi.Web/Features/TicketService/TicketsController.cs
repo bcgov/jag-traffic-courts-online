@@ -23,7 +23,7 @@ namespace DisputeApi.Web.Features.TicketService.Controller
         }
 
         [HttpPost]
-        [Route("savetickets")]
+        [Route("saveticket")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
         [OpenApiTag("Dispute API")]
