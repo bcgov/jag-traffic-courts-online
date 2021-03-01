@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Frontend UI
         run: |
-          src/frontend/citizen-portal
+          cd src/frontend/citizen-portal
           npm install
           ng serve
           cd -
