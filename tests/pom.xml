@@ -51,7 +51,13 @@
 		    <groupId>io.cucumber</groupId>
 		    <artifactId>cucumber-core</artifactId>
 		    <version>6.10.0</version>
-		</dependency>		
+		</dependency>	
+		<dependency>
+		    <groupId>io.rest-assured</groupId>
+		    <artifactId>rest-assured</artifactId>
+		    <version>4.3.3</version>
+		    <scope>test</scope>
+		</dependency>
     </dependencies>
 
     <build>

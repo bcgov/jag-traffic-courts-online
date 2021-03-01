@@ -1,10 +1,8 @@
-package stepDefinitions;
+package stepDefinitions.frontendstepdefinitions;
 
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.cucumber.java.en.Given;
@@ -14,38 +12,36 @@ import io.cucumber.java.en.When;
 public class Steps {
 	WebDriver driver;
 	
-	@Given("User had successfully launched the web browser")
+	@Given("User has successfully launched the web browser")
 	public void user_had_successfully_launched_the_web_browser() {
 	    // Write code here that turns the phrase above into concrete actions
         System.setProperty("webdriver.chrome.driver","C:\\chromedriver_win32\\chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        
 	}
 	
-	@When("User navigates to Google.com")
-	public void user_navigates_to_google_com() {
+	@When("User navigates to BC Traffic Courts Online Website")
+	public void user_navigates_to_bc_traffic_courts_online_website() {
 	    // Write code here that turns the phrase above into concrete actions
-		driver.get("https://www.google.com");
+	    driver.get("http://localhost:4200/");
 	}
-	
-	@Then("User searches for BC Traffic Courts")
-	public void user_searches_for_bc_traffic_courts() {
+	@When("User clicks on Initiate Dispute Option")
+	public void user_clicks_on_initiate_dispute_option() {
 	    // Write code here that turns the phrase above into concrete actions
-		WebElement searchBar = driver.findElement(By.name("q"));
-		searchBar.sendKeys("BC Traffic Courts");
-		
-        WebElement searchButton = driver.findElement(By.name("btnK"));
-        searchButton.click();
+	    
 	}
-	
-	@Then("Expected Search Results are Displayed")
-	public void expected_search_results_are_displayed() {
+	@When("User Enters the Violation Ticket Details")
+	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
+	    // Write code here that turns the phrase above into concrete actions
+	}
+	@When("User Signs and Clicks on Complete Option")
+	public void user_signs_and_clicks_on_complete_option() {
+	    // Write code here that turns the phrase above into concrete actions
+	}
+	@Then("The Violation Ticket should be Successfully Submitted")
+	public void the_violation_ticket_should_be_successfully_submitted() {
 	    // Write code here that turns the phrase above into concrete actions
 		driver.quit();
 	}
-
-
-
 }
