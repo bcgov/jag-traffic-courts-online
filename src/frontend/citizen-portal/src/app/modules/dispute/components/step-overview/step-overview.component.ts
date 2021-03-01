@@ -51,7 +51,7 @@ export class StepOverviewComponent
 
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.ticket = ticket;
-      this.form?.patchValue(ticket);
+      this.form.patchValue(ticket);
     });
 
     this.nextBtnLabel = 'Submit';

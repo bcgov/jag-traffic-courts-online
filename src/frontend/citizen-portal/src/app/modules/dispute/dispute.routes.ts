@@ -2,6 +2,7 @@ export class DisputeRoutes {
   public static DISPUTE = 'dispute';
   public static FIND = 'find';
   public static STEPPER = 'stepper';
+  public static SUCCESS = 'success';
 
   public static MODULE_PATH = DisputeRoutes.DISPUTE;
 

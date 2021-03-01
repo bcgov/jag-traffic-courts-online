@@ -25,12 +25,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     this.initialize();
   }
 
-  public getStepCountForm(countIndex: number): FormGroup {
-    if (countIndex === 0) return this.stepCount1Form;
-    else if (countIndex === 1) return this.stepCount2Form;
-    else if (countIndex === 2) return this.stepCount3Form;
-  }
-
   /**
    * @description
    * Convert JSON into reactive form abstract controls, which can
@@ -47,6 +41,12 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     // Store required dispute identifiers not captured in forms
 
     super.setForm(dispute, forcePatch);
+  }
+
+  public getStepCountForm(countIndex: number): FormGroup {
+    if (countIndex === 1) return this.stepCount2Form;
+    else if (countIndex === 2) return this.stepCount3Form;
+    return this.stepCount1Form;
   }
 
   /**

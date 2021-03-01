@@ -1,8 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { YesNoPipe } from '@shared/pipes/yes-no.pipe';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepCourtComponent } from './step-court.component';
 
@@ -14,11 +17,13 @@ describe('StepCourtComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),
+        FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MatCheckboxModule,
+        NgxMaterialModule,
       ],
-      declarations: [StepCourtComponent],
+      declarations: [StepCourtComponent, YesNoPipe],
+      providers: [MockDisputeService, DisputeFormStateService],
     }).compileComponents();
   });
 

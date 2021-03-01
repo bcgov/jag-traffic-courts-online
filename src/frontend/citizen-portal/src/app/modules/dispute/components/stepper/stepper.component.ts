@@ -17,6 +17,15 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 
+export class StepData {
+  constructor(
+    public pageName: number,
+    public title: string,
+    public description?: string,
+    public statuteId?: number,
+    public value?: number
+  ) {}
+}
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
@@ -25,7 +34,7 @@ import { MatStepper } from '@angular/material/stepper';
 export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   public busy: Subscription;
   public pageMode: string;
-  public disputeSteps: any[];
+  public disputeSteps: StepData[];
 
   constructor(
     protected route: ActivatedRoute,
@@ -55,21 +64,19 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       this.logger.info('ticket', ticket);
 
       let steps = [];
-      steps.push({
-        title: 'Violation Ticket Review',
-        value: null,
-        pageName: 1,
-      });
+      let stepData = new StepData(1, 'Violation Ticket Review');
+      steps.push(stepData);
 
       let index = 0;
       ticket?.counts.forEach((cnt) => {
-        steps.push({
-          title: 'Offence #' + cnt.countNo + ' Review ',
-          description: cnt.description,
-          statuteId: cnt.statuteId,
-          value: index,
-          pageName: 2,
-        });
+        stepData = new StepData(
+          2,
+          'Offence #' + cnt.countNo + ' Review ',
+          cnt.description,
+          cnt.statuteId,
+          index
+        );
+        steps.push(stepData);
         index++;
       });
 
@@ -108,12 +115,10 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     const courtPageExists = steps.some((step) => step.pageName === 3);
 
     if (showCourtPage && !courtPageExists) {
+      const stepData = new StepData(3, 'Court Information');
+
       // Check if the 'Court' step should be added
-      steps.splice(steps.length - 1, 0, {
-        title: 'Court Information',
-        value: null,
-        pageName: 3,
-      });
+      steps.splice(steps.length - 1, 0, stepData);
       this.disputeService.steps$.next(steps);
     } else if (!showCourtPage && courtPageExists) {
       for (var i = 0; i < steps.length; i++) {
@@ -164,7 +169,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
           const source = timer(1000);
           this.busy = source.subscribe((val) => {
             this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate(['/']);
+            this.router.navigate(['/dispute/success']);
           });
         }
       });

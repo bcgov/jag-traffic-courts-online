@@ -11,6 +11,7 @@ import { DisputeFormStateService } from '@dispute/services/dispute-form-state.se
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
 import { Ticket } from '@shared/models/ticket.model';
+import { StepData } from '../stepper/stepper.component';
 
 @Component({
   selector: 'app-step-count',
@@ -19,7 +20,7 @@ import { Ticket } from '@shared/models/ticket.model';
 })
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
-  @Input() public step: any;
+  @Input() public step: StepData;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public nextBtnLabel: string;
@@ -48,11 +49,12 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit() {
-    this.form = this.disputeFormStateService.getStepCountForm(this.step?.value);
+    const stepNumber = this.step ? this.step.value : 0;
+    this.form = this.disputeFormStateService.getStepCountForm(stepNumber);
 
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
       this.ticket = ticket;
-      this.form?.patchValue(ticket);
+      this.form.patchValue(ticket);
     });
 
     this.nextBtnLabel = 'Next';

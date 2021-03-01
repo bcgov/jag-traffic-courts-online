@@ -1,11 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { DefaultPipe } from '@shared/pipes/default.pipe';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepOverviewComponent } from './step-overview.component';
 
@@ -17,19 +17,20 @@ describe('StepOverviewComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),
+        FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        MatDialogModule,
-        MatSnackBarModule,
-        MatCheckboxModule,
+        NgxMaterialModule,
       ],
       declarations: [StepOverviewComponent, DefaultPipe],
+      providers: [MockDisputeService, DisputeFormStateService],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(StepOverviewComponent);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 
