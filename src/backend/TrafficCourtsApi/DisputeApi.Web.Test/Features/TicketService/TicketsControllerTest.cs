@@ -1,6 +1,4 @@
-﻿using DisputeApi.Web.Features;
-using DisputeApi.Web.Features.TicketService.Models;
-using DisputeApi.Web.Features.TicketService;
+﻿using DisputeApi.Web.Features.TicketService.Models;
 using DisputeApi.Web.Features.TicketService.Controller;
 using DisputeApi.Web.Features.TicketService.Service;
 using DisputeApi.Web.Test.Utils;
@@ -31,11 +29,12 @@ namespace DisputeApi.Web.Test.Features.TicketService
         {
             var ticket = new Ticket
             {
-                TicketNumber = 11235,
-                Name = "Jane Doe",
-                DateOfIssue = "11-12-2003",
-                TimeOfIssue = "12:24",
-                DriversLicence = "L2323G8"
+                Id = 1,
+                UserId = "User123",
+                ViolationTicketNumber = "LM87878888",
+                ViolationDate = "11-10-2002 12:23",
+                SurName = "Smith",
+                GivenNames = "Will"
             };
             _ticketsServiceMock.Setup(x => x.GetTickets()).Returns(
               Task.FromResult(new List<Ticket> { ticket }.AsQueryable()));
@@ -52,11 +51,12 @@ namespace DisputeApi.Web.Test.Features.TicketService
         {
             var ticket = new Ticket
             {
-                TicketNumber = 11235,
-                Name = "Jane Doe",
-                DateOfIssue = "11-12-2003",
-                TimeOfIssue = "12:24",
-                DriversLicence = "L2323G8"
+                Id = 2,
+                UserId = "User14",
+                ViolationTicketNumber = "BC87878888",
+                ViolationDate = "11-11-2002 12:23",
+                SurName = "Smith",
+                GivenNames = "Tim",
             };
 
             _ticketsServiceMock.Setup(x => x.SaveTicket(ticket)).Returns(Task.FromResult(
