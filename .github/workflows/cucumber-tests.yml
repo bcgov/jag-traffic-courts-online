@@ -28,16 +28,13 @@ jobs:
           cd src/frontend/citizen-portal
           sudo npm install
           sudo npm install -g @angular/cli
-          ng serve
-          cd -
-        shell: bash
+          ng serve &
 
       - name: Run Backend API
         run: |
-          cd src/backend/TrafficCourtsApi
+          cd ${{github.workspace}}/src/backend/TrafficCourtsApi
           docker build -f Dockerfile -t disputev1 .
-          docker run -p 5004:80 disputev1
-          cd -
+          docker run -p 5004:80 disputev1 &
 
       - name: Running UI and API Tests
         run: |
@@ -46,6 +43,7 @@ jobs:
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt-get -y install ./google-chrome-stable_current_amd64.deb
 
+          cd ${{github.workspace}}
           mvn verify -f tests/pom.xml
 
       # Upload Spark report for debugging purposes
