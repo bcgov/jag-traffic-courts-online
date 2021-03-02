@@ -9,9 +9,9 @@ services:
     build:
       context: ./src/backend/TrafficCourtsApi
       args:
-        PROJECT_NAME: DisputeApi.Web        
+        PROJECT_NAME: DisputeApi.Web
     environment:
-      ASPNETCORE_ENVIRONMENT: Development    
+      ASPNETCORE_ENVIRONMENT: Development
       SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
       SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
     ports:
@@ -61,7 +61,7 @@ services:
     environment: 
       - USE_MOCK_SERVICES=true
       - USE_KEYCLOAK=false
-    command: "nginx -g 'daemon off;'"     
+    command: "nginx -g 'daemon off;'"
     restart: always
     ports:
       - "4200:8080"
@@ -116,4 +116,4 @@ services:
   
 networks:
   traffic-court-net:
-    driver: "bridge"    
+    driver: "bridge"
