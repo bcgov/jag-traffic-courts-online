@@ -78,7 +78,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     const currentStep = stepper.selectedIndex + 1;
     const showCourtPage = this.shouldShowCourtPage();
 
-    let steps = this.disputeService.steps$.value;
+    const steps = this.disputeService.steps$.value;
     const courtPageExists = steps.some((step) => step.pageName === 3);
 
     if (showCourtPage && !courtPageExists) {

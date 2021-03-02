@@ -64,8 +64,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
         switch (request.method) {
           case 'GET':
-          case 'PUT':
-          case 'POST':
             return of(
               new HttpResponse({ status: 200, body: { result: tickets } })
             );
