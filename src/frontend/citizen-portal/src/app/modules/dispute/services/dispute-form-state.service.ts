@@ -44,8 +44,11 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
   }
 
   public getStepCountForm(countIndex: number): FormGroup {
-    if (countIndex === 1) return this.stepCount2Form;
-    else if (countIndex === 2) return this.stepCount3Form;
+    if (countIndex === 1) {
+      return this.stepCount2Form;
+    } else if (countIndex === 2) {
+      return this.stepCount3Form;
+    }
     return this.stepCount1Form;
   }
 
