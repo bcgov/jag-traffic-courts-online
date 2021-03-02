@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+
+# #############################################################################################
+# ###                                 Github Runner Container                                  ###
+# #############################################################################################
+  github-runner:
+    build:
+      context: ./github-runner
+    environment:
+      GITHUB_OWNER: ${GITHUB_OWNER}
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+      GITHUB_URL: ${GITHUB_URL}
+      GITHUB_PAT: ${GITHUB_PAT}
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - tco-tools
+
+networks:
+  tco-tools:
