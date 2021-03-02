@@ -28,6 +28,19 @@ export class DisputeResourceService {
     );
   }
 
+  public getTickets(): Observable<Ticket[]> {
+    return this.apiResource.get<Ticket[]>('tickets').pipe(
+      map((response: ApiHttpResponse<Ticket[]>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[GetTicket] DisputeResourceService::tickets error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
   public createDispute(ticket: Ticket): Observable<Ticket> {
     this.logger.info('createDispute', ticket);
 

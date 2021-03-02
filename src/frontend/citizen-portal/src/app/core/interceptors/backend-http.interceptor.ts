@@ -28,7 +28,11 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     if (environment.useMockServices) {
       const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
-      if (currentRoutePath !== 'ticket' && currentRoutePath !== 'lookups') {
+      if (
+        currentRoutePath !== 'ticket' &&
+        currentRoutePath !== 'tickets' &&
+        currentRoutePath !== 'lookups'
+      ) {
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
           status: 400,
@@ -45,6 +49,25 @@ export class BackendHttpInterceptor implements HttpInterceptor {
           case 'POST':
             return of(
               new HttpResponse({ status: 200, body: { result: ticket } })
+            );
+            break;
+          default:
+            throw new HttpErrorResponse({
+              error: 'Mock Bad Request',
+              status: 400,
+            });
+        }
+
+        // Handle 'tickets' requests
+      } else if (currentRoutePath === 'tickets') {
+        const tickets = this.mockDisputeService.tickets;
+
+        switch (request.method) {
+          case 'GET':
+          case 'PUT':
+          case 'POST':
+            return of(
+              new HttpResponse({ status: 200, body: { result: tickets } })
             );
             break;
           default:

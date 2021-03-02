@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="row mt-4">
+    <div class="col-lg-6">
+      <section>
+        <h1>Ticket Listing</h1>
+
+        <div *ngIf="dataSource?.data?.length > 0">
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
+            <ng-container matColumnDef="violationTicketNumber">
+              <th mat-header-cell *matHeaderCellDef>Violation Ticket Number</th>
+              <td
+                mat-cell
+                *matCellDef="let row"
+                data-label="Violation Ticket Number"
+                class="col1"
+              >
+                {{ row.violationTicketNumber | default }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="violationDate">
+              <th mat-header-cell *matHeaderCellDef>Violation Date</th>
+              <td
+                mat-cell
+                *matCellDef="let row"
+                data-label="Violation Date"
+                class="col1"
+              >
+                {{ row.violationDate | formatDate | default }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="violationTime">
+              <th mat-header-cell *matHeaderCellDef>Violation Time</th>
+              <td
+                mat-cell
+                *matCellDef="let row"
+                data-label="Violation Time"
+                class="col1"
+              >
+                {{ row.violationTime | default }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

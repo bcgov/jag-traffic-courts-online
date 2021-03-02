@@ -15,13 +15,19 @@ export class DisputeService {
 
   // tslint:disable-next-line: variable-name
   private _ticket: BehaviorSubject<Ticket>;
+  private _tickets: BehaviorSubject<Ticket[]>;
 
   constructor() {
     this._ticket = new BehaviorSubject<Ticket>(null);
+    this._tickets = new BehaviorSubject<Ticket[]>(null);
   }
 
   public get ticket$(): BehaviorSubject<Ticket> {
     return this._ticket;
+  }
+
+  public get tickets$(): BehaviorSubject<Ticket[]> {
+    return this._tickets;
   }
 
   public get ticket(): Ticket {

@@ -6,12 +6,39 @@ import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
   private _ticket: BehaviorSubject<Ticket>;
+  private _tickets: BehaviorSubject<Ticket[]>;
 
   constructor() {
-    const ticketId = faker.random.number();
+    const ticketA = this.createTicket();
+    const ticketB = this.createTicket();
 
-    this._ticket = new BehaviorSubject<Ticket>({
-      id: ticketId,
+    this._ticket = new BehaviorSubject<Ticket>(ticketA);
+    this._tickets = new BehaviorSubject<Ticket[]>([ticketA, ticketB]);
+  }
+
+  public get ticket$(): BehaviorSubject<Ticket> {
+    return this._ticket;
+  }
+
+  public get ticket(): Ticket {
+    return this._ticket.value;
+  }
+
+  public get tickets$(): BehaviorSubject<Ticket[]> {
+    return this._tickets;
+  }
+
+  public get tickets(): Ticket[] {
+    return this._tickets.value;
+  }
+
+  public get httpTicket(): ApiHttpResponse<Ticket> {
+    return new ApiHttpResponse(200, null, this._ticket.value);
+  }
+
+  private createTicket(): Ticket {
+    return {
+      id: faker.random.number(),
       userId: faker.random.uuid(),
       violationTicketNumber:
         'AE' +
@@ -23,7 +50,20 @@ export class MockDisputeService {
           .toString(),
       courtLocation: faker.address.city(1),
       violationDate: faker.date.recent().toString(),
-      violationTime: '14:36',
+      violationTime:
+        faker.random
+          .number({
+            min: 10,
+            max: 23,
+          })
+          .toString() +
+        ':' +
+        faker.random
+          .number({
+            min: 10,
+            max: 59,
+          })
+          .toString(),
       surname: faker.name.lastName(),
       givenNames: faker.name.firstName(),
       mailing: faker.address.streetAddress(),
@@ -56,18 +96,6 @@ export class MockDisputeService {
           description: 'MVA 73(1) Fail to Stop for Police',
         },
       ],
-    });
-  }
-
-  public get ticket$(): BehaviorSubject<Ticket> {
-    return this._ticket;
-  }
-
-  public get ticket(): Ticket {
-    return this._ticket.value;
-  }
-
-  public get httpTicket(): ApiHttpResponse<Ticket> {
-    return new ApiHttpResponse(200, null, this._ticket.value);
+    };
   }
 }
