@@ -61,32 +61,11 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     this.pageMode = 'full';
 
     this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.logger.info('ticket', ticket);
-
-      let steps = [];
-      let stepData = new StepData(1, 'Violation Ticket Review');
-      steps.push(stepData);
-
-      let index = 0;
-      ticket?.counts.forEach((cnt) => {
-        stepData = new StepData(
-          2,
-          'Offence #' + cnt.countNo + ' Review ',
-          cnt.description,
-          cnt.statuteId,
-          index
-        );
-        steps.push(stepData);
-        index++;
-      });
-
-      steps.push({ title: 'Dispute Overview', value: null, pageName: 5 });
-
-      this.disputeService.steps$.next(steps);
+      this.initializeDisputeSteps(ticket);
     });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.disputeService.steps$.subscribe((stepData) => {
       this.disputeSteps = stepData;
     });
@@ -97,44 +76,81 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
+    const showCourtPage = this.shouldShowCourtPage();
 
+    let steps = this.disputeService.steps$.value;
+    const courtPageExists = steps.some((step) => step.pageName === 3);
+
+    if (showCourtPage && !courtPageExists) {
+      this.addCourtPage(steps);
+    } else if (!showCourtPage && courtPageExists) {
+      this.removeCourtPage(steps);
+    }
+
+    // on the last step
+    if (numberOfSteps === currentStep) {
+      this.submitDispute();
+    } else {
+      this.saveStep(stepper);
+    }
+  }
+
+  private shouldShowCourtPage(): boolean {
     const count1 = this.disputeFormStateService.stepCount1Form.controls.count
       .value;
     const count2 = this.disputeFormStateService.stepCount2Form.controls.count
       .value;
     const count3 = this.disputeFormStateService.stepCount3Form.controls.count
       .value;
-    const showCourtPage =
-      (count1 && count1 != 'A') ||
-      (count2 && count2 != 'A') ||
-      (count3 && count3 != 'A')
+    const shouldShow =
+      (count1 && count1 !== 'A') ||
+      (count2 && count2 !== 'A') ||
+      (count3 && count3 !== 'A')
         ? true
         : false;
 
-    let steps = this.disputeService.steps$.value;
-    const courtPageExists = steps.some((step) => step.pageName === 3);
+    return shouldShow;
+  }
 
-    if (showCourtPage && !courtPageExists) {
-      const stepData = new StepData(3, 'Court Information');
+  private initializeDisputeSteps(ticket: Ticket): void {
+    this.logger.info('initializeDisputeSteps', ticket);
 
-      // Check if the 'Court' step should be added
-      steps.splice(steps.length - 1, 0, stepData);
-      this.disputeService.steps$.next(steps);
-    } else if (!showCourtPage && courtPageExists) {
-      for (var i = 0; i < steps.length; i++) {
-        if (steps[i].pageName === 3) {
-          steps.splice(i, 1);
-          i--;
-        }
+    const steps = [];
+    let stepData = new StepData(1, 'Violation Ticket Review');
+    steps.push(stepData);
+
+    let index = 0;
+    ticket?.counts.forEach((cnt) => {
+      stepData = new StepData(
+        2,
+        'Offence #' + cnt.countNo + ' Review ',
+        cnt.description,
+        cnt.statuteId,
+        index
+      );
+      steps.push(stepData);
+      index++;
+    });
+
+    steps.push({ title: 'Dispute Overview', value: null, pageName: 5 });
+
+    this.disputeService.steps$.next(steps);
+  }
+
+  private addCourtPage(steps: StepData[]): void {
+    const courtStepData = new StepData(3, 'Court Information');
+    steps.splice(steps.length - 1, 0, courtStepData);
+    this.disputeService.steps$.next(steps);
+  }
+
+  private removeCourtPage(steps: StepData[]): void {
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].pageName === 3) {
+        steps.splice(i, 1);
+        i--;
       }
     }
-
-    if (numberOfSteps === currentStep) {
-      // on the last step
-      this.submitDispute();
-    } else {
-      this.saveStep(stepper);
-    }
+    this.disputeService.steps$.next(steps);
   }
 
   /**
