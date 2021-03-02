@@ -7,6 +7,7 @@ import { SurveyJson } from 'tests/survey';
 import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
+import { Dispute } from '@shared/models/dispute.model';
 
 @Component({
   selector: 'app-home',
@@ -65,62 +66,65 @@ export class HomeComponent implements OnInit {
 
     const pageName = survey.currentPage.name;
     if (pageName === 'page2') {
-      this.surveyResource.getTicket().subscribe((response) => {
+      this.surveyResource.getDispute().subscribe((response: Dispute) => {
+        const ticket = response.ticket;
+
         survey.setValue(
           'info_violationTicketNumber',
-          response.violationTicketNumber
+          ticket.violationTicketNumber
         );
 
         survey.setValue(
           'info_violationDate',
-          this.datePipe.transform(response.violationDate?.toString())
+          this.datePipe.transform(ticket.violationDate?.toString()) +
+            ' ' +
+            ticket.violationTime
         );
-        survey.setValue('info_courtLocation', response.courtLocation);
-        survey.setValue('info_surname', response.surname);
-        survey.setValue('info_givenNames', response.givenNames);
-        survey.setValue('info_mailing', response.mailing);
-        survey.setValue('info_postal', response.postal);
-        survey.setValue('info_city', response.city);
-        survey.setValue('info_province', response.province);
-        survey.setValue('info_license', response.license);
-        survey.setValue('info_provLicense', response.provLicense);
-        survey.setValue('info_homePhone', response.homePhone);
-        survey.setValue('info_workPhone', response.workPhone);
+        survey.setValue('info_surname', ticket.surname);
+        survey.setValue('info_givenNames', ticket.givenNames);
+        survey.setValue('info_mailing', ticket.mailing);
+        survey.setValue('info_postal', ticket.postal);
+        survey.setValue('info_city', ticket.city);
+        survey.setValue('info_province', ticket.province);
+        survey.setValue('info_license', ticket.license);
+        survey.setValue('info_provLicense', ticket.provLicense);
+        survey.setValue('info_homePhone', ticket.homePhone);
+        survey.setValue('info_workPhone', ticket.workPhone);
         survey.setValue(
           'info_birthdate',
-          this.datePipe.transform(response.birthdate?.toString())
+          this.datePipe.transform(ticket.birthdate?.toString())
         );
 
         survey.setValue(
           'info_party',
-          response.givenNames +
+          ticket.givenNames +
             ' ' +
-            response.surname +
+            ticket.surname +
             '\nBirthdate: ' +
-            this.datePipe.transform(response.birthdate?.toString()) +
+            this.datePipe.transform(ticket.birthdate?.toString()) +
             '\n\nDriver License: ' +
-            response.license +
+            ticket.license +
             ' ' +
-            response.provLicense
+            ticket.provLicense
         );
 
         survey.setValue(
           'info_address',
-          response.mailing +
+          ticket.mailing +
             '\n' +
-            response.city +
+            ticket.city +
             ' ' +
-            response.province +
+            ticket.province +
             ' ' +
-            response.postal +
+            ticket.postal +
             '\nHome: ' +
-            this.phonePipe.transform(response.homePhone) +
+            this.phonePipe.transform(ticket.homePhone) +
             '\nWork: ' +
-            this.phonePipe.transform(response.workPhone)
+            this.phonePipe.transform(ticket.workPhone)
         );
 
-        const numberOfCounts = response.counts?.length;
-        survey.setValue('numberOfCounts', response.counts?.length);
+        const numberOfCounts = ticket.counts?.length;
+        survey.setValue('numberOfCounts', ticket.counts?.length);
 
         response?.counts.forEach((cnt) => {
           const question = survey.getQuestionByName(
@@ -128,9 +132,9 @@ export class HomeComponent implements OnInit {
           );
           if (cnt.countNo === 1) {
             question.html =
-              '<div class="alert alert-primary"><h1 class="alert-heading">Violation Ticket Counts</h1>' +
-              '<p class="mt-2 mb-0">Look at each of the counts on your ticket and please answer the following questions.</p></div>' +
-              '<br/><br/><div class="alert alert-primary"><h1 class="alert-heading">Count #' +
+              '<div class="alert alert-primary"><h1 class="alert-heading">Violation Ticket Offences</h1>' +
+              '<p class="mt-2 mb-0">Look at each of the offences on your ticket and please answer the following questions.</p></div>' +
+              '<br/><br/><div class="alert alert-primary"><h1 class="alert-heading">Offence #' +
               cnt.countNo +
               '<small>' +
               cnt.description +
@@ -138,7 +142,7 @@ export class HomeComponent implements OnInit {
               '</div>';
           } else {
             question.html =
-              '<div class="alert alert-primary"><h1 class="alert-heading">Count #' +
+              '<div class="alert alert-primary"><h1 class="alert-heading">Offence #' +
               cnt.countNo +
               '<small>' +
               cnt.description +

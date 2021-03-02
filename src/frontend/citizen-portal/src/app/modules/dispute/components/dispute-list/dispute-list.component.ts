@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoggerService } from '@core/services/logger.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
-import { DisputeService } from '@dispute/services/dispute.service';
-import { Ticket } from '@shared/models/ticket.model';
+import { Dispute } from '@shared/models/dispute.model';
 
 @Component({
   selector: 'app-dispute-list',
@@ -11,7 +10,7 @@ import { Ticket } from '@shared/models/ticket.model';
   styleUrls: ['./dispute-list.component.scss'],
 })
 export class DisputeListComponent implements OnInit {
-  public tickets: Ticket[];
+  public disputes: Dispute[];
 
   public dataSource = new MatTableDataSource([]);
 
@@ -23,19 +22,17 @@ export class DisputeListComponent implements OnInit {
 
   constructor(
     private disputeResource: DisputeResourceService,
-    private disputeService: DisputeService,
     private logger: LoggerService
   ) {
     this.dataSource = new MatTableDataSource([]);
   }
 
   ngOnInit(): void {
-    this.disputeResource.getTickets().subscribe((response) => {
-      this.tickets = response;
-      this.logger.info('tickets', this.tickets);
+    this.disputeResource.getDisputes().subscribe((response) => {
+      this.disputes = response;
+      this.logger.info('disputes', this.disputes);
 
       this.dataSource.data = response;
-      this.disputeService.tickets$.next(response);
     });
   }
 }

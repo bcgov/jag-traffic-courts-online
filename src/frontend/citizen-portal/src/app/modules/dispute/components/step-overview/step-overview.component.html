@@ -14,12 +14,6 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6 mb-3">Court Location named on the VT</div>
-    <div class="col-6 text-right mb-3">
-      {{ ticket?.courtLocation | default }}
-    </div>
-  </div>
-  <div class="row">
     <div class="col-6 mb-3">Violation Date</div>
     <div class="col-6 text-right">
       {{ ticket?.violationDate | date: "mediumDate" | default }}

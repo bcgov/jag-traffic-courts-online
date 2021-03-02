@@ -10,19 +10,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-6 mb-3">Court Location named on the VT</div>
-    <div class="col-6 text-right mb-3">{{ ticket?.courtLocation }}</div>
-  </div>
-  <div class="row">
-    <div class="col-6 mb-3">Violation Date</div>
+    <div class="col-6 mb-3">Violation Date and Time</div>
     <div class="col-6 text-right">
       {{ ticket?.violationDate | formatDate | default }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 mb-3">Violation Time</div>
-    <div class="col-6 text-right">
-      {{ ticket?.violationTime | default }}
+      {{ ticket?.violationTime }}
     </div>
   </div>
 </section>
@@ -35,10 +26,6 @@
       {{ ticket?.givenNames }} {{ ticket?.surname }}
     </div>
   </div>
-</section>
-
-<section class="mb-3">
-  <h3>Address Information</h3>
   <div class="row">
     <div class="col-6 mb-3">Street Address</div>
     <div class="col-6 text-right mb-3">
@@ -55,22 +42,18 @@
 
 <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
   <section class="mb-3">
+    <h3>Contact Email Address</h3>
     <div class="row">
-      <div class="col">
-        <h2>Is the above information correct?</h2>
-        <mat-radio-group
-          formControlName="infoCorrect"
-          class="w-100"
-          labelPosition="before"
-        >
-          <p>
-            <mat-radio-button value="Y">Yes</mat-radio-button>
-            <mat-radio-button class="ml-4" value="N">No</mat-radio-button>
-          </p>
-          <mat-error *ngIf="infoCorrect.hasError('required') && isSubmitted"
+      <div class="col-sm-6">
+        <mat-form-field class="w-100">
+          <input matInput formControlName="emailAddress" />
+          <mat-error *ngIf="emailAddress.hasError('required')"
             >Required</mat-error
           >
-        </mat-radio-group>
+          <mat-error *ngIf="emailAddress.hasError('email')"
+            >Must be a valid email address</mat-error
+          >
+        </mat-form-field>
       </div>
     </div>
   </section>

@@ -2,7 +2,6 @@ export interface Ticket {
   id?: number;
   userId: string;
   violationTicketNumber: string;
-  courtLocation: string;
   violationDate: string;
   violationTime: string;
   surname: string;
@@ -24,6 +23,7 @@ export interface Ticket {
 }
 
 export interface Count {
+  id: number;
   countNo: number;
   statuteId: number;
   description: string;

@@ -31,6 +31,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       if (
         currentRoutePath !== 'ticket' &&
         currentRoutePath !== 'tickets' &&
+        currentRoutePath !== 'dispute' &&
+        currentRoutePath !== 'disputes' &&
         currentRoutePath !== 'lookups'
       ) {
         throw new HttpErrorResponse({
@@ -41,59 +43,117 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       // Handle 'ticket' requests
       if (currentRoutePath === 'ticket') {
-        const ticket = this.mockDisputeService.ticket;
-
-        switch (request.method) {
-          case 'GET':
-          case 'PUT':
-          case 'POST':
-            return of(
-              new HttpResponse({ status: 200, body: { result: ticket } })
-            );
-            break;
-          default:
-            throw new HttpErrorResponse({
-              error: 'Mock Bad Request',
-              status: 400,
-            });
-        }
+        return this.handleTicketRequests(request.method);
 
         // Handle 'tickets' requests
       } else if (currentRoutePath === 'tickets') {
-        const tickets = this.mockDisputeService.tickets;
+        return this.handleTicketsRequests(request.method);
 
-        switch (request.method) {
-          case 'GET':
-            return of(
-              new HttpResponse({ status: 200, body: { result: tickets } })
-            );
-            break;
-          default:
-            throw new HttpErrorResponse({
-              error: 'Mock Bad Request',
-              status: 400,
-            });
-        }
+        // Handle 'dispute' requests
+      } else if (currentRoutePath === 'dispute') {
+        return this.handleDisputeRequests(request.method);
+
+        // Handle 'disputes' requests
+      } else if (currentRoutePath === 'disputes') {
+        return this.handleDisputesRequests(request.method);
 
         // Handle 'lookups' requests
       } else if (currentRoutePath === 'lookups') {
-        switch (request.method) {
-          case 'GET':
-            return of(
-              new HttpResponse({
-                status: 200,
-                body: { result: MockConfig.get() },
-              })
-            );
-            break;
-          default:
-            throw new HttpErrorResponse({
-              error: 'Mock Bad Request',
-              status: 400,
-            });
-        }
+        return this.handleLookupsRequests(request.method);
       }
     }
     return next.handle(request);
+  }
+
+  private handleTicketRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    const ticket = this.mockDisputeService.ticket;
+
+    switch (requestMethod) {
+      case 'GET':
+      case 'PUT':
+      case 'POST':
+        return of(new HttpResponse({ status: 200, body: { result: ticket } }));
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handleTicketsRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    const tickets = this.mockDisputeService.tickets;
+
+    switch (requestMethod) {
+      case 'GET':
+        return of(new HttpResponse({ status: 200, body: { result: tickets } }));
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handleDisputeRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    const dispute = this.mockDisputeService.dispute;
+
+    switch (requestMethod) {
+      case 'GET':
+        return of(new HttpResponse({ status: 200, body: { result: dispute } }));
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handleDisputesRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    const disputes = this.mockDisputeService.disputes;
+
+    switch (requestMethod) {
+      case 'GET':
+        return of(
+          new HttpResponse({ status: 200, body: { result: disputes } })
+        );
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handleLookupsRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    switch (requestMethod) {
+      case 'GET':
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: { result: MockConfig.get() },
+          })
+        );
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
   }
 }

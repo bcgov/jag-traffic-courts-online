@@ -9,6 +9,7 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
+import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
@@ -50,9 +51,9 @@ export class StepReviewTicketComponent
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepReviewForm;
 
-    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.ticket = ticket;
-      this.form.patchValue(ticket);
+    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+      this.ticket = dispute.ticket;
+      this.form.patchValue(dispute);
     });
 
     this.nextBtnLabel = 'Next';
@@ -67,7 +68,7 @@ export class StepReviewTicketComponent
     }
   }
 
-  public get infoCorrect(): FormControl {
-    return this.form.get('infoCorrect') as FormControl;
+  public get emailAddress(): FormControl {
+    return this.form.get('emailAddress') as FormControl;
   }
 }

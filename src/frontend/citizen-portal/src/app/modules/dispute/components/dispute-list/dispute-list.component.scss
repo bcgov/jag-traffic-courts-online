@@ -1,3 +1,5 @@
+@import "palette.scss";
+
 table {
   width: 100%;
 }
@@ -151,4 +153,37 @@ a {
     min-height: unset;
     /* min-height: 48px; */
   }
+}
+
+tr {
+  background-color: rgba(theme-palette(blue), 0.05) !important;
+  // Set border width as default to avoid content jump on selection
+  border-left: 3px solid theme-palette(yellow);
+  // cursor: pointer;
+
+  &:hover {
+    background-color: rgba(theme-palette(blue), 0.125) !important;
+  }
+
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+td,
+label,
+small {
+  user-select: none;
+}
+
+label {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+mat-icon {
+  vertical-align: middle;
 }

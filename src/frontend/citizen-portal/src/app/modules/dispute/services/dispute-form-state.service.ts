@@ -132,7 +132,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
   private buildStepReviewForm(): FormGroup {
     return this.fb.group({
       id: [null],
-      infoCorrect: [null],
+      emailAddress: [null, [Validators.required, Validators.email]],
     });
   }
 
@@ -144,7 +144,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
       count1A: [null],
       count1A1: [null],
       count1A2: [null],
-      surname: [null],
       reductionReason: [null],
       timeReason: [null],
       count1B1: [null],

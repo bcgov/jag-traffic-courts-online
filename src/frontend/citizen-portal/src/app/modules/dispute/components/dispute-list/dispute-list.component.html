@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
+      <!--
       <section>
         <h1>Ticket Listing</h1>
 
@@ -46,6 +47,52 @@
             <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
           </table>
         </div>
+      </section>
+    -->
+
+      <section class="mt-4 mb-4">
+        <h1>Ticket Listing</h1>
+        <table>
+          <tr class="d-flex p-2" *ngFor="let row of disputes; let i = index">
+            <th scope="row" class="col-sm-4">
+              {{ row.ticket?.violationTicketNumber | default }}
+              <small class="d-block ml-2 text-muted"
+                >Received:
+                {{ row.ticket?.violationDate | formatDate | default }} at
+                {{ row.ticket?.violationTime | default }}</small
+              >
+            </th>
+            <td class="col">
+              <small class="d-block text-muted">Status</small>
+              <small class="text-danger"
+                >{{ row.status }}
+                <mat-icon *ngIf="row.statusCode === 'INP'"
+                  >warning</mat-icon
+                ></small
+              >
+            </td>
+            <td class="col">
+              <small class="d-block text-muted">Note</small>
+              <small class="text-danger">{{ row.note }}</small>
+            </td>
+            <td class="col text-right">
+              <button
+                mat-stroked-button
+                color="primary"
+                *ngIf="row.statusCode === 'ACT'"
+              >
+                View
+              </button>
+              <button
+                mat-stroked-button
+                color="primary"
+                *ngIf="row.statusCode === 'INP'"
+              >
+                Continue
+              </button>
+            </td>
+          </tr>
+        </table>
       </section>
     </div>
   </div>

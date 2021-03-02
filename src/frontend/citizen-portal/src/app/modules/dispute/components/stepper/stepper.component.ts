@@ -16,6 +16,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
+import { Dispute } from '@shared/models/dispute.model';
 
 export class StepData {
   constructor(
@@ -59,13 +60,13 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     );
 
     this.pageMode = 'full';
-
-    this.disputeService.ticket$.subscribe((ticket: Ticket) => {
-      this.initializeDisputeSteps(ticket);
-    });
   }
 
   public ngOnInit(): void {
+    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+      this.initializeDisputeSteps(dispute);
+    });
+
     this.disputeService.steps$.subscribe((stepData) => {
       this.disputeSteps = stepData;
     });
@@ -112,15 +113,15 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     return shouldShow;
   }
 
-  private initializeDisputeSteps(ticket: Ticket): void {
-    this.logger.info('initializeDisputeSteps', ticket);
+  private initializeDisputeSteps(dispute: Dispute): void {
+    this.logger.info('initializeDisputeSteps', dispute);
 
     const steps = [];
     let stepData = new StepData(1, 'Violation Ticket Review');
     steps.push(stepData);
 
     let index = 0;
-    ticket?.counts.forEach((cnt) => {
+    dispute?.counts.forEach((cnt) => {
       stepData = new StepData(
         2,
         'Offence #' + cnt.countNo + ' Review ',
