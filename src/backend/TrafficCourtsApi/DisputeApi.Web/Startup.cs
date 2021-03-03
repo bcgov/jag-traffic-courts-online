@@ -45,58 +45,44 @@ namespace DisputeApi.Web
             {
                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             });
-
             services.AddDbContext<TicketContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers();
             ConfigureOpenApi(services);
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(ConfigureJwtBearerAuthentication);
-
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
                      .RequireAuthenticatedUser()
                      .Build();
             });
-
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
-
             void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
             {
                 string authority = Configuration["Jwt:Authority"];
                 string audience = Configuration["Jwt:Audience"];
-
                 if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
                 {
                     throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
                 }
-
                 if (!authority.EndsWith("/", StringComparison.InvariantCulture))
-                {
-                    authority += "/";
-                }
-
+                { authority += "/"; }
                 string metadataAddress = authority + ".well-known/uma2-configuration";
-
                 o.Authority = authority;
                 o.Audience = audience;
                 o.MetadataAddress = metadataAddress;
                 o.RequireHttpsMetadata = false;
-
                 o.Events = new JwtBearerEvents
                 {
                     OnAuthenticationFailed = c =>
                     {
                         c.NoResult();
-
                         c.Response.StatusCode = 401;
                         c.Response.ContentType = "text/plain";
-
                         return c.Response.WriteAsync("An error occured processing your authentication.");
                     }
                 };
