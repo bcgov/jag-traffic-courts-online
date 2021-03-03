@@ -1,0 +1,10 @@
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+kind: NetworkSecurityPolicy
+metadata:
+  name: allow-egress
+  namespace: 0198bb-tools
+spec:
+  egress: 
+  - type: Allow
+    to:
+      cidrSelector: 0.0.0.0/0
