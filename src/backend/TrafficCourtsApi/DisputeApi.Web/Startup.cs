@@ -61,32 +61,35 @@ namespace DisputeApi.Web
             });
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
-            void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
+        }
+
+        private void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
+        {
+            string authority = Configuration["Jwt:Authority"];
+            string audience = Configuration["Jwt:Audience"];
+            if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
             {
-                string authority = Configuration["Jwt:Authority"];
-                string audience = Configuration["Jwt:Audience"];
-                if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
-                {
-                    throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
-                }
-                if (!authority.EndsWith("/", StringComparison.InvariantCulture))
-                { authority += "/"; }
-                string metadataAddress = authority + ".well-known/uma2-configuration";
-                o.Authority = authority;
-                o.Audience = audience;
-                o.MetadataAddress = metadataAddress;
-                o.RequireHttpsMetadata = false;
-                o.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = c =>
-                    {
-                        c.NoResult();
-                        c.Response.StatusCode = 401;
-                        c.Response.ContentType = "text/plain";
-                        return c.Response.WriteAsync("An error occured processing your authentication.");
-                    }
-                };
+                throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
             }
+            if (!authority.EndsWith("/", StringComparison.InvariantCulture))
+            {
+                authority += "/";
+            }
+            string metadataAddress = authority + ".well-known/uma2-configuration";
+            o.Authority = authority;
+            o.Audience = audience;
+            o.MetadataAddress = metadataAddress;
+            o.RequireHttpsMetadata = false;
+            o.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = c =>
+                {
+                    c.NoResult();
+                    c.Response.StatusCode = 401;
+                    c.Response.ContentType = "text/plain";
+                    return c.Response.WriteAsync("An error occured processing your authentication.");
+                }
+            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
