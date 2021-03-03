@@ -21,6 +21,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { AlertComponent } from './components/alert/alert.component';
 import { ConfigModule } from 'app/config/config.module';
 import { PostalPipe } from './pipes/postal.pipe';
+import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { PostalPipe } from './pipes/postal.pipe';
     PageComponent,
     PageFooterComponent,
     PageHeaderComponent,
+    TcoPageHeaderComponent,
     DialogContentDirective,
     AlertComponent,
   ],
@@ -70,6 +72,7 @@ import { PostalPipe } from './pipes/postal.pipe';
     PageComponent,
     PageFooterComponent,
     PageHeaderComponent,
+    TcoPageHeaderComponent,
     DialogContentDirective,
     AlertComponent,
     ConfigModule,

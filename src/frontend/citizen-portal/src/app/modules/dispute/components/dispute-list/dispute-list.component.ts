@@ -14,8 +14,6 @@ import { Dispute } from '@shared/models/dispute.model';
 export class DisputeListComponent implements OnInit {
   public disputes: Dispute[];
 
-  // public dataSource = new MatTableDataSource([]);
-
   public columnsToDisplay: string[] = [
     'violationTicketNumber',
     'violationDate',
@@ -27,15 +25,11 @@ export class DisputeListComponent implements OnInit {
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private logger: LoggerService
-  ) {
-    // this.dataSource = new MatTableDataSource([]);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.disputeResource.getDisputes().subscribe((response) => {
       this.disputes = response;
-
-      // this.dataSource.data = response;
     });
   }
 

@@ -1,15 +1,15 @@
 <app-page>
-  <app-page-header>
+  <app-tco-page-header>
     <ng-container header>Ticket Listing</ng-container>
-    <ng-container subHeader>Here are your list of active tickets</ng-container>
-  </app-page-header>
+    <ng-container subHeader>Here are your active tickets</ng-container>
+  </app-tco-page-header>
 
   <section class="mt-4 mb-4">
     <table>
       <tr class="d-flex p-2" *ngFor="let row of disputes; let i = index">
         <th scope="row" class="col-sm-4">
           {{ row.ticket?.violationTicketNumber | default }}
-          <small class="d-block ml-2 text-muted"
+          <small class="d-block ml-2"
             >Received: {{ row.ticket?.violationDate | formatDate | default }} at
             {{ row.ticket?.violationTime | default }} ({{
               row.ticketType

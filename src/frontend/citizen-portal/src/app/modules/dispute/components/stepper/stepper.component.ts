@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
+import { DisputeRoutes } from '@dispute/dispute.routes';
 
 export class StepData {
   constructor(
@@ -185,7 +186,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
           const source = timer(1000);
           this.busy = source.subscribe((val) => {
             this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate(['/dispute/success']);
+            this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.LIST)]);
           });
         }
       });
