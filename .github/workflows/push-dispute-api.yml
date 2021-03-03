@@ -16,16 +16,22 @@ jobs:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
           parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
           cmd: |
-            'version'
-      - name: Login to Openshift Docker
-        run : |
-          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
+            'version'   
       - name: Build the Docker image
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |          
           docker-compose build dispute-api
+          docker image ls
+      - name: Login to Openshift Docker
+        run : |
+          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
+      - name: Push the Docker image to OpenShift
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |
           docker image ls
           docker tag jag-traffic-courts-online_dispute-api ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
           docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
