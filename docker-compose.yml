@@ -6,6 +6,7 @@ services:
 # ###                                 TrafficCourt BACKEND                                  ###
 # #############################################################################################
   dispute-api:
+    container_name: dispute-api
     build:
       context: ./src/backend/TrafficCourtsApi
       args:
