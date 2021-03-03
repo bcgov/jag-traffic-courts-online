@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
 
 @Component({
   selector: 'app-find-ticket',
@@ -18,8 +17,8 @@ export class FindTicketComponent {
   ) {}
 
   public onSearch(): void {
-    this.disputeResource.getTicket().subscribe((response) => {
-      this.disputeService.ticket$.next(response);
+    this.disputeResource.getDispute().subscribe((response) => {
+      this.disputeService.dispute$.next(response);
       this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
     });
   }

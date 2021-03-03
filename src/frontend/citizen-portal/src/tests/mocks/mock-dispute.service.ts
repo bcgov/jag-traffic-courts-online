@@ -93,7 +93,7 @@ export class MockDisputeService {
       id: faker.random.number(),
       userId: faker.random.uuid(),
       violationTicketNumber:
-        'AE' +
+        'EA' +
         faker.random
           .number({
             min: 10000000,

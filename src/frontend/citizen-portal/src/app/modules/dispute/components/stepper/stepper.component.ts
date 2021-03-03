@@ -61,12 +61,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.disputeResource.getTicket().subscribe((ticket: Ticket) => {
-      this.disputeService.ticket$.next(ticket);
-    });
-
-    this.disputeResource.getDispute().subscribe((dispute: Dispute) => {
-      this.disputeService.dispute$.next(dispute);
+    this.disputeService.dispute$.subscribe((dispute) => {
       this.patchForm();
       this.initializeDisputeSteps(dispute);
     });

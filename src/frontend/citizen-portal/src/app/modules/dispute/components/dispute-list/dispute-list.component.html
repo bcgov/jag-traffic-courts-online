@@ -46,7 +46,7 @@
             mat-stroked-button
             color="primary"
             *ngIf="row.statusCode === 'ACT'"
-            routerLink="/dispute/stepper"
+            (click)="onSelect(row)"
           >
             View
             <mat-icon inline="true">preview</mat-icon>
@@ -55,7 +55,7 @@
             mat-stroked-button
             color="primary"
             *ngIf="row.statusCode === 'INP'"
-            routerLink="/dispute/stepper"
+            (click)="onSelect(row)"
           >
             Continue
             <mat-icon inline="true">read_more</mat-icon>
@@ -64,7 +64,7 @@
             mat-stroked-button
             color="primary"
             *ngIf="row.statusCode === 'NEW'"
-            routerLink="/dispute/stepper"
+            (click)="onSelect(row)"
           >
             Start
             <mat-icon inline="true">read_more</mat-icon>
