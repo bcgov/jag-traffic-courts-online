@@ -1,7 +1,8 @@
-apiVersion: network.openshift.io/v1
-kind: EgressNetworkPolicy
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+kind: NetworkSecurityPolicy
 metadata:
-  name: default
+  name: allow-egress
+  namespace: 0198bb-tools
 spec:
   egress: 
   - type: Allow
