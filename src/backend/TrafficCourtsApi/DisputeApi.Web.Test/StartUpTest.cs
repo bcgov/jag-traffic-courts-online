@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TicketService.Service;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NSwag.Generation;
@@ -15,6 +17,10 @@ namespace DisputeApi.Web.Test
     {
         private WebApplicationFactory<Startup> WebAppFactoryObj;
 
+        private Dictionary<string, string> inMemorySettings = new Dictionary<string, string> {
+                {"Jwt.Authority", "http://localhost:8080/auth/realms/myrealm/"}, {"Jwt.Audience", "account"}
+        };
+
         [SetUp]
         public void SetUp()
         {
@@ -23,6 +29,10 @@ namespace DisputeApi.Web.Test
                     builder =>
                     {
                         builder.ConfigureTestServices(services => { });
+                        builder.ConfigureAppConfiguration((context, config) =>
+                        {
+                            config.AddInMemoryCollection(inMemorySettings);
+                        });
                     });
         }
 
@@ -47,8 +57,11 @@ namespace DisputeApi.Web.Test
         [Test]
         public void configure_services_should_inject_services()
         {
+            IConfiguration configuration = new ConfigurationBuilder()
+               .AddInMemoryCollection(inMemorySettings)
+               .Build();
             IServiceCollection services = new ServiceCollection();
-            var target = new Startup(null);
+            var target = new Startup(configuration);
             target.ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
             Assert.IsNotNull(serviceProvider);
