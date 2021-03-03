@@ -28,5 +28,5 @@ jobs:
           
           docker-compose build dispute-api
           
-          docker tag dispute-api ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/efiling-reviewer-api:latest
-          docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/efiling-reviewer-api:latest
+          docker tag dispute-api ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
+          docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
