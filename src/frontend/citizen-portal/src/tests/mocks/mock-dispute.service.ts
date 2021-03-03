@@ -20,25 +20,35 @@ export class MockDisputeService {
 
     const disputeA = this.createDispute();
     disputeA.statusCode = 'INP';
-    disputeA.status = 'Not Submitted';
+    disputeA.ticketType = 'eTicket';
+    disputeA.status = 'Dispute Not Submitted';
     disputeA.note =
-      'The dispute information is incomplete. Click Continue to finish the process';
+      'The dispute information is incomplete... click Continue to finish the process';
 
     const disputeB = this.createDispute();
     disputeB.statusCode = 'ACT';
-    disputeB.status = 'Active';
+    disputeB.ticketType = 'eTicket';
+    disputeB.status = 'Dispute Submitted';
     disputeB.note = 'This is currently under review';
 
     const disputeC = this.createDispute();
     disputeC.statusCode = 'NEW';
+    disputeC.ticketType = 'eTicket';
     disputeC.status = 'New';
     disputeC.note = '';
+
+    const disputeD = this.createDispute();
+    disputeD.statusCode = 'PAID';
+    disputeD.ticketType = 'eTicket';
+    disputeD.status = 'Paid';
+    disputeD.note = 'This ticket has been paid';
 
     this._dispute = new BehaviorSubject<Dispute>(disputeA);
     this._disputes = new BehaviorSubject<Dispute[]>([
       disputeA,
       disputeB,
       disputeC,
+      disputeD,
     ]);
   }
 

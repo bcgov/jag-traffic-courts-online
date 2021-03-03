@@ -14,6 +14,7 @@ export interface Dispute {
   statusCode?: string;
   status?: string;
   note?: string;
+  ticketType?: string;
 
   ticket: Ticket;
 }

@@ -122,8 +122,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
       return;
     }
 
-    console.log('BBBPATCH FORM', dispute);
-
     this.stepReviewForm.patchValue(dispute);
 
     dispute.counts.forEach((c: Count) => {
@@ -133,9 +131,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
     this.stepCourtForm.patchValue(dispute);
     this.stepOverviewForm.patchValue(dispute);
-
-    console.log('BBBPATCH stepReviewForm', this.stepReviewForm.value);
-    console.log('BBBPATCH stepCourtForm', this.stepCourtForm.value);
 
     // After patching the form is dirty, and needs to be pristine
     // to allow for deactivation modals to work properly

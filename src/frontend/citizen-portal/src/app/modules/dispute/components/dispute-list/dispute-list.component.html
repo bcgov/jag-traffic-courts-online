@@ -11,7 +11,9 @@
           {{ row.ticket?.violationTicketNumber | default }}
           <small class="d-block ml-2 text-muted"
             >Received: {{ row.ticket?.violationDate | formatDate | default }} at
-            {{ row.ticket?.violationTime | default }}</small
+            {{ row.ticket?.violationTime | default }} ({{
+              row.ticketType
+            }})</small
           >
         </th>
         <td class="col">
@@ -20,7 +22,8 @@
             [ngClass]="{
               'text-danger': row.statusCode === 'INP',
               'text-primary': row.statusCode === 'NEW',
-              'text-success': row.statusCode === 'ACT'
+              'text-success': row.statusCode === 'ACT',
+              'text-info': row.statusCode === 'PAID'
             }"
             >{{ row.status }}
             <mat-icon *ngIf="row.statusCode === 'INP'">warning</mat-icon></small
@@ -32,7 +35,8 @@
             [ngClass]="{
               'text-danger': row.statusCode === 'INP',
               'text-primary': row.statusCode === 'NEW',
-              'text-success': row.statusCode === 'ACT'
+              'text-success': row.statusCode === 'ACT',
+              'text-info': row.statusCode === 'PAID'
             }"
             >{{ row.note }}</small
           >
