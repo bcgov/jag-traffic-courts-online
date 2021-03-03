@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
@@ -23,6 +25,7 @@ describe('StepReviewTicketComponent', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         NgxMaterialModule,
+        BrowserAnimationsModule,
       ],
       declarations: [
         StepReviewTicketComponent,
@@ -31,14 +34,20 @@ describe('StepReviewTicketComponent', () => {
         DatePipe,
       ],
       providers: [MockDisputeService, DisputeFormStateService],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(StepReviewTicketComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  beforeEach(inject(
+    [DisputeFormStateService],
+    (disputeFormStateService: DisputeFormStateService) => {
+      fixture = TestBed.createComponent(StepReviewTicketComponent);
+      component = fixture.componentInstance;
+      // Add the bound FormGroup to the component
+      component.form = disputeFormStateService.buildStepReviewForm();
+      fixture.detectChanges();
+    }
+  ));
 
   it('should create', () => {
     expect(component).toBeTruthy();

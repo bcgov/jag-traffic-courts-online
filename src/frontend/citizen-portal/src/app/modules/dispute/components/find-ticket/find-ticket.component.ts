@@ -20,11 +20,7 @@ export class FindTicketComponent {
   public onSearch(): void {
     this.disputeResource.getTicket().subscribe((response) => {
       this.disputeService.ticket$.next(response);
-
-      this.disputeResource.getDispute().subscribe((dispute: Dispute) => {
-        this.disputeService.dispute$.next(dispute);
-        this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
-      });
+      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
     });
   }
 }

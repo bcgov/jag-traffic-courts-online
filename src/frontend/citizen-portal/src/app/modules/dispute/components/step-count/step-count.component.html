@@ -1,88 +1,89 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-  <section class="mb-3">
-    <h1>{{ step?.title }}</h1>
-    <p>{{ step?.description }}</p>
-    <hr />
-  </section>
+<app-page>
+  <app-page-header>
+    <ng-container header>{{ step?.title }}</ng-container>
+    <ng-container subHeader>{{ step?.description }}</ng-container>
+  </app-page-header>
 
-  <section class="mb-3">
-    <div class="row">
-      <div class="col">
-        <label>For this count, which do you agree?</label>
-        <mat-radio-group formControlName="count" class="w-100">
-          <mat-radio-button value="A"
-            ><span class="wrap-mat-radio-label"
-              >I agree that I committed this offence, and I do not want to
-              appear in court</span
-            ></mat-radio-button
-          >
-          <mat-radio-button value="B"
-            ><span class="wrap-mat-radio-label"
-              >I agree that I committed this offence, and I want to appear in
-              court</span
-            ></mat-radio-button
-          >
-          <mat-radio-button value="C"
-            ><span class="wrap-mat-radio-label"
-              >I do not agree that I committed this offence (allegation)</span
-            ></mat-radio-button
-          >
-        </mat-radio-group>
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-2">
+      <div class="row">
+        <div class="col">
+          <label>For this count, which do you agree?</label>
+          <mat-radio-group formControlName="count" class="w-100">
+            <mat-radio-button value="A"
+              ><span class="wrap-mat-radio-label"
+                >I agree that I committed this offence, and I do not want to
+                appear in court</span
+              ></mat-radio-button
+            >
+            <mat-radio-button value="B"
+              ><span class="wrap-mat-radio-label"
+                >I agree that I committed this offence, and I want to appear in
+                court</span
+              ></mat-radio-button
+            >
+            <mat-radio-button value="C"
+              ><span class="wrap-mat-radio-label"
+                >I do not agree that I committed this offence (allegation)</span
+              ></mat-radio-button
+            >
+          </mat-radio-group>
+        </div>
       </div>
-    </div>
 
-    <div class="row" *ngIf="count.value === 'A'">
-      <div class="col">
-        <label>Which requests would you like to make?</label>
-        <mat-checkbox formControlName="count1A1" color="primary" class="w-100"
-          >I request a reduction of the ticketed amount: and/or</mat-checkbox
-        >
-        <mat-checkbox formControlName="count1A2" color="primary" class="w-100"
-          >I request time to pay the ticketed amount</mat-checkbox
-        >
-      </div>
-    </div>
-
-    <div class="row" *ngIf="count.value === 'A' && count1A1.value">
-      <div class="col">
-        <mat-form-field class="w-100">
-          <label
-            >What are your reasons for a reduction in the ticketed
-            amount(s)?</label
+      <div class="row" *ngIf="count.value === 'A'">
+        <div class="col">
+          <label>Which requests would you like to make?</label>
+          <mat-checkbox formControlName="count1A1" color="primary" class="w-100"
+            >I request a reduction of the ticketed amount: and/or</mat-checkbox
           >
-          <textarea matInput formControlName="reductionReason"></textarea>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row" *ngIf="count.value === 'A' && count1A2.value">
-      <div class="col">
-        <mat-form-field class="w-100">
-          <label
-            >What are your reasons for requiring more time to pay the ticketed
-            amount(s)?</label
+          <mat-checkbox formControlName="count1A2" color="primary" class="w-100"
+            >I request time to pay the ticketed amount</mat-checkbox
           >
-          <textarea matInput formControlName="timeReason"></textarea>
-        </mat-form-field>
+        </div>
       </div>
-    </div>
 
-    <div class="row" *ngIf="count.value === 'B'">
-      <div class="col">
-        <label>Why do you want to appear?</label>
-        <mat-checkbox formControlName="count1B1" color="primary" class="w-100"
-          >To request a reduction of the ticketed amount: and/or</mat-checkbox
-        >
-        <mat-checkbox formControlName="count1B2" color="primary" class="w-100"
-          >To request time to pay the ticketed amount</mat-checkbox
-        >
+      <div class="row" *ngIf="count.value === 'A' && count1A1.value">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <label
+              >What are your reasons for a reduction in the ticketed
+              amount(s)?</label
+            >
+            <textarea matInput formControlName="reductionReason"></textarea>
+          </mat-form-field>
+        </div>
       </div>
-    </div>
-  </section>
-</form>
 
-<app-page-footer
-  [saveButtonLabel]="nextBtnLabel"
-  (save)="onSubmit()"
-  (back)="onBack()"
-></app-page-footer>
+      <div class="row" *ngIf="count.value === 'A' && count1A2.value">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <label
+              >What are your reasons for requiring more time to pay the ticketed
+              amount(s)?</label
+            >
+            <textarea matInput formControlName="timeReason"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="count.value === 'B'">
+        <div class="col">
+          <label>Why do you want to appear?</label>
+          <mat-checkbox formControlName="count1B1" color="primary" class="w-100"
+            >To request a reduction of the ticketed amount: and/or</mat-checkbox
+          >
+          <mat-checkbox formControlName="count1B2" color="primary" class="w-100"
+            >To request time to pay the ticketed amount</mat-checkbox
+          >
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    [saveButtonLabel]="nextBtnLabel"
+    (save)="onSubmit()"
+    (back)="onBack()"
+  ></app-page-footer>
+</app-page>

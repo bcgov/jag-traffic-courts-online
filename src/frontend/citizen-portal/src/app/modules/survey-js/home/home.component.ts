@@ -8,6 +8,7 @@ import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
 import { Dispute } from '@shared/models/dispute.model';
+import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-home',
@@ -66,8 +67,8 @@ export class HomeComponent implements OnInit {
 
     const pageName = survey.currentPage.name;
     if (pageName === 'page2') {
-      this.surveyResource.getDispute().subscribe((response: Dispute) => {
-        const ticket = response.ticket;
+      this.surveyResource.getTicket().subscribe((response: Ticket) => {
+        const ticket = response;
 
         survey.setValue(
           'info_violationTicketNumber',

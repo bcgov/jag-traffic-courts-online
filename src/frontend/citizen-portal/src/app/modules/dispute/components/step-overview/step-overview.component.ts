@@ -49,11 +49,14 @@ export class StepOverviewComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepOverviewForm;
+    this.patchForm();
 
-    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-      this.ticket = dispute.ticket;
-      this.form.patchValue(dispute);
-    });
+    this.ticket = this.disputeService.dispute?.ticket;
+
+    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+    //   this.ticket = dispute?.ticket;
+    //   this.form.patchValue(dispute);
+    // });
 
     this.nextBtnLabel = 'Submit';
   }

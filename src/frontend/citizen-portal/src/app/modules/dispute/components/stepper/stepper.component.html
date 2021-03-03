@@ -1,5 +1,4 @@
 <app-page [busy]="busy" [mode]="pageMode">
-  <app-page-header>BC Traffic Court Online</app-page-header>
   <mat-vertical-stepper #disputeStepper linear>
     <mat-step *ngFor="let step of disputeSteps; let i = index">
       <ng-template matStepLabel>{{ step.title }}</ng-template>

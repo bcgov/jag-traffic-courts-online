@@ -20,16 +20,26 @@ export class MockDisputeService {
 
     const disputeA = this.createDispute();
     disputeA.statusCode = 'INP';
-    disputeA.status = 'In Progress';
-    disputeA.note = 'More information is required to submit this dispute';
+    disputeA.status = 'Not Submitted';
+    disputeA.note =
+      'The dispute information is incomplete. Click Continue to finish the process';
 
     const disputeB = this.createDispute();
     disputeB.statusCode = 'ACT';
     disputeB.status = 'Active';
     disputeB.note = 'This is currently under review';
 
+    const disputeC = this.createDispute();
+    disputeC.statusCode = 'NEW';
+    disputeC.status = 'New';
+    disputeC.note = '';
+
     this._dispute = new BehaviorSubject<Dispute>(disputeA);
-    this._disputes = new BehaviorSubject<Dispute[]>([disputeA, disputeB]);
+    this._disputes = new BehaviorSubject<Dispute[]>([
+      disputeA,
+      disputeB,
+      disputeC,
+    ]);
   }
 
   public get ticket$(): BehaviorSubject<Ticket> {
@@ -133,7 +143,7 @@ export class MockDisputeService {
   }
 
   private createDispute(): Dispute {
-    let dispute: Dispute = {
+    const dispute: Dispute = {
       id: faker.random.number(),
       emailAddress: faker.internet.email(),
       courtLocation: faker.address.city(1),

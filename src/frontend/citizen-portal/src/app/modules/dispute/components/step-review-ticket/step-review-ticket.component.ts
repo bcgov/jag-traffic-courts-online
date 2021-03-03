@@ -50,11 +50,14 @@ export class StepReviewTicketComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepReviewForm;
+    this.patchForm();
 
-    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-      this.ticket = dispute.ticket;
-      this.form.patchValue(dispute);
-    });
+    this.ticket = this.disputeService.dispute?.ticket;
+
+    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+    //   this.ticket = dispute?.ticket;
+    //   this.form.patchValue(dispute);
+    // });
 
     this.nextBtnLabel = 'Next';
   }

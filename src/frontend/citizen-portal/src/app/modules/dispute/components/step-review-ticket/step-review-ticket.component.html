@@ -1,66 +1,72 @@
-<section class="mb-3">
-  <h1>Violation Ticket Review</h1>
-</section>
-<section class="mb-3">
-  <h3>Violation Ticket Information</h3>
-  <div class="row">
-    <div class="col-6 mb-3">Violation Ticket Number</div>
-    <div class="col-6 text-right mb-3">
-      {{ ticket?.violationTicketNumber }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 mb-3">Violation Date and Time</div>
-    <div class="col-6 text-right">
-      {{ ticket?.violationDate | formatDate | default }}
-      {{ ticket?.violationTime }}
-    </div>
-  </div>
-</section>
+<app-page>
+  <app-page-header>
+    <ng-container header>Violation Ticket Review</ng-container>
+    <ng-container subHeader
+      >This is a summary of your violation ticket information.</ng-container
+    >
+  </app-page-header>
 
-<section class="mb-3">
-  <h3>Personal Information</h3>
-  <div class="row">
-    <div class="col-6 mb-3">Name</div>
-    <div class="col-6 text-right mb-3">
-      {{ ticket?.givenNames }} {{ ticket?.surname }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 mb-3">Street Address</div>
-    <div class="col-6 text-right mb-3">
-      {{ ticket?.mailing }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 mb-3">City</div>
-    <div class="col-6 text-right mb-3">
-      {{ ticket?.city }}
-    </div>
-  </div>
-</section>
-
-<form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-  <section class="mb-3">
-    <h3>Contact Email Address</h3>
+  <section class="mb-2">
+    <h3>Violation Ticket Information</h3>
     <div class="row">
-      <div class="col-sm-6">
-        <mat-form-field class="w-100">
-          <input matInput formControlName="emailAddress" />
-          <mat-error *ngIf="emailAddress.hasError('required')"
-            >Required</mat-error
-          >
-          <mat-error *ngIf="emailAddress.hasError('email')"
-            >Must be a valid email address</mat-error
-          >
-        </mat-form-field>
+      <div class="col-6 mb-2">Violation Ticket Number</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.violationTicketNumber }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Violation Date and Time</div>
+      <div class="col-6 text-right">
+        {{ ticket?.violationDate | formatDate | default }}
+        {{ ticket?.violationTime }}
       </div>
     </div>
   </section>
-</form>
 
-<app-page-footer
-  (save)="onSubmit()"
-  [hasSecondaryAction]="false"
-  [saveButtonLabel]="nextBtnLabel"
-></app-page-footer>
+  <section class="mb-2">
+    <h3>Personal Information</h3>
+    <div class="row">
+      <div class="col-6 mb-2">Name</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.givenNames }} {{ ticket?.surname }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Street Address</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.mailing }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">City</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.city }}
+      </div>
+    </div>
+  </section>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section>
+      <h3>Contact Email Address</h3>
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field class="w-100">
+            <input matInput formControlName="emailAddress" />
+            <mat-error *ngIf="emailAddress.hasError('required')"
+              >Required</mat-error
+            >
+            <mat-error *ngIf="emailAddress.hasError('email')"
+              >Must be a valid email address</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    (save)="onSubmit()"
+    [hasSecondaryAction]="false"
+    [saveButtonLabel]="nextBtnLabel"
+  ></app-page-footer>
+</app-page>

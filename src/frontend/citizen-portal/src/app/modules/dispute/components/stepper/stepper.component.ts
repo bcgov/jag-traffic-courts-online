@@ -8,15 +8,14 @@ import { DisputeResourceService } from '@dispute/services/dispute-resource.servi
 import { DisputeService } from '@dispute/services/dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { FormUtilsService } from '@core/services/form-utils.service';
 import { UtilsService } from '@core/services/utils.service';
-import { Ticket } from '@shared/models/ticket.model';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Dispute } from '@shared/models/dispute.model';
+import { Ticket } from '@shared/models/ticket.model';
 
 export class StepData {
   constructor(
@@ -46,7 +45,6 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeFormStateService: DisputeFormStateService,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
   ) {
@@ -63,7 +61,13 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+    this.disputeResource.getTicket().subscribe((ticket: Ticket) => {
+      this.disputeService.ticket$.next(ticket);
+    });
+
+    this.disputeResource.getDispute().subscribe((dispute: Dispute) => {
+      this.disputeService.dispute$.next(dispute);
+      this.patchForm();
       this.initializeDisputeSteps(dispute);
     });
 

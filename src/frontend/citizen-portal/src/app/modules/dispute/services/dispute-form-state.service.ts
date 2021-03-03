@@ -4,10 +4,11 @@ import {
   Validators,
   FormGroup,
   AbstractControl,
+  FormArray,
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
-import { Dispute } from '@shared/models/dispute.model';
+import { Count, Dispute } from '@shared/models/dispute.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +21,11 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
   public stepCourtForm: FormGroup;
   public stepOverviewForm: FormGroup;
 
-  constructor(protected fb: FormBuilder, protected logger: LoggerService) {
-    super(fb, logger);
+  constructor(
+    protected formBuilder: FormBuilder,
+    protected logger: LoggerService
+  ) {
+    super(formBuilder, logger);
     this.initialize();
   }
 
@@ -38,8 +42,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     dispute: Dispute,
     forcePatch: boolean = false
   ): Promise<void> {
-    // Store required dispute identifiers not captured in forms
-
     super.setForm(dispute, forcePatch);
   }
 
@@ -120,6 +122,21 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
       return;
     }
 
+    console.log('BBBPATCH FORM', dispute);
+
+    this.stepReviewForm.patchValue(dispute);
+
+    dispute.counts.forEach((c: Count) => {
+      const count = this.buildStepCourtForm();
+      count.patchValue(c);
+    });
+
+    this.stepCourtForm.patchValue(dispute);
+    this.stepOverviewForm.patchValue(dispute);
+
+    console.log('BBBPATCH stepReviewForm', this.stepReviewForm.value);
+    console.log('BBBPATCH stepCourtForm', this.stepCourtForm.value);
+
     // After patching the form is dirty, and needs to be pristine
     // to allow for deactivation modals to work properly
     this.markAsPristine();
@@ -129,15 +146,15 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
    * Form Builders and Helpers
    */
 
-  private buildStepReviewForm(): FormGroup {
-    return this.fb.group({
+  public buildStepReviewForm(): FormGroup {
+    return this.formBuilder.group({
       id: [null],
       emailAddress: [null, [Validators.required, Validators.email]],
     });
   }
 
-  private buildStepCountForm(): FormGroup {
-    return this.fb.group({
+  public buildStepCountForm(): FormGroup {
+    return this.formBuilder.group({
       id: [null],
       statuteId: [null],
       count: [null],
@@ -151,8 +168,8 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     });
   }
 
-  private buildStepCourtForm(): FormGroup {
-    return this.fb.group({
+  public buildStepCourtForm(): FormGroup {
+    return this.formBuilder.group({
       id: [null],
       lawyerPresent: [false],
       interpreterRequired: [false],
@@ -161,8 +178,8 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     });
   }
 
-  private buildStepOverviewForm(): FormGroup {
-    return this.fb.group({
+  public buildStepOverviewForm(): FormGroup {
+    return this.formBuilder.group({
       id: [null],
       certifyCorrect: [false],
     });

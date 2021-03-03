@@ -23,7 +23,6 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public nextBtnLabel: string;
-  public ticket: Ticket;
 
   constructor(
     protected route: ActivatedRoute,
@@ -49,11 +48,12 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepCourtForm;
+    this.patchForm();
 
-    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-      this.ticket = dispute.ticket;
-      this.form.patchValue(dispute);
-    });
+    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+    //   this.ticket = dispute?.ticket;
+    //   this.form.patchValue(dispute);
+    // });
 
     this.nextBtnLabel = 'Next';
   }

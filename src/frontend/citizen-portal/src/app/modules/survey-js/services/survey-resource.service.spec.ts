@@ -25,14 +25,4 @@ describe('SurveyResourceService', () => {
     const ticket = service.getTicket();
     expect(ticket).toBeDefined();
   });
-
-  it('should create dispute', () => {
-    const ticket = service.createDispute(mock.ticket);
-    expect(ticket).toBeDefined();
-  });
-
-  it('should update dispute', () => {
-    const ticket = service.updateDispute(mock.ticket);
-    expect(ticket).toBeDefined();
-  });
 });

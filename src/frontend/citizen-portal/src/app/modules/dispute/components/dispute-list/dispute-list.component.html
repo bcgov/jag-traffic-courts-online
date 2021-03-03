@@ -1,99 +1,72 @@
-<div class="container">
-  <div class="row mt-4">
-    <div class="col-lg-12">
-      <!--
-      <section>
-        <h1>Ticket Listing</h1>
+<app-page>
+  <app-page-header>
+    <ng-container header>Ticket Listing</ng-container>
+    <ng-container subHeader>Here are your list of active tickets</ng-container>
+  </app-page-header>
 
-        <div *ngIf="dataSource?.data?.length > 0">
-          <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
-            <ng-container matColumnDef="violationTicketNumber">
-              <th mat-header-cell *matHeaderCellDef>Violation Ticket Number</th>
-              <td
-                mat-cell
-                *matCellDef="let row"
-                data-label="Violation Ticket Number"
-                class="col1"
-              >
-                {{ row.violationTicketNumber | default }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="violationDate">
-              <th mat-header-cell *matHeaderCellDef>Violation Date</th>
-              <td
-                mat-cell
-                *matCellDef="let row"
-                data-label="Violation Date"
-                class="col1"
-              >
-                {{ row.violationDate | formatDate | default }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="violationTime">
-              <th mat-header-cell *matHeaderCellDef>Violation Time</th>
-              <td
-                mat-cell
-                *matCellDef="let row"
-                data-label="Violation Time"
-                class="col1"
-              >
-                {{ row.violationTime | default }}
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
-          </table>
-        </div>
-      </section>
-    -->
-
-      <section class="mt-4 mb-4">
-        <h1>Ticket Listing</h1>
-        <table>
-          <tr class="d-flex p-2" *ngFor="let row of disputes; let i = index">
-            <th scope="row" class="col-sm-4">
-              {{ row.ticket?.violationTicketNumber | default }}
-              <small class="d-block ml-2 text-muted"
-                >Received:
-                {{ row.ticket?.violationDate | formatDate | default }} at
-                {{ row.ticket?.violationTime | default }}</small
-              >
-            </th>
-            <td class="col">
-              <small class="d-block text-muted">Status</small>
-              <small class="text-danger"
-                >{{ row.status }}
-                <mat-icon *ngIf="row.statusCode === 'INP'"
-                  >warning</mat-icon
-                ></small
-              >
-            </td>
-            <td class="col">
-              <small class="d-block text-muted">Note</small>
-              <small class="text-danger">{{ row.note }}</small>
-            </td>
-            <td class="col text-right">
-              <button
-                mat-stroked-button
-                color="primary"
-                *ngIf="row.statusCode === 'ACT'"
-              >
-                View
-              </button>
-              <button
-                mat-stroked-button
-                color="primary"
-                *ngIf="row.statusCode === 'INP'"
-              >
-                Continue
-              </button>
-            </td>
-          </tr>
-        </table>
-      </section>
-    </div>
-  </div>
-</div>
+  <section class="mt-4 mb-4">
+    <table>
+      <tr class="d-flex p-2" *ngFor="let row of disputes; let i = index">
+        <th scope="row" class="col-sm-4">
+          {{ row.ticket?.violationTicketNumber | default }}
+          <small class="d-block ml-2 text-muted"
+            >Received: {{ row.ticket?.violationDate | formatDate | default }} at
+            {{ row.ticket?.violationTime | default }}</small
+          >
+        </th>
+        <td class="col">
+          <small class="d-block text-muted">Status</small>
+          <small
+            [ngClass]="{
+              'text-danger': row.statusCode === 'INP',
+              'text-primary': row.statusCode === 'NEW',
+              'text-success': row.statusCode === 'ACT'
+            }"
+            >{{ row.status }}
+            <mat-icon *ngIf="row.statusCode === 'INP'">warning</mat-icon></small
+          >
+        </td>
+        <td class="col">
+          <small class="d-block text-muted" *ngIf="row.note">Note</small>
+          <small
+            [ngClass]="{
+              'text-danger': row.statusCode === 'INP',
+              'text-primary': row.statusCode === 'NEW',
+              'text-success': row.statusCode === 'ACT'
+            }"
+            >{{ row.note }}</small
+          >
+        </td>
+        <td class="col text-right">
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="row.statusCode === 'ACT'"
+            routerLink="/dispute/stepper"
+          >
+            View
+            <mat-icon inline="true">preview</mat-icon>
+          </button>
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="row.statusCode === 'INP'"
+            routerLink="/dispute/stepper"
+          >
+            Continue
+            <mat-icon inline="true">read_more</mat-icon>
+          </button>
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="row.statusCode === 'NEW'"
+            routerLink="/dispute/stepper"
+          >
+            Start
+            <mat-icon inline="true">read_more</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+  </section>
+</app-page>

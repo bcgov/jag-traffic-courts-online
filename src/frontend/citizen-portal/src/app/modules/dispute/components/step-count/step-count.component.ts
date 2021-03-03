@@ -25,7 +25,6 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public nextBtnLabel: string;
-  public ticket: Ticket;
 
   constructor(
     protected route: ActivatedRoute,
@@ -52,11 +51,12 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   public ngOnInit() {
     const stepNumber = this.step ? this.step.value : 0;
     this.form = this.disputeFormStateService.getStepCountForm(stepNumber);
+    this.patchForm();
 
-    this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-      this.ticket = dispute.ticket;
-      this.form.patchValue(dispute);
-    });
+    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
+    //   this.ticket = dispute?.ticket;
+    //   this.form.patchValue(dispute);
+    // });
 
     this.nextBtnLabel = 'Next';
   }
