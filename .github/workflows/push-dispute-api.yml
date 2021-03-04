@@ -8,8 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     env:
+      VERSION: v1
       IMAGE_NAME: dispute-api
-      IMAGE_TAGS: latest v1
+      IMAGE_TAGS: latest ${{ env.VERSION }}
 
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +30,8 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |          
           docker-compose build ${{ env.IMAGE_NAME }}
-          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:latest
+          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} docker-daemon:${{ env.IMAGE_NAME }}:latest
+          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} docker-daemon:${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
       # - name: Login to Openshift container registry
       #   run : |
