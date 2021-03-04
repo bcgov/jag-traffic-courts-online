@@ -17,12 +17,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Cluster Login
+        id: cluster-login
         uses: redhat-developer/openshift-actions@v1.1
         with:
           openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
           parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
           cmd: |
             'version'
+            'project ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}'
 
       - name: Ensure actor is clean
         id: clean-actor
