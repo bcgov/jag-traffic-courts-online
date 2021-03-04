@@ -27,7 +27,7 @@ jobs:
         run: cd src/frontend/citizen-portal
 
       - name: Setp Up Node / Npm
-      - uses: actions/setup-node@v2
+        uses: actions/setup-node@v2
         with:
           node-version: '14.15'
 
