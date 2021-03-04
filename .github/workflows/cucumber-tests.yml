@@ -12,7 +12,7 @@ jobs:
     name: Runs cucumber-tests
     runs-on: ubuntu-latest
     steps:
-      - name: Pull Git repo.
+      - name: Pull Git repo
         uses: actions/checkout@v2
 
       - name: Cache local Maven repository
