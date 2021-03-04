@@ -4,6 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
     branches: [main]
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -23,20 +24,35 @@ jobs:
           cmd: |
             'version'
 
-      - name: Build the container image
+      - name: Build the Image
         id: build-image
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |          
           docker-compose build ${{ env.IMAGE_NAME }}
+          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
+
+      - name: Tag the Image
+        id: tag-image
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |
           docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAGS }}
           docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
-          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
-          echo "docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAGS }}"
-          docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAGS }}
+
+      # - name: Push To Registry
+      #   id: push-image
+      #   env:
+      #     COMPOSE_DOCKER_CLI_BUILD: 1
+      #     DOCKER_BUILDKIT: 1
+      #   run: |
+      #     docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAGS }}
+
       - name: Push To Registry
+        id: push-image
         uses: redhat-actions/push-to-registry@v2.1.1
         with:
           image: ${{ env.IMAGE_NAME }}
