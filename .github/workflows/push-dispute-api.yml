@@ -50,7 +50,7 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
-          docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAGS }}
+          docker image push --all-tags ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}
 
       # - name: Push To Registry
       #   id: push-image
