@@ -3,6 +3,7 @@ package stepDefinitions.frontendstepdefinitions;
 import java.util.concurrent.TimeUnit;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
@@ -58,7 +59,6 @@ public class Steps {
 		
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_110i_0']")).click();
 		
-		
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 		
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_112i_2']")).click();
@@ -70,7 +70,6 @@ public class Steps {
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_131i_1']")).click();
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_133i_0']")).click();
 		
-		
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 		
 	}
@@ -78,7 +77,7 @@ public class Steps {
 	public void user_signs_and_clicks_on_complete_option() {
 	    // Write code here that turns the phrase above into concrete actions
 		
-		WebElement canvasElement = driver.findElement(By.xpath("//canvas[@tabindex='0']"));
+	    WebElement canvasElement = driver.findElement(By.xpath("//canvas[@tabindex='0']"));
 
 	    Actions builder = new Actions(driver);
 	    Action signature = builder.contextClick(canvasElement) //start points x axis and y axis. 
@@ -98,6 +97,8 @@ public class Steps {
 	@Then("The Violation Ticket should be Successfully Submitted")
 	public void the_violation_ticket_should_be_successfully_submitted() {
 	    // Write code here that turns the phrase above into concrete actions
+		String bodyText = driver.findElement(By.tagName("body")).getText();
+		Assert.assertTrue("Text not found!", bodyText.contains("Your Violation Ticket information has been submitted."));
 		
 		driver.quit();
 	}
