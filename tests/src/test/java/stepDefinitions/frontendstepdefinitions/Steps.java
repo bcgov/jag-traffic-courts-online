@@ -42,15 +42,15 @@ public class Steps {
         driver.manage().deleteAllCookies();
 	}
 	
-	@When("User navigates to BC Traffic Courts Online Website")
+	@When("User navigates to BC Traffic Courts online website")
 	public void user_navigates_to_bc_traffic_courts_online_website() {
 	    driver.get("http://localhost:4200/");
 	}
-	@When("User clicks on Initiate Dispute Option")
+	@When("User clicks on Initiate Dispute option")
 	public void user_clicks_on_initiate_dispute_option() {
 	    driver.findElement(By.xpath("//button[@ng-reflect-router-link='/survey/home']")).click();
 	}
-	@When("User Enters the Violation Ticket Details")
+	@When("User enters the violation ticket details")
 	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
 	    // Write code here that turns the phrase above into concrete actions
 		driver.findElement(By.xpath("//input[@id='sq_102i']")).sendKeys("ABCD1234");
@@ -73,7 +73,7 @@ public class Steps {
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 		
 	}
-	@When("User Signs and Clicks on Complete Option")
+	@When("User signs and clicks on Complete option")
 	public void user_signs_and_clicks_on_complete_option() {
 	    // Write code here that turns the phrase above into concrete actions
 		
@@ -94,7 +94,7 @@ public class Steps {
 		
 	    driver.findElement(By.xpath("//input[@type='button' and @value='Complete']")).click();
 	}
-	@Then("The Violation Ticket should be Successfully Submitted")
+	@Then("The violation ticket should be successfully submitted")
 	public void the_violation_ticket_should_be_successfully_submitted() {
 	    // Write code here that turns the phrase above into concrete actions
 		String bodyText = driver.findElement(By.tagName("body")).getText();

@@ -16,14 +16,14 @@ public class Steps {
 	@Given("A list of tickets are available.")
 	public void a_list_of_tickets_are_available() {
 	}
-	@When("User makes a Request to get the List of Tickets")
+	@When("User makes a request to get the list of tickets")
 	public void user_makes_a_request_to_get_the_list_of_tickets() {
 	    // Write code here that turns the phrase above into concrete actions
 		RestAssured.baseURI = BASE_URL;
 		RequestSpecification request = RestAssured.given();
 		response = request.get("/api/Tickets/getTickets");
 	}
-	@Then("The Request is successfully processed")
+	@Then("The request is successfully processed")
 	public void the_request_is_successfully_processed() {
 	    // Write code here that turns the phrase above into concrete actions
 		Assert.assertEquals(200, response.getStatusCode());
