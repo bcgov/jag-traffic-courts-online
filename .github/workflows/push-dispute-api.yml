@@ -18,11 +18,13 @@ jobs:
           cmd: |
             'version'
       - name: Build the container image
+        id: build-image
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |          
           docker-compose build dispute-api
+          docker tag jag-traffic-courts-online_dispute-api ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
       # - name: Login to Openshift container registry
       #   run : |
       #     docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
@@ -32,13 +34,12 @@ jobs:
       #     DOCKER_BUILDKIT: 1
       #   run: |
       #     docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }} && \
-      #     docker tag jag-traffic-courts-online_dispute-api ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest && \
+      #      && \
       #     docker push ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
       - name: Push To Registry
         uses: redhat-actions/push-to-registry@v2.1.1
         with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
+          image: ${{ steps.build-image.outputs.image }}
           registry: '${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}'
           username: '${{ secrets.OPENSHIFT_SA_USERNAME }}'
           password: '${{ secrets.OPENSHIFT_SA_PASSWORD }}'
