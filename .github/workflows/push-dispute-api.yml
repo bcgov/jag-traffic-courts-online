@@ -39,7 +39,7 @@ jobs:
       - name: Push To Registry
         uses: redhat-actions/push-to-registry@v2.1.1
         with:
-          image: ${{ steps.build-image.outputs.image }}
+          image: dispute-api
           registry: '${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}'
           username: '${{ secrets.OPENSHIFT_SA_USERNAME }}'
           password: '${{ secrets.OPENSHIFT_SA_PASSWORD }}'
