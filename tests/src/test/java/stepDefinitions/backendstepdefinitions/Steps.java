@@ -26,7 +26,7 @@ public class Steps {
 	@Then("The request is successfully processed")
 	public void the_request_is_successfully_processed() {
 	    // Write code here that turns the phrase above into concrete actions
-		Assert.assertEquals(201, response.getStatusCode());
+		Assert.assertEquals(200, response.getStatusCode());
 	}
 
 }
