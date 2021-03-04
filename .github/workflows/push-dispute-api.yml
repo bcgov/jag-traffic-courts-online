@@ -6,10 +6,14 @@ on:
     branches: [main]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: dispute-api
+      IMAGE_TAGS: latest v1
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Cluster Login
         uses: redhat-developer/openshift-actions@v1.1
         with:
@@ -17,14 +21,15 @@ jobs:
           parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
           cmd: |
             'version'
+
       - name: Build the container image
         id: build-image
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |          
-          docker-compose build dispute-api
-          docker tag jag-traffic-courts-online_dispute-api ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/dispute-api:latest
+          docker-compose build ${{ env.IMAGE_NAME }}
+          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
       # - name: Login to Openshift container registry
       #   run : |
       #     docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
@@ -39,8 +44,8 @@ jobs:
       - name: Push To Registry
         uses: redhat-actions/push-to-registry@v2.1.1
         with:
-          image: dispute-api
+          image: ${{ env.IMAGE_NAME }}
           registry: '${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}'
           username: '${{ secrets.OPENSHIFT_SA_USERNAME }}'
           password: '${{ secrets.OPENSHIFT_SA_PASSWORD }}'
-          tags: latest ${{ github.sha }}
+          tags: ${{ env.IMAGE_TAGS }}
