@@ -1,0 +1,66 @@
+name: Cucumber Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  cucumber-tests:
+    name: Runs cucumber-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull Git repo
+        uses: actions/checkout@v2
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Setp Up Node / Npm
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.15'
+
+      - name: Run Frontend UI
+        run: |
+          cd src/frontend/citizen-portal
+          sudo npm install
+          sudo npm install -g @angular/cli
+          ng serve &
+
+      - name: Run Backend API
+        run: |
+          cd ${{github.workspace}}/src/backend/TrafficCourtsApi
+          docker build -f Dockerfile -t disputev1 .
+          docker run -p 5000:80 disputev1 &
+
+      - name: Maven requires chrome driver
+        run: |
+          sudo apt-get update
+          sudo apt-get --only-upgrade install google-chrome-stable
+
+      - name: Running UI and API Tests
+        run: |
+          cd ${{github.workspace}}
+          mvn verify -f tests/pom.xml
+
+      # Upload Spark report for debugging purposes
+      - name: Upload Spark report for debugging purposes
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-spark-report
+          path: ./tests/test-output/extent/Spark/Index.html
+
+      # Upload Cucumber JSON for debugging purposes
+      - name: Upload Cucumber JSON for debugging purposes
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-json-report
+          path: ./tests/target/cucumber-reports/CucumberTestReport.json
