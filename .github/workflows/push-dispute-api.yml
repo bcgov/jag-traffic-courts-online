@@ -16,25 +16,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cluster Login
-        uses: redhat-actions/oc-login@v1
-        env:
-          OPENSHIFT_USER: ${{ secrets.OPENSHIFT_SA_USERNAME }}
-          OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_username: ${{ secrets.OPENSHIFT_SA_USERNAME }}
-          openshift_password: ${{ secrets.OPENSHIFT_SA_PASSWORD }}
-          namespace: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
       # - name: Cluster Login
-      #   id: cluster-login
-      #   uses: redhat-developer/openshift-actions@v1.1
+      #   uses: redhat-actions/oc-login@v1
+      #   env:
+      #     OPENSHIFT_USER: ${{ secrets.OPENSHIFT_SA_USERNAME }}
+      #     OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
       #   with:
       #     openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-      #     parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
-      #     cmd: |
-      #       'version'
-      #       'project ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}'
+      #     openshift_username: ${{ secrets.OPENSHIFT_SA_USERNAME }}
+      #     openshift_password: ${{ secrets.OPENSHIFT_SA_PASSWORD }}
+      #     namespace: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
+      - name: Cluster Login
+        id: cluster-login
+        uses: redhat-developer/openshift-actions@v1.1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+          parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
+          cmd: |
+            'version'
 
       - name: Ensure actor is clean
         id: clean-actor
