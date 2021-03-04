@@ -6,6 +6,7 @@ services:
 # ###                                 TrafficCourt BACKEND                                  ###
 # #############################################################################################
   dispute-api:
+    container_name: dispute-api
     build:
       context: ./src/backend/TrafficCourtsApi
       args:
@@ -72,6 +73,7 @@ services:
 ###                                  KEYCLOAK                                             ###
 #############################################################################################  
   keycloak:
+    container_name: keycloak
     image: quay.io/keycloak/keycloak
     environment:
       DB_VENDOR: H2
@@ -90,6 +92,7 @@ services:
 # ###                                  KEYCLOAK CONFIG                                      ###
 # #############################################################################################  
   keycloak-config:
+    container_name: keycloak-config
     build:
       context: ./infrastructure/keycloak
       args:
