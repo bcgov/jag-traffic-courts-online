@@ -23,9 +23,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Navigate to Citizen Portal Directory
-        run: cd src/frontend/citizen-portal
-
       - name: Setp Up Node / Npm
         uses: actions/setup-node@v2
         with:
@@ -33,6 +30,7 @@ jobs:
 
       - name: Run Frontend UI
         run: |
+          cd src/frontend/citizen-portal
           sudo npm install
           sudo npm install -g @angular/cli
           ng serve &
