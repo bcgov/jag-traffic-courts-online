@@ -26,14 +26,14 @@ jobs:
       #     openshift_username: ${{ secrets.OPENSHIFT_SA_USERNAME }}
       #     openshift_password: ${{ secrets.OPENSHIFT_SA_PASSWORD }}
       #     namespace: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
-      - name: Cluster Login
-        id: cluster-login
-        uses: redhat-developer/openshift-actions@v1.1
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
-          cmd: |
-            'version'
+      # - name: Cluster Login
+      #   id: cluster-login
+      #   uses: redhat-developer/openshift-actions@v1.1
+      #   with:
+      #     openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+      #     parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
+      #     cmd: |
+      #       'version'
 
       - name: Ensure actor is clean
         id: clean-actor
