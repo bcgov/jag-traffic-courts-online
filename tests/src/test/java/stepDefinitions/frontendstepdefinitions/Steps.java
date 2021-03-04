@@ -54,12 +54,10 @@ public class Steps {
 	    // Write code here that turns the phrase above into concrete actions
 		driver.findElement(By.xpath("//input[@id='sq_102i']")).sendKeys("ABCD1234");
 		driver.findElement(By.xpath("//input[@id='sq_103i']")).sendKeys("01022");
-		sleep();
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 		
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_110i_0']")).click();
 		
-		sleep();
 		
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 		
@@ -72,7 +70,6 @@ public class Steps {
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_131i_1']")).click();
 		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_133i_0']")).click();
 		
-		sleep();
 		
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
 		
@@ -95,14 +92,12 @@ public class Steps {
                    .build();
 	    signature.perform();
 	    
-	    sleep();
 		
 	    driver.findElement(By.xpath("//input[@type='button' and @value='Complete']")).click();
 	}
 	@Then("The Violation Ticket should be Successfully Submitted")
 	public void the_violation_ticket_should_be_successfully_submitted() {
 	    // Write code here that turns the phrase above into concrete actions
-		sleep();
 		
 		driver.quit();
 	}
