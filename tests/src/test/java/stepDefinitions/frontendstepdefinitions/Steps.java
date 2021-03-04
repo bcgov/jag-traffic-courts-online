@@ -22,7 +22,6 @@ public class Steps {
 	
 	@Given("User has successfully launched the web browser")
 	public void user_had_successfully_launched_the_web_browser() {
-	    // Write code here that turns the phrase above into concrete actions
 		String browser = System.getProperty("BROWSER");
 		WebDriverManager.chromedriver().setup();
 		ChromeOptions options = new ChromeOptions();
@@ -52,7 +51,6 @@ public class Steps {
 	}
 	@When("User enters the violation ticket details")
 	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
-	    // Write code here that turns the phrase above into concrete actions
 		driver.findElement(By.xpath("//input[@id='sq_102i']")).sendKeys("ABCD1234");
 		driver.findElement(By.xpath("//input[@id='sq_103i']")).sendKeys("01022");
 		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
@@ -75,7 +73,6 @@ public class Steps {
 	}
 	@When("User signs and clicks on Complete option")
 	public void user_signs_and_clicks_on_complete_option() {
-	    // Write code here that turns the phrase above into concrete actions
 		
 	    WebElement canvasElement = driver.findElement(By.xpath("//canvas[@tabindex='0']"));
 
@@ -96,7 +93,6 @@ public class Steps {
 	}
 	@Then("The violation ticket should be successfully submitted")
 	public void the_violation_ticket_should_be_successfully_submitted() {
-	    // Write code here that turns the phrase above into concrete actions
 		String bodyText = driver.findElement(By.tagName("body")).getText();
 		Assert.assertTrue("Text not found!", bodyText.contains("Your Violation Ticket information has been submitted."));
 		
