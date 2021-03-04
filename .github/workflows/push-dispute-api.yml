@@ -17,8 +17,6 @@ jobs:
           parameters: '{"apitoken": "${{ secrets.OPENSHIFT_SA_PASSWORD }}"}'
           cmd: |
             'version'
-            docker --version
-            docker-compose --version
       - name: Build the container image
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
