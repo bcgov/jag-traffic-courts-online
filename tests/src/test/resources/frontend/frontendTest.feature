@@ -7,4 +7,3 @@ Scenario:  User initiates dispute in BC Traffic Courts online website
 	And User enters the violation ticket details
 	And User signs and clicks on Complete option
 	Then The violation ticket should be successfully submitted
-	

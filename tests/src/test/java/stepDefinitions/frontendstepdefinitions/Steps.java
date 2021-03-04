@@ -34,20 +34,20 @@ public class Steps {
 		options.addArguments("--dns-prefetch-disable");
 		options.addArguments("--disable-gpu");
 		options.setPageLoadStrategy(PageLoadStrategy.NONE);
-        driver = new ChromeDriver(options);
+		driver = new ChromeDriver(options);
         
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
-        driver.manage().deleteAllCookies();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
+		driver.manage().deleteAllCookies();
 	}
 	
 	@When("User navigates to BC Traffic Courts online website")
 	public void user_navigates_to_bc_traffic_courts_online_website() {
-	    driver.get("http://localhost:4200/");
+		driver.get("http://localhost:4200/");
 	}
 	@When("User clicks on Initiate Dispute option")
 	public void user_clicks_on_initiate_dispute_option() {
-	    driver.findElement(By.xpath("//button[@ng-reflect-router-link='/survey/home']")).click();
+		driver.findElement(By.xpath("//button[@ng-reflect-router-link='/survey/home']")).click();
 	}
 	@When("User enters the violation ticket details")
 	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
@@ -74,22 +74,22 @@ public class Steps {
 	@When("User signs and clicks on Complete option")
 	public void user_signs_and_clicks_on_complete_option() {
 		
-	    WebElement canvasElement = driver.findElement(By.xpath("//canvas[@tabindex='0']"));
+		WebElement canvasElement = driver.findElement(By.xpath("//canvas[@tabindex='0']"));
 
-	    Actions builder = new Actions(driver);
-	    Action signature = builder.contextClick(canvasElement) //start points x axis and y axis. 
-	              .clickAndHold()
-                  .clickAndHold()
-                  .moveToElement(canvasElement,20,-50)
-                  .moveByOffset(50, 50)
-                  .moveByOffset(80,-50)
-                  .moveByOffset(100,50)
-                  .release(canvasElement)
-                   .build();
-	    signature.perform();
+		Actions builder = new Actions(driver);
+		Action signature = builder.contextClick(canvasElement) //start points x axis and y axis. 
+				          .clickAndHold()
+				  		  .clickAndHold()
+				  		  .moveToElement(canvasElement,20,-50)
+				  		  .moveByOffset(50, 50)
+				  		  .moveByOffset(80,-50)
+				  		  .moveByOffset(100,50)
+				  		  .release(canvasElement)
+				  		  .build();
+		signature.perform();
 	    
 		
-	    driver.findElement(By.xpath("//input[@type='button' and @value='Complete']")).click();
+		driver.findElement(By.xpath("//input[@type='button' and @value='Complete']")).click();
 	}
 	@Then("The violation ticket should be successfully submitted")
 	public void the_violation_ticket_should_be_successfully_submitted() {
