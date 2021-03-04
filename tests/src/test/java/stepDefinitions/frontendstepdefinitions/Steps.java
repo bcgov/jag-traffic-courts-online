@@ -47,7 +47,7 @@ public class Steps {
 	}
 	@When("User clicks on Initiate Dispute Option")
 	public void user_clicks_on_initiate_dispute_option() {
-	    driver.findElement(By.xpath("/html/body/app-root/div/app-auth/app-landing/div/div/div[2]/div[3]/div/div[1]/button")).click();
+	    driver.findElement(By.xpath("//button[@ng-reflect-router-link='/survey/home']")).click();
 	}
 	@When("User Enters the Violation Ticket Details")
 	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
