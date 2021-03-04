@@ -45,6 +45,14 @@ namespace DisputeApi.Web.Test
         }
 
         [Test]
+        public async Task Returns_unauthorized_for_missing_token()
+        {
+            using var httpClient = WebAppFactoryObj.CreateClient();
+            var response = await httpClient.GetAsync("api/Tickets/getTickets");
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        }
+
+        [Test]
         public void startup_should_registered_all_required_services()
         {
             var webHost = Microsoft.AspNetCore.WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build();
