@@ -24,6 +24,14 @@ jobs:
           cmd: |
             'version'
 
+      - name: Ensure actor is clean
+        id: build-image
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |          
+          docker system prune -a --force
+
       - name: Build the Image
         id: build-image
         env:
