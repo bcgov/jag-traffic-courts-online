@@ -1,0 +1,52 @@
+name: Build NodeJS Image and Push to Openshift Registry
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    branches: [main]
+
+jobs:
+  build-main:
+    runs-on: ubuntu-20.04
+    env:
+      VERSION: v1
+      IMAGE_NAME: citizen-portal
+      IMAGE_TAGS: latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # - name: Ensure actor is clean
+      #   id: clean-actor
+      #   env:
+      #     COMPOSE_DOCKER_CLI_BUILD: 1
+      #     DOCKER_BUILDKIT: 1
+      #   run: |          
+      #     docker system prune -a --force
+
+      - name: Build the Image
+        id: build-image
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |          
+          docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
+          docker-compose build ${{ env.IMAGE_NAME }}
+
+      - name: Tag the Image
+        id: tag-image
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}
+
+      - name: Push To Registry via Docker
+        id: push-image-docker
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
+          docker image ls
+          docker image push --all-tags ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}

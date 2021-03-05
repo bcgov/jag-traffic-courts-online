@@ -1,5 +1,5 @@
 # base image
-FROM node:10.16 as build-deps
+FROM registry.redhat.io/rhel8/nodejs-10 as build-deps
 RUN printenv
 
 # set working directory
