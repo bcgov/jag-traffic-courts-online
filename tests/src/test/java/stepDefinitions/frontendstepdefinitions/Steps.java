@@ -45,66 +45,11 @@ public class Steps {
 	public void user_navigates_to_bc_traffic_courts_online_website() {
 		driver.get("http://localhost:4200/");
 	}
-	@When("User clicks on Initiate Dispute option")
-	public void user_clicks_on_initiate_dispute_option() {
-		driver.findElement(By.xpath("//button[@ng-reflect-router-link='/survey/home']")).click();
-	}
-	@When("User enters the violation ticket details")
-	public void user_enters_violation_ticket_number_plus_time_of_ticket() {
-		driver.findElement(By.xpath("//input[@id='sq_102i']")).sendKeys("ABCD1234");
-		driver.findElement(By.xpath("//input[@id='sq_103i']")).sendKeys("01022");
-		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
-		
-		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_110i_0']")).click();
-		
-		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
-		
-		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_112i_2']")).click();
-		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
-		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_118i_2']")).click();
-		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
-		
-		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_130i_0']")).click();
-		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_131i_1']")).click();
-		driver.findElement(By.xpath("//input[@type='radio' and @id='sq_133i_0']")).click();
-		
-		driver.findElement(By.xpath("//input[@type='button' and @value='Next']")).click();
-		
-	}
-	@When("User signs and clicks on Complete option")
-	public void user_signs_and_clicks_on_complete_option() {
-		
-		WebElement canvasElement = driver.findElement(By.xpath("//canvas[@tabindex='0']"));
 
-		Actions builder = new Actions(driver);
-		Action signature = builder.contextClick(canvasElement) //start points x axis and y axis. 
-				          .clickAndHold()
-				  		  .clickAndHold()
-				  		  .moveToElement(canvasElement,20,-50)
-				  		  .moveByOffset(50, 50)
-				  		  .moveByOffset(80,-50)
-				  		  .moveByOffset(100,50)
-				  		  .release(canvasElement)
-				  		  .build();
-		signature.perform();
-	    
-		
-		driver.findElement(By.xpath("//input[@type='button' and @value='Complete']")).click();
-	}
-	@Then("The violation ticket should be successfully submitted")
-	public void the_violation_ticket_should_be_successfully_submitted() {
-		String bodyText = driver.findElement(By.tagName("body")).getText();
-		Assert.assertTrue("Text not found!", bodyText.contains("Your Violation Ticket information has been submitted."));
+	@Then("Pay Ticket button should be displayed")
+	public void pay_ticket_button_should_be_displayed()  {
+		driver.findElement(By.partialLinkText("Pay Ticket"));
 		
 		driver.quit();
-	}
-	
-	private void sleep() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
