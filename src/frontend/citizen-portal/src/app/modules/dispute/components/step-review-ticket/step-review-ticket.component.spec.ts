@@ -9,6 +9,7 @@ import { DisputeFormStateService } from '@dispute/services/dispute-form-state.se
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { DefaultPipe } from '@shared/pipes/default.pipe';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
+import { PhonePipe } from '@shared/pipes/phone.pipe';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepReviewTicketComponent } from './step-review-ticket.component';
@@ -32,6 +33,7 @@ describe('StepReviewTicketComponent', () => {
         DefaultPipe,
         FormatDatePipe,
         DatePipe,
+        PhonePipe,
       ],
       providers: [MockDisputeService, DisputeFormStateService],
       schemas: [NO_ERRORS_SCHEMA],

@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { DefaultPipe } from '@shared/pipes/default.pipe';
+import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepOverviewComponent } from './step-overview.component';
@@ -23,7 +24,7 @@ describe('StepOverviewComponent', () => {
         HttpClientTestingModule,
         NgxMaterialModule,
       ],
-      declarations: [StepOverviewComponent, DefaultPipe],
+      declarations: [StepOverviewComponent, DefaultPipe, FormatDatePipe],
       providers: [MockDisputeService, DisputeFormStateService],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
