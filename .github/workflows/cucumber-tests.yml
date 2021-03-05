@@ -55,9 +55,12 @@ jobs:
           sudo apt-get --only-upgrade install google-chrome-stable
 
       - name: Running UI and API Tests
+        uses: actions/setup-java@v1
+        with:
+          java-version: 13
         run: |
           cd ${{ github.workspace }}
-          mvn verify -f tests/pom.xml
+          mvn verify -f tests/pom.xml -e
 
       # Upload Spark report for debugging purposes
       - name: Upload Spark report for debugging purposes
