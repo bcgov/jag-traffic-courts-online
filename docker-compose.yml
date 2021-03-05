@@ -9,8 +9,8 @@ services:
     container_name: dispute-api
     build:
       context: ./src/backend/TrafficCourtsApi
-      args:
-        PROJECT_NAME: DisputeApi.Web
+      # args:
+      #   PROJECT_NAME: DisputeApi.Web
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
