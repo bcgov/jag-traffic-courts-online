@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Setp Up Node / Npm
+      - name: Setup Node / Npm
         uses: actions/setup-node@v2
         with:
           node-version: '14.15'
