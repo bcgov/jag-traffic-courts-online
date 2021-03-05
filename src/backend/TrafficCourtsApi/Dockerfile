@@ -11,7 +11,7 @@ RUN dotnet publish "DisputeApi.Web/DisputeApi.Web.csproj" -c Release -o /opt/app
 
 FROM registry.redhat.io/rhel8/dotnet-50-runtime AS base
 WORKDIR /opt/app-root
-EXPOSE 80
+EXPOSE 8080
 COPY --from=build /opt/app-root .
 
 ENTRYPOINT ["sh","-c","dotnet DisputeApi.Web.dll"]

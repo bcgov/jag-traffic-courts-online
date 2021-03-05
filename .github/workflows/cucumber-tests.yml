@@ -47,14 +47,14 @@ jobs:
         run: |
           cd ${{ github.workspace }}/src/backend/TrafficCourtsApi
           docker build -f Dockerfile -t disputev1 .
-          docker run -p 8080:80 disputev1 &
+          docker run -p 8080:8080 -d disputev1
 
       - name: Maven requires chrome driver
         run: |
           sudo apt-get update
           sudo apt-get --only-upgrade install google-chrome-stable
 
-      - name: setup JDK
+      - name: Setup JDK
         uses: actions/setup-java@v1
         with:
           java-version: 13
