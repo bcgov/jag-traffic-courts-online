@@ -1,8 +1,8 @@
 
-# FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-FROM registry.redhat.io/rhel8/dotnet-50 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+# FROM registry.redhat.io/rhel8/dotnet-50 AS build
 
-WORKDIR /tmp/src
+WORKDIR /src
 COPY . .
 RUN dotnet restore "DisputeApi.Web/DisputeApi.Web.csproj"
 RUN dotnet build "DisputeApi.Web/DisputeApi.Web.csproj" -c Release -o /opt/app-root
