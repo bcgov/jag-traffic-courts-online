@@ -5,53 +5,6 @@ export const SurveyJson = {
       name: 'page1',
       elements: [
         {
-          type: 'image',
-          name: 'first_page_image',
-          imageLink: '/assets/traffic_light.jpg',
-          imageFit: 'none',
-          imageHeight: 426,
-          imageWidth: 400,
-          width: '500px',
-        },
-        {
-          type: 'panel',
-          elements: [
-            {
-              type: 'html',
-              name: 'alert_info',
-              html: `<div class="alert alert-primary">
-                <h1 class="alert-heading">Violation Ticket Lookup</h1>
-                <p class="mt-2 mb-0">Find your Violation Ticket by entering the Violation Ticket Number and Time.</p>
-                </div>`,
-            },
-            {
-              type: 'text',
-              inputFormat: 'AA99999999',
-              name: 'violationTicketNumber',
-              title: 'What is the Violation Ticket Number',
-              autoComplete: 'off',
-              description:
-                'A Violation Ticket Number is 2 letters and 8 numbers. For example, AB12345678.',
-              isRequired: false,
-              hideNumber: true,
-            },
-            {
-              type: 'text',
-              name: 'ticketTime',
-              title: 'What is the Time of the Ticket',
-              inputType: 'time',
-              isRequired: false,
-              hideNumber: true,
-            },
-          ],
-          startWithNewLine: false,
-        },
-      ],
-    },
-    {
-      name: 'page2',
-      elements: [
-        {
           name: 'panel1',
           type: 'panel',
           elements: [
@@ -59,10 +12,10 @@ export const SurveyJson = {
               type: 'html',
               name: 'alert_info',
               html: `<div class="alert alert-primary">
-                <h1 class="alert-heading">Violation Ticket Information</h1>
-                <p class="mt-2 mb-0">Here is a summary of your ticket information.
-                Ensure that the specifics of the ticket are correct.</p>
-                </div>`,
+                    <h1 class="alert-heading">Violation Ticket Information</h1>
+                    <p class="mt-2 mb-0">Here is a summary of your ticket information.
+                    Ensure that the specifics of the ticket are correct.</p>
+                    </div>`,
             },
             {
               name: 'info_violationTicketNumber',
@@ -99,7 +52,6 @@ export const SurveyJson = {
     },
     {
       name: 'pageCount1',
-      visibleIf: '{numberOfCounts} > 0',
       elements: [
         {
           type: 'panel',
@@ -518,3 +470,102 @@ export const SurveyJson = {
   completedHtml:
     '<p><h3>Your Violation Ticket information has been submitted.</h3></p>',
 };
+
+/*
+
+    {
+      name: 'page1',
+      elements: [
+        {
+          type: 'image',
+          name: 'first_page_image',
+          imageLink: '/assets/traffic_light.jpg',
+          imageFit: 'none',
+          imageHeight: 426,
+          imageWidth: 400,
+          width: '500px',
+        },
+        {
+          type: 'panel',
+          elements: [
+            {
+              type: 'html',
+              name: 'alert_info',
+              html: `<div class="alert alert-primary">
+                <h1 class="alert-heading">Violation Ticket Lookup</h1>
+                <p class="mt-2 mb-0">Find your Violation Ticket by entering the Violation Ticket Number and Time.</p>
+                </div>`,
+            },
+            {
+              type: 'text',
+              inputFormat: 'AA99999999',
+              name: 'violationTicketNumber',
+              title: 'What is the Violation Ticket Number',
+              autoComplete: 'off',
+              description:
+                'A Violation Ticket Number is 2 letters and 8 numbers. For example, AB12345678.',
+              isRequired: false,
+              hideNumber: true,
+            },
+            {
+              type: 'text',
+              name: 'ticketTime',
+              title: 'What is the Time of the Ticket',
+              inputType: 'time',
+              isRequired: false,
+              hideNumber: true,
+            },
+          ],
+          startWithNewLine: false,
+        },
+      ],
+    },
+    {
+      name: 'page2',
+      elements: [
+        {
+          name: 'panel1',
+          type: 'panel',
+          elements: [
+            {
+              type: 'html',
+              name: 'alert_info',
+              html: `<div class="alert alert-primary">
+                <h1 class="alert-heading">Violation Ticket Information</h1>
+                <p class="mt-2 mb-0">Here is a summary of your ticket information.
+                Ensure that the specifics of the ticket are correct.</p>
+                </div>`,
+            },
+            {
+              name: 'info_violationTicketNumber',
+              type: 'text',
+              title: 'Violation Ticket Number',
+              hideNumber: true,
+              readOnly: true,
+            },
+            {
+              name: 'info_violationDate',
+              type: 'text',
+              title: 'Violation Date and Time',
+              startWithNewLine: false,
+              hideNumber: true,
+              readOnly: true,
+            },
+            {
+              name: 'info_party',
+              type: 'comment',
+              title: 'Personal Information',
+              hideNumber: true,
+              readOnly: true,
+            },
+            {
+              name: 'info_address',
+              type: 'comment',
+              title: 'Address Information',
+              hideNumber: true,
+              readOnly: true,
+            },
+          ],
+        },
+      ],
+    },*/

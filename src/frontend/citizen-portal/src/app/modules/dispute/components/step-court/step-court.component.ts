@@ -48,7 +48,7 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepCourtForm;
-    this.patchForm();
+    // this.patchForm();
 
     // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
     //   this.ticket = dispute?.ticket;

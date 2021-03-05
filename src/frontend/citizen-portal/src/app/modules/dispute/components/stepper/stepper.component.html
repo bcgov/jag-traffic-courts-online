@@ -1,5 +1,9 @@
 <app-page [busy]="busy" [mode]="pageMode">
-  <mat-vertical-stepper #disputeStepper linear>
+  <mat-vertical-stepper
+    #disputeStepper
+    linear
+    (selectionChange)="onSelectionChange($event)"
+  >
     <mat-step *ngFor="let step of disputeSteps; let i = index">
       <ng-template matStepLabel>{{ step.title }}</ng-template>
 

@@ -4,7 +4,6 @@ import {
   Validators,
   FormGroup,
   AbstractControl,
-  FormArray,
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
@@ -54,6 +53,57 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     return this.stepCount1Form;
   }
 
+  public getCountSummary(countNo: number): string {
+    let countInfo;
+    if (countNo === 2) {
+      countInfo = this.stepCount2Form.getRawValue();
+    } else if (countNo === 2) {
+      countInfo = this.stepCount3Form.getRawValue();
+    } else {
+      countInfo = this.stepCount1Form.getRawValue();
+    }
+
+    if (!countInfo) {
+      return null;
+    }
+
+    let summary: string;
+    if (countInfo.count === 'A') {
+      summary =
+        'I agree that I committed this offence, and I do not want to appear in court.';
+
+      if (countInfo.count1A1) {
+        summary +=
+          ' I request a reduction of the ticketed amount for the following reason:';
+        summary += '<br/><small>';
+        summary += countInfo.reductionReason;
+        summary += '</small><br/>';
+      }
+      if (countInfo.count1A2) {
+        summary +=
+          ' I request time to pay the ticketed amount for the following reason:';
+        summary += '<br/><small>';
+        summary += countInfo.timeReason;
+        summary += '</small><br/>';
+      }
+    } else if (countInfo.count === 'A') {
+      summary =
+        'I agree that I committed this offence, and I want to appear in court.';
+
+      if (countInfo.count1B1) {
+        summary +=
+          'I would like to request a reduction of the ticketed amount.';
+      }
+      if (countInfo.count1B2) {
+        summary += 'I would like to request time to pay the ticketed amount';
+      }
+    } else {
+      summary = 'I do not agree that I committed this offence (allegation)';
+    }
+
+    return summary;
+  }
+
   /**
    * @description
    * Convert reactive form abstract controls into JSON.
@@ -78,7 +128,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   /**
    * @description
-   * Helper for getting a list of enrolment forms.
+   * Helper for getting a list of dispute forms.
    */
   public get forms(): AbstractControl[] {
     return [
@@ -125,8 +175,15 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     this.stepReviewForm.patchValue(dispute);
 
     dispute.counts.forEach((c: Count) => {
-      const count = this.buildStepCourtForm();
-      count.patchValue(c);
+      if (c.countNo === 1) {
+        this.stepCount1Form.patchValue(c);
+      }
+      if (c.countNo === 2) {
+        this.stepCount2Form.patchValue(c);
+      }
+      if (c.countNo === 3) {
+        this.stepCount3Form.patchValue(c);
+      }
     });
 
     this.stepCourtForm.patchValue(dispute);
@@ -152,8 +209,9 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     return this.formBuilder.group({
       id: [null],
       statuteId: [null],
+      countNo: [null],
+      description: [null],
       count: [null],
-      count1A: [null],
       count1A1: [null],
       count1A2: [null],
       reductionReason: [null],

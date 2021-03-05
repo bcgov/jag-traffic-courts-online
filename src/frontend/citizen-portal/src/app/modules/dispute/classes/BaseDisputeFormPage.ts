@@ -28,7 +28,7 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
    * Patch the form with dispute information.
    */
   protected patchForm(): void {
-    // Store a local copy of the enrolment for views
+    // Store a local copy of the dispute for views
     this.dispute = this.disputeService.dispute;
 
     // Attempt to patch the form if not already patched

@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-6 mb-2">Violation Ticket Number</div>
       <div class="col-6 text-right mb-2">
-        {{ ticket?.violationTicketNumber }}
+        {{ ticket?.violationTicketNumber | default }}
       </div>
     </div>
     <div class="row">
@@ -21,6 +21,12 @@
         {{ ticket?.violationTime }}
       </div>
     </div>
+    <div class="row" *ngFor="let cnt of ticket?.counts; let i = index">
+      <div class="col-3 mb-2">Offence #{{ cnt.countNo }}</div>
+      <div class="col-9 text-right">
+        {{ cnt.description | default }}
+      </div>
+    </div>
   </section>
 
   <section class="mb-2">
@@ -28,19 +34,39 @@
     <div class="row">
       <div class="col-6 mb-2">Name</div>
       <div class="col-6 text-right mb-2">
-        {{ ticket?.givenNames }} {{ ticket?.surname }}
+        {{ ticket?.givenNames }} {{ ticket?.surname | default }}
       </div>
     </div>
     <div class="row">
-      <div class="col-6 mb-2">Street Address</div>
+      <div class="col-6 mb-2">Birthdate</div>
       <div class="col-6 text-right mb-2">
-        {{ ticket?.mailing }}
+        {{ ticket?.birthdate | formatDate | default }}
       </div>
     </div>
     <div class="row">
-      <div class="col-6 mb-2">City</div>
+      <div class="col-6 mb-2">Address</div>
       <div class="col-6 text-right mb-2">
-        {{ ticket?.city }}
+        {{ ticket?.mailing | default }}<br />
+        {{ ticket?.city }} {{ ticket?.province | default }}<br />
+        {{ ticket?.postal | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Home Phone</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.homePhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Work Phone</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.workPhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Driver's License</div>
+      <div class="col-6 text-right mb-2">
+        {{ ticket?.license | default }} {{ ticket?.provLicense }}
       </div>
     </div>
   </section>

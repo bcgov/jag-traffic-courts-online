@@ -50,7 +50,7 @@ export class StepReviewTicketComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepReviewForm;
-    this.patchForm();
+    // this.patchForm();
 
     this.ticket = this.disputeService.dispute?.ticket;
 

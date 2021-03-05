@@ -25,7 +25,6 @@ export interface Count {
   statuteId: number;
   description: string;
   count?: string;
-  count1A?: string;
   count1A1?: string;
   count1A2?: string;
   reductionReason?: string;

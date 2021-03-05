@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -9,7 +9,7 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
+import { Count, Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
@@ -24,7 +24,13 @@ export class StepOverviewComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public nextBtnLabel: string;
+  public dispute: Dispute;
   public ticket: Ticket;
+
+  private count1Form: FormGroup;
+  private count2Form: FormGroup;
+  private count3Form: FormGroup;
+  private courtForm: FormGroup;
 
   constructor(
     protected route: ActivatedRoute,
@@ -49,15 +55,16 @@ export class StepOverviewComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepOverviewForm;
-    this.patchForm();
+    // this.patchForm();
+
+    this.count1Form = this.disputeFormStateService.stepCount1Form;
+    this.count2Form = this.disputeFormStateService.stepCount2Form;
+    this.count3Form = this.disputeFormStateService.stepCount3Form;
+    this.courtForm = this.disputeFormStateService.stepCourtForm;
 
     this.ticket = this.disputeService.dispute?.ticket;
 
-    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-    //   this.ticket = dispute?.ticket;
-    //   this.form.patchValue(dispute);
-    // });
-
+    // this.disputeFormStateService.setForm(this.disputeFormStateService.json);
     this.nextBtnLabel = 'Submit';
   }
 
@@ -77,5 +84,33 @@ export class StepOverviewComponent
 
   public get certifyCorrect(): FormControl {
     return this.form.get('certifyCorrect') as FormControl;
+  }
+
+  public get count1Summary(): string {
+    return this.disputeFormStateService.getCountSummary(1);
+  }
+
+  public get count2Summary(): string {
+    return this.disputeFormStateService.getCountSummary(2);
+  }
+
+  public get count3Summary(): string {
+    return this.disputeFormStateService.getCountSummary(3);
+  }
+
+  public get count1Data(): Count {
+    return this.count1Form.value;
+  }
+
+  public get count2Data(): Count {
+    return this.count2Form.value;
+  }
+
+  public get count3Data(): Count {
+    return this.count3Form.value;
+  }
+
+  public get court(): any {
+    return this.courtForm.value;
   }
 }

@@ -11,10 +11,8 @@
           {{ row.ticket?.violationTicketNumber | default }}
           <small class="d-block ml-2"
             >Received: {{ row.ticket?.violationDate | formatDate | default }} at
-            {{ row.ticket?.violationTime | default }} ({{
-              row.ticketType
-            }})</small
-          >
+            {{ row.ticket?.violationTime | default }} - {{ row.ticketType }}
+          </small>
         </th>
         <td class="col">
           <small class="d-block text-muted">Status</small>
@@ -64,7 +62,7 @@
             mat-stroked-button
             color="primary"
             *ngIf="row.statusCode === 'NEW'"
-            (click)="onSelect(row)"
+            (click)="onSelectSurvey(row)"
           >
             Start
             <mat-icon inline="true">read_more</mat-icon>

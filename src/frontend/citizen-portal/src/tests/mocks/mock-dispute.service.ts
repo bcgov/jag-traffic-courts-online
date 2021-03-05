@@ -131,22 +131,18 @@ export class MockDisputeService {
       homePhone: faker.phone.phoneNumber('250#######'),
       workPhone: faker.phone.phoneNumber('250#######'),
       birthdate: faker.date.past(60, new Date(2001, 0, 1)),
-      lawyerPresent: false,
-      interpreterRequired: false,
-      interpreterLanguage: null,
-      callWitness: false,
       counts: [
         {
           id: faker.random.number(),
           countNo: 1,
           statuteId: 19149,
-          description: 'MVA 146(1) Speed in outside municipality',
+          description: 'MVA 146(1) - Speed in outside municipality',
         },
         {
           id: faker.random.number(),
           countNo: 2,
           statuteId: 19742,
-          description: 'MVA 73(1) Fail to Stop for Police',
+          description: 'MVA 73(1) - Fail to Stop for Police',
         },
       ],
     };
@@ -166,6 +162,7 @@ export class MockDisputeService {
     };
 
     dispute.counts = [...dispute.ticket.counts];
+
     return dispute;
   }
 }

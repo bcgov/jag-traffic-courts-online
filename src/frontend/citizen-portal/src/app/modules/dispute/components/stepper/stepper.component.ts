@@ -62,9 +62,15 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
+    // TODO just here temporarily to make sure data always displays
+    if (!this.disputeService.dispute) {
+      this.disputeResource.getDispute().subscribe((response) => {
+        this.disputeService.dispute$.next(response);
+      });
+    }
     this.disputeService.dispute$.subscribe((dispute) => {
-      this.patchForm();
       this.initializeDisputeSteps(dispute);
+      this.patchForm();
     });
 
     this.disputeService.steps$.subscribe((stepData) => {
@@ -121,7 +127,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     steps.push(stepData);
 
     let index = 0;
-    dispute?.counts.forEach((cnt) => {
+    dispute?.counts?.forEach((cnt) => {
       stepData = new StepData(
         2,
         'Offence #' + cnt.countNo + ' Review ',
@@ -190,5 +196,9 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
           });
         }
       });
+  }
+
+  public onSelectionChange(stepper): void {
+    this.logger.info('onSelectionChange:', this.disputeFormStateService.json);
   }
 }

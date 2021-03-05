@@ -15,10 +15,6 @@ export interface Ticket {
   homePhone: string;
   workPhone: string;
   birthdate: Date;
-  lawyerPresent: boolean;
-  interpreterRequired: boolean;
-  interpreterLanguage: string;
-  callWitness: boolean;
   counts: Count[];
 }
 
