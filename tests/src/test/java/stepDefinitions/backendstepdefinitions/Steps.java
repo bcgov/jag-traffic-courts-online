@@ -10,7 +10,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class Steps {
-	private static final String BASE_URL = "http://localhost:5000/";
+	private static final String BASE_URL = "http://localhost:8080/";
 	private static Response response;
 	
 	@Given("A list of tickets are available.")
