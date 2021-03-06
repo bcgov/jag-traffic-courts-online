@@ -28,13 +28,15 @@ namespace DisputeApi.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _config { get; }
 
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            Configuration = configuration;
+            _config = configuration;
+            _env = env;
         }
-
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -63,10 +65,10 @@ namespace DisputeApi.Web
             services.AddTicketService();
         }
 
-        private void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
+        internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
         {
-            string authority = Configuration["Jwt:Authority"];
-            string audience = Configuration["Jwt:Audience"];
+            string authority = _config["Jwt:Authority"];
+            string audience = _config["Jwt:Audience"];
             if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
             {
                 throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
@@ -79,7 +81,11 @@ namespace DisputeApi.Web
             o.Authority = authority;
             o.Audience = audience;
             o.MetadataAddress = metadataAddress;
-            o.RequireHttpsMetadata = false;
+            if (_env.IsDevelopment())
+            {
+                o.RequireHttpsMetadata = false;
+            }
+
             o.Events = new JwtBearerEvents
             {
                 OnAuthenticationFailed = c =>

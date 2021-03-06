@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.TicketService.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Moq;
 using NSwag.Generation;
 using NUnit.Framework;
 
@@ -16,9 +19,11 @@ namespace DisputeApi.Web.Test
     public class StartUpTest
     {
         private WebApplicationFactory<Startup> WebAppFactoryObj;
+        private Mock<IWebHostEnvironment> mockEnv;
+        private IConfiguration configuration;
 
         private Dictionary<string, string> inMemorySettings = new Dictionary<string, string> {
-                {"Jwt.Authority", "http://localhost:8080/auth/realms/myrealm/"}, {"Jwt.Audience", "account"}
+                {"Jwt:Authority", "http://localhost:8080/auth/realms/myrealm"}, {"Jwt:Audience", "account"}
         };
 
         [SetUp]
@@ -34,6 +39,11 @@ namespace DisputeApi.Web.Test
                             config.AddInMemoryCollection(inMemorySettings);
                         });
                     });
+            mockEnv = new Mock<IWebHostEnvironment>();
+            mockEnv.Setup(m => m.EnvironmentName).Returns("Development");
+            configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
         }
 
         [Test]
@@ -53,6 +63,30 @@ namespace DisputeApi.Web.Test
         }
 
         [Test]
+        public void missing_jwt_config()
+        {
+            Dictionary<string, string> emptyConfig = new Dictionary<string, string> {
+                {"Jwt:Authority", ""}, {"Jwt:Audience", ""}
+        };
+            IConfiguration emptyConfiguration = new ConfigurationBuilder()
+                    .AddInMemoryCollection(emptyConfig)
+                    .Build();
+            var target = new Startup(mockEnv.Object, emptyConfiguration);
+            Assert.Throws<ConfigurationErrorsException>(() => target.ConfigureJwtBearerAuthentication(new JwtBearerOptions()));
+        }
+
+        [Test]
+        public void success_jwt_config()
+        {
+            var target = new Startup(mockEnv.Object, configuration);
+            JwtBearerOptions options = new JwtBearerOptions();
+            target.ConfigureJwtBearerAuthentication(options);
+            Assert.That(options.Authority, Is.EqualTo("http://localhost:8080/auth/realms/myrealm/"));
+            Assert.That(options.RequireHttpsMetadata, Is.EqualTo(false));
+            Assert.That(options.MetadataAddress, Is.EqualTo("http://localhost:8080/auth/realms/myrealm/.well-known/uma2-configuration"));
+        }
+
+        [Test]
         public void startup_should_registered_all_required_services()
         {
             var webHost = Microsoft.AspNetCore.WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build();
@@ -69,7 +103,7 @@ namespace DisputeApi.Web.Test
                .AddInMemoryCollection(inMemorySettings)
                .Build();
             IServiceCollection services = new ServiceCollection();
-            var target = new Startup(configuration);
+            var target = new Startup(mockEnv.Object, configuration);
             target.ConfigureServices(services);
             var serviceProvider = services.BuildServiceProvider();
             Assert.IsNotNull(serviceProvider);
@@ -77,6 +111,4 @@ namespace DisputeApi.Web.Test
 
         }
     }
-
-
 }

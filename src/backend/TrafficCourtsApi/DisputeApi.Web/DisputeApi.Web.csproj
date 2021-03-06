@@ -29,4 +29,10 @@
     <ProjectReference Include="..\TrafficCourts.Common\TrafficCourts.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+    <_Parameter1>DisputeApi.Web.Test</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>
