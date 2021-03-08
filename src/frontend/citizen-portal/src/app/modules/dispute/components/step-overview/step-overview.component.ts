@@ -66,7 +66,7 @@ export class StepOverviewComponent
     this.ticket = this.disputeService.dispute?.ticket;
 
     // this.disputeFormStateService.setForm(this.disputeFormStateService.json);
-    this.nextBtnLabel = 'Submit Dispute';
+    this.nextBtnLabel = 'Submit';
   }
 
   public onBack() {

@@ -44,8 +44,6 @@ export class HomeComponent implements OnInit {
       'btn btn-outline-secondary';
 
     const tcoSurvey = new Survey.Model(SurveyJson);
-    tcoSurvey.showCompletedPage = false;
-    tcoSurvey.completeText = 'Submit Dispute';
 
     this.surveyResource.getDispute().subscribe((dispute) => {
       this.dispute = dispute;

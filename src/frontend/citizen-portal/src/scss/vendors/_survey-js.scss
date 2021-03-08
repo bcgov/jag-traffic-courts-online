@@ -329,6 +329,11 @@ h5 {
   color: #fff;
 }
 
+.sv_complete_btn {
+  border: 1px solid theme-palette(blue) !important;
+  color: theme-palette(blue) !important;
+}
+
 .sv_complete_btn:hover {
   color: theme-palette(blue) !important;
 }
@@ -380,4 +385,10 @@ h5 {
 div[name^="alert_info"] {
   padding-left: 0 !important;
   padding-right: 0 !important;
+}
+
+.alert-danger {
+  color: theme-palette(red);
+  background-color: transparent;
+  border-color: theme-palette(red, light);
 }

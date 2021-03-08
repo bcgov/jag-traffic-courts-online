@@ -1,6 +1,9 @@
 export const SurveyJson = {
   showProgressBar: 'top',
   progressBarType: 'buttons',
+  showQuestionNumbers: 'off',
+  completeText: 'Submit Dispute',
+  showCompletedPage: false,
   pages: [
     {
       name: 'page1',
@@ -18,7 +21,7 @@ export const SurveyJson = {
                 <div>
                   <h2 class="mb-1">Violation Ticket Information</h2>
                   <div class="text-muted m-2">
-                  Here is a summary of your ticket information. Ensure that the specifics of the ticket are correct.
+                  Here is a summary of your ticket information.
                   </div>
                   <hr class="m-0" style="border: 1px solid #ffb200;" />
                 </div>
@@ -50,6 +53,7 @@ export const SurveyJson = {
               name: 'info_address',
               type: 'comment',
               title: 'Address Information',
+              startWithNewLine: false,
               hideNumber: true,
               readOnly: true,
             },
@@ -74,7 +78,6 @@ export const SurveyJson = {
               type: 'radiogroup',
               name: 'count1',
               title: 'For this offence, which do you agree?',
-              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -98,7 +101,6 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count1A',
               visibleIf: '{count1} = "A"',
-              hideNumber: true,
               title: 'Which requests would you like to make?',
               isRequired: false,
               choices: [
@@ -115,7 +117,6 @@ export const SurveyJson = {
             {
               type: 'comment',
               name: 'count1_reduction_reason',
-              hideNumber: true,
               title:
                 'What are your reasons for a reduction in the ticketed amount(s)?',
               description:
@@ -126,7 +127,6 @@ export const SurveyJson = {
             {
               type: 'comment',
               name: 'count1_time_reason',
-              hideNumber: true,
               title:
                 'What are your reasons for requiring more time to pay the ticketed amount(s)?',
               description:
@@ -138,7 +138,6 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count1B',
               visibleIf: '{count1} = "B"',
-              hideNumber: true,
               title: 'Why do you want to appear?',
               isRequired: false,
               choices: [
@@ -174,7 +173,6 @@ export const SurveyJson = {
               type: 'radiogroup',
               name: 'count2',
               title: 'For this offence, which do you agree?',
-              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -199,7 +197,6 @@ export const SurveyJson = {
               name: 'count2A',
               visibleIf: '{count2} = "A"',
               title: 'Which requests would you like to make?',
-              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -219,7 +216,6 @@ export const SurveyJson = {
                 'What are your reasons for a reduction in the ticketed amount(s)?',
               description:
                 'This reason must not contain a defence of the allegation',
-              hideNumber: true,
               isRequired: false,
               visibleIf: '{count2} = "A" and {count2A} contains "A1"',
             },
@@ -238,7 +234,6 @@ export const SurveyJson = {
               name: 'count2B',
               visibleIf: '{count2} = "B"',
               title: 'Why do you want to appear?',
-              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -273,7 +268,6 @@ export const SurveyJson = {
               type: 'radiogroup',
               name: 'count3',
               title: 'For this offence, which do you agree?',
-              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -298,7 +292,6 @@ export const SurveyJson = {
               name: 'count3A',
               visibleIf: '{count3} = "A"',
               title: 'Which requests would you like to make?',
-              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -319,7 +312,6 @@ export const SurveyJson = {
               description:
                 'This reason must not contain a defence of the allegation',
               isRequired: false,
-              hideNumber: true,
               visibleIf: '{count3} = "A" and {count3A} contains "A1"',
             },
             {
@@ -330,7 +322,6 @@ export const SurveyJson = {
               description:
                 'This reason must not contain a defence of the allegation',
               isRequired: false,
-              hideNumber: true,
               visibleIf: '{count3} = "A" and {count3A} contains "A2"',
             },
             {
@@ -339,7 +330,6 @@ export const SurveyJson = {
               visibleIf: '{count3} = "B"',
               title: 'Why do you want to appear?',
               isRequired: false,
-              hideNumber: true,
               choices: [
                 {
                   value: 'B1',
@@ -380,7 +370,6 @@ export const SurveyJson = {
           name: 'lawyerYn',
           title: 'Do you intend to be represented at the hearing by a lawyer?',
           isRequired: false,
-          hideNumber: true,
           choices: [
             {
               value: 'Y',
@@ -398,7 +387,6 @@ export const SurveyJson = {
           name: 'interpreterYn',
           title: 'Do you require an interpreter at the hearing?',
           isRequired: false,
-          hideNumber: true,
           choices: [
             {
               value: 'Y',
@@ -416,7 +404,6 @@ export const SurveyJson = {
           name: 'interpreterLang',
           title: 'Language',
           visibleIf: '{interpreterYn} = "Y"',
-          hideNumber: true,
           choices: [
             {
               value: 'L1',
@@ -433,7 +420,6 @@ export const SurveyJson = {
           name: 'witnessYn',
           title: 'Do you intend to call a witness at the hearing?',
           isRequired: false,
-          hideNumber: true,
           choices: [
             {
               value: 'Y',
@@ -458,7 +444,7 @@ export const SurveyJson = {
           name: 'alert_info',
           html: `
           <div>
-          <h2 class="mb-1">Dispute Overiew</h2>
+          <h2 class="mb-1">Dispute Overview</h2>
           <div class="text-muted m-2">
           Please review the following information. You can go back to any step to
           update the information
@@ -470,7 +456,6 @@ export const SurveyJson = {
           name: 'info_violationTicketNumber',
           type: 'text',
           title: 'Violation Ticket Number',
-          hideNumber: true,
           readOnly: true,
         },
         {
@@ -478,15 +463,15 @@ export const SurveyJson = {
           type: 'text',
           title: 'Violation Date and Time',
           startWithNewLine: false,
-          hideNumber: true,
           readOnly: true,
         },
         {
           type: 'checkbox',
           name: 'certifyCorrect',
           title: 'Certification',
-          isRequired: false,
-          hideNumber: true,
+          isRequired: true,
+          requiredErrorText:
+            'The information must be certified before you can submit the dispute',
           choices: [
             {
               value: 'true',
@@ -504,6 +489,7 @@ export const SurveyJson = {
 
 /*
 
+  showPreviewBeforeComplete: 'showAnsweredQuestions',
     {
       name: 'page1',
       elements: [

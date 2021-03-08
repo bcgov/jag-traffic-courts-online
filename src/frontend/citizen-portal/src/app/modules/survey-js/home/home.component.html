@@ -1,11 +1,14 @@
-<div class="container mt-4">
+<div class="container mt-4 mb-4">
   <app-page [busy]="busy">
     <app-tco-page-header>
       <ng-container header
         >BC Traffic Court Dispute
-        <small
-          >Ticket {{ dispute?.ticket.violationTicketNumber }}</small
-        ></ng-container
+        <mat-chip-list>
+          <mat-chip>eTicket</mat-chip>
+          <mat-chip color="primary" selected
+            >Ticket #{{ dispute?.ticket.violationTicketNumber }}</mat-chip
+          >
+        </mat-chip-list></ng-container
       >
     </app-tco-page-header>
 
