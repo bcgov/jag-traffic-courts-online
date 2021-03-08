@@ -9,6 +9,12 @@ import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
 import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { Subscription, timer } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastService } from '@core/services/toast.service';
+import { DisputeRoutes } from '@dispute/dispute.routes';
 
 @Component({
   selector: 'app-home',
@@ -17,11 +23,14 @@ import { Ticket } from '@shared/models/ticket.model';
   providers: [FormatDatePipe, PhonePipe],
 })
 export class HomeComponent implements OnInit {
-  public isComplete = false;
+  public busy: Subscription;
+  public dispute: Dispute;
 
   constructor(
     private logger: LoggerService,
-    private route: Router,
+    private dialog: MatDialog,
+    private router: Router,
+    private toastService: ToastService,
     private datePipe: FormatDatePipe,
     private phonePipe: PhonePipe,
     private surveyResource: SurveyResourceService
@@ -35,8 +44,11 @@ export class HomeComponent implements OnInit {
       'btn btn-outline-secondary';
 
     const tcoSurvey = new Survey.Model(SurveyJson);
+    tcoSurvey.showCompletedPage = false;
+    tcoSurvey.completeText = 'Submit Dispute';
 
     this.surveyResource.getDispute().subscribe((dispute) => {
+      this.dispute = dispute;
       const ticket = dispute.ticket;
 
       tcoSurvey.setValue(
@@ -100,24 +112,16 @@ export class HomeComponent implements OnInit {
         const question = tcoSurvey.getQuestionByName(
           'alert_info_count' + cnt.countNo
         );
-        if (cnt.countNo === 1) {
-          question.html =
-            '<div class="alert alert-primary"><h1 class="alert-heading">Violation Ticket Offences</h1>' +
-            '<p class="mt-2 mb-0">Look at each of the offences on your ticket and please answer the following questions.</p></div>' +
-            '<br/><br/><div class="alert alert-primary"><h1 class="alert-heading">Offence #' +
-            cnt.countNo +
-            '<small>' +
-            cnt.description +
-            '</small></h1>' +
-            '</div>';
-        } else {
-          question.html =
-            '<div class="alert alert-primary"><h1 class="alert-heading">Offence #' +
-            cnt.countNo +
-            '<small>' +
-            cnt.description +
-            '</small></h1></div>';
-        }
+        question.html =
+          `<div>
+          <h2 class="mb-1">Offence #` +
+          cnt.countNo +
+          `<small class="ml-2">` +
+          cnt.description +
+          `</small>
+          </h2>
+          <hr class="m-0" style="border: 1px solid #ffb200;" />
+        </div>`;
       });
 
       Survey.SurveyNG.render('surveyContainer', {
@@ -129,10 +133,47 @@ export class HomeComponent implements OnInit {
     // survey.setValue('disputeYn', false);
     // survey.focusQuestion("disputeYn");
 
+    tcoSurvey.onCompleting.add((survey, options) => {
+      this.logger.info(
+        'onCompleting Survey JSON:',
+        JSON.stringify(survey.data, null, 3)
+      );
+
+      if (!!tcoSurvey.isConfirming) return;
+      tcoSurvey.isConfirming = true;
+      options.allowComplete = false;
+
+      const data: DialogOptions = {
+        title: 'Submit Dispute',
+        message:
+          'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
+        actionText: 'Submit Dispute',
+      };
+
+      this.dialog
+        .open(ConfirmDialogComponent, { data })
+        .afterClosed()
+        .subscribe((response: boolean) => {
+          if (response) {
+            const source = timer(1000);
+            this.busy = source.subscribe((val) => {
+              tcoSurvey.doComplete();
+              this.toastService.openSuccessToast('Dispute has been submitted');
+              this.router.navigate([
+                DisputeRoutes.routePath(DisputeRoutes.LIST),
+              ]);
+            });
+          } else {
+            tcoSurvey.isConfirming = false;
+          }
+        });
+    });
+
     tcoSurvey.onComplete.add((survey) => {
-      this.logger.info('Survey JSON:', JSON.stringify(survey.data, null, 3));
-      this.isComplete = true;
-      this.route.navigate(['dispute/list']);
+      this.logger.info(
+        'onComplete Survey JSON:',
+        JSON.stringify(survey.data, null, 3)
+      );
     });
   }
 }

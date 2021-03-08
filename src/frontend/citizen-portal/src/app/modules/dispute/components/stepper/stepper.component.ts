@@ -15,7 +15,6 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Dispute } from '@shared/models/dispute.model';
-import { Ticket } from '@shared/models/ticket.model';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 
 export class StepData {

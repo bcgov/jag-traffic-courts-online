@@ -8,7 +8,6 @@
   </app-page-header>
 
   <section class="mb-2">
-    <h3>Dispute Information</h3>
     <div class="row">
       <div class="col-6 mb-2">Violation Ticket Number</div>
       <div class="col-6 text-right mb-2">
@@ -22,6 +21,12 @@
         {{ ticket?.violationTime }}
       </div>
     </div>
+    <div class="row">
+      <div class="col-6 mb-2">Contact Email</div>
+      <div class="col-6 text-right">
+        {{ dispute?.emailAddress | default }}
+      </div>
+    </div>
     <ng-container *ngIf="count1Data.countNo">
       <div class="row">
         <div class="col-12 mb-2">
@@ -30,8 +35,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">&nbsp;</div>
-        <div class="col-10 text-left mb-2">
+        <div class="offset-2 col-10 text-left mb-2">
           <div [innerHTML]="count1Summary | safeHtml"></div>
         </div></div
     ></ng-container>
@@ -43,8 +47,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">&nbsp;</div>
-        <div class="col-10 text-left mb-2">
+        <div class="offset-2 col-10 text-left mb-2">
           <div [innerHTML]="count2Summary | safeHtml"></div>
         </div></div
     ></ng-container>
@@ -56,11 +59,20 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">&nbsp;</div>
-        <div class="col-10 text-left mb-2">
+        <div class="offset-2 col-10 text-left mb-2">
           <div [innerHTML]="count3Summary | safeHtml"></div>
         </div></div
     ></ng-container>
+
+    <div class="row">
+      <div class="col-12">Court Information</div>
+    </div>
+    <div class="row">
+      <div class="offset-2 col-10 text-left mb-2">
+        <div>A lawyer will be present</div>
+        <div>A witness will be called</div>
+      </div>
+    </div>
   </section>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>

@@ -62,10 +62,11 @@ export class StepOverviewComponent
     this.count3Form = this.disputeFormStateService.stepCount3Form;
     this.courtForm = this.disputeFormStateService.stepCourtForm;
 
+    this.dispute = this.disputeService.dispute;
     this.ticket = this.disputeService.dispute?.ticket;
 
     // this.disputeFormStateService.setForm(this.disputeFormStateService.json);
-    this.nextBtnLabel = 'Submit';
+    this.nextBtnLabel = 'Submit Dispute';
   }
 
   public onBack() {

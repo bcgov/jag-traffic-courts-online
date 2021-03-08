@@ -1,8 +1,11 @@
 export const SurveyJson = {
   showProgressBar: 'top',
+  progressBarType: 'buttons',
   pages: [
     {
       name: 'page1',
+      navigationTitle: 'Violation Ticket',
+      navigationDescription: 'Summary',
       elements: [
         {
           name: 'panel1',
@@ -11,11 +14,15 @@ export const SurveyJson = {
             {
               type: 'html',
               name: 'alert_info',
-              html: `<div class="alert alert-primary">
-                    <h1 class="alert-heading">Violation Ticket Information</h1>
-                    <p class="mt-2 mb-0">Here is a summary of your ticket information.
-                    Ensure that the specifics of the ticket are correct.</p>
-                    </div>`,
+              html: `
+                <div>
+                  <h2 class="mb-1">Violation Ticket Information</h2>
+                  <div class="text-muted m-2">
+                  Here is a summary of your ticket information. Ensure that the specifics of the ticket are correct.
+                  </div>
+                  <hr class="m-0" style="border: 1px solid #ffb200;" />
+                </div>
+             `,
             },
             {
               name: 'info_violationTicketNumber',
@@ -52,6 +59,7 @@ export const SurveyJson = {
     },
     {
       name: 'pageCount1',
+      navigationTitle: 'Offence #1',
       elements: [
         {
           type: 'panel',
@@ -66,6 +74,7 @@ export const SurveyJson = {
               type: 'radiogroup',
               name: 'count1',
               title: 'For this offence, which do you agree?',
+              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -89,6 +98,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count1A',
               visibleIf: '{count1} = "A"',
+              hideNumber: true,
               title: 'Which requests would you like to make?',
               isRequired: false,
               choices: [
@@ -105,6 +115,7 @@ export const SurveyJson = {
             {
               type: 'comment',
               name: 'count1_reduction_reason',
+              hideNumber: true,
               title:
                 'What are your reasons for a reduction in the ticketed amount(s)?',
               description:
@@ -115,6 +126,7 @@ export const SurveyJson = {
             {
               type: 'comment',
               name: 'count1_time_reason',
+              hideNumber: true,
               title:
                 'What are your reasons for requiring more time to pay the ticketed amount(s)?',
               description:
@@ -126,6 +138,7 @@ export const SurveyJson = {
               type: 'checkbox',
               name: 'count1B',
               visibleIf: '{count1} = "B"',
+              hideNumber: true,
               title: 'Why do you want to appear?',
               isRequired: false,
               choices: [
@@ -145,6 +158,7 @@ export const SurveyJson = {
     },
     {
       name: 'pageCount2',
+      navigationTitle: 'Offence #2',
       visibleIf: '{numberOfCounts} > 1',
       elements: [
         {
@@ -160,6 +174,7 @@ export const SurveyJson = {
               type: 'radiogroup',
               name: 'count2',
               title: 'For this offence, which do you agree?',
+              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -184,6 +199,7 @@ export const SurveyJson = {
               name: 'count2A',
               visibleIf: '{count2} = "A"',
               title: 'Which requests would you like to make?',
+              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -203,6 +219,7 @@ export const SurveyJson = {
                 'What are your reasons for a reduction in the ticketed amount(s)?',
               description:
                 'This reason must not contain a defence of the allegation',
+              hideNumber: true,
               isRequired: false,
               visibleIf: '{count2} = "A" and {count2A} contains "A1"',
             },
@@ -221,6 +238,7 @@ export const SurveyJson = {
               name: 'count2B',
               visibleIf: '{count2} = "B"',
               title: 'Why do you want to appear?',
+              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -239,6 +257,7 @@ export const SurveyJson = {
     },
     {
       name: 'pageCount3',
+      navigationTitle: 'Offence #3',
       visibleIf: '{numberOfCounts} > 2',
       elements: [
         {
@@ -254,6 +273,7 @@ export const SurveyJson = {
               type: 'radiogroup',
               name: 'count3',
               title: 'For this offence, which do you agree?',
+              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -278,6 +298,7 @@ export const SurveyJson = {
               name: 'count3A',
               visibleIf: '{count3} = "A"',
               title: 'Which requests would you like to make?',
+              hideNumber: true,
               isRequired: false,
               choices: [
                 {
@@ -298,6 +319,7 @@ export const SurveyJson = {
               description:
                 'This reason must not contain a defence of the allegation',
               isRequired: false,
+              hideNumber: true,
               visibleIf: '{count3} = "A" and {count3A} contains "A1"',
             },
             {
@@ -308,6 +330,7 @@ export const SurveyJson = {
               description:
                 'This reason must not contain a defence of the allegation',
               isRequired: false,
+              hideNumber: true,
               visibleIf: '{count3} = "A" and {count3A} contains "A2"',
             },
             {
@@ -316,6 +339,7 @@ export const SurveyJson = {
               visibleIf: '{count3} = "B"',
               title: 'Why do you want to appear?',
               isRequired: false,
+              hideNumber: true,
               choices: [
                 {
                   value: 'B1',
@@ -333,23 +357,30 @@ export const SurveyJson = {
     },
     {
       name: 'pageCourtInfo',
+      navigationTitle: 'Court Information',
       visibleIf:
         '({count1} and {count1} != "A") or ({count2} and {count2} != "A") or ({count3} and {count3} != "A")',
       elements: [
         {
           type: 'html',
           name: 'alert_info',
-          html: `<div class="alert alert-primary">
-          <h1 class="alert-heading">Disputing your Ticket in Court</h1>
-          <p class="mt-2 mb-0">Based upon your answers to the previous questions, you have decided to dispute your ticket in Court.
-          Please answer the following questions.</p>
-          </div>`,
+          html: `
+            <div>
+              <h2 class="mb-1">Disputing your Ticket in Court</h2>
+              <div class="text-muted m-2">
+              Based upon your answers to the previous questions, you have decided to dispute your ticket in Court.
+            Please answer the following questions.
+              </div>
+              <hr class="m-0" style="border: 1px solid #ffb200;" />
+            </div>
+          `,
         },
         {
           type: 'radiogroup',
           name: 'lawyerYn',
           title: 'Do you intend to be represented at the hearing by a lawyer?',
           isRequired: false,
+          hideNumber: true,
           choices: [
             {
               value: 'Y',
@@ -367,6 +398,7 @@ export const SurveyJson = {
           name: 'interpreterYn',
           title: 'Do you require an interpreter at the hearing?',
           isRequired: false,
+          hideNumber: true,
           choices: [
             {
               value: 'Y',
@@ -384,6 +416,7 @@ export const SurveyJson = {
           name: 'interpreterLang',
           title: 'Language',
           visibleIf: '{interpreterYn} = "Y"',
+          hideNumber: true,
           choices: [
             {
               value: 'L1',
@@ -400,30 +433,7 @@ export const SurveyJson = {
           name: 'witnessYn',
           title: 'Do you intend to call a witness at the hearing?',
           isRequired: false,
-          choices: [
-            {
-              value: 'Y',
-              text: 'Yes',
-            },
-            {
-              value: 'N',
-              text: 'No',
-            },
-          ],
-          colCount: 0,
-        },
-      ],
-    },
-    {
-      name: 'pageNoCourt',
-      visibleIf:
-        '({count1} == "A" or !{count1}) and ({count2} == "A" or !{count2}) and ({count3} == "A" or !{count3})',
-      elements: [
-        {
-          type: 'radiogroup',
-          name: 'xxYn',
-          title: 'What is next?',
-          isRequired: false,
+          hideNumber: true,
           choices: [
             {
               value: 'Y',
@@ -440,22 +450,43 @@ export const SurveyJson = {
     },
     {
       name: 'pageConfirmation',
+      navigationTitle: 'Overview',
+      navigationDescription: 'Summary',
       elements: [
         {
           type: 'html',
           name: 'alert_info',
-          html: `<div class="alert alert-primary">
-          <h1 class="alert-heading">Dispute Overiew</h1>
-          <p class="mt-2 mb-0">
+          html: `
+          <div>
+          <h2 class="mb-1">Dispute Overiew</h2>
+          <div class="text-muted m-2">
           Please review the following information. You can go back to any step to
-          update the information.</p>
+          update the information
+          </div>
+          <hr class="m-0" style="border: 1px solid #ffb200;" />
           </div>`,
+        },
+        {
+          name: 'info_violationTicketNumber',
+          type: 'text',
+          title: 'Violation Ticket Number',
+          hideNumber: true,
+          readOnly: true,
+        },
+        {
+          name: 'info_violationDate',
+          type: 'text',
+          title: 'Violation Date and Time',
+          startWithNewLine: false,
+          hideNumber: true,
+          readOnly: true,
         },
         {
           type: 'checkbox',
           name: 'certifyCorrect',
-          title: 'Please verify the following',
+          title: 'Certification',
           isRequired: false,
+          hideNumber: true,
           choices: [
             {
               value: 'true',
