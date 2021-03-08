@@ -16,14 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Ensure actor is clean
-      #   id: clean-actor
-      #   env:
-      #     COMPOSE_DOCKER_CLI_BUILD: 1
-      #     DOCKER_BUILDKIT: 1
-      #   run: |          
-      #     docker system prune -a --force
-
       - name: Build the Image
         id: build-image
         env:
