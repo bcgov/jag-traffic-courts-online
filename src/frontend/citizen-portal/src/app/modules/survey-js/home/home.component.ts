@@ -139,7 +139,9 @@ export class HomeComponent implements OnInit {
         JSON.stringify(survey.data, null, 3)
       );
 
-      if (!!tcoSurvey.isConfirming) return;
+      if (!!tcoSurvey.isConfirming) {
+        return;
+      }
       tcoSurvey.isConfirming = true;
       options.allowComplete = false;
 
