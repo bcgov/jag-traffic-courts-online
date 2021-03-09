@@ -89,6 +89,7 @@ export class MockDisputeService {
   }
 
   private createTicket(): Ticket {
+    // tslint:disable
     return {
       id: faker.random.number(),
       userId: faker.random.uuid(),
@@ -146,6 +147,7 @@ export class MockDisputeService {
         },
       ],
     };
+    // tslint:enable
   }
 
   private createDispute(): Dispute {

@@ -21,14 +21,14 @@ const routes: Routes = [
         component: FindTicketComponent,
       },
       {
-        path: DisputeRoutes.STEPPER,
-        component: StepperComponent,
-      },
-      {
         path: DisputeRoutes.SUCCESS,
         component: DisputeSubmitComponent,
       },
     ],
+  },
+  {
+    path: DisputeRoutes.STEPPER,
+    component: StepperComponent,
   },
 ];
 

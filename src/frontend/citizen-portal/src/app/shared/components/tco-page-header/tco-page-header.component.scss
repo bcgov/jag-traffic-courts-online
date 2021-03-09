@@ -17,3 +17,18 @@ button a {
 .heading-hr {
   border: 1px solid theme-palette(yellow);
 }
+
+.mat-flat-button {
+  width: 100%;
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  &.light {
+    background-color: theme-palette(blue, light);
+    color: white;
+  }
+}
