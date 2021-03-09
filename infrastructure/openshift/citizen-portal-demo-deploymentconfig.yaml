@@ -1,0 +1,47 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    app: citizen-portal-demo
+  name: citizen-portal-demo
+spec:
+  replicas: 1
+  selector:
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: citizen-portal-demo
+    spec:
+      containers:
+      - args:
+        - nginx
+        - -g
+        - daemon off;
+        env:
+        - name: USE_KEYCLOAK
+          value: "false"
+        - name: USE_MOCK_SERVICES
+          value: "true"
+        image: ' '
+        name: citizen-portal-demo
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - citizen-portal-demo
+      from:
+        kind: ImageStreamTag
+        namespace: 0198bb-tools
+        name: citizen-portal-demo:latest
+    type: ImageChange
+status: {}
