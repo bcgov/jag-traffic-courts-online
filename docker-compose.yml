@@ -116,7 +116,7 @@ services:
       - 8088:8088
     networks:
       - traffic-court-net
-  
+
 networks:
   traffic-court-net:
     driver: "bridge"
