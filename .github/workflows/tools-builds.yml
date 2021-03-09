@@ -6,7 +6,7 @@ on:
     branches: [tools]
 
 jobs:
-  build-main:
+  build-tools:
     runs-on: ubuntu-20.04
     env:
       VERSION: v1

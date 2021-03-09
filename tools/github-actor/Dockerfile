@@ -20,9 +20,13 @@ RUN apt-get update \
         jq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd -m github \
+    && useradd -u 1001 -m github \
     && usermod -aG sudo github \
     && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN touch /home/github/.env && \
+    touch /home/github/.path && \
+    chown -R 1001:1001 /home/github && \
+    chmod -R 777 /home/github
 
 USER github
 WORKDIR /home/github
