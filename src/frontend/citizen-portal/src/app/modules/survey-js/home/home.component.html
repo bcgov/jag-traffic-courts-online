@@ -1,31 +1,15 @@
-<div class="container">
-  <div class="row mt-4 mb-4">
-    <div class="col-lg-2">
-      <div class="logo mt-4">
-        <img
-          src="/assets/traffic_light.jpg"
-          style="width: 100px"
-          alt="Traffic Court Logo"
-        />
-      </div>
-    </div>
+<app-page [busy]="busy">
+  <app-tco-page-header>
+    <ng-container header
+      >BC Traffic Court Dispute
+      <mat-chip-list>
+        <mat-chip>eTicket</mat-chip>
+        <mat-chip color="primary" selected
+          >Ticket #{{ dispute?.ticket.violationTicketNumber }}</mat-chip
+        >
+      </mat-chip-list></ng-container
+    >
+  </app-tco-page-header>
 
-    <div class="col-lg-10">
-      <app-page [busy]="busy">
-        <app-tco-page-header>
-          <ng-container header
-            >BC Traffic Court Dispute
-            <mat-chip-list>
-              <mat-chip>eTicket</mat-chip>
-              <mat-chip color="primary" selected
-                >Ticket #{{ dispute?.ticket.violationTicketNumber }}</mat-chip
-              >
-            </mat-chip-list></ng-container
-          >
-        </app-tco-page-header>
-
-        <div id="surveyContainer"></div>
-      </app-page>
-    </div>
-  </div>
-</div>
+  <div id="surveyContainer"></div>
+</app-page>
