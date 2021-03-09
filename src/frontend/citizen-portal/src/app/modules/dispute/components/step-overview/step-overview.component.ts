@@ -27,10 +27,10 @@ export class StepOverviewComponent
   public dispute: Dispute;
   public ticket: Ticket;
 
-  private count1Form: FormGroup;
-  private count2Form: FormGroup;
-  private count3Form: FormGroup;
-  private courtForm: FormGroup;
+  public count1Form: FormGroup;
+  public count2Form: FormGroup;
+  public count3Form: FormGroup;
+  public courtForm: FormGroup;
 
   constructor(
     protected route: ActivatedRoute,
@@ -87,31 +87,127 @@ export class StepOverviewComponent
     return this.form.get('certifyCorrect') as FormControl;
   }
 
-  public get count1Summary(): string {
-    return this.disputeFormStateService.getCountSummary(1);
+  public get cnt1_countNo(): FormControl {
+    return this.count1Form.get('countNo') as FormControl;
   }
 
-  public get count2Summary(): string {
-    return this.disputeFormStateService.getCountSummary(2);
+  public get cnt1_description(): FormControl {
+    return this.count1Form.get('description') as FormControl;
   }
 
-  public get count3Summary(): string {
-    return this.disputeFormStateService.getCountSummary(3);
+  public get cnt1_count(): FormControl {
+    return this.count1Form.get('count') as FormControl;
   }
 
-  public get count1Data(): Count {
-    return this.count1Form.value;
+  public get cnt1_count1A1(): FormControl {
+    return this.count1Form.get('count1A1') as FormControl;
   }
 
-  public get count2Data(): Count {
-    return this.count2Form.value;
+  public get cnt1_count1A2(): FormControl {
+    return this.count1Form.get('count1A2') as FormControl;
   }
 
-  public get count3Data(): Count {
-    return this.count3Form.value;
+  public get cnt1_reductionReason(): FormControl {
+    return this.count1Form.get('reductionReason') as FormControl;
   }
 
-  public get court(): any {
-    return this.courtForm.value;
+  public get cnt1_timeReason(): FormControl {
+    return this.count1Form.get('timeReason') as FormControl;
+  }
+
+  public get cnt1_count1B1(): FormControl {
+    return this.count1Form.get('count1B1') as FormControl;
+  }
+
+  public get cnt1_count1B2(): FormControl {
+    return this.count1Form.get('count1B2') as FormControl;
+  }
+
+  public get cnt2_countNo(): FormControl {
+    return this.count2Form.get('countNo') as FormControl;
+  }
+
+  public get cnt2_description(): FormControl {
+    return this.count2Form.get('description') as FormControl;
+  }
+
+  public get cnt2_count(): FormControl {
+    return this.count2Form.get('count') as FormControl;
+  }
+
+  public get cnt2_count1A1(): FormControl {
+    return this.count2Form.get('count1A1') as FormControl;
+  }
+
+  public get cnt2_count1A2(): FormControl {
+    return this.count2Form.get('count1A2') as FormControl;
+  }
+
+  public get cnt2_reductionReason(): FormControl {
+    return this.count2Form.get('reductionReason') as FormControl;
+  }
+
+  public get cnt2_timeReason(): FormControl {
+    return this.count2Form.get('timeReason') as FormControl;
+  }
+
+  public get cnt2_count1B1(): FormControl {
+    return this.count2Form.get('count1B1') as FormControl;
+  }
+
+  public get cnt2_count1B2(): FormControl {
+    return this.count2Form.get('count1B2') as FormControl;
+  }
+
+  public get cnt3_countNo(): FormControl {
+    return this.count3Form.get('countNo') as FormControl;
+  }
+
+  public get cnt3_description(): FormControl {
+    return this.count3Form.get('description') as FormControl;
+  }
+
+  public get cnt3_count(): FormControl {
+    return this.count3Form.get('count') as FormControl;
+  }
+
+  public get cnt3_count1A1(): FormControl {
+    return this.count3Form.get('count1A1') as FormControl;
+  }
+
+  public get cnt3_count1A2(): FormControl {
+    return this.count3Form.get('count1A2') as FormControl;
+  }
+
+  public get cnt3_reductionReason(): FormControl {
+    return this.count3Form.get('reductionReason') as FormControl;
+  }
+
+  public get cnt3_timeReason(): FormControl {
+    return this.count3Form.get('timeReason') as FormControl;
+  }
+
+  public get cnt3_count1B1(): FormControl {
+    return this.count3Form.get('count1B1') as FormControl;
+  }
+
+  public get cnt3_count1B2(): FormControl {
+    return this.count3Form.get('count1B2') as FormControl;
+  }
+
+  public get lawyerPresent(): FormControl {
+    return this.courtForm.get('lawyerPresent') as FormControl;
+  }
+
+  public get interpreterRequired(): FormControl {
+    return this.courtForm.get('interpreterRequired') as FormControl;
+  }
+
+  public get interpreterLanguage(): FormControl {
+    return this.courtForm.get('interpreterLanguage') as FormControl;
+  }
+
+  public get callWitness(): FormControl {
+    return this.courtForm.get('callWitness') as FormControl;
   }
 }

@@ -53,57 +53,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     return this.stepCount1Form;
   }
 
-  public getCountSummary(countNo: number): string {
-    let countInfo;
-    if (countNo === 2) {
-      countInfo = this.stepCount2Form.getRawValue();
-    } else if (countNo === 2) {
-      countInfo = this.stepCount3Form.getRawValue();
-    } else {
-      countInfo = this.stepCount1Form.getRawValue();
-    }
-
-    if (!countInfo) {
-      return null;
-    }
-
-    let summary: string;
-    if (countInfo.count === 'A') {
-      summary =
-        'I agree that I committed this offence, and I do not want to appear in court.';
-
-      if (countInfo.count1A1) {
-        summary +=
-          ' I request a reduction of the ticketed amount for the following reason:';
-        summary += '<br/><small>';
-        summary += countInfo.reductionReason;
-        summary += '</small><br/>';
-      }
-      if (countInfo.count1A2) {
-        summary +=
-          ' I request time to pay the ticketed amount for the following reason:';
-        summary += '<br/><small>';
-        summary += countInfo.timeReason;
-        summary += '</small><br/>';
-      }
-    } else if (countInfo.count === 'A') {
-      summary =
-        'I agree that I committed this offence, and I want to appear in court.';
-
-      if (countInfo.count1B1) {
-        summary +=
-          'I would like to request a reduction of the ticketed amount.';
-      }
-      if (countInfo.count1B2) {
-        summary += 'I would like to request time to pay the ticketed amount';
-      }
-    } else {
-      summary = 'I do not agree that I committed this offence (allegation)';
-    }
-
-    return summary;
-  }
-
   /**
    * @description
    * Convert reactive form abstract controls into JSON.
