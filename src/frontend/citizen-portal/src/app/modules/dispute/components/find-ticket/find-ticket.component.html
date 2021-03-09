@@ -1,8 +1,11 @@
 <app-page>
-  <app-page-header>
-    <ng-container header>BC Traffic Court Online</ng-container>
-    <ng-container subHeader>Let's look for your ticket.</ng-container>
-  </app-page-header>
+  <app-tco-page-header>
+    <ng-container header>Find your BC Traffic Ticket</ng-container>
+    <ng-container subHeader
+      >Enter the Violation Ticket Number and the Violation Time to find your
+      ticket.</ng-container
+    >
+  </app-tco-page-header>
 
   <div class="container">
     <div class="row mt-4">
@@ -10,7 +13,7 @@
         <section>
           <div class="row mb-4">
             <div class="col">
-              <p>First, enter your Violation Ticket Number:</p>
+              <p>Violation Ticket Number:</p>
               <mat-form-field class="w-100">
                 <input
                   matInput
@@ -33,7 +36,7 @@
           </div>
           <div class="row">
             <div class="col">
-              <p>Then enter your Violation Time:</p>
+              <p>Violation Time:</p>
               <mat-form-field class="w-100">
                 <input matInput type="time" />
                 <mat-error>Required</mat-error>

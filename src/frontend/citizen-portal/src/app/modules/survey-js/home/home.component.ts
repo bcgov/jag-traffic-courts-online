@@ -160,7 +160,7 @@ export class HomeComponent implements OnInit {
               tcoSurvey.doComplete();
               this.toastService.openSuccessToast('Dispute has been submitted');
               this.router.navigate([
-                DisputeRoutes.routePath(DisputeRoutes.LIST),
+                DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
               ]);
             });
           } else {

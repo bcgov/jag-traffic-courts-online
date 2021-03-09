@@ -77,7 +77,7 @@ export const SurveyJson = {
             {
               type: 'radiogroup',
               name: 'count1',
-              title: 'For this offence, which do you agree?',
+              title: 'For this offence:',
               isRequired: false,
               choices: [
                 {
@@ -172,7 +172,7 @@ export const SurveyJson = {
             {
               type: 'radiogroup',
               name: 'count2',
-              title: 'For this offence, which do you agree?',
+              title: 'For this offence:',
               isRequired: false,
               choices: [
                 {
@@ -267,7 +267,7 @@ export const SurveyJson = {
             {
               type: 'radiogroup',
               name: 'count3',
-              title: 'For this offence, which do you agree?',
+              title: 'For this offence:',
               isRequired: false,
               choices: [
                 {

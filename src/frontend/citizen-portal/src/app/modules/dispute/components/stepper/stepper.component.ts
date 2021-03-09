@@ -191,7 +191,9 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
           const source = timer(1000);
           this.busy = source.subscribe((val) => {
             this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.LIST)]);
+            this.router.navigate([
+              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
+            ]);
           });
         }
       });
