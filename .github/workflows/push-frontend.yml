@@ -1,4 +1,4 @@
-name: Build .NET API Image and Push to Openshift Registry
+name: Build NodeJS Image and Push to Openshift Registry
 on:
   push:
     branches: [main]
@@ -10,11 +10,20 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       VERSION: v1
-      IMAGE_NAME: dispute-api
+      IMAGE_NAME: citizen-portal
       IMAGE_TAGS: latest
 
+      
     steps:
       - uses: actions/checkout@v2
+
+      # - name: Ensure actor is clean
+      #   id: clean-actor
+      #   env:
+      #     COMPOSE_DOCKER_CLI_BUILD: 1
+      #     DOCKER_BUILDKIT: 1
+      #   run: |          
+      #     docker system prune -a --force
 
       - name: Build the Image
         id: build-image
@@ -23,8 +32,14 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-          docker-compose build ${{ env.IMAGE_NAME }}
-
+          docker-compose build \
+          --build-arg USE_MOCK_SERVICES=${{ secrets.USE_MOCK_SERVICES }} \
+          --build-arg USE_KEYCLOAK= "true" \
+          --build-arg API_URL=${{ secrets.API_URL }} \
+          --build-arg KEYCLOAK_URL=${{ secrets.KEYCLOAK_URL }} \
+          --build-arg KEYCLOAK_REALM=${{ secrets.KEYCLOAK_REALM }} \
+          --build-arg KEYCLOAK_CLIENT_ID=${ secrets.KEYCLOAK_CLIENT_ID }} \
+          ${{ env.IMAGE_NAME }} 
       - name: Tag the Image
         id: tag-image
         env:
