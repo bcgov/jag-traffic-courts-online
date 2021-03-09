@@ -1,4 +1,4 @@
-name: Build .NET API Image and Push to Openshift Registry
+name: Build NodeJS Image and Push to Openshift Registry
 on:
   push:
     branches: [main]
@@ -10,11 +10,19 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       VERSION: v1
-      IMAGE_NAME: dispute-api
+      IMAGE_NAME: citizen-portal
       IMAGE_TAGS: latest
 
     steps:
       - uses: actions/checkout@v2
+
+      # - name: Ensure actor is clean
+      #   id: clean-actor
+      #   env:
+      #     COMPOSE_DOCKER_CLI_BUILD: 1
+      #     DOCKER_BUILDKIT: 1
+      #   run: |          
+      #     docker system prune -a --force
 
       - name: Build the Image
         id: build-image

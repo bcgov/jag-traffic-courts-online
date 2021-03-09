@@ -1,28 +1,32 @@
-apiVersion: apps.openshift.io/v1
+apiVersion: v1
 kind: DeploymentConfig
-metadata: 
-  creationTimestamp: null  
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --provider=openshift --build=deploy-config
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dispute-api
   name: dispute-api
 spec:
+  replicas: 1
   selector:
-    app: dispute-api
-  replicas: 1  
+    io.kompose.service: dispute-api
   strategy:
     resources: {}
   template:
     metadata:
+      creationTimestamp: null
       labels:
-        app: dispute-api
-      creationTimestamp: null     
+        io.kompose.network/traffic-court-net: "true"
+        io.kompose.service: dispute-api
     spec:
       containers:
       - env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Development
         - name: SPLUNK_COLLECTOR_URL
-          value: ""
         - name: SPLUNK_TOKEN
-          value: ""
         image: ' '
         name: dispute-api
         ports:
@@ -38,7 +42,6 @@ spec:
       - dispute-api
       from:
         kind: ImageStreamTag
-        namespace: 0198bb-tools
         name: dispute-api:latest
     type: ImageChange
 status: {}

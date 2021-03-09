@@ -16,7 +16,7 @@ services:
       SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
       SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
     ports:
-      - "5000:80"
+      - "5000:8080"
     restart: always
     networks:
       - traffic-court-net
