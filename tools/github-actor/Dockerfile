@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM registry.redhat.io/rhel8/s2i-core
 
 ARG GITHUB_RUNNER_VERSION="2.165.2"
 ARG GITHUB_PAT "${GITHUB_PAT}"
@@ -12,14 +12,12 @@ ENV GITHUB_OWNER "${GITHUB_OWNER}"
 ENV GITHUB_REPOSITORY "${GITHUB_REPOSITORY}"
 ENV RUNNER_WORKDIR "_work"
 
-RUN apt-get update \
-    && apt-get install -y \
+RUN yum update && \
+    yum install -y \
         curl \
         sudo \
         git \
         jq && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
     mkdir -p /github
 
 COPY *.sh /github

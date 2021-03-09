@@ -1,0 +1,14 @@
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+kind: NetworkSecurityPolicy
+metadata:
+  name: allow-ingress-from-github
+  namespace: 0198bb-tools
+spec:
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            project: project_name
+        podSelector:
+          matchLabels:
+            name: test-pods
