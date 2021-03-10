@@ -11,13 +11,14 @@ import { DashboardHeaderComponent } from './components/dashboard-header/dashboar
 import { DashboardMenuComponent } from './components/dashboard-menu/dashboard-menu.component';
 import { DashboardRouteMenuItemComponent } from './components/dashboard-route-menu-item/dashboard-route-menu-item.component';
 import { NgxProgressModule } from '@shared/modules/ngx-progress/ngx-progress.module';
+import { CoreModule } from '@core/core.module';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     DashboardHeaderComponent,
     DashboardMenuComponent,
-    DashboardRouteMenuItemComponent
+    DashboardRouteMenuItemComponent,
   ],
   imports: [
     CommonModule,
@@ -26,11 +27,9 @@ import { NgxProgressModule } from '@shared/modules/ngx-progress/ngx-progress.mod
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    NgxProgressModule
+    NgxProgressModule,
+    CoreModule,
   ],
-  exports: [
-    DashboardComponent,
-    DashboardHeaderComponent
-  ]
+  exports: [DashboardComponent, DashboardHeaderComponent],
 })
-export class DashboardModule { }
+export class DashboardModule {}

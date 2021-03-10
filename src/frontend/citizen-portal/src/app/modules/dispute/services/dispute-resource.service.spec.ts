@@ -19,7 +19,7 @@ describe('DisputeResourceService', () => {
       providers: [MockDisputeService],
     });
 
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
     service = TestBed.inject(DisputeResourceService);
     mock = TestBed.inject(MockDisputeService);
   });
