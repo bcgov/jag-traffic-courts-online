@@ -1,13 +1,11 @@
-name: Build NodeJS Image and Push to Openshift Registry
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
-    branches: [main]
+name: Frontend PR Build
+
+on: [pull_request]
 
 jobs:
-  build-main:
+  build:
     runs-on: [self-hosted, linux]
+
     env:
       VERSION: v1
       IMAGE_NAME: citizen-portal
@@ -31,20 +29,3 @@ jobs:
           --build-arg KEYCLOAK_REALM=${{ secrets.KEYCLOAK_REALM }} \
           --build-arg KEYCLOAK_CLIENT_ID=${{ secrets.KEYCLOAK_CLIENT_ID }} \
           ${{ env.IMAGE_NAME }} 
-
-      - name: Tag the Image
-        id: tag-image
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}
-
-      - name: Push To Registry via Docker
-        id: push-image-docker
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
-          docker image push --all-tags ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}
