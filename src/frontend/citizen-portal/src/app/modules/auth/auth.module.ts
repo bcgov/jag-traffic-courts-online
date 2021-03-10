@@ -7,6 +7,7 @@ import { DashboardModule } from '@dashboard/dashboard.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { AuthComponent } from './auth/auth.component';
 import { FindTicketComponent } from './find-ticket/find-ticket.component';
+import { CoreModule } from 'keycloak-angular';
 
 @NgModule({
   declarations: [AuthComponent, LandingComponent, FindTicketComponent],

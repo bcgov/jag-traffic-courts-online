@@ -8,7 +8,8 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
-import { KeycloakService } from 'keycloak-angular';
+import { User } from 'app/modules/auth/models/user.model';
+import { AuthService } from 'app/modules/auth/services/auth.service';
 
 @Component({
   selector: 'app-dashboard-header',
@@ -23,7 +24,7 @@ export class DashboardHeaderComponent implements OnInit {
   @Output() public toggle: EventEmitter<void>;
 
   constructor(
-    protected keycloakService: KeycloakService,
+    protected authService: AuthService,
     private cdRef: ChangeDetectorRef,
     protected logger: LoggerService
   ) {
@@ -31,20 +32,11 @@ export class DashboardHeaderComponent implements OnInit {
     this.toggle = new EventEmitter<void>();
   }
 
-  public ngOnInit(): Promise<void> {
-    try {
-      this.keycloakService.isLoggedIn().then((result) => {
-        if (result) {
-          this.keycloakService.loadUserProfile().then((profile) => {
-            this.username = `${profile.firstName} ${profile.lastName}`;
-            this.cdRef.detectChanges();
-          });
-        }
-      });
-    } catch (e) {
-      this.logger.error('Failed to load user details', e);
-    }
-    return Promise.resolve();
+  public ngOnInit() {
+    this.authService.getUser$().subscribe(({ firstName, lastName }: User) => {
+      this.username = `${firstName} ${lastName}`;
+    });
+    this.cdRef.detectChanges();
   }
 
   public toggleSidenav(): void {
@@ -52,7 +44,7 @@ export class DashboardHeaderComponent implements OnInit {
   }
 
   public onLogout(): Promise<void> {
-    this.keycloakService.logout(
+    this.authService.logout(
       `${window.location.protocol}//${window.location.host}`
     );
     return Promise.resolve();
