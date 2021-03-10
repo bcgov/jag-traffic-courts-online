@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-expressions */
 import { ChangeDetectorRef } from '@angular/core';
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CoreModule } from '@core/core.module';
 import { LoggerService } from '@core/services/logger.service';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
