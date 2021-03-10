@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { User } from 'app/modules/auth/models/user.model';
@@ -18,7 +19,7 @@ import { AuthService } from 'app/modules/auth/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardHeaderComponent implements OnInit {
-  public username: string;
+  public fullName: string;
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
@@ -33,10 +34,12 @@ export class DashboardHeaderComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.authService.getUser$().subscribe(({ firstName, lastName }: User) => {
-      this.username = `${firstName} ${lastName}`;
+    this.authService.getUser$().subscribe((user: User) => {
+      this.fullName = `${user?.firstName} ${user?.lastName}`;
+      console.log('DashboardHeaderComponent username', this.fullName);
+
+      this.cdRef.detectChanges();
     });
-    this.cdRef.detectChanges();
   }
 
   public toggleSidenav(): void {

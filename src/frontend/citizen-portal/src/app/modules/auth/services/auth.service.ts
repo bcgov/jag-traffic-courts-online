@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { KeycloakService } from 'keycloak-angular';
 import Keycloak, { KeycloakLoginOptions } from 'keycloak-js';
-import { from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../models/user.model';
 
@@ -36,34 +36,39 @@ export class AuthService {
   }
 
   public async getUser(forceReload?: boolean): Promise<User> {
-    // try {
-    // let profile = await this.keycloakService
-    //   .loadUserProfile()
-    //   .catch((error: any) => {
-    //     this.logger.error(`Error occurred during attempted authentication`);
-    //   });
+    const loggedIn = await this.keycloakService.isLoggedIn();
+    console.log('loggedIn', loggedIn);
+    // this.keycloakService.isLoggedIn().then((loggedIn) => {
+    //   console.log('loggedIn', loggedIn);
+    //   if (loggedIn) {
+    if (loggedIn) {
+      return this.keycloakService.loadUserProfile(forceReload) as Promise<User>;
+    }
 
-    this.keycloakService
-      .isLoggedIn()
-      .then((result) => {
-        if (result) {
-          this.keycloakService.loadUserProfile().then((profile) => {
-            let firstName;
-            let lastName;
-            firstName = profile.firstName;
-            lastName = profile.lastName;
-            return { firstName, lastName } as User;
-          });
-        }
-      })
-      .catch((error: any) => {
-        this.logger.error(`Error occurred during attempted authentication`);
-      });
+    return Promise.reject();
+    //   }
+    // });
+    // this.keycloakService.loadUserProfile(forceReload).then((profile) => {
+    //   console.log('profile', profile);
+    // const firstName = profile.firstName;
+    // const lastName = profile.lastName;
+    // const profile: User = {
+    //   firstName: 'mockFirstName',
+    //   lastName: 'mockLastName',
+    // };
+    //   return Promise.resolve(profile);
+    // });
+    // }
+    // })
+    // .catch((error: any) => {
+    //   this.logger.error(`Error occurred during attempted authentication`);
+    // });
     // } catch (e) {
     //   this.logger.error('Failed to load user details', e);
     //   return null;
     // }
-    return ({ firstname: '', lastName: '' } as unknown) as User;
+    // return Promise.resolve({ firstName: 'unknown', lastName: 'unknown' });
+    // return ({ firstname: 'unknown', lastName: 'unknown' } as unknown) as User;
   }
 
   public getUser$(forceReload?: boolean): Observable<User> {
