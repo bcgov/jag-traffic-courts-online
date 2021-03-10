@@ -24,7 +24,7 @@ jobs:
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
           cd tools
-          docker-compose -f tools\docker-compose.yml build \
+          docker-compose -f tools/docker-compose.yml build \
           --build-arg RUNNER_NAME=${{ secrets.RUNNER_NAME }} \
           --build-arg GITHUB_PAT=${{ secrets.RUNNER_PAT }} \
           --build-arg GITHUB_REPOSITORY=${{ secrets.RUNNER_REPOSITORY }} \ 
