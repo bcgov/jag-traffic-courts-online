@@ -81,9 +81,5 @@
     </section>
   </form>
 
-  <app-page-footer
-    [saveButtonLabel]="nextBtnLabel"
-    (save)="onSubmit()"
-    (back)="onBack()"
-  ></app-page-footer>
+  <app-page-footer (save)="onSubmit()" (back)="onBack()"></app-page-footer>
 </app-page>

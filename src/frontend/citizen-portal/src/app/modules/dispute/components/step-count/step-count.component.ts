@@ -24,8 +24,6 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public step: StepData;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
-  public nextBtnLabel: string;
-
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -57,8 +55,6 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     //   this.ticket = dispute?.ticket;
     //   this.form.patchValue(dispute);
     // });
-
-    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {

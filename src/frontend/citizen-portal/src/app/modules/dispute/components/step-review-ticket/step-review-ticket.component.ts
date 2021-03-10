@@ -23,7 +23,6 @@ export class StepReviewTicketComponent
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
-  public nextBtnLabel: string;
   public ticket: Ticket;
   public isSubmitted = false;
 
@@ -58,8 +57,6 @@ export class StepReviewTicketComponent
     //   this.ticket = dispute?.ticket;
     //   this.form.patchValue(dispute);
     // });
-
-    this.nextBtnLabel = 'Next';
   }
 
   public onSubmit(): void {
