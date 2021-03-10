@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: github-actor
-  replicas: 3
+  replicas: 5
   template:
     metadata:
       labels:
@@ -15,8 +15,13 @@ spec:
       containers:
         - name: github-actor
           image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/gitlab-actor
-          ports:
-            - containerPort: 8080
           envFrom:
             - secretRef:
                 name: github-actor
+          resources:
+            requests:
+              cpu: '1'
+              memory: 1Gi
+            limits:
+              cpu: '2'
+              memory: 4Gi
