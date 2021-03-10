@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CoreModule } from '@core/core.module';
@@ -44,14 +43,14 @@ describe('DashboardHeaderComponent', () => {
       Promise.resolve(false)
     );
     component.ngOnInit().then(() => {
-      expect(component.username).toBeUndefined;
+      expect(component.username).toBeUndefined();
     });
   });
 
   it('should call logout after angular call logout', () => {
     spyOn(testBedKeycloak, 'logout').and.callThrough();
     component.onLogout().then(() => {
-      expect(component.username).toBeUndefined;
+      expect(component.username).toBeUndefined();
       expect(testBedKeycloak.logout).toHaveBeenCalled();
     });
   });
