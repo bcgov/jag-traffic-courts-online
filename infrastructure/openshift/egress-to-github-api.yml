@@ -1,0 +1,9 @@
+kind: EgressNetworkPolicy
+apiVersion: v1
+metadata:
+  name: github-api 
+spec:
+  egress: 
+  - type: Allow
+    to:
+      dnsName: api.github.com

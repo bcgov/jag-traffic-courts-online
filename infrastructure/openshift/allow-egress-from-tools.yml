@@ -1,13 +1,38 @@
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+kind: NetworkSecurityPolicy
 metadata:
-  name: https
+  name: allow-egress-from-tools
+  generation: 1
+  managedFields:
+    - apiVersion: security.devops.gov.bc.ca/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          .: {}
+          'f:description': {}
+          'f:destination': {}
+          'f:source': {}
+      manager: OpenAPI-Generator
+      operation: Update
+    - apiVersion: security.devops.gov.bc.ca/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:finalizers':
+            .: {}
+            'v:"finalizer.security.devops.gov.bc.ca"': {}
+        'f:status':
+          .: {}
+          'f:conditions': {}
+      manager: ansible-operator
+      operation: Update
   namespace: 0198bb-tools
+  finalizers:
+    - finalizer.security.devops.gov.bc.ca
 spec:
-  podSelector: {}
-  egress:
-    - ports:
-        - protocol: TCP
-          port: 443
-  policyTypes:
-    - Egress
+  description: |
+    Allow all pods to talk to external systems
+  destination:
+    - - 'ext:network=any'
+  source:
+    - - $namespace=0198bb-tools
