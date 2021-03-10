@@ -1,16 +1,16 @@
-name: Build NodeJS Image and Push to Openshift Registry
+name: Build tools
 on:
   push:
-    branches: [main]
+    branches: [tools]
   workflow_dispatch:
-    branches: [main]
+    branches: [tools]
 
 jobs:
-  build-main:
+  build-tools:
     runs-on: ubuntu-20.04
     env:
       VERSION: v1
-      IMAGE_NAME: citizen-portal
+      IMAGE_NAME: github-actor
       IMAGE_TAGS: latest
      
     steps:
@@ -23,13 +23,12 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-          docker-compose build \
-          --build-arg USE_MOCK_SERVICES=${{ secrets.USE_MOCK_SERVICES }} \
-          --build-arg USE_KEYCLOAK= "true" \
-          --build-arg API_URL=${{ secrets.API_URL }} \
-          --build-arg KEYCLOAK_URL=${{ secrets.KEYCLOAK_URL }} \
-          --build-arg KEYCLOAK_REALM=${{ secrets.KEYCLOAK_REALM }} \
-          --build-arg KEYCLOAK_CLIENT_ID=${{ secrets.KEYCLOAK_CLIENT_ID }} \
+          cd tools
+          docker-compose -f ${{ github.workspace }}/tools/docker-compose.yml build \
+          --build-arg RUNNER_NAME=${{ secrets.RUNNER_NAME }} \
+          --build-arg GITHUB_PAT=${{ secrets.RUNNER_PAT }} \
+          --build-arg GITHUB_REPOSITORY=${{ secrets.RUNNER_REPOSITORY }} \ 
+          --build-arg GITHUB_OWNER=${{ secrets.RUNNER_OWNER }} \
             ${{ env.IMAGE_NAME }} 
 
       - name: Tag the Image
@@ -38,7 +37,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |
-          docker tag jag-traffic-courts-online_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}
+          docker tag tools_${{ env.IMAGE_NAME }} ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/${{ env.IMAGE_NAME }}
 
       - name: Push To Registry via Docker
         id: push-image-docker

@@ -1,0 +1,22 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: github-actor
+  namespace: 0198bb-tools
+spec:
+  selector:
+    app: github-actor
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: github-actor
+    spec:
+      containers:
+        - name: github-actor
+          image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/gitlab-actor
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: github-actor
