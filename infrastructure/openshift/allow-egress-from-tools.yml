@@ -1,10 +1,13 @@
-apiVersion: security.devops.gov.bc.ca/v1alpha1
-kind: NetworkSecurityPolicy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: allow-egress
+  name: https
   namespace: 0198bb-tools
 spec:
-  egress: 
-  - type: Allow
-    to:
-      cidrSelector: 0.0.0.0/0
+  podSelector: {}
+  egress:
+    - ports:
+        - protocol: TCP
+          port: 443
+  policyTypes:
+    - Egress

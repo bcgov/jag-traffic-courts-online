@@ -24,20 +24,13 @@ COPY *.sh /github
 
 RUN cd /github && \
     curl -Ls https://github.com/actions/runner/releases/download/v${GITHUB_RUNNER_VERSION}/actions-runner-linux-x64-${GITHUB_RUNNER_VERSION}.tar.gz | tar xz && \
-    ./bin/installdependencies.sh
-
-RUN touch /github/.env && \
+    ./bin/installdependencies.sh && \
+    touch /github/.env && \
     touch /github/.path && \
     chmod -R 777 /github && \
-    sudo chmod a+rwx /github
+    sudo chmod a+rwx /github 
 
-RUN cd /github && \
-    curl -Ls https://github.com/actions/runner/releases/download/v${GITHUB_RUNNER_VERSION}/actions-runner-linux-x64-${GITHUB_RUNNER_VERSION}.tar.gz | tar xz \
-    && sudo ./bin/installdependencies.sh
-
-RUN chmod -R a+rwx /github
-# USER github
-USER 100000000
+USER github
 WORKDIR /github
 
 # RUN curl -Ls https://github.com/actions/runner/releases/download/v${GITHUB_RUNNER_VERSION}/actions-runner-linux-x64-${GITHUB_RUNNER_VERSION}.tar.gz | tar xz \
