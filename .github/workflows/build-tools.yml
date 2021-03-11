@@ -30,8 +30,9 @@ jobs:
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
-        run: |          
-          docker-compose -f ${{ github.workspace }}/tools/docker-compose.yml build \
+        run: |
+          cd tools/github-actor          
+          docker build \
           --build-arg RUNNER_NAME="${{secrets.RUNNER_NAME}}" \
           --build-arg GITHUB_PAT="${{secrets.RUNNER_PAT}}" \
           --build-arg GITHUB_REPOSITORY="${{secrets.RUNNER_REPOSITORY}}" \ 
