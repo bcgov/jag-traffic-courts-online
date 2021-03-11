@@ -1,0 +1,44 @@
+name: Build tools
+on:
+  push:
+    branches: [tools]
+  workflow_dispatch:
+    branches: [tools]
+
+jobs:
+  build-tools:
+    runs-on: ubuntu-20.04
+    env:
+      VERSION: v1
+      IMAGE_TAGS: latest
+     
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the networking toolbox
+        id: build-network-tools
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          IMAGE_NAME: network-tester
+        run: |          
+          docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
+          docker-compose -f ${{ github.workspace }}/tools/docker-compose.yml build $IMAGE_NAME
+          docker tag tools_$IMAGE_NAME ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/$IMAGE_NAME
+          docker login ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }} -u ${{ secrets.OPENSHIFT_SA_USERNAME }} -p ${{ secrets.OPENSHIFT_SA_PASSWORD }}
+          docker image push --all-tags ${{ secrets.OPENSHIFT_EXTERNAL_REPOSITORY }}/${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}/$IMAGE_NAME
+
+      # - name: Build the Runner
+      #   id: build-runner
+      #   env:
+      #     COMPOSE_DOCKER_CLI_BUILD: 1
+      #     DOCKER_BUILDKIT: 1
+      #     IMAGE_NAME: github-actor
+      #   run: |          
+      #     docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
+      #     cd tools
+      #     docker-compose -f ${{ github.workspace }}/tools/docker-compose.yml build \
+      #     --build-arg RUNNER_NAME=${{ secrets.RUNNER_NAME }} \
+      #     --build-arg GITHUB_PAT=${{ secrets.RUNNER_PAT }} \
+      #     --build-arg GITHUB_REPOSITORY=${{ secrets.RUNNER_REPOSITORY }} \ 
+      #     --build-arg GITHUB_OWNER=${{ secrets.RUNNER_OWNER }} \
+      #       ${{ env.IMAGE_NAME }} 

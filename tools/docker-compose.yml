@@ -5,15 +5,7 @@ services:
 # #############################################################################################
 # ###                                 Github  BACKEND                                  ###
 # #############################################################################################
-  github-actor:
-    container_name: github-actor
+  networking-tools:
+    container_name: network-tester
     build:
-      context: ./github-actor
-    ports:
-      - "80:8080"
-    restart: always
-    volumes:
-      - github-actor:/github
-
-volumes:
-  github-actor:
+      context: ./network-tester
