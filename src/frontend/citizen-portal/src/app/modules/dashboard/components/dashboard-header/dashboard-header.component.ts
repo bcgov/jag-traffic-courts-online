@@ -36,8 +36,7 @@ export class DashboardHeaderComponent implements OnInit {
   public ngOnInit() {
     this.authService.getUser$().subscribe((user: User) => {
       this.fullName = `${user?.firstName} ${user?.lastName}`;
-      console.log('DashboardHeaderComponent username', this.fullName);
-
+      this.logger.info('DashboardHeaderComponent username', this.fullName);
       this.cdRef.detectChanges();
     });
   }

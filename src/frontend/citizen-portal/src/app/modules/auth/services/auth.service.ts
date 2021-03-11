@@ -38,37 +38,10 @@ export class AuthService {
   public async getUser(forceReload?: boolean): Promise<User> {
     const loggedIn = await this.keycloakService.isLoggedIn();
     console.log('loggedIn', loggedIn);
-    // this.keycloakService.isLoggedIn().then((loggedIn) => {
-    //   console.log('loggedIn', loggedIn);
-    //   if (loggedIn) {
     if (loggedIn) {
       return this.keycloakService.loadUserProfile(forceReload) as Promise<User>;
     }
-
     return Promise.reject();
-    //   }
-    // });
-    // this.keycloakService.loadUserProfile(forceReload).then((profile) => {
-    //   console.log('profile', profile);
-    // const firstName = profile.firstName;
-    // const lastName = profile.lastName;
-    // const profile: User = {
-    //   firstName: 'mockFirstName',
-    //   lastName: 'mockLastName',
-    // };
-    //   return Promise.resolve(profile);
-    // });
-    // }
-    // })
-    // .catch((error: any) => {
-    //   this.logger.error(`Error occurred during attempted authentication`);
-    // });
-    // } catch (e) {
-    //   this.logger.error('Failed to load user details', e);
-    //   return null;
-    // }
-    // return Promise.resolve({ firstName: 'unknown', lastName: 'unknown' });
-    // return ({ firstname: 'unknown', lastName: 'unknown' } as unknown) as User;
   }
 
   public getUser$(forceReload?: boolean): Observable<User> {
