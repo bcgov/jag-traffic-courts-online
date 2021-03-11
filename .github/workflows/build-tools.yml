@@ -9,6 +9,7 @@ jobs:
   build-tools:
     runs-on: ubuntu-20.04
     env:
+      name: tools
       VERSION: v1
       IMAGE_NAME: github-actor
       IMAGE_TAGS: latest
@@ -25,10 +26,10 @@ jobs:
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
           cd tools
           docker-compose -f ${{ github.workspace }}/tools/docker-compose.yml build \
-          --build-arg RUNNER_NAME=${{ secrets.RUNNER_NAME }} \
-          --build-arg GITHUB_PAT=${{ secrets.RUNNER_PAT }} \
-          --build-arg GITHUB_REPOSITORY=${{ secrets.RUNNER_REPOSITORY }} \ 
-          --build-arg GITHUB_OWNER=${{ secrets.RUNNER_OWNER }} \
+          --build-arg RUNNER_NAME="${{ secrets.RUNNER_NAME }}" \
+          --build-arg GITHUB_PAT="${{ secrets.RUNNER_PAT }} \"
+          --build-arg GITHUB_REPOSITORY="${{ secrets.RUNNER_REPOSITORY }}" \ 
+          --build-arg GITHUB_OWNER="${{ secrets.RUNNER_OWNER }}" \
             ${{ env.IMAGE_NAME }} 
 
       - name: Tag the Image

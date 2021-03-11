@@ -10,6 +10,6 @@ services:
     build:
       context: ./github-actor
       args:
-        GITHUB_PAT: ${RUNNER_PAT}
-        GITHUB_OWNER: ${RUNNER_OWNER}
-        GITHUB_REPOSITORY: ${RUNNER_REPOSITORY}
+        GITHUB_PAT: "${RUNNER_PAT}"
+        GITHUB_OWNER: "${RUNNER_OWNER}"
+        GITHUB_REPOSITORY: "${RUNNER_REPOSITORY}"
