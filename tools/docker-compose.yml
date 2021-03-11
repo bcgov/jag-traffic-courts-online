@@ -3,17 +3,13 @@ version: "3.0"
 services:
 
 # #############################################################################################
-# ###                                 Github  BACKEND                                  ###
+# ###                                 Github  BACKEND                                       ###
 # #############################################################################################
   github-actor:
     container_name: github-actor
     build:
       context: ./github-actor
-    ports:
-      - "80:8080"
-    restart: always
-    volumes:
-      - github-actor:/github
-
-volumes:
-  github-actor:
+      args:
+        GITHUB_PAT: ${GITHUB_TOKEN}
+        GITHUB_OWNER: ${GITHUB_OWNER}
+        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
