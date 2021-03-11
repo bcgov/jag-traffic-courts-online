@@ -5,8 +5,6 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  ChangeDetectorRef,
-  AfterViewInit,
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { User } from 'app/modules/auth/models/user.model';
@@ -16,7 +14,7 @@ import { AuthService } from 'app/modules/auth/services/auth.service';
   selector: 'app-dashboard-header',
   templateUrl: './dashboard-header.component.html',
   styleUrls: ['./dashboard-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DashboardHeaderComponent implements OnInit {
   public fullName: string;
@@ -26,7 +24,6 @@ export class DashboardHeaderComponent implements OnInit {
 
   constructor(
     protected authService: AuthService,
-    private cdRef: ChangeDetectorRef,
     protected logger: LoggerService
   ) {
     this.hasMobileSidemenu = true;
@@ -37,7 +34,6 @@ export class DashboardHeaderComponent implements OnInit {
     this.authService.getUser$().subscribe((user: User) => {
       this.fullName = `${user?.firstName} ${user?.lastName}`;
       this.logger.info('DashboardHeaderComponent username', this.fullName);
-      this.cdRef.detectChanges();
     });
   }
 

@@ -1,16 +1,22 @@
-import { ChangeDetectorRef } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  flush,
+  TestBed,
+} from '@angular/core/testing';
 import { CoreModule } from '@core/core.module';
 import { LoggerService } from '@core/services/logger.service';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { NgxProgressModule } from '@shared/modules/ngx-progress/ngx-progress.module';
-import { KeycloakService } from 'keycloak-angular';
-import { MockKeycloakService } from 'tests/mocks/mock-keycloak.service';
+import { AuthService } from 'app/modules/auth/services/auth.service';
+import { EMPTY, Observable, of } from 'rxjs';
+import { MockAuthService } from 'tests/mocks/mock-auth.service';
 import { DashboardHeaderComponent } from './dashboard-header.component';
 
 describe('DashboardHeaderComponent', () => {
   let component: DashboardHeaderComponent;
-  let testBedKeycloak: KeycloakService;
+  let authService: AuthService;
+  let fixture: ComponentFixture<DashboardHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,40 +24,41 @@ describe('DashboardHeaderComponent', () => {
       declarations: [DashboardHeaderComponent],
       providers: [
         DashboardHeaderComponent,
-        { provide: KeycloakService, useClass: MockKeycloakService },
+        { provide: AuthService, useClass: MockAuthService },
         LoggerService,
-        ChangeDetectorRef,
       ],
-    }).compileComponents();
+    })
+      .compileComponents()
+      .then(() => {
+        fixture = TestBed.createComponent(DashboardHeaderComponent);
+      });
 
     component = TestBed.inject(DashboardHeaderComponent);
-    testBedKeycloak = TestBed.inject(KeycloakService);
+    authService = TestBed.inject(AuthService);
   });
 
   it('should not have username after construction', () => {
-    expect(component.username).toBeUndefined();
+    expect(component.fullName).toBeUndefined();
   });
 
-  it('should have username after Angular calls ngOnInit', () => {
-    component.ngOnInit().then(() => {
-      expect(component.username).toContain('mockfirstname mocklastname');
-    });
-  });
+  it('should have username after Angular calls ngOnInit', fakeAsync(() => {
+    component.ngOnInit();
+    fixture.detectChanges();
+    expect(component.fullName).toContain('mockFirstName mockLastName');
+    flush();
+  }));
 
   it('username undefined after Angular calls ngOnInit and user not loggedIn', () => {
-    spyOn(testBedKeycloak, 'isLoggedIn').and.returnValue(
-      Promise.resolve(false)
-    );
-    component.ngOnInit().then(() => {
-      expect(component.username).toBeUndefined();
-    });
+    spyOn(authService, 'getUser$').and.returnValue(EMPTY);
+    component.ngOnInit();
+    expect(component.fullName).toBeUndefined();
   });
 
   it('should call logout after angular call logout', () => {
-    spyOn(testBedKeycloak, 'logout').and.callThrough();
+    spyOn(authService, 'logout').and.callThrough();
     component.onLogout().then(() => {
-      expect(component.username).toBeUndefined();
-      expect(testBedKeycloak.logout).toHaveBeenCalled();
+      expect(component.fullName).toBeUndefined();
+      expect(authService.logout).toHaveBeenCalled();
     });
   });
 });
