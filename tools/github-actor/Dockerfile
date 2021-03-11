@@ -24,7 +24,7 @@ RUN yum update && \
 COPY . /github
 
 RUN cd /github && \
-    curl -Ls https://github.com/actions/runner/releases/download/v${GITHUB_RUNNER_VERSION}/actions-runner-linux-x64-${GITHUB_RUNNER_VERSION}.tar.gz | tar xz \ && \
+    tar -zxf *.tar.gz && \
     ./bin/installdependencies.sh && \
     touch /github/.env && \
     touch /github/.path && \
