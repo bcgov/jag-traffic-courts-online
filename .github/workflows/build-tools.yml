@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: tools
+    env:
       VERSION: v1
       IMAGE_NAME: github-actor
       IMAGE_TAGS: latest
