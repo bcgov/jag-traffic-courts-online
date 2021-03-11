@@ -7,7 +7,8 @@ on:
 
 jobs:
   build-runner:
-    runs-on: ubuntu-20.04
+    # runs-on: ubuntu-20.04
+    runs-on: [self-hosted,linux]
     environment:
       name: tools
     env:
