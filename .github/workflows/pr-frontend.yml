@@ -1,5 +1,9 @@
 name: Build NodeJS Image and Push to Openshift Registry
-on: [pull_request]
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    branches: [main]
 
 jobs:
   build-main:
