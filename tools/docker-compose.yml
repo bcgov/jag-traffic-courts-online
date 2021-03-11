@@ -5,7 +5,7 @@ services:
 # #############################################################################################
 # ###                                 Github  BACKEND                                  ###
 # #############################################################################################
-  networking-tools:
+  network-tester:
     container_name: network-tester
     build:
       context: ./network-tester
