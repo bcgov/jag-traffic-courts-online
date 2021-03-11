@@ -32,11 +32,7 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           cd tools/github-actor          
-          docker build \
-          --build-arg RUNNER_NAME="${{secrets.RUNNER_NAME}}" \
-          --build-arg GITHUB_PAT="${{secrets.RUNNER_PAT}}" \
-          --build-arg GITHUB_REPOSITORY="${{secrets.RUNNER_REPOSITORY}}" \ 
-          --build-arg GITHUB_OWNER="${{secrets.RUNNER_OWNER}}"
+          docker build --build-arg RUNNER_NAME="${{secrets.RUNNER_NAME}}" --build-arg GITHUB_PAT="${{secrets.RUNNER_PAT}}" --build-arg GITHUB_REPOSITORY="${{secrets.RUNNER_REPOSITORY}}" --build-arg GITHUB_OWNER="${{secrets.RUNNER_OWNER}}"
 
       - name: Tag the Image
         id: tag-image
