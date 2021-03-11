@@ -11,4 +11,4 @@ RUN apt-get update && \
         openssl \
         inetutils-ping 
 USER 1005460000
-CMD ["/usr/bin/tail","/dev/null"]
+CMD ["/usr/bin/tail","-f","/dev/null"]
