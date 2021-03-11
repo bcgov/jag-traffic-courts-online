@@ -17,6 +17,13 @@ jobs:
      
     steps:
       - uses: actions/checkout@v2
+      - name: Login to RedHat Repo
+        id: redhat-repo
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+        run: |          
+          docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
 
       - name: Build the Image
         id: build-image
@@ -24,7 +31,6 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |          
-          docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
           docker-compose -f ${{ github.workspace }}/tools/docker-compose.yml build \
           --build-arg RUNNER_NAME="${{secrets.RUNNER_NAME}}" \
           --build-arg GITHUB_PAT="${{secrets.RUNNER_PAT}}" \
