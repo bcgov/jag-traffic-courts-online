@@ -33,7 +33,7 @@ namespace DisputeApi.Web.Test.Features.TcoDispute.Services
         }
 
         [Test]
-        public async Task save_dispute()
+        public async Task create_and_get_dispute()
         {
             var dispute = new Dispute
             {
@@ -47,9 +47,16 @@ namespace DisputeApi.Web.Test.Features.TcoDispute.Services
                 CertifyCorrect = true,
                 StatusCode = "SUBM"
             };
+            
             var result = await _service.CreateDispute(dispute);
             Assert.IsInstanceOf<Dispute>(result);
-            _loggerMock.VerifyLog(LogLevel.Information, "Saving mock dispute", Times.Once());
+            _loggerMock.VerifyLog(LogLevel.Information, "Creating mock dispute", Times.Once());
+
+            result = await _service.GetDispute(3);
+            Assert.IsInstanceOf<Dispute>(result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Id, dispute.Id);
+            _loggerMock.VerifyLog(LogLevel.Information, "Returning a specific mock dispute", Times.Once());
         }
     }
 }

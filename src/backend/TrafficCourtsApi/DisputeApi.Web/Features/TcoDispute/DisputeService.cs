@@ -43,7 +43,7 @@ namespace DisputeApi.Web.Features.TcoDispute.Service
 
         public async Task<Dispute> CreateDispute(Dispute dispute)
         {
-            _logger.LogInformation("Saving mock dispute");
+            _logger.LogInformation("Creating mock dispute");
             _context.Disputes.Add(dispute);
             _context.SaveChanges();
             return await Task.FromResult(dispute);
