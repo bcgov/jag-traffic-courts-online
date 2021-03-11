@@ -9,7 +9,6 @@ namespace DisputeApi.Web.Features.TicketService.Models
         public int Id { get; set; }
         public string UserId { get; set; }
         public string ViolationTicketNumber { get; set; }
-        public string CourtLocation { get; set; }
         public string ViolationDate { get; set; }
         public string SurName { get; set; }
         public string GivenNames { get; set; }

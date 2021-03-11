@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
+using DisputeApi.Web.Features.TcoDispute.Configuration;
 using DisputeApi.Web.Features.TicketService.Configuration;
 using DisputeApi.Web.Features.TicketService.DBContexts;
 using DisputeApi.Web.Health;
@@ -20,6 +18,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using NSwag;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 
 namespace DisputeApi.Web
 {
@@ -40,13 +41,17 @@ namespace DisputeApi.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(o =>
+            // TODO - For now, prevent authentication this way
+            if (!_env.IsDevelopment())
             {
-                o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-            }).AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-            });
+                services.AddMvc(o =>
+                {
+                    o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+                }).AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                });
+            }
             services.AddDbContext<TicketContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers();
             ConfigureOpenApi(services);
@@ -63,6 +68,7 @@ namespace DisputeApi.Web
             });
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
+            services.AddDisputeService();
         }
 
         internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
@@ -127,7 +133,6 @@ namespace DisputeApi.Web
                 await next();
             });
 
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -154,7 +159,6 @@ namespace DisputeApi.Web
         /// <param name="services"></param>
         private void ConfigureOpenApi(IServiceCollection services)
         {
-
             services.AddSwaggerDocument(config =>
             {
                 // configure swagger properties
@@ -172,7 +176,6 @@ namespace DisputeApi.Web
                     };
                 };
             });
-
         }
     }
 }
