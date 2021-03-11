@@ -7,6 +7,7 @@ RUN apt-get update && \
         git \
         nmap \
         nano \
+        telnet \
         vim \
         openssl \
         inetutils-ping 
