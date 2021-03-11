@@ -6,7 +6,7 @@ on:
     branches: [tools]
 
 jobs:
-  build-tools:
+  build-runner:
     runs-on: ubuntu-20.04
     environment:
       name: tools
