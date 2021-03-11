@@ -7,6 +7,7 @@ RUN apt-get update && \
         git \
         nmap \
         nano \
+        lynx \
         telnet \
         vim \
         openssl \
