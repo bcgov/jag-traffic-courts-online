@@ -8,7 +8,7 @@ on:
 jobs:
   build-tools:
     runs-on: ubuntu-20.04
-    env:
+    environment:
       name: tools
       VERSION: v1
       IMAGE_NAME: github-actor
