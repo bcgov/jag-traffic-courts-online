@@ -1,4 +1,4 @@
-FROM registry.redhat.io/rhel8/s2i-core
+FROM registry.redhat.io/rhel7/rhel
 
 # ARG GITHUB_RUNNER_VERSION="2.165.1"
 ARG GITHUB_RUNNER_VERSION="2.277.1"
