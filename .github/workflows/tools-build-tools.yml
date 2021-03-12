@@ -8,6 +8,7 @@ on:
 jobs:
   build-tools:
     runs-on: ubuntu-20.04
+    environment: tools
     env:
       VERSION: v1
       IMAGE_TAGS: latest
