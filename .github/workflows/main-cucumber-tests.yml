@@ -11,6 +11,7 @@ jobs:
   cucumber-tests:
     name: Runs cucumber-tests
     runs-on: ubuntu-latest
+    environment: Development
     steps:
       - name: Pull Git repo
         uses: actions/checkout@v2
