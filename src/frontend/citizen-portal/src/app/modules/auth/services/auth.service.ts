@@ -41,7 +41,7 @@ export class AuthService {
     if (loggedIn) {
       return this.keycloakService.loadUserProfile(forceReload) as Promise<User>;
     }
-    return Promise.reject();
+    return Promise.reject('user not logged in.');
   }
 
   public getUser$(forceReload?: boolean): Observable<User> {
