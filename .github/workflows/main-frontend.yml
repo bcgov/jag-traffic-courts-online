@@ -8,6 +8,7 @@ on:
 jobs:
   build-main:
     runs-on: ubuntu-20.04
+    environment: Development
     env:
       VERSION: v1
       IMAGE_NAME: citizen-portal

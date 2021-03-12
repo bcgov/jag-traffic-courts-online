@@ -6,14 +6,11 @@ metadata:
     app: citizen-portal
   name: citizen-portal
 spec:
-  replicas: 1
   selector:
-    io.kompose.service: citizen-portal
-  strategy:
-    resources: {}
+    app: citizen-portal
+  replicas: 3
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: citizen-portal
     spec:
@@ -33,7 +30,6 @@ spec:
         - containerPort: 8080
         resources: {}
       restartPolicy: Always
-  test: false
   triggers:
   - type: ConfigChange
   - imageChangeParams:
