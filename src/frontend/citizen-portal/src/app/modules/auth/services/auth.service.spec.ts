@@ -60,7 +60,6 @@ describe('AuthService', () => {
     authService.getUser().catch((error) => {
       expect(error).toEqual('user not logged in.');
     });
-    //expect(authService).toBeTruthy();
   });
 
   it('getUser$ should get userInfo', () => {

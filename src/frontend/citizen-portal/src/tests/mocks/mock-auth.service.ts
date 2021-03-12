@@ -27,13 +27,13 @@ export class MockAuthService {
     return Promise.resolve({
       firstName: 'mockFirstName',
       lastName: 'mockLastName',
-    } as User);
+    });
   }
 
   public getUser$(forceReload?: boolean): Observable<User> {
     return of({
       firstName: 'mockFirstName',
       lastName: 'mockLastName',
-    } as User);
+    });
   }
 }
