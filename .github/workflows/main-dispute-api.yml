@@ -23,7 +23,7 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-          docker-compose build ${{ env.IMAGE_NAME }}
+          docker-compose build $IMAGE_NAME
 
       - name: Tag the Image
         id: tag-image
