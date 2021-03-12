@@ -7,7 +7,7 @@ export const environment = {
   apiUrl: 'http://dispute-api:5000/api',
   keycloakConfig: {
     config: {
-      url: 'http://localhost:8081/auth',
+      url: 'http://keycloak:8081/auth',
       realm: 'traffic-court',
       clientId: 'test',
     },
