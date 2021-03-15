@@ -16,6 +16,10 @@ function initializer(
   keycloak: KeycloakService,
   injector: Injector
 ): () => Promise<void> {
+  if (!environment.useKeycloak) {
+    return () => Promise.resolve();
+  }
+
   const routeToDefault = () => injector.get(Router).navigateByUrl('/home');
 
   return async (): Promise<void> => {
