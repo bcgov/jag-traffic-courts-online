@@ -1,3 +1,19 @@
 <app-dashboard-header [hasMobileSidemenu]="false"></app-dashboard-header>
 
-<router-outlet></router-outlet>
+<div class="container">
+  <div class="row mt-4 mb-4">
+    <div class="col-lg-2">
+      <div class="logo mt-4">
+        <img
+          src="/assets/traffic_light.jpg"
+          style="width: 100px"
+          alt="Traffic Court Logo"
+        />
+      </div>
+    </div>
+
+    <div class="col-lg-10">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

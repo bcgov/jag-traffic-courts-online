@@ -1,84 +1,37 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControlValidators } from '@core/validators/form-control.validators';
+import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { BaseDisputePage } from './BaseDisputePage';
+import { Dispute } from '@shared/models/dispute.model';
 
 export interface IBaseDisputeFormPage {
-  formStep1: FormGroup;
-  formStep2: FormGroup;
-  formStep3: FormGroup;
-  formStep4: FormGroup;
-  formStep5: FormGroup;
+  form: FormGroup;
+  dispute: Dispute;
 }
 
-export abstract class BaseDisputeFormPage
-  extends BaseDisputePage
-  implements IBaseDisputeFormPage {
-  formStep1: FormGroup;
-  formStep2: FormGroup;
-  formStep3: FormGroup;
-  formStep4: FormGroup;
-  formStep5: FormGroup;
+export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
+  public form: FormGroup;
+  public dispute: Dispute;
 
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
     protected formBuilder: FormBuilder,
     protected disputeService: DisputeService,
-    protected disputeResource: DisputeResourceService
-  ) {
-    super(route, router);
+    protected disputeResource: DisputeResourceService,
+    protected disputeFormStateService: DisputeFormStateService
+  ) {}
 
-    this.formStep1 = this.formBuilder.group({
-      id: [null],
-      userId: [null],
-      violationTicketNumber: [null, [Validators.required]],
-      courtLocation: [null],
-      violationDate: [null],
-    });
+  /**
+   * @description
+   * Patch the form with dispute information.
+   */
+  protected patchForm(): void {
+    // Store a local copy of the dispute for views
+    this.dispute = this.disputeService.dispute;
 
-    this.formStep2 = this.formBuilder.group({
-      id: [null],
-      surname: [null, [Validators.required]],
-      givenNames: [null],
-      mailing: [null],
-      postal: [null],
-      city: [null],
-      province: [null],
-      license: [null],
-      provLicense: [null],
-      homePhone: [null, [FormControlValidators.phone]],
-      workPhone: [null, [FormControlValidators.phone]],
-      birthdate: [null, []],
-    });
-
-    this.formStep3 = this.formBuilder.group({
-      id: [null],
-      surname: [null, [Validators.required]],
-    });
-
-    this.formStep4 = this.formBuilder.group({
-      id: [null],
-      lawyerPresent: [false, [FormControlValidators.requiredBoolean]],
-      interpreterRequired: [false, [FormControlValidators.requiredBoolean]],
-      interpreterLanguage: [null],
-      callWitness: [false, [FormControlValidators.requiredBoolean]],
-    });
-
-    this.formStep5 = this.formBuilder.group({
-      id: [null],
-      surname: [null, [Validators.required]],
-    });
-
-    // TODO Put in here for now.... move later
-    this.getTicket();
-  }
-
-  private getTicket(): void {
-    this.disputeResource.getTicket().subscribe((response) => {
-      this.disputeService.ticket$.next(response);
-    });
+    // Attempt to patch the form if not already patched
+    this.disputeFormStateService.setForm(this.dispute);
   }
 }

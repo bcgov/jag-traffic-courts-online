@@ -1,15 +1,15 @@
-<div class="container">
-  <div class="row mt-4 pb-4">
-    <div class="col-md-12 col-lg-10">
-      <h1>BC Traffic Court Online</h1>
-      <div id="surveyContainer"></div>
-      <button
-        [hidden]="!isComplete"
-        class="btn sv_next_btn mt-4"
-        routerLink="/"
-      >
-        Return Home
-      </button>
-    </div>
-  </div>
-</div>
+<app-page [busy]="busy">
+  <app-tco-page-header>
+    <ng-container header
+      >BC Traffic Court Dispute
+      <mat-chip-list>
+        <mat-chip>eTicket</mat-chip>
+        <mat-chip color="primary" selected
+          >Ticket #{{ dispute?.ticket.violationTicketNumber }}</mat-chip
+        >
+      </mat-chip-list></ng-container
+    >
+  </app-tco-page-header>
+
+  <div id="surveyContainer"></div>
+</app-page>

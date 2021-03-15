@@ -10,7 +10,7 @@ import { FindTicketComponent } from './find-ticket/find-ticket.component';
 import { CoreModule } from 'keycloak-angular';
 
 @NgModule({
-  declarations: [AuthComponent, LandingComponent, FindTicketComponent],
+  declarations: [AuthComponent, LandingComponent],
   imports: [CommonModule, SharedModule, DashboardModule],
   exports: [AuthRoutingModule],
 })

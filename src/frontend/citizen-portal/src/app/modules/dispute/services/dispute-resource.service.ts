@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
+import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -20,7 +21,7 @@ export class DisputeResourceService {
       map((response: ApiHttpResponse<Ticket>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[GetTicket] DisputeResourceService::ticket error has occurred: ',
+          '[getTicket] DisputeResourceService::ticket error has occurred: ',
           error
         );
         throw error;
@@ -28,14 +29,12 @@ export class DisputeResourceService {
     );
   }
 
-  public createTicket(ticket: Ticket): Observable<Ticket> {
-    this.logger.info('createTicket', ticket);
-
-    return this.apiResource.post<Ticket>('ticket').pipe(
-      map((response: ApiHttpResponse<Ticket>) => response.result),
+  public getTickets(): Observable<Ticket[]> {
+    return this.apiResource.get<Ticket[]>('tickets').pipe(
+      map((response: ApiHttpResponse<Ticket[]>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[CreateTicket] DisputeResourceService::ticket error has occurred: ',
+          '[getTickets] DisputeResourceService::tickets error has occurred: ',
           error
         );
         throw error;
@@ -43,14 +42,55 @@ export class DisputeResourceService {
     );
   }
 
-  public updateTicket(ticket: Ticket): Observable<Ticket> {
-    this.logger.info('updateTicket', ticket);
-
-    return this.apiResource.put<Ticket>('ticket').pipe(
-      map((response: ApiHttpResponse<Ticket>) => response.result),
+  public getDispute(): Observable<Dispute> {
+    return this.apiResource.get<Dispute>('dispute').pipe(
+      map((response: ApiHttpResponse<Dispute>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[UpdateTicket] DisputeResourceService::ticket error has occurred: ',
+          '[getDispute] DisputeResourceService::dispute error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public getDisputes(): Observable<Dispute[]> {
+    return this.apiResource.get<Dispute[]>('disputes').pipe(
+      map((response: ApiHttpResponse<Dispute[]>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[getDisputes] DisputeResourceService::disputes error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public createDispute(dispute: Dispute): Observable<Dispute> {
+    this.logger.info('createDispute', dispute);
+
+    return this.apiResource.post<Dispute>('ticket').pipe(
+      map((response: ApiHttpResponse<Dispute>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[createDispute] DisputeResourceService::dispute error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  public updateDispute(dispute: Dispute): Observable<Dispute> {
+    this.logger.info('updateDispute', dispute);
+
+    return this.apiResource.put<Dispute>('ticket').pipe(
+      map((response: ApiHttpResponse<Dispute>) => response.result),
+      catchError((error: any) => {
+        this.logger.error(
+          '[updateDispute] DisputeResourceService::dispute error has occurred: ',
           error
         );
         throw error;

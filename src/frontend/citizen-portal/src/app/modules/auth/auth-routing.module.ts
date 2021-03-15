@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { AuthRoutes } from './auth.routes';
 import { AuthComponent } from './auth/auth.component';
-import { FindTicketComponent } from './find-ticket/find-ticket.component';
 import { LandingComponent } from './landing/landing.component';
 
 const routes: Routes = [

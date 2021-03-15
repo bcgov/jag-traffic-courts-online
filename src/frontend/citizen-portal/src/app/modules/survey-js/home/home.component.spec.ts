@@ -1,6 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { SurveyResourceService } from '@survey/services/survey-resource.service';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
@@ -12,7 +14,12 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterModule.forRoot([])],
+      imports: [
+        HttpClientTestingModule,
+        RouterModule.forRoot([]),
+        BrowserAnimationsModule,
+        NgxMaterialModule,
+      ],
       declarations: [HomeComponent],
       providers: [MockDisputeService, SurveyResourceService],
     }).compileComponents();

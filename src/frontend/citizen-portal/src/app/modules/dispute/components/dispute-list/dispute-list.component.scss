@@ -1,0 +1,198 @@
+@import "palette.scss";
+
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.match-file {
+  background-color: #ffff99;
+}
+/*
+.example-expanded-row, .example-detail-row {
+  background-color: #e2edf8;
+}
+*/
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.mat-flat-button {
+  background-color: inherit;
+  padding: 0;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.col0 {
+  width: 70px;
+}
+.col1 {
+  width: 350px;
+}
+.col2 {
+  width: 250px;
+}
+.col3 {
+  width: 200px;
+}
+
+small {
+  color: #a4a9ac;
+}
+
+a {
+  color: #1a5a96;
+}
+
+@media screen and (max-width: 960px) {
+  .mat-table {
+    border: 0;
+    vertical-align: middle;
+  }
+
+  .mat-table caption {
+    font-size: 1em;
+  }
+
+  .mat-header-row {
+    display: none;
+  }
+
+  /*  Enable this to hide header
+    .mat-table .mat-header-cell {
+
+      border: 10px solid;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+    */
+  .mat-table .mat-row {
+    border-bottom: 5px solid #ddd;
+    display: block;
+  }
+  /*
+    .mat-table .mat-row:nth-child(even) {background: #CCC}
+    .mat-table .mat-row:nth-child(odd) {background: #FFF}
+    */
+  .mat-table .mat-cell {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 1em;
+    text-align: right;
+    font-weight: bold;
+    height: 30px;
+  }
+  .mat-table .mat-cell:before {
+    /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+    content: attr(data-label);
+    float: left;
+    text-transform: uppercase;
+    font-weight: normal;
+
+    font-size: 0.85em;
+  }
+  .mat-table .mat-cell:last-child {
+    border-bottom: 0;
+  }
+
+  .mat-table .mat-cell:first-child {
+    padding-top: 4%;
+  }
+
+  .mat-cell {
+    padding: 24px;
+  }
+
+  .mat-row,
+  .mat-footer-row {
+    min-height: unset;
+    /* min-height: 48px; */
+  }
+}
+
+tr {
+  background-color: rgba(theme-palette(blue), 0.05) !important;
+  // Set border width as default to avoid content jump on selection
+  border-left: 3px solid theme-palette(blue);
+  // cursor: pointer;
+
+  &:hover {
+    background-color: rgba(theme-palette(blue), 0.125) !important;
+  }
+
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+td,
+label,
+small {
+  user-select: none;
+}
+
+label {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+mat-icon {
+  vertical-align: middle;
+}
+
+button.mat-flat-button .mat-icon {
+  vertical-align: top;
+  font-size: 1.25em;
+}
+
+small {
+  color: theme-palette(blue);
+}
