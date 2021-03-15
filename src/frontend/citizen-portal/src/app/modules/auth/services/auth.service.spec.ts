@@ -33,6 +33,7 @@ describe('AuthService', () => {
   });
 
   it('isLoggedIn should invoke keycloak isLoggedIn', () => {
+    spyOn(keycloakService, 'isLoggedIn').and.returnValue(Promise.resolve(true));
     authService.isLoggedIn().then((result) => {
       expect(keycloakService.isLoggedIn()).toHaveBeenCalled();
       expect(result).toEqual(true);
@@ -40,6 +41,7 @@ describe('AuthService', () => {
   });
 
   it('logout should invoke keycloak logout', () => {
+    spyOn(keycloakService, 'logout').and.returnValue(Promise.resolve());
     authService.logout().then(() => {
       expect(keycloakService.logout()).toHaveBeenCalled();
     });
