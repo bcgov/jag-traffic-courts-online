@@ -14,12 +14,6 @@ const routes: Routes = [
         path: AuthRoutes.LANDING,
         component: LandingComponent,
       },
-      {
-        path: AuthRoutes.FIND,
-        component: FindTicketComponent,
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard]
-      },
     ],
   },
 ];
@@ -27,6 +21,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [AuthGuard]
+  providers: [AuthGuard],
 })
 export class AuthRoutingModule {}
