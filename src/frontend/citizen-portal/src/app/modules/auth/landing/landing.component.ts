@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RouteUtils } from '@core/utils/route-utils.class';
+import { SurveyJsRoutes } from '@survey/survey-js.routes';
 
 @Component({
   selector: 'app-landing',
@@ -10,6 +12,6 @@ export class LandingComponent {
   constructor(private route: Router) {}
 
   public onStep1(): void {
-    this.route.navigate(['/survey/home']);
+    this.route.navigate([SurveyJsRoutes.routePath(SurveyJsRoutes.HOME)]);
   }
 }

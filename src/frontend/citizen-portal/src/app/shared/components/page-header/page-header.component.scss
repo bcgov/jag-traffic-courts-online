@@ -1,2 +1,10 @@
-@import 'palette';
-@import 'variables';
+@import "palette";
+@import "variables";
+
+h1 {
+  font-weight: bold;
+}
+
+.heading-hr {
+  border: 1px solid theme-palette(yellow);
+}

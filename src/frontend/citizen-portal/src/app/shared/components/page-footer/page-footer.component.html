@@ -1,24 +1,27 @@
-<div class="row justify-content-between mb-4">
-  <div *ngIf="hasSecondaryAction"
-       class="col pt-2">
-
-    <button mat-stroked-button
-            type="button"
-            color="primary"
-            (click)="onSecondaryAction()">
+<div class="row justify-content-between">
+  <div *ngIf="hasSecondaryAction" class="col pt-2">
+    <button
+      id="secondaryButton"
+      mat-stroked-button
+      type="button"
+      color="primary"
+      (click)="onSecondaryAction()"
+    >
+      <mat-icon inline="true">keyboard_arrow_left</mat-icon>
       {{ secondaryActionButtonLabel }}
     </button>
-
   </div>
   <div class="col pt-2 text-right">
-
-    <button mat-flat-button
-            type="button"
-            color="primary"
-            [disabled]="disableSave"
-            (click)="onSave()">
+    <button
+      id="primaryButton"
+      mat-flat-button
+      type="button"
+      color="primary"
+      [disabled]="disableSave"
+      (click)="onSave()"
+    >
       {{ saveButtonLabel }}
+      <mat-icon inline="true">keyboard_arrow_right</mat-icon>
     </button>
-
   </div>
 </div>
