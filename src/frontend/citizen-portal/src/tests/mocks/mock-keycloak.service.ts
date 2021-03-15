@@ -4,9 +4,29 @@ import { KeycloakService } from 'keycloak-angular';
 @Injectable({
   providedIn: 'root',
 })
-export class MockKeycloakService extends KeycloakService {
+export class MockKeycloakService {
   public init(): Promise<boolean> {
     return Promise.resolve(true);
+  }
+
+  public isLoggedIn(): Promise<boolean> {
+    return Promise.resolve(true);
+  }
+
+  public async login(): Promise<void> {
+    // empty, just for mock login function.
+  }
+
+  public async logout(redirectUrl): Promise<void> {
+    // empty, just for mock logout function.
+  }
+
+  public loadUserProfile(): Promise<UserProfile> {
+    const profile: UserProfile = {
+      firstName: 'mockFirstName',
+      lastName: 'mockLastName',
+    };
+    return Promise.resolve(profile);
   }
 
   public getKeycloakInstance(): Keycloak.KeycloakInstance {
@@ -29,4 +49,9 @@ export class MockKeycloakService extends KeycloakService {
   public updateToken(minValidity?: number): Promise<boolean> {
     return Promise.resolve(true);
   }
+}
+
+class UserProfile {
+  firstName: string;
+  lastName: string;
 }

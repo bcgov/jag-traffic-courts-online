@@ -13,12 +13,22 @@
 
   <span class="flex-fill"></span>
 
-  <span *ngIf="username && !isMobile" class="username">
-    {{ username }}
-  </span>
-  <span *ngIf="username" class="logout">
-    <mat-icon (click)="onLogout()">logout</mat-icon>
-  </span>
+  <ng-container *ngIf="fullName">
+    <ng-container *ngIf="isMobile; else notMobile">
+      <span class="logout">
+        <mat-icon (click)="onLogout()">logout</mat-icon>
+      </span>
+    </ng-container>
+
+    <ng-template #notMobile>
+      <span class="fullName">
+        {{ fullName }}
+      </span>
+      <span class="logout">
+        <mat-icon (click)="onLogout()">logout</mat-icon>
+      </span>
+    </ng-template>
+  </ng-container>
 </mat-toolbar>
 
 <div class="ngx-progress">
