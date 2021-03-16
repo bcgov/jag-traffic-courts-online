@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net.Security;
+using System.Runtime.InteropServices;
 using TrafficCourts.Common.Configuration;
 
 namespace TrafficCourts.Common.Test.Configuration
@@ -23,6 +25,13 @@ namespace TrafficCourts.Common.Test.Configuration
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.TestCorrelator()
                 .CreateLogger();
+        }
+
+        [Test]
+        public void SplunkEventCollector_custom_server_certificate_validator_returns_true()
+        {
+            // there are no parameter validations
+            Assert.True(SplunkEventCollector.ServerCertificateCustomValidation(null, null, null, SslPolicyErrors.None));
         }
 
         [Test]

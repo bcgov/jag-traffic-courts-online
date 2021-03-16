@@ -47,11 +47,16 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
 
-
-            var result = (OkObjectResult)await sut.GetDisputes();
-            Assert.IsInstanceOf<IEnumerable<Dispute>>(result.Value);
+            var result = await sut.GetDisputes();
             Assert.IsNotNull(result);
-            Assert.AreEqual(((IEnumerable<Dispute>)result.Value).Count(), 1);
+            Assert.IsInstanceOf<OkObjectResult>(result);
+
+            var objectResult = (ObjectResult) result;
+            Assert.IsInstanceOf<IEnumerable<Dispute>>(objectResult.Value);
+
+            var values = (IEnumerable<Dispute>) objectResult.Value;
+            Assert.AreEqual(values.Count(), 1);
+
             _disputeServiceMock.Verify(x => x.GetAllAsync(), Times.Once);
         }
 
@@ -66,9 +71,10 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
 
             var result = await sut.GetDispute(expected.Id);
-            Assert.IsInstanceOf<OkObjectResult>(result);
-            Assert.IsInstanceOf<Dispute>(((OkObjectResult)result).Value);
             Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkObjectResult>(result);
+
+            Assert.IsInstanceOf<Dispute>(((OkObjectResult)result).Value);
             _disputeServiceMock.Verify(x => x.GetAsync(expected.Id), Times.Once);
         }
 
@@ -83,6 +89,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
             
             var result = await sut.GetDispute(disputeId);
+            Assert.IsNotNull(result);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
 
@@ -96,9 +103,15 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
 
-            var result = (OkObjectResult)await sut.CreateDispute(dispute);
-            Assert.IsInstanceOf<Dispute>(result.Value);
-            Assert.IsNotNull(result.Value);
+            var result = await sut.CreateDispute(dispute);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkObjectResult>(result);
+
+            var objectResult = (ObjectResult)result;
+
+            Assert.IsInstanceOf<Dispute>(objectResult.Value);
+            Assert.IsNotNull(objectResult.Value);
+
             _disputeServiceMock.Verify(x => x.CreateAsync(dispute), Times.Once);
         }
     }

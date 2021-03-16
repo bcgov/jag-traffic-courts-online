@@ -1,4 +1,5 @@
-﻿using DisputeApi.Web.Features.TicketService;
+﻿using System;
+using DisputeApi.Web.Features.TicketService;
 using DisputeApi.Web.Infrastructure;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
@@ -9,6 +10,8 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
+using DisputeApi.Web.Features.Disputes;
 
 namespace DisputeApi.Web.Test.Features.TicketService
 {
@@ -16,14 +19,28 @@ namespace DisputeApi.Web.Test.Features.TicketService
     public class TicketServiceTest
     {
         private ITicketsService _service;
-        private readonly Mock<ILogger<TicketsService>> _loggerMock = LoggerServiceMock.LoggerMock<TicketsService>();
+        private Mock<ILogger<TicketsService>> _loggerMock;
+
+        private ViolationContext CreateContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
+            optionsBuilder.UseInMemoryDatabase("DisputeApi");
+
+            return new ViolationContext(optionsBuilder.Options);
+        }
 
         [SetUp]
         public void SetUp()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
-            optionsBuilder.UseInMemoryDatabase("DisputeApi");
-            _service = new TicketsService(_loggerMock.Object, new ViolationContext(optionsBuilder.Options));
+            _loggerMock = LoggerServiceMock.LoggerMock<TicketsService>();
+            _service = new TicketsService(_loggerMock.Object, CreateContext());
+        }
+
+        [Test]
+        public void throw_ArgumentNullException_if_passed_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext()));
+            Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null));
         }
 
         [Test]
@@ -34,18 +51,10 @@ namespace DisputeApi.Web.Test.Features.TicketService
             //_loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
         }
 
-        [Test]
-        public async Task save_ticket()
+        [Theory]
+        [AutoData]
+        public async Task save_ticket(Ticket ticket)
         {
-            var ticket = new Ticket
-            {
-                Id = 3,
-                UserId = "User125",
-                ViolationTicketNumber = "AX87877777",
-                ViolationDate = "11-11-2002 12:23",
-                SurName = "Smith",
-                GivenNames = "Tim"
-            };
             var result = await _service.SaveTicket(ticket);
             Assert.IsInstanceOf<Ticket>(result);
             //_loggerMock.VerifyLog(LogLevel.Information, "Saving mock ticket", Times.Once());

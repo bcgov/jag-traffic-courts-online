@@ -1,4 +1,5 @@
-﻿using DisputeApi.Web.Features.TicketService;
+﻿using System;
+using DisputeApi.Web.Features.TicketService;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -10,22 +11,28 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using DisputeApi.Web.Features.Disputes;
 
 namespace DisputeApi.Web.Test.Features.TicketService
 {
     [ExcludeFromCodeCoverage]
     public class TicketsControllerTest
     {
-        private TicketsController _controller;
-        private readonly Mock<ILogger<TicketsController>> _loggerMock = LoggerServiceMock.LoggerMock<TicketsController>();
+        private Mock<ILogger<TicketsController>> _loggerMock;
         private Mock<ITicketsService> _ticketsServiceMock;
 
         [SetUp]
         public void SetUp()
         {
+            _loggerMock = LoggerServiceMock.LoggerMock<TicketsController>();
             _ticketsServiceMock = new Mock<ITicketsService>();
+        }
 
-            _controller = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+        [Test]
+        public void throw_ArgumentNullException_if_passed_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, null));
         }
 
         [Theory]
@@ -38,7 +45,9 @@ namespace DisputeApi.Web.Test.Features.TicketService
                 .Setup(x => x.GetTickets())
                 .Returns(Task.FromResult(data));
 
-            var result = (OkObjectResult)await _controller.GetTickets();
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+
+            var result = (OkObjectResult)await sut.GetTickets();
             Assert.IsInstanceOf<IEnumerable<Ticket>>(result.Value);
             Assert.IsNotNull(result);
             Assert.AreEqual(((IEnumerable<Ticket>)result.Value).Count(), 1);
@@ -54,7 +63,9 @@ namespace DisputeApi.Web.Test.Features.TicketService
                 .Setup(x => x.SaveTicket(ticket))
                 .Returns(Task.FromResult(ticket));
 
-            var result = (OkObjectResult)await _controller.SaveTicket(ticket);
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+
+            var result = (OkObjectResult)await sut.SaveTicket(ticket);
             Assert.IsInstanceOf<Ticket>(result.Value);
             Assert.IsNotNull(result.Value);
 
