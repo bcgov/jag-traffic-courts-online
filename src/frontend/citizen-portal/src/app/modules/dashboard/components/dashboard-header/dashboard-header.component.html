@@ -3,21 +3,32 @@
     <mat-icon (click)="toggleSidenav()">menu</mat-icon>
   </span>
   <span>
-    <img src="/assets/gov_bc_logo.png"
-         alt="Government of BC Logo"
-         [class.hasMobileSidemenu]="hasMobileSidemenu">
+    <img
+      src="/assets/gov_bc_logo.png"
+      alt="Government of BC Logo"
+      routerLink="/"
+      [class.hasMobileSidemenu]="hasMobileSidemenu"
+    />
   </span>
 
   <span class="flex-fill"></span>
 
-  <span *ngIf="username && !isMobile"
-        class="username">
-    {{ username }}
-  </span>
-  <span *ngIf="username"
-        class="logout">
-    <mat-icon (click)="onLogout()">logout</mat-icon>
-  </span>
+  <ng-container *ngIf="fullName">
+    <ng-container *ngIf="isMobile; else notMobile">
+      <span class="logout">
+        <mat-icon (click)="onLogout()">logout</mat-icon>
+      </span>
+    </ng-container>
+
+    <ng-template #notMobile>
+      <span class="fullName">
+        {{ fullName }}
+      </span>
+      <span class="logout">
+        <mat-icon (click)="onLogout()">logout</mat-icon>
+      </span>
+    </ng-template>
+  </ng-container>
 </mat-toolbar>
 
 <div class="ngx-progress">

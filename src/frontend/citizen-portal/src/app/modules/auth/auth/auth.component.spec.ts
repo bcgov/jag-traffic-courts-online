@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AuthComponent } from './auth.component';
 
 describe('AuthComponent', () => {
@@ -7,10 +6,9 @@ describe('AuthComponent', () => {
   let fixture: ComponentFixture<AuthComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ AuthComponent ]
-    })
-    .compileComponents();
+    TestBed.configureTestingModule({
+      declarations: [AuthComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

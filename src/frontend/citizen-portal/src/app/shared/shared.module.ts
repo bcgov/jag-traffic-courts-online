@@ -10,7 +10,6 @@ import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { DefaultPipe } from './pipes/default.pipe';
 import { FormatDatePipe } from './pipes/format-date.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
-import { PostalPipe } from './pipes/postal.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -21,6 +20,8 @@ import { PageFooterComponent } from './components/page-footer/page-footer.compon
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { ConfigModule } from 'app/config/config.module';
+import { PostalPipe } from './pipes/postal.pipe';
+import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 
 @NgModule({
   declarations: [
@@ -28,15 +29,16 @@ import { ConfigModule } from 'app/config/config.module';
     DefaultPipe,
     FormatDatePipe,
     PhonePipe,
-    PostalPipe,
     ReplacePipe,
     SafeHtmlPipe,
     YesNoPipe,
+    PostalPipe,
     ConfirmDialogComponent,
     DialogContentDirective,
     PageComponent,
     PageFooterComponent,
     PageHeaderComponent,
+    TcoPageHeaderComponent,
     DialogContentDirective,
     AlertComponent,
   ],
@@ -62,14 +64,15 @@ import { ConfigModule } from 'app/config/config.module';
     DefaultPipe,
     FormatDatePipe,
     PhonePipe,
-    PostalPipe,
     ReplacePipe,
     SafeHtmlPipe,
     YesNoPipe,
+    PostalPipe,
     DialogContentDirective,
     PageComponent,
     PageFooterComponent,
     PageHeaderComponent,
+    TcoPageHeaderComponent,
     DialogContentDirective,
     AlertComponent,
     ConfigModule,

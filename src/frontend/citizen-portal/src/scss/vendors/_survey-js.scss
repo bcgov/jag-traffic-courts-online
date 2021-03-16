@@ -319,13 +319,19 @@ h5 {
 .card-footer {
   padding: 0.75rem 1.25rem;
   background-color: transparent;
-  border-top: 1px solid theme-palette(yellow);
+  border: none;
+  // border-top: 1px solid theme-palette(blue);
 }
 
 .sv_next_btn,
 .sv_prev_btn {
   background-color: theme-palette(blue) !important;
   color: #fff;
+}
+
+.sv_complete_btn {
+  border: 1px solid theme-palette(blue) !important;
+  color: theme-palette(blue) !important;
 }
 
 .sv_complete_btn:hover {
@@ -379,4 +385,10 @@ h5 {
 div[name^="alert_info"] {
   padding-left: 0 !important;
   padding-right: 0 !important;
+}
+
+.alert-danger {
+  color: theme-palette(red);
+  background-color: transparent;
+  border-color: theme-palette(red, light);
 }

@@ -2,7 +2,7 @@
   <div class="row mt-4">
     <div class="col-md-2 logo">
       <img
-        src="/assets/traffic-light.jpg"
+        src="/assets/traffic_light.jpg"
         style="width: 120px"
         alt="Traffic Court Logo"
       />
@@ -23,7 +23,7 @@
         </p>
         <p>
           If you would like to simply pay for your ticket, please click on the
-          'Pay Ticket (PayBC)' button.
+          'Pay Now' button.
         </p>
       </div>
       <div class="col-sm-12 mt-4">
@@ -43,7 +43,7 @@
               mat-flat-button
               color="primary"
               class="large light"
-              routerLink="/auth/find"
+              routerLink="/dispute/find"
             >
               Update Dispute Information
             </button>
@@ -59,8 +59,24 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            Pay Ticket (PayBC)
+            Pay Now
           </a>
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          class="large light"
+          routerLink="/dispute/find"
+        >
+          Find Ticket
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          class="large light"
+          routerLink="/dispute/list"
+        >
+          Ticket Listing
         </button>
       </div>
     </div>

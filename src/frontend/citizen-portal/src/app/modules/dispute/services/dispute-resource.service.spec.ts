@@ -19,7 +19,7 @@ describe('DisputeResourceService', () => {
       providers: [MockDisputeService],
     });
 
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
     service = TestBed.inject(DisputeResourceService);
     mock = TestBed.inject(MockDisputeService);
   });
@@ -33,13 +33,13 @@ describe('DisputeResourceService', () => {
     expect(ticket).toBeDefined();
   });
 
-  it('should create ticket', () => {
-    const ticket = service.createTicket(mock.ticket);
+  it('should create dispute', () => {
+    const ticket = service.createDispute(mock.dispute);
     expect(ticket).toBeDefined();
   });
 
-  it('should update ticket', () => {
-    const ticket = service.updateTicket(mock.ticket);
+  it('should update dispute', () => {
+    const ticket = service.updateDispute(mock.dispute);
     expect(ticket).toBeDefined();
   });
 });

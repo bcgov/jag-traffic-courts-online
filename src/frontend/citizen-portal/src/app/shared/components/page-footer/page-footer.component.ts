@@ -9,7 +9,6 @@ export class PageFooterComponent implements OnInit {
   @Input() public hasSecondaryAction: boolean;
   @Input() public disableSave: boolean;
   @Output() public save: EventEmitter<void>;
-  @Output() public continue: EventEmitter<void>;
   @Output() public back: EventEmitter<void>;
 
   @Input() public saveButtonLabel: string;
@@ -19,10 +18,13 @@ export class PageFooterComponent implements OnInit {
     this.hasSecondaryAction = true;
 
     this.save = new EventEmitter<void>();
-    this.continue = new EventEmitter<void>();
     this.back = new EventEmitter<void>();
-    this.saveButtonLabel = 'Save and Continue';
+    this.saveButtonLabel = 'Next';
     this.secondaryActionButtonLabel = 'Back';
+  }
+
+  public ngOnInit(): void {
+    //
   }
 
   public onSave(): void {
@@ -30,15 +32,6 @@ export class PageFooterComponent implements OnInit {
   }
 
   public onSecondaryAction(): void {
-    // allowed ? this.back.emit() : this.continue.emit();
     this.back.emit();
-  }
-
-  public ngOnInit(): void {
-    // if (Allowed to go back) {
-    // } else {
-    // this.saveButtonLabel = 'Continue';
-    // this.hasSecondaryAction = false;
-    // }
   }
 }

@@ -6,10 +6,9 @@ import { SharedModule } from '@shared/shared.module';
 import { DashboardModule } from '@dashboard/dashboard.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { AuthComponent } from './auth/auth.component';
-import { FindTicketComponent } from './find-ticket/find-ticket.component';
 
 @NgModule({
-  declarations: [AuthComponent, LandingComponent, FindTicketComponent],
+  declarations: [AuthComponent, LandingComponent],
   imports: [CommonModule, SharedModule, DashboardModule],
   exports: [AuthRoutingModule],
 })

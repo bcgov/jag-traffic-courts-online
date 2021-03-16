@@ -1,8 +1,6 @@
 <app-dashboard-header
   [isMobile]="isMobile"
-  [username]="username"
   (toggle)="sidenav.toggle()"
-  (logout)="onLogout()"
 ></app-dashboard-header>
 
 <mat-sidenav-container class="prime-sidenav-container">
@@ -17,7 +15,7 @@
   >
     <div class="logo">
       <img
-        src="/assets/traffic-light.jpg"
+        src="/assets/traffic_light.jpg"
         alt="Traffic Court Logo"
         [class.fixed]="!responsiveMenuItems"
       />
