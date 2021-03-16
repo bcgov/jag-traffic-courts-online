@@ -26,14 +26,14 @@ describe('AuthService', () => {
   });
 
   it('login should invoke keycloak login', () => {
-    spyOn(keycloakService, 'login').and.returnValue(Promise.resolve());
+    // spyOn(keycloakService, 'login').and.returnValue(Promise.resolve());
     authService.login().then(() => {
       expect(keycloakService.login()).toHaveBeenCalled();
     });
   });
 
   it('isLoggedIn should invoke keycloak isLoggedIn', () => {
-    spyOn(keycloakService, 'isLoggedIn').and.returnValue(Promise.resolve(true));
+    // spyOn(keycloakService, 'isLoggedIn').and.returnValue(Promise.resolve(true));
     authService.isLoggedIn().then((result) => {
       expect(keycloakService.isLoggedIn()).toHaveBeenCalled();
       expect(result).toEqual(true);
@@ -41,9 +41,9 @@ describe('AuthService', () => {
   });
 
   it('getUser should getUserInfo when loggedIn', () => {
-    spyOn(keycloakService, 'loadUserProfile').and.returnValue(
-      Promise.resolve(new Object())
-    );
+    // spyOn(keycloakService, 'loadUserProfile').and.returnValue(
+    //   Promise.resolve(new Object())
+    // );
     authService.getUser().then((result) => {
       expect(keycloakService.loadUserProfile()).toHaveBeenCalled();
       expect(result.firstName).toEqual('mockFirstName');
@@ -67,10 +67,10 @@ describe('AuthService', () => {
     });
   });
 
-  // it('logout should invoke keycloak logout', () => {
-  //   spyOn(keycloakService, 'logout').and.returnValue(Promise.resolve());
-  //   authService.logout().then(() => {
-  //     expect(keycloakService.logout()).toHaveBeenCalled();
-  //   });
-  // });
+  it('logout should invoke keycloak logout', () => {
+    // spyOn(keycloakService, 'logout').and.returnValue(Promise.resolve());
+    authService.logout().then(() => {
+      expect(keycloakService.logout()).toHaveBeenCalled();
+    });
+  });
 });
