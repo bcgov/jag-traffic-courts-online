@@ -18,3 +18,4 @@ jobs:
       - name: Test TrafficCourtsApi
         run: dotnet test
         working-directory: ./src/backend/TrafficCourtsApi
+        
