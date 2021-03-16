@@ -42,9 +42,9 @@ describe('DashboardHeaderComponent', () => {
   });
 
   it('should have username after Angular calls ngOnInit', fakeAsync(() => {
-    component.ngOnInit();
-    fixture.detectChanges();
-    expect(component.fullName).toContain('mockFirstName mockLastName');
+    component.ngOnInit().then(() => {
+      expect(component.fullName).toContain('mockFirstName mockLastName');
+    });
     flush();
   }));
 

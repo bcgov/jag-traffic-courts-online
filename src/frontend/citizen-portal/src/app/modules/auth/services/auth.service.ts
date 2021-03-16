@@ -37,7 +37,7 @@ export class AuthService {
 
   public async getUser(forceReload?: boolean): Promise<User> {
     const loggedIn = await this.keycloakService.isLoggedIn();
-    this.logger.info('loggedIn', loggedIn);
+    this.logger.info('isLoggedIn', loggedIn);
     if (loggedIn) {
       return this.keycloakService.loadUserProfile(forceReload) as Promise<User>;
     }
