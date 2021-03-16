@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Moq;
@@ -8,10 +5,15 @@ using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.TestCorrelator;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using TrafficCourts.Common.Configuration;
 
 namespace TrafficCourts.Common.Test.Configuration
 {
+    [ExcludeFromCodeCoverage]
     [TestFixture]
     public class SplunkEventCollectorTest
     {
@@ -22,7 +24,7 @@ namespace TrafficCourts.Common.Test.Configuration
                 .WriteTo.TestCorrelator()
                 .CreateLogger();
         }
-        
+
         [Test]
         public void Configure_checks_for_null_arguments()
         {
@@ -32,7 +34,7 @@ namespace TrafficCourts.Common.Test.Configuration
             Assert.Throws<ArgumentNullException>(() => SplunkEventCollector.Configure(null, loggerConfiguration));
             Assert.Throws<ArgumentNullException>(() => SplunkEventCollector.Configure(hostBuilderContext, null));
         }
-        
+
         [Test]
         public void Configure_logs_warning_if_splunk_configuration_settings_not_found()
         {
@@ -56,7 +58,7 @@ namespace TrafficCourts.Common.Test.Configuration
                 Assert.NotNull(logEvent.RenderMessage()); // assert anything about this message?
             }
         }
-        
+
         [Test]
         [Ignore("Having troubles with Serilog reading the configuration and also our reading of the configuration")]
         public void Configure_will_configure_EventCollector_if_url_and_token_are_available()
@@ -64,7 +66,7 @@ namespace TrafficCourts.Common.Test.Configuration
             var configurationValues = new Mock<IDictionary<string, string>>();
 
             // without this, we get a NullReferenceException when Serilog tries to read the configuration
-            configurationValues.Setup(_ => _.GetEnumerator()).Returns(new List<KeyValuePair<string,string>>().GetEnumerator());
+            configurationValues.Setup(_ => _.GetEnumerator()).Returns(new List<KeyValuePair<string, string>>().GetEnumerator());
 
             // setup that the expected configuration keys
             configurationValues.Setup(_ => _["Splunk:Url"]).Returns("http://localhost");

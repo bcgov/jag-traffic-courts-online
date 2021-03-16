@@ -1,7 +1,6 @@
-﻿using DisputeApi.Web.Features.TcoDispute.Service;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace DisputeApi.Web.Features.TcoDispute.Configuration
+namespace DisputeApi.Web.Features.Disputes.Configuration
 {
     /// <summary>
     /// Extension to inject dispute configuration service in service collection

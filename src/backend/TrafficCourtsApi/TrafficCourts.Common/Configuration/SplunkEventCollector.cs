@@ -1,8 +1,8 @@
-﻿using System;
-using System.Net.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
+using System.Net.Http;
 
 namespace TrafficCourts.Common.Configuration
 {

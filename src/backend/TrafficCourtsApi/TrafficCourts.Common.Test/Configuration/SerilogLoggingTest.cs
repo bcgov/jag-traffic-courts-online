@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 using Serilog;
 using TrafficCourts.Common.Configuration;
 
 namespace TrafficCourts.Common.Test.Configuration
 {
+    [ExcludeFromCodeCoverage]
     [TestFixture]
     public class SerilogLoggingTest
     {

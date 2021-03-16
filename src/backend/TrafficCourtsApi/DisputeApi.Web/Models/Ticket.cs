@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DisputeApi.Web.Features.TicketService.Models
+namespace DisputeApi.Web.Models
 {
     public class Ticket
     {

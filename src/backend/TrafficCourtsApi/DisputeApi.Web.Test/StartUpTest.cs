@@ -1,5 +1,4 @@
-﻿using DisputeApi.Web.Features.TicketService.Service;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -11,11 +10,14 @@ using NSwag.Generation;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
+using DisputeApi.Web.Features.TicketService;
 
 namespace DisputeApi.Web.Test
 {
+    [ExcludeFromCodeCoverage]
     public class StartUpTest
     {
         private WebApplicationFactory<Startup> WebAppFactoryObj;

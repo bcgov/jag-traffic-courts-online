@@ -1,9 +1,11 @@
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TrafficCourts.Common.Test.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public static class UnitTestExtensions
     {
         /// <summary>
@@ -12,7 +14,7 @@ namespace TrafficCourts.Common.Test.Configuration
         /// <param name="configurationBuilder">The configuration builder.</param>
         /// <param name="values">The values.</param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddUnitTestValues(this IConfigurationBuilder configurationBuilder, IDictionary<string,string> values = null)
+        public static IConfigurationBuilder AddUnitTestValues(this IConfigurationBuilder configurationBuilder, IDictionary<string, string> values = null)
         {
             if (configurationBuilder == null) throw new ArgumentNullException(nameof(configurationBuilder));
 
