@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -19,12 +20,27 @@ namespace DisputeApi.Web.Test.Features.Disputes
         private IDisputeService _service;
         private readonly Mock<ILogger<DisputeService>> _loggerMock = LoggerServiceMock.LoggerMock<DisputeService>();
 
-        [SetUp]
-        public void SetUp()
+
+        private ViolationContext CreateContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
             optionsBuilder.UseInMemoryDatabase("DisputeApi");
-            _service = new DisputeService(_loggerMock.Object, new ViolationContext(optionsBuilder.Options));
+
+            return new ViolationContext(optionsBuilder.Options);
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _service = new DisputeService(_loggerMock.Object, CreateContext());
+        }
+
+
+        [Test]
+        public void throw_ArgumentNullException_if_passed_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new DisputeService(null, CreateContext()));
+            Assert.Throws<ArgumentNullException>(() => new DisputeService(_loggerMock.Object, null));
         }
 
         [Test]
