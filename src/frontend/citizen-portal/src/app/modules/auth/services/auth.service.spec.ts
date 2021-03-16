@@ -25,31 +25,31 @@ describe('AuthService', () => {
     expect(authService).toBeTruthy();
   });
 
-  // it('login should invoke keycloak login', () => {
-  //   spyOn(keycloakService, 'login').and.returnValue(Promise.resolve());
-  //   authService.login().then(() => {
-  //     expect(keycloakService.login()).toHaveBeenCalled();
-  //   });
-  // });
+  it('login should invoke keycloak login', () => {
+    spyOn(keycloakService, 'login').and.returnValue(Promise.resolve());
+    authService.login().then(() => {
+      expect(keycloakService.login).toHaveBeenCalled();
+    });
+  });
 
-  // it('isLoggedIn should invoke keycloak isLoggedIn', () => {
-  //   spyOn(keycloakService, 'isLoggedIn').and.returnValue(Promise.resolve(true));
-  //   authService.isLoggedIn().then((result) => {
-  //     expect(keycloakService.isLoggedIn()).toHaveBeenCalled();
-  //     expect(result).toEqual(true);
-  //   });
-  // });
+  it('isLoggedIn should invoke keycloak isLoggedIn', () => {
+    spyOn(keycloakService, 'isLoggedIn').and.returnValue(Promise.resolve(true));
+    authService.isLoggedIn().then((result) => {
+      expect(keycloakService.isLoggedIn).toHaveBeenCalled();
+      expect(result).toEqual(true);
+    });
+  });
 
-  // it('getUser should getUserInfo when loggedIn', () => {
-  //   spyOn(keycloakService, 'loadUserProfile').and.returnValue(
-  //     Promise.resolve(new Object())
-  //   );
-  //   authService.getUser().then((result) => {
-  //     expect(keycloakService.loadUserProfile()).toHaveBeenCalled();
-  //     expect(result.firstName).toEqual('mockFirstName');
-  //     expect(result.lastName).toEqual('mockLastName');
-  //   });
-  // });
+  it('getUser should getUserInfo when loggedIn', () => {
+    spyOn(keycloakService, 'loadUserProfile').and.returnValue(
+      Promise.resolve(new Object())
+    );
+    authService.getUser().then((result) => {
+      expect(keycloakService.loadUserProfile).toHaveBeenCalled();
+      expect(result.firstName).toEqual('mockFirstName');
+      expect(result.lastName).toEqual('mockLastName');
+    });
+  });
 
   it('getUser should reject when not loggedIn', () => {
     spyOn(keycloakService, 'isLoggedIn').and.returnValue(
@@ -67,10 +67,10 @@ describe('AuthService', () => {
     });
   });
 
-  // it('logout should invoke keycloak logout', () => {
-  //   spyOn(keycloakService, 'logout').and.returnValue(Promise.resolve());
-  //   authService.logout().then(() => {
-  //     expect(keycloakService.logout()).toHaveBeenCalled();
-  //   });
-  // });
+  it('logout should invoke keycloak logout', () => {
+    spyOn(keycloakService, 'logout').and.returnValue(Promise.resolve());
+    authService.logout().then(() => {
+      expect(keycloakService.logout).toHaveBeenCalled();
+    });
+  });
 });
