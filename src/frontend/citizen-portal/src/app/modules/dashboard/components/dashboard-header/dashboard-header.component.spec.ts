@@ -54,11 +54,12 @@ describe('DashboardHeaderComponent', () => {
     expect(component.fullName).toBeUndefined();
   });
 
-  it('should call logout after angular call logout', () => {
+  it('should call logout after angular call logout', (done) => {
     spyOn(authService, 'logout').and.callThrough();
     component.onLogout().then(() => {
       expect(component.fullName).toBeUndefined();
       expect(authService.logout).toHaveBeenCalled();
+      done();
     });
   });
 });
