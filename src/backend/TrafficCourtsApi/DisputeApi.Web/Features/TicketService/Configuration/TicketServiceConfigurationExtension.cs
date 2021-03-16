@@ -1,6 +1,4 @@
-﻿
-using DisputeApi.Web.Features.TicketService.Service;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace DisputeApi.Web.Features.TicketService.Configuration
 {

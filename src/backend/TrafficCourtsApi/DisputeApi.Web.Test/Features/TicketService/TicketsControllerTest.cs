@@ -1,72 +1,75 @@
-﻿using DisputeApi.Web.Features.TicketService.Models;
-using DisputeApi.Web.Features.TicketService.Controller;
-using DisputeApi.Web.Features.TicketService.Service;
+﻿using System;
+using DisputeApi.Web.Features.TicketService;
+using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
+using DisputeApi.Web.Features.Disputes;
 
 namespace DisputeApi.Web.Test.Features.TicketService
 {
+    [ExcludeFromCodeCoverage]
     public class TicketsControllerTest
     {
-        private TicketsController _controller;
-        private readonly Mock<ILogger<TicketsController>> _loggerMock = LoggerServiceMock.LoggerMock<TicketsController>();
-        private Mock<ITicketsService> _ticketsServiceMock = new Mock<ITicketsService>();
+        private Mock<ILogger<TicketsController>> _loggerMock;
+        private Mock<ITicketsService> _ticketsServiceMock;
 
         [SetUp]
         public void SetUp()
         {
-            _controller = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+            _loggerMock = LoggerServiceMock.LoggerMock<TicketsController>();
+            _ticketsServiceMock = new Mock<ITicketsService>();
         }
 
         [Test]
-        public async Task get_tickets()
+        public void throw_ArgumentNullException_if_passed_null()
         {
-            var ticket = new Ticket
-            {
-                Id = 1,
-                UserId = "User123",
-                ViolationTicketNumber = "LM87878888",
-                ViolationDate = "11-10-2002 12:23",
-                SurName = "Smith",
-                GivenNames = "Will"
-            };
-            _ticketsServiceMock.Setup(x => x.GetTickets()).Returns(
-              Task.FromResult(new List<Ticket> { ticket }.AsQueryable()));
-            var result = (OkObjectResult)await _controller.GetTickets();
-            Assert.IsInstanceOf<IQueryable<Ticket>>(result.Value);
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, null));
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task get_tickets(Ticket ticket)
+        {
+            IEnumerable<Ticket> data = new List<Ticket> { ticket };
+
+            _ticketsServiceMock
+                .Setup(x => x.GetTickets())
+                .Returns(Task.FromResult(data));
+
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+
+            var result = (OkObjectResult)await sut.GetTickets();
+            Assert.IsInstanceOf<IEnumerable<Ticket>>(result.Value);
             Assert.IsNotNull(result);
-            Assert.AreEqual(((IQueryable<Ticket>)result.Value).Count(), 1);
-            _ticketsServiceMock.Verify(x => x.GetTickets(), Times.Once);
+            Assert.AreEqual(((IEnumerable<Ticket>)result.Value).Count(), 1);
 
+            _ticketsServiceMock.Verify(x => x.GetTickets(), Times.Once);
         }
 
-        [Test]
-        public async Task save_ticket()
+        [Theory]
+        [AutoData]
+        public async Task save_ticket(Ticket ticket)
         {
-            var ticket = new Ticket
-            {
-                Id = 2,
-                UserId = "User14",
-                ViolationTicketNumber = "BC87878888",
-                ViolationDate = "11-11-2002 12:23",
-                SurName = "Smith",
-                GivenNames = "Tim",
-            };
+            _ticketsServiceMock
+                .Setup(x => x.SaveTicket(ticket))
+                .Returns(Task.FromResult(ticket));
 
-            _ticketsServiceMock.Setup(x => x.SaveTicket(ticket)).Returns(Task.FromResult(
-               ticket));
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
 
-            var result = (OkObjectResult)await _controller.SaveTicket(ticket);
+            var result = (OkObjectResult)await sut.SaveTicket(ticket);
             Assert.IsInstanceOf<Ticket>(result.Value);
             Assert.IsNotNull(result.Value);
-            _ticketsServiceMock.Verify(x => x.SaveTicket(ticket), Times.Once);
 
+            _ticketsServiceMock.Verify(x => x.SaveTicket(ticket), Times.Once);
         }
     }
 }

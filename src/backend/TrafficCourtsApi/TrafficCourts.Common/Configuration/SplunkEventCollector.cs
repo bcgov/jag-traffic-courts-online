@@ -1,8 +1,10 @@
-﻿using System;
-using System.Net.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System;
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TrafficCourts.Common.Configuration
 {
@@ -42,11 +44,16 @@ namespace TrafficCourts.Common.Configuration
 #pragma warning disable CA2000 // Dispose objects before losing scope
                         messageHandler: new HttpClientHandler
                         {
-                            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                            ServerCertificateCustomValidationCallback = ServerCertificateCustomValidation
                         });
 #pragma warning restore CA2000 // Dispose objects before losing scope
 
             }
+        }
+
+        internal static bool ServerCertificateCustomValidation(HttpRequestMessage message, X509Certificate2 cert, X509Chain chain, SslPolicyErrors errors)
+        {
+            return true;
         }
     }
 }
