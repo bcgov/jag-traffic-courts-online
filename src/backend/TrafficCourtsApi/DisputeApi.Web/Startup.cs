@@ -54,7 +54,8 @@ namespace DisputeApi.Web
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers();
             ConfigureOpenApi(services);
-            
+
+#if USE_AUTHENTICATION
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,7 +68,7 @@ namespace DisputeApi.Web
                      .RequireAuthenticatedUser()
                      .Build();
             });
-            
+#endif
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
             services.AddDisputeService();
