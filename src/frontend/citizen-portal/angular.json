@@ -21,11 +21,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "sourceMap": {
-              "scripts": true,
-              "styles": true,
-              "vendor": true
-            },
+            "sourceMap": false,
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": ["src/favicon.ico", "src/assets"],
@@ -71,7 +67,6 @@
                 }
               ]
             }
-            
           }
         },
         "serve": {

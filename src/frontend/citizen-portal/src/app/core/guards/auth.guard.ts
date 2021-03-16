@@ -6,6 +6,7 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
+import { LoggerService } from '@core/services/logger.service';
 import { KeycloakService } from 'keycloak-angular';
 
 @Injectable()
@@ -14,7 +15,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(
     protected router: Router,
-    protected keycloakService: KeycloakService
+    protected keycloakService: KeycloakService,
+    private logger: LoggerService
   ) {}
 
   public get isAuthenticated(): boolean {
@@ -40,7 +42,10 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       try {
         this.authenticated = await this.keycloakService.isLoggedIn();
         if (!this.authenticated) {
-          this.keycloakService.login();
+          this.keycloakService.login().catch((e) => {
+            this.logger.error('keycloakService.login failure', e);
+            this.router.navigate(['/']);
+          });
         }
         const result = await this.canAccess(this.authenticated, url);
         resolve(result);

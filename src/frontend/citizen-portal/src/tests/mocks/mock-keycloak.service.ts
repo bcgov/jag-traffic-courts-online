@@ -1,10 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MockKeycloakService {
+  public static mockInitializer(
+    keycloak: KeycloakService,
+    injector: Injector
+  ): () => Promise<void> {
+    console.log('mock initializer');
+    return () => Promise.resolve();
+  }
+
   public init(): Promise<boolean> {
     return Promise.resolve(true);
   }

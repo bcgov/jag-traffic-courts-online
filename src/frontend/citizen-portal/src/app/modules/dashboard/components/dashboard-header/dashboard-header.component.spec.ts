@@ -9,7 +9,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { NgxProgressModule } from '@shared/modules/ngx-progress/ngx-progress.module';
 import { AuthService } from 'app/modules/auth/services/auth.service';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { MockAuthService } from 'tests/mocks/mock-auth.service';
 import { DashboardHeaderComponent } from './dashboard-header.component';
 
@@ -54,11 +54,12 @@ describe('DashboardHeaderComponent', () => {
     expect(component.fullName).toBeUndefined();
   });
 
-  it('should call logout after angular call logout', () => {
+  it('should call logout after angular call logout', (done) => {
     spyOn(authService, 'logout').and.callThrough();
     component.onLogout().then(() => {
       expect(component.fullName).toBeUndefined();
       expect(authService.logout).toHaveBeenCalled();
+      done();
     });
   });
 });
