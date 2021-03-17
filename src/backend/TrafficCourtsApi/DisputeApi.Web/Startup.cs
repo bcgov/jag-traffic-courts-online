@@ -75,6 +75,7 @@ namespace DisputeApi.Web
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
             services.AddDisputeService();
+            services.AddRouting(options => options.LowercaseUrls = true);
         }
 
         internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
