@@ -11,7 +11,7 @@ on: [pull_request]
 
 jobs:
   label:
-    environment: production
+    environment: Development
     runs-on: ubuntu-latest
     steps:
     - uses: actions/labeler@v2

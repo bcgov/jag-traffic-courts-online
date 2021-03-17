@@ -4,7 +4,7 @@ on: [pull_request]
 jobs:
   build-main:
     runs-on: ubuntu-20.04
-    environment: production
+    environment: Development
     env:
       VERSION: v1
       IMAGE_NAME: citizen-portal
@@ -20,7 +20,7 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-          docker-compose build \
+          docker-compose build --force-rm --no-cache \
           --build-arg API_URL=${{secrets.API_URL}} \
           --build-arg KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}} \
           --build-arg KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} \

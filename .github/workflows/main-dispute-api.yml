@@ -8,7 +8,7 @@ on:
 jobs:
   build-main:
     runs-on: ubuntu-20.04
-    environment: production
+    environment: Development
     env:
       VERSION: v1
       IMAGE_NAME: dispute-api
@@ -24,7 +24,7 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-          docker-compose build $IMAGE_NAME
+          docker-compose build --force-rm --no-cache $IMAGE_NAME
 
       - name: Tag the Image
         id: tag-image

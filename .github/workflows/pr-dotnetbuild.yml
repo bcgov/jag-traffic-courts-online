@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: production
+    environment: Development
     steps:
       - uses: actions/checkout@v1
       - name: Setup .NET Core
@@ -18,4 +18,3 @@ jobs:
       - name: Test TrafficCourtsApi
         run: dotnet test
         working-directory: ./src/backend/TrafficCourtsApi
-        
