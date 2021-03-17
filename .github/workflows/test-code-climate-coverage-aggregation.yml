@@ -2,13 +2,10 @@ name: Generate/Upload all Coverage Reports
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+    branches: [test]  
 jobs:
   frontend:
-    environment: Development
+    environment: test
     env:
       FILE_COUNTER: 0
       CC_TEST_REPORTER_ID: 8a4068fec71e2ce84714008f57ea6548614c380821df800ed611c2afc6a42d93
