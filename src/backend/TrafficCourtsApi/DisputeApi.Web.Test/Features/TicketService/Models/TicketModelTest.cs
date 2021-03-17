@@ -1,35 +1,23 @@
-﻿using DisputeApi.Web.Features.TicketService.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoFixture.NUnit3;
+using DisputeApi.Web.Models;
+using DisputeApi.Web.Test.Utils;
 using NUnit.Framework;
 
 namespace DisputeApi.Web.Test.Features.TicketService.Models
 {
+    [ExcludeFromCodeCoverage]
     public class TicketModelTest
     {
+        [Theory]
+        [AutoData]
+        public void can_create_class(Ticket expected)
+        { 
+            var actual = PropertyCopy.CopyProperties(expected);
 
-        [Test]
-        public void can_create_class()
-        {
-            var ticket = new Ticket
-            {
-                Id = 1001,
-                UserId = "User123",
-                ViolationTicketNumber = "GX87878888",
-                CourtLocation = "Victoria",
-                ViolationDate = "11-12-2002 12:23",
-                SurName = "Smith",
-                GivenNames = "John",
-                Mailing = "Mailing",
-                Postal = "V0W0A0",
-                City = "Victoria",
-                Province = "BC",
-                Licence = "L2323G7",
-                ProvLicense = "L34343G64",
-                HomePhone = "2434332233",
-                WorkPhone = "3345553344",
-                Birthdate = "12-12-2002"
-            };
-            Assert.AreEqual(ticket.GivenNames, "John");
-            Assert.AreEqual(ticket.Licence, "L2323G7");
+            // to do: check all properties
+            Assert.AreEqual(expected.GivenNames, actual.GivenNames);
+            Assert.AreEqual(expected.Licence, actual.Licence);
         }
     }
 }

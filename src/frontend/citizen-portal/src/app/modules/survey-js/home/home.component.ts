@@ -7,6 +7,14 @@ import { SurveyJson } from 'tests/survey';
 import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
+import { Dispute } from '@shared/models/dispute.model';
+import { Ticket } from '@shared/models/ticket.model';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { Subscription, timer } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastService } from '@core/services/toast.service';
+import { DisputeRoutes } from '@dispute/dispute.routes';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +23,16 @@ import { PhonePipe } from '@shared/pipes/phone.pipe';
   providers: [FormatDatePipe, PhonePipe],
 })
 export class HomeComponent implements OnInit {
-  public isComplete = false;
+  public busy: Subscription;
+  public dispute: Dispute;
+
+  private tcoSurvey: Survey.Survey;
 
   constructor(
     private logger: LoggerService,
-    private route: Router,
+    private dialog: MatDialog,
+    private router: Router,
+    private toastService: ToastService,
     private datePipe: FormatDatePipe,
     private phonePipe: PhonePipe,
     private surveyResource: SurveyResourceService
@@ -32,137 +45,149 @@ export class HomeComponent implements OnInit {
     Survey.defaultBootstrapCss.signaturepad.clearButton =
       'btn btn-outline-secondary';
 
-    const tcoSurvey = new Survey.Model(SurveyJson);
-    Survey.SurveyNG.render('surveyContainer', {
-      model: tcoSurvey,
+    this.setupSurvey();
+  }
+
+  private setupSurvey(): void {
+    this.tcoSurvey = new Survey.Model(SurveyJson);
+
+    this.surveyResource.getDispute().subscribe((dispute) => {
+      this.dispute = dispute;
+      this.handleSurveySetup(dispute);
+
+      Survey.SurveyNG.render('surveyContainer', {
+        model: this.tcoSurvey,
+      });
     });
 
     // let ticketYn = survey.getValue('ticketYn');
     // survey.setValue('disputeYn', false);
     // survey.focusQuestion("disputeYn");
 
-    tcoSurvey.onComplete.add((survey) => {
-      this.logger.info('Survey JSON:', JSON.stringify(survey.data, null, 3));
+    this.tcoSurvey.onCompleting.add((survey, options) => {
+      this.logger.info(
+        'onCompleting Survey JSON:',
+        JSON.stringify(survey.data, null, 3)
+      );
 
-      this.isComplete = true;
+      options.allowComplete = false;
+      this.handleOnCompleting();
     });
 
-    // tcoSurvey.onValidateQuestion.add((survey, options) => {
-    //   this.surveyValidateQuestion(survey, options);
-    // });
-
-    tcoSurvey.onCurrentPageChanged.add((survey, options) => {
-      this.surveyCurrentPageChanged(survey);
+    this.tcoSurvey.onComplete.add((survey) => {
+      this.logger.info(
+        'onComplete Survey JSON:',
+        JSON.stringify(survey.data, null, 3)
+      );
     });
   }
 
-  public surveyCurrentPageChanged(survey: Survey.SurveyModel): void {
-    this.logger.info(
-      'surveyCurrentPageChanged',
-      survey.currentPage.name,
-      JSON.stringify(survey.data, null, 3)
+  private handleSurveySetup(dispute: Dispute): void {
+    const ticket = dispute.ticket;
+
+    this.tcoSurvey.setValue(
+      'info_violationTicketNumber',
+      ticket.violationTicketNumber
     );
 
-    const pageName = survey.currentPage.name;
-    if (pageName === 'page2') {
-      this.surveyResource.getTicket().subscribe((response) => {
-        survey.setValue(
-          'info_violationTicketNumber',
-          response.violationTicketNumber
-        );
+    this.tcoSurvey.setValue(
+      'info_violationDate',
+      this.datePipe.transform(ticket.violationDate?.toString()) +
+        ' ' +
+        ticket.violationTime
+    );
+    this.tcoSurvey.setValue('info_surname', ticket.surname);
+    this.tcoSurvey.setValue('info_givenNames', ticket.givenNames);
+    this.tcoSurvey.setValue('info_mailing', ticket.mailing);
+    this.tcoSurvey.setValue('info_postal', ticket.postal);
+    this.tcoSurvey.setValue('info_city', ticket.city);
+    this.tcoSurvey.setValue('info_province', ticket.province);
+    this.tcoSurvey.setValue('info_license', ticket.license);
+    this.tcoSurvey.setValue('info_provLicense', ticket.provLicense);
+    this.tcoSurvey.setValue('info_homePhone', ticket.homePhone);
+    this.tcoSurvey.setValue('info_workPhone', ticket.workPhone);
+    this.tcoSurvey.setValue(
+      'info_birthdate',
+      this.datePipe.transform(ticket.birthdate?.toString())
+    );
 
-        survey.setValue(
-          'info_violationDate',
-          this.datePipe.transform(response.violationDate?.toString())
-        );
-        survey.setValue('info_courtLocation', response.courtLocation);
-        survey.setValue('info_surname', response.surname);
-        survey.setValue('info_givenNames', response.givenNames);
-        survey.setValue('info_mailing', response.mailing);
-        survey.setValue('info_postal', response.postal);
-        survey.setValue('info_city', response.city);
-        survey.setValue('info_province', response.province);
-        survey.setValue('info_license', response.license);
-        survey.setValue('info_provLicense', response.provLicense);
-        survey.setValue('info_homePhone', response.homePhone);
-        survey.setValue('info_workPhone', response.workPhone);
-        survey.setValue(
-          'info_birthdate',
-          this.datePipe.transform(response.birthdate?.toString())
-        );
+    this.tcoSurvey.setValue(
+      'info_party',
+      ticket.givenNames +
+        ' ' +
+        ticket.surname +
+        '\nBirthdate: ' +
+        this.datePipe.transform(ticket.birthdate?.toString()) +
+        '\n\nDriver License: ' +
+        ticket.license +
+        ' ' +
+        ticket.provLicense
+    );
 
-        survey.setValue(
-          'info_party',
-          response.givenNames +
-            ' ' +
-            response.surname +
-            '\nBirthdate: ' +
-            this.datePipe.transform(response.birthdate?.toString()) +
-            '\n\nDriver License: ' +
-            response.license +
-            ' ' +
-            response.provLicense
-        );
+    this.tcoSurvey.setValue(
+      'info_address',
+      ticket.mailing +
+        '\n' +
+        ticket.city +
+        ' ' +
+        ticket.province +
+        ' ' +
+        ticket.postal +
+        '\nHome: ' +
+        this.phonePipe.transform(ticket.homePhone) +
+        '\nWork: ' +
+        this.phonePipe.transform(ticket.workPhone)
+    );
 
-        survey.setValue(
-          'info_address',
-          response.mailing +
-            '\n' +
-            response.city +
-            ' ' +
-            response.province +
-            ' ' +
-            response.postal +
-            '\nHome: ' +
-            this.phonePipe.transform(response.homePhone) +
-            '\nWork: ' +
-            this.phonePipe.transform(response.workPhone)
-        );
+    const numberOfCounts = ticket.counts?.length;
+    this.tcoSurvey.setValue('numberOfCounts', ticket.counts?.length);
 
-        const numberOfCounts = response.counts?.length;
-        survey.setValue('numberOfCounts', response.counts?.length);
-
-        response.counts.forEach((cnt) => {
-          const question = survey.getQuestionByName(
-            'alert_info_count' + cnt.countNo
-          );
-          if (cnt.countNo === 1) {
-            question.html =
-              '<div class="alert alert-primary"><h1 class="alert-heading">Violation Ticket Counts</h1>' +
-              '<p class="mt-2 mb-0">Look at each of the counts on your ticket and please answer the following questions.</p></div>' +
-              '<br/><br/><div class="alert alert-primary"><h1 class="alert-heading">Count #' +
-              cnt.countNo +
-              '<small>' +
-              cnt.description +
-              '</small></h1>' +
-              '</div>';
-          } else {
-            question.html =
-              '<div class="alert alert-primary"><h1 class="alert-heading">Count #' +
-              cnt.countNo +
-              '<small>' +
-              cnt.description +
-              '</small></h1></div>';
-          }
-        });
-      });
-    }
+    ticket?.counts.forEach((cnt) => {
+      const question = this.tcoSurvey.getQuestionByName(
+        'alert_info_count' + cnt.countNo
+      );
+      question.html =
+        `<div>
+        <h2 class="mb-1">Offence #` +
+        cnt.countNo +
+        `<small class="ml-2">` +
+        cnt.description +
+        `</small>
+        </h2>
+        <hr class="m-0" style="border: 1px solid #ffb200;" />
+      </div>`;
+    });
   }
 
-  // public surveyValidateQuestion(
-  //   survey: Survey.SurveyModel,
-  //   options: any
-  // ): void {
-  // if (options.name === 'violationTicketNumber') {
-  //   this.logger.info('surveyValidateQuestion', options);
-  //   // const violationTicketNumber = options.value;
-  //   this.surveyResource.getTicket().subscribe((response) => {
-  //     if (!response) {
-  //       options.error = 'There was a problem finding your ticket';
-  //       this.logger.info('surveyValidateQuestion after', options);
-  //       return;
-  //     }
-  //   });
-  // }
-  // }
+  private handleOnCompleting(): void {
+    if (!!this.tcoSurvey.isConfirming) {
+      return;
+    }
+    this.tcoSurvey.isConfirming = true;
+
+    const data: DialogOptions = {
+      title: 'Submit Dispute',
+      message:
+        'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
+      actionText: 'Submit Dispute',
+    };
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data })
+      .afterClosed()
+      .subscribe((response: boolean) => {
+        if (response) {
+          const source = timer(1000);
+          this.busy = source.subscribe((val) => {
+            this.tcoSurvey.doComplete();
+            this.toastService.openSuccessToast('Dispute has been submitted');
+            this.router.navigate([
+              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
+            ]);
+          });
+        } else {
+          this.tcoSurvey.isConfirming = false;
+        }
+      });
+  }
 }

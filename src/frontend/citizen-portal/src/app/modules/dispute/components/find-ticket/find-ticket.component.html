@@ -1,0 +1,87 @@
+<app-page>
+  <app-tco-page-header>
+    <ng-container header>Find your BC Traffic Ticket</ng-container>
+    <ng-container subHeader
+      >Enter the Violation Ticket Number and the Violation Time to find your
+      ticket.</ng-container
+    >
+  </app-tco-page-header>
+
+  <div class="container">
+    <div class="row mt-4">
+      <div class="col-lg-6">
+        <section>
+          <div class="row mb-4">
+            <div class="col">
+              <p>Violation Ticket Number:</p>
+              <mat-form-field class="w-100">
+                <input
+                  matInput
+                  type="text"
+                  oninput="this.value =
+              this.value.toUpperCase()"
+                  mask="SS00000000"
+                  autocomplete="off"
+                />
+                <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-hint>
+                  <small
+                    >A Violation Ticket Number is 2 letters and 8 numbers
+                  </small></mat-hint
+                >
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p>Violation Time:</p>
+              <mat-form-field class="w-100">
+                <input matInput type="time" />
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button
+                mat-flat-button
+                color="primary"
+                class="large"
+                (click)="onSearch()"
+              >
+                Search
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-3 mt-4">
+          <div class="row">
+            <div class="col-lg-12">
+              <app-alert type="info" icon="warning">
+                <ng-container #alertContent class="alert-content">
+                  <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong
+                  ><br />
+                  Phone Toll Free: 1-877-661-8026 <br />
+                  Forms are available on the website at:
+                  <a
+                    href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
+                    target="_blank"
+                    >Online Forms</a
+                  >
+                </ng-container>
+              </app-alert>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col-lg-6">
+        <div class="info-graphic pl-4">
+          <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
+        </div>
+      </div>
+    </div>
+  </div>
+</app-page>

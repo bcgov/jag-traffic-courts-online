@@ -16,7 +16,8 @@ function initializer(
   keycloak: KeycloakService,
   injector: Injector
 ): () => Promise<void> {
-  const routeToDefault = () => injector.get(Router).navigateByUrl('/home');
+  console.log('using Keycloak initializer');
+  const routeToDefault = () => injector.get(Router).navigateByUrl('/');
 
   return async (): Promise<void> => {
     const authenticated = await keycloak.init(
@@ -54,7 +55,11 @@ function initializer(
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: initializer,
+      useFactory: () => {
+        return environment.useKeycloak
+          ? initializer
+          : MockKeycloakService.mockInitializer;
+      },
       multi: true,
       deps: [KeycloakService, Injector],
     },

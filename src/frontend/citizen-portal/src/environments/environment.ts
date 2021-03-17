@@ -1,4 +1,3 @@
-
 export const environment = {
   production: false,
   version: '1.0.0',
@@ -7,9 +6,9 @@ export const environment = {
   apiUrl: 'http://dispute-api:5000/api',
   keycloakConfig: {
     config: {
-      url: 'http://localhost:8081/auth',
-      realm: 'traffic-court',
-      clientId: 'test',
+      url: 'http://localhost:8082/auth',
+      realm: 'TCO',
+      clientId: 'citizenPortal',
     },
     initOptions: {
       onLoad: 'check-sso',

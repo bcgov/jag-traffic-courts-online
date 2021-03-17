@@ -2,8 +2,8 @@ export interface Ticket {
   id?: number;
   userId: string;
   violationTicketNumber: string;
-  courtLocation: string;
-  violationDate: Date;
+  violationDate: string;
+  violationTime: string;
   surname: string;
   givenNames: string;
   mailing: string;
@@ -15,14 +15,11 @@ export interface Ticket {
   homePhone: string;
   workPhone: string;
   birthdate: Date;
-  lawyerPresent: boolean;
-  interpreterRequired: boolean;
-  interpreterLanguage: string;
-  callWitness: boolean;
   counts: Count[];
 }
 
 export interface Count {
+  id: number;
   countNo: number;
   statuteId: number;
   description: string;

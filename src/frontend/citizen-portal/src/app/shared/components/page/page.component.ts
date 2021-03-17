@@ -13,6 +13,4 @@ export class PageComponent {
   constructor() {
     this.mode = 'default';
   }
-
-  // ngOnInit(): void { }
 }

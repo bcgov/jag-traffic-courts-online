@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
+using DisputeApi.Web.Features.Disputes.Configuration;
 using DisputeApi.Web.Features.TicketService.Configuration;
-using DisputeApi.Web.Features.TicketService.DBContexts;
 using DisputeApi.Web.Health;
+using DisputeApi.Web.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -20,55 +18,69 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using NSwag;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 
 namespace DisputeApi.Web
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-
-        private IConfiguration _config { get; }
-
         private readonly IWebHostEnvironment _env;
+        private IConfiguration _configuration { get; }
 
         public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
-            _config = configuration;
-            _env = env;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            _env = env ?? throw new ArgumentNullException(nameof(env));
         }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(o =>
+            // TODO - For now, prevent authentication this way
+            if (!_env.IsDevelopment())
             {
-                o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-            }).AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-            });
-            services.AddDbContext<TicketContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
+                services.AddMvc(o =>
+                {
+#if USE_AUTHENTICATION
+                    o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+#endif
+                }).AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                });
+            }
+
+            services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers();
             ConfigureOpenApi(services);
+
+#if USE_AUTHENTICATION
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(ConfigureJwtBearerAuthentication);
+
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
                      .RequireAuthenticatedUser()
                      .Build();
             });
+#endif
             services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
+            services.AddDisputeService();
         }
 
         internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
         {
-            string authority = _config["Jwt:Authority"];
-            string audience = _config["Jwt:Audience"];
+            string authority = _configuration["Jwt:Authority"];
+            string audience = _configuration["Jwt:Audience"];
             if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
             {
                 throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
@@ -93,7 +105,7 @@ namespace DisputeApi.Web
                     c.NoResult();
                     c.Response.StatusCode = 401;
                     c.Response.ContentType = "text/plain";
-                    return c.Response.WriteAsync("An error occured processing your authentication.");
+                    return c.Response.WriteAsync("An error occurred processing your authentication.");
                 }
             };
         }
@@ -114,7 +126,7 @@ namespace DisputeApi.Web
             app.Use(async (context, next) =>
             {
                 context.Response.GetTypedHeaders().CacheControl =
-                 new CacheControlHeaderValue()
+                 new CacheControlHeaderValue
                  {
                      NoStore = true,
                      NoCache = true,
@@ -126,7 +138,6 @@ namespace DisputeApi.Web
                 context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
                 await next();
             });
-
 
             app.UseRouting();
 
@@ -152,9 +163,8 @@ namespace DisputeApi.Web
         /// https://github.com/RicoSuter/NSwag
         /// </summary>
         /// <param name="services"></param>
-        private void ConfigureOpenApi(IServiceCollection services)
+        internal void ConfigureOpenApi(IServiceCollection services)
         {
-
             services.AddSwaggerDocument(config =>
             {
                 // configure swagger properties
@@ -163,16 +173,16 @@ namespace DisputeApi.Web
                     document.Info.Version = "V0.1";
                     document.Info.Description = "Dispute API";
                     document.Info.Title = "Dispute API";
-                    document.Tags = new List<OpenApiTag>()
+                    document.Tags = new List<OpenApiTag>
                     {
-                        new OpenApiTag() {
+                        new OpenApiTag
+                        {
                             Name = "Dispute API",
                             Description = "Dispute API"
                         }
                     };
                 };
             });
-
         }
     }
 }
