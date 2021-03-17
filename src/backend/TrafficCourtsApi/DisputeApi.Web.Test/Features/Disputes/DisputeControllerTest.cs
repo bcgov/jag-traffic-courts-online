@@ -17,21 +17,21 @@ namespace DisputeApi.Web.Test.Features.Disputes
     [ExcludeFromCodeCoverage]
     public class DisputeControllerTest
     {
-        private Mock<ILogger<DisputeController>> _loggerMock;
+        private Mock<ILogger<DisputesController>> _loggerMock;
         private Mock<IDisputeService> _disputeServiceMock;
 
         [SetUp]
         public void SetUp()
         {
-            _loggerMock = LoggerServiceMock.LoggerMock<DisputeController>();
+            _loggerMock = LoggerServiceMock.LoggerMock<DisputesController>();
             _disputeServiceMock = new Mock<IDisputeService>();
         }
 
         [Test]
         public void throw_ArgumentNullException_if_passed_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new DisputeController(null, _disputeServiceMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new DisputeController(_loggerMock.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _disputeServiceMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null));
         }
 
         [Theory]
@@ -45,7 +45,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Returns(Task.FromResult(expected));
 
 
-            var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object);
 
             var result = await sut.GetDisputes();
             Assert.IsNotNull(result);
@@ -68,7 +68,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.GetAsync(expected.Id))
                 .Returns(Task.FromResult(expected));
 
-            var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object);
 
             var result = await sut.GetDispute(expected.Id);
             Assert.IsNotNull(result);
@@ -86,7 +86,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult((Dispute)null));
 
-            var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object);
             
             var result = await sut.GetDispute(disputeId);
             Assert.IsNotNull(result);
@@ -101,7 +101,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.CreateAsync(dispute))
                 .Returns(Task.FromResult(dispute));
 
-            var sut = new DisputeController(_loggerMock.Object, _disputeServiceMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object);
 
             var result = await sut.CreateDispute(dispute);
             Assert.IsNotNull(result);

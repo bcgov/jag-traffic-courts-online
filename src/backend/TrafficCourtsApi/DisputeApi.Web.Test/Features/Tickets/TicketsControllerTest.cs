@@ -7,6 +7,7 @@ using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -19,19 +20,22 @@ namespace DisputeApi.Web.Test.Features.Tickets
     {
         private Mock<ILogger<TicketsController>> _loggerMock;
         private Mock<ITicketsService> _ticketsServiceMock;
+        private Mock<IMediator> _mediatorMock;
 
         [SetUp]
         public void SetUp()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<TicketsController>();
             _ticketsServiceMock = new Mock<ITicketsService>();
+            _mediatorMock = new Mock<IMediator>();
         }
 
         [Test]
         public void throw_ArgumentNullException_if_passed_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object, _mediatorMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, null, _mediatorMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, null));
         }
 
         [Theory]
@@ -44,7 +48,7 @@ namespace DisputeApi.Web.Test.Features.Tickets
                 .Setup(x => x.GetTickets())
                 .Returns(Task.FromResult(data));
 
-            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
 
             var result = (OkObjectResult)await sut.GetTickets();
             Assert.IsInstanceOf<IEnumerable<Ticket>>(result.Value);
@@ -62,7 +66,7 @@ namespace DisputeApi.Web.Test.Features.Tickets
                 .Setup(x => x.SaveTicket(ticket))
                 .Returns(Task.FromResult(ticket));
 
-            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object);
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
 
             var result = (OkObjectResult)await sut.SaveTicket(ticket);
             Assert.IsInstanceOf<Ticket>(result.Value);
