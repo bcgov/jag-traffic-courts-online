@@ -7,7 +7,7 @@ jobs:
     environment: production
     env:
       VERSION: v1
-      IMAGE_NAME: citizen-portal-demo
+      IMAGE_NAME: citizen-portal
       IMAGE_TAGS: latest
      
     steps:
