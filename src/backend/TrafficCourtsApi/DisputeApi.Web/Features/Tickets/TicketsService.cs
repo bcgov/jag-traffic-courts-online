@@ -1,12 +1,12 @@
-﻿using DisputeApi.Web.Infrastructure;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DisputeApi.Web.Infrastructure;
 using DisputeApi.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace DisputeApi.Web.Features.TicketService
+namespace DisputeApi.Web.Features.Tickets
 {
 
     public interface ITicketsService

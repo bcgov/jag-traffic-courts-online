@@ -1,13 +1,13 @@
-﻿using DisputeApi.Web.Models;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using DisputeApi.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace DisputeApi.Web.Features.TicketService
+namespace DisputeApi.Web.Features.Tickets
 {
     [Route("api/[controller]")]
     [ApiController]

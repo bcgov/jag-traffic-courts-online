@@ -4,7 +4,7 @@ using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using NUnit.Framework;
 
-namespace DisputeApi.Web.Test.Features.TicketService.Models
+namespace DisputeApi.Web.Test.Features.Tickets.Models
 {
     [ExcludeFromCodeCoverage]
     public class TicketModelTest

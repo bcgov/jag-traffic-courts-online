@@ -1,19 +1,18 @@
 ﻿using System;
-using DisputeApi.Web.Features.TicketService;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
+using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
-using DisputeApi.Web.Features.Disputes;
 
-namespace DisputeApi.Web.Test.Features.TicketService
+namespace DisputeApi.Web.Test.Features.Tickets
 {
     [ExcludeFromCodeCoverage]
     public class TicketsControllerTest
