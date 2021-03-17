@@ -1,5 +1,4 @@
 using DisputeApi.Web.Features.Disputes.Configuration;
-using DisputeApi.Web.Features.TicketService.Configuration;
 using DisputeApi.Web.Health;
 using DisputeApi.Web.Infrastructure;
 using HealthChecks.UI.Client;
@@ -21,6 +20,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using DisputeApi.Web.Features.Tickets.Configuration;
 
 namespace DisputeApi.Web
 {

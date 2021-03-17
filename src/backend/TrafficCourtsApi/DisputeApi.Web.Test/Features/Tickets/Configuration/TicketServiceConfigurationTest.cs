@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using DisputeApi.Web.Features.TicketService;
-using DisputeApi.Web.Features.TicketService.Configuration;
+using System.Linq;
+using DisputeApi.Web.Features.Tickets;
+using DisputeApi.Web.Features.Tickets.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System.Linq;
 
-namespace DisputeApi.Web.Test.Features.TicketService.Configuration
+namespace DisputeApi.Web.Test.Features.Tickets.Configuration
 {
     [ExcludeFromCodeCoverage]
     public class TicketServiceConfigurationExtensionTest

@@ -13,7 +13,7 @@ using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
-using DisputeApi.Web.Features.TicketService;
+using DisputeApi.Web.Features.Tickets;
 
 namespace DisputeApi.Web.Test
 {
