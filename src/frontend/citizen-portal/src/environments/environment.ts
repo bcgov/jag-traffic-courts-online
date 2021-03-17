@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   version: '1.0.0',
-  useKeycloak: true,
+  useKeycloak: false,
   useMockServices: true,
   apiUrl: 'http://dispute-api:5000/api',
   keycloakConfig: {

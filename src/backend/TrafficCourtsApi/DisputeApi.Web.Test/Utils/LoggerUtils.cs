@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DisputeApi.Web.Test.Utils
 {
-
+    [ExcludeFromCodeCoverage]
     public static class LoggerServiceMock
     {
         public static Mock<ILogger<T>> LoggerMock<T>() where T : class

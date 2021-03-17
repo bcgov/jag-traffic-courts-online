@@ -30,11 +30,13 @@ export class DashboardHeaderComponent implements OnInit {
     this.toggle = new EventEmitter<void>();
   }
 
-  public ngOnInit() {
-    this.authService.getUser$().subscribe((user: User) => {
-      this.fullName = `${user?.firstName} ${user?.lastName}`;
-      this.logger.info('DashboardHeaderComponent username', this.fullName);
-    });
+  public async ngOnInit() {
+    const authenticated = await this.authService.isLoggedIn();
+    if (authenticated) {
+      this.authService.getUser$().subscribe((user: User) => {
+        this.fullName = `${user?.firstName} ${user?.lastName}`;
+      });
+    }
   }
 
   public toggleSidenav(): void {
