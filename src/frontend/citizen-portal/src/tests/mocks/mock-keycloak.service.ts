@@ -9,7 +9,7 @@ export class MockKeycloakService {
     keycloak: KeycloakService,
     injector: Injector
   ): () => Promise<void> {
-    console.log('mock initializer');
+    console.log('using Mock initializer');
     return () => Promise.resolve();
   }
 
