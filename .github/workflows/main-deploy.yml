@@ -65,7 +65,6 @@ jobs:
           --build-arg KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} \
           --build-arg KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}} \
           $IMAGE_NAME
-          --force-rm --no-cache
 
       - name: Tag the Image
        
