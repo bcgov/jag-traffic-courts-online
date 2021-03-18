@@ -29,7 +29,7 @@ export class DisputeListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.disputeResource.getDisputes().subscribe((response) => {
+    this.disputeResource.getAllDisputes().subscribe((response) => {
       this.disputes = response;
     });
   }

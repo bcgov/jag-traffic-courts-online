@@ -29,11 +29,11 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
       if (
-        currentRoutePath !== 'Tickets' &&
-        currentRoutePath !== 'ticket' &&
         currentRoutePath !== 'tickets' &&
+        currentRoutePath !== 'ticket' &&
+        currentRoutePath !== 'alltickets' &&
         currentRoutePath !== 'dispute' &&
-        currentRoutePath !== 'disputes' &&
+        currentRoutePath !== 'alldisputes' &&
         currentRoutePath !== 'lookups'
       ) {
         throw new HttpErrorResponse({
@@ -47,7 +47,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return this.handleTicketRequests(request.method);
 
         // Handle 'tickets' requests
-      } else if (currentRoutePath === 'tickets') {
+      } else if (currentRoutePath === 'alltickets') {
         return this.handleTicketsRequests(request.method);
 
         // Handle 'dispute' requests
@@ -55,7 +55,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return this.handleDisputeRequests(request.method);
 
         // Handle 'disputes' requests
-      } else if (currentRoutePath === 'disputes') {
+      } else if (currentRoutePath === 'alldisputes') {
         return this.handleDisputesRequests(request.method);
 
         // Handle 'lookups' requests

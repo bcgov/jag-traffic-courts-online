@@ -24,7 +24,7 @@ export class DisputeResourceService {
     time: string;
   }): Observable<any> {
     const httpParams = new HttpParams({ fromObject: params });
-    return this.apiResource.get<any>('Tickets', httpParams).pipe(
+    return this.apiResource.get<any>('tickets', httpParams).pipe(
       map((response: ApiHttpResponse<any>) => response),
       catchError((error: any) => {
         if (error.errors === 404) {
@@ -48,12 +48,12 @@ export class DisputeResourceService {
     );
   }
 
-  public getTickets(): Observable<Ticket[]> {
-    return this.apiResource.get<Ticket[]>('tickets').pipe(
+  public getAllTickets(): Observable<Ticket[]> {
+    return this.apiResource.get<Ticket[]>('alltickets').pipe(
       map((response: ApiHttpResponse<Ticket[]>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[getTickets] DisputeResourceService::tickets error has occurred: ',
+          '[getAllTickets] DisputeResourceService::alltickets error has occurred: ',
           error
         );
         throw error;
@@ -74,12 +74,12 @@ export class DisputeResourceService {
     );
   }
 
-  public getDisputes(): Observable<Dispute[]> {
-    return this.apiResource.get<Dispute[]>('disputes').pipe(
+  public getAllDisputes(): Observable<Dispute[]> {
+    return this.apiResource.get<Dispute[]>('alldisputes').pipe(
       map((response: ApiHttpResponse<Dispute[]>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[getDisputes] DisputeResourceService::disputes error has occurred: ',
+          '[getAllDisputes] DisputeResourceService::alldisputes error has occurred: ',
           error
         );
         throw error;
