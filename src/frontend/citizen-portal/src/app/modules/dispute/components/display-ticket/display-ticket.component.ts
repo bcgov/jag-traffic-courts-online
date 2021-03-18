@@ -16,10 +16,8 @@ export class DisplayTicketComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.ticket = this.disputeService.ticket;
     this.disputeService.ticket$.subscribe((data) => {
       this.ticket = data;
-      console.log('data', data);
     });
   }
 }
