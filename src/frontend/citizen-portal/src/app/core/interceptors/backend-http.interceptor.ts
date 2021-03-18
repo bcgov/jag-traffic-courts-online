@@ -29,6 +29,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
       if (
+        currentRoutePath !== 'Tickets' &&
         currentRoutePath !== 'ticket' &&
         currentRoutePath !== 'tickets' &&
         currentRoutePath !== 'dispute' &&

@@ -1,6 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 import { FindTicketComponent } from './find-ticket.component';
 
@@ -10,7 +13,14 @@ describe('FindTicketComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgxMaterialModule,
+      ],
       declarations: [FindTicketComponent],
     }).compileComponents();
   });

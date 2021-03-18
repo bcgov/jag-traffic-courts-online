@@ -1,0 +1,73 @@
+<app-page>
+  <app-tco-page-header>
+    <ng-container header>View your BC Traffic Ticket</ng-container>
+    <ng-container subHeader>Here is the Violation Ticket details.</ng-container>
+  </app-tco-page-header>
+
+  <ng-container *ngIf="ticket">
+    <section class="mb-2">
+      <div class="row">
+        <h2 class="col-12 mb-2">Ticket Information</h2>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">Violation Ticket Number</div>
+        <div class="col-6 text-right mb-2">
+          {{ ticket?.violation_number | default }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">Violation Date and Time</div>
+        <div class="col-6 text-right">
+          {{ ticket?.violation_date | formatDate | default }}
+          {{ ticket?.violation_time | default }}
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-2" *ngFor="let row of ticket?.counts; let i = index">
+      <div class="row">
+        <h2 class="col-12 mb-2">
+          Offence #{{ row.count_number }}
+          <small class="text-muted ml-2">{{ row.description }}</small>
+        </h2>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">Ticket Amount</div>
+        <div class="col-6 text-right">
+          {{ row?.ticket_amount | currency | default }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">Amount Due</div>
+        <div class="col-6 text-right">
+          {{ row?.amount_due | currency | default }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">Due Date</div>
+        <div class="col-6 text-right">
+          {{ row?.due_date | formatDate | default }}
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <div class="row">
+    <div class="col text-right">
+      <button
+        id="primaryButton"
+        mat-flat-button
+        type="button"
+        color="primary"
+        routerLink="/dispute/find"
+      >
+        Search Again
+        <mat-icon inline="true">search</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="jumbotron mt-4" style="padding: 2rem 2rem" *ngIf="ticket">
+    <pre>{{ ticket | json }}</pre>
+  </div>
+</app-page>
