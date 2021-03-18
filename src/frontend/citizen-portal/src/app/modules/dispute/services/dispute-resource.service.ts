@@ -1,7 +1,9 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { Observable, of } from 'rxjs';
@@ -13,8 +15,38 @@ import { catchError, map } from 'rxjs/operators';
 export class DisputeResourceService {
   constructor(
     private apiResource: ApiResource,
+    private toastService: ToastService,
     private logger: LoggerService
   ) {}
+
+  public getRsiTicket(params: {
+    ticketNumber: string;
+    time: string;
+  }): Observable<any> {
+    let httpParams = new HttpParams({ fromObject: params });
+
+    return this.apiResource.get<any>('Tickets', httpParams).pipe(
+      map((response: ApiHttpResponse<any>) => response),
+      catchError((error: any) => {
+        if (error.errors === 404) {
+          this.toastService.openErrorToast('No matching ticket was found');
+        }
+        this.logger.error(
+          '[getRsiTicket] DisputeResourceService::ticket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  // return this.httpClient.get<any[]>(this.baseUrl + '/courtFileData', { params: httpParams })
+  // .pipe(
+  //   catchError((error: any) => {
+  //     this.toastService.openErrorToast('Search Results could not be retrieved');
+  //     throw error;
+  //   })
+  // );
 
   public getTicket(): Observable<Ticket> {
     return this.apiResource.get<Ticket>('ticket').pipe(

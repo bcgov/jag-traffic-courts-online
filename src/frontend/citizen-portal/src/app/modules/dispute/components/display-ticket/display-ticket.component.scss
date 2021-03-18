@@ -1,0 +1,10 @@
+@import "palette";
+
+.text-right,
+.text-left {
+  font-weight: bold;
+}
+
+.border_bottom {
+  border-bottom: 1px solid theme-palette(blue);
+}
