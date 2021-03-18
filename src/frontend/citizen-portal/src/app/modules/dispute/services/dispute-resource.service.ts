@@ -23,8 +23,7 @@ export class DisputeResourceService {
     ticketNumber: string;
     time: string;
   }): Observable<any> {
-    let httpParams = new HttpParams({ fromObject: params });
-
+    const httpParams = new HttpParams({ fromObject: params });
     return this.apiResource.get<any>('Tickets', httpParams).pipe(
       map((response: ApiHttpResponse<any>) => response),
       catchError((error: any) => {
