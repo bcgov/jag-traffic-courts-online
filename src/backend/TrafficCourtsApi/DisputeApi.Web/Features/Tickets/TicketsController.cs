@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DisputeApi.Web.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using NSwag.Annotations;
 
 namespace DisputeApi.Web.Features.Tickets
@@ -16,10 +22,13 @@ namespace DisputeApi.Web.Features.Tickets
     {
         private readonly ILogger _logger;
         private readonly ITicketsService _ticketsService;
-        public TicketsController(ILogger<TicketsController> logger, ITicketsService ticketsService)
+        private readonly IMediator _mediator;
+
+        public TicketsController(ILogger<TicketsController> logger, ITicketsService ticketsService, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ticketsService = ticketsService ?? throw new ArgumentNullException(nameof(ticketsService));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpPost]
@@ -38,6 +47,22 @@ namespace DisputeApi.Web.Features.Tickets
         public async Task<IActionResult> GetTickets()
         {
             return Ok(await _ticketsService.GetTickets());
+        }
+
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(TicketLookup.TicketLookup.Response), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetTicket([FromQuery] TicketLookup.TicketLookup.Query query)
+        {
+            var response = await _mediator.Send(query);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+
+            return NotFound();
         }
     }
 }

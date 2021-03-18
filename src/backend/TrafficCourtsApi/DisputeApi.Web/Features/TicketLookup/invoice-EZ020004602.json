@@ -1,0 +1,16 @@
+{
+  "invoice_number": "EZ020004602",
+  "pbc_ref_number": "10006",
+  "party_number": "n/a",
+  "party_name": "n/a",
+  "account_number": "n/a",
+  "site_number": "0",
+  "cust_trx_type": "Traffic Violation Ticket",
+  "term_due_date": "2020-09-18T09:54",
+  "total": 109.0,
+  "amount_due": 96.0,
+  "attribute1": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01",
+  "attribute2": "",
+  "attribute3": "2020-09-18",
+  "attribute4": "n/a"
+}

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using DisputeApi.Web.Features.Tickets.Configuration;
+using MediatR;
 
 namespace DisputeApi.Web
 {
@@ -54,8 +55,11 @@ namespace DisputeApi.Web
                 });
             }
 
+            services.AddMediatR(typeof(Startup));
+
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
+
             ConfigureOpenApi(services);
 
 #if USE_AUTHENTICATION
