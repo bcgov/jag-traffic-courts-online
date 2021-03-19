@@ -1,7 +1,9 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { Observable, of } from 'rxjs';
@@ -13,8 +15,25 @@ import { catchError, map } from 'rxjs/operators';
 export class DisputeResourceService {
   constructor(
     private apiResource: ApiResource,
+    private toastService: ToastService,
     private logger: LoggerService
   ) {}
+
+  public getRsiTicket(params: {
+    ticketNumber: string;
+    time: string;
+  }): Observable<any> {
+    const httpParams = new HttpParams({ fromObject: params });
+    return this.apiResource.get<any>('tickets', httpParams).pipe(
+      map((response: ApiHttpResponse<any>) => response),
+      catchError((error: any) => {
+        if (error.errors === 404) {
+          this.toastService.openErrorToast('No matching ticket was found');
+        }
+        throw error;
+      })
+    );
+  }
 
   public getTicket(): Observable<Ticket> {
     return this.apiResource.get<Ticket>('ticket').pipe(
@@ -29,12 +48,12 @@ export class DisputeResourceService {
     );
   }
 
-  public getTickets(): Observable<Ticket[]> {
-    return this.apiResource.get<Ticket[]>('tickets').pipe(
+  public getAllTickets(): Observable<Ticket[]> {
+    return this.apiResource.get<Ticket[]>('alltickets').pipe(
       map((response: ApiHttpResponse<Ticket[]>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[getTickets] DisputeResourceService::tickets error has occurred: ',
+          '[getAllTickets] DisputeResourceService::alltickets error has occurred: ',
           error
         );
         throw error;
@@ -55,12 +74,12 @@ export class DisputeResourceService {
     );
   }
 
-  public getDisputes(): Observable<Dispute[]> {
-    return this.apiResource.get<Dispute[]>('disputes').pipe(
+  public getAllDisputes(): Observable<Dispute[]> {
+    return this.apiResource.get<Dispute[]>('alldisputes').pipe(
       map((response: ApiHttpResponse<Dispute[]>) => response.result),
       catchError((error: any) => {
         this.logger.error(
-          '[getDisputes] DisputeResourceService::disputes error has occurred: ',
+          '[getAllDisputes] DisputeResourceService::alldisputes error has occurred: ',
           error
         );
         throw error;

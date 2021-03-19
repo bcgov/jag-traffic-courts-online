@@ -14,6 +14,7 @@ import { StepOverviewComponent } from './components/step-overview/step-overview.
 import { StepCourtComponent } from './components/step-court/step-court.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
+import { DisplayTicketComponent } from './components/display-ticket/display-ticket.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { DisputeListComponent } from './components/dispute-list/dispute-list.com
     StepCourtComponent,
     DisputeSubmitComponent,
     DisputeListComponent,
+    DisplayTicketComponent,
   ],
   imports: [
     CommonModule,

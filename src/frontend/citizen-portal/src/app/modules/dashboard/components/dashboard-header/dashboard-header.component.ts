@@ -32,7 +32,6 @@ export class DashboardHeaderComponent implements OnInit {
 
   public async ngOnInit() {
     const authenticated = await this.authService.isLoggedIn();
-    console.log('User isLoggedIn:', authenticated);
     if (authenticated) {
       this.authService.getUser$().subscribe((user: User) => {
         this.fullName = `${user?.firstName} ${user?.lastName}`;

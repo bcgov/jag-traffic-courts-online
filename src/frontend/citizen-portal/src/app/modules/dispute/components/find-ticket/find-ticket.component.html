@@ -7,15 +7,16 @@
     >
   </app-tco-page-header>
 
-  <div class="container">
-    <div class="row mt-4">
-      <div class="col-lg-6">
+  <div class="row mt-4">
+    <div class="col-lg-6">
+      <form (ngSubmit)="onRsbcSearch()" [formGroup]="form" novalidate>
         <section>
           <div class="row mb-4">
             <div class="col">
               <p>Violation Ticket Number:</p>
               <mat-form-field class="w-100">
                 <input
+                  formControlName="ticketNumber"
                   matInput
                   type="text"
                   oninput="this.value =
@@ -31,6 +32,7 @@
                     >A Violation Ticket Number is 2 letters and 8 numbers
                   </small></mat-hint
                 >
+                <mat-error>Required</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -38,7 +40,7 @@
             <div class="col">
               <p>Violation Time:</p>
               <mat-form-field class="w-100">
-                <input matInput type="time" />
+                <input matInput type="time" formControlName="time" />
                 <mat-error>Required</mat-error>
               </mat-form-field>
             </div>
@@ -52,35 +54,47 @@
                 (click)="onSearch()"
               >
                 Search
+                <mat-icon inline="true">search</mat-icon>
+              </button>
+            </div>
+            <div class="col text-right">
+              <button
+                mat-flat-button
+                color="primary"
+                class="large light"
+                type="submit"
+              >
+                RSI Search
+                <mat-icon inline="true">search</mat-icon>
               </button>
             </div>
           </div>
         </section>
+      </form>
 
-        <section class="mb-3 mt-4">
-          <div class="row">
-            <div class="col-lg-12">
-              <app-alert type="info" icon="warning">
-                <ng-container #alertContent class="alert-content">
-                  <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong
-                  ><br />
-                  Phone Toll Free: 1-877-661-8026 <br />
-                  Forms are available on the website at:
-                  <a
-                    href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
-                    target="_blank"
-                    >Online Forms</a
-                  >
-                </ng-container>
-              </app-alert>
-            </div>
+      <section class="mb-3 mt-4">
+        <div class="row">
+          <div class="col-lg-12">
+            <app-alert type="info" icon="warning">
+              <ng-container #alertContent class="alert-content">
+                <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong
+                ><br />
+                Phone Toll Free: 1-877-661-8026 <br />
+                Forms are available on the website at:
+                <a
+                  href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
+                  target="_blank"
+                  >Online Forms</a
+                >
+              </ng-container>
+            </app-alert>
           </div>
-        </section>
-      </div>
-      <div class="col-lg-6">
-        <div class="info-graphic pl-4">
-          <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
         </div>
+      </section>
+    </div>
+    <div class="col-lg-6">
+      <div class="info-graphic pl-4">
+        <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
       </div>
     </div>
   </div>
