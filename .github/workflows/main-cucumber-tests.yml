@@ -1,4 +1,4 @@
-name: Cucumber Tests
+name: Main-Cucumber Tests
 
 on:
   pull_request:

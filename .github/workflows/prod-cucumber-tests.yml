@@ -1,4 +1,4 @@
-name: Cucumber Tests
+name: Prod-Cucumber Tests
 
 on:
   push:
