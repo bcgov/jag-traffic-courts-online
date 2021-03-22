@@ -24,6 +24,7 @@ export class StepReviewTicketComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public ticket: Ticket;
+  public rsiTicket: any;
   public isSubmitted = false;
 
   constructor(
@@ -52,6 +53,7 @@ export class StepReviewTicketComponent
     // this.patchForm();
 
     this.ticket = this.disputeService.dispute?.ticket;
+    this.rsiTicket = this.disputeService.dispute?.rsiTicket;
 
     // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
     //   this.ticket = dispute?.ticket;

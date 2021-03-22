@@ -106,10 +106,16 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
     const dispute = this.mockDisputeService.dispute;
+    const rsiTicket = this.mockDisputeService.rsiTicket;
 
     switch (requestMethod) {
       case 'GET':
-        return of(new HttpResponse({ status: 200, body: { result: dispute } }));
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: { result: dispute },
+          })
+        );
         break;
       default:
         throw new HttpErrorResponse({

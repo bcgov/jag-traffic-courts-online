@@ -32,10 +32,10 @@
   <form [formGroup]="count1Form" novalidate>
     <section class="mb-2">
       <div class="row">
-        <div class="col-12 mb-2">
-          Offence #{{ cnt1_countNo.value }}
-          <small class="text-muted ml-2">{{ cnt1_description.value }}</small>
-        </div>
+        <div class="col-3 mb-2">Offence #{{ cnt1_countNo.value }}</div>
+        <small class="col-9 text-muted text-right mb-2">{{
+          cnt1_description.value
+        }}</small>
       </div>
       <div class="row">
         <div class="offset-2 col-10 text-left mb-2 pl-0">
@@ -82,10 +82,10 @@
   <form [formGroup]="count2Form" novalidate>
     <section class="mb-2" *ngIf="cnt2_countNo.value">
       <div class="row">
-        <div class="col-12 mb-2">
-          Offence #{{ cnt2_countNo.value }}
-          <small class="text-muted ml-2">{{ cnt2_description.value }}</small>
-        </div>
+        <div class="col-3 mb-2">Offence #{{ cnt2_countNo.value }}</div>
+        <small class="col-9 text-muted text-right mb-2">{{
+          cnt2_description.value
+        }}</small>
       </div>
       <div class="row">
         <div class="offset-2 col-10 text-left mb-2 pl-0">
@@ -132,10 +132,10 @@
   <form [formGroup]="count3Form" novalidate>
     <section class="mb-2" *ngIf="cnt3_countNo.value">
       <div class="row">
-        <div class="col-12 mb-2">
-          Offence #{{ cnt3_countNo.value }}
-          <small class="text-muted ml-2">{{ cnt3_description.value }}</small>
-        </div>
+        <div class="col-3 mb-2">Offence #{{ cnt3_countNo.value }}</div>
+        <small class="col-9 text-muted text-right mb-2">{{
+          cnt3_description.value
+        }}</small>
       </div>
       <div class="row">
         <div class="offset-2 col-10 text-left mb-2 pl-0">

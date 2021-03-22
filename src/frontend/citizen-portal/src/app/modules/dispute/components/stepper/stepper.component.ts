@@ -16,11 +16,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Dispute } from '@shared/models/dispute.model';
 import { DisputeRoutes } from '@dispute/dispute.routes';
+import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
+import { CurrencyPipe } from '@angular/common';
+import { ViewportService } from '@core/services/viewport.service';
 
 export class StepData {
   constructor(
     public pageName: number,
     public title: string,
+    public title2Label?: string,
+    public title2?: string,
+    public title3Label?: string,
+    public title3?: string,
+    public title4Label?: string,
+    public title4?: string,
     public description?: string,
     public statuteId?: number,
     public value?: number
@@ -46,6 +55,9 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     private toastService: ToastService,
     private dialog: MatDialog,
     private utilsService: UtilsService,
+    private formatDatePipe: FormatDatePipe,
+    private currencyPipe: CurrencyPipe,
+    private viewportService: ViewportService,
     private logger: LoggerService
   ) {
     super(
@@ -67,6 +79,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
         this.disputeService.dispute$.next(response);
       });
     }
+
     this.disputeService.dispute$.subscribe((dispute) => {
       this.initializeDisputeSteps(dispute);
       this.patchForm();
@@ -129,7 +142,14 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     dispute?.counts?.forEach((cnt) => {
       stepData = new StepData(
         2,
-        'Offence #' + cnt.countNo + ' Review ',
+        'Offence #' + cnt.countNo + ' Review and Action',
+        'Offence Description',
+        cnt.description,
+        // 'MVA 146(1) - ' + cnt.description,
+        'Ticket Amount',
+        this.transformCurrency(cnt.ticket_amount),
+        'Ticket Amount (if paid by ' + this.transformDate(cnt.due_date) + ' )',
+        this.transformCurrency(cnt.amount_due),
         cnt.description,
         cnt.statuteId,
         index
@@ -141,6 +161,14 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     steps.push({ title: 'Dispute Overview', value: null, pageName: 5 });
 
     this.disputeService.steps$.next(steps);
+  }
+
+  private transformDate(date: string) {
+    return this.formatDatePipe.transform(date);
+  }
+
+  private transformCurrency(amount) {
+    return this.currencyPipe.transform(amount);
   }
 
   private addCourtPage(steps: StepData[]): void {

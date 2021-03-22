@@ -11,6 +11,53 @@
     <div class="row">
       <div class="col-6 mb-2">Violation Ticket Number</div>
       <div class="col-6 text-right mb-2">
+        {{ rsiTicket?.violation_number | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Violation Date and Time</div>
+      <div class="col-6 text-right">
+        {{ rsiTicket?.violation_date | formatDate | default }}
+        {{ rsiTicket?.violation_time | default }}
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-2" *ngFor="let row of rsiTicket?.counts; let i = index">
+    <h3 class="row">
+      <div class="col-2 mb-2 p-0">Offence #{{ row.count_number }}</div>
+      <small class="col-10 text-muted text-right mb-2">{{
+        row.description
+      }}</small>
+    </h3>
+
+    <!--
+    <h3>
+      Offence #{{ row.count_number }}
+      <small class="text-muted ml-2">{{ row.description }}</small>
+    </h3>-->
+    <div class="row pl-2 pr-2">
+      <div class="col-6 mb-2">Ticket Amount</div>
+      <div class="col-6 text-right">
+        {{ row?.ticket_amount | currency | default }}
+      </div>
+    </div>
+    <div class="row pl-2 pr-2">
+      <div class="col-6 mb-2">
+        Ticket Amount (if paid by {{ row?.due_date | formatDate }})
+      </div>
+      <div class="col-6 text-right">
+        {{ row?.amount_due | currency | default }}
+      </div>
+    </div>
+  </section>
+
+  <!--
+  <section class="mb-2">
+    <h3>Violation Ticket Information</h3>
+    <div class="row">
+      <div class="col-6 mb-2">Violation Ticket Number</div>
+      <div class="col-6 text-right mb-2">
         {{ ticket?.violationTicketNumber | default }}
       </div>
     </div>
@@ -71,6 +118,10 @@
     </div>
   </section>
 
+  <div class="jumbotron mt-4" style="padding: 2rem 2rem" *ngIf="rsiTicket">
+    <pre>{{ rsiTicket | json }}</pre>
+  </div>
+-->
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section>
       <h3>Contact Email Address</h3>
