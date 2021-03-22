@@ -40,33 +40,33 @@ services:
     command: "nginx -g 'daemon off;'"
     restart: always
     ports:
-      - "4201:8080"
+      - "8080:8080"
     networks:
       - traffic-court-net
 
   #############################################################################################
   ###                                 TrafficCourt DEMO                                     ###
   #############################################################################################
-  citizen-portal-demo:
-    container_name: citizen-portal-demo
-    build:
-      context: ./src/frontend/citizen-portal
-      args:
-        USE_MOCK_SERVICES: "true"
-        USE_KEYCLOAK: "false"
-        API_URL: ${API_URL}
-        KEYCLOAK_URL: ${KEYCLOAK_URL}
-        KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-        KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
-    environment:
-      - USE_MOCK_SERVICES=true
-      - USE_KEYCLOAK=false
-    command: "nginx -g 'daemon off;'"
-    restart: always
-    ports:
-      - "4200:8080"
-    networks:
-      - traffic-court-net
+  # citizen-portal-demo:
+  #   container_name: citizen-portal-demo
+  #   build:
+  #     context: ./src/frontend/citizen-portal
+  #     args:
+  #       USE_MOCK_SERVICES: "true"
+  #       USE_KEYCLOAK: "false"
+  #       API_URL: ${API_URL}
+  #       KEYCLOAK_URL: ${KEYCLOAK_URL}
+  #       KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+  #       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+  #   environment:
+  #     USE_MOCK_SERVICES: "true"
+  #     USE_KEYCLOAK: "false"
+  #   command: "nginx -g 'daemon off;'"
+  #   restart: always
+  #   ports:
+  #     - "4200:8080"
+  #   networks:
+  #     - traffic-court-net
 
   #############################################################################################
   ###                                  KEYCLOAK                                             ###
