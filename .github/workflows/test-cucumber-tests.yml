@@ -1,4 +1,4 @@
-name: Cucumber Tests
+name: Test-Cucumber Tests
 
 on: 
   push:

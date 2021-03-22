@@ -1,4 +1,4 @@
-name: Generate/Upload all Coverage Reports
+name: Test-Generate/Upload all Coverage Reports
 
 on:
   push:
