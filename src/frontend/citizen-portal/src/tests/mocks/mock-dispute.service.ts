@@ -268,7 +268,7 @@ export class MockDisputeService {
     // dispute.counts = [...dispute.ticket.counts];
 
     dispute.rsiTicket?.counts.forEach((cnt) => {
-      let dueDate = new Date(dispute.rsiTicket.violation_date);
+      const dueDate = new Date(dispute.rsiTicket.violation_date);
       dueDate.setDate(dueDate.getDate() + 30);
       cnt.due_date = dueDate.toString();
     });
