@@ -106,7 +106,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
     const dispute = this.mockDisputeService.dispute;
-    const rsiTicket = this.mockDisputeService.rsiTicket;
 
     switch (requestMethod) {
       case 'GET':
