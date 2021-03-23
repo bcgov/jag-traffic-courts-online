@@ -109,7 +109,12 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
     switch (requestMethod) {
       case 'GET':
-        return of(new HttpResponse({ status: 200, body: { result: dispute } }));
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: { result: dispute },
+          })
+        );
         break;
       default:
         throw new HttpErrorResponse({

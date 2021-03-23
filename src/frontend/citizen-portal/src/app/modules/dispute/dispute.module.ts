@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatStepperModule } from '@angular/material/stepper';
 
 import { SharedModule } from '@shared/shared.module';
@@ -15,6 +15,7 @@ import { StepCourtComponent } from './components/step-court/step-court.component
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { DisplayTicketComponent } from './components/display-ticket/display-ticket.component';
+import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { DisplayTicketComponent } from './components/display-ticket/display-tick
     DisputeRoutingModule,
     MatStepperModule,
   ],
+  providers: [CurrencyPipe, FormatDatePipe],
   exports: [DisputeRoutingModule],
 })
 export class DisputeModule {}

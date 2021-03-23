@@ -1,7 +1,20 @@
 <app-page>
   <app-page-header>
     <ng-container header>{{ step?.title }}</ng-container>
-    <ng-container subHeader>{{ step?.description }}</ng-container>
+    <ng-container subHeader>
+      <div class="row">
+        <div class="col-4 mb-2">{{ step?.title2Label }}</div>
+        <div class="col-8 text-right mb-2">{{ step?.title2 }}</div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">{{ step?.title3Label }}</div>
+        <div class="col-6 text-right mb-2">{{ step?.title3 }}</div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">{{ step?.title4Label }}</div>
+        <div class="col-6 text-right mb-2">{{ step?.title4 }}</div>
+      </div>
+    </ng-container>
   </app-page-header>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>

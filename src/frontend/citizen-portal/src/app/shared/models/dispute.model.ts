@@ -17,6 +17,7 @@ export interface Dispute {
   ticketType?: string;
 
   ticket: Ticket;
+  rsiTicket: any;
 }
 
 export interface Count {
@@ -31,4 +32,9 @@ export interface Count {
   timeReason?: string;
   count1B1?: string;
   count1B2?: string;
+
+  count_number: number;
+  ticket_amount: number;
+  amount_due: number;
+  due_date: string;
 }

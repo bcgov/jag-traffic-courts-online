@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row mt-4">
-    <div class="col-md-2 logo">
+    <div class="col-md-2 logo d-none d-md-block">
       <img
         src="/assets/traffic_light.jpg"
         style="width: 120px"
@@ -33,11 +33,12 @@
               mat-flat-button
               color="primary"
               class="large"
-              routerLink="/survey/home"
+              routerLink="/dispute/find"
             >
               Initiate Dispute
             </button>
           </div>
+          <!--
           <div class="col col-md-6">
             <button
               mat-flat-button
@@ -48,6 +49,7 @@
               Update Dispute Information
             </button>
           </div>
+          -->
         </div>
       </div>
     </div>
@@ -61,6 +63,15 @@
           >
             Pay Now
           </a>
+        </button>
+        <!--
+        <button
+          mat-flat-button
+          color="primary"
+          class="large light"
+          routerLink="/survey/home"
+        >
+          SurveyJS
         </button>
         <button
           mat-flat-button
@@ -78,7 +89,7 @@
         >
           Ticket Listing
         </button>
-      </div>
+      --></div>
     </div>
     <div class="col-sm-12 col-md-4 steps step-1">
       <div class="step-container">

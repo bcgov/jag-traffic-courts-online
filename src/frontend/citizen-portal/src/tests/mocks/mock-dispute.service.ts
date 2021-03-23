@@ -88,6 +88,107 @@ export class MockDisputeService {
     return new ApiHttpResponse(200, null, this._ticket.value);
   }
 
+  public get rsiTicket(): any {
+    return `{
+      "violation_number": "EZ02000460",
+      "violation_time": "09:54",
+      "violation_date": "2020-09-18T09:54:00",
+      "counts": [
+        {
+          "count_number": 1,
+          "ticket_amount": 109,
+          "amount_due": 83,
+          "due_date": "2020-09-18T09:54",
+          "description": "LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH"
+        },
+        {
+          "count_number": 2,
+          "ticket_amount": 109,
+          "amount_due": 96,
+          "due_date": "2020-09-18T09:54",
+          "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01"
+        },
+        {
+          "count_number": 3,
+          "ticket_amount": 109,
+          "amount_due": 95,
+          "due_date": "2020-09-18T09:54",
+          "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH"
+        }
+      ],
+      "rawResponse": {
+        "items": [
+          {
+            "selected_invoice": {
+              "$ref": "https://wsgw.test.jag.gov.bc.ca/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/EZ020004601",
+              "invoice": {
+                "invoice_number": "EZ020004601",
+                "pbc_ref_number": "10006",
+                "party_number": "n/a",
+                "party_name": "n/a",
+                "account_number": "n/a",
+                "site_number": "0",
+                "cust_trx_type": "Traffic Violation Ticket",
+                "term_due_date": "2020-09-18T09:54",
+                "total": 109,
+                "amount_due": 83,
+                "attribute1": "LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH",
+                "attribute2": "",
+                "attribute3": "2020-09-18",
+                "attribute4": "n/a"
+              }
+            },
+            "open_invoices_for_site": null
+          },
+          {
+            "selected_invoice": {
+              "$ref": "https://wsgw.test.jag.gov.bc.ca/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/EZ020004602",
+              "invoice": {
+                "invoice_number": "EZ020004602",
+                "pbc_ref_number": "10006",
+                "party_number": "n/a",
+                "party_name": "n/a",
+                "account_number": "n/a",
+                "site_number": "0",
+                "cust_trx_type": "Traffic Violation Ticket",
+                "term_due_date": "2020-09-18T09:54",
+                "total": 109,
+                "amount_due": 96,
+                "attribute1": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01",
+                "attribute2": "",
+                "attribute3": "2020-09-18",
+                "attribute4": "n/a"
+              }
+            },
+            "open_invoices_for_site": null
+          },
+          {
+            "selected_invoice": {
+              "$ref": "https://wsgw.test.jag.gov.bc.ca/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/EZ020004603",
+              "invoice": {
+                "invoice_number": "EZ020004603",
+                "pbc_ref_number": "10006",
+                "party_number": "n/a",
+                "party_name": "n/a",
+                "account_number": "n/a",
+                "site_number": "0",
+                "cust_trx_type": "Traffic Violation Ticket",
+                "term_due_date": "2020-09-18T09:54",
+                "total": 109,
+                "amount_due": 95,
+                "attribute1": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH",
+                "attribute2": "",
+                "attribute3": "2020-09-18",
+                "attribute4": "n/a"
+              }
+            },
+            "open_invoices_for_site": null
+          }
+        ]
+      }
+    }`;
+  }
+
   private createTicket(): Ticket {
     // tslint:disable
     return {
@@ -161,9 +262,24 @@ export class MockDisputeService {
       callWitness: false,
       certifyCorrect: false,
       ticket: this.createTicket(),
+      rsiTicket: JSON.parse(this.rsiTicket),
     };
 
-    dispute.counts = [...dispute.ticket.counts];
+    // dispute.counts = [...dispute.ticket.counts];
+
+    dispute.rsiTicket?.counts.forEach((cnt) => {
+      const dueDate = new Date(dispute.rsiTicket.violation_date);
+      dueDate.setDate(dueDate.getDate() + 30);
+      cnt.due_date = dueDate.toString();
+    });
+
+    dispute.counts = [...dispute.rsiTicket?.counts];
+
+    dispute.counts.forEach((cnt) => {
+      cnt.id = cnt.count_number;
+      cnt.countNo = cnt.count_number;
+      cnt.statuteId = cnt.count_number;
+    });
 
     return dispute;
   }

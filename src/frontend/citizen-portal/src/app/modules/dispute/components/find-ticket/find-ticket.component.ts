@@ -22,9 +22,12 @@ export class FindTicketComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form = this.formBuilder.group({
-      ticketNumber: ['EZ02000460', [Validators.required]],
-      time: ['09:54', [Validators.required]],
+      ticketNumber: [null],
+      time: [null],
     });
+
+    // ticketNumber: ['EZ02000460', [Validators.required]],
+    // time: ['09:54', [Validators.required]],
   }
 
   public onSearch(): void {
@@ -35,7 +38,11 @@ export class FindTicketComponent implements OnInit {
   }
 
   public onRsbcSearch(): void {
-    const queryParams = { ...this.form.value };
+    const queryParams = {
+      ticketNumber: 'EZ02000460',
+      time: '09:54',
+    };
+
     this.disputeResource.getRsiTicket(queryParams).subscribe((response) => {
       this.disputeService.ticket$.next(response);
       this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.DISPLAY)]);
