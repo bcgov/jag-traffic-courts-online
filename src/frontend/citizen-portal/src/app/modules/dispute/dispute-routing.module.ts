@@ -8,6 +8,7 @@ import { DisputeSubmitComponent } from './components/dispute-submit/dispute-subm
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { DisplayTicketComponent } from './components/display-ticket/display-ticket.component';
+import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         path: DisputeRoutes.SUCCESS,
         component: DisputeSubmitComponent,
+      },
+      {
+        path: DisputeRoutes.SUMMARY,
+        component: DisputeSummaryComponent,
       },
     ],
   },

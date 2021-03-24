@@ -33,7 +33,7 @@ export class FindTicketComponent implements OnInit {
   public onSearch(): void {
     this.disputeResource.getDispute().subscribe((response) => {
       this.disputeService.dispute$.next(response);
-      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
+      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)]);
     });
   }
 

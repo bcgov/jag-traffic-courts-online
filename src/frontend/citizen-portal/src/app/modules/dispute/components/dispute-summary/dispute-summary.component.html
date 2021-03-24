@@ -1,0 +1,279 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>BC Traffic Court Online</ng-container>
+    <ng-container subHeader>Summary of your ticket and dispute</ng-container>
+  </app-page-header>
+
+  <section>
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="info" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong>Your Ticket has been Resolved</strong><br />
+            No further actions are required.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <!--
+  <section class="mt-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="danger" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong>Your Ticket is Outstanding</strong><br />
+            One or more offences have not been paid.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="warning" icon="lightbulb">
+          <ng-container #alertContent class="alert-content">
+            <strong>Ticket Amount Reduction</strong><br />
+            You are still within the 30 day period to receive a $25 reduction on
+            your Ticket Amount.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="info" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong>Your Ticket has been Paid in Full</strong><br />
+            All offences on the ticket have been paid
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>Your Dispute of Offence #2 has been Submitted</strong><br />
+            A court date has not yet been set. You will be receiving an email
+            soon with the court information.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="danger" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong
+              >Your Dispute of Offence #2 has a Scheduled Court Date</strong
+            ><br />
+            You should have received an email indicating your scheduled court
+            date and all related information.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="info" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong>Your Dispute of Offence #2 has been Settled</strong><br />
+            An email with the settlement details has been sent.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <!--
+  <div class="jumbotron mt-4" style="padding: 2rem 2rem" *ngIf="dispute">
+    <pre>{{ dispute | json }}</pre>
+  </div>
+
+border-bottom: 1px solid #ffb200;
+
+  <section class="mb-4">
+    <section class="mb-2">
+      <div class="row">
+        <h2 class="col-6 mb-2" style="border: none">
+          Ticket #{{ dispute.ticket?.violationTicketNumber }}
+        </h2>
+        <h2 class="col-6 text-right" style="border: none">
+          {{ dispute.ticket?.violationDate | formatDate }}
+          {{ dispute.ticket?.violationTime }}
+        </h2>
+      </div>
+    </section>
+
+
+     <small class="d-block text-muted">
+            <mat-icon inline="true" style="color: #fcba19">lightbulb</mat-icon>
+            if paid by
+            {{ row?.due_date | formatDate }}:
+          </small>
+          <strong>{{ row?.early_amount | currency }}</strong>
+
+
+      <h3>
+        Offence #{{ row.countNo }}
+        <div class="text-muted">
+          {{ row.description }}
+        </div>
+      </h3>
+-->
+
+  <div class="mb-4">
+    <section class="mb-2">
+      <h2 class="mb-2">Ticket #{{ dispute.ticket?.violationTicketNumber }}</h2>
+      <h2 class="text-muted" style="border-bottom: 1px solid #ffb200">
+        {{ dispute.ticket?.violationDate | formatDate }}
+        {{ dispute.ticket?.violationTime }}
+      </h2>
+    </section>
+
+    <section
+      class="px-4 py-2 mb-4 offence-section"
+      *ngFor="let row of dispute.counts; let i = index"
+    >
+      <h3>
+        <div class="row">
+          <div class="col-md-2">Offence #{{ row.countNo }}</div>
+          <div class="col-md-10 text-muted">
+            {{ row.description | titlecase }}
+          </div>
+        </div>
+      </h3>
+
+      <div class="row ml-2">
+        <div class="col-4">
+          <small class="d-block text-muted">Offence Amount</small>
+          {{ row?.ticket_amount | currency }}
+        </div>
+        <div class="col-2">
+          <small class="d-block text-muted">Amount Due</small>
+          {{ row?.amount_due | currency }}
+        </div>
+        <div class="col">
+          <small class="d-block text-muted">Status</small>
+          <small
+            [ngClass]="{
+              'text-danger': row.statusCode === 'COURT',
+              'text-primary': row.statusCode === 'UNPAID',
+              'text-success':
+                row.statusCode === 'COMPLETE' || row.statusCode === 'PAID',
+              'text-info': row.statusCode === 'DISPUTE'
+            }"
+            ><strong>{{ row.statusDesc }}</strong>
+          </small>
+        </div>
+        <div class="col">
+          <button
+            mat-flat-button
+            color="accent"
+            *ngIf="
+              row.statusCode === 'UNPAID' ||
+              row.statusCode === 'DISPUTE' ||
+              row.statusCode === 'COURT'
+            "
+          >
+            <a
+              href="https://pay.gov.bc.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <mat-icon inline="true">money</mat-icon>
+              Pay Now
+            </a>
+          </button>
+          <button
+            *ngIf="row.statusCode === 'UNPAID'"
+            mat-flat-button
+            color="primary"
+            (click)="onDispute()"
+          >
+            <mat-icon inline="true">read_more</mat-icon>
+            Dispute
+          </button>
+        </div>
+      </div>
+
+      <div class="row ml-2 mt-1" *ngIf="row.notes">
+        <div class="col-md-9">
+          <app-alert type="info" icon="info">
+            <ng-container #alertContent class="alert-content">
+              <strong>
+                {{ row.notes }}
+              </strong>
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+
+      <div class="row ml-2 mt-1" *ngIf="row?.early_amount > 0">
+        <div class="col-md-9">
+          <app-alert type="warning" icon="lightbulb">
+            <ng-container #alertContent class="alert-content">
+              <strong>
+                If paid by {{ row?.due_date | formatDate }}, the amount due is
+                {{ row?.early_amount | currency }}
+              </strong>
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+    </section>
+    <div class="row" *ngIf="dispute.ticket?.outstandingBalance > 0">
+      <div class="offset-md-6 col-md-6">
+        <button mat-flat-button color="accent">
+          <a
+            href="https://pay.gov.bc.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <mat-icon inline="true">money</mat-icon>
+            Pay Outstanding Balance of
+            {{ dispute.ticket?.outstandingBalance | currency }}
+          </a>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <section class="mb-3 mt-4">
+    <h3 class="mt-4">Questions</h3>
+    <p>
+      Any further questions about your dispute should be directed to: <br />
+      Phone Toll Free: 1-877-661-8026
+    </p>
+  </section>
+
+  <section class="mb-3 mt-4">
+    <button
+      id="secondaryButton"
+      mat-stroked-button
+      type="button"
+      color="primary"
+      routerLink="/dispute/find"
+    >
+      <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+      Find Another Ticket
+    </button>
+  </section>
+</app-page>
