@@ -35,7 +35,7 @@ export class FindTicketComponent implements OnInit {
       this.disputeResource.getDispute().subscribe((response) => {
         this.disputeService.dispute$.next(response);
 
-        const queryParams = Object.assign({}, this.form.value);
+        const queryParams = [...this.form.value];
         this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
           queryParams,
         });
