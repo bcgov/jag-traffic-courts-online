@@ -1,4 +1,4 @@
-<app-page>
+<app-page [busy]="busy">
   <app-tco-page-header>
     <ng-container header>Find Your BC Traffic Ticket</ng-container>
     <ng-container subHeader
@@ -9,11 +9,11 @@
 
   <div class="row mt-4">
     <div class="col-lg-6">
-      <form (ngSubmit)="onRsbcSearch()" [formGroup]="form" novalidate>
+      <form [formGroup]="form" novalidate>
         <section>
           <div class="row mb-4">
             <div class="col">
-              <p>Violation Ticket Number:</p>
+              Violation Ticket Number
               <mat-form-field class="w-100">
                 <input
                   formControlName="ticketNumber"
@@ -38,7 +38,7 @@
           </div>
           <div class="row">
             <div class="col">
-              <p>Violation Time:</p>
+              Violation Time
               <mat-form-field class="w-100">
                 <input matInput type="time" formControlName="time" />
                 <mat-error>Required</mat-error>

@@ -96,10 +96,10 @@ export class MockDisputeService {
       "counts": [
         {
           "count_number": 1,
-          "ticket_amount": 109,
-          "amount_due": 83,
+          "ticket_amount": 167,
+          "amount_due": 95,
           "due_date": "2021-03-18T09:54",
-          "description": "Fail to display 'L' sign in violation of driver's licence condition"
+          "description": "OPERATE VEHICLE WITHOUT SEATBELTS"
         },
         {
           "count_number": 2,
@@ -128,13 +128,6 @@ export class MockDisputeService {
           "amount_due": 368,
           "due_date": "2021-03-18T09:54",
           "description": "USING ELECTRONIC DEVICE WHILE DRIVING"
-        },
-        {
-          "count_number": 6,
-          "ticket_amount": 167,
-          "amount_due": 95,
-          "due_date": "2021-03-18T09:54",
-          "description": "OPERATE VEHICLE WITHOUT SEATBELTS"
         }
       ],
       "rawResponse": {
