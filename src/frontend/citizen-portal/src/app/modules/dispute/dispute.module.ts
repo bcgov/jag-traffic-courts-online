@@ -16,6 +16,7 @@ import { DisputeSubmitComponent } from './components/dispute-submit/dispute-subm
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { DisplayTicketComponent } from './components/display-ticket/display-ticket.component';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
+import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
     DisputeSubmitComponent,
     DisputeListComponent,
     DisplayTicketComponent,
+    DisputeSummaryComponent,
   ],
   imports: [
     CommonModule,

@@ -92,28 +92,42 @@ export class MockDisputeService {
     return `{
       "violation_number": "EZ02000460",
       "violation_time": "09:54",
-      "violation_date": "2020-09-18T09:54:00",
+      "violation_date": "2021-03-18T09:54:00",
       "counts": [
         {
           "count_number": 1,
-          "ticket_amount": 109,
-          "amount_due": 83,
-          "due_date": "2020-09-18T09:54",
-          "description": "LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH"
+          "ticket_amount": 167,
+          "amount_due": 95,
+          "due_date": "2021-03-18T09:54",
+          "description": "OPERATE VEHICLE WITHOUT SEATBELTS"
         },
         {
           "count_number": 2,
-          "ticket_amount": 109,
+          "ticket_amount": 126,
           "amount_due": 96,
-          "due_date": "2020-09-18T09:54",
+          "due_date": "2021-03-18T09:54",
           "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01"
         },
         {
           "count_number": 3,
-          "ticket_amount": 109,
-          "amount_due": 95,
-          "due_date": "2020-09-18T09:54",
+          "ticket_amount": 97,
+          "amount_due": 0,
+          "due_date": "2021-03-18T09:54",
           "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH"
+        },
+        {
+          "count_number": 4,
+          "ticket_amount": 253,
+          "amount_due": 253,
+          "due_date": "2021-03-18T09:54",
+          "description": "SPEED IN SCHOOL ZONE"
+        },
+        {
+          "count_number": 5,
+          "ticket_amount": 368,
+          "amount_due": 368,
+          "due_date": "2021-03-18T09:54",
+          "description": "USING ELECTRONIC DEVICE WHILE DRIVING"
         }
       ],
       "rawResponse": {
@@ -267,19 +281,63 @@ export class MockDisputeService {
 
     // dispute.counts = [...dispute.ticket.counts];
 
+    dispute.ticket.violationTicketNumber = dispute.rsiTicket?.violation_number;
+    dispute.ticket.violationTime = dispute.rsiTicket?.violation_time;
+    dispute.ticket.violationDate = dispute.rsiTicket?.violation_date;
+
     dispute.rsiTicket?.counts.forEach((cnt) => {
-      const dueDate = new Date(dispute.rsiTicket.violation_date);
-      dueDate.setDate(dueDate.getDate() + 30);
-      cnt.due_date = dueDate.toString();
+      cnt.early_amount = 0;
+      if (cnt.amount_due > 0) {
+        const todayDate = new Date();
+        const dueDate = new Date(cnt.due_date);
+        dueDate.setDate(dueDate.getDate() + 30);
+        cnt.due_date = dueDate.toString();
+
+        if (todayDate <= dueDate) {
+          cnt.early_amount = cnt.ticket_amount - 25;
+          cnt.amount_due = cnt.early_amount;
+        }
+      }
     });
 
     dispute.counts = [...dispute.rsiTicket?.counts];
 
+    let balance = 0;
     dispute.counts.forEach((cnt) => {
       cnt.id = cnt.count_number;
       cnt.countNo = cnt.count_number;
       cnt.statuteId = cnt.count_number;
+
+      if (cnt.countNo === 1) {
+        cnt.statusCode = 'UNPAID';
+        cnt.statusDesc = 'Outstanding Balance';
+      } else if (cnt.countNo === 2) {
+        cnt.statusCode = 'DISPUTE';
+        cnt.statusDesc = 'Dispute Submitted';
+        cnt.notes =
+          'The dispute has been filed. An email with the court information will be sent soon.';
+      } else if (cnt.countNo === 3) {
+        cnt.statusCode = 'PAID';
+        cnt.statusDesc = 'Paid';
+      } else if (cnt.countNo === 4) {
+        cnt.statusCode = 'COURT';
+        cnt.statusDesc = 'Dispute In Progress';
+        cnt.early_amount = 0;
+        cnt.notes =
+          'A court date has been set for this dispute. Check your email for more information.';
+      } else if (cnt.countNo === 5) {
+        cnt.amount_due = 0;
+        cnt.statusCode = 'COMPLETE';
+        cnt.statusDesc = 'Dispute Settled';
+        cnt.early_amount = 0;
+      } else if (cnt.countNo === 6) {
+        cnt.statusCode = 'UNPAID';
+        cnt.statusDesc = 'Outstanding Balance';
+      }
+      balance += cnt.early_amount > 0 ? cnt.early_amount : cnt.amount_due;
     });
+
+    dispute.ticket.outstandingBalance = balance;
 
     return dispute;
   }

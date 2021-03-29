@@ -37,4 +37,9 @@ export interface Count {
   ticket_amount: number;
   amount_due: number;
   due_date: string;
+
+  early_amount: number;
+  statusCode: string;
+  statusDesc: string;
+  notes: string;
 }

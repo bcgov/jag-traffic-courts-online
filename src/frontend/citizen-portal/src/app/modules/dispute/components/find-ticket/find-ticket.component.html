@@ -1,4 +1,4 @@
-<app-page>
+<app-page [busy]="busy">
   <app-tco-page-header>
     <ng-container header>Find Your BC Traffic Ticket</ng-container>
     <ng-container subHeader
@@ -9,11 +9,11 @@
 
   <div class="row mt-4">
     <div class="col-lg-6">
-      <form (ngSubmit)="onRsbcSearch()" [formGroup]="form" novalidate>
+      <form [formGroup]="form" novalidate>
         <section>
           <div class="row mb-4">
             <div class="col">
-              <p>Violation Ticket Number:</p>
+              Violation Ticket Number
               <mat-form-field class="w-100">
                 <input
                   formControlName="ticketNumber"
@@ -38,7 +38,7 @@
           </div>
           <div class="row">
             <div class="col">
-              <p>Violation Time:</p>
+              Violation Time
               <mat-form-field class="w-100">
                 <input matInput type="time" formControlName="time" />
                 <mat-error>Required</mat-error>
@@ -48,15 +48,29 @@
           <div class="row">
             <div class="col">
               <button
+                id="secondaryButton"
+                mat-stroked-button
+                type="button"
+                color="primary"
+                routerLink="/"
+              >
+                <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+                Back
+              </button>
+            </div>
+            <div class="col text-right">
+              <button
                 mat-flat-button
                 color="primary"
                 class="large"
                 (click)="onSearch()"
               >
-                Search
                 <mat-icon inline="true">search</mat-icon>
+                Search
               </button>
             </div>
+            <!--
+
             <div class="col text-right">
               <button
                 mat-flat-button
@@ -67,6 +81,7 @@
                 Test RSI Search
               </button>
             </div>
+            -->
           </div>
         </section>
       </form>

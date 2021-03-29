@@ -1,0 +1,184 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>BC Traffic Court Online</ng-container>
+    <ng-container subHeader
+      >Summary of your ticket and any dispute that exists.</ng-container
+    >
+  </app-page-header>
+
+  <div *ngIf="dispute; else noDispute">
+    <section>
+      <div class="row">
+        <div class="col-lg-12">
+          <app-alert type="info" icon="info">
+            <ng-container #alertContent class="alert-content">
+              <strong>Your Ticket has been Resolved</strong><br />
+              No further actions are required.
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+    </section>
+
+    <div class="mb-4">
+      <section class="mb-2">
+        <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
+          Ticket #{{ dispute.ticket?.violationTicketNumber }}
+          <span class="text-muted ml-4">
+            {{ dispute.ticket?.violationDate | formatDate }}
+            {{ dispute.ticket?.violationTime }}</span
+          >
+        </h2>
+      </section>
+
+      <section
+        class="px-4 py-2 mb-4 offence-section"
+        *ngFor="let row of dispute.counts; let i = index"
+      >
+        <h3>
+          <div class="row">
+            <div class="col-md-2">Offence #{{ row.countNo }}</div>
+            <div class="col-md-10 text-muted">
+              {{ row.description | titlecase }}
+            </div>
+          </div>
+        </h3>
+
+        <div class="row ml-2">
+          <div class="col-4">
+            <small class="d-block text-muted">Offence Amount</small>
+            <strong>{{ row?.ticket_amount | currency }}</strong>
+          </div>
+          <div class="col-2">
+            <small class="d-block text-muted">Amount Due</small>
+            <strong>{{ row?.amount_due | currency }}</strong>
+          </div>
+          <div class="col">
+            <small class="d-block text-muted">Status</small>
+            <small
+              [ngClass]="{
+                'text-danger': row.statusCode === 'COURT',
+                'text-primary': row.statusCode === 'UNPAID',
+                'text-success':
+                  row.statusCode === 'COMPLETE' || row.statusCode === 'PAID',
+                'text-info': row.statusCode === 'DISPUTE'
+              }"
+              ><strong>{{ row.statusDesc }}</strong>
+            </small>
+          </div>
+          <div class="col">
+            <!--
+          <mat-chip-list
+            *ngIf="row.statusCode === 'PAID' || row.statusCode === 'COMPLETE'"
+          >
+            <mat-chip color="primary" selected>COMPLETE</mat-chip>
+          </mat-chip-list>
+          -->
+            <app-alert
+              class="text-center"
+              type="info"
+              *ngIf="row.statusCode === 'PAID' || row.statusCode === 'COMPLETE'"
+            >
+              <ng-container #alertContent class="alert-content">
+                <strong> COMPLETE </strong>
+              </ng-container>
+            </app-alert>
+
+            <button
+              mat-flat-button
+              color="accent"
+              *ngIf="
+                row.statusCode === 'UNPAID' ||
+                row.statusCode === 'DISPUTE' ||
+                row.statusCode === 'COURT'
+              "
+            >
+              <a
+                href="https://pay.gov.bc.ca"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <mat-icon inline="true">money</mat-icon>
+                Pay Now
+              </a>
+            </button>
+            <button
+              *ngIf="row.statusCode === 'UNPAID'"
+              mat-flat-button
+              color="primary"
+              (click)="onDispute()"
+            >
+              <mat-icon inline="true">read_more</mat-icon>
+              Dispute
+            </button>
+          </div>
+        </div>
+
+        <div class="row ml-2 mt-1" *ngIf="row.notes">
+          <div class="col-md-9">
+            <app-alert type="info" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <strong>
+                  {{ row.notes }}
+                </strong>
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+
+        <div class="row ml-2 mt-1" *ngIf="row?.early_amount > 0">
+          <div class="col-md-9">
+            <app-alert type="warning" icon="lightbulb">
+              <ng-container #alertContent class="alert-content">
+                <strong>
+                  If paid by {{ row?.due_date | formatDate }}, the amount due is
+                  {{ row?.early_amount | currency }}
+                </strong>
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+      </section>
+      <div class="row" *ngIf="dispute.ticket?.outstandingBalance > 0">
+        <div class="offset-md-6 col-md-6">
+          <button mat-flat-button color="accent">
+            <a
+              href="https://pay.gov.bc.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <mat-icon inline="true">money</mat-icon>
+              Pay Outstanding Balance of
+              {{ dispute.ticket?.outstandingBalance | currency }}
+            </a>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="mb-3 mt-4">
+      <h3 class="mt-4">Questions</h3>
+      <p>
+        Any further questions about your dispute should be directed to: <br />
+        Phone Toll Free: 1-877-661-8026
+      </p>
+    </section>
+
+    <section class="mb-3 mt-4">
+      <button
+        id="secondaryButton"
+        mat-stroked-button
+        type="button"
+        color="primary"
+        routerLink="/dispute/find"
+      >
+        <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+        Find Another Ticket
+      </button>
+    </section>
+  </div>
+
+  <ng-template #noDispute>
+    <h2>No current dispute/ticket</h2>
+  </ng-template>
+</app-page>

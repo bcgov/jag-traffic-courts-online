@@ -14,6 +14,7 @@ import { SurveyJsRoutes } from '@survey/survey-js.routes';
 })
 export class DisputeListComponent implements OnInit {
   public disputes: Dispute[];
+  public dispute: Dispute;
 
   public columnsToDisplay: string[] = [
     'violationTicketNumber',
@@ -31,6 +32,10 @@ export class DisputeListComponent implements OnInit {
   ngOnInit(): void {
     this.disputeResource.getAllDisputes().subscribe((response) => {
       this.disputes = response;
+    });
+
+    this.disputeResource.getDispute().subscribe((response) => {
+      this.dispute = response;
     });
   }
 

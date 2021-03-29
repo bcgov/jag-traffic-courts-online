@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
+import { Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-find-ticket',
@@ -11,6 +12,7 @@ import { DisputeService } from '@dispute/services/dispute.service';
   styleUrls: ['./find-ticket.component.scss'],
 })
 export class FindTicketComponent implements OnInit {
+  public busy: Subscription;
   public form: FormGroup;
 
   constructor(
@@ -22,18 +24,22 @@ export class FindTicketComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form = this.formBuilder.group({
-      ticketNumber: [null],
-      time: [null],
+      ticketNumber: ['EZ02000460', [Validators.required]],
+      time: ['09:54', [Validators.required]],
     });
-
-    // ticketNumber: ['EZ02000460', [Validators.required]],
-    // time: ['09:54', [Validators.required]],
   }
 
   public onSearch(): void {
-    this.disputeResource.getDispute().subscribe((response) => {
-      this.disputeService.dispute$.next(response);
-      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
+    const source = timer(1000);
+    this.busy = source.subscribe((val) => {
+      this.disputeResource.getDispute().subscribe((response) => {
+        this.disputeService.dispute$.next(response);
+
+        const queryParams = [...this.form.value];
+        this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
+          queryParams,
+        });
+      });
     });
   }
 

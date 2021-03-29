@@ -5,6 +5,7 @@ export class DisputeRoutes {
   public static STEPPER = 'stepper';
   public static SUCCESS = 'success';
   public static LIST = 'list';
+  public static SUMMARY = 'summary';
 
   public static MODULE_PATH = DisputeRoutes.DISPUTE;
 

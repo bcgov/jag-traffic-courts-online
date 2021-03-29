@@ -16,6 +16,7 @@ export interface Ticket {
   workPhone: string;
   birthdate: Date;
   counts: Count[];
+  outstandingBalance?: number;
 }
 
 export interface Count {

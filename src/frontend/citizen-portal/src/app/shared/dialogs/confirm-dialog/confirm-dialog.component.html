@@ -1,10 +1,10 @@
-<h2 mat-dialog-title
-    class="d-flex align-items-stretch">
-  <mat-icon *ngIf="options.icon && !options.imageSrc"
-            [color]="options.actionType">{{ options.icon }}</mat-icon>
-  <img *ngIf="options.imageSrc"
-       [attr.src]="options.imageSrc"
-       alt="">
+<h2 mat-dialog-title class="d-flex align-items-stretch">
+  <mat-icon
+    *ngIf="options.icon && !options.imageSrc"
+    [color]="options.actionType"
+    >{{ options.icon }}</mat-icon
+  >
+  <img *ngIf="options.imageSrc" [attr.src]="options.imageSrc" alt="" />
   <span class="flex-grow-1">
     {{ options.title }}
   </span>
@@ -14,23 +14,32 @@
   <ng-template appDialogContent></ng-template>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button *ngIf="!options.cancelHide"
-          mat-stroked-button
-          [mat-dialog-close]="false"
-          cdkFocusInitial
-          class="my-2 mr-2">{{ options.cancelText }}</button>
-  <button *ngIf="!options.actionHide"
-          mat-flat-button
-          [color]="options.actionType"
-          (click)="onConfirm()"
-          class="my-2 mr-1">{{ options.actionText }}</button>
+  <button
+    *ngIf="!options.actionHide"
+    mat-flat-button
+    [color]="options.actionType"
+    (click)="onConfirm()"
+    class="my-2 mr-1"
+  >
+    {{ options.actionText }}
+  </button>
+  <button
+    *ngIf="!options.cancelHide"
+    mat-stroked-button
+    [mat-dialog-close]="false"
+    cdkFocusInitial
+    class="my-2 mr-2"
+  >
+    {{ options.cancelText }}
+  </button>
 
   <span class="flex-grow-1"></span>
 
-  <a *ngIf="options.actionLink"
-     [attr.href]="options.actionLink.href"
-     [attr.target]="options.actionLink.target">
+  <a
+    *ngIf="options.actionLink"
+    [attr.href]="options.actionLink.href"
+    [attr.target]="options.actionLink.target"
+  >
     {{ options.actionLink.text }}
   </a>
-
 </mat-dialog-actions>
