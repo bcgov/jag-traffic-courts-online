@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using DisputeApi.Web.Features.Tickets.Configuration;
 using MediatR;
+using DisputeApi.Web.Auth;
 
 namespace DisputeApi.Web
 {
@@ -60,6 +61,7 @@ namespace DisputeApi.Web
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers().AddNewtonsoftJson();
 
+            ConfigureRSIClient(services);
             ConfigureOpenApi(services);
 
 #if USE_AUTHENTICATION
@@ -188,6 +190,13 @@ namespace DisputeApi.Web
                     };
                 };
             });
+        }
+
+        private void ConfigureRSIClient(IServiceCollection services)
+        {
+            services.AddMemoryCache();
+            services.AddHttpClient<IOAuthClient, OAuthClient>();
+            services.AddTransient<ITokenService, TokenService>();
         }
     }
 }
