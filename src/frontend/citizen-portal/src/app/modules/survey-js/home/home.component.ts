@@ -7,7 +7,6 @@ import { SurveyJson } from 'tests/survey';
 import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
-import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -24,7 +23,7 @@ import { DisputeRoutes } from '@dispute/dispute.routes';
 })
 export class HomeComponent implements OnInit {
   public busy: Subscription;
-  public dispute: Dispute;
+  public ticket: Ticket;
 
   private tcoSurvey: Survey.Survey;
 
@@ -33,8 +32,6 @@ export class HomeComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private toastService: ToastService,
-    private datePipe: FormatDatePipe,
-    private phonePipe: PhonePipe,
     private surveyResource: SurveyResourceService
   ) {}
 
@@ -51,9 +48,9 @@ export class HomeComponent implements OnInit {
   private setupSurvey(): void {
     this.tcoSurvey = new Survey.Model(SurveyJson);
 
-    this.surveyResource.getDispute().subscribe((dispute) => {
-      this.dispute = dispute;
-      this.handleSurveySetup(dispute);
+    this.surveyResource.getTicket().subscribe((ticket) => {
+      this.ticket = ticket;
+      this.handleSurveySetup(ticket);
 
       Survey.SurveyNG.render('surveyContainer', {
         model: this.tcoSurvey,
@@ -82,81 +79,47 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private handleSurveySetup(dispute: Dispute): void {
-    const ticket = dispute.ticket;
-
+  private handleSurveySetup(ticket: Ticket): void {
     this.tcoSurvey.setValue(
       'info_violationTicketNumber',
       ticket.violationTicketNumber
     );
 
-    this.tcoSurvey.setValue(
-      'info_violationDate',
-      this.datePipe.transform(ticket.violationDate?.toString()) +
-        ' ' +
-        ticket.violationTime
-    );
-    this.tcoSurvey.setValue('info_surname', ticket.surname);
-    this.tcoSurvey.setValue('info_givenNames', ticket.givenNames);
-    this.tcoSurvey.setValue('info_mailing', ticket.mailing);
-    this.tcoSurvey.setValue('info_postal', ticket.postal);
-    this.tcoSurvey.setValue('info_city', ticket.city);
-    this.tcoSurvey.setValue('info_province', ticket.province);
-    this.tcoSurvey.setValue('info_license', ticket.license);
-    this.tcoSurvey.setValue('info_provLicense', ticket.provLicense);
-    this.tcoSurvey.setValue('info_homePhone', ticket.homePhone);
-    this.tcoSurvey.setValue('info_workPhone', ticket.workPhone);
-    this.tcoSurvey.setValue(
-      'info_birthdate',
-      this.datePipe.transform(ticket.birthdate?.toString())
-    );
+    this.tcoSurvey.setValue('info_violationDate', ticket.violationTime);
+    this.tcoSurvey.setValue('info_surname', '');
+    this.tcoSurvey.setValue('info_givenNames', '');
+    this.tcoSurvey.setValue('info_mailing', '');
+    this.tcoSurvey.setValue('info_postal', '');
+    this.tcoSurvey.setValue('info_city', '');
+    this.tcoSurvey.setValue('info_province', '');
+    this.tcoSurvey.setValue('info_license', '');
+    this.tcoSurvey.setValue('info_provLicense', '');
+    this.tcoSurvey.setValue('info_homePhone', '');
+    this.tcoSurvey.setValue('info_workPhone', '');
+    this.tcoSurvey.setValue('info_birthdate', '');
 
-    this.tcoSurvey.setValue(
-      'info_party',
-      ticket.givenNames +
-        ' ' +
-        ticket.surname +
-        '\nBirthdate: ' +
-        this.datePipe.transform(ticket.birthdate?.toString()) +
-        '\n\nDriver License: ' +
-        ticket.license +
-        ' ' +
-        ticket.provLicense
-    );
+    this.tcoSurvey.setValue('info_party', '');
 
-    this.tcoSurvey.setValue(
-      'info_address',
-      ticket.mailing +
-        '\n' +
-        ticket.city +
-        ' ' +
-        ticket.province +
-        ' ' +
-        ticket.postal +
-        '\nHome: ' +
-        this.phonePipe.transform(ticket.homePhone) +
-        '\nWork: ' +
-        this.phonePipe.transform(ticket.workPhone)
-    );
+    this.tcoSurvey.setValue('info_address', '');
 
-    const numberOfCounts = ticket.counts?.length;
-    this.tcoSurvey.setValue('numberOfCounts', ticket.counts?.length);
+    // const numberOfCounts = ticket.counts?.length;
+    this.tcoSurvey.setValue('numberOfCounts', 0); //ticket.counts?.length);
 
-    ticket?.counts.forEach((cnt) => {
-      const question = this.tcoSurvey.getQuestionByName(
-        'alert_info_count' + cnt.countNo
-      );
-      question.html =
-        `<div>
-        <h2 class="mb-1">Offence #` +
-        cnt.countNo +
-        `<small class="ml-2">` +
-        cnt.description +
-        `</small>
-        </h2>
-        <hr class="m-0" style="border: 1px solid #ffb200;" />
-      </div>`;
-    });
+    // ticket?.counts.forEach((cnt) => {
+    //   const question = this.tcoSurvey.getQuestionByName(
+    //     'alert_info_count' + cnt.countNo
+    //   );
+    //   question.html =
+    //     `<div>
+    //     <h2 class="mb-1">Offence #` +
+    //     cnt.countNo +
+    //     `<small class="ml-2">` +
+    //     cnt.description +
+    //     `</small>
+    //     </h2>
+    //     <hr class="m-0" style="border: 1px solid #ffb200;" />
+    //   </div>`;
+    // });
   }
 
   private handleOnCompleting(): void {

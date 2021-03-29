@@ -6,7 +6,7 @@
     >
   </app-page-header>
 
-  <div *ngIf="dispute; else noDispute">
+  <div *ngIf="ticket; else noTicket">
     <section>
       <div class="row">
         <div class="col-lg-12">
@@ -23,21 +23,20 @@
     <div class="mb-4">
       <section class="mb-2">
         <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
-          Ticket #{{ dispute.ticket?.violationTicketNumber }}
+          Ticket #{{ ticket.violationTicketNumber }}
           <span class="text-muted ml-4">
-            {{ dispute.ticket?.violationDate | formatDate }}
-            {{ dispute.ticket?.violationTime }}</span
-          >
+            {{ ticket.violationTime }}
+          </span>
         </h2>
       </section>
 
       <section
         class="px-4 py-2 mb-4 offence-section"
-        *ngFor="let row of dispute.counts; let i = index"
+        *ngFor="let row of ticket.offences; let i = index"
       >
         <h3>
           <div class="row">
-            <div class="col-md-2">Offence #{{ row.countNo }}</div>
+            <div class="col-md-2">Offence #{{ row.offenceNumber }}</div>
             <div class="col-md-10 text-muted">
               {{ row.description | titlecase }}
             </div>
@@ -47,11 +46,11 @@
         <div class="row ml-2">
           <div class="col-4">
             <small class="d-block text-muted">Offence Amount</small>
-            <strong>{{ row?.ticket_amount | currency }}</strong>
+            <strong>{{ row?.ticketAmount | currency }}</strong>
           </div>
           <div class="col-2">
             <small class="d-block text-muted">Amount Due</small>
-            <strong>{{ row?.amount_due | currency }}</strong>
+            <strong>{{ row?.amountDue | currency }}</strong>
           </div>
           <div class="col">
             <small class="d-block text-muted">Status</small>
@@ -67,13 +66,6 @@
             </small>
           </div>
           <div class="col">
-            <!--
-          <mat-chip-list
-            *ngIf="row.statusCode === 'PAID' || row.statusCode === 'COMPLETE'"
-          >
-            <mat-chip color="primary" selected>COMPLETE</mat-chip>
-          </mat-chip-list>
-          -->
             <app-alert
               class="text-center"
               type="info"
@@ -106,7 +98,7 @@
               *ngIf="row.statusCode === 'UNPAID'"
               mat-flat-button
               color="primary"
-              (click)="onDispute()"
+              (click)="onDispute(row)"
             >
               <mat-icon inline="true">read_more</mat-icon>
               Dispute
@@ -126,20 +118,20 @@
           </div>
         </div>
 
-        <div class="row ml-2 mt-1" *ngIf="row?.early_amount > 0">
+        <div class="row ml-2 mt-1" *ngIf="row?.earlyAmount > 0">
           <div class="col-md-9">
             <app-alert type="warning" icon="lightbulb">
               <ng-container #alertContent class="alert-content">
                 <strong>
-                  If paid by {{ row?.due_date | formatDate }}, the amount due is
-                  {{ row?.early_amount | currency }}
+                  If paid by {{ row?.dueDate | formatDate }}, the amount due is
+                  {{ row?.earlyAmount | currency }}
                 </strong>
               </ng-container>
             </app-alert>
           </div>
         </div>
       </section>
-      <div class="row" *ngIf="dispute.ticket?.outstandingBalance > 0">
+      <div class="row" *ngIf="ticket.outstandingBalance > 0">
         <div class="offset-md-6 col-md-6">
           <button mat-flat-button color="accent">
             <a
@@ -149,7 +141,7 @@
             >
               <mat-icon inline="true">money</mat-icon>
               Pay Outstanding Balance of
-              {{ dispute.ticket?.outstandingBalance | currency }}
+              {{ ticket.outstandingBalance | currency }}
             </a>
           </button>
         </div>
@@ -178,7 +170,7 @@
     </section>
   </div>
 
-  <ng-template #noDispute>
+  <ng-template #noTicket>
     <h2>No current dispute/ticket</h2>
   </ng-template>
 </app-page>

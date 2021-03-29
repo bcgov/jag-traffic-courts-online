@@ -1,27 +1,26 @@
+import { Dispute } from './dispute.model';
+
 export interface Ticket {
-  id?: number;
-  userId: string;
   violationTicketNumber: string;
-  violationDate: string;
   violationTime: string;
-  surname: string;
-  givenNames: string;
-  mailing: string;
-  postal: string;
-  city: string;
-  province: string;
-  license: string;
-  provLicense: string;
-  homePhone: string;
-  workPhone: string;
-  birthdate: Date;
-  counts: Count[];
+  offences: Offence[];
+
+  // derived later on
   outstandingBalance?: number;
 }
 
-export interface Count {
-  id: number;
-  countNo: number;
-  statuteId: number;
+export interface Offence {
+  offenceNumber: number;
+  ticketAmount: number;
+  amountDue: number;
+  dueDate: string;
   description: string;
+
+  // derived later on
+  earlyAmount?: number;
+  statusCode?: string;
+  statusDesc?: string;
+  notes?: string;
+
+  dispute: Dispute;
 }

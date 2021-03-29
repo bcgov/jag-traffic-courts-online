@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
 
@@ -8,7 +8,6 @@ import { DisputeResourceService } from '@dispute/services/dispute-resource.servi
 import { DisputeService } from '@dispute/services/dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { UtilsService } from '@core/services/utils.service';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -18,11 +17,11 @@ import { Dispute } from '@shared/models/dispute.model';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { CurrencyPipe } from '@angular/common';
-import { ViewportService } from '@core/services/viewport.service';
+import { Offence } from '@shared/models/ticket.model';
 
 export class StepData {
   constructor(
-    public pageName: number,
+    public stepNumber: number,
     public title: string,
     public title2Label?: string,
     public title2?: string,
@@ -35,6 +34,14 @@ export class StepData {
     public value?: number
   ) {}
 }
+
+export enum StepNumber {
+  REVIEW = 1,
+  OFFENCE = 2,
+  COURT = 3,
+  OVERVIEW = 4,
+}
+
 @Component({
   selector: 'app-stepper',
   templateUrl: './stepper.component.html',
@@ -45,6 +52,8 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   public pageMode: string;
   public disputeSteps: StepData[];
 
+  private currentParams: Params;
+
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -52,12 +61,11 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
+    private activatedRoute: ActivatedRoute,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private utilsService: UtilsService,
     private formatDatePipe: FormatDatePipe,
     private currencyPipe: CurrencyPipe,
-    private viewportService: ViewportService,
     private logger: LoggerService
   ) {
     super(
@@ -73,19 +81,31 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit(): void {
-    // TODO just here temporarily to make sure data always displays
-    if (!this.disputeService.dispute) {
-      this.disputeResource.getDispute().subscribe((response) => {
-        this.disputeService.dispute$.next(response);
+    this.activatedRoute.queryParams.subscribe((params) => {
+      console.log('STEPPER', params);
+      this.currentParams = params;
+    });
+
+    // TODO  hack to temporarily to make sure data always displays (when refresh page)
+    if (!this.disputeService.ticketDispute) {
+      this.disputeResource.getTicket().subscribe((response) => {
+        this.disputeService.ticket$.next(response);
+        const ticketDispute = this.disputeService.getDisputeTicket(
+          response,
+          response.offences[0]
+        );
+        this.disputeService.ticketDispute$.next(ticketDispute);
       });
     }
 
-    this.disputeService.dispute$.subscribe((dispute) => {
-      this.initializeDisputeSteps(dispute);
+    this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
+      console.log('STEPPER ticketDispute', ticketDispute);
+      this.initializeDisputeSteps(ticketDispute.offence);
       this.patchForm();
     });
 
     this.disputeService.steps$.subscribe((stepData) => {
+      console.log('STEPS stepData', stepData);
       this.disputeSteps = stepData;
     });
   }
@@ -95,16 +115,16 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
-    const showCourtPage = this.shouldShowCourtPage();
+    // const showCourtPage = this.shouldShowCourtPage();
 
-    const steps = this.disputeService.steps$.value;
-    const courtPageExists = steps.some((step) => step.pageName === 3);
+    // const steps = this.disputeService.steps$.value;
+    // const courtPageExists = steps.some((step) => step.pageName === 3);
 
-    if (showCourtPage && !courtPageExists) {
-      this.addCourtPage(steps);
-    } else if (!showCourtPage && courtPageExists) {
-      this.removeCourtPage(steps);
-    }
+    // if (showCourtPage && !courtPageExists) {
+    //   this.addCourtPage(steps);
+    // } else if (!showCourtPage && courtPageExists) {
+    //   this.removeCourtPage(steps);
+    // }
 
     // on the last step
     if (numberOfSteps === currentStep) {
@@ -114,51 +134,48 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     }
   }
 
-  private shouldShowCourtPage(): boolean {
-    const count1 = this.disputeFormStateService.stepCount1Form.controls.count
-      .value;
-    const count2 = this.disputeFormStateService.stepCount2Form.controls.count
-      .value;
-    const count3 = this.disputeFormStateService.stepCount3Form.controls.count
-      .value;
-    const shouldShow =
-      (count1 && count1 !== 'A') ||
-      (count2 && count2 !== 'A') ||
-      (count3 && count3 !== 'A')
-        ? true
-        : false;
+  // private shouldShowCourtPage(): boolean {
+  //   const count1 = this.disputeFormStateService.stepCount1Form.controls.count
+  //     .value;
+  //   const count2 = this.disputeFormStateService.stepCount2Form.controls.count
+  //     .value;
+  //   const count3 = this.disputeFormStateService.stepCount3Form.controls.count
+  //     .value;
+  //   const shouldShow =
+  //     (count1 && count1 !== 'A') ||
+  //     (count2 && count2 !== 'A') ||
+  //     (count3 && count3 !== 'A')
+  //       ? true
+  //       : false;
 
-    return shouldShow;
-  }
+  //   return shouldShow;
+  // }
 
-  private initializeDisputeSteps(dispute: Dispute): void {
-    this.logger.info('initializeDisputeSteps', dispute);
+  private initializeDisputeSteps(offence: Offence): void {
+    this.logger.info('initializeDisputeSteps offence', offence);
 
     const steps = [];
-    let stepData = new StepData(1, 'Violation Ticket Review');
+    let stepData = new StepData(StepNumber.REVIEW, 'Violation Ticket Review');
     steps.push(stepData);
 
-    let index = 0;
-    dispute?.counts?.forEach((cnt) => {
-      stepData = new StepData(
-        2,
-        'Offence #' + cnt.countNo + ' Review and Action',
-        'Offence Description',
-        cnt.description,
-        // 'MVA 146(1) - ' + cnt.description,
-        'Ticket Amount',
-        this.transformCurrency(cnt.ticket_amount),
-        'Ticket Amount (if paid by ' + this.transformDate(cnt.due_date) + ' )',
-        this.transformCurrency(cnt.amount_due),
-        cnt.description,
-        cnt.statuteId,
-        index
-      );
-      steps.push(stepData);
-      index++;
-    });
+    stepData = new StepData(
+      StepNumber.OFFENCE,
+      'Offence #' + offence.offenceNumber + ' Review and Action',
+      'Offence Description',
+      offence.description,
+      'Ticket Amount',
+      this.transformCurrency(offence.ticketAmount),
+      'Ticket Amount (if paid by ' + this.transformDate(offence.dueDate) + ' )',
+      this.transformCurrency(offence.amountDue),
+      offence.description
+    );
+    steps.push(stepData);
 
-    steps.push({ title: 'Dispute Overview', value: null, pageName: 5 });
+    stepData = new StepData(StepNumber.COURT, 'Court Information');
+    steps.push(stepData);
+
+    stepData = new StepData(StepNumber.OVERVIEW, 'Dispute Overview');
+    steps.push(stepData);
 
     this.disputeService.steps$.next(steps);
   }
@@ -171,21 +188,21 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     return this.currencyPipe.transform(amount);
   }
 
-  private addCourtPage(steps: StepData[]): void {
-    const courtStepData = new StepData(3, 'Court Information');
-    steps.splice(steps.length - 1, 0, courtStepData);
-    this.disputeService.steps$.next(steps);
-  }
+  // private addCourtPage(steps: StepData[]): void {
+  //   const courtStepData = new StepData(3, 'Court Information');
+  //   steps.splice(steps.length - 1, 0, courtStepData);
+  //   this.disputeService.steps$.next(steps);
+  // }
 
-  private removeCourtPage(steps: StepData[]): void {
-    for (let i = 0; i < steps.length; i++) {
-      if (steps[i].pageName === 3) {
-        steps.splice(i, 1);
-        i--;
-      }
-    }
-    this.disputeService.steps$.next(steps);
-  }
+  // private removeCourtPage(steps: StepData[]): void {
+  //   for (let i = 0; i < steps.length; i++) {
+  //     if (steps[i].pageName === 3) {
+  //       steps.splice(i, 1);
+  //       i--;
+  //     }
+  //   }
+  //   this.disputeService.steps$.next(steps);
+  // }
 
   /**
    * @description
@@ -219,9 +236,12 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
           const source = timer(1000);
           this.busy = source.subscribe((val) => {
             this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate([
-              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
-            ]);
+            this.router.navigate(
+              [DisputeRoutes.routePath(DisputeRoutes.SUCCESS)],
+              {
+                queryParams: this.currentParams,
+              }
+            );
           });
         }
       });

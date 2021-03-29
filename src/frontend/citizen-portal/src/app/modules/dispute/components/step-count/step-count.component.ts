@@ -10,8 +10,6 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
-import { Ticket } from '@shared/models/ticket.model';
 import { StepData } from '../stepper/stepper.component';
 
 @Component({
@@ -47,14 +45,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit() {
-    const stepNumber = this.step ? this.step.value : 0;
-    this.form = this.disputeFormStateService.getStepCountForm(stepNumber);
-    // this.patchForm();
-
-    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-    //   this.ticket = dispute?.ticket;
-    //   this.form.patchValue(dispute);
-    // });
+    this.form = this.disputeFormStateService.stepOffenceForm;
   }
 
   public onSubmit(): void {

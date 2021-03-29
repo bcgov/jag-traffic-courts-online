@@ -61,47 +61,6 @@ export class DisputeResourceService {
     );
   }
 
-  public getDispute(): Observable<Dispute> {
-    return this.apiResource.get<Dispute>('dispute').pipe(
-      map((response: ApiHttpResponse<Dispute>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[getDispute] DisputeResourceService::dispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
-  public getAllDisputes(): Observable<Dispute[]> {
-    return this.apiResource.get<Dispute[]>('alldisputes').pipe(
-      map((response: ApiHttpResponse<Dispute[]>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[getAllDisputes] DisputeResourceService::alldisputes error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
-  public createDispute(dispute: Dispute): Observable<Dispute> {
-    this.logger.info('createDispute', dispute);
-
-    return this.apiResource.post<Dispute>('ticket').pipe(
-      map((response: ApiHttpResponse<Dispute>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[createDispute] DisputeResourceService::dispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
   public updateDispute(dispute: Dispute): Observable<Dispute> {
     this.logger.info('updateDispute', dispute);
 

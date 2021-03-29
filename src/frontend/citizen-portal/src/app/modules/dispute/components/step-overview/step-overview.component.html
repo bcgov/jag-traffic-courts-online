@@ -11,166 +11,67 @@
     <div class="row">
       <div class="col-6 mb-2">Violation Ticket Number</div>
       <div class="col-6 text-right mb-2">
-        {{ ticket?.violationTicketNumber | default }}
+        {{ ticketDispute?.violationTicketNumber | default }}
       </div>
     </div>
     <div class="row">
       <div class="col-6 mb-2">Violation Date and Time</div>
       <div class="col-6 text-right">
-        {{ ticket?.violationDate | formatDate | default }}
-        {{ ticket?.violationTime }}
+        {{ ticketDispute?.violationTime }}
       </div>
     </div>
     <div class="row">
       <div class="col-6 mb-2">Contact Email</div>
       <div class="col-6 text-right">
-        {{ dispute?.emailAddress | default }}
+        {{ emailAddress.value | default }}
       </div>
     </div>
   </section>
 
-  <form [formGroup]="count1Form" novalidate>
+  <form [formGroup]="offenceForm" novalidate>
     <section class="mb-2">
       <div class="row">
-        <div class="col-3 mb-2">Offence #{{ cnt1_countNo.value }}</div>
-        <small class="col-9 text-muted text-right mb-2">{{
-          cnt1_description.value
-        }}</small>
-      </div>
-      <div class="row">
-        <div class="offset-2 col-10 text-left mb-2 pl-0">
-          <div *ngIf="cnt1_count.value === 'A'">
-            I agree that I committed this offence, and I do not want to appear
-            in court
-          </div>
-          <div *ngIf="cnt1_count.value === 'B'">
-            I agree that I committed this offence, and I want to appear in court
-          </div>
-          <div *ngIf="cnt1_count.value === 'C'">
-            I do not agree that I committed this offence (allegation)
-          </div>
-
-          <div *ngIf="cnt1_count.value === 'A'">
-            <div *ngIf="cnt1_count1A1.value">
-              I request a reduction of the ticketed amount
-            </div>
-
-            <div *ngIf="cnt1_count1A1.value">
-              <div>{{ cnt1_reductionReason.value }}</div>
-            </div>
-            <div *ngIf="cnt1_count1A2.value">
-              I request time to pay the ticketed amount
-            </div>
-            <div *ngIf="cnt1_count1A2.value">
-              <div>{{ cnt1_timeReason.value }}</div>
-            </div>
-          </div>
-
-          <div *ngIf="cnt1_count.value === 'B'">
-            <div *ngIf="cnt1_count1B1.value">
-              I request a reduction of the ticketed amount
-            </div>
-            <div *ngIf="cnt1_count1B2.value">
-              I request time to pay the ticketed amount
-            </div>
-          </div>
+        <div class="col-3 mb-2">
+          Offence #{{ ticketDispute?.offence.offenceNumber }}
         </div>
-      </div>
-    </section>
-  </form>
-
-  <form [formGroup]="count2Form" novalidate>
-    <section class="mb-2" *ngIf="cnt2_countNo.value">
-      <div class="row">
-        <div class="col-3 mb-2">Offence #{{ cnt2_countNo.value }}</div>
         <small class="col-9 text-muted text-right mb-2">{{
-          cnt2_description.value
+          ticketDispute?.offence.description
         }}</small>
       </div>
       <div class="row">
         <div class="offset-2 col-10 text-left mb-2 pl-0">
-          <div *ngIf="cnt2_count.value === 'A'">
+          <div *ngIf="count.value === 'A'">
             I agree that I committed this offence, and I do not want to appear
             in court
           </div>
-          <div *ngIf="cnt2_count.value === 'B'">
+          <div *ngIf="count.value === 'B'">
             I agree that I committed this offence, and I want to appear in court
           </div>
-          <div *ngIf="cnt2_count.value === 'C'">
+          <div *ngIf="count.value === 'C'">
             I do not agree that I committed this offence (allegation)
           </div>
 
-          <div *ngIf="cnt2_count.value === 'A'">
-            <div *ngIf="cnt2_count1A1.value">
+          <div *ngIf="count.value === 'A'">
+            <div *ngIf="count1A1.value">
               I request a reduction of the ticketed amount
             </div>
 
-            <div *ngIf="cnt2_count1A1.value">
-              <div>{{ cnt2_reductionReason.value }}</div>
+            <div *ngIf="count1A1.value">
+              <div>{{ reductionReason.value }}</div>
             </div>
-            <div *ngIf="cnt2_count1A2.value">
+            <div *ngIf="count1A2.value">
               I request time to pay the ticketed amount
             </div>
-            <div *ngIf="cnt2_count1A2.value">
-              <div>{{ cnt2_timeReason.value }}</div>
+            <div *ngIf="count1A2.value">
+              <div>{{ timeReason.value }}</div>
             </div>
           </div>
 
-          <div *ngIf="cnt2_count.value === 'B'">
-            <div *ngIf="cnt2_count1B1.value">
+          <div *ngIf="count.value === 'B'">
+            <div *ngIf="count1B1.value">
               I request a reduction of the ticketed amount
             </div>
-            <div *ngIf="cnt2_count1B2.value">
-              I request time to pay the ticketed amount
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </form>
-
-  <form [formGroup]="count3Form" novalidate>
-    <section class="mb-2" *ngIf="cnt3_countNo.value">
-      <div class="row">
-        <div class="col-3 mb-2">Offence #{{ cnt3_countNo.value }}</div>
-        <small class="col-9 text-muted text-right mb-2">{{
-          cnt3_description.value
-        }}</small>
-      </div>
-      <div class="row">
-        <div class="offset-2 col-10 text-left mb-2 pl-0">
-          <div *ngIf="cnt3_count.value === 'A'">
-            I agree that I committed this offence, and I do not want to appear
-            in court
-          </div>
-          <div *ngIf="cnt3_count.value === 'B'">
-            I agree that I committed this offence, and I want to appear in court
-          </div>
-          <div *ngIf="cnt3_count.value === 'C'">
-            I do not agree that I committed this offence (allegation)
-          </div>
-
-          <div *ngIf="cnt3_count.value === 'A'">
-            <div *ngIf="cnt3_count1A1.value">
-              I request a reduction of the ticketed amount
-            </div>
-
-            <div *ngIf="cnt3_count1A1.value">
-              <div>{{ cnt3_reductionReason.value }}</div>
-            </div>
-            <div *ngIf="cnt3_count1A2.value">
-              I request time to pay the ticketed amount
-            </div>
-            <div *ngIf="cnt3_count1A2.value">
-              <div>{{ cnt3_timeReason.value }}</div>
-            </div>
-          </div>
-
-          <div *ngIf="cnt3_count.value === 'B'">
-            <div *ngIf="cnt3_count1B1.value">
-              I request a reduction of the ticketed amount
-            </div>
-            <div *ngIf="cnt3_count1B2.value">
+            <div *ngIf="count1B2.value">
               I request time to pay the ticketed amount
             </div>
           </div>
