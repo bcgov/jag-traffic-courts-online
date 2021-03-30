@@ -50,11 +50,11 @@ export class DisputeService {
     return this.disputeSteps;
   }
 
-  public getDisputeTicket(ticket: Ticket, offence: Offence): TicketDispute {
+  public getDisputeTicket(ticket: Ticket, oneOffence: Offence): TicketDispute {
     const ticketDispute = {
       violationTicketNumber: ticket.violationTicketNumber,
       violationTime: ticket.violationTime,
-      offence: offence,
+      offence: oneOffence,
     };
 
     return ticketDispute;
