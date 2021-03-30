@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,22 +22,10 @@ namespace DisputeApi.Web.Auth
 
         public async Task<Token> GetTokenAsync(CancellationToken cancellationToken)
         {
-            return await GetOrRefreshTokenAsync(cancellationToken);
-        }
-
-        private async Task<Token> GetOrRefreshTokenAsync(CancellationToken cancellationToken)
-        {
-            var token = GetFromMemoryAsync();
+            var token = _memoryCache.Get<Token>(Keys.OAUTH_TOKEN_KEY);
             if (token == null)
                 return await RefreshTokenAsync(cancellationToken);
             return token;
-        }
-
-        private Token GetFromMemoryAsync()
-        {
-            string tokenString = (string)_memoryCache.Get(Keys.OAUTH_TOKEN_KEY);
-            if (String.IsNullOrEmpty((string)tokenString)) return null;
-            return JsonConvert.DeserializeObject<Token>(tokenString);
         }
 
         private async Task<Token> RefreshTokenAsync(CancellationToken cancellationToken)

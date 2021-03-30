@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,12 +55,7 @@ namespace DisputeApi.Web.Auth
 
                 var stream = await response.Content.ReadAsStreamAsync();
 
-                using (StreamReader sr = new StreamReader(stream))
-                using (JsonReader reader = new JsonTextReader(sr))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    return serializer.Deserialize<Token>(reader);
-                }
+                return await JsonSerializer.DeserializeAsync<Token>(stream);
             }
         }
     }

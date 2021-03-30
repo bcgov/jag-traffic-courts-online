@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DisputeApi.Web.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -50,8 +51,14 @@ namespace DisputeApi.Web.Features.TicketLookup
 
         public class Handler : IRequestHandler<Query, Response>
         {
+            ITokenService _tokenService;
+            public Handler(ITokenService tokenService )
+            {
+                _tokenService = tokenService;
+            }
             public async Task<Response> Handle(Query query, CancellationToken cancellationToken)
             {
+                Token token = await _tokenService.GetTokenAsync(new CancellationToken());
                 string ticketNumber = query.TicketNumber;
                 string time = query.Time;
 
