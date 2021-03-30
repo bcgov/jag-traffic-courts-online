@@ -146,7 +146,10 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   // }
 
   private initializeDisputeSteps(ticketDispute: TicketDispute): void {
-    const offence = ticketDispute.offence;
+    const offence = ticketDispute?.offence;
+    if (!offence) {
+      return;
+    }
     this.logger.info('initializeDisputeSteps offence', offence);
 
     const steps = [];
