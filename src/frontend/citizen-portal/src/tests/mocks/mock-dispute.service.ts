@@ -185,7 +185,7 @@ export class MockDisputeService {
       offenceNumber: 3,
       ticketAmount: 167,
       amountDue: 167,
-      dueDate: faker.date.soon().toString(), //'2020-09-18T09:54',
+      dueDate: faker.date.soon().toString(), // '2020-09-18T09:54',
       description: 'Operate Vehicle Without Seatbelts',
       dispute: null,
     };
