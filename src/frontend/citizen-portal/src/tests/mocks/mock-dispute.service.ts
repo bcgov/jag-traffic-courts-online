@@ -111,7 +111,7 @@ export class MockDisputeService {
 
     let balance = 0;
 
-    //--------------------------
+    // --------------------------
     let offence: Offence = {
       offenceNumber: 1,
       ticketAmount: 126,
@@ -149,7 +149,7 @@ export class MockDisputeService {
 
     ticket.offences.push(offence);
 
-    //--------------------------
+    // --------------------------
     offence = {
       offenceNumber: 2,
       ticketAmount: 126,
@@ -180,7 +180,7 @@ export class MockDisputeService {
 
     ticket.offences.push(offence);
 
-    //--------------------------
+    // --------------------------
     offence = {
       offenceNumber: 3,
       ticketAmount: 167,
@@ -212,7 +212,7 @@ export class MockDisputeService {
       offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
 
     ticket.offences.push(offence);
-    //--------------------------
+    // --------------------------
     offence = {
       offenceNumber: 4,
       ticketAmount: 126,
@@ -247,7 +247,7 @@ export class MockDisputeService {
 
     ticket.offences.push(offence);
 
-    //--------------------------
+    // --------------------------
     offence = {
       offenceNumber: 5,
       ticketAmount: 126,
@@ -283,7 +283,7 @@ export class MockDisputeService {
 
     ticket.offences.push(offence);
 
-    //------------------------------------
+    // ------------------------------------
     ticket.outstandingBalance = balance;
 
     return ticket;

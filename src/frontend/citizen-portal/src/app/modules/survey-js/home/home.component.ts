@@ -103,7 +103,7 @@ export class HomeComponent implements OnInit {
     this.tcoSurvey.setValue('info_address', '');
 
     // const numberOfCounts = ticket.counts?.length;
-    this.tcoSurvey.setValue('numberOfCounts', 0); //ticket.counts?.length);
+    this.tcoSurvey.setValue('numberOfCounts', 0); // ticket.counts?.length);
 
     // ticket?.counts.forEach((cnt) => {
     //   const question = this.tcoSurvey.getQuestionByName(
