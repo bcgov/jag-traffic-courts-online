@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { ViewportService } from '@core/services/viewport.service';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
@@ -27,7 +26,6 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
-    private viewportService: ViewportService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService
@@ -56,10 +54,6 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
 
   public onBack() {
     this.stepper.previous();
-  }
-
-  public get isMobile(): boolean {
-    return this.viewportService.isMobile;
   }
 
   public get interpreterRequired(): FormControl {

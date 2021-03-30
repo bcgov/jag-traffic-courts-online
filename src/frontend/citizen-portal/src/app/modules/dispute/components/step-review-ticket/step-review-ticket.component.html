@@ -23,12 +23,12 @@
       </div>
     </section>
 
-    <section class="mb-2">
-      <h4 class="row">
-        <div class="col-lg-2 mb-2 p-0">
+    <section class="mb-4">
+      <h4 class="row mb-2">
+        <div class="col-lg-2 p-0">
           Offence #{{ ticketDispute.offence.offenceNumber }}
         </div>
-        <small class="col-lg-10 text-muted text-right mb-2">
+        <small class="col-lg-10 text-muted text-right">
           {{ ticketDispute.offence.description }}
         </small>
       </h4>
@@ -52,7 +52,7 @@
 
     <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
       <section>
-        <h3>Contact Email Address</h3>
+        <h3 class="mb-0">Contact Email Address</h3>
         <div class="row">
           <div class="col-sm-6">
             <mat-form-field class="w-100">

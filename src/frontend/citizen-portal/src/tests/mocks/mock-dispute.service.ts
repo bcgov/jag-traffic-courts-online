@@ -114,39 +114,6 @@ export class MockDisputeService {
     //--------------------------
     let offence: Offence = {
       offenceNumber: 1,
-      ticketAmount: 167,
-      amountDue: 167,
-      dueDate: faker.date.soon().toString(), //'2020-09-18T09:54',
-      description: 'Operate Vehicle Without Seatbelts',
-      dispute: null,
-    };
-
-    let dispute = this.createDispute();
-    offence.dispute = dispute;
-
-    offence.earlyAmount = 0;
-    offence.statusCode = 'UNPAID';
-    offence.statusDesc = 'Outstanding Balance';
-    offence.notes = '';
-
-    if (offence.amountDue > 0) {
-      const todayDate = new Date();
-      const dueDate = new Date(offence.dueDate);
-
-      if (todayDate <= dueDate) {
-        offence.earlyAmount = offence.ticketAmount - 25;
-        offence.amountDue = offence.earlyAmount;
-      }
-    }
-
-    balance +=
-      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
-
-    ticket.offences.push(offence);
-
-    //--------------------------
-    offence = {
-      offenceNumber: 2,
       ticketAmount: 126,
       amountDue: 126,
       dueDate: faker.date.soon().toString(),
@@ -155,7 +122,7 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
+    let dispute: Dispute = this.createDispute();
     dispute.interpreterRequired = true;
     dispute.interpreterLanguage = 'Spanish';
     dispute.certifyCorrect = true;
@@ -184,7 +151,7 @@ export class MockDisputeService {
 
     //--------------------------
     offence = {
-      offenceNumber: 3,
+      offenceNumber: 2,
       ticketAmount: 126,
       amountDue: 0,
       dueDate: faker.date.soon().toString(),
@@ -213,6 +180,38 @@ export class MockDisputeService {
 
     ticket.offences.push(offence);
 
+    //--------------------------
+    offence = {
+      offenceNumber: 3,
+      ticketAmount: 167,
+      amountDue: 167,
+      dueDate: faker.date.soon().toString(), //'2020-09-18T09:54',
+      description: 'Operate Vehicle Without Seatbelts',
+      dispute: null,
+    };
+
+    dispute = this.createDispute();
+    offence.dispute = dispute;
+
+    offence.earlyAmount = 0;
+    offence.statusCode = 'UNPAID';
+    offence.statusDesc = 'Outstanding Balance';
+    offence.notes = '';
+
+    if (offence.amountDue > 0) {
+      const todayDate = new Date();
+      const dueDate = new Date(offence.dueDate);
+
+      if (todayDate <= dueDate) {
+        offence.earlyAmount = offence.ticketAmount - 25;
+        offence.amountDue = offence.earlyAmount;
+      }
+    }
+
+    balance +=
+      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+
+    ticket.offences.push(offence);
     //--------------------------
     offence = {
       offenceNumber: 4,
@@ -284,6 +283,7 @@ export class MockDisputeService {
 
     ticket.offences.push(offence);
 
+    //------------------------------------
     ticket.outstandingBalance = balance;
 
     return ticket;

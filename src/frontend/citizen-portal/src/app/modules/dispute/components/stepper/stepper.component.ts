@@ -16,7 +16,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { CurrencyPipe } from '@angular/common';
-import { Offence } from '@shared/models/ticket.model';
+import { TicketDispute } from '@shared/models/ticket-dispute.model';
 
 export class StepData {
   constructor(
@@ -28,8 +28,7 @@ export class StepData {
     public title3?: string,
     public title4Label?: string,
     public title4?: string,
-    public description?: string,
-    public value?: number
+    public description?: string
   ) {}
 }
 
@@ -89,14 +88,14 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
         this.disputeService.ticket$.next(response);
         const ticketDispute = this.disputeService.getDisputeTicket(
           response,
-          response.offences[0]
+          response.offences[2]
         );
         this.disputeService.ticketDispute$.next(ticketDispute);
       });
     }
 
     this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
-      this.initializeDisputeSteps(ticketDispute.offence);
+      this.initializeDisputeSteps(ticketDispute);
       this.patchForm();
     });
 
@@ -146,7 +145,8 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
   //   return shouldShow;
   // }
 
-  private initializeDisputeSteps(offence: Offence): void {
+  private initializeDisputeSteps(ticketDispute: TicketDispute): void {
+    const offence = ticketDispute.offence;
     this.logger.info('initializeDisputeSteps offence', offence);
 
     const steps = [];
@@ -242,7 +242,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       });
   }
 
-  public onSelectionChange(stepper): void {
-    this.logger.info('onSelectionChange:', this.disputeFormStateService.json);
-  }
+  // public onSelectionChange(stepper): void {
+  //   this.logger.info('onSelectionChange:', this.disputeFormStateService.json);
+  // }
 }

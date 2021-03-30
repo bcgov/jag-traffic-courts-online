@@ -3,7 +3,6 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatStepperModule } from '@angular/material/stepper';
 
 import { SharedModule } from '@shared/shared.module';
-import { DashboardModule } from '../dashboard/dashboard.module';
 import { DisputeRoutingModule } from './dispute-routing.module';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
@@ -32,13 +31,7 @@ import { DisputeSummaryComponent } from './components/dispute-summary/dispute-su
     DisplayTicketComponent,
     DisputeSummaryComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    DashboardModule,
-    DisputeRoutingModule,
-    MatStepperModule,
-  ],
+  imports: [CommonModule, SharedModule, DisputeRoutingModule, MatStepperModule],
   providers: [CurrencyPipe, FormatDatePipe],
   exports: [DisputeRoutingModule],
 })

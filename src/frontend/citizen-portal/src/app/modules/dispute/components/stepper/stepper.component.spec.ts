@@ -30,6 +30,18 @@ describe('StepperComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StepperComponent);
     component = fixture.componentInstance;
+    component.ticketDispute = {
+      violationTicketNumber: '',
+      violationTime: '',
+      offence: {
+        offenceNumber: 1,
+        ticketAmount: 1,
+        amountDue: 1,
+        dueDate: '',
+        description: '',
+        dispute: null,
+      },
+    };
     fixture.detectChanges();
   });
 

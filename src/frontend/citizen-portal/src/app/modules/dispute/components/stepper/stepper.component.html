@@ -1,4 +1,4 @@
-<app-dashboard-header [hasMobileSidemenu]="false"></app-dashboard-header>
+<app-header></app-header>
 
 <div class="container">
   <div class="row mt-4">
@@ -18,11 +18,8 @@
           <ng-container header>BC Traffic Court Dispute</ng-container>
         </app-tco-page-header>
 
-        <mat-vertical-stepper
-          #disputeStepper
-          linear
-          (selectionChange)="onSelectionChange($event)"
-        >
+        <!-- (selectionChange)="onSelectionChange($event)" -->
+        <mat-vertical-stepper #disputeStepper linear>
           <mat-step *ngFor="let step of disputeSteps; let i = index">
             <ng-template matStepLabel>{{ step.title }}</ng-template>
 

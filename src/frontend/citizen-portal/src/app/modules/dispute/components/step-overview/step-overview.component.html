@@ -39,7 +39,7 @@
         }}</small>
       </div>
       <div class="row">
-        <div class="offset-2 col-10 text-left mb-2 pl-0">
+        <div class="offset-4 col-8 text-left mb-2 pl-0">
           <div *ngIf="count.value === 'A'">
             I agree that I committed this offence, and I do not want to appear
             in court
@@ -85,7 +85,7 @@
       <div class="col-12 mb-2">Court Information</div>
     </div>
     <div class="row">
-      <div class="offset-2 col-10 text-left mb-2 pl-0">
+      <div class="offset-4 col-8 text-left mb-2 pl-0">
         <form [formGroup]="courtForm" novalidate>
           <div *ngIf="lawyerPresent.value">
             I intend to be represented at the hearing by a lawyer
