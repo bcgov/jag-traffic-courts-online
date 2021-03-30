@@ -10,8 +10,6 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
-import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-step-court',
@@ -46,12 +44,6 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepCourtForm;
-    // this.patchForm();
-
-    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-    //   this.ticket = dispute?.ticket;
-    //   this.form.patchValue(dispute);
-    // });
   }
 
   public onSubmit(): void {

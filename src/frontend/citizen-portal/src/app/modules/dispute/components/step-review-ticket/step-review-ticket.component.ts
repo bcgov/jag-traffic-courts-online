@@ -9,8 +9,6 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
-import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-step-review-ticket',
@@ -23,7 +21,6 @@ export class StepReviewTicketComponent
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
-  // public ticket: Ticket;
   public isSubmitted = false;
 
   constructor(
@@ -50,17 +47,6 @@ export class StepReviewTicketComponent
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepReviewForm;
     this.ticketDispute = this.disputeService.ticketDispute;
-    console.log('REVIEW ticketDispute', this.ticketDispute);
-
-    // this.patchForm();
-
-    // this.ticket = this.disputeService.dispute?.ticket;
-    // this.rsiTicket = this.disputeService.dispute?.rsiTicket;
-
-    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-    //   this.ticket = dispute?.ticket;
-    //   this.form.patchValue(dispute);
-    // });
   }
 
   public onSubmit(): void {

@@ -292,11 +292,11 @@ export class MockDisputeService {
   private createDispute(): Dispute {
     const dispute: Dispute = {
       emailAddress: faker.internet.email(),
-      lawyerPresent: false,
-      interpreterRequired: false,
+      lawyerPresent: null,
+      interpreterRequired: null,
       interpreterLanguage: null,
-      callWitness: false,
-      certifyCorrect: false,
+      callWitness: null,
+      certifyCorrect: null,
     };
 
     return dispute;

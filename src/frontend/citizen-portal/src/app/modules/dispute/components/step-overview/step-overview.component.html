@@ -107,6 +107,15 @@
             I certify that all information provided is true and complete. I
             understand it is an offence under the law to knowingly provide false
             or misleading information.
+            <mat-error
+              *ngIf="
+                (certifyCorrect.dirty || certifyCorrect.touched) &&
+                certifyCorrect.invalid &&
+                certifyCorrect.errors.required
+              "
+            >
+              Required
+            </mat-error>
           </mat-checkbox>
         </div>
       </div>

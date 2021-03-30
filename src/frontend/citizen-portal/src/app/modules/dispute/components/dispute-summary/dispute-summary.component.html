@@ -44,15 +44,15 @@
         </h3>
 
         <div class="row ml-2">
-          <div class="col-4">
+          <div class="col-3 mb-2">
             <small class="d-block text-muted">Offence Amount</small>
             <strong>{{ row?.ticketAmount | currency }}</strong>
           </div>
-          <div class="col-2">
+          <div class="col-3">
             <small class="d-block text-muted">Amount Due</small>
             <strong>{{ row?.amountDue | currency }}</strong>
           </div>
-          <div class="col">
+          <div class="col-2 mb-2">
             <small class="d-block text-muted">Status</small>
             <small
               [ngClass]="{
@@ -67,8 +67,8 @@
           </div>
           <div class="col">
             <app-alert
-              class="text-center"
               type="info"
+              icon="check"
               *ngIf="row.statusCode === 'PAID' || row.statusCode === 'COMPLETE'"
             >
               <ng-container #alertContent class="alert-content">

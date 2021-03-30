@@ -30,7 +30,6 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
   protected patchForm(): void {
     // Store a local copy of the dispute for views
     this.ticketDispute = this.disputeService.ticketDispute;
-    console.log('patchForm xxx', this.ticketDispute);
 
     // Attempt to patch the form if not already patched
     this.disputeFormStateService.setForm(this.ticketDispute.offence.dispute);

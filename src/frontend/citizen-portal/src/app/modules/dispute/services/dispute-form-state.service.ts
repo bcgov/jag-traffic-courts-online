@@ -83,6 +83,25 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   /**
    * @description
+   * Check that at least one constituent form is dirty.
+   */
+  public get isDirty(): boolean {
+    return this.forms.reduce(
+      (dirty: boolean, form: AbstractControl) => dirty || form.dirty,
+      false
+    );
+  }
+
+  /**
+   * @description
+   * Mark all constituent forms as pristine.
+   */
+  public markAsPristine(): void {
+    this.forms.forEach((form: AbstractControl) => form.markAsPristine());
+  }
+
+  /**
+   * @description
    * Initialize and configure the forms for patching, which is also used
    * to clear previous form data from the service.
    */
@@ -124,7 +143,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
-      count: [null],
+      count: [null, [Validators.required]],
       count1A1: [null],
       count1A2: [null],
       reductionReason: [null],
@@ -145,7 +164,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      certifyCorrect: [false],
+      certifyCorrect: [false, [Validators.required]],
     });
   }
 }

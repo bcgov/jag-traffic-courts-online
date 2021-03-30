@@ -13,7 +13,6 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import { Dispute } from '@shared/models/dispute.model';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { CurrencyPipe } from '@angular/common';
@@ -30,7 +29,6 @@ export class StepData {
     public title4Label?: string,
     public title4?: string,
     public description?: string,
-    public statuteId?: number,
     public value?: number
   ) {}
 }
@@ -82,7 +80,6 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      console.log('STEPPER', params);
       this.currentParams = params;
     });
 
@@ -99,13 +96,11 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     }
 
     this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
-      console.log('STEPPER ticketDispute', ticketDispute);
       this.initializeDisputeSteps(ticketDispute.offence);
       this.patchForm();
     });
 
     this.disputeService.steps$.subscribe((stepData) => {
-      console.log('STEPS stepData', stepData);
       this.disputeSteps = stepData;
     });
   }

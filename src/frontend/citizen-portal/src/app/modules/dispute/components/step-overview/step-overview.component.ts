@@ -5,12 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
+import { UtilsService } from '@core/services/utils.service';
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
-import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-step-overview',
@@ -24,8 +23,6 @@ export class StepOverviewComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public nextBtnLabel: string;
-  // public dispute: Dispute;
-  // public ticket: Ticket;
 
   public reviewForm: FormGroup;
   public offenceForm: FormGroup;
@@ -39,6 +36,7 @@ export class StepOverviewComponent
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
     private formUtilsService: FormUtilsService,
+    private utilsService: UtilsService,
     private logger: LoggerService,
     private toastService: ToastService
   ) {
@@ -53,13 +51,15 @@ export class StepOverviewComponent
   }
 
   public ngOnInit() {
-    this.form = this.disputeFormStateService.stepOverviewForm;
     this.ticketDispute = this.disputeService.ticketDispute;
-    this.logger.log('OVERVIEW ticketDispute', this.ticketDispute);
 
-    this.reviewForm = this.disputeFormStateService.stepReviewForm;
-    this.offenceForm = this.disputeFormStateService.stepOffenceForm;
-    this.courtForm = this.disputeFormStateService.stepCourtForm;
+    const formsList = this.disputeFormStateService.forms;
+    [
+      this.reviewForm,
+      this.offenceForm,
+      this.courtForm,
+      this.form,
+    ] = formsList as FormGroup[];
 
     this.nextBtnLabel = 'Submit';
   }
@@ -70,11 +70,15 @@ export class StepOverviewComponent
 
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
-      this.stepSave.emit(this.stepper);
+      if (this.disputeFormStateService.isValid) {
+        this.stepSave.emit(this.stepper);
+      } else {
+        this.toastService.openErrorToast(
+          'Your dispute has an error that needs to be corrected before you will be able to submit'
+        );
+      }
     } else {
-      this.toastService.openErrorToast(
-        'Your dispute has an error that needs to be corrected before you will be able to submit'
-      );
+      this.utilsService.scrollToErrorSection();
     }
   }
 

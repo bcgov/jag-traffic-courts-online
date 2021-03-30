@@ -14,7 +14,6 @@ export class DisputeSubmitComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      console.log('SUBMIT', params);
       this.currentParams = params;
     });
   }
