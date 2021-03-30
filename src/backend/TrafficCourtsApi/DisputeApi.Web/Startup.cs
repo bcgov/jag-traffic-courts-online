@@ -3,12 +3,10 @@ using DisputeApi.Web.Health;
 using DisputeApi.Web.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +16,8 @@ using Microsoft.Net.Http.Headers;
 using NSwag;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
+using System.Collections.Generic;
 using DisputeApi.Web.Features.Tickets.Configuration;
 using MediatR;
 using DisputeApi.Web.Auth;
@@ -194,6 +192,10 @@ namespace DisputeApi.Web
 
         private void ConfigureRSIClient(IServiceCollection services)
         {
+            services.AddOptions<OAuthOptions>()
+                .Bind(_configuration.GetSection("OAuth"))
+                .ValidateDataAnnotations();
+
             services.AddMemoryCache();
             services.AddHttpClient<IOAuthClient, OAuthClient>();
             services.AddTransient<ITokenService, TokenService>();

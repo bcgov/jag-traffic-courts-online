@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -14,10 +15,11 @@ namespace DisputeApi.Web.Auth
     public class OAuthClient : IOAuthClient
     {
         private readonly HttpClient _httpClient;
-        public OAuthClient(HttpClient httpClient)
+        private readonly OAuthOptions _oAuthOptions;
+        public OAuthClient(HttpClient httpClient, IOptionsMonitor<OAuthOptions> oAuthOptions)
         {
             _httpClient = httpClient;
-
+            _oAuthOptions = oAuthOptions.CurrentValue;
         }
 
         public async Task<Token> GetRefreshToken(CancellationToken cancellationToken)
@@ -27,16 +29,16 @@ namespace DisputeApi.Web.Auth
 
             var data = new Dictionary<string, string>
             {
-                {"resource", "https://wsgw.test.jag.gov.bc.ca:8443/paybc"},
-                {"client_id", "bd4fe7e3-449d-49be-a680-c12d433004be"},
-                {"client_secret", "bc723590-0999-4690-84f6-6534bf333b99"},
+                {"resource", _oAuthOptions.ResourceUrl},
+                {"client_id", _oAuthOptions.ClientId},
+                {"client_secret", _oAuthOptions.Secret},
                 {"scope", "openid"},
                 {"response_mode", "form_post"},
                 {"grant_type", "client_credentials"}
             };
 
             var content = new FormUrlEncodedContent(data);
-            using (var request = new HttpRequestMessage(HttpMethod.Post, "https://wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token") { Content = content })
+            using (var request = new HttpRequestMessage(HttpMethod.Post, _oAuthOptions.OAuthUrl) { Content = content })
             {
                 var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead,
                     cancellationToken);
