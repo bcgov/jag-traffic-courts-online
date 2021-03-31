@@ -10,7 +10,7 @@
     <section>
       <div class="row">
         <div class="col-lg-12">
-          <app-alert type="info" icon="info">
+          <app-alert type="success" icon="check">
             <ng-container #alertContent class="alert-content">
               <strong>Your Ticket has been Resolved</strong><br />
               No further actions are required.
@@ -43,7 +43,7 @@
           </div>
         </h3>
 
-        <div class="row ml-2">
+        <div class="row">
           <div class="col-3 mb-2">
             <small class="d-block text-muted">Offence Amount</small>
             <strong>{{ row?.ticketAmount | currency }}</strong>
@@ -52,7 +52,7 @@
             <small class="d-block text-muted">Amount Due</small>
             <strong>{{ row?.amountDue | currency }}</strong>
           </div>
-          <div class="col-2 mb-2">
+          <div class="col-3 mb-2">
             <small class="d-block text-muted">Status</small>
             <small
               [ngClass]="{
@@ -65,7 +65,7 @@
               ><strong>{{ row.statusDesc }}</strong>
             </small>
           </div>
-          <div class="col">
+          <div class="col-md-3">
             <app-alert
               type="success"
               icon="check"
@@ -106,7 +106,7 @@
           </div>
         </div>
 
-        <div class="row ml-2 mt-1" *ngIf="row.notes">
+        <div class="row mt-1" *ngIf="row.notes">
           <div class="col-md-9">
             <app-alert type="info" icon="info">
               <ng-container #alertContent class="alert-content">
@@ -118,7 +118,7 @@
           </div>
         </div>
 
-        <div class="row ml-2 mt-1" *ngIf="row?.earlyAmount > 0">
+        <div class="row mt-1" *ngIf="row?.earlyAmount > 0">
           <div class="col-md-9">
             <app-alert type="warning" icon="lightbulb">
               <ng-container #alertContent class="alert-content">
@@ -133,7 +133,7 @@
       </section>
       <div class="row" *ngIf="ticket.outstandingBalance > 0">
         <div class="offset-md-6 col-md-6">
-          <button mat-flat-button color="accent">
+          <button mat-flat-button color="accent" class="large">
             <a
               href="https://pay.gov.bc.ca"
               target="_blank"
