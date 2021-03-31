@@ -30,22 +30,21 @@ export class DisputeListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.disputeResource.getAllDisputes().subscribe((response) => {
-      this.disputes = response;
-    });
-
-    this.disputeResource.getDispute().subscribe((response) => {
-      this.dispute = response;
-    });
+    // this.disputeResource.getAllDisputes().subscribe((response) => {
+    //   this.disputes = response;
+    // });
+    // this.disputeResource.getDispute().subscribe((response) => {
+    //   this.dispute = response;
+    // });
   }
 
-  public onSelect(dispute: Dispute): void {
-    this.disputeService.dispute$.next(dispute);
-    this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
-  }
+  // public onSelect(dispute: Dispute): void {
+  //   this.disputeService.dispute$.next(dispute);
+  //   this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
+  // }
 
-  public onSelectSurvey(dispute: Dispute): void {
-    this.disputeService.dispute$.next(dispute);
-    this.route.navigate([SurveyJsRoutes.routePath(SurveyJsRoutes.HOME)]);
-  }
+  // public onSelectSurvey(dispute: Dispute): void {
+  //   this.disputeService.dispute$.next(dispute);
+  //   this.route.navigate([SurveyJsRoutes.routePath(SurveyJsRoutes.HOME)]);
+  // }
 }

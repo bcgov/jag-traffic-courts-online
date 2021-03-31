@@ -7,16 +7,14 @@ import {
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
-import { Count, Dispute } from '@shared/models/dispute.model';
+import { Dispute } from '@shared/models/dispute.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
   public stepReviewForm: FormGroup;
-  public stepCount1Form: FormGroup;
-  public stepCount2Form: FormGroup;
-  public stepCount3Form: FormGroup;
+  public stepOffenceForm: FormGroup;
   public stepCourtForm: FormGroup;
   public stepOverviewForm: FormGroup;
 
@@ -44,32 +42,19 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     super.setForm(dispute, forcePatch);
   }
 
-  public getStepCountForm(countIndex: number): FormGroup {
-    if (countIndex === 1) {
-      return this.stepCount2Form;
-    } else if (countIndex === 2) {
-      return this.stepCount3Form;
-    }
-    return this.stepCount1Form;
-  }
-
   /**
    * @description
    * Convert reactive form abstract controls into JSON.
    */
   public get json(): Dispute {
     const stepReview = this.stepReviewForm.getRawValue();
-    const stepCount1 = this.stepCount1Form.getRawValue();
-    const stepCount2 = this.stepCount2Form.getRawValue();
-    const stepCount3 = this.stepCount3Form.getRawValue();
+    const stepOffence = this.stepOffenceForm.getRawValue();
     const stepCourt = this.stepCourtForm.getRawValue();
     const stepOverview = this.stepOverviewForm.getRawValue();
 
     return {
       ...stepReview,
-      stepCount1: { ...stepCount1 },
-      stepCount2: { ...stepCount2 },
-      stepCount3: { ...stepCount3 },
+      ...stepOffence,
       ...stepCourt,
       ...stepOverview,
     };
@@ -82,9 +67,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
   public get forms(): AbstractControl[] {
     return [
       this.stepReviewForm,
-      this.stepCount1Form,
-      this.stepCount2Form,
-      this.stepCount3Form,
+      this.stepOffenceForm,
       this.stepCourtForm,
       this.stepOverviewForm,
     ];
@@ -100,14 +83,31 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   /**
    * @description
+   * Check that at least one constituent form is dirty.
+   */
+  public get isDirty(): boolean {
+    return this.forms.reduce(
+      (dirty: boolean, form: AbstractControl) => dirty || form.dirty,
+      false
+    );
+  }
+
+  /**
+   * @description
+   * Mark all constituent forms as pristine.
+   */
+  public markAsPristine(): void {
+    this.forms.forEach((form: AbstractControl) => form.markAsPristine());
+  }
+
+  /**
+   * @description
    * Initialize and configure the forms for patching, which is also used
    * to clear previous form data from the service.
    */
   protected buildForms() {
     this.stepReviewForm = this.buildStepReviewForm();
-    this.stepCount1Form = this.buildStepCountForm();
-    this.stepCount2Form = this.buildStepCountForm();
-    this.stepCount3Form = this.buildStepCountForm();
+    this.stepOffenceForm = this.buildStepOffenceForm();
     this.stepCourtForm = this.buildStepCourtForm();
     this.stepOverviewForm = this.buildStepOverviewForm();
   }
@@ -122,19 +122,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     }
 
     this.stepReviewForm.patchValue(dispute);
-
-    dispute.counts.forEach((c: Count) => {
-      if (c.countNo === 1) {
-        this.stepCount1Form.patchValue(c);
-      }
-      if (c.countNo === 2) {
-        this.stepCount2Form.patchValue(c);
-      }
-      if (c.countNo === 3) {
-        this.stepCount3Form.patchValue(c);
-      }
-    });
-
+    this.stepOffenceForm.patchValue(dispute);
     this.stepCourtForm.patchValue(dispute);
     this.stepOverviewForm.patchValue(dispute);
 
@@ -149,18 +137,13 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepReviewForm(): FormGroup {
     return this.formBuilder.group({
-      id: [null],
       emailAddress: [null, [Validators.required, Validators.email]],
     });
   }
 
-  public buildStepCountForm(): FormGroup {
+  public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
-      id: [null],
-      statuteId: [null],
-      countNo: [null],
-      description: [null],
-      count: [null],
+      count: [null, [Validators.required]],
       count1A1: [null],
       count1A2: [null],
       reductionReason: [null],
@@ -172,7 +155,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepCourtForm(): FormGroup {
     return this.formBuilder.group({
-      id: [null],
       lawyerPresent: [false],
       interpreterRequired: [false],
       interpreterLanguage: [null],
@@ -182,8 +164,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      id: [null],
-      certifyCorrect: [false],
+      certifyCorrect: [false, [Validators.required]],
     });
   }
 }

@@ -3,16 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
+import { TicketDispute } from '@shared/models/ticket-dispute.model';
 
 export interface IBaseDisputeFormPage {
   form: FormGroup;
-  dispute: Dispute;
+  ticketDispute: TicketDispute;
 }
 
 export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
   public form: FormGroup;
-  public dispute: Dispute;
+  public ticketDispute: TicketDispute;
 
   constructor(
     protected route: ActivatedRoute,
@@ -29,9 +29,9 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
    */
   protected patchForm(): void {
     // Store a local copy of the dispute for views
-    this.dispute = this.disputeService.dispute;
+    this.ticketDispute = this.disputeService.ticketDispute;
 
     // Attempt to patch the form if not already patched
-    this.disputeFormStateService.setForm(this.dispute);
+    this.disputeFormStateService.setForm(this.ticketDispute?.offence.dispute);
   }
 }

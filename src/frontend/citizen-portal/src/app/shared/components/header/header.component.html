@@ -1,0 +1,24 @@
+<mat-toolbar color="primary">
+  <span>
+    <img
+      src="/assets/gov_bc_logo.png"
+      alt="Government of BC Logo"
+      routerLink="/"
+    />
+  </span>
+
+  <span class="flex-fill"></span>
+
+  <ng-container *ngIf="fullName">
+    <span class="fullName d-none d-md-block">
+      {{ fullName }}
+    </span>
+    <span class="logout">
+      <mat-icon (click)="onLogout()">logout</mat-icon>
+    </span>
+  </ng-container>
+</mat-toolbar>
+
+<div class="ngx-progress">
+  <ng-progress></ng-progress>
+</div>

@@ -57,6 +57,12 @@ small {
 .mat-flat-button {
   width: 100%;
   margin-bottom: 1em;
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+    margin-bottom: 0;
+  }
 }
 
 .offence-section {

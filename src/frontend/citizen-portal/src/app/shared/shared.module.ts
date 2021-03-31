@@ -22,6 +22,7 @@ import { AlertComponent } from './components/alert/alert.component';
 import { ConfigModule } from 'app/config/config.module';
 import { PostalPipe } from './pipes/postal.pipe';
 import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-he
     TcoPageHeaderComponent,
     DialogContentDirective,
     AlertComponent,
+    HeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-he
     DialogContentDirective,
     AlertComponent,
     ConfigModule,
+    HeaderComponent,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

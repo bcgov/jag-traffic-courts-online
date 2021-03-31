@@ -8,6 +8,7 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 import { StepperComponent } from './stepper.component';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { CurrencyPipe } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('StepperComponent', () => {
   let component: StepperComponent;
@@ -19,6 +20,7 @@ describe('StepperComponent', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),
+        RouterTestingModule,
         BrowserAnimationsModule,
         NgxMaterialModule,
       ],
@@ -30,6 +32,9 @@ describe('StepperComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StepperComponent);
     component = fixture.componentInstance;
+    spyOn<any>(component, 'initializeDisputeSteps').and.callFake(() => {
+      console.log('IN CALL FAKE');
+    });
     fixture.detectChanges();
   });
 
