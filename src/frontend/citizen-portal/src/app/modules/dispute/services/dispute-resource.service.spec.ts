@@ -32,14 +32,4 @@ describe('DisputeResourceService', () => {
     const ticket = service.getTicket();
     expect(ticket).toBeDefined();
   });
-
-  it('should create dispute', () => {
-    const ticket = service.createDispute(mock.dispute);
-    expect(ticket).toBeDefined();
-  });
-
-  it('should update dispute', () => {
-    const ticket = service.updateDispute(mock.dispute);
-    expect(ticket).toBeDefined();
-  });
 });

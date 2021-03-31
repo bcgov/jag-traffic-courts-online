@@ -32,8 +32,8 @@ export class FindTicketComponent implements OnInit {
   public onSearch(): void {
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      this.disputeResource.getDispute().subscribe((response) => {
-        this.disputeService.dispute$.next(response);
+      this.disputeResource.getTicket().subscribe((response) => {
+        this.disputeService.ticket$.next(response);
 
         const formParams = { ...this.form.value };
         this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {

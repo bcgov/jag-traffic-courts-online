@@ -35,11 +35,20 @@
                 court</span
               ></mat-radio-button
             >
-            <mat-radio-button value="C"
-              ><span class="wrap-mat-radio-label"
-                >I do not agree that I committed this offence (allegation)</span
-              ></mat-radio-button
+            <mat-radio-button value="C">
+              <span class="wrap-mat-radio-label">
+                I do not agree that I committed this offence (allegation)
+              </span>
+            </mat-radio-button>
+            <mat-error
+              *ngIf="
+                (count.dirty || count.touched) &&
+                count.invalid &&
+                count.errors.required
+              "
             >
+              Required
+            </mat-error>
           </mat-radio-group>
         </div>
       </div>

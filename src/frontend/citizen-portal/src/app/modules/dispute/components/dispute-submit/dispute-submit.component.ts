@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { DisputeRoutes } from '@dispute/dispute.routes';
 
 @Component({
   selector: 'app-dispute-submit',
@@ -6,11 +8,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dispute-submit.component.scss'],
 })
 export class DisputeSubmitComponent implements OnInit {
-  constructor() {
-    //
-  }
+  private currentParams: Params;
+
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    //
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.currentParams = params;
+    });
+  }
+
+  public onViewYourTicket(): void {
+    this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
+      queryParams: this.currentParams,
+    });
   }
 }

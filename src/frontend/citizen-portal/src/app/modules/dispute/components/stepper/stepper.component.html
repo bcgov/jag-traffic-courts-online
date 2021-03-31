@@ -1,4 +1,4 @@
-<app-dashboard-header [hasMobileSidemenu]="false"></app-dashboard-header>
+<app-header></app-header>
 
 <div class="container">
   <div class="row mt-4">
@@ -18,22 +18,19 @@
           <ng-container header>BC Traffic Court Dispute</ng-container>
         </app-tco-page-header>
 
-        <mat-vertical-stepper
-          #disputeStepper
-          linear
-          (selectionChange)="onSelectionChange($event)"
-        >
+        <!-- (selectionChange)="onSelectionChange($event)" -->
+        <mat-vertical-stepper #disputeStepper linear>
           <mat-step *ngFor="let step of disputeSteps; let i = index">
             <ng-template matStepLabel>{{ step.title }}</ng-template>
 
-            <div *ngIf="step.pageName === 1">
+            <div *ngIf="step.stepNumber === 1">
               <app-step-review-ticket
                 [stepper]="disputeStepper"
+                (stepCancel)="onStepCancel()"
                 (stepSave)="onStepSave($event)"
               ></app-step-review-ticket>
             </div>
-
-            <div *ngIf="step.pageName === 2">
+            <div *ngIf="step.stepNumber === 2">
               <app-step-count
                 [stepper]="disputeStepper"
                 [step]="step"
@@ -41,14 +38,14 @@
               ></app-step-count>
             </div>
 
-            <div *ngIf="step.pageName === 3">
+            <div *ngIf="step.stepNumber === 3">
               <app-step-court
                 [stepper]="disputeStepper"
                 (stepSave)="onStepSave($event)"
               ></app-step-court>
             </div>
 
-            <div *ngIf="step.pageName === 5">
+            <div *ngIf="step.stepNumber === 4">
               <app-step-overview
                 [stepper]="disputeStepper"
                 (busy)="(busy)"

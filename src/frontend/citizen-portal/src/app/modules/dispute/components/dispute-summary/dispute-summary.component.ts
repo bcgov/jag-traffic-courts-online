@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
+import { Offence, Ticket } from '@shared/models/ticket.model';
 import { Subscription, timer } from 'rxjs';
-import { filter, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dispute-summary',
@@ -15,7 +14,9 @@ import { filter, withLatestFrom } from 'rxjs/operators';
 })
 export class DisputeSummaryComponent implements OnInit {
   public busy: Subscription;
-  public dispute: Dispute;
+  public ticket: Ticket;
+
+  private currentParams: Params;
 
   constructor(
     private route: Router,
@@ -27,6 +28,8 @@ export class DisputeSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
+      this.currentParams = params;
+
       const ticketNumber = params.ticketNumber;
       const ticketTime = params.time;
 
@@ -34,13 +37,12 @@ export class DisputeSummaryComponent implements OnInit {
         this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
       }
 
-      const currentDispute = this.disputeService.dispute;
-      const ticket = currentDispute?.ticket;
+      const ticket = this.disputeService.ticket;
       if (
         ticket?.violationTicketNumber === ticketNumber &&
         ticket?.violationTime === ticketTime
       ) {
-        this.dispute = currentDispute;
+        this.ticket = ticket;
       } else {
         this.performSearch(params);
       }
@@ -48,20 +50,24 @@ export class DisputeSummaryComponent implements OnInit {
   }
 
   private performSearch(params): void {
-    this.disputeResource.getDispute().subscribe((response) => {
-      this.dispute = response;
+    this.disputeResource.getTicket().subscribe((response) => {
+      this.ticket = response;
     });
   }
 
-  public onDispute(): void {
+  public onDispute(offence: Offence): void {
+    this.logger.log('onDispute offence', offence);
+
+    const ticketDispute = this.disputeService.getDisputeTicket(
+      this.ticket,
+      offence
+    );
+    this.disputeService.ticketDispute$.next(ticketDispute);
+
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      const ticket = this.dispute?.ticket;
       this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)], {
-        queryParams: {
-          ticketNumber: ticket.violationTicketNumber,
-          time: ticket.violationTime,
-        },
+        queryParams: this.currentParams,
       });
     });
   }

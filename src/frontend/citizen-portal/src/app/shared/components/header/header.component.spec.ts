@@ -11,29 +11,29 @@ import { NgxProgressModule } from '@shared/modules/ngx-progress/ngx-progress.mod
 import { AuthService } from 'app/modules/auth/services/auth.service';
 import { EMPTY } from 'rxjs';
 import { MockAuthService } from 'tests/mocks/mock-auth.service';
-import { DashboardHeaderComponent } from './dashboard-header.component';
+import { HeaderComponent } from './header.component';
 
-describe('DashboardHeaderComponent', () => {
-  let component: DashboardHeaderComponent;
+describe('HeaderComponent', () => {
+  let component: HeaderComponent;
   let authService: AuthService;
-  let fixture: ComponentFixture<DashboardHeaderComponent>;
+  let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NgxMaterialModule, NgxProgressModule, CoreModule],
-      declarations: [DashboardHeaderComponent],
+      declarations: [HeaderComponent],
       providers: [
-        DashboardHeaderComponent,
+        HeaderComponent,
         { provide: AuthService, useClass: MockAuthService },
         LoggerService,
       ],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(DashboardHeaderComponent);
+        fixture = TestBed.createComponent(HeaderComponent);
       });
 
-    component = TestBed.inject(DashboardHeaderComponent);
+    component = TestBed.inject(HeaderComponent);
     authService = TestBed.inject(AuthService);
   });
 

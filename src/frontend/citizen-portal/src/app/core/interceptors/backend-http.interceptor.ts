@@ -51,12 +51,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return this.handleTicketsRequests(request.method);
 
         // Handle 'dispute' requests
-      } else if (currentRoutePath === 'dispute') {
-        return this.handleDisputeRequests(request.method);
-
-        // Handle 'disputes' requests
-      } else if (currentRoutePath === 'alldisputes') {
-        return this.handleDisputesRequests(request.method);
+        // } else if (currentRoutePath === 'dispute') {
+        //   return this.handleDisputeRequests(request.method);
 
         // Handle 'lookups' requests
       } else if (currentRoutePath === 'lookups') {
@@ -102,46 +98,27 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     }
   }
 
-  private handleDisputeRequests(
-    requestMethod: string
-  ): Observable<HttpEvent<unknown>> {
-    const dispute = this.mockDisputeService.dispute;
+  // private handleDisputeRequests(
+  //   requestMethod: string
+  // ): Observable<HttpEvent<unknown>> {
+  //   const dispute = this.mockDisputeService.tick;
 
-    switch (requestMethod) {
-      case 'GET':
-        return of(
-          new HttpResponse({
-            status: 200,
-            body: { result: dispute },
-          })
-        );
-        break;
-      default:
-        throw new HttpErrorResponse({
-          error: 'Mock Bad Request',
-          status: 400,
-        });
-    }
-  }
-
-  private handleDisputesRequests(
-    requestMethod: string
-  ): Observable<HttpEvent<unknown>> {
-    const disputes = this.mockDisputeService.disputes;
-
-    switch (requestMethod) {
-      case 'GET':
-        return of(
-          new HttpResponse({ status: 200, body: { result: disputes } })
-        );
-        break;
-      default:
-        throw new HttpErrorResponse({
-          error: 'Mock Bad Request',
-          status: 400,
-        });
-    }
-  }
+  //   switch (requestMethod) {
+  //     case 'GET':
+  //       return of(
+  //         new HttpResponse({
+  //           status: 200,
+  //           body: { result: dispute },
+  //         })
+  //       );
+  //       break;
+  //     default:
+  //       throw new HttpErrorResponse({
+  //         error: 'Mock Bad Request',
+  //         status: 400,
+  //       });
+  //   }
+  // }
 
   private handleLookupsRequests(
     requestMethod: string

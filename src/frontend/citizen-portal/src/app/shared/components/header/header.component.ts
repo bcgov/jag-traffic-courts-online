@@ -11,12 +11,12 @@ import { User } from 'app/modules/auth/models/user.model';
 import { AuthService } from 'app/modules/auth/services/auth.service';
 
 @Component({
-  selector: 'app-dashboard-header',
-  templateUrl: './dashboard-header.component.html',
-  styleUrls: ['./dashboard-header.component.scss'],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class DashboardHeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit {
   public fullName: string;
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
@@ -26,7 +26,7 @@ export class DashboardHeaderComponent implements OnInit {
     protected authService: AuthService,
     protected logger: LoggerService
   ) {
-    this.hasMobileSidemenu = true;
+    this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
   }
 
