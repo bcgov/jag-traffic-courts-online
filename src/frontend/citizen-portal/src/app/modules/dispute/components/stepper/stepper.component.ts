@@ -104,6 +104,12 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     });
   }
 
+  public onStepCancel(): void {
+    this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
+      queryParams: this.currentParams,
+    });
+  }
+
   public onStepSave(stepper: MatStepper): void {
     this.logger.info('Dispute Data:', this.disputeFormStateService.json);
 

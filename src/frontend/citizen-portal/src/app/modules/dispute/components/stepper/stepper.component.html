@@ -26,6 +26,7 @@
             <div *ngIf="step.stepNumber === 1">
               <app-step-review-ticket
                 [stepper]="disputeStepper"
+                (stepCancel)="onStepCancel()"
                 (stepSave)="onStepSave($event)"
               ></app-step-review-ticket>
             </div>

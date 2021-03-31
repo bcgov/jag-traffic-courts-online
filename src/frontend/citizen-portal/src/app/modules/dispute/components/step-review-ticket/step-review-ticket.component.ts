@@ -20,8 +20,11 @@ export class StepReviewTicketComponent
   implements OnInit {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
+  @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
   public isSubmitted = false;
+  public prevBtnLabel: string;
+  public prevBtnIcon: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -47,6 +50,13 @@ export class StepReviewTicketComponent
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepReviewForm;
     this.ticketDispute = this.disputeService.ticketDispute;
+
+    this.prevBtnLabel = 'Cancel';
+    this.prevBtnIcon = 'close';
+  }
+
+  public onBack() {
+    this.stepCancel.emit();
   }
 
   public onSubmit(): void {

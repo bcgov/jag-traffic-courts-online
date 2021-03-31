@@ -76,6 +76,9 @@
 
   <app-page-footer
     (save)="onSubmit()"
-    [hasSecondaryAction]="false"
+    (back)="onBack()"
+    [secondaryActionButtonLabel]="prevBtnLabel"
+    [secondaryActionButtonIcon]="prevBtnIcon"
+    [hasSecondaryAction]="true"
   ></app-page-footer>
 </app-page>
