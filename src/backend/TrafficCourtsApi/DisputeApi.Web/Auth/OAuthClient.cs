@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,10 +17,12 @@ namespace DisputeApi.Web.Auth
     {
         private readonly HttpClient _httpClient;
         private readonly OAuthOptions _oAuthOptions;
-        public OAuthClient(HttpClient httpClient, IOptionsMonitor<OAuthOptions> oAuthOptions)
+        private ILogger<OAuthClient> _logger;
+        public OAuthClient(HttpClient httpClient, IOptionsMonitor<OAuthOptions> oAuthOptions, ILogger<OAuthClient> logger)
         {
             _httpClient = httpClient;
             _oAuthOptions = oAuthOptions.CurrentValue;
+            _logger = logger;
         }
 
         public async Task<Token> GetRefreshToken(CancellationToken cancellationToken)
@@ -48,13 +51,14 @@ namespace DisputeApi.Web.Auth
                     var responseData = response.Content == null
                         ? null
                         : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    _logger.LogError($"get oauth token failed. {responseData}"); 
                     throw new OAuthException(
                         "The HTTP status code of the response was not expected (" + (int)response.StatusCode + ").",
                         (int)response.StatusCode, responseData,
                         response.Headers.ToDictionary(x => x.Key, x => x.Value), null);
                 }
 
-
+                _logger.LogInformation("get oauth token successfully");
                 var stream = await response.Content.ReadAsStreamAsync();
 
                 return await JsonSerializer.DeserializeAsync<Token>(stream);
