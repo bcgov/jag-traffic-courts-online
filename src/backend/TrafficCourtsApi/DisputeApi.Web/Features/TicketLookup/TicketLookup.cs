@@ -58,7 +58,10 @@ namespace DisputeApi.Web.Features.TicketLookup
             }
             public async Task<Response> Handle(Query query, CancellationToken cancellationToken)
             {
+                //When we deal with Refit, will change this, currently, this line just for testing
                 Token token = await _tokenService.GetTokenAsync(new CancellationToken());
+                //temp
+
                 string ticketNumber = query.TicketNumber;
                 string time = query.Time;
 
