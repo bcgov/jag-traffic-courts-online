@@ -35,8 +35,7 @@ namespace DisputeApi.Web.Test.Auth
             [Frozen] Mock<IMemoryCache> memoryMock,
             [Frozen] Mock<IOAuthClient> authClientMock,
             TokenService sut,
-            Token expectedToken,
-            CancellationToken cancellationToken
+            Token expectedToken            
         )
         {
             object expectedMemToken = null;
@@ -47,7 +46,7 @@ namespace DisputeApi.Web.Test.Auth
                 .Setup(x => x.GetRefreshToken(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(expectedToken));
 
-            Token token = await sut.GetTokenAsync(cancellationToken);
+            Token token = await sut.GetTokenAsync(CancellationToken.None);
             Assert.AreEqual(expectedToken, token);
         }
 
