@@ -24,9 +24,9 @@ export class UtilsService {
    * Scroll to the top of the mat-sidenav container.
    */
   public scrollTop() {
-    const contentContainer =
-      this.document.querySelector('.mat-sidenav-content') || this.window;
-    contentContainer.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    // const contentContainer = this.document.querySelector('.app') || this.window;
+    // contentContainer.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    this.window.scroll({ top: 0, left: 0, behavior: 'smooth' });
   }
 
   /**

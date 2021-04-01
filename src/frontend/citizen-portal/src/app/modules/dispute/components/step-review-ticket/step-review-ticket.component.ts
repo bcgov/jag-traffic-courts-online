@@ -22,7 +22,6 @@ export class StepReviewTicketComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
-  public isSubmitted = false;
   public prevBtnLabel: string;
   public prevBtnIcon: string;
 
@@ -60,7 +59,6 @@ export class StepReviewTicketComponent
   }
 
   public onSubmit(): void {
-    this.isSubmitted = true;
     if (this.formUtilsService.checkValidity(this.form)) {
       this.stepSave.emit(this.stepper);
     } else {

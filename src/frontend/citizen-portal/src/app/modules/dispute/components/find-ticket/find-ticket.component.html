@@ -1,14 +1,23 @@
 <app-page [busy]="busy">
   <app-tco-page-header>
     <ng-container header>Find Your BC Traffic Ticket</ng-container>
-    <ng-container subHeader
-      >Enter the Violation Ticket Number and the Violation Time to find your
-      ticket.</ng-container
-    >
+    <ng-container subHeader>
+      Enter the Violation Ticket Number and the Violation Time to find your
+      ticket.
+    </ng-container>
   </app-tco-page-header>
 
   <div class="row mt-4">
     <div class="col-lg-6">
+      <app-alert type="danger" icon="warning">
+        <ng-container #alertContent class="alert-content">
+          <strong>Ticket Not Found</strong><br />
+          Sorry, we are unable to find your ticket. If your ticket starts with
+          the letter "E" or the letter "S", it is an electronic ticket. Please
+          allow for 24-48 hours for your ticket to appear in our system.
+        </ng-container>
+      </app-alert>
+
       <form [formGroup]="form" novalidate>
         <section>
           <div class="row mb-4">

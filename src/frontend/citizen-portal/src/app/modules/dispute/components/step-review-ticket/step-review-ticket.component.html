@@ -33,13 +33,13 @@
         </small>
       </h4>
 
-      <div class="row pl-2 pr-2">
+      <div class="row pr-2">
         <div class="col-6 mb-2">Ticket Amount</div>
         <div class="col-6 text-right">
           {{ ticketDispute.offence.ticketAmount | currency | default }}
         </div>
       </div>
-      <div class="row pl-2 pr-2">
+      <div class="row pr-2">
         <div class="col-6 mb-2">
           Ticket Amount (if paid by
           {{ ticketDispute.offence.dueDate | formatDate }})
