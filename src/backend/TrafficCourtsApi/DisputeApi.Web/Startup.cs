@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using DisputeApi.Web.Features.Tickets.Configuration;
 using MediatR;
 using DisputeApi.Web.Auth;
+using Refit;
+using DisputeApi.Web.Features.TicketLookup;
 
 namespace DisputeApi.Web
 {
@@ -199,6 +201,11 @@ namespace DisputeApi.Web
             services.AddMemoryCache();
             services.AddHttpClient<IOAuthClient, OAuthClient>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<OAuthHandler>();
+
+            services.AddRefitClient<IRSIRestApi>()
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://wsgw.test.jag.gov.bc.ca:8443"))
+                .AddHttpMessageHandler<OAuthHandler>(); ;
         }
     }
 }
