@@ -11,7 +11,7 @@ namespace DisputeApi.Web.Features.TicketLookup
     public interface IRSIRestApi
     {
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/")]
-        Task<RawTicketSearchResponse> GetTicket(GetTicketParams tiketParams);
+        Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams);
 
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/{invoiceNumber}")]
         Task<Invoice> GetInvoice(string invoiceNumber);
@@ -20,7 +20,7 @@ namespace DisputeApi.Web.Features.TicketLookup
     public class GetTicketParams
     {
         [AliasAs("in")]
-        public string TicketNumebr { get; set; }
+        public string TicketNumber { get; set; }
 
         [AliasAs("prn")]
         public string PRN { get; set; }

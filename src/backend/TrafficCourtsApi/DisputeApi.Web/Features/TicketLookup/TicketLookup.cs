@@ -70,7 +70,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 if (Keys.RSI_OPERATION_MODE != "FAKE")
                 {
                     RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
-                        new GetTicketParams { TicketNumebr = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":","") }
+                        new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":","") }
                     );
                     if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0)
                     {
