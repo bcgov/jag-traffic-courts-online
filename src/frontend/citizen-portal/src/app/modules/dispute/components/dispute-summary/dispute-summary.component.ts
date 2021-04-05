@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
+import { UtilsService } from '@core/services/utils.service';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
@@ -12,7 +13,7 @@ import { Subscription, timer } from 'rxjs';
   templateUrl: './dispute-summary.component.html',
   styleUrls: ['./dispute-summary.component.scss'],
 })
-export class DisputeSummaryComponent implements OnInit {
+export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
   public ticket: Ticket;
 
@@ -23,10 +24,11 @@ export class DisputeSummaryComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
+    private utilsService: UtilsService,
     private logger: LoggerService
   ) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.currentParams = params;
 
@@ -47,6 +49,10 @@ export class DisputeSummaryComponent implements OnInit {
         this.performSearch(params);
       }
     });
+  }
+
+  public ngAfterViewInit(): void {
+    this.utilsService.scrollTop();
   }
 
   private performSearch(params): void {

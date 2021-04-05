@@ -162,6 +162,10 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     });
   }
 
+  public resetStepCourtForm(): void {
+    this.stepCourtForm.reset();
+  }
+
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
       certifyCorrect: [false, [Validators.required]],
