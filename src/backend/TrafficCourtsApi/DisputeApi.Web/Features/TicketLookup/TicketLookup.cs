@@ -61,10 +61,32 @@ namespace DisputeApi.Web.Features.TicketLookup
                 string time = query.Time;
                 if (Keys.RSI_OPERATION_MODE != "FAKE")
                 {
-                    RawTicketSearchResponse httpResponse = await _rsiApi.GetTicket(
+                    RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
                         new GetTicketParams { TicketNumebr = "EZ02000460", PRN = "10006", IssuedTime = "0954" }
                     );
-                    return null;
+                    if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        foreach(Item item in rawResponse.Items)
+                        {
+                            if(item.SelectedInvoice?.Reference != null)
+                            {
+                                int lastSlash = item.SelectedInvoice.Reference.LastIndexOf('/');
+                                if (lastSlash > 0)
+                                {
+                                    string invoiceNumber = item.SelectedInvoice.Reference.Substring(lastSlash+1);
+                                    Invoice invoice = await _rsiApi.GetInvoice(invoiceNumber);
+                                    item.SelectedInvoice.Invoice = invoice;
+                                }
+                            }
+                        }
+                    }
+                    Response response = new Response();
+                    response.RawResponse = rawResponse;
+                    return response;
                 }
                 else
                 {

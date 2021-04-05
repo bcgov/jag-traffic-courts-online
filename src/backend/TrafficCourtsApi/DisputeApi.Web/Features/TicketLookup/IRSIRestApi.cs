@@ -10,6 +10,9 @@ namespace DisputeApi.Web.Features.TicketLookup
     {
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/")]
         Task<RawTicketSearchResponse> GetTicket(GetTicketParams tiketParams);
+
+        [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/{invoiceNumber}")]
+        Task<Invoice> GetInvoice(string invoiceNumber);
     }
 
     public class GetTicketParams
