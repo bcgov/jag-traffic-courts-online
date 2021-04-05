@@ -213,6 +213,7 @@ export class StepperComponent
         i--;
       }
     }
+    this.disputeFormStateService.resetStepCourtForm();
     this.disputeService.steps$.next(steps);
   }
 
