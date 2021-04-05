@@ -248,10 +248,14 @@ jobs:
       - name: List items inside coverage-reports folder
         run: |
           ls coverage-reports
+          wc -l coverage-reports/backend-codeclimate.json
+          wc -l coverage-reports/citizen-portal-codeclimate.json
 
       # Sum the coverage reports
       - name: Summing the coverage reports generated
-        run: ./cc-test-reporter sum-coverage coverage-reports/*-codeclimate.json -p 2 -o coverage-reports/total-codeclimate.json
+        run: |
+          ./cc-test-reporter sum-coverage coverage-reports/*-codeclimate.json -p 2 -o coverage-reports/total-codeclimate.json
+          wc -l coverage-reports/total-codeclimate.json
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
