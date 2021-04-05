@@ -36,8 +36,12 @@
       >
         <h3>
           <div class="row">
-            <div class="col-md-2">OFFENCE #{{ row.offenceNumber }}</div>
-            <div class="col-md-10 text-muted">
+            <div class="col-md-3 mb-2">
+              <mat-chip-list>
+                <mat-chip selected>Offence #{{ row.offenceNumber }}</mat-chip>
+              </mat-chip-list>
+            </div>
+            <div class="col-md-9 text-muted">
               {{ row.description | titlecase }}
             </div>
           </div>
