@@ -72,7 +72,7 @@
               *ngIf="row.statusCode === 'PAID' || row.statusCode === 'COMPLETE'"
             >
               <ng-container #alertContent class="alert-content">
-                <strong> COMPLETE </strong>
+                <strong> RESOLVED </strong>
               </ng-container>
             </app-alert>
 
@@ -148,7 +148,7 @@
       </div>
     </div>
 
-    <section class="mb-3 mt-4">
+    <section class="mb-2 mt-4">
       <h3 class="mt-4">Questions</h3>
       <p>
         Any further questions about your dispute should be directed to: <br />
@@ -156,17 +156,32 @@
       </p>
     </section>
 
-    <section class="mb-3 mt-4">
-      <button
-        id="secondaryButton"
-        mat-stroked-button
-        type="button"
-        color="primary"
-        routerLink="/dispute/find"
-      >
-        <mat-icon inline="true">keyboard_arrow_left</mat-icon>
-        Find Another Ticket
-      </button>
+    <section class="mb-4 mt-4">
+      <div class="row">
+        <div class="col">
+          <button
+            id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            routerLink="/dispute/find"
+          >
+            <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+            Find Another Ticket
+          </button>
+        </div>
+
+        <div class="col text-right">
+          <button
+            mat-stroked-button
+            color="primary"
+            style="background-color: #003366; color: white"
+            routerLink="/"
+          >
+            Exit
+          </button>
+        </div>
+      </div>
     </section>
   </div>
 
