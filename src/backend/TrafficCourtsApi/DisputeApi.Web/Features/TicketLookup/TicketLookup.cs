@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -29,7 +26,6 @@ namespace DisputeApi.Web.Features.TicketLookup
 
         public class Response
         {
-            // TO DO: why one the query it is ticketNumber and time but on the response it is violation_number / violation_time?
             public string ViolationTicketNumber { get; set; }
             public string ViolationTime { get; set; }
             public string ViolationDate { get; set; }

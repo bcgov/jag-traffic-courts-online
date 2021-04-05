@@ -127,8 +127,8 @@ namespace DisputeApi.Web.Features.TicketLookup
             response.RawResponse = rawResponse;
             Invoice firstInvoice = rawResponse.Items.First().SelectedInvoice.Invoice;
             response.ViolationTicketNumber = firstInvoice.invoice_number.Remove(firstInvoice.invoice_number.Length - 1);
-            response.ViolationDate = DateTime.Parse(firstInvoice.term_due_date).Date.ToString("yyyy/MM/dd");
-            response.ViolationTime = DateTime.Parse(firstInvoice.term_due_date).TimeOfDay.ToString();
+            response.ViolationDate = DateTime.Parse(firstInvoice.term_due_date).ToString("yyyy-MM-dd");
+            response.ViolationTime = DateTime.Parse(firstInvoice.term_due_date).ToString("HH:mm");
             response.Offences = rawResponse.Items.Select((_, i) => new Offence
             {
                 OffenceNumber = i + 1,
