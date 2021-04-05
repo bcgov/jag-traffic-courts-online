@@ -18,9 +18,15 @@
           <ng-container header>BC Traffic Court Dispute</ng-container>
         </app-tco-page-header>
 
-        <!-- (selectionChange)="onSelectionChange($event)" -->
-        <mat-vertical-stepper #disputeStepper linear>
-          <mat-step *ngFor="let step of disputeSteps; let i = index">
+        <mat-vertical-stepper
+          #disputeStepper
+          linear
+          (selectionChange)="onSelectionChange($event)"
+        >
+          <mat-step
+            *ngFor="let step of disputeSteps; let i = index"
+            state="build"
+          >
             <ng-template matStepLabel>{{ step.title }}</ng-template>
 
             <div *ngIf="step.stepNumber === 1">

@@ -297,6 +297,13 @@ export class MockDisputeService {
       interpreterLanguage: null,
       callWitness: null,
       certifyCorrect: null,
+      count: null,
+      count1A1: null,
+      count1A2: null,
+      count1B1: null,
+      count1B2: null,
+      reductionReason: null,
+      timeReason: null,
     };
 
     return dispute;

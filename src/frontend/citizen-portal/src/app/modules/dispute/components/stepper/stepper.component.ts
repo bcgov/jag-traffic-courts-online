@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
@@ -17,6 +17,8 @@ import { DisputeRoutes } from '@dispute/dispute.routes';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { TicketDispute } from '@shared/models/ticket-dispute.model';
+import { UtilsService } from '@core/services/utils.service';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 export class StepData {
   constructor(
@@ -44,12 +46,17 @@ export enum StepNumber {
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.scss'],
 })
-export class StepperComponent extends BaseDisputeFormPage implements OnInit {
+export class StepperComponent
+  extends BaseDisputeFormPage
+  implements OnInit, AfterViewInit {
   public busy: Subscription;
   public pageMode: string;
   public disputeSteps: StepData[];
 
   private currentParams: Params;
+
+  @ViewChild(MatStepper)
+  private stepper: MatStepper;
 
   constructor(
     protected route: ActivatedRoute,
@@ -59,6 +66,7 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
     private activatedRoute: ActivatedRoute,
+    private utilsService: UtilsService,
     private toastService: ToastService,
     private dialog: MatDialog,
     private formatDatePipe: FormatDatePipe,
@@ -104,6 +112,10 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     });
   }
 
+  public ngAfterViewInit(): void {
+    this.utilsService.scrollTop();
+  }
+
   public onStepCancel(): void {
     this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
       queryParams: this.currentParams,
@@ -115,16 +127,18 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
-    // const showCourtPage = this.shouldShowCourtPage();
+    const showCourtPage = this.shouldShowCourtPage();
 
-    // const steps = this.disputeService.steps$.value;
-    // const courtPageExists = steps.some((step) => step.pageName === 3);
+    const steps = this.disputeService.steps$.value;
+    const courtPageExists = steps.some(
+      (step) => step.stepNumber === StepNumber.COURT
+    );
 
-    // if (showCourtPage && !courtPageExists) {
-    //   this.addCourtPage(steps);
-    // } else if (!showCourtPage && courtPageExists) {
-    //   this.removeCourtPage(steps);
-    // }
+    if (showCourtPage && !courtPageExists) {
+      this.addCourtPage(steps);
+    } else if (!showCourtPage && courtPageExists) {
+      this.removeCourtPage(steps);
+    }
 
     // on the last step
     if (numberOfSteps === currentStep) {
@@ -134,22 +148,13 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     }
   }
 
-  // private shouldShowCourtPage(): boolean {
-  //   const count1 = this.disputeFormStateService.stepCount1Form.controls.count
-  //     .value;
-  //   const count2 = this.disputeFormStateService.stepCount2Form.controls.count
-  //     .value;
-  //   const count3 = this.disputeFormStateService.stepCount3Form.controls.count
-  //     .value;
-  //   const shouldShow =
-  //     (count1 && count1 !== 'A') ||
-  //     (count2 && count2 !== 'A') ||
-  //     (count3 && count3 !== 'A')
-  //       ? true
-  //       : false;
+  private shouldShowCourtPage(): boolean {
+    const offence = this.disputeFormStateService.stepOffenceForm.controls.count
+      .value;
+    const shouldShow = offence && offence !== 'A' ? true : false;
 
-  //   return shouldShow;
-  // }
+    return shouldShow;
+  }
 
   private initializeDisputeSteps(ticketDispute: TicketDispute): void {
     const offence = ticketDispute?.offence;
@@ -175,8 +180,8 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     );
     steps.push(stepData);
 
-    stepData = new StepData(StepNumber.COURT, 'Court Information');
-    steps.push(stepData);
+    // stepData = new StepData(StepNumber.COURT, 'Additional Information');
+    // steps.push(stepData);
 
     stepData = new StepData(StepNumber.OVERVIEW, 'Dispute Overview');
     steps.push(stepData);
@@ -192,21 +197,25 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
     return this.currencyPipe.transform(amount);
   }
 
-  // private addCourtPage(steps: StepData[]): void {
-  //   const courtStepData = new StepData(3, 'Court Information');
-  //   steps.splice(steps.length - 1, 0, courtStepData);
-  //   this.disputeService.steps$.next(steps);
-  // }
+  private addCourtPage(steps: StepData[]): void {
+    const courtStepData = new StepData(
+      StepNumber.COURT,
+      'Additional Information'
+    );
+    steps.splice(steps.length - 1, 0, courtStepData);
+    this.disputeService.steps$.next(steps);
+  }
 
-  // private removeCourtPage(steps: StepData[]): void {
-  //   for (let i = 0; i < steps.length; i++) {
-  //     if (steps[i].pageName === 3) {
-  //       steps.splice(i, 1);
-  //       i--;
-  //     }
-  //   }
-  //   this.disputeService.steps$.next(steps);
-  // }
+  private removeCourtPage(steps: StepData[]): void {
+    for (let i = 0; i < steps.length; i++) {
+      if (steps[i].stepNumber === StepNumber.COURT) {
+        steps.splice(i, 1);
+        i--;
+      }
+    }
+    this.disputeFormStateService.resetStepCourtForm();
+    this.disputeService.steps$.next(steps);
+  }
 
   /**
    * @description
@@ -251,7 +260,18 @@ export class StepperComponent extends BaseDisputeFormPage implements OnInit {
       });
   }
 
-  // public onSelectionChange(stepper): void {
-  //   this.logger.info('onSelectionChange:', this.disputeFormStateService.json);
-  // }
+  public onSelectionChange(event): void {
+    const stepIndex = event.selectedIndex;
+    const stepId = this.stepper._getStepLabelId(stepIndex);
+    const stepElement = document.getElementById(stepId);
+    if (stepElement) {
+      setTimeout(() => {
+        stepElement.scrollIntoView({
+          block: 'start',
+          inline: 'nearest',
+          behavior: 'smooth',
+        });
+      }, 250);
+    }
+  }
 }

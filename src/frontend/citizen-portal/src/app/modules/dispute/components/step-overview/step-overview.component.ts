@@ -72,14 +72,14 @@ export class StepOverviewComponent
     if (this.formUtilsService.checkValidity(this.form)) {
       if (this.disputeFormStateService.isValid) {
         this.stepSave.emit(this.stepper);
+        return;
       } else {
         this.toastService.openErrorToast(
           'Your dispute has an error that needs to be corrected before you will be able to submit'
         );
       }
-    } else {
-      this.utilsService.scrollToErrorSection();
     }
+    this.utilsService.scrollToErrorSection();
   }
 
   public get certifyCorrect(): FormControl {
@@ -116,6 +116,14 @@ export class StepOverviewComponent
 
   public get count1B2(): FormControl {
     return this.offenceForm.get('count1B2') as FormControl;
+  }
+
+  public get courtDataExists(): boolean {
+    return (
+      this.lawyerPresent.value ||
+      this.interpreterRequired.value ||
+      this.callWitness.value
+    );
   }
 
   public get lawyerPresent(): FormControl {

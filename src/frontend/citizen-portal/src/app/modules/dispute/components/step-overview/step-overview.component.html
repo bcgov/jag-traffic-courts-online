@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6 mb-2">Violation Date and Time</div>
+      <div class="col-6 mb-2">Violation Time</div>
       <div class="col-6 text-right">
         {{ ticketDispute?.violationTime }}
       </div>
@@ -31,69 +31,73 @@
   <form [formGroup]="offenceForm" novalidate>
     <section class="mb-2">
       <div class="row">
-        <div class="col-3 mb-2">
+        <div class="col-5 mb-2">
           Offence #{{ ticketDispute?.offence.offenceNumber }}
         </div>
-        <small class="col-9 text-muted text-right mb-2">{{
+        <small class="col-7 text-muted text-right mb-2">{{
           ticketDispute?.offence.description
         }}</small>
       </div>
       <div class="row">
-        <div class="offset-4 col-8 text-left mb-2 pl-0">
-          <div *ngIf="count.value === 'A'">
-            I agree that I committed this offence, and I do not want to appear
-            in court
-          </div>
-          <div *ngIf="count.value === 'B'">
-            I agree that I committed this offence, and I want to appear in court
-          </div>
-          <div *ngIf="count.value === 'C'">
-            I do not agree that I committed this offence (allegation)
-          </div>
+        <div class="offset-md-1 col text-left mb-2">
+          <ul>
+            <li *ngIf="count.value === 'A'">
+              I agree that I committed this offence, and I do not want to appear
+              in court
+            </li>
+            <li *ngIf="count.value === 'B'">
+              I agree that I committed this offence, and I want to appear in
+              court
+            </li>
+            <li *ngIf="count.value === 'C'">
+              I do not agree that I committed this offence (allegation)
+            </li>
 
-          <div *ngIf="count.value === 'A'">
-            <div *ngIf="count1A1.value">
-              I request a reduction of the ticketed amount
-            </div>
+            <ng-container *ngIf="count.value === 'A'">
+              <li *ngIf="count1A1.value">
+                I request a reduction of the ticketed amount
+              </li>
+              <div *ngIf="count1A1.value">
+                {{ reductionReason.value }}
+              </div>
+              <li *ngIf="count1A2.value">
+                I request time to pay the ticketed amount
+              </li>
+              <div *ngIf="count1A2.value">
+                {{ timeReason.value }}
+              </div>
+            </ng-container>
 
-            <div *ngIf="count1A1.value">
-              <div>{{ reductionReason.value }}</div>
-            </div>
-            <div *ngIf="count1A2.value">
-              I request time to pay the ticketed amount
-            </div>
-            <div *ngIf="count1A2.value">
-              <div>{{ timeReason.value }}</div>
-            </div>
-          </div>
-
-          <div *ngIf="count.value === 'B'">
-            <div *ngIf="count1B1.value">
-              I request a reduction of the ticketed amount
-            </div>
-            <div *ngIf="count1B2.value">
-              I request time to pay the ticketed amount
-            </div>
-          </div>
+            <ng-container *ngIf="count.value === 'B'">
+              <li *ngIf="count1B1.value">
+                I request a reduction of the ticketed amount
+              </li>
+              <li *ngIf="count1B2.value">
+                I request time to pay the ticketed amount
+              </li>
+            </ng-container>
+          </ul>
         </div>
       </div>
     </section>
   </form>
 
-  <section class="mb-2">
+  <section class="mb-2" *ngIf="courtDataExists">
     <div class="row">
-      <div class="col-12 mb-2">Court Information</div>
+      <div class="col-12 mb-2">Additional Information</div>
     </div>
     <div class="row">
-      <div class="offset-4 col-8 text-left mb-2 pl-0">
+      <div class="offset-md-1 col text-left mb-2">
         <form [formGroup]="courtForm" novalidate>
-          <div *ngIf="lawyerPresent.value">
-            I intend to be represented at the hearing by a lawyer
-          </div>
-          <div *ngIf="interpreterRequired.value">
-            I require an interpreter - {{ interpreterLanguage.value }}
-          </div>
-          <div *ngIf="callWitness.value">I intend to call a witness</div>
+          <ul>
+            <li *ngIf="lawyerPresent.value">
+              I intend to be represented at the hearing by a lawyer
+            </li>
+            <li *ngIf="interpreterRequired.value">
+              I require an interpreter - {{ interpreterLanguage.value }}
+            </li>
+            <li *ngIf="callWitness.value">I intend to call a witness</li>
+          </ul>
         </form>
       </div>
     </div>
