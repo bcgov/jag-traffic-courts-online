@@ -204,8 +204,9 @@ namespace DisputeApi.Web
             services.AddTransient<OAuthHandler>();
 
             services.AddRefitClient<IRSIRestApi>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://wsgw.test.jag.gov.bc.ca:8443"))
-                .AddHttpMessageHandler<OAuthHandler>(); ;
+                .ConfigureHttpClient(c => c.BaseAddress = new Uri(_configuration.GetSection("RSI:BASEADDRESS").Value))
+                .AddHttpMessageHandler<OAuthHandler>();
+            Keys.RSI_OPERATION_MODE = _configuration.GetSection("RSI:OPERATIONMODE").Value;
         }
     }
 }

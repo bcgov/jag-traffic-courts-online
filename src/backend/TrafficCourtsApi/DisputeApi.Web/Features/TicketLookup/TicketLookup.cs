@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
-using Newtonsoft.Json;
 
 namespace DisputeApi.Web.Features.TicketLookup
 {
@@ -30,12 +30,12 @@ namespace DisputeApi.Web.Features.TicketLookup
         public class Response
         {
             // TO DO: why one the query it is ticketNumber and time but on the response it is violation_number / violation_time?
-            [JsonProperty("violation_number")]
+            [JsonPropertyName("violation_number")]
             public string ViolationNumber { get; set; }
-            [JsonProperty("violation_time")]
+            [JsonPropertyName("violation_time")]
 
             public string ViolationTime { get; set; }
-            [JsonProperty("violation_date")]
+            [JsonPropertyName("violation_date")]
             public DateTime ViolationDate { get; set; }
 
             public List<ViolationCount> Counts { get; set; }
@@ -57,18 +57,27 @@ namespace DisputeApi.Web.Features.TicketLookup
             }
             public async Task<Response> Handle(Query query, CancellationToken cancellationToken)
             {
-                //When we deal with Refit, will change this, currently, this line just for testing
-                //Token token = await _tokenService.GetTokenAsync(new CancellationToken());
-                //temp
-                
-
                 string ticketNumber = query.TicketNumber;
                 string time = query.Time;
-                RawTicketSearchResponse httpResponse = await _rsiApi.GetTicket(
-                    new GetTicketParams { TicketNumebr = "EZ02000460", PRN = "10006", IssuedTime = "0954" }
-                ); ;
+                if (Keys.RSI_OPERATION_MODE != "FAKE")
+                {
+                    RawTicketSearchResponse httpResponse = await _rsiApi.GetTicket(
+                        new GetTicketParams { TicketNumebr = "EZ02000460", PRN = "10006", IssuedTime = "0954" }
+                    );
+                    return null;
+                }
+                else
+                {
+                    return await GetFakeResponseFromFile(ticketNumber, time);
 
-                RawTicketSearchResponse rawResponse = await DeserializeAsync<RawTicketSearchResponse>($"Features/TicketLookup/ticket-{ticketNumber}.json");
+ 
+                }
+            }
+
+            private async Task<Response> GetFakeResponseFromFile(string ticketNumber, string time)
+            {
+                using FileStream openStream = File.OpenRead($"Features/TicketLookup/ticket-{ticketNumber}.json");
+                RawTicketSearchResponse rawResponse = await JsonSerializer.DeserializeAsync<RawTicketSearchResponse>(openStream);
 
                 if (rawResponse == null)
                 {
@@ -77,7 +86,8 @@ namespace DisputeApi.Web.Features.TicketLookup
 
                 for (int i = 0; i < rawResponse.Items.Count; i++)
                 {
-                    var invoice = await DeserializeAsync<Invoice>($"Features/TicketLookup/invoice-{ticketNumber}{i + 1}.json");
+                    using FileStream itemStream = File.OpenRead($"Features/TicketLookup/invoice-{ticketNumber}{i + 1}.json");
+                    var invoice = await JsonSerializer.DeserializeAsync<Invoice>(itemStream);
                     rawResponse.Items[i].SelectedInvoice.Invoice = invoice;
                 }
 
@@ -111,119 +121,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 return response;
             }
 
-            private async Task<T> DeserializeAsync<T>(string resourcePath) where T : class
-            {
-                var provider = new ManifestEmbeddedFileProvider(GetType().Assembly);
-
-                var fileInfo = provider.GetFileInfo(resourcePath);
-                if (!fileInfo.Exists)
-                {
-                    return null;
-                }
-
-                using var streamReader = new StreamReader(fileInfo.CreateReadStream());
-                string json = await streamReader.ReadToEndAsync();
-
-                var settings = new JsonSerializerSettings();
-                settings.MetadataPropertyHandling = MetadataPropertyHandling.Ignore;
-
-                T data = JsonConvert.DeserializeObject<T>(json, settings);
-                return data;
-            }
         }
 
-
-
-//#region Raw RSI data for troubleshooting
-//        public class ViolationCount
-//        {
-//            [JsonProperty("count_number")]
-//            public int CountNumber { get; set; }
-
-//            [JsonProperty("ticket_amount")]
-//            public decimal TicketAmount { get; set; }
-
-//            [JsonProperty("amount_due")]
-//            public decimal AmountDue { get; set; }
-
-//            [JsonProperty("due_date")]
-//            public string DueDate { get; set; }
-//            [JsonProperty("description")]
-//            public string Description { get; set; }
-
-//        }
-
-
-//        public class RawTicketSearchResponse
-//        {
-//            [JsonProperty("items")]
-//            public List<Item> Items { get; set; }
-//        }
-
-//        public class Item
-//        {
-//            [JsonProperty("selected_invoice")]
-//            public SelectedInvoice SelectedInvoice { get; set; }
-
-//            [JsonProperty("open_invoices_for_site")]
-//            public object OpenInvoicesForSite { get; set; }
-//        }
-
-//        public class SelectedInvoice
-//        {
-//            [JsonProperty("$ref")]
-//            public string Reference { get; set; }
-
-//            [JsonProperty("invoice")]
-//            public Invoice Invoice { get; set; }
-//        }
-
-//        public class Invoice
-//        {
-//            [JsonProperty("invoice_number")]
-//            public string invoice_number { get; set; }
-
-//            [JsonProperty("pbc_ref_number")]
-//            public string pbc_ref_number { get; set; }
-
-//            [JsonProperty("party_number")]
-//            public string party_number { get; set; }
-
-//            [JsonProperty("party_name")]
-//            public string party_name { get; set; }
-
-//            [JsonProperty("account_number")]
-//            public string account_number { get; set; }
-
-//            [JsonProperty("site_number")]
-//            public string site_number { get; set; }
-
-//            [JsonProperty("cust_trx_type")]
-//            public string cust_trx_type { get; set; }
-
-//            [JsonProperty("term_due_date")]
-//            public string term_due_date { get; set; }
-
-//            [JsonProperty("total")]
-//            public decimal total { get; set; }
-
-//            [JsonProperty("amount_due")]
-//            public decimal amount_due { get; set; }
-
-//            [JsonProperty("attribute1")]
-//            public string attribute1 { get; set; }
-
-//            [JsonProperty("attribute2")]
-//            public string attribute2 { get; set; }
-
-//            [JsonProperty("attribute3")]
-//            public string attribute3 { get; set; }
-
-//            [JsonProperty("attribute4")]
-//            public string attribute4 { get; set; }
-//        }
-
-
-//        #endregion
     }
 }
