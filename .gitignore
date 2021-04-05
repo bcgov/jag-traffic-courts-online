@@ -1,5 +1,6 @@
 
 src/frontend/citizen-portal/debug.log
+src/backend/TrafficCourtsApi/DisputeApi.Web/Properties/launchSettings.json
 # User-specific files
 *.suo
 *.user
