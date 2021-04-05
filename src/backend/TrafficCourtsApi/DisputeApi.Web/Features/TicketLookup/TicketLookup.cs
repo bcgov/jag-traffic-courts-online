@@ -30,15 +30,11 @@ namespace DisputeApi.Web.Features.TicketLookup
         public class Response
         {
             // TO DO: why one the query it is ticketNumber and time but on the response it is violation_number / violation_time?
-            [JsonPropertyName("violation_number")]
-            public string ViolationNumber { get; set; }
-            [JsonPropertyName("violation_time")]
-
+            public string ViolationTicketNumber { get; set; }
             public string ViolationTime { get; set; }
-            [JsonPropertyName("violation_date")]
-            public DateTime ViolationDate { get; set; }
+            public string ViolationDate { get; set; }
 
-            public List<ViolationCount> Counts { get; set; }
+            public List<Offence> Offences { get; set; }
 
             /// <summary>
             /// Gets or sets the raw response returned from the RSI Pay BC API.
@@ -46,6 +42,18 @@ namespace DisputeApi.Web.Features.TicketLookup
             /// once the API usage is understood.
             /// </summary>
             public RawTicketSearchResponse RawResponse { get; set; }
+        }
+
+        public class Offence
+        {
+            public int OffenceNumber { get; set; }
+            public decimal TicketAmount { get; set; }
+            public decimal AmountDue { get; set; }
+            public string DueDate { get; set; }
+            public string Description { get; set; }
+
+            ///will change to Dispute class later
+            public string Dispute { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Response>
@@ -62,7 +70,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 if (Keys.RSI_OPERATION_MODE != "FAKE")
                 {
                     RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
-                        new GetTicketParams { TicketNumebr = "EZ02000460", PRN = "10006", IssuedTime = "0954" }
+                        new GetTicketParams { TicketNumebr = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":","") }
                     );
                     if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0)
                     {
@@ -84,9 +92,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                             }
                         }
                     }
-                    Response response = new Response();
-                    response.RawResponse = rawResponse;
-                    return response;
+                    return rawResponse.ConvertToResponse();
                 }
                 else
                 {
@@ -112,35 +118,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                     var invoice = await JsonSerializer.DeserializeAsync<Invoice>(itemStream);
                     rawResponse.Items[i].SelectedInvoice.Invoice = invoice;
                 }
-
-
-                Response response = new Response();
-                response.RawResponse = rawResponse;
-
-                var firstInvoice = rawResponse.Items.First().SelectedInvoice.Invoice;
-
-                response.ViolationTime = firstInvoice.term_due_date.Substring(11, 5);
-                if (time != response.ViolationTime)
-                {
-                    // time does not match
-                    return null;
-                }
-
-                response.ViolationDate = DateTime.Parse(firstInvoice.term_due_date);
-                response.ViolationNumber = ticketNumber;
-
-                response.Counts = rawResponse.Items
-                    .Select((_, i) => new ViolationCount
-                    {
-                        CountNumber = i + 1,
-                        AmountDue = _.SelectedInvoice.Invoice.amount_due,
-                        Description = _.SelectedInvoice.Invoice.attribute1,
-                        DueDate = _.SelectedInvoice.Invoice.term_due_date,
-                        TicketAmount = _.SelectedInvoice.Invoice.total
-                    })
-                    .ToList();
-
-                return response;
+                return rawResponse.ConvertToResponse();
             }
 
         }

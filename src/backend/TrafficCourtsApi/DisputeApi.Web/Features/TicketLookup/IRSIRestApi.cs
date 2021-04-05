@@ -1,5 +1,7 @@
 ﻿using Refit;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
@@ -116,6 +118,27 @@ namespace DisputeApi.Web.Features.TicketLookup
         public string attribute4 { get; set; }
     }
 
-
+    public static class RSIRawResponseExtensions
+    {
+        public static Response ConvertToResponse(this RawTicketSearchResponse rawResponse)
+        {
+            if (rawResponse.Items == null || rawResponse.Items.Count <= 0) return null;
+            Response response = new Response();
+            response.RawResponse = rawResponse;
+            Invoice firstInvoice = rawResponse.Items.First().SelectedInvoice.Invoice;
+            response.ViolationTicketNumber = firstInvoice.invoice_number.Remove(firstInvoice.invoice_number.Length - 1);
+            response.ViolationDate = DateTime.Parse(firstInvoice.term_due_date).Date.ToString("yyyy/MM/dd");
+            response.ViolationTime = DateTime.Parse(firstInvoice.term_due_date).TimeOfDay.ToString();
+            response.Offences = rawResponse.Items.Select((_, i) => new Offence
+            {
+                OffenceNumber = i + 1,
+                AmountDue=_.SelectedInvoice.Invoice.amount_due,
+                Description = _.SelectedInvoice.Invoice.attribute1,
+                DueDate = _.SelectedInvoice.Invoice.term_due_date,
+                TicketAmount=_.SelectedInvoice.Invoice.total
+            }).ToList();
+            return response;
+        }
+    }
 #endregion
 }
