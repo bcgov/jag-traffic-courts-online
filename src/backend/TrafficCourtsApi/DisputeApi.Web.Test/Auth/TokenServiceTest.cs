@@ -2,6 +2,7 @@
 using AutoFixture.AutoMoq;
 using AutoFixture.NUnit3;
 using DisputeApi.Web.Auth;
+using DisputeApi.Web.Test.Utils;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace DisputeApi.Web.Test.Auth
     [ExcludeFromCodeCoverage]
     public class TokenServiceTest
     {
-        [Test,TokenServiceData]
+        [Test, TCOAutoData]
         public async Task GetTokenAsync_if_token_not_expired_return_token_from_memory(
             [Frozen]Mock<IMemoryCache> memoryMock, 
             TokenService sut, 
@@ -30,7 +31,7 @@ namespace DisputeApi.Web.Test.Auth
             Assert.AreEqual(expectedToken, token);
         }
 
-        [Test,TokenServiceData]
+        [Test, TCOAutoData]
         public async Task GetTokenAsync_if_token_expired_get_new_token_from_client(
             [Frozen] Mock<IMemoryCache> memoryMock,
             [Frozen] Mock<IOAuthClient> authClientMock,
@@ -48,14 +49,6 @@ namespace DisputeApi.Web.Test.Auth
 
             Token token = await sut.GetTokenAsync(CancellationToken.None);
             Assert.AreEqual(expectedToken, token);
-        }
-
-        internal class TokenServiceDataAttribute : AutoDataAttribute
-        {
-            public TokenServiceDataAttribute()
-              : base(() => new Fixture().Customize(new AutoMoqCustomization()))
-            {
-            }
         }
     }
 }

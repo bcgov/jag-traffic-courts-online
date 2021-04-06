@@ -1,6 +1,4 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.NUnit3;
 using DisputeApi.Web.Auth;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
