@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
+import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-display-ticket',
@@ -8,16 +10,24 @@ import { DisputeService } from '@dispute/services/dispute.service';
   styleUrls: ['./display-ticket.component.scss'],
 })
 export class DisplayTicketComponent implements OnInit {
+  public busy: Subscription;
   public ticket: any;
 
   constructor(
-    private disputeService: DisputeService,
+    private disputeResource: DisputeResourceService,
     private loggerService: LoggerService
   ) {}
 
   ngOnInit(): void {
-    this.disputeService.ticket$.subscribe((data) => {
-      this.ticket = data;
-    });
+    const queryParams = {
+      ticketNumber: 'EZ02000460',
+      time: '09:54',
+    };
+
+    this.busy = this.disputeResource
+      .getRsiTicket(queryParams)
+      .subscribe((response) => {
+        this.ticket = response;
+      });
   }
 }
