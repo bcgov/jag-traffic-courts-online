@@ -56,7 +56,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   }
 
   private performSearch(params): void {
-    this.disputeResource.getTicket().subscribe((response) => {
+    this.busy = this.disputeResource.getTicket().subscribe((response) => {
       this.ticket = response;
     });
   }
