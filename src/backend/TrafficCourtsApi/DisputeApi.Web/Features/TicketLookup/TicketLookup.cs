@@ -65,30 +65,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 string time = query.Time;
                 if (Keys.RSI_OPERATION_MODE != "FAKE")
                 {
-                    RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
-                        new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":","") }
-                    );
-                    if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        foreach(Item item in rawResponse.Items)
-                        {
-                            if(item.SelectedInvoice?.Reference != null)
-                            {
-                                int lastSlash = item.SelectedInvoice.Reference.LastIndexOf('/');
-                                if (lastSlash > 0)
-                                {
-                                    string invoiceNumber = item.SelectedInvoice.Reference.Substring(lastSlash+1);
-                                    Invoice invoice = await _rsiApi.GetInvoice(invoiceNumber);
-                                    item.SelectedInvoice.Invoice = invoice;
-                                }
-                            }
-                        }
-                    }
-                    return rawResponse.ConvertToResponse();
+                    return await GetResponseFromRSI(ticketNumber, time);
                 }
                 else
                 {
@@ -96,6 +73,30 @@ namespace DisputeApi.Web.Features.TicketLookup
 
  
                 }
+            }
+
+            private async Task<Response> GetResponseFromRSI(string ticketNumber, string time)
+            {
+                RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
+                        new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "") }
+                    );
+                if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0) return null;
+
+                foreach (Item item in rawResponse.Items)
+                {
+                    if (item.SelectedInvoice?.Reference != null)
+                    {
+                        int lastSlash = item.SelectedInvoice.Reference.LastIndexOf('/');
+                        if (lastSlash > 0)
+                        {
+                            string invoiceNumber = item.SelectedInvoice.Reference.Substring(lastSlash + 1);
+                            Invoice invoice = await _rsiApi.GetInvoice(invoiceNumber);
+                            item.SelectedInvoice.Invoice = invoice;
+                        }
+                    }
+                }
+
+                return rawResponse.ConvertToResponse();
             }
 
             private async Task<Response> GetFakeResponseFromFile(string ticketNumber, string time)
