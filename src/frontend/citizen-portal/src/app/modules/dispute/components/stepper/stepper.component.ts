@@ -92,7 +92,7 @@ export class StepperComponent
 
     // TODO  hack to temporarily to make sure data always displays (when refresh page)
     if (!this.disputeService.ticketDispute) {
-      this.disputeResource.getTicket().subscribe((response) => {
+      this.busy = this.disputeResource.getTicket().subscribe((response) => {
         this.disputeService.ticket$.next(response);
         const ticketDispute = this.disputeService.getDisputeTicket(
           response,

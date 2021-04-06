@@ -37,49 +37,56 @@ export class MockDisputeService {
     return new ApiHttpResponse(200, null, this._ticket.value);
   }
 
-  public get rsiTicket(): any {
-    return `{
-      "violation_number": "EZ02000460",
-      "violation_time": "09:54",
-      "violation_date": "2021-03-18T09:54:00",
-      "counts": [
+  private createRsiTicket(): Ticket {
+    const ticket: Ticket = {
+      violationTicketNumber: 'EZ02000461',
+      violationTime: '09:55',
+      violationDate: '2020-09-18',
+      offences: [
         {
-          "count_number": 1,
-          "ticket_amount": 167,
-          "amount_due": 95,
-          "due_date": "2021-03-18T09:54",
-          "description": "OPERATE VEHICLE WITHOUT SEATBELTS"
+          offenceNumber: 1,
+          ticketAmount: 109,
+          amountDue: 77.76,
+          dueDate: '2020-09-18T09:54',
+          description:
+            'LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH',
+          dispute: null,
         },
         {
-          "count_number": 2,
-          "ticket_amount": 126,
-          "amount_due": 96,
-          "due_date": "2021-03-18T09:54",
-          "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01"
+          offenceNumber: 2,
+          ticketAmount: 109,
+          amountDue: 89.76,
+          dueDate: '2020-09-18T09:54',
+          description:
+            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01',
+          dispute: null,
         },
         {
-          "count_number": 3,
-          "ticket_amount": 97,
-          "amount_due": 0,
-          "due_date": "2021-03-18T09:54",
-          "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH"
+          offenceNumber: 3,
+          ticketAmount: 109,
+          amountDue: 87.76,
+          dueDate: '2020-09-18T09:54',
+          description:
+            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH',
+          dispute: null,
         },
-        {
-          "count_number": 4,
-          "ticket_amount": 253,
-          "amount_due": 253,
-          "due_date": "2021-03-18T09:54",
-          "description": "SPEED IN SCHOOL ZONE"
-        },
-        {
-          "count_number": 5,
-          "ticket_amount": 368,
-          "amount_due": 368,
-          "due_date": "2021-03-18T09:54",
-          "description": "USING ELECTRONIC DEVICE WHILE DRIVING"
-        }
-      ]
-    }`;
+      ],
+    };
+
+    let balance = 0;
+    ticket.offences.forEach((offence) => {
+      offence.earlyAmount = 0;
+      offence.statusCode = 'UNPAID';
+      offence.statusDesc = 'Outstanding Balance';
+      offence.notes = '';
+      balance +=
+        offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+    });
+
+    // ------------------------------------
+    ticket.outstandingBalance = balance;
+
+    return ticket;
   }
 
   private createTicket(): Ticket {
@@ -106,6 +113,7 @@ export class MockDisputeService {
             max: 59,
           })
           .toString(),
+      violationDate: null,
       offences: [],
     };
 

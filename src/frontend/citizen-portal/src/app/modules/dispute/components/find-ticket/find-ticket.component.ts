@@ -44,14 +44,6 @@ export class FindTicketComponent implements OnInit {
   }
 
   public onRsbcSearch(): void {
-    const queryParams = {
-      ticketNumber: 'EZ02000460',
-      time: '09:54',
-    };
-
-    this.disputeResource.getRsiTicket(queryParams).subscribe((response) => {
-      this.disputeService.ticket$.next(response);
-      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.DISPLAY)]);
-    });
+    this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.DISPLAY)]);
   }
 }

@@ -30,10 +30,10 @@ export class DisputeListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.disputeResource.getAllDisputes().subscribe((response) => {
+    // this.busy = this.disputeResource.getAllDisputes().subscribe((response) => {
     //   this.disputes = response;
     // });
-    // this.disputeResource.getDispute().subscribe((response) => {
+    // this.busy = this.disputeResource.getDispute().subscribe((response) => {
     //   this.dispute = response;
     // });
   }
