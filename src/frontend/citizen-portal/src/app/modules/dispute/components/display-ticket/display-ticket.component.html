@@ -12,41 +12,41 @@
       <div class="row">
         <div class="col-6 mb-2">Violation Ticket Number</div>
         <div class="col-6 text-right mb-2">
-          {{ ticket?.violation_number | default }}
+          {{ ticket?.violationTicketNumber | default }}
         </div>
       </div>
       <div class="row">
         <div class="col-6 mb-2">Violation Date and Time</div>
         <div class="col-6 text-right">
-          {{ ticket?.violation_date | formatDate | default }}
-          {{ ticket?.violation_time | default }}
+          {{ ticket?.violationDate | formatDate | default }}
+          {{ ticket?.violationTime | default }}
         </div>
       </div>
     </section>
 
-    <section class="mb-2" *ngFor="let row of ticket?.counts; let i = index">
+    <section class="mb-2" *ngFor="let row of ticket?.offences; let i = index">
       <div class="row">
         <h2 class="col-12 mb-2">
-          Offence #{{ row.count_number }}
+          Offence #{{ row.offenceNumber }}
           <small class="text-muted ml-2">{{ row.description }}</small>
         </h2>
       </div>
       <div class="row">
         <div class="col-6 mb-2">Ticket Amount</div>
         <div class="col-6 text-right">
-          {{ row?.ticket_amount | currency | default }}
+          {{ row?.ticketAmount | currency | default }}
         </div>
       </div>
       <div class="row">
         <div class="col-6 mb-2">Amount Due</div>
         <div class="col-6 text-right">
-          {{ row?.amount_due | currency | default }}
+          {{ row?.amountDue | currency | default }}
         </div>
       </div>
       <div class="row">
         <div class="col-6 mb-2">Due Date</div>
         <div class="col-6 text-right">
-          {{ row?.due_date | formatDate | default }}
+          {{ row?.dueDate | formatDate | default }}
         </div>
       </div>
     </section>
