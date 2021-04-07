@@ -16,7 +16,7 @@ export class FindTicketComponent implements OnInit {
   public busy: Subscription;
   public form: FormGroup;
 
-  public notFound: boolean = false;
+  public notFound = false;
 
   constructor(
     private route: Router,

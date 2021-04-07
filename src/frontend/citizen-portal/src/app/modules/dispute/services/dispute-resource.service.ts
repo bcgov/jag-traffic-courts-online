@@ -87,7 +87,6 @@ export class DisputeResourceService {
 
   /**
    * populate the offence object with the calculated information
-   * @param ticket
    */
   private setOffenceInfo(ticket: Ticket): void {
     let balance = 0;
