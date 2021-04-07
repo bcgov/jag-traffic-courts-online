@@ -48,7 +48,7 @@ namespace DisputeApi.Web.Features.Tickets
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResultResponse<TicketLookup.TicketLookup.Response>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTicket([FromQuery] TicketLookup.TicketLookup.Query query)
         {
@@ -58,7 +58,7 @@ namespace DisputeApi.Web.Features.Tickets
                 return Ok(ApiResponse.Result(response));
             }
 
-            return NotFound(ApiResponse.Message($"No tickets have been found."));
+            return NoContent();
         }
     }
 }

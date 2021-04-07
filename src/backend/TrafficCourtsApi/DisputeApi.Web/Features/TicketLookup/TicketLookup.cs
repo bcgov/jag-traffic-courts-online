@@ -47,9 +47,19 @@ namespace DisputeApi.Web.Features.TicketLookup
             public decimal AmountDue { get; set; }
             public string DueDate { get; set; }
             public string Description { get; set; }
+            public OffenceStatus Status { get; set; }
 
             ///will change to Dispute class later
             public string Dispute { get; set; }
+        }
+
+        public enum OffenceStatus
+        {
+            OutstandingBalance,
+            Paid,
+            DisputeInProgress,
+            DisputeSettled,
+            DisputeSubmitted,
         }
 
         public class Handler : IRequestHandler<Query, Response>

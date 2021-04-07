@@ -135,7 +135,8 @@ namespace DisputeApi.Web.Features.TicketLookup
                 AmountDue=_.SelectedInvoice.Invoice.amount_due,
                 Description = _.SelectedInvoice.Invoice.attribute1,
                 DueDate = _.SelectedInvoice.Invoice.term_due_date,
-                TicketAmount=_.SelectedInvoice.Invoice.total
+                TicketAmount=_.SelectedInvoice.Invoice.total,
+                Status = OffenceStatus.OutstandingBalance
             }).ToList();
             return response;
         }
