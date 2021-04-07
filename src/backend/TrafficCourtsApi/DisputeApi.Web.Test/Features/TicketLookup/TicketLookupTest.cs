@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture;
+using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.TicketLookup;
 using DisputeApi.Web.Test.Utils;
 using Moq;
@@ -20,7 +21,8 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             Handler sut
         )
         {
-            Query query = new Query { TicketNumber = "EZ02000460", Time = "21:40" };
+            Fixture fixture = new Fixture();
+            Query query = fixture.Create<Query>();
             Keys.RSI_OPERATION_MODE = "";
             rawResponse.Items = new List<Item> { 
                 new Item{ SelectedInvoice=new SelectedInvoice{Reference="https://test/EZ020004601"}}
@@ -42,10 +44,11 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             Handler sut
         )
         {
-            Query query = new Query { TicketNumber = "EZ02000460", Time = "21:40" };
+            Fixture fixture = new Fixture();
+            Query query = fixture.Create<Query>();
             Keys.RSI_OPERATION_MODE = "";
             rawResponse.Items = null;
-            rsiApiMock.Setup(m => m.GetTicket(It.Is<GetTicketParams>(m => m.TicketNumber == "EZ02000460" && m.IssuedTime == "2140"))).Returns(Task.FromResult(rawResponse));
+            rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>())).Returns(Task.FromResult(rawResponse));
             var response = await sut.Handle(query, CancellationToken.None);
             Assert.AreEqual(null, response);
         }
