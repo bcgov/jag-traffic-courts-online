@@ -47,19 +47,33 @@ namespace DisputeApi.Web.Features.TicketLookup
             public decimal AmountDue { get; set; }
             public string DueDate { get; set; }
             public string Description { get; set; }
-            public OffenceStatus Status { get; set; }
-
-            ///will change to Dispute class later
-            public string Dispute { get; set; }
+            public Dispute Dispute { get; set; }
         }
 
-        public enum OffenceStatus
+        public class Dispute
         {
-            OutstandingBalance,
-            Paid,
-            DisputeInProgress,
-            DisputeSettled,
-            DisputeSubmitted,
+            public string ViolationTicketNumber { get; set; }
+            public int OffenceNumber { get; set; }
+            public string EmailAddress { get; set; }
+            public string OffenceAgreementStatus { get; set; }
+            public bool RequestReduction { get; set; }
+            public bool RequestTime { get; set; }
+            public string ReductionReason { get; set; }
+            public string TimeReason { get; set; }
+            public bool LawyerPresent { get; set; }
+            public bool InterpreterRequired { get; set; }
+            public bool WitnessPresent { get; set; }
+            public string InterpreterLanguage { get; set; }
+            public bool InformationCertified { get; set; }
+            public DisputeStatus Status { get; set; }
+        }
+
+        public enum DisputeStatus
+        {
+            NEW,
+            SUBMITTED,
+            INPROGRESS,
+            COMPLETE,
         }
 
         public class Handler : IRequestHandler<Query, Response>
