@@ -30,10 +30,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       if (
         currentRoutePath !== 'tickets' &&
-        currentRoutePath !== 'ticket' &&
         currentRoutePath !== 'alltickets' &&
-        currentRoutePath !== 'dispute' &&
-        currentRoutePath !== 'alldisputes' &&
         currentRoutePath !== 'lookups'
       ) {
         throw new HttpErrorResponse({
@@ -42,17 +39,13 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         });
       }
 
-      // Handle 'ticket' requests
-      if (currentRoutePath === 'ticket') {
+      // Handle 'tickets' requests
+      if (currentRoutePath === 'tickets') {
         return this.handleTicketRequests(request.method);
 
-        // Handle 'tickets' requests
+        // Handle 'alltickets' requests
       } else if (currentRoutePath === 'alltickets') {
         return this.handleTicketsRequests(request.method);
-
-        // Handle 'dispute' requests
-        // } else if (currentRoutePath === 'dispute') {
-        //   return this.handleDisputeRequests(request.method);
 
         // Handle 'lookups' requests
       } else if (currentRoutePath === 'lookups') {
@@ -97,28 +90,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         });
     }
   }
-
-  // private handleDisputeRequests(
-  //   requestMethod: string
-  // ): Observable<HttpEvent<unknown>> {
-  //   const dispute = this.mockDisputeService.tick;
-
-  //   switch (requestMethod) {
-  //     case 'GET':
-  //       return of(
-  //         new HttpResponse({
-  //           status: 200,
-  //           body: { result: dispute },
-  //         })
-  //       );
-  //       break;
-  //     default:
-  //       throw new HttpErrorResponse({
-  //         error: 'Mock Bad Request',
-  //         status: 400,
-  //       });
-  //   }
-  // }
 
   private handleLookupsRequests(
     requestMethod: string

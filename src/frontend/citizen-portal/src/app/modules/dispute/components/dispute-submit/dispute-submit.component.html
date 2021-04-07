@@ -7,7 +7,7 @@
   <section class="mb-2 mt-4">
     <div class="row">
       <div class="col-lg-12">
-        <app-alert type="info" icon="info">
+        <app-alert type="success" icon="check">
           <ng-container #alertContent class="alert-content">
             <strong>Dispute Received</strong><br />
             Your dispute was successfully submitted. Please check your email
@@ -32,14 +32,28 @@
 
   <section class="mb-4 mt-4">
     <div class="row">
-      <div class="col col-md-6">
+      <div class="col-md-4 col-xs-12">
         <button
           mat-flat-button
           color="primary"
           class="large light"
           (click)="onViewYourTicket()"
         >
+          <mat-icon inline="true">text_snippet</mat-icon>
           View Your Ticket
+        </button>
+      </div>
+
+      <div class="offset-md-4 col-md-4 col-xs-12 text-right">
+        <button
+          mat-stroked-button
+          type="button"
+          color="primary"
+          class="large light"
+          routerLink="/"
+        >
+          <mat-icon inline="true">home</mat-icon>
+          Exit
         </button>
       </div>
     </div>

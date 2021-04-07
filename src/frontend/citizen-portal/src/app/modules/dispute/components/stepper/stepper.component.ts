@@ -18,7 +18,6 @@ import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { CurrencyPipe } from '@angular/common';
 import { TicketDispute } from '@shared/models/ticket-dispute.model';
 import { UtilsService } from '@core/services/utils.service';
-import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 export class StepData {
   constructor(
@@ -53,8 +52,6 @@ export class StepperComponent
   public pageMode: string;
   public disputeSteps: StepData[];
 
-  private currentParams: Params;
-
   @ViewChild(MatStepper)
   private stepper: MatStepper;
 
@@ -86,23 +83,11 @@ export class StepperComponent
   }
 
   public ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      this.currentParams = params;
-    });
-
-    // TODO  hack to temporarily to make sure data always displays (when refresh page)
-    if (!this.disputeService.ticketDispute) {
-      this.busy = this.disputeResource.getTicket().subscribe((response) => {
-        this.disputeService.ticket$.next(response);
-        const ticketDispute = this.disputeService.getDisputeTicket(
-          response,
-          response.offences[2]
-        );
-        this.disputeService.ticketDispute$.next(ticketDispute);
-      });
-    }
-
     this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
+      if (!ticketDispute) {
+        this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
+      }
+
       this.initializeDisputeSteps(ticketDispute);
       this.patchForm();
     });
@@ -117,8 +102,14 @@ export class StepperComponent
   }
 
   public onStepCancel(): void {
+    const ticketDispute = this.disputeService.ticketDispute;
+    const params = {
+      ticketNumber: ticketDispute.violationTicketNumber,
+      time: ticketDispute.violationTime,
+    };
+
     this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
-      queryParams: this.currentParams,
+      queryParams: params,
     });
   }
 
@@ -180,9 +171,6 @@ export class StepperComponent
     );
     steps.push(stepData);
 
-    // stepData = new StepData(StepNumber.COURT, 'Additional Information');
-    // steps.push(stepData);
-
     stepData = new StepData(StepNumber.OVERVIEW, 'Dispute Overview');
     steps.push(stepData);
 
@@ -222,11 +210,11 @@ export class StepperComponent
    * Save the data on the current step
    */
   private saveStep(stepper: MatStepper): void {
-    const source = timer(1000);
-    this.busy = source.subscribe((val) => {
-      this.toastService.openSuccessToast('Information has been saved');
-      stepper.next();
-    });
+    // const source = timer(1000);
+    // this.busy = source.subscribe((val) => {
+    // this.toastService.openSuccessToast('Information has been saved');
+    stepper.next();
+    // });
   }
 
   /**
@@ -248,13 +236,12 @@ export class StepperComponent
         if (response) {
           const source = timer(1000);
           this.busy = source.subscribe((val) => {
-            this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate(
-              [DisputeRoutes.routePath(DisputeRoutes.SUCCESS)],
-              {
-                queryParams: this.currentParams,
-              }
+            this.toastService.openSuccessToast(
+              'Dispute has been successfully submitted'
             );
+            this.router.navigate([
+              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
+            ]);
           });
         }
       });

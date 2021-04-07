@@ -17,11 +17,9 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
   public ticket: Ticket;
 
-  private currentParams: Params;
-
   constructor(
-    private route: Router,
-    private activatedRoute: ActivatedRoute,
+    protected route: ActivatedRoute,
+    protected router: Router,
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
@@ -29,21 +27,20 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   ) {}
 
   public ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      this.currentParams = params;
+    this.route.queryParams.subscribe((params) => {
+      if (Object.keys(params).length === 0) {
+        this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
+      }
 
       const ticketNumber = params.ticketNumber;
       const ticketTime = params.time;
 
       if (!ticketNumber || !ticketTime) {
-        this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
+        this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
       }
 
       const ticket = this.disputeService.ticket;
-      if (
-        ticket?.violationTicketNumber === ticketNumber &&
-        ticket?.violationTime === ticketTime
-      ) {
+      if (ticket) {
         this.ticket = ticket;
       } else {
         this.performSearch(params);
@@ -56,7 +53,8 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   }
 
   private performSearch(params): void {
-    this.busy = this.disputeResource.getTicket().subscribe((response) => {
+    this.busy = this.disputeResource.getTicket(params).subscribe((response) => {
+      this.disputeService.ticket$.next(response);
       this.ticket = response;
     });
   }
@@ -72,9 +70,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)], {
-        queryParams: this.currentParams,
-      });
+      this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
     });
   }
 }

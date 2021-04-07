@@ -6,7 +6,7 @@
     >
   </app-page-header>
 
-  <div *ngIf="ticket; else noTicket">
+  <div *ngIf="ticket">
     <section>
       <div class="row">
         <div class="col-lg-12">
@@ -20,7 +20,7 @@
       </div>
     </section>
 
-    <div class="mb-4">
+    <div class="mb-2">
       <section class="mb-2">
         <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
           Ticket #{{ ticket.violationTicketNumber }}
@@ -152,8 +152,8 @@
       </div>
     </div>
 
-    <section class="mb-2 mt-4">
-      <h3 class="mt-4">Questions</h3>
+    <section class="mb-2">
+      <h3>Questions</h3>
       <p>
         Any further questions about your dispute should be directed to: <br />
         Phone Toll Free: 1-877-661-8026
@@ -174,22 +174,7 @@
             Find Another Ticket
           </button>
         </div>
-
-        <div class="col text-right">
-          <button
-            mat-stroked-button
-            color="primary"
-            style="background-color: #003366; color: white"
-            routerLink="/"
-          >
-            Exit
-          </button>
-        </div>
       </div>
     </section>
   </div>
-
-  <ng-template #noTicket>
-    <h2>No current dispute/ticket</h2>
-  </ng-template>
 </app-page>
