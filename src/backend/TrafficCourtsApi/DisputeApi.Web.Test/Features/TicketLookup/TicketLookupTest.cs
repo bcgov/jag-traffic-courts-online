@@ -3,10 +3,7 @@ using DisputeApi.Web.Features.TicketLookup;
 using DisputeApi.Web.Test.Utils;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
@@ -16,10 +13,10 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
     public class TicketLookupTest
     {
         [Test, TCOAutoData]
-        public async Task Handler_handle_return_response_correctly(           
+        public async Task if_rsi_return_response_with_offence_handle_should_return_response_correctly(           
             RawTicketSearchResponse rawResponse,
             Invoice invoice,
-            [Frozen] Mock<IRSIRestApi> rsiApiMock,
+            [Frozen] Mock<IRsiRestApi> rsiApiMock,
             Handler sut
         )
         {
@@ -29,7 +26,7 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
                 new Item{ SelectedInvoice=new SelectedInvoice{Reference="https://test/EZ020004601"}}
             };
             invoice.term_due_date = "2020-09-18T21:40";
-            rsiApiMock.Setup(m => m.GetTicket(It.Is<GetTicketParams>(m=>m.TicketNumber== "EZ02000460"&&m.IssuedTime=="2140"))).Returns(Task.FromResult(rawResponse));
+            rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>())).Returns(Task.FromResult(rawResponse));
             rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"))).Returns(Task.FromResult(invoice));
             var response = await sut.Handle(query, CancellationToken.None);
             Assert.IsInstanceOf<Response>(response);
@@ -39,9 +36,9 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
         }
 
         [Test, TCOAutoData]
-        public async Task Handler_handle_return_null_when_noOffences_found(
+        public async Task if_rsi_return_noOffences_handle_should_return_null(
             RawTicketSearchResponse rawResponse,
-            [Frozen] Mock<IRSIRestApi> rsiApiMock,
+            [Frozen] Mock<IRsiRestApi> rsiApiMock,
             Handler sut
         )
         {

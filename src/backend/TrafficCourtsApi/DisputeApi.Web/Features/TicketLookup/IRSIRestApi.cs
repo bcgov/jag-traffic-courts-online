@@ -8,7 +8,7 @@ using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
 
 namespace DisputeApi.Web.Features.TicketLookup
 {
-    public interface IRSIRestApi
+    public interface IRsiRestApi
     {
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/")]
         Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams);
@@ -118,7 +118,7 @@ namespace DisputeApi.Web.Features.TicketLookup
         public string attribute4 { get; set; }
     }
 
-    public static class RSIRawResponseExtensions
+    public static class RsiRawResponseExtensions
     {
         public static Response ConvertToResponse(this RawTicketSearchResponse rawResponse)
         {

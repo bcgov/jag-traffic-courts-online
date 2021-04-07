@@ -203,7 +203,7 @@ namespace DisputeApi.Web
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<OAuthHandler>();
 
-            services.AddRefitClient<IRSIRestApi>()
+            services.AddRefitClient<IRsiRestApi>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(_configuration.GetSection("RSI:BASEADDRESS").Value))
                 .AddHttpMessageHandler<OAuthHandler>();
             Keys.RSI_OPERATION_MODE = _configuration.GetSection("RSI:OPERATIONMODE").Value;

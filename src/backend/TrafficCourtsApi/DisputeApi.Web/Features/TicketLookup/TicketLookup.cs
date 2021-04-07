@@ -54,8 +54,8 @@ namespace DisputeApi.Web.Features.TicketLookup
 
         public class Handler : IRequestHandler<Query, Response>
         {
-            IRSIRestApi _rsiApi;
-            public Handler(IRSIRestApi rsiApi )
+            IRsiRestApi _rsiApi;
+            public Handler(IRsiRestApi rsiApi )
             {
                 _rsiApi = rsiApi;
             }
@@ -65,7 +65,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 string time = query.Time;
                 if (Keys.RSI_OPERATION_MODE != "FAKE")
                 {
-                    return await GetResponseFromRSI(ticketNumber, time);
+                    return await GetResponseFromRsi(ticketNumber, time);
                 }
                 else
                 {
@@ -75,7 +75,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 }
             }
 
-            private async Task<Response> GetResponseFromRSI(string ticketNumber, string time)
+            private async Task<Response> GetResponseFromRsi(string ticketNumber, string time)
             {
                 RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
                         new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "") }
