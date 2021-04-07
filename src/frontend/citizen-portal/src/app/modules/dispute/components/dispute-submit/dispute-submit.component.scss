@@ -3,13 +3,13 @@ h3 {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-.mat-flat-button {
+.mat-flat-button,
+.mat-stroked-button {
   width: 100%;
   margin-bottom: 1em;
 
   &.large {
     height: 46px;
     font-size: 1rem;
-    margin-bottom: 0;
   }
 }
