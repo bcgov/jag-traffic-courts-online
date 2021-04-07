@@ -94,15 +94,14 @@ namespace DisputeApi.Web.Test.Features.Tickets
 
         [Theory]
         [AutoData]
-        public async Task GetTicket_return_null_with_NotFound(Query query)
+        public async Task GetTicket_return_null_with_NoContent(Query query)
         {
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
             _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult<Response>(null));
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
-            var result = (NotFoundObjectResult)await sut.GetTicket(query);
-            Assert.AreEqual(404, result.StatusCode);
-            Assert.IsInstanceOf<ApiMessageResponse>(result.Value);
+            var result = (NoContentResult)await sut.GetTicket(query);
+            Assert.AreEqual(204, result.StatusCode);
         }
     }
 }
