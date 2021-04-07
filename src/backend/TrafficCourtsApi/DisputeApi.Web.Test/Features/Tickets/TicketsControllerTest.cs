@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using DisputeApi.Web.Features;
 using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
@@ -86,7 +87,7 @@ namespace DisputeApi.Web.Test.Features.Tickets
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
             var result = (OkObjectResult)await sut.GetTicket(query);
-            Assert.IsInstanceOf<Response>(result.Value);
+            Assert.IsInstanceOf<ApiResultResponse<Response>>(result.Value);
             Assert.IsNotNull(result.Value);
             Assert.AreEqual(200, result.StatusCode);
         }
@@ -99,8 +100,9 @@ namespace DisputeApi.Web.Test.Features.Tickets
             _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult<Response>(null));
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
-            var result = (NotFoundResult)await sut.GetTicket(query);
+            var result = (NotFoundObjectResult)await sut.GetTicket(query);
             Assert.AreEqual(404, result.StatusCode);
+            Assert.IsInstanceOf<ApiMessageResponse>(result.Value);
         }
     }
 }
