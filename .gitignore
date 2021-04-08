@@ -1,5 +1,6 @@
 
 src/frontend/citizen-portal/debug.log
+
 # User-specific files
 *.suo
 *.user
@@ -40,6 +41,10 @@ TestResult.xml
 #RESHARPER
 .DotSettings
 
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
 
 # dependencies
 /node_modules
