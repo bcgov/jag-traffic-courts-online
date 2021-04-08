@@ -13,7 +13,6 @@ import { StepOverviewComponent } from './components/step-overview/step-overview.
 import { StepCourtComponent } from './components/step-court/step-court.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
-import { DisplayTicketComponent } from './components/display-ticket/display-ticket.component';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 
@@ -28,7 +27,6 @@ import { DisputeSummaryComponent } from './components/dispute-summary/dispute-su
     StepCourtComponent,
     DisputeSubmitComponent,
     DisputeListComponent,
-    DisplayTicketComponent,
     DisputeSummaryComponent,
   ],
   imports: [CommonModule, SharedModule, DisputeRoutingModule, MatStepperModule],

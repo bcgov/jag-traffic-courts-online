@@ -9,7 +9,7 @@
 
   <div class="row mt-4">
     <div class="col-lg-6">
-      <app-alert type="danger" icon="warning">
+      <app-alert type="danger" icon="error" *ngIf="notFound">
         <ng-container #alertContent class="alert-content">
           <strong>Ticket Not Found</strong><br />
           Sorry, we are unable to find your ticket. <br />If your ticket starts
@@ -85,7 +85,7 @@
       <section class="mb-4 mt-4">
         <div class="row">
           <div class="col-lg-12">
-            <app-alert type="info" icon="warning">
+            <app-alert type="info" icon="info">
               <ng-container #alertContent class="alert-content">
                 <strong>VIOLATION TICKET CENTRE CONTACT INFORMATION </strong
                 ><br />
@@ -101,17 +101,6 @@
           </div>
         </div>
       </section>
-
-      <div class="mt-4">
-        <button
-          mat-flat-button
-          color="primary"
-          class="large light"
-          (click)="onRsbcSearch()"
-        >
-          Test RSI
-        </button>
-      </div>
     </div>
     <div class="col-lg-6 d-none d-lg-block">
       <div class="info-graphic pl-4">

@@ -10,7 +10,7 @@ export class MockDisputeService {
   private _tickets: BehaviorSubject<Ticket[]>;
 
   constructor() {
-    const ticketA = this.createTicket();
+    const ticketA = this.createRsiTicket();
     const ticketB = this.createTicket();
 
     this._ticket = new BehaviorSubject<Ticket>(ticketA);

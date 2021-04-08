@@ -90,8 +90,18 @@ export abstract class AbstractResource {
     error,
     status,
   }: HttpErrorResponse): Observable<ApiHttpErrorResponse> {
-    this.logger.error('An error occurred:', error);
+    if (error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      this.logger.error('An error occurred:', error.error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      this.logger.error(
+        `Backend returned code ${error.status}, body was:`,
+        error.error
+      );
+    }
 
-    return throwError(new ApiHttpErrorResponse(error, status));
+    return throwError(new ApiHttpErrorResponse(status, error));
   }
 }
