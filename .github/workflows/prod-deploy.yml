@@ -60,10 +60,10 @@ jobs:
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
           docker-compose build --force-rm --no-cache \
-          --build-arg API_URL=${{secrets.API_URL}} \
-          --build-arg KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}} \
-          --build-arg KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} \
-          --build-arg KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}} \
+          --build-arg API_URL='${{secrets.API_URL}}' \
+          --build-arg KEYCLOAK_URL='${{secrets.KEYCLOAK_URL}}' \
+          --build-arg KEYCLOAK_REALM='${{secrets.KEYCLOAK_REALM}}' \
+          --build-arg KEYCLOAK_CLIENT_ID='${{secrets.KEYCLOAK_CLIENT_ID}}' \
           $IMAGE_NAME
 
       - name: Tag the Image
