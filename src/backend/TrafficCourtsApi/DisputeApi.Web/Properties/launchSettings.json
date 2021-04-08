@@ -12,8 +12,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "OAUTH__OAUTHURL": "https://wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token",
         "OAUTH__RESOURCEURL": "https://wsgw.test.jag.gov.bc.ca:8443/paybc",
-        "OAUTH__CLIENTID": "bd4fe7e3-449d-49be-a680-c12d433004be",
-        "OAUTH__SECRET": "bc723590-0999-4690-84f6-6534bf333b99"
+        "RSI__BASEADDRESS": "https://wsgw.test.jag.gov.bc.ca:8443",
+        "RSI__OPERATIONMODE": ""
       },
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
