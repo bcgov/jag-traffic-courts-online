@@ -29,8 +29,9 @@ namespace DisputeApi.Web.Features.Disputes
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
         {
-            var result = await _disputeService.CreateAsync(dispute);
-            return Ok(result);
+            //var result = await _disputeService.CreateAsync(dispute);
+            _logger.LogDebug("{dispute}", JsonSerializer.Serialize<Dispute>(dispute));
+            return Ok();
         }
 
         [HttpGet]
