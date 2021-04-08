@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
 
@@ -49,7 +49,6 @@ export class StepperComponent
   extends BaseDisputeFormPage
   implements OnInit, AfterViewInit {
   public busy: Subscription;
-  public pageMode: string;
   public disputeSteps: StepData[];
 
   @ViewChild(MatStepper)
@@ -62,7 +61,6 @@ export class StepperComponent
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
-    private activatedRoute: ActivatedRoute,
     private utilsService: UtilsService,
     private toastService: ToastService,
     private dialog: MatDialog,
@@ -78,8 +76,6 @@ export class StepperComponent
       disputeResource,
       disputeFormStateService
     );
-
-    this.pageMode = 'full';
   }
 
   public ngOnInit(): void {
@@ -87,6 +83,8 @@ export class StepperComponent
       if (!ticketDispute) {
         this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
       }
+
+      this.disputeFormStateService.reset();
 
       this.initializeDisputeSteps(ticketDispute);
       this.patchForm();
@@ -140,9 +138,9 @@ export class StepperComponent
   }
 
   private shouldShowCourtPage(): boolean {
-    const offence = this.disputeFormStateService.stepOffenceForm.controls.count
-      .value;
-    const shouldShow = offence && offence !== 'A' ? true : false;
+    const offence = this.disputeFormStateService.stepOffenceForm.controls
+      .offenceAgreementStatus.value;
+    const shouldShow = offence && offence !== 1 ? true : false;
 
     return shouldShow;
   }
@@ -234,15 +232,18 @@ export class StepperComponent
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          const source = timer(1000);
-          this.busy = source.subscribe((val) => {
-            this.toastService.openSuccessToast(
-              'Dispute has been successfully submitted'
-            );
-            this.router.navigate([
-              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
-            ]);
-          });
+          this.logger.info('submitDispute', this.disputeFormStateService.json);
+
+          this.busy = this.disputeResource
+            .createDispute(this.disputeFormStateService.json)
+            .subscribe((response) => {
+              this.toastService.openSuccessToast(
+                'Dispute has been successfully submitted'
+              );
+              this.router.navigate([
+                DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
+              ]);
+            });
         }
       });
   }

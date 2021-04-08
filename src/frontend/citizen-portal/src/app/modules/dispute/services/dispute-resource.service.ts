@@ -19,6 +19,12 @@ export class DisputeResourceService {
     private logger: LoggerService
   ) {}
 
+  /**
+   * Get the ticket from RSI.
+   *
+   * @param params containing the ticketNumber and time
+   * @returns
+   */
   public getTicket(params: {
     ticketNumber: string;
     time: string;
@@ -49,35 +55,21 @@ export class DisputeResourceService {
     );
   }
 
-  public getAllTickets(): Observable<Ticket[]> {
-    return this.apiResource.get<Ticket[]>('alltickets').pipe(
-      map((response: ApiHttpResponse<Ticket[]>) => response.result),
-      tap((tickets: Ticket[]) =>
-        this.logger.info('DisputeResourceService::getAllTickets', tickets)
-      ),
-      catchError((error: any) => {
-        this.toastService.openErrorToast('Tickets could not be retrieved');
-        this.logger.error(
-          'DisputeResourceService::getAllTickets error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
   /**
-   * Update the dispute
+   * Create the dispute
+   *
+   * @param dispute The dispute to be created
+   * @returns
    */
-  public updateDispute(dispute: Dispute): Observable<Dispute> {
-    this.logger.info('updateDispute', dispute);
+  public createDispute(dispute: Dispute): Observable<Dispute> {
+    this.logger.info('createDispute', dispute);
 
-    return this.apiResource.put<Dispute>('ticket').pipe(
-      map((response: ApiHttpResponse<Dispute>) => response.result),
+    return this.apiResource.post<Dispute>('disputes', dispute).pipe(
+      map((response: ApiHttpResponse<Dispute>) => null),
       catchError((error: any) => {
-        this.toastService.openErrorToast('Dispute could not be updated');
+        this.toastService.openErrorToast('Dispute could not be created');
         this.logger.error(
-          'DisputeResourceService::updateDispute error has occurred: ',
+          'DisputeResourceService::createDispute error has occurred: ',
           error
         );
         throw error;

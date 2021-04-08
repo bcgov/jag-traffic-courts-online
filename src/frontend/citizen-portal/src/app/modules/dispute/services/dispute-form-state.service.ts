@@ -137,19 +137,19 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepReviewForm(): FormGroup {
     return this.formBuilder.group({
+      violationTicketNumber: [null],
+      offenceNumber: [null],
       emailAddress: [null, [Validators.required, Validators.email]],
     });
   }
 
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
-      count: [null, [Validators.required]],
-      count1A1: [null],
-      count1A2: [null],
+      offenceAgreementStatus: [null, [Validators.required]],
+      requestReduction: [null],
+      requestTime: [null],
       reductionReason: [null],
       timeReason: [null],
-      count1B1: [null],
-      count1B2: [null],
     });
   }
 
@@ -158,7 +158,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
       lawyerPresent: [false],
       interpreterRequired: [false],
       interpreterLanguage: [null],
-      callWitness: [false],
+      witnessPresent: [false],
     });
   }
 
@@ -168,7 +168,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      certifyCorrect: [false, [Validators.required]],
+      informationCertified: [false, [Validators.required]],
     });
   }
 }

@@ -1,6 +1,7 @@
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { Dispute } from '@shared/models/dispute.model';
-import { Offence, Ticket } from '@shared/models/ticket.model';
+import { Offence } from '@shared/models/offence.model';
+import { Ticket } from '@shared/models/ticket.model';
 import * as faker from 'faker';
 
 import { BehaviorSubject } from 'rxjs';
@@ -130,10 +131,13 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    let dispute: Dispute = this.createDispute();
+    let dispute: Dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
     dispute.interpreterRequired = true;
     dispute.interpreterLanguage = 'Spanish';
-    dispute.certifyCorrect = true;
+    dispute.informationCertified = true;
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -198,7 +202,10 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
+    dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -230,8 +237,11 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
-    dispute.certifyCorrect = true;
+    dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
+    dispute.informationCertified = true;
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -266,9 +276,12 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
+    dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
     dispute.lawyerPresent = true;
-    dispute.certifyCorrect = true;
+    dispute.informationCertified = true;
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -297,19 +310,22 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createDispute(): Dispute {
+  private createDispute(
+    violationTicketNumber: string,
+    offenceNumber: number
+  ): Dispute {
     const dispute: Dispute = {
+      violationTicketNumber: violationTicketNumber,
+      offenceNumber: offenceNumber,
       emailAddress: faker.internet.email(),
       lawyerPresent: null,
       interpreterRequired: null,
       interpreterLanguage: null,
-      callWitness: null,
-      certifyCorrect: null,
-      count: null,
-      count1A1: null,
-      count1A2: null,
-      count1B1: null,
-      count1B2: null,
+      witnessPresent: null,
+      informationCertified: null,
+      offenceAgreementStatus: null,
+      requestReduction: null,
+      requestTime: null,
       reductionReason: null,
       timeReason: null,
     };

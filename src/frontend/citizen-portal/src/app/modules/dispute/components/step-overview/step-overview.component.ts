@@ -82,24 +82,24 @@ export class StepOverviewComponent
     this.utilsService.scrollToErrorSection();
   }
 
-  public get certifyCorrect(): FormControl {
-    return this.form.get('certifyCorrect') as FormControl;
+  public get informationCertified(): FormControl {
+    return this.form.get('informationCertified') as FormControl;
   }
 
   public get emailAddress(): FormControl {
     return this.reviewForm.get('emailAddress') as FormControl;
   }
 
-  public get count(): FormControl {
-    return this.offenceForm.get('count') as FormControl;
+  public get offenceAgreementStatus(): FormControl {
+    return this.offenceForm.get('offenceAgreementStatus') as FormControl;
   }
 
-  public get count1A1(): FormControl {
-    return this.offenceForm.get('count1A1') as FormControl;
+  public get requestReduction(): FormControl {
+    return this.offenceForm.get('requestReduction') as FormControl;
   }
 
-  public get count1A2(): FormControl {
-    return this.offenceForm.get('count1A2') as FormControl;
+  public get requestTime(): FormControl {
+    return this.offenceForm.get('requestTime') as FormControl;
   }
 
   public get reductionReason(): FormControl {
@@ -110,19 +110,11 @@ export class StepOverviewComponent
     return this.offenceForm.get('timeReason') as FormControl;
   }
 
-  public get count1B1(): FormControl {
-    return this.offenceForm.get('count1B1') as FormControl;
-  }
-
-  public get count1B2(): FormControl {
-    return this.offenceForm.get('count1B2') as FormControl;
-  }
-
   public get courtDataExists(): boolean {
     return (
       this.lawyerPresent.value ||
       this.interpreterRequired.value ||
-      this.callWitness.value
+      this.witnessPresent.value
     );
   }
 
@@ -138,7 +130,7 @@ export class StepOverviewComponent
     return this.courtForm.get('interpreterLanguage') as FormControl;
   }
 
-  public get callWitness(): FormControl {
-    return this.courtForm.get('callWitness') as FormControl;
+  public get witnessPresent(): FormControl {
+    return this.courtForm.get('witnessPresent') as FormControl;
   }
 }
