@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.TicketLookup;
+using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Moq;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>())).Returns(Task.FromResult(rawResponse));
             rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"))).Returns(Task.FromResult(invoice));
             var response = await sut.Handle(query, CancellationToken.None);
-            Assert.IsInstanceOf<Response>(response);
+            Assert.IsInstanceOf<TicketDispute>(response);
             Assert.AreEqual(1, response.Offences.Count);
             Assert.AreEqual("2020-09-18", response.ViolationDate);
             Assert.AreEqual("21:40", response.ViolationTime);

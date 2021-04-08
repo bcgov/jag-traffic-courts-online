@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DisputeApi.Web.Features.Disputes
@@ -25,7 +26,7 @@ namespace DisputeApi.Web.Features.Disputes
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
         {
             var result = await _disputeService.CreateAsync(dispute);

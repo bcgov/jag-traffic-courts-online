@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using DisputeApi.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ namespace DisputeApi.Web.Features.TicketLookup
 {
     public static class TicketLookup
     {
-        public class Query : IRequest<Response>
+        public class Query : IRequest<TicketDispute>
         {
             [FromQuery(Name = "ticketNumber")]
             [Required]
@@ -24,66 +25,16 @@ namespace DisputeApi.Web.Features.TicketLookup
             public string Time { get; set; }
         }
 
-        public class Response
-        {
-            public string ViolationTicketNumber { get; set; }
-            public string ViolationTime { get; set; }
-            public string ViolationDate { get; set; }
+ 
 
-            public List<Offence> Offences { get; set; }
-
-            /// <summary>
-            /// Gets or sets the raw response returned from the RSI Pay BC API.
-            /// Used only for troubleshooting during development. Will be removed
-            /// once the API usage is understood.
-            /// </summary>
-            public RawTicketSearchResponse RawResponse { get; set; }
-        }
-
-        public class Offence
-        {
-            public int OffenceNumber { get; set; }
-            public decimal TicketAmount { get; set; }
-            public decimal AmountDue { get; set; }
-            public string DueDate { get; set; }
-            public string Description { get; set; }
-            public Dispute Dispute { get; set; }
-        }
-
-        public class Dispute
-        {
-            public string ViolationTicketNumber { get; set; }
-            public int OffenceNumber { get; set; }
-            public string EmailAddress { get; set; }
-            public string OffenceAgreementStatus { get; set; }
-            public bool RequestReduction { get; set; }
-            public bool RequestTime { get; set; }
-            public string ReductionReason { get; set; }
-            public string TimeReason { get; set; }
-            public bool LawyerPresent { get; set; }
-            public bool InterpreterRequired { get; set; }
-            public bool WitnessPresent { get; set; }
-            public string InterpreterLanguage { get; set; }
-            public bool InformationCertified { get; set; }
-            public DisputeStatus Status { get; set; }
-        }
-
-        public enum DisputeStatus
-        {
-            NEW,
-            SUBMITTED,
-            INPROGRESS,
-            COMPLETE,
-        }
-
-        public class Handler : IRequestHandler<Query, Response>
+        public class Handler : IRequestHandler<Query, TicketDispute>
         {
             IRsiRestApi _rsiApi;
             public Handler(IRsiRestApi rsiApi )
             {
                 _rsiApi = rsiApi;
             }
-            public async Task<Response> Handle(Query query, CancellationToken cancellationToken)
+            public async Task<TicketDispute> Handle(Query query, CancellationToken cancellationToken)
             {
                 string ticketNumber = query.TicketNumber;
                 string time = query.Time;
@@ -99,7 +50,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 }
             }
 
-            private async Task<Response> GetResponseFromRsi(string ticketNumber, string time)
+            private async Task<TicketDispute> GetResponseFromRsi(string ticketNumber, string time)
             {
                 RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
                         new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "") }
@@ -120,10 +71,10 @@ namespace DisputeApi.Web.Features.TicketLookup
                     }
                 }
 
-                return rawResponse.ConvertToResponse();
+                return rawResponse.ConvertToTicketDispute();
             }
 
-            private async Task<Response> GetFakeResponseFromFile(string ticketNumber, string time)
+            private async Task<TicketDispute> GetFakeResponseFromFile(string ticketNumber, string time)
             {
                 using FileStream openStream = File.OpenRead($"Features/TicketLookup/ticket-{ticketNumber}.json");
                 RawTicketSearchResponse rawResponse = await JsonSerializer.DeserializeAsync<RawTicketSearchResponse>(openStream);
@@ -139,7 +90,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                     var invoice = await JsonSerializer.DeserializeAsync<Invoice>(itemStream);
                     rawResponse.Items[i].SelectedInvoice.Invoice = invoice;
                 }
-                return rawResponse.ConvertToResponse();
+                return rawResponse.ConvertToTicketDispute();
             }
 
         }

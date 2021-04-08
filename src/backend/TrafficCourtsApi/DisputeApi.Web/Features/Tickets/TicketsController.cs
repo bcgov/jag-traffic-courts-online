@@ -47,7 +47,7 @@ namespace DisputeApi.Web.Features.Tickets
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketLookup.TicketLookup.Response>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTicket([FromQuery] TicketLookup.TicketLookup.Query query)

@@ -80,14 +80,14 @@ namespace DisputeApi.Web.Test.Features.Tickets
 
         [Theory]
         [AutoData]
-        public async Task GetTicket_return_response_with_OK(Query query, Response response)
+        public async Task GetTicket_return_response_with_OK(Query query, TicketDispute response)
         {
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
             _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult(response));
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
             var result = (OkObjectResult)await sut.GetTicket(query);
-            Assert.IsInstanceOf<ApiResultResponse<Response>>(result.Value);
+            Assert.IsInstanceOf<ApiResultResponse<TicketDispute>>(result.Value);
             Assert.IsNotNull(result.Value);
             Assert.AreEqual(200, result.StatusCode);
         }
@@ -97,7 +97,7 @@ namespace DisputeApi.Web.Test.Features.Tickets
         public async Task GetTicket_return_null_with_NoContent(Query query)
         {
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
-            _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult<Response>(null));
+            _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult<TicketDispute>(null));
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
             var result = (NoContentResult)await sut.GetTicket(query);

@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using DisputeApi.Web.Models;
+using Refit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,16 +121,16 @@ namespace DisputeApi.Web.Features.TicketLookup
 
     public static class RsiRawResponseExtensions
     {
-        public static Response ConvertToResponse(this RawTicketSearchResponse rawResponse)
+        public static TicketDispute ConvertToTicketDispute(this RawTicketSearchResponse rawResponse)
         {
             if (rawResponse.Items == null || rawResponse.Items.Count <= 0) return null;
-            Response response = new Response();
-            response.RawResponse = rawResponse;
+            TicketDispute ticketDispute = new TicketDispute();
+            ticketDispute.RawResponse = rawResponse;
             Invoice firstInvoice = rawResponse.Items.First().SelectedInvoice.Invoice;
-            response.ViolationTicketNumber = firstInvoice.invoice_number.Remove(firstInvoice.invoice_number.Length - 1);
-            response.ViolationDate = DateTime.Parse(firstInvoice.term_due_date).ToString("yyyy-MM-dd");
-            response.ViolationTime = DateTime.Parse(firstInvoice.term_due_date).ToString("HH:mm");
-            response.Offences = rawResponse.Items.Select((_, i) => new Offence
+            ticketDispute.ViolationTicketNumber = firstInvoice.invoice_number.Remove(firstInvoice.invoice_number.Length - 1);
+            ticketDispute.ViolationDate = DateTime.Parse(firstInvoice.term_due_date).ToString("yyyy-MM-dd");
+            ticketDispute.ViolationTime = DateTime.Parse(firstInvoice.term_due_date).ToString("HH:mm");
+            ticketDispute.Offences = rawResponse.Items.Select((_, i) => new Offence
             {
                 OffenceNumber = i + 1,
                 AmountDue=_.SelectedInvoice.Invoice.amount_due,
@@ -137,7 +138,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 DueDate = _.SelectedInvoice.Invoice.term_due_date,
                 TicketAmount=_.SelectedInvoice.Invoice.total
             }).ToList();
-            return response;
+            return ticketDispute;
         }
     }
 #endregion
