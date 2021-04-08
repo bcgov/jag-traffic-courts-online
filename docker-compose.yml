@@ -33,15 +33,15 @@ services:
     build:
       context: ./src/frontend/citizen-portal
       args:
-        USE_MOCK_SERVICES: "true"
-        USE_KEYCLOAK: "false"
+        USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
+        USE_KEYCLOAK: ${USE_KEYCLOAK}
         API_URL: ${API_URL}
         KEYCLOAK_URL: ${KEYCLOAK_URL}
         KEYCLOAK_REALM: ${KEYCLOAK_REALM}
         KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
     environment:
-      USE_MOCK_SERVICES: "true"
-      USE_KEYCLOAK: "false"
+      USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
+      USE_KEYCLOAK: ${USE_KEYCLOAK}
     command: "nginx -g 'daemon off;'"
     restart: always
     ports:

@@ -45,7 +45,6 @@ TestResult.xml
 project.lock.json
 project.fragment.lock.json
 artifacts/
-**/Properties/launchSettings.json
 
 # dependencies
 /node_modules
