@@ -57,6 +57,12 @@ jobs:
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
+          API_URL: ${{ secrets.API_URL }}
+          KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL }}
+          KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+          KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+          USE_MOCK_SERVICES: ${{ secrets.USE_MOCK_SERVICES }}
+          USE_KEYCLOAK: ${{ secrets.USE_KEYCLOAK }}
         run: |          
           docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
           docker-compose build --force-rm --no-cache \

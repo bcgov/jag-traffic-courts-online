@@ -50,7 +50,12 @@ jobs:
       VERSION: v1
       IMAGE_NAME: citizen-portal
       IMAGE_TAGS: latest
-    
+      API_URL: ${{ secrets.API_URL }}
+      KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL }}
+      KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+      KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+      USE_MOCK_SERVICES: ${{ secrets.USE_MOCK_SERVICES }}
+      USE_KEYCLOAK: ${{ secrets.USE_KEYCLOAK }}
     steps:
       - uses: actions/checkout@v2
 
