@@ -9,7 +9,6 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { StepData } from '../stepper/stepper.component';
 
 @Component({
   selector: 'app-step-count',
@@ -18,7 +17,6 @@ import { StepData } from '../stepper/stepper.component';
 })
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
-  @Input() public step: StepData;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   constructor(
@@ -44,6 +42,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepOffenceForm;
+    this.patchForm();
   }
 
   public onSubmit(): void {

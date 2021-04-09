@@ -6,6 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
+import { FormControlValidators } from '@core/validators/form-control.validators';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
 import { Dispute } from '@shared/models/dispute.model';
 
@@ -155,10 +156,10 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepCourtForm(): FormGroup {
     return this.formBuilder.group({
-      lawyerPresent: [false],
-      interpreterRequired: [false],
+      lawyerPresent: [null],
+      interpreterRequired: [null],
       interpreterLanguage: [null],
-      witnessPresent: [false],
+      witnessPresent: [null],
     });
   }
 
@@ -168,7 +169,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      informationCertified: [false, [Validators.required]],
+      informationCertified: [null, [FormControlValidators.requiredTruthful]],
     });
   }
 }

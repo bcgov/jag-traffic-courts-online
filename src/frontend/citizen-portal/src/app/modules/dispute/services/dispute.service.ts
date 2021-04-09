@@ -47,10 +47,6 @@ export class DisputeService {
     return this._ticketDispute.value;
   }
 
-  public get steps$(): BehaviorSubject<any[]> {
-    return this.disputeSteps;
-  }
-
   public getDisputeTicket(ticket: Ticket, oneOffence: Offence): TicketDispute {
     if (!oneOffence.dispute) {
       oneOffence.dispute = {

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
-import { Subscription, timer } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
@@ -14,31 +14,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { DisputeRoutes } from '@dispute/dispute.routes';
-import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
-import { CurrencyPipe } from '@angular/common';
-import { TicketDispute } from '@shared/models/ticket-dispute.model';
 import { UtilsService } from '@core/services/utils.service';
-
-export class StepData {
-  constructor(
-    public stepNumber: number,
-    public title: string,
-    public title2Label?: string,
-    public title2?: string,
-    public title3Label?: string,
-    public title3?: string,
-    public title4Label?: string,
-    public title4?: string,
-    public description?: string
-  ) {}
-}
-
-export enum StepNumber {
-  REVIEW = 1,
-  OFFENCE = 2,
-  COURT = 3,
-  OVERVIEW = 4,
-}
 
 @Component({
   selector: 'app-stepper',
@@ -49,10 +25,14 @@ export class StepperComponent
   extends BaseDisputeFormPage
   implements OnInit, AfterViewInit {
   public busy: Subscription;
-  public disputeSteps: StepData[];
-
+  public showAdditionalInformationStep: boolean;
   @ViewChild(MatStepper)
   private stepper: MatStepper;
+
+  public reviewForm: FormGroup;
+  public offenceForm: FormGroup;
+  public courtForm: FormGroup;
+  public overviewForm: FormGroup;
 
   constructor(
     protected route: ActivatedRoute,
@@ -64,8 +44,6 @@ export class StepperComponent
     private utilsService: UtilsService,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private formatDatePipe: FormatDatePipe,
-    private currencyPipe: CurrencyPipe,
     private logger: LoggerService
   ) {
     super(
@@ -76,6 +54,8 @@ export class StepperComponent
       disputeResource,
       disputeFormStateService
     );
+
+    this.showAdditionalInformationStep = false;
   }
 
   public ngOnInit(): void {
@@ -85,14 +65,16 @@ export class StepperComponent
       }
 
       this.disputeFormStateService.reset();
-
-      this.initializeDisputeSteps(ticketDispute);
       this.patchForm();
     });
 
-    this.disputeService.steps$.subscribe((stepData) => {
-      this.disputeSteps = stepData;
-    });
+    const formsList = this.disputeFormStateService.forms;
+    [
+      this.reviewForm,
+      this.offenceForm,
+      this.courtForm,
+      this.overviewForm,
+    ] = formsList as FormGroup[];
   }
 
   public ngAfterViewInit(): void {
@@ -116,18 +98,13 @@ export class StepperComponent
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
-    const showCourtPage = this.shouldShowCourtPage();
 
-    const steps = this.disputeService.steps$.value;
-    const courtPageExists = steps.some(
-      (step) => step.stepNumber === StepNumber.COURT
+    this.showAdditionalInformationStep = this.showCourtPage();
+
+    this.logger.info(
+      'showAdditionalInformationStep',
+      this.showAdditionalInformationStep
     );
-
-    if (showCourtPage && !courtPageExists) {
-      this.addCourtPage(steps);
-    } else if (!showCourtPage && courtPageExists) {
-      this.removeCourtPage(steps);
-    }
 
     // on the last step
     if (numberOfSteps === currentStep) {
@@ -137,70 +114,11 @@ export class StepperComponent
     }
   }
 
-  private shouldShowCourtPage(): boolean {
-    const offence = this.disputeFormStateService.stepOffenceForm.controls
+  private showCourtPage(): boolean {
+    const offenceStatus = this.disputeFormStateService.stepOffenceForm.controls
       .offenceAgreementStatus.value;
-    const shouldShow = offence && offence !== 1 ? true : false;
-
-    return shouldShow;
-  }
-
-  private initializeDisputeSteps(ticketDispute: TicketDispute): void {
-    const offence = ticketDispute?.offence;
-    if (!offence) {
-      return;
-    }
-    this.logger.info('initializeDisputeSteps offence', offence);
-
-    const steps = [];
-    let stepData = new StepData(StepNumber.REVIEW, 'Violation Ticket Review');
-    steps.push(stepData);
-
-    stepData = new StepData(
-      StepNumber.OFFENCE,
-      'Offence #' + offence.offenceNumber + ' Review and Action',
-      'Offence Description',
-      offence.description,
-      'Ticket Amount',
-      this.transformCurrency(offence.ticketAmount),
-      'Ticket Amount (if paid by ' + this.transformDate(offence.dueDate) + ' )',
-      this.transformCurrency(offence.amountDue),
-      offence.description
-    );
-    steps.push(stepData);
-
-    stepData = new StepData(StepNumber.OVERVIEW, 'Dispute Overview');
-    steps.push(stepData);
-
-    this.disputeService.steps$.next(steps);
-  }
-
-  private transformDate(date: string) {
-    return this.formatDatePipe.transform(date);
-  }
-
-  private transformCurrency(amount) {
-    return this.currencyPipe.transform(amount);
-  }
-
-  private addCourtPage(steps: StepData[]): void {
-    const courtStepData = new StepData(
-      StepNumber.COURT,
-      'Additional Information'
-    );
-    steps.splice(steps.length - 1, 0, courtStepData);
-    this.disputeService.steps$.next(steps);
-  }
-
-  private removeCourtPage(steps: StepData[]): void {
-    for (let i = 0; i < steps.length; i++) {
-      if (steps[i].stepNumber === StepNumber.COURT) {
-        steps.splice(i, 1);
-        i--;
-      }
-    }
-    this.disputeFormStateService.resetStepCourtForm();
-    this.disputeService.steps$.next(steps);
+    console.log('offenceStatus', offenceStatus);
+    return offenceStatus && offenceStatus !== '1' ? true : false;
   }
 
   /**

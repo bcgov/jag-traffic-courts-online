@@ -51,8 +51,6 @@ export class StepOverviewComponent
   }
 
   public ngOnInit() {
-    this.ticketDispute = this.disputeService.ticketDispute;
-
     const formsList = this.disputeFormStateService.forms;
     [
       this.reviewForm,
@@ -61,6 +59,7 @@ export class StepOverviewComponent
       this.form,
     ] = formsList as FormGroup[];
 
+    this.patchForm();
     this.nextBtnLabel = 'Submit';
   }
 

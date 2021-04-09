@@ -1,18 +1,30 @@
 <app-page>
-  <app-page-header>
-    <ng-container header>{{ step?.title }}</ng-container>
+  <app-page-header *ngIf="this.ticketDispute && this.ticketDispute.offence">
+    <ng-container header
+      >Count #{{ this.ticketDispute.offence.offenceNumber }} Review and
+      Action</ng-container
+    >
     <ng-container subHeader>
       <div class="row">
-        <div class="col-4 mb-2">{{ step?.title2Label }}</div>
-        <div class="col-8 text-right mb-2">{{ step?.title2 }}</div>
+        <div class="col-4 mb-2">Offence Description</div>
+        <div class="col-8 text-right mb-2">
+          {{ this.ticketDispute.offence.description }}
+        </div>
       </div>
       <div class="row">
-        <div class="col-6 mb-2">{{ step?.title3Label }}</div>
-        <div class="col-6 text-right mb-2">{{ step?.title3 }}</div>
+        <div class="col-6 mb-2">Ticket Amount</div>
+        <div class="col-6 text-right mb-2">
+          {{ this.ticketDispute.offence.ticketAmount | currency }}
+        </div>
       </div>
-      <div class="row">
-        <div class="col-6 mb-2">{{ step?.title4Label }}</div>
-        <div class="col-6 text-right mb-2">{{ step?.title4 }}</div>
+      <div class="row" *ngIf="this.ticketDispute.offence.earlyAmount > 0">
+        <div class="col-6 mb-2">
+          Ticket Amount (if paid by
+          {{ this.ticketDispute.offence.dueDate | formatDate }})
+        </div>
+        <div class="col-6 text-right mb-2">
+          {{ this.ticketDispute.offence.earlyAmount | currency }}
+        </div>
       </div>
     </ng-container>
   </app-page-header>
