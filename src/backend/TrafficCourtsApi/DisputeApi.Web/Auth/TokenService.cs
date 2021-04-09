@@ -46,11 +46,12 @@ namespace DisputeApi.Web.Auth
         private async Task<Token> RefreshTokenAsync(CancellationToken cancellationToken)
         {
             Token token = await _oAuthClient.GetRefreshToken(cancellationToken);
+            int expiredSeconds = token.ExpiresIn - Keys.OAUTH_TOKEN_EXPIRE_BUFFER;
             _logger.LogInformation(
-                "Got new token and save it to memory(key={key}, expired={expired})", 
+                "Got new token and save it to memory(key={key}, expired in {expired} seconds.)", 
                 Keys.OAUTH_TOKEN_KEY, 
-                DateTime.Now.AddSeconds(token.ExpiresIn - Keys.OAUTH_TOKEN_EXPIRE_BUFFER) );
-            _memoryCache.Set(Keys.OAUTH_TOKEN_KEY, token, new TimeSpan(0, 0, token.ExpiresIn - Keys.OAUTH_TOKEN_EXPIRE_BUFFER));
+                expiredSeconds );
+            _memoryCache.Set(Keys.OAUTH_TOKEN_KEY, token, TimeSpan.FromSeconds(expiredSeconds));
             return token;
         }
     }
