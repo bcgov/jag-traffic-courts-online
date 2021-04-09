@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using DisputeApi.Web.Features;
 using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
@@ -79,28 +80,28 @@ namespace DisputeApi.Web.Test.Features.Tickets
 
         [Theory]
         [AutoData]
-        public async Task GetTicket_return_response_with_OK(Query query, Response response)
+        public async Task GetTicket_return_response_with_OK(Query query, TicketDispute response)
         {
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
             _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult(response));
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
             var result = (OkObjectResult)await sut.GetTicket(query);
-            Assert.IsInstanceOf<Response>(result.Value);
+            Assert.IsInstanceOf<ApiResultResponse<TicketDispute>>(result.Value);
             Assert.IsNotNull(result.Value);
             Assert.AreEqual(200, result.StatusCode);
         }
 
         [Theory]
         [AutoData]
-        public async Task GetTicket_return_null_with_NotFound(Query query)
+        public async Task GetTicket_return_null_with_NoContent(Query query)
         {
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
-            _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult<Response>(null));
+            _mediatorMock.Setup(m => m.Send(It.IsAny<Query>(), CancellationToken.None)).Returns(Task.FromResult<TicketDispute>(null));
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
-            var result = (NotFoundResult)await sut.GetTicket(query);
-            Assert.AreEqual(404, result.StatusCode);
+            var result = (NoContentResult)await sut.GetTicket(query);
+            Assert.AreEqual(204, result.StatusCode);
         }
     }
 }

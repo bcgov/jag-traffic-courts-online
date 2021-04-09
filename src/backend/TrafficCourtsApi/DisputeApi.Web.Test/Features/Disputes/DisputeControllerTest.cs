@@ -105,13 +105,6 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var result = await sut.CreateDispute(dispute);
             Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkObjectResult>(result);
-
-            var objectResult = (ObjectResult)result;
-
-            Assert.IsInstanceOf<Dispute>(objectResult.Value);
-            Assert.IsNotNull(objectResult.Value);
-
             _disputeServiceMock.Verify(x => x.CreateAsync(dispute), Times.Once);
         }
     }

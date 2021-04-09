@@ -47,17 +47,18 @@ namespace DisputeApi.Web.Features.Tickets
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(TicketLookup.TicketLookup.Response), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTicket([FromQuery] TicketLookup.TicketLookup.Query query)
         {
             var response = await _mediator.Send(query);
             if (response != null)
             {
-                return Ok(response);
+                return Ok(ApiResponse.Result(response));
             }
 
-            return NotFound();
+            return NoContent();
         }
     }
 }
