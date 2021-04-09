@@ -23,7 +23,6 @@ export class DisputeResourceService {
    * Get the ticket from RSI.
    *
    * @param params containing the ticketNumber and time
-   * @returns
    */
   public getTicket(params: {
     ticketNumber: string;
@@ -59,7 +58,6 @@ export class DisputeResourceService {
    * Create the dispute
    *
    * @param dispute The dispute to be created
-   * @returns
    */
   public createDispute(dispute: Dispute): Observable<Dispute> {
     this.logger.info('createDispute', dispute);

@@ -154,7 +154,7 @@ export class StepperComponent
 
           this.busy = this.disputeResource
             .createDispute(this.disputeFormStateService.json)
-            .subscribe((response) => {
+            .subscribe(() => {
               this.toastService.openSuccessToast(
                 'Dispute has been successfully submitted'
               );

@@ -315,8 +315,8 @@ export class MockDisputeService {
     offenceNumber: number
   ): Dispute {
     const dispute: Dispute = {
-      violationTicketNumber: violationTicketNumber,
-      offenceNumber: offenceNumber,
+      violationTicketNumber,
+      offenceNumber,
       emailAddress: faker.internet.email(),
       lawyerPresent: null,
       interpreterRequired: null,
