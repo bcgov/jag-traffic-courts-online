@@ -9,6 +9,6 @@ namespace DisputeApi.Web
     {
         public static readonly string OAUTH_TOKEN_KEY = "oauth-token";
         public static readonly int OAUTH_TOKEN_EXPIRE_BUFFER = 60;
-        public static string RSI_OPERATION_MODE = "";
+        public static string RSI_OPERATION_MODE_FAKE = "FAKE";
     }
 }

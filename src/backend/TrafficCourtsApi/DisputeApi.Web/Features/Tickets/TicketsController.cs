@@ -53,12 +53,7 @@ namespace DisputeApi.Web.Features.Tickets
         public async Task<IActionResult> GetTicket([FromQuery] TicketLookup.TicketLookup.Query query)
         {
             var response = await _mediator.Send(query);
-            if (response != null)
-            {
-                return Ok(ApiResponse.Result(response));
-            }
-
-            return NoContent();
+            return response == null ? (IActionResult) NoContent() : Ok(ApiResponse.Result(response));
         }
     }
 }
