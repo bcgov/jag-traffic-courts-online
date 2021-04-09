@@ -15,7 +15,7 @@ namespace DisputeApi.Web.Test.Auth
     [ExcludeFromCodeCoverage]
     public class TokenServiceTest
     {
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public async Task GetTokenAsync_if_token_not_expired_return_token_from_memory(
             [Frozen]Mock<IMemoryCache> memoryMock, 
             TokenService sut, 
@@ -31,7 +31,7 @@ namespace DisputeApi.Web.Test.Auth
             Assert.AreEqual(expectedToken, token);
         }
 
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public async Task GetTokenAsync_if_token_expired_get_new_token_from_client(
             [Frozen] Mock<IMemoryCache> memoryMock,
             [Frozen] Mock<IOAuthClient> authClientMock,

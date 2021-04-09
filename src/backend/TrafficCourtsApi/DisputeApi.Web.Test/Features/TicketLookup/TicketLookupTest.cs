@@ -14,7 +14,7 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
 {
     public class TicketLookupTest
     {
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public async Task if_rsi_return_response_with_offence_handle_should_return_response_correctly(           
             RawTicketSearchResponse rawResponse,
             Invoice invoice,
@@ -38,7 +38,7 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             Assert.AreEqual("21:40", response.ViolationTime);
         }
 
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public async Task if_rsi_return_noOffences_handle_should_return_null(
             RawTicketSearchResponse rawResponse,
             [Frozen] Mock<IRsiRestApi> rsiApiMock,

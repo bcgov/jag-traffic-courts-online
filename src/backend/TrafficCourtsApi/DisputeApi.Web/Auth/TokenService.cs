@@ -16,19 +16,19 @@ namespace DisputeApi.Web.Auth
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<Token> GetTokenAsync(CancellationToken cancellationToken);
+        public Task<Token> GetTokenAsync(CancellationToken cancellationToken);
     }
 
     public class TokenService : ITokenService
     {
-        private readonly IOAuthClient _oAuthCient;
-        private IMemoryCache _memoryCache;
-        private ILogger<TokenService> _logger;
+        private readonly IOAuthClient _oAuthClient;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<TokenService> _logger;
 
         public TokenService(IOAuthClient oAuthClient, IMemoryCache memoryCache, ILogger<TokenService> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _oAuthCient = oAuthClient ?? throw new ArgumentNullException(nameof(oAuthClient));
+            _oAuthClient = oAuthClient ?? throw new ArgumentNullException(nameof(oAuthClient));
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
@@ -45,7 +45,7 @@ namespace DisputeApi.Web.Auth
 
         private async Task<Token> RefreshTokenAsync(CancellationToken cancellationToken)
         {
-            Token token = await _oAuthCient.GetRefreshToken(cancellationToken);
+            Token token = await _oAuthClient.GetRefreshToken(cancellationToken);
             _logger.LogInformation(
                 "Got new token and save it to memory(key={key}, expired={expired})", 
                 Keys.OAUTH_TOKEN_KEY, 
