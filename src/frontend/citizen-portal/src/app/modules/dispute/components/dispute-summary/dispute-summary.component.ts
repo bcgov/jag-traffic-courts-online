@@ -5,7 +5,8 @@ import { UtilsService } from '@core/services/utils.service';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Offence, Ticket } from '@shared/models/ticket.model';
+import { Offence } from '@shared/models/offence.model';
+import { Ticket } from '@shared/models/ticket.model';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
@@ -60,7 +61,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   }
 
   public onDispute(offence: Offence): void {
-    this.logger.log('onDispute offence', offence);
+    this.logger.info('onDispute offence', offence);
 
     const ticketDispute = this.disputeService.getDisputeTicket(
       this.ticket,

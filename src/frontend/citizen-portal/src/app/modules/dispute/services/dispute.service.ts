@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Offence } from '@shared/models/offence.model';
 import { TicketDispute } from '@shared/models/ticket-dispute.model';
-import { Offence, Ticket } from '@shared/models/ticket.model';
+import { Ticket } from '@shared/models/ticket.model';
 import { BehaviorSubject } from 'rxjs';
 
 export interface IDisputeService {
@@ -46,11 +47,14 @@ export class DisputeService {
     return this._ticketDispute.value;
   }
 
-  public get steps$(): BehaviorSubject<any[]> {
-    return this.disputeSteps;
-  }
-
   public getDisputeTicket(ticket: Ticket, oneOffence: Offence): TicketDispute {
+    if (!oneOffence.dispute) {
+      oneOffence.dispute = {
+        violationTicketNumber: ticket.violationTicketNumber,
+        offenceNumber: oneOffence.offenceNumber,
+      };
+    }
+
     const ticketDispute = {
       violationTicketNumber: ticket.violationTicketNumber,
       violationTime: ticket.violationTime,

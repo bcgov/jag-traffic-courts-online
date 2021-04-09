@@ -24,7 +24,7 @@
       <section class="mb-2">
         <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
           Ticket #{{ ticket.violationTicketNumber }}
-          <span class="text-muted ml-4">
+          <span class="ml-4">
             {{ ticket.violationTime }}
           </span>
         </h2>
@@ -37,11 +37,17 @@
         <h3>
           <div class="row">
             <div class="col-md-3 mb-2">
+              <!--
+              COUNT #{{ row.offenceNumber }}
+              -->
               <mat-chip-list>
-                <mat-chip selected>Offence #{{ row.offenceNumber }}</mat-chip>
+                <mat-chip selected class="p-3"
+                  >Count #{{ row.offenceNumber }}</mat-chip
+                >
               </mat-chip-list>
             </div>
-            <div class="col-md-9 text-muted">
+            <div class="col-md-9">
+              <small class="d-block">Description of Offence</small>
               {{ row.description | titlecase }}
             </div>
           </div>
@@ -49,15 +55,15 @@
 
         <div class="row">
           <div class="col-3 mb-2">
-            <small class="d-block text-muted">Offence Amount</small>
+            <small class="d-block">Offence Amount</small>
             <strong>{{ row?.ticketAmount | currency }}</strong>
           </div>
           <div class="col-3">
-            <small class="d-block text-muted">Amount Due</small>
+            <small class="d-block">Amount Due</small>
             <strong>{{ row?.amountDue | currency }}</strong>
           </div>
           <div class="col-3 mb-2">
-            <small class="d-block text-muted">Status</small>
+            <small class="d-block">Status</small>
             <small
               [ngClass]="{
                 'text-danger': row.statusCode === 'COURT',
@@ -95,7 +101,7 @@
                 rel="noopener noreferrer"
               >
                 <mat-icon inline="true">money</mat-icon>
-                Pay Now
+                Pay Count
               </a>
             </button>
             <button
@@ -105,7 +111,7 @@
               (click)="onDispute(row)"
             >
               <mat-icon inline="true">read_more</mat-icon>
-              Dispute
+              Dispute Count
             </button>
           </div>
         </div>
@@ -136,7 +142,7 @@
         </div>
       </section>
       <div class="row" *ngIf="ticket.outstandingBalance > 0">
-        <div class="offset-md-6 col-md-6">
+        <div class="col-md-6">
           <button mat-flat-button color="accent" class="large">
             <a
               href="https://pay.gov.bc.ca"
@@ -144,15 +150,23 @@
               rel="noopener noreferrer"
             >
               <mat-icon inline="true">money</mat-icon>
-              Pay Outstanding Balance of
+              Pay Ticket Balance of
               {{ ticket.outstandingBalance | currency }}
             </a>
           </button>
         </div>
+        <!--
+        <div class="col-md-6">
+          <button mat-flat-button color="primary" class="large">
+            <mat-icon inline="true">read_more</mat-icon>
+            Dispute All Counts
+          </button>
+        </div>
+        -->
       </div>
     </div>
 
-    <section class="mb-2">
+    <section class="mt-4 mb-2">
       <h3>Questions</h3>
       <p>
         Any further questions about your dispute should be directed to: <br />

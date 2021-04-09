@@ -30,7 +30,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       if (
         currentRoutePath !== 'tickets' &&
-        currentRoutePath !== 'alltickets' &&
+        currentRoutePath !== 'disputes' &&
         currentRoutePath !== 'lookups'
       ) {
         throw new HttpErrorResponse({
@@ -41,11 +41,11 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       // Handle 'tickets' requests
       if (currentRoutePath === 'tickets') {
-        return this.handleTicketRequests(request.method);
-
-        // Handle 'alltickets' requests
-      } else if (currentRoutePath === 'alltickets') {
         return this.handleTicketsRequests(request.method);
+
+        // Handle 'disputes' requests
+      } else if (currentRoutePath === 'disputes') {
+        return this.handleDisputesRequests(request.method);
 
         // Handle 'lookups' requests
       } else if (currentRoutePath === 'lookups') {
@@ -55,7 +55,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     return next.handle(request);
   }
 
-  private handleTicketRequests(
+  private handleTicketsRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
     const ticket = this.mockDisputeService.ticket;
@@ -74,15 +74,15 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     }
   }
 
-  private handleTicketsRequests(
+  private handleDisputesRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
-    const tickets = this.mockDisputeService.tickets;
-
     switch (requestMethod) {
-      case 'GET':
-        return of(new HttpResponse({ status: 200, body: { result: tickets } }));
+      case 'POST':
+        return of(new HttpResponse({ status: 200, body: {} }));
         break;
+      case 'GET':
+      case 'PUT':
       default:
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',

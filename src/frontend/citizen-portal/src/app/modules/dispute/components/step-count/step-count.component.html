@@ -1,18 +1,30 @@
 <app-page>
-  <app-page-header>
-    <ng-container header>{{ step?.title }}</ng-container>
+  <app-page-header *ngIf="this.ticketDispute && this.ticketDispute.offence">
+    <ng-container header
+      >Count #{{ this.ticketDispute.offence.offenceNumber }} Review and
+      Action</ng-container
+    >
     <ng-container subHeader>
       <div class="row">
-        <div class="col-4 mb-2">{{ step?.title2Label }}</div>
-        <div class="col-8 text-right mb-2">{{ step?.title2 }}</div>
+        <div class="col-4 mb-2">Offence Description</div>
+        <div class="col-8 text-right mb-2">
+          {{ this.ticketDispute.offence.description }}
+        </div>
       </div>
       <div class="row">
-        <div class="col-6 mb-2">{{ step?.title3Label }}</div>
-        <div class="col-6 text-right mb-2">{{ step?.title3 }}</div>
+        <div class="col-6 mb-2">Ticket Amount</div>
+        <div class="col-6 text-right mb-2">
+          {{ this.ticketDispute.offence.ticketAmount | currency }}
+        </div>
       </div>
-      <div class="row">
-        <div class="col-6 mb-2">{{ step?.title4Label }}</div>
-        <div class="col-6 text-right mb-2">{{ step?.title4 }}</div>
+      <div class="row" *ngIf="this.ticketDispute.offence.earlyAmount > 0">
+        <div class="col-6 mb-2">
+          Ticket Amount (if paid by
+          {{ this.ticketDispute.offence.dueDate | formatDate }})
+        </div>
+        <div class="col-6 text-right mb-2">
+          {{ this.ticketDispute.offence.earlyAmount | currency }}
+        </div>
       </div>
     </ng-container>
   </app-page-header>
@@ -22,29 +34,33 @@
       <div class="row">
         <div class="col">
           <label>For this offence:</label>
-          <mat-radio-group formControlName="count" class="w-100">
-            <mat-radio-button value="A"
+          <mat-radio-group
+            formControlName="offenceAgreementStatus"
+            class="w-100"
+          >
+            <mat-radio-button value="1"
               ><span class="wrap-mat-radio-label"
                 >I agree that I committed this offence, and I do not want to
                 appear in court</span
               ></mat-radio-button
             >
-            <mat-radio-button value="B"
+            <mat-radio-button value="2"
               ><span class="wrap-mat-radio-label"
                 >I agree that I committed this offence, and I want to appear in
                 court</span
               ></mat-radio-button
             >
-            <mat-radio-button value="C">
+            <mat-radio-button value="3">
               <span class="wrap-mat-radio-label">
                 I do not agree that I committed this offence (allegation)
               </span>
             </mat-radio-button>
             <mat-error
               *ngIf="
-                (count.dirty || count.touched) &&
-                count.invalid &&
-                count.errors.required
+                (offenceAgreementStatus.dirty ||
+                  offenceAgreementStatus.touched) &&
+                offenceAgreementStatus.invalid &&
+                offenceAgreementStatus.errors.required
               "
             >
               Required
@@ -53,19 +69,34 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="count.value === 'A'">
+      <div
+        class="row"
+        *ngIf="
+          offenceAgreementStatus.value === '1' ||
+          offenceAgreementStatus.value === '2'
+        "
+      >
         <div class="col">
           <label>Which requests would you like to make?</label>
-          <mat-checkbox formControlName="count1A1" color="primary" class="w-100"
+          <mat-checkbox
+            formControlName="requestReduction"
+            color="primary"
+            class="w-100"
             >I request a reduction of the ticketed amount: and/or</mat-checkbox
           >
-          <mat-checkbox formControlName="count1A2" color="primary" class="w-100"
+          <mat-checkbox
+            formControlName="requestTime"
+            color="primary"
+            class="w-100"
             >I request time to pay the ticketed amount</mat-checkbox
           >
         </div>
       </div>
 
-      <div class="row" *ngIf="count.value === 'A' && count1A1.value">
+      <div
+        class="row"
+        *ngIf="offenceAgreementStatus.value === '1' && requestReduction.value"
+      >
         <div class="col">
           <mat-form-field class="w-100">
             <label>
@@ -79,11 +110,17 @@
               cdkAutosizeMaxRows="5"
               formControlName="reductionReason"
             ></textarea>
+            <mat-error *ngIf="reductionReason.hasError('required')">
+              Required
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
 
-      <div class="row" *ngIf="count.value === 'A' && count1A2.value">
+      <div
+        class="row"
+        *ngIf="offenceAgreementStatus.value === '1' && requestTime.value"
+      >
         <div class="col">
           <mat-form-field class="w-100">
             <label>
@@ -98,19 +135,10 @@
               cdkAutosizeMaxRows="5"
               formControlName="timeReason"
             ></textarea>
+            <mat-error *ngIf="timeReason.hasError('required')">
+              Required
+            </mat-error>
           </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row" *ngIf="count.value === 'B'">
-        <div class="col">
-          <label>Why do you want to appear?</label>
-          <mat-checkbox formControlName="count1B1" color="primary" class="w-100"
-            >To request a reduction of the ticketed amount: and/or</mat-checkbox
-          >
-          <mat-checkbox formControlName="count1B2" color="primary" class="w-100"
-            >To request time to pay the ticketed amount</mat-checkbox
-          >
         </div>
       </div>
     </section>

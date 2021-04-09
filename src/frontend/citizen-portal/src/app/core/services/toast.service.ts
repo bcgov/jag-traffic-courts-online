@@ -23,7 +23,7 @@ export class ToastService {
     const defaultConfig: MatSnackBarConfig = {
       ...config,
       duration: this.duration,
-      panelClass: ['alert-success'],
+      panelClass: ['toast-success'],
     };
     this.openToast(message, action, defaultConfig);
   }
@@ -40,7 +40,7 @@ export class ToastService {
     const defaultConfig: MatSnackBarConfig = {
       ...config,
       duration: this.duration,
-      panelClass: ['alert-danger'],
+      panelClass: ['toast-danger'],
     };
     this.openToast(message, action, defaultConfig);
   }
