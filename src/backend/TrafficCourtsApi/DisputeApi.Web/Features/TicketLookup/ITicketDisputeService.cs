@@ -13,13 +13,13 @@ namespace DisputeApi.Web.Features.TicketLookup
     {
         public async Task<TicketDispute> RetrieveTicketDisputeAsync(string ticketNumber, string time, CancellationToken cancellationToken)
         {
-            RawTicketSearchResponse rawResponse =  await GetTicket(ticketNumber, time, cancellationToken);
-            if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0) return null;
+            var rawResponse =  await GetTicket(ticketNumber, time, cancellationToken);
+            if (rawResponse?.Items == null || rawResponse.Items.Count == 0) return null;
 
             foreach (Item item in rawResponse.Items)
             {
                 if (item.SelectedInvoice?.Reference == null) continue;
-                int lastSlash = item.SelectedInvoice.Reference.LastIndexOf('/');
+                var lastSlash = item.SelectedInvoice.Reference.LastIndexOf('/');
                 if (lastSlash <= 0) continue;
                 string invoiceNumber = item.SelectedInvoice.Reference.Substring(lastSlash + 1);
                 Invoice invoice = await GetInvoice(invoiceNumber, cancellationToken);

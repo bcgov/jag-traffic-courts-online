@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Refit;
 
 namespace DisputeApi.Web.Features.TicketLookup
 {
@@ -15,7 +14,7 @@ namespace DisputeApi.Web.Features.TicketLookup
         protected override async Task<RawTicketSearchResponse> GetTicket(string ticketNumber, string time, CancellationToken cancellationToken)
         {
             var result = await _rsiApi.GetTicket(
-                new GetTicketParams {TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "")},
+                new GetTicketParams {TicketNumber = ticketNumber, Prn = "10006", IssuedTime = time.Replace(":", "")},
                 cancellationToken);
             return result;
 

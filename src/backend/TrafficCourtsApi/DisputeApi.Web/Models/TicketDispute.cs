@@ -12,7 +12,7 @@ namespace DisputeApi.Web.Models
         public string ViolationTime { get; set; }
         public string ViolationDate { get; set; }
 
-        public List<Offence> Offences { get; set; }
+        public List<Offense> Offenses { get; set; }
 
         /// <summary>
         /// Gets or sets the raw response returned from the RSI Pay BC API.
@@ -22,9 +22,9 @@ namespace DisputeApi.Web.Models
         public RawTicketSearchResponse RawResponse { get; set; }
     }
 
-    public class Offence
+    public class Offense
     {
-        public int OffenceNumber { get; set; }
+        public int OffenseNumber { get; set; }
         public decimal TicketAmount { get; set; }
         public decimal AmountDue { get; set; }
         public string DueDate { get; set; }

@@ -8,9 +8,9 @@ namespace DisputeApi.Web.Models
         [Required]
         public int Id { get; set; }
         public string ViolationTicketNumber { get; set; }
-        public int OffenceNumber { get; set; }
+        public int OffenseNumber { get; set; }
         public string EmailAddress { get; set; }
-        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public OffenseAgreementStatus OffenseAgreementStatus { get; set; }
         public bool RequestReduction { get; set; }
         public bool RequestMoreTime { get; set; }
         public string ReductionReason { get; set; }
@@ -31,10 +31,10 @@ namespace DisputeApi.Web.Models
         Complete,
     }
 
-    public enum OffenceAgreementStatus
+    public enum OffenseAgreementStatus
     {
-        AgreeOffenceNotInCourt,
-        AgreeOffenceInCourt,
-        NotAgreeOffence,
+        AgreeOffenseNotInCourt,
+        AgreeOffenseInCourt,
+        NotAgreeOffense,
     }
 }
