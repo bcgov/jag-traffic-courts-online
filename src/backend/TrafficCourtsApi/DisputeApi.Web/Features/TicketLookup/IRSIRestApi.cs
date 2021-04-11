@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
-using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
 
 namespace DisputeApi.Web.Features.TicketLookup
 {
     public interface IRsiRestApi
     {
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/")]
-        Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams);
+        Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams, CancellationToken cancellationToken);
 
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/{invoiceNumber}")]
-        Task<Invoice> GetInvoice(string invoiceNumber);
+        Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken);
     }
 
     public class GetTicketParams

@@ -29,9 +29,9 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
                 new Item{ SelectedInvoice=new SelectedInvoice{Reference="https://test/EZ020004601"}}
             };
             invoice.term_due_date = "2020-09-18T21:40";
-            rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>())).Returns(Task.FromResult(rawResponse));
-            rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"))).Returns(Task.FromResult(invoice));
-            var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time);
+            rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>(), CancellationToken.None)).Returns(Task.FromResult(rawResponse));
+            rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"), CancellationToken.None)).Returns(Task.FromResult(invoice));
+            var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, CancellationToken.None);
             Assert.IsInstanceOf<TicketDispute>(response);
             Assert.AreEqual(1, response.Offences.Count);
             Assert.AreEqual("2020-09-18", response.ViolationDate);
@@ -48,8 +48,8 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             Fixture fixture = new Fixture();
             Query query = fixture.Create<Query>();
             rawResponse.Items = null;
-            rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>())).Returns(Task.FromResult(rawResponse));
-            var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber,query.Time);
+            rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>(), CancellationToken.None)).Returns(Task.FromResult(rawResponse));
+            var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber,query.Time,CancellationToken.None);
             Assert.AreEqual(null, response);
         }
     }

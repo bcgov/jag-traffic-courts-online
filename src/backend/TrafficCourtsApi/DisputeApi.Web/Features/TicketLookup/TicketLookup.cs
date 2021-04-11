@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using DisputeApi.Web.Models;
@@ -26,17 +24,17 @@ namespace DisputeApi.Web.Features.TicketLookup
 
  
 
-        public class Handler : IRequestHandler<Query, TicketDispute>
+        public class TicketDisputeHandler : IRequestHandler<Query, TicketDispute>
         {
             readonly ITicketDisputeService _ticketDisputeService;
-            public Handler(ITicketDisputeService ticketDisputeService )
+            public TicketDisputeHandler(ITicketDisputeService ticketDisputeService )
             {
                 _ticketDisputeService = ticketDisputeService;
             }
 
             public async Task<TicketDispute> Handle(Query query, CancellationToken cancellationToken)
             {
-                return await _ticketDisputeService.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time);
+                return await _ticketDisputeService.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, cancellationToken);
             }
 
         }

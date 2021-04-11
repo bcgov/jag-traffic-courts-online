@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Refit;
 
 namespace DisputeApi.Web.Features.TicketLookup
 {
@@ -10,16 +12,18 @@ namespace DisputeApi.Web.Features.TicketLookup
             _rsiApi = rsiApi;
         }
 
-        protected override async Task<RawTicketSearchResponse> GetTicket(string ticketNumber, string time)
+        protected override async Task<RawTicketSearchResponse> GetTicket(string ticketNumber, string time, CancellationToken cancellationToken)
         {
-            return await _rsiApi.GetTicket(
-                new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "") }
-            );
+            var result = await _rsiApi.GetTicket(
+                new GetTicketParams {TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "")},
+                cancellationToken);
+            return result;
+
         }
 
-        protected override async Task<Invoice> GetInvoice(string invoiceNumber)
+        protected override async Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken)
         {
-            return await _rsiApi.GetInvoice(invoiceNumber);
+            return await _rsiApi.GetInvoice(invoiceNumber: invoiceNumber, cancellationToken: cancellationToken);
         }
     }
 }
