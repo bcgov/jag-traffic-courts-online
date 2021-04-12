@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -26,15 +27,29 @@ namespace DisputeApi.Web.Features.TicketLookup
 
         public class TicketDisputeHandler : IRequestHandler<Query, TicketDispute>
         {
-            readonly ITicketDisputeService _ticketDisputeService;
-            public TicketDisputeHandler(ITicketDisputeService ticketDisputeService )
+            private readonly ITicketDisputeService _ticketDisputeService;
+            private readonly IDisputeService _disputeService;
+            public TicketDisputeHandler(ITicketDisputeService ticketDisputeService, IDisputeService disputeService )
             {
                 _ticketDisputeService = ticketDisputeService;
+                _disputeService = disputeService;
             }
 
             public async Task<TicketDispute> Handle(Query query, CancellationToken cancellationToken)
             {
-                return await _ticketDisputeService.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, cancellationToken);
+                var ticketDispute =
+                    await _ticketDisputeService.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time,
+                        cancellationToken);
+                if (ticketDispute != null)
+                {
+                    foreach (var offense in ticketDispute.Offenses)
+                    {
+                        offense.Dispute = await
+                            _disputeService.FindDispute(ticketDispute.ViolationTicketNumber, offense.OffenseNumber);
+                    }
+                }
+
+                return ticketDispute;
             }
 
         }
