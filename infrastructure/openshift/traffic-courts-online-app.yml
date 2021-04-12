@@ -1,0 +1,189 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: traffic-courts-online
+  description: >-
+    Deployment template for the Traffic Courts Online App
+
+parameters:
+- name: NAME
+  displayName: name
+  description: A prefix appended to all objects
+  required: true
+  value: traffic-courts
+- name: OC_NAMESPACE
+  required: true
+  value: 0198bb
+- name: OC_APP
+  required: true
+- name: FRONTEND_POD
+  required: true
+  value: citizen-portal
+- name: FRONTEND_URL
+  required: true
+- name: API_POD
+  required: true
+  value: dispute-api
+- name: API_URL
+  required: true
+- name: USE_KEYCLOAK
+  required: true
+  value: "true"
+- name: USE_MOCK_SERVICES
+  required: true
+  value: "false"
+objects:
+### Citizen Portal Deployment Config ###
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${FRONTEND_POD}
+    labels:
+      app.kubernetes.io/part-of: ${NAME}
+  spec:
+    completionDeadlineSeconds: 1200
+    replicas: 3
+    selector:
+      name: ${FRONTEND_POD}
+    strategy:
+      type: Recreate
+      maxSurge: 50%
+      maxUnavailable: 0
+    template:
+      metadata:
+        labels:          
+          name: ${FRONTEND_POD}
+      spec:
+        containers:
+        - args:
+          - nginx
+          - -g
+          - daemon off;
+          env:
+          - name: USE_KEYCLOAK
+            value: "${USE_KEYCLOAK}"
+          - name: USE_MOCK_SERVICES
+            value: "${USE_MOCK_SERVICES}"
+          image: ' '
+          name: citizen-portal
+          ports:
+          - containerPort: 8080
+          resources: {}
+        restartPolicy: Always
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - ${FRONTEND_POD}
+          from:
+            kind: ImageStreamTag
+            namespace: "${OC_NAMESPACE}-tools"
+            name: '${FRONTEND_POD}:${OC_APP}'
+  status: {}
+
+### Citizen Portal Service ###
+- apiVersion: v1
+  kind: Service
+  metadata:
+    namespace: "${OC_NAMESPACE}-${OC_APP}"
+    name: ${FRONTEND_POD}    
+  spec:
+    ports:
+      - protocol: TCP
+      port: 80
+      targetPort: 8080
+    selector:
+      app: ${FRONTEND_POD}
+
+### Citizen Portal Imagestream ###
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: ${FRONTEND_POD}
+    namespace: "${OC_NAMESPACE}-tools"
+
+### Dispute API Deployment Configs ###
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${API_POD}
+    labels:
+      app.kubernetes.io/part-of: ${NAME}
+  spec:
+  selector:
+    app: ${API_POD}
+  replicas: 1  
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      labels:
+        app: ${API_POD}
+      creationTimestamp: null     
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: SPLUNK_COLLECTOR_URL
+          value: ""
+        - name: SPLUNK_TOKEN
+          value: ""
+        image: ' '
+        name: ${API_POD}
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - ${API_POD}
+      from:
+        kind: ImageStreamTag
+        namespace: "${OC_NAMESPACE}-tools"
+        name: ${API_POD}:${OC_APP}
+    type: ImageChange  
+  status: {}
+
+#### Dispute API Service ###
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${API_POD}
+    labels:
+      app.kubernetes.io/part-of: ${NAME}
+  spec:
+    ports:
+      - name: ${API_POD}
+        port: 8080
+        targetPort: 8080
+    selector:
+      name: ${API_POD}
+
+#### Dispute API Imagestream ###
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      app.kubernetes.io/part-of: ${NAME}
+    name: ${API_POD}
+    namespace: "${OC_NAMESPACE}-tools"
+  spec:
+    tags:
+    - annotations: null
+      from:
+        kind: DockerImage
+        name: ${API_POD}
+      generation: null
+      importPolicy: {}
+      name: latest
+  status:
+    dockerImageRepository: ""
+
