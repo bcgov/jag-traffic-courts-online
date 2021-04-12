@@ -86,7 +86,7 @@ jobs:
       - name: Run Yarn Coverage - citizen Portal and format lcov.info
         run: |
           yarn --cwd ${{github.workspace}}/src/frontend/citizen-portal coverage
-          sed -i 's/SF:src/SF:src\\frontend\\citizen-portal\\src/g' ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/report-lcov/lcov.info
+          sed -i "s+SF:src+SF:src\\\frontend\\\citizen-portal\\\src+g" ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/report-lcov/lcov.info
 
 #      # Copy .ts files to Current Working Directory as they are referred by lcov.info
 #      - name: Copy .ts files to Current Working Directory
