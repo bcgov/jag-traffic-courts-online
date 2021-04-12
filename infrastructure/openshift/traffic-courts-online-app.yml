@@ -65,7 +65,7 @@ objects:
           - name: USE_MOCK_SERVICES
             value: "${USE_MOCK_SERVICES}"
           image: ' '
-          name: citizen-portal
+          name: ${FRONTEND_POD} 
           ports:
           - containerPort: 8080
           resources: {}
