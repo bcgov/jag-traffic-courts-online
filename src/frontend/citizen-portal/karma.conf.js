@@ -20,7 +20,7 @@ module.exports = function (config) {
     },
     reporters: ["progress", "coverage", "kjhtml"],
     preprocessors: {
-      'src/**/*.js': ['coverage']
+      'src/**/*.ts': ['coverage']
     },
     coverageReporter: {
       dir: require("path").join(__dirname, "./coverage/citizen-portal"),
