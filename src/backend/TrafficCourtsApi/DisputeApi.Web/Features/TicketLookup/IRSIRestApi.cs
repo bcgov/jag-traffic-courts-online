@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
-using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
 
 namespace DisputeApi.Web.Features.TicketLookup
 {
     public interface IRsiRestApi
     {
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/")]
-        Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams);
+        Task<RawTicketSearchResponse> GetTicket(GetTicketParams ticketParams, CancellationToken cancellationToken);
 
         [Get("/paybc/vph/rest/PSSGVPHPAYBC/vph/invs/{invoiceNumber}")]
-        Task<Invoice> GetInvoice(string invoiceNumber);
+        Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken);
     }
 
     public class GetTicketParams
@@ -24,7 +24,7 @@ namespace DisputeApi.Web.Features.TicketLookup
         public string TicketNumber { get; set; }
 
         [AliasAs("prn")]
-        public string PRN { get; set; }
+        public string Prn { get; set; }
 
         [AliasAs("time")]
         public string IssuedTime { get; set; }
@@ -77,46 +77,46 @@ namespace DisputeApi.Web.Features.TicketLookup
     public class Invoice
     {
         [JsonPropertyName("invoice_number")]
-        public string invoice_number { get; set; }
+        public string InvoiceNumber { get; set; }
 
         [JsonPropertyName("pbc_ref_number")]
-        public string pbc_ref_number { get; set; }
+        public string PbcRefNumber { get; set; }
 
         [JsonPropertyName("party_number")]
-        public string party_number { get; set; }
+        public string PartyNumber { get; set; }
 
         [JsonPropertyName("party_name")]
-        public string party_name { get; set; }
+        public string PartyName { get; set; }
 
         [JsonPropertyName("account_number")]
-        public string account_number { get; set; }
+        public string AccountNumber { get; set; }
 
         [JsonPropertyName("site_number")]
-        public string site_number { get; set; }
+        public string SiteNumber { get; set; }
 
         [JsonPropertyName("cust_trx_type")]
-        public string cust_trx_type { get; set; }
+        public string CustTrxType { get; set; }
 
         [JsonPropertyName("term_due_date")]
-        public string term_due_date { get; set; }
+        public string TermDueDate { get; set; }
 
         [JsonPropertyName("total")]
-        public decimal total { get; set; }
+        public decimal Total { get; set; }
 
         [JsonPropertyName("amount_due")]
-        public decimal amount_due { get; set; }
+        public decimal AmountDue { get; set; }
 
         [JsonPropertyName("attribute1")]
-        public string attribute1 { get; set; }
+        public string Attribute1 { get; set; }
 
         [JsonPropertyName("attribute2")]
-        public string attribute2 { get; set; }
+        public string Attribute2 { get; set; }
 
         [JsonPropertyName("attribute3")]
-        public string attribute3 { get; set; }
+        public string Attribute3 { get; set; }
 
         [JsonPropertyName("attribute4")]
-        public string attribute4 { get; set; }
+        public string Attribute4 { get; set; }
     }
 
     public static class RsiRawResponseExtensions
@@ -124,19 +124,18 @@ namespace DisputeApi.Web.Features.TicketLookup
         public static TicketDispute ConvertToTicketDispute(this RawTicketSearchResponse rawResponse)
         {
             if (rawResponse.Items == null || rawResponse.Items.Count <= 0) return null;
-            TicketDispute ticketDispute = new TicketDispute();
-            ticketDispute.RawResponse = rawResponse;
+            TicketDispute ticketDispute = new TicketDispute {RawResponse = rawResponse};
             Invoice firstInvoice = rawResponse.Items.First().SelectedInvoice.Invoice;
-            ticketDispute.ViolationTicketNumber = firstInvoice.invoice_number.Remove(firstInvoice.invoice_number.Length - 1);
-            ticketDispute.ViolationDate = DateTime.Parse(firstInvoice.term_due_date).ToString("yyyy-MM-dd");
-            ticketDispute.ViolationTime = DateTime.Parse(firstInvoice.term_due_date).ToString("HH:mm");
+            ticketDispute.ViolationTicketNumber = firstInvoice.InvoiceNumber.Remove(firstInvoice.InvoiceNumber.Length - 1);
+            ticketDispute.ViolationDate = DateTime.Parse(firstInvoice.TermDueDate).ToString("yyyy-MM-dd");
+            ticketDispute.ViolationTime = DateTime.Parse(firstInvoice.TermDueDate).ToString("HH:mm");
             ticketDispute.Offences = rawResponse.Items.Select((_, i) => new Offence
             {
                 OffenceNumber = i + 1,
-                AmountDue=_.SelectedInvoice.Invoice.amount_due,
-                Description = _.SelectedInvoice.Invoice.attribute1,
-                DueDate = _.SelectedInvoice.Invoice.term_due_date,
-                TicketAmount=_.SelectedInvoice.Invoice.total
+                AmountDue=_.SelectedInvoice.Invoice.AmountDue,
+                Description = _.SelectedInvoice.Invoice.Attribute1,
+                DueDate = _.SelectedInvoice.Invoice.TermDueDate,
+                TicketAmount=_.SelectedInvoice.Invoice.Total
             }).ToList();
             return ticketDispute;
         }

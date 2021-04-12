@@ -61,7 +61,7 @@ namespace DisputeApi.Web
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers().AddNewtonsoftJson();
 
-            ConfigureRSIClient(services);
+            ConfigureRsiClient(services);
             ConfigureOpenApi(services);
 
 #if USE_AUTHENTICATION
@@ -192,7 +192,7 @@ namespace DisputeApi.Web
             });
         }
 
-        private void ConfigureRSIClient(IServiceCollection services)
+        private void ConfigureRsiClient(IServiceCollection services)
         {
             services.AddOptions<OAuthOptions>()
                 .Bind(_configuration.GetSection("OAuth"))
@@ -206,7 +206,14 @@ namespace DisputeApi.Web
             services.AddRefitClient<IRsiRestApi>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri(_configuration.GetSection("RSI:BASEADDRESS").Value))
                 .AddHttpMessageHandler<OAuthHandler>();
-            Keys.RSI_OPERATION_MODE = _configuration.GetSection("RSI:OPERATIONMODE").Value;
+            string operationMode = _configuration.GetSection("RSI:OPERATIONMODE").Value;
+
+            if (operationMode == Keys.RSI_OPERATION_MODE_FAKE)
+                services.AddTransient<ITicketDisputeService, TicketDisputeFromFilesService>();
+            else
+            {
+                services.AddTransient<ITicketDisputeService, TicketDisputeFromRsiService>();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ namespace DisputeApi.Web.Features.Disputes
         Task<Dispute> CreateAsync(Dispute dispute);
         Task<IEnumerable<Dispute>> GetAllAsync();
         Task<Dispute> GetAsync(int disputeId);
+        Task<Dispute> FindDispute(string ticketNumber, int offenceNumber);
     }
 
     public class DisputeService : IDisputeService
@@ -29,12 +30,19 @@ namespace DisputeApi.Web.Features.Disputes
 
         public async Task<Dispute> CreateAsync(Dispute dispute)
         {
-            _logger.LogDebug("Creating dispute");
 
-            await _context.Disputes.AddAsync(dispute);
-            await _context.SaveChangesAsync();
+            var existedDispute = await FindDispute(dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            if (existedDispute == null)
+            {
+                _logger.LogInformation("Creating dispute");
+                await _context.Disputes.AddAsync(dispute);
+                await _context.SaveChangesAsync();
+                return dispute;
 
-            return dispute;
+            }
+            _logger.LogError("found the dispute for the same offence, ticketNumber={ticketNumber}, offenceNumer={offenceNumber}", dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            return null;
+
         }
 
         public async Task<IEnumerable<Dispute>> GetAllAsync()
@@ -51,6 +59,15 @@ namespace DisputeApi.Web.Features.Disputes
             _logger.LogDebug("Get dispute");
 
             Dispute dispute = await _context.Disputes.SingleOrDefaultAsync(_ => _.Id == disputeId);
+
+            return dispute;
+        }
+
+        public async Task<Dispute> FindDispute(string ticketNumber, int offenceNumber)
+        {
+            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}, offenceNumber {offenceNumber}",ticketNumber,offenceNumber);
+
+            var dispute = await _context.Disputes.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber && _.OffenceNumber==offenceNumber);
 
             return dispute;
         }

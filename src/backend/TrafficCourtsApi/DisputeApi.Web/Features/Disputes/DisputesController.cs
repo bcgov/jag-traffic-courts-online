@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DisputeApi.Web.Features.Disputes
 {
@@ -27,10 +28,16 @@ namespace DisputeApi.Web.Features.Disputes
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
         {
             var result = await _disputeService.CreateAsync(dispute);
-            _logger.LogDebug("{dispute}", JsonSerializer.Serialize<Dispute>(dispute));
+            if (result == null)
+            {
+                ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
+                return BadRequest(ApiResponse.BadRequest(ModelState));
+            }
+
             return Ok();
         }
 

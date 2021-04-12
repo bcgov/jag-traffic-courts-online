@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,13 +11,13 @@ namespace DisputeApi.Web.Auth
 {
     public interface IOAuthClient
     {
-        Task<Token> GetRefreshToken(CancellationToken cancellationToken);
+        public Task<Token> GetRefreshToken(CancellationToken cancellationToken);
     }
     public class OAuthClient : IOAuthClient
     {
         private readonly HttpClient _httpClient;
         private readonly OAuthOptions _oAuthOptions;
-        private ILogger<OAuthClient> _logger;
+        private readonly ILogger<OAuthClient> _logger;
         public OAuthClient(HttpClient httpClient, IOptionsMonitor<OAuthOptions> oAuthOptions, ILogger<OAuthClient> logger)
         {
             _httpClient = httpClient;
@@ -55,9 +55,7 @@ namespace DisputeApi.Web.Auth
             }
 
             _logger.LogInformation("get oauth token successfully");
-            var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-
-            return await JsonSerializer.DeserializeAsync<Token>(stream);
+            return await response.Content.ReadFromJsonAsync<Token>(cancellationToken:cancellationToken);
         }
     }
 }

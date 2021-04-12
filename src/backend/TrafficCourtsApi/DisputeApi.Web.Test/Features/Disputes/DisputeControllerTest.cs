@@ -107,5 +107,21 @@ namespace DisputeApi.Web.Test.Features.Disputes
             Assert.IsNotNull(result);
             _disputeServiceMock.Verify(x => x.CreateAsync(dispute), Times.Once);
         }
+
+        [Theory]
+        [AutoData]
+        public async Task when_service_return_null_createDispute_return_badRequest(Dispute dispute)
+        {
+            _disputeServiceMock
+                .Setup(x => x.CreateAsync(dispute))
+                .Returns(Task.FromResult<Dispute>(null));
+
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object);
+
+            var result = (BadRequestObjectResult)await sut.CreateDispute(dispute);
+            Assert.IsNotNull(result);
+            _disputeServiceMock.Verify(x => x.CreateAsync(dispute), Times.Once);
+            Assert.AreEqual(400, result.StatusCode);
+        }
     }
 }

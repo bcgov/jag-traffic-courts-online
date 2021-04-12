@@ -11,7 +11,7 @@ namespace DisputeApi.Web.Test.Features
 {
     public class ApiResponseTest
     {
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public void Result_T_will_create_ApiResultResponse_T(Type type)
         {
             var fixture = new Fixture();
@@ -21,7 +21,7 @@ namespace DisputeApi.Web.Test.Features
 
         }
 
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public void Message_str_will_create_ApiMessageResponse(string msg)
         {
             var result = ApiResponse.Message(msg);
@@ -29,7 +29,7 @@ namespace DisputeApi.Web.Test.Features
             Assert.AreEqual(msg, result.Message);
         }
 
-        [Test, TCOAutoData]
+        [Test, AutoMockAutoData]
         public void BadRequest_will_create_ApiBadRequestResponse(ModelStateDictionary modelState, string key, string errorMsg)
         {
             modelState.AddModelError(key, errorMsg);

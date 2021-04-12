@@ -4,9 +4,9 @@ using AutoFixture.NUnit3;
 
 namespace DisputeApi.Web.Test.Utils
 {
-    public class TCOAutoDataAttribute : AutoDataAttribute
+    public class AutoMockAutoDataAttribute : AutoDataAttribute
     {
-        public TCOAutoDataAttribute()
+        public AutoMockAutoDataAttribute()
           : base(() => new Fixture().Customize(new AutoMoqCustomization()))
         {
         }

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,70 +25,31 @@ namespace DisputeApi.Web.Features.TicketLookup
 
  
 
-        public class Handler : IRequestHandler<Query, TicketDispute>
+        public class TicketDisputeHandler : IRequestHandler<Query, TicketDispute>
         {
-            IRsiRestApi _rsiApi;
-            public Handler(IRsiRestApi rsiApi )
+            private readonly ITicketDisputeService _ticketDisputeService;
+            private readonly IDisputeService _disputeService;
+            public TicketDisputeHandler(ITicketDisputeService ticketDisputeService, IDisputeService disputeService )
             {
-                _rsiApi = rsiApi;
+                _ticketDisputeService = ticketDisputeService;
+                _disputeService = disputeService;
             }
+
             public async Task<TicketDispute> Handle(Query query, CancellationToken cancellationToken)
             {
-                string ticketNumber = query.TicketNumber;
-                string time = query.Time;
-                if (Keys.RSI_OPERATION_MODE != "FAKE")
+                var ticketDispute =
+                    await _ticketDisputeService.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time,
+                        cancellationToken);
+                if (ticketDispute != null)
                 {
-                    return await GetResponseFromRsi(ticketNumber, time);
-                }
-                else
-                {
-                    return await GetFakeResponseFromFile(ticketNumber, time);
-
- 
-                }
-            }
-
-            private async Task<TicketDispute> GetResponseFromRsi(string ticketNumber, string time)
-            {
-                RawTicketSearchResponse rawResponse = await _rsiApi.GetTicket(
-                        new GetTicketParams { TicketNumber = ticketNumber, PRN = "10006", IssuedTime = time.Replace(":", "") }
-                    );
-                if (rawResponse == null || rawResponse.Items == null || rawResponse.Items.Count == 0) return null;
-
-                foreach (Item item in rawResponse.Items)
-                {
-                    if (item.SelectedInvoice?.Reference != null)
+                    foreach (var offence in ticketDispute.Offences)
                     {
-                        int lastSlash = item.SelectedInvoice.Reference.LastIndexOf('/');
-                        if (lastSlash > 0)
-                        {
-                            string invoiceNumber = item.SelectedInvoice.Reference.Substring(lastSlash + 1);
-                            Invoice invoice = await _rsiApi.GetInvoice(invoiceNumber);
-                            item.SelectedInvoice.Invoice = invoice;
-                        }
+                        offence.Dispute = await
+                            _disputeService.FindDispute(ticketDispute.ViolationTicketNumber, offence.OffenceNumber);
                     }
                 }
 
-                return rawResponse.ConvertToTicketDispute();
-            }
-
-            private async Task<TicketDispute> GetFakeResponseFromFile(string ticketNumber, string time)
-            {
-                using FileStream openStream = File.OpenRead($"Features/TicketLookup/ticket-{ticketNumber}.json");
-                RawTicketSearchResponse rawResponse = await JsonSerializer.DeserializeAsync<RawTicketSearchResponse>(openStream);
-
-                if (rawResponse == null)
-                {
-                    return null;
-                }
-
-                for (int i = 0; i < rawResponse.Items.Count; i++)
-                {
-                    using FileStream itemStream = File.OpenRead($"Features/TicketLookup/invoice-{ticketNumber}{i + 1}.json");
-                    var invoice = await JsonSerializer.DeserializeAsync<Invoice>(itemStream);
-                    rawResponse.Items[i].SelectedInvoice.Invoice = invoice;
-                }
-                return rawResponse.ConvertToTicketDispute();
+                return ticketDispute;
             }
 
         }
