@@ -31,6 +31,7 @@ exclude_patterns:
   - "src/frontend/citizen-portal/**/*.model.*"
   - "src/frontend/citizen-portal/**/*.module.*"
   - "src/frontend/citizen-portal/**/*.routes.*"
+  - "src/frontend/citizen-portal/**/abstract*.*"
   - "src/frontend/citizen-portal/tests/"
   - "src/frontend/citizen-portal/shared/components/"
   - "src/frontend/citizen-portal/src/tests/mocks/"
