@@ -30,12 +30,19 @@ namespace DisputeApi.Web.Features.Disputes
 
         public async Task<Dispute> CreateAsync(Dispute dispute)
         {
-            _logger.LogDebug("Creating dispute");
 
-            await _context.Disputes.AddAsync(dispute);
-            await _context.SaveChangesAsync();
+            var existedDispute = await FindDispute(dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            if (existedDispute == null)
+            {
+                _logger.LogInformation("Creating dispute");
+                await _context.Disputes.AddAsync(dispute);
+                await _context.SaveChangesAsync();
+                return dispute;
 
-            return dispute;
+            }
+            _logger.LogError("found the dispute for the same offence, ticketNumber={ticketNumber}, offenceNumer={offenceNumber}", dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            return null;
+
         }
 
         public async Task<IEnumerable<Dispute>> GetAllAsync()
