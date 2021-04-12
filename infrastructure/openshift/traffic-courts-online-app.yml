@@ -32,6 +32,10 @@ parameters:
 - name: USE_MOCK_SERVICES
   required: true
   value: "false"
+- name: URL_STUB
+  value: "-0198bb-dev.apps.silver.devops.gov.bc.ca"
+  required: false
+
 objects:
 ### Citizen Portal Deployment Config ###
 - apiVersion: apps.openshift.io/v1
@@ -92,8 +96,8 @@ objects:
   spec:
     ports:
       - protocol: TCP
-      port: 80
-      targetPort: 8080
+        port: 80
+        targetPort: 8080
     selector:
       app: ${FRONTEND_POD}
 
@@ -103,6 +107,24 @@ objects:
   metadata:
     name: ${FRONTEND_POD}
     namespace: "${OC_NAMESPACE}-tools"
+
+### Citizen Portal Routes ###
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: ${FRONTEND_POD}
+    namespace: "${OC_NAMESPACE}-${OC_APP}" 
+  spec:
+    host: ${API_URL}${URL_STUB}
+    to:
+      kind: Service
+      name: ${FRONTEND_POD}
+      weight: 100
+    port:
+      targetPort: 80
+    tls:
+      termination: edge
+    wildcardPolicy: None
 
 ### Dispute API Deployment Configs ###
 - apiVersion: apps.openshift.io/v1
