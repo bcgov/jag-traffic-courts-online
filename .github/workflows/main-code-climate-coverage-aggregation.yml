@@ -92,7 +92,7 @@ jobs:
 
       # Formatting the Frontend Citizen Portal Coverage Report
       - name: Format the Frontend Citizen Portal coverage report
-        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/report-lcov/lcov.info
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
@@ -244,18 +244,10 @@ jobs:
         run: |
           cp backend-coverage-report/backend-codeclimate.json coverage-reports/backend-codeclimate.json
 
-      # See what is inside coverage
-      - name: List items inside coverage-reports folder
-        run: |
-          ls coverage-reports
-          wc -l coverage-reports/backend-codeclimate.json
-          wc -l coverage-reports/citizen-portal-codeclimate.json
-
       # Sum the coverage reports
       - name: Summing the coverage reports generated
         run: |
           ./cc-test-reporter sum-coverage coverage-reports/*-codeclimate.json -p 2 -o coverage-reports/total-codeclimate.json
-          wc -l coverage-reports/total-codeclimate.json
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
