@@ -1,4 +1,4 @@
-import { Offence } from './ticket.model';
+import { Offence } from './offence.model';
 
 export interface TicketDispute {
   violationTicketNumber: string;

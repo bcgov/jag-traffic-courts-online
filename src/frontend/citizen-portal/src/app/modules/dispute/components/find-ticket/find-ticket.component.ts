@@ -1,19 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-find-ticket',
   templateUrl: './find-ticket.component.html',
   styleUrls: ['./find-ticket.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FindTicketComponent implements OnInit {
   public busy: Subscription;
   public form: FormGroup;
+
+  public notFound = false;
 
   constructor(
     private route: Router,
@@ -30,28 +33,24 @@ export class FindTicketComponent implements OnInit {
   }
 
   public onSearch(): void {
-    const source = timer(1000);
-    this.busy = source.subscribe((val) => {
-      this.disputeResource.getTicket().subscribe((response) => {
+    this.notFound = false;
+
+    const formParams = { ...this.form.value };
+    this.busy = this.disputeResource
+      .getTicket(formParams)
+      .subscribe((response) => {
         this.disputeService.ticket$.next(response);
 
-        const formParams = { ...this.form.value };
-        this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
-          queryParams: formParams,
-        });
+        if (response) {
+          this.route.navigate(
+            [DisputeRoutes.routePath(DisputeRoutes.SUMMARY)],
+            {
+              queryParams: formParams,
+            }
+          );
+        } else {
+          this.notFound = true;
+        }
       });
-    });
-  }
-
-  public onRsbcSearch(): void {
-    const queryParams = {
-      ticketNumber: 'EZ02000460',
-      time: '09:54',
-    };
-
-    this.disputeResource.getRsiTicket(queryParams).subscribe((response) => {
-      this.disputeService.ticket$.next(response);
-      this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.DISPLAY)]);
-    });
   }
 }

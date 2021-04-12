@@ -1,26 +1,11 @@
-import { Dispute } from './dispute.model';
+import { Offence } from './offence.model';
 
 export interface Ticket {
   violationTicketNumber: string;
   violationTime: string;
+  violationDate: string;
   offences: Offence[];
 
   // derived later on
   outstandingBalance?: number;
-}
-
-export interface Offence {
-  offenceNumber: number;
-  ticketAmount: number;
-  amountDue: number;
-  dueDate: string;
-  description: string;
-
-  // derived later on
-  earlyAmount?: number;
-  statusCode?: string;
-  statusDesc?: string;
-  notes?: string;
-
-  dispute: Dispute;
 }

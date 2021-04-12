@@ -19,7 +19,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Models
 
             // to do: check all properties
             Assert.AreEqual(expected.EmailAddress, actual.EmailAddress);
-            Assert.AreEqual(expected.CertifyCorrect, actual.CertifyCorrect);
+            Assert.AreEqual(expected.InformationCertified, actual.InformationCertified);
         }
     }
 }

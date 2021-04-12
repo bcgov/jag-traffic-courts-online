@@ -32,9 +32,6 @@ describe('StepperComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StepperComponent);
     component = fixture.componentInstance;
-    spyOn<any>(component, 'initializeDisputeSteps').and.callFake(() => {
-      console.log('IN CALL FAKE');
-    });
     fixture.detectChanges();
   });
 

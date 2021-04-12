@@ -6,6 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
+import { FormControlValidators } from '@core/validators/form-control.validators';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
 import { Dispute } from '@shared/models/dispute.model';
 
@@ -137,34 +138,38 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepReviewForm(): FormGroup {
     return this.formBuilder.group({
+      violationTicketNumber: [null],
+      offenceNumber: [null],
       emailAddress: [null, [Validators.required, Validators.email]],
     });
   }
 
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
-      count: [null, [Validators.required]],
-      count1A1: [null],
-      count1A2: [null],
+      offenceAgreementStatus: [null, [Validators.required]],
+      requestReduction: [null],
+      requestTime: [null],
       reductionReason: [null],
       timeReason: [null],
-      count1B1: [null],
-      count1B2: [null],
     });
   }
 
   public buildStepCourtForm(): FormGroup {
     return this.formBuilder.group({
-      lawyerPresent: [false],
-      interpreterRequired: [false],
+      lawyerPresent: [null],
+      interpreterRequired: [null],
       interpreterLanguage: [null],
-      callWitness: [false],
+      witnessPresent: [null],
     });
+  }
+
+  public resetStepCourtForm(): void {
+    this.stepCourtForm.reset();
   }
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      certifyCorrect: [false, [Validators.required]],
+      informationCertified: [null, [FormControlValidators.requiredTruthful]],
     });
   }
 }

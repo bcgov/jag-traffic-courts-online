@@ -30,10 +30,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
       if (
         currentRoutePath !== 'tickets' &&
-        currentRoutePath !== 'ticket' &&
-        currentRoutePath !== 'alltickets' &&
-        currentRoutePath !== 'dispute' &&
-        currentRoutePath !== 'alldisputes' &&
+        currentRoutePath !== 'disputes' &&
         currentRoutePath !== 'lookups'
       ) {
         throw new HttpErrorResponse({
@@ -42,17 +39,13 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         });
       }
 
-      // Handle 'ticket' requests
-      if (currentRoutePath === 'ticket') {
-        return this.handleTicketRequests(request.method);
-
-        // Handle 'tickets' requests
-      } else if (currentRoutePath === 'alltickets') {
+      // Handle 'tickets' requests
+      if (currentRoutePath === 'tickets') {
         return this.handleTicketsRequests(request.method);
 
-        // Handle 'dispute' requests
-        // } else if (currentRoutePath === 'dispute') {
-        //   return this.handleDisputeRequests(request.method);
+        // Handle 'disputes' requests
+      } else if (currentRoutePath === 'disputes') {
+        return this.handleDisputesRequests(request.method);
 
         // Handle 'lookups' requests
       } else if (currentRoutePath === 'lookups') {
@@ -62,7 +55,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     return next.handle(request);
   }
 
-  private handleTicketRequests(
+  private handleTicketsRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
     const ticket = this.mockDisputeService.ticket;
@@ -81,15 +74,15 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     }
   }
 
-  private handleTicketsRequests(
+  private handleDisputesRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
-    const tickets = this.mockDisputeService.tickets;
-
     switch (requestMethod) {
-      case 'GET':
-        return of(new HttpResponse({ status: 200, body: { result: tickets } }));
+      case 'POST':
+        return of(new HttpResponse({ status: 200, body: {} }));
         break;
+      case 'GET':
+      case 'PUT':
       default:
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
@@ -97,28 +90,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         });
     }
   }
-
-  // private handleDisputeRequests(
-  //   requestMethod: string
-  // ): Observable<HttpEvent<unknown>> {
-  //   const dispute = this.mockDisputeService.tick;
-
-  //   switch (requestMethod) {
-  //     case 'GET':
-  //       return of(
-  //         new HttpResponse({
-  //           status: 200,
-  //           body: { result: dispute },
-  //         })
-  //       );
-  //       break;
-  //     default:
-  //       throw new HttpErrorResponse({
-  //         error: 'Mock Bad Request',
-  //         status: 400,
-  //       });
-  //   }
-  // }
 
   private handleLookupsRequests(
     requestMethod: string

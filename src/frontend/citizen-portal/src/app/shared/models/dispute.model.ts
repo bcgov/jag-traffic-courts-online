@@ -1,20 +1,21 @@
 export interface Dispute {
+  violationTicketNumber: string;
+  offenceNumber: number;
+
   emailAddress?: string;
 
-  count?: string;
-  count1A1?: string;
-  count1A2?: string;
+  offenceAgreementStatus?: string;
+  requestReduction?: string;
+  requestTime?: string;
   reductionReason?: string;
   timeReason?: string;
-  count1B1?: string;
-  count1B2?: string;
 
   lawyerPresent?: boolean;
   interpreterRequired?: boolean;
   interpreterLanguage?: string;
-  callWitness?: boolean;
+  witnessPresent?: boolean;
 
-  certifyCorrect?: boolean;
+  informationCertified?: boolean;
 
   statusCode?: string;
   status?: string;

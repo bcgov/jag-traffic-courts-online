@@ -48,3 +48,14 @@ To remove services run (all services and networking)
 ```
 docker-compose down
 ```
+
+Note:
+When build backend in docker, you need to have a Red Hat account.
+Create a red hat account through https://developers.redhat.com/
+then
+
+```
+docker login registry.redhat.io
+```
+
+Should prompt for redhat user and pass. After successful login, could do docker-compose up

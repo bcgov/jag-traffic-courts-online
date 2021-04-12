@@ -14,6 +14,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
       SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
+      OAUTH__OAUTHURL: ${OAUTH__OAUTHURL}
+      OAUTH__RESOURCEURL: ${OAUTH__RESOURCEURL}
+      OAUTH__CLIENTID: ${OAUTH__CLIENTID}
+      OAUTH__SECRET: ${OAUTH__SECRET}
+      RSI__BASEADDRESS: ${RSI__BASEADDRESS}
     ports:
       - "5000:8080"
     restart: always
@@ -28,15 +33,15 @@ services:
     build:
       context: ./src/frontend/citizen-portal
       args:
-        USE_MOCK_SERVICES: "true"
-        USE_KEYCLOAK: "false"
+        USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
+        USE_KEYCLOAK: ${USE_KEYCLOAK}
         API_URL: ${API_URL}
         KEYCLOAK_URL: ${KEYCLOAK_URL}
         KEYCLOAK_REALM: ${KEYCLOAK_REALM}
         KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
     environment:
-      USE_MOCK_SERVICES: "true"
-      USE_KEYCLOAK: "false"
+      USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
+      USE_KEYCLOAK: ${USE_KEYCLOAK}
     command: "nginx -g 'daemon off;'"
     restart: always
     ports:

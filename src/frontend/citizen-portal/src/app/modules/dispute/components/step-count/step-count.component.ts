@@ -9,7 +9,6 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { StepData } from '../stepper/stepper.component';
 
 @Component({
   selector: 'app-step-count',
@@ -18,7 +17,6 @@ import { StepData } from '../stepper/stepper.component';
 })
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
-  @Input() public step: StepData;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   constructor(
@@ -44,6 +42,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepOffenceForm;
+    this.patchForm();
   }
 
   public onSubmit(): void {
@@ -58,23 +57,23 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.stepper.previous();
   }
 
-  public get count(): FormControl {
-    return this.form.get('count') as FormControl;
+  public get offenceAgreementStatus(): FormControl {
+    return this.form.get('offenceAgreementStatus') as FormControl;
   }
 
-  public get count1A1(): FormControl {
-    return this.form.get('count1A1') as FormControl;
+  public get requestReduction(): FormControl {
+    return this.form.get('requestReduction') as FormControl;
   }
 
-  public get count1A2(): FormControl {
-    return this.form.get('count1A2') as FormControl;
+  public get requestTime(): FormControl {
+    return this.form.get('requestTime') as FormControl;
   }
 
-  public get count1B1(): FormControl {
-    return this.form.get('count1B1') as FormControl;
+  public get reductionReason(): FormControl {
+    return this.form.get('reductionReason') as FormControl;
   }
 
-  public get count1B2(): FormControl {
-    return this.form.get('count1B2') as FormControl;
+  public get timeReason(): FormControl {
+    return this.form.get('timeReason') as FormControl;
   }
 }

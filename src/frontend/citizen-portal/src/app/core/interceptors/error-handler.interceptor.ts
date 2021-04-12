@@ -19,8 +19,7 @@ export class ErrorHandlerInterceptor {
 
   /**
    * @description
-   * Intercept 401 responses to redirect to login if a user
-   * is not authenticated.
+   * Intercept error responses
    */
   intercept(
     req: HttpRequest<any>,

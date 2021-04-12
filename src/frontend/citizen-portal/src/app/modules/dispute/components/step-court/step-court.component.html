@@ -1,6 +1,6 @@
 <app-page>
   <app-page-header>
-    <ng-container header>Court Information</ng-container>
+    <ng-container header>Additional Information</ng-container>
     <ng-container subHeader
       >Based upon your answers to the previous questions, you have decided to
       dispute your ticket in Court. Please answer the following
@@ -45,7 +45,7 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="mr-4 mb-2" formControlName="callWitness">
+          <mat-checkbox class="mr-4 mb-2" formControlName="witnessPresent">
             I intend to call a witness.
           </mat-checkbox>
         </div>
@@ -53,7 +53,7 @@
 
       <div class="row">
         <div class="col">
-          <app-alert type="info" icon="warning">
+          <app-alert type="warning" icon="warning">
             <ng-container #alertContent class="alert-content">
               <strong>Note:</strong> If the disputant or the disputant’s agent
               does not attend the court hearing, the court will treat the

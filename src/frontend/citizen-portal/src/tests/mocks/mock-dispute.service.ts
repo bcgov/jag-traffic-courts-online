@@ -1,6 +1,7 @@
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { Dispute } from '@shared/models/dispute.model';
-import { Offence, Ticket } from '@shared/models/ticket.model';
+import { Offence } from '@shared/models/offence.model';
+import { Ticket } from '@shared/models/ticket.model';
 import * as faker from 'faker';
 
 import { BehaviorSubject } from 'rxjs';
@@ -10,7 +11,7 @@ export class MockDisputeService {
   private _tickets: BehaviorSubject<Ticket[]>;
 
   constructor() {
-    const ticketA = this.createTicket();
+    const ticketA = this.createRsiTicket();
     const ticketB = this.createTicket();
 
     this._ticket = new BehaviorSubject<Ticket>(ticketA);
@@ -37,49 +38,56 @@ export class MockDisputeService {
     return new ApiHttpResponse(200, null, this._ticket.value);
   }
 
-  public get rsiTicket(): any {
-    return `{
-      "violation_number": "EZ02000460",
-      "violation_time": "09:54",
-      "violation_date": "2021-03-18T09:54:00",
-      "counts": [
+  private createRsiTicket(): Ticket {
+    const ticket: Ticket = {
+      violationTicketNumber: 'EZ02000461',
+      violationTime: '09:55',
+      violationDate: '2020-09-18',
+      offences: [
         {
-          "count_number": 1,
-          "ticket_amount": 167,
-          "amount_due": 95,
-          "due_date": "2021-03-18T09:54",
-          "description": "OPERATE VEHICLE WITHOUT SEATBELTS"
+          offenceNumber: 1,
+          ticketAmount: 109,
+          amountDue: 77.76,
+          dueDate: '2020-09-18T09:54',
+          description:
+            'LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH',
+          dispute: null,
         },
         {
-          "count_number": 2,
-          "ticket_amount": 126,
-          "amount_due": 96,
-          "due_date": "2021-03-18T09:54",
-          "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01"
+          offenceNumber: 2,
+          ticketAmount: 109,
+          amountDue: 89.76,
+          dueDate: '2020-09-18T09:54',
+          description:
+            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01',
+          dispute: null,
         },
         {
-          "count_number": 3,
-          "ticket_amount": 97,
-          "amount_due": 0,
-          "due_date": "2021-03-18T09:54",
-          "description": "LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH"
+          offenceNumber: 3,
+          ticketAmount: 109,
+          amountDue: 87.76,
+          dueDate: '2020-09-18T09:54',
+          description:
+            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH',
+          dispute: null,
         },
-        {
-          "count_number": 4,
-          "ticket_amount": 253,
-          "amount_due": 253,
-          "due_date": "2021-03-18T09:54",
-          "description": "SPEED IN SCHOOL ZONE"
-        },
-        {
-          "count_number": 5,
-          "ticket_amount": 368,
-          "amount_due": 368,
-          "due_date": "2021-03-18T09:54",
-          "description": "USING ELECTRONIC DEVICE WHILE DRIVING"
-        }
-      ]
-    }`;
+      ],
+    };
+
+    let balance = 0;
+    ticket.offences.forEach((offence) => {
+      offence.earlyAmount = 0;
+      offence.statusCode = 'UNPAID';
+      offence.statusDesc = 'Outstanding Balance';
+      offence.notes = '';
+      balance +=
+        offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+    });
+
+    // ------------------------------------
+    ticket.outstandingBalance = balance;
+
+    return ticket;
   }
 
   private createTicket(): Ticket {
@@ -106,6 +114,7 @@ export class MockDisputeService {
             max: 59,
           })
           .toString(),
+      violationDate: null,
       offences: [],
     };
 
@@ -122,10 +131,13 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    let dispute: Dispute = this.createDispute();
+    let dispute: Dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
     dispute.interpreterRequired = true;
     dispute.interpreterLanguage = 'Spanish';
-    dispute.certifyCorrect = true;
+    dispute.informationCertified = true;
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -190,7 +202,10 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
+    dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -222,8 +237,11 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
-    dispute.certifyCorrect = true;
+    dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
+    dispute.informationCertified = true;
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -258,9 +276,12 @@ export class MockDisputeService {
       dispute: null,
     };
 
-    dispute = this.createDispute();
+    dispute = this.createDispute(
+      ticket.violationTicketNumber,
+      offence.offenceNumber
+    );
     dispute.lawyerPresent = true;
-    dispute.certifyCorrect = true;
+    dispute.informationCertified = true;
     offence.dispute = dispute;
 
     offence.earlyAmount = 0;
@@ -289,14 +310,24 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createDispute(): Dispute {
+  private createDispute(
+    violationTicketNumber: string,
+    offenceNumber: number
+  ): Dispute {
     const dispute: Dispute = {
+      violationTicketNumber,
+      offenceNumber,
       emailAddress: faker.internet.email(),
       lawyerPresent: null,
       interpreterRequired: null,
       interpreterLanguage: null,
-      callWitness: null,
-      certifyCorrect: null,
+      witnessPresent: null,
+      informationCertified: null,
+      offenceAgreementStatus: null,
+      requestReduction: null,
+      requestTime: null,
+      reductionReason: null,
+      timeReason: null,
     };
 
     return dispute;

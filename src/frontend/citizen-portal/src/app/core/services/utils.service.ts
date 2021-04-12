@@ -24,9 +24,9 @@ export class UtilsService {
    * Scroll to the top of the mat-sidenav container.
    */
   public scrollTop() {
-    const contentContainer =
-      this.document.querySelector('.mat-sidenav-content') || this.window;
-    contentContainer.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    // const contentContainer = this.document.querySelector('.app') || this.window;
+    // contentContainer.scroll({ top: 0, left: 0, behavior: 'smooth' });
+    this.window.scroll({ top: 0, left: 0, behavior: 'smooth' });
   }
 
   /**
@@ -45,14 +45,19 @@ export class UtilsService {
    * within a <section> scroll to the section instead.
    */
   public scrollToErrorSection(): void {
-    const firstElementWithError = document.querySelector(
-      'mat-form-field.ng-invalid'
-    );
+    let errorElement = document.querySelector('mat-form-field.ng-invalid');
 
-    if (firstElementWithError) {
-      const section = firstElementWithError.closest('section');
-      const element = section == null ? firstElementWithError : section;
+    if (!errorElement) {
+      errorElement = document.querySelector('mat-radio-group.ng-invalid');
+    }
 
+    if (!errorElement) {
+      errorElement = document.querySelector('mat-checkbox.ng-invalid');
+    }
+
+    if (errorElement) {
+      const section = errorElement.closest('section');
+      const element = section == null ? errorElement : section;
       this.scrollTo(element);
     } else {
       this.scrollTop();

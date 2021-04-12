@@ -28,18 +28,18 @@
         <div class="col-lg-2 p-0">
           Offence #{{ ticketDispute.offence.offenceNumber }}
         </div>
-        <small class="col-lg-10 text-muted text-right">
+        <small class="col-lg-10 text-right">
           {{ ticketDispute.offence.description }}
         </small>
       </h4>
 
-      <div class="row pl-2 pr-2">
+      <div class="row pr-2">
         <div class="col-6 mb-2">Ticket Amount</div>
         <div class="col-6 text-right">
           {{ ticketDispute.offence.ticketAmount | currency | default }}
         </div>
       </div>
-      <div class="row pl-2 pr-2">
+      <div class="row pr-2">
         <div class="col-6 mb-2">
           Ticket Amount (if paid by
           {{ ticketDispute.offence.dueDate | formatDate }})
@@ -56,7 +56,11 @@
         <div class="row">
           <div class="col-sm-6">
             <mat-form-field class="w-100">
-              <input matInput formControlName="emailAddress" />
+              <input
+                matInput
+                formControlName="emailAddress"
+                autocomplete="off"
+              />
               <mat-error *ngIf="emailAddress.hasError('required')"
                 >Required</mat-error
               >
