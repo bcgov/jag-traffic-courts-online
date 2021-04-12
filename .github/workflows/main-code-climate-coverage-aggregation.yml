@@ -92,7 +92,7 @@ jobs:
 
       # Formatting the Frontend Citizen Portal Coverage Report
       - name: Format the Frontend Citizen Portal coverage report
-        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/report-lcov/lcov.info
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
