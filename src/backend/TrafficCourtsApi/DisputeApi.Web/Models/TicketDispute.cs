@@ -1,8 +1,5 @@
 ﻿using DisputeApi.Web.Features.TicketLookup;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DisputeApi.Web.Models
 {
@@ -12,7 +9,7 @@ namespace DisputeApi.Web.Models
         public string ViolationTime { get; set; }
         public string ViolationDate { get; set; }
 
-        public List<Offense> Offenses { get; set; }
+        public List<Offence> Offences { get; set; }
 
         /// <summary>
         /// Gets or sets the raw response returned from the RSI Pay BC API.
@@ -22,9 +19,9 @@ namespace DisputeApi.Web.Models
         public RawTicketSearchResponse RawResponse { get; set; }
     }
 
-    public class Offense
+    public class Offence
     {
-        public int OffenseNumber { get; set; }
+        public int OffenceNumber { get; set; }
         public decimal TicketAmount { get; set; }
         public decimal AmountDue { get; set; }
         public string DueDate { get; set; }

@@ -42,10 +42,10 @@ namespace DisputeApi.Web.Features.TicketLookup
                         cancellationToken);
                 if (ticketDispute != null)
                 {
-                    foreach (var offense in ticketDispute.Offenses)
+                    foreach (var offence in ticketDispute.Offences)
                     {
-                        offense.Dispute = await
-                            _disputeService.FindDispute(ticketDispute.ViolationTicketNumber, offense.OffenseNumber);
+                        offence.Dispute = await
+                            _disputeService.FindDispute(ticketDispute.ViolationTicketNumber, offence.OffenceNumber);
                     }
                 }
 

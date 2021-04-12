@@ -129,9 +129,9 @@ namespace DisputeApi.Web.Features.TicketLookup
             ticketDispute.ViolationTicketNumber = firstInvoice.InvoiceNumber.Remove(firstInvoice.InvoiceNumber.Length - 1);
             ticketDispute.ViolationDate = DateTime.Parse(firstInvoice.TermDueDate).ToString("yyyy-MM-dd");
             ticketDispute.ViolationTime = DateTime.Parse(firstInvoice.TermDueDate).ToString("HH:mm");
-            ticketDispute.Offenses = rawResponse.Items.Select((_, i) => new Offense
+            ticketDispute.Offences = rawResponse.Items.Select((_, i) => new Offence
             {
-                OffenseNumber = i + 1,
+                OffenceNumber = i + 1,
                 AmountDue=_.SelectedInvoice.Invoice.AmountDue,
                 Description = _.SelectedInvoice.Invoice.Attribute1,
                 DueDate = _.SelectedInvoice.Invoice.TermDueDate,

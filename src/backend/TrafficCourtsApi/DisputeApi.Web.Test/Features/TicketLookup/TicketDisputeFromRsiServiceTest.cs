@@ -16,7 +16,7 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
     {
         [Test, AutoMockAutoData]
         public async Task
-            if_rsi_return_response_with_offense_RetrieveTicketDisputeAsync_should_return_response_correctly(           
+            if_rsi_return_response_with_offence_RetrieveTicketDisputeAsync_should_return_response_correctly(           
             RawTicketSearchResponse rawResponse,
             Invoice invoice,
             [Frozen] Mock<IRsiRestApi> rsiApiMock,
@@ -33,13 +33,13 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"), CancellationToken.None)).Returns(Task.FromResult(invoice));
             var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, CancellationToken.None);
             Assert.IsInstanceOf<TicketDispute>(response);
-            Assert.AreEqual(1, response.Offenses.Count);
+            Assert.AreEqual(1, response.Offences.Count);
             Assert.AreEqual("2020-09-18", response.ViolationDate);
             Assert.AreEqual("21:40", response.ViolationTime);
         }
 
         [Test, AutoMockAutoData]
-        public async Task if_rsi_return_noOffenses_RetrieveTicketDisputeAsync_should_return_null(
+        public async Task if_rsi_return_noOffences_RetrieveTicketDisputeAsync_should_return_null(
             RawTicketSearchResponse rawResponse,
             [Frozen] Mock<IRsiRestApi> rsiApiMock,
             TicketDisputeFromRsiService sut
