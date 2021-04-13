@@ -6,17 +6,17 @@ export interface Dispute {
   emailAddress?: string;
 
   offenceAgreementStatus?: string;
-  requestReduction?: boolean;
-  requestMoreTime?: boolean;
+  requestReduction: boolean;
+  requestMoreTime: boolean;
   reductionReason?: string;
   moreTimeReason?: string;
 
-  lawyerPresent?: boolean;
-  interpreterRequired?: boolean;
+  lawyerPresent: boolean;
+  interpreterRequired: boolean;
   interpreterLanguage?: string;
-  witnessPresent?: boolean;
+  witnessPresent: boolean;
 
-  informationCertified?: boolean;
+  informationCertified: boolean;
 
   statusCode?: string;
   status?: string;
