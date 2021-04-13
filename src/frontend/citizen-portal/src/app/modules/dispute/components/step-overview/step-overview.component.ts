@@ -97,16 +97,16 @@ export class StepOverviewComponent
     return this.offenceForm.get('requestReduction') as FormControl;
   }
 
-  public get requestTime(): FormControl {
-    return this.offenceForm.get('requestTime') as FormControl;
+  public get requestMoreTime(): FormControl {
+    return this.offenceForm.get('requestMoreTime') as FormControl;
   }
 
   public get reductionReason(): FormControl {
     return this.offenceForm.get('reductionReason') as FormControl;
   }
 
-  public get timeReason(): FormControl {
-    return this.offenceForm.get('timeReason') as FormControl;
+  public get moreTimeReason(): FormControl {
+    return this.offenceForm.get('moreTimeReason') as FormControl;
   }
 
   public get courtDataExists(): boolean {
