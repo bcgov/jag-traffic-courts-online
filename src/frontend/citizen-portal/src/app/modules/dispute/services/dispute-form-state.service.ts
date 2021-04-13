@@ -148,9 +148,9 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     return this.formBuilder.group({
       offenceAgreementStatus: [null, [Validators.required]],
       requestReduction: [null],
-      requestTime: [null],
+      requestMoreTime: [null],
       reductionReason: [null],
-      timeReason: [null],
+      moreTimeReason: [null],
     });
   }
 

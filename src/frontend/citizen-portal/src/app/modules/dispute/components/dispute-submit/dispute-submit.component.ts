@@ -26,6 +26,8 @@ export class DisputeSubmitComponent implements OnInit {
       time: ticketDispute.violationTime,
     };
 
+    this.disputeService.ticket$.next(null);
+
     this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
       queryParams: params,
     });

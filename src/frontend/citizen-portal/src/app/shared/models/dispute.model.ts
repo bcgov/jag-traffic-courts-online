@@ -1,14 +1,15 @@
 export interface Dispute {
+  id?: number;
   violationTicketNumber: string;
   offenceNumber: number;
 
   emailAddress?: string;
 
   offenceAgreementStatus?: string;
-  requestReduction?: string;
-  requestTime?: string;
+  requestReduction?: boolean;
+  requestMoreTime?: boolean;
   reductionReason?: string;
-  timeReason?: string;
+  moreTimeReason?: string;
 
   lawyerPresent?: boolean;
   interpreterRequired?: boolean;

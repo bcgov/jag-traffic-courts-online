@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Dispute } from '@shared/models/dispute.model';
 import { Offence } from '@shared/models/offence.model';
 import { TicketDispute } from '@shared/models/ticket-dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
@@ -47,12 +48,28 @@ export class DisputeService {
     return this._ticketDispute.value;
   }
 
+  private createDispute(
+    violationTicketNumber: string,
+    offenceNumber: number
+  ): Dispute {
+    return {
+      violationTicketNumber,
+      offenceNumber,
+      requestReduction: false,
+      requestMoreTime: false,
+      lawyerPresent: false,
+      interpreterRequired: false,
+      witnessPresent: false,
+      informationCertified: false,
+    };
+  }
+
   public getDisputeTicket(ticket: Ticket, oneOffence: Offence): TicketDispute {
     if (!oneOffence.dispute) {
-      oneOffence.dispute = {
-        violationTicketNumber: ticket.violationTicketNumber,
-        offenceNumber: oneOffence.offenceNumber,
-      };
+      oneOffence.dispute = this.createDispute(
+        ticket.violationTicketNumber,
+        oneOffence.offenceNumber
+      );
     }
 
     const ticketDispute = {

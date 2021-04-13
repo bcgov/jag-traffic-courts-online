@@ -117,7 +117,6 @@ export class StepperComponent
   private showCourtPage(): boolean {
     const offenceStatus = this.disputeFormStateService.stepOffenceForm.controls
       .offenceAgreementStatus.value;
-    console.log('offenceStatus', offenceStatus);
     return offenceStatus && offenceStatus !== '1' ? true : false;
   }
 

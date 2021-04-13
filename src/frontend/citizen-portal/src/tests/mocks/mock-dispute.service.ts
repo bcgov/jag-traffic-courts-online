@@ -325,9 +325,9 @@ export class MockDisputeService {
       informationCertified: null,
       offenceAgreementStatus: null,
       requestReduction: null,
-      requestTime: null,
+      requestMoreTime: null,
       reductionReason: null,
-      timeReason: null,
+      moreTimeReason: null,
     };
 
     return dispute;
