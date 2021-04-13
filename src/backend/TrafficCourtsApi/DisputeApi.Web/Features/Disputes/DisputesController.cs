@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DisputeApi.Web.Features.Disputes
@@ -19,11 +20,13 @@ namespace DisputeApi.Web.Features.Disputes
     {
         private readonly ILogger _logger;
         private readonly IDisputeService _disputeService;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService)
+        public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService, IPublishEndpoint publishEndPoint, IPublishEndpoint publishEndpoint)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
+            _publishEndpoint = publishEndpoint?? throw new ArgumentNullException(nameof(publishEndPoint));
         }
 
         [HttpPost]
@@ -32,6 +35,7 @@ namespace DisputeApi.Web.Features.Disputes
         public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
         {
             var result = await _disputeService.CreateAsync(dispute);
+            await _publishEndpoint.Publish<Dispute>(dispute);
             if (result == null)
             {
                 ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");

@@ -23,6 +23,8 @@ using MediatR;
 using DisputeApi.Web.Auth;
 using Refit;
 using DisputeApi.Web.Features.TicketLookup;
+using DisputeApi.Web.Messaging.Configuration;
+using MassTransit;
 
 namespace DisputeApi.Web
 {
@@ -63,6 +65,7 @@ namespace DisputeApi.Web
 
             ConfigureRsiClient(services);
             ConfigureOpenApi(services);
+            ConfigureServiceBus(services);
 
 #if USE_AUTHENTICATION
             services.AddAuthentication(options =>
@@ -82,6 +85,27 @@ namespace DisputeApi.Web
             services.AddTicketService();
             services.AddDisputeService();
             services.AddRouting(options => options.LowercaseUrls = true);
+        }
+
+        private void ConfigureServiceBus(IServiceCollection services)
+        {
+            services.Configure<RabbitMqConfiguration>(_configuration.GetSection("RabbitMq"));
+
+            var rabbitMqSettings = _configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>();
+            var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+
+            services.AddMassTransit(x =>
+            {
+                x.AddBus( provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
+                {
+                    cfg.Host(new Uri(rabbitBaseUri), hostConfig =>
+                    {
+                        hostConfig.Username(rabbitMqSettings.Username);
+                        hostConfig.Password(rabbitMqSettings.Password);
+                    });
+                }));
+            });
+            services.AddMassTransitHostedService();
         }
 
         internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
@@ -215,5 +239,6 @@ namespace DisputeApi.Web
                 services.AddTransient<ITicketDisputeService, TicketDisputeFromRsiService>();
             }
         }
+
     }
 }
