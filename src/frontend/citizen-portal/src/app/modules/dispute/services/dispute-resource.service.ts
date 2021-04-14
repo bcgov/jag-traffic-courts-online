@@ -81,18 +81,7 @@ export class DisputeResourceService {
   private setOffenceInfo(ticket: Ticket): void {
     let balance = 0;
     ticket.offences.forEach((offence) => {
-      offence.earlyAmount = 0;
       offence.notes = '';
-
-      if (offence.amountDue > 0) {
-        const todayDate = new Date();
-        const dueDate = new Date(offence.dueDate);
-
-        if (todayDate <= dueDate) {
-          offence.earlyAmount = offence.ticketAmount - 25;
-          offence.amountDue = offence.earlyAmount;
-        }
-      }
 
       if (offence.amountDue === 0) {
         offence.statusCode = 'PAID';
@@ -115,8 +104,7 @@ export class DisputeResourceService {
         offence.statusDesc = 'Outstanding Balance';
       }
 
-      balance +=
-        offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+      balance += offence.amountDue;
     });
 
     // ------------------------------------

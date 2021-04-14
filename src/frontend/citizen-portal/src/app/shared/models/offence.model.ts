@@ -1,15 +1,20 @@
 import { Dispute } from './dispute.model';
 
 export interface Offence {
+  invoiceType: string;
   offenceNumber: number;
-  ticketAmount: number;
+  offenceDescription: string;
+  violationDateTime: string;
+  vehicleDescription: string;
+
+  ticketedAmount: number;
   amountDue: number;
-  dueDate: string;
-  description: string;
+  discountAmount: number;
+  discountDueDate: string;
+
   dispute: Dispute;
 
   // derived later on
-  earlyAmount?: number;
   statusCode?: string;
   statusDesc?: string;
   notes?: string;
