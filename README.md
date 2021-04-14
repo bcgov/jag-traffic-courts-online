@@ -40,6 +40,7 @@ Copy the `.env.template` to `.env` and then run docker-compose up.
 Add the configuration for token and password for splunk.
 Default user is `admin`. Password is what is configured in `.env`
 
+REDIS__HOST will be `redis` which is the service name.
 ```
 docker-compose up
 ```
