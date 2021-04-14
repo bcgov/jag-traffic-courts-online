@@ -28,7 +28,9 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             rawResponse.Items = new List<Item> { 
                 new Item{ SelectedInvoice=new SelectedInvoice{Reference="https://test/EZ020004601"}}
             };
-            invoice.TermDueDate = "2020-09-18T21:40";
+            invoice.ViolationDateTime = "2020-09-18T21:40";
+            invoice.InvoiceNumber = "EZ020004601";
+            invoice.DiscountAmount = "25.00";
             rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>(), CancellationToken.None)).Returns(Task.FromResult(rawResponse));
             rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"), CancellationToken.None)).Returns(Task.FromResult(invoice));
             var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, CancellationToken.None);
@@ -36,6 +38,7 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             Assert.AreEqual(1, response.Offences.Count);
             Assert.AreEqual("2020-09-18", response.ViolationDate);
             Assert.AreEqual("21:40", response.ViolationTime);
+            Assert.AreEqual("2020-10-18", response.Offences[0].DiscountDueDate);
         }
 
         [Test, AutoMockAutoData]

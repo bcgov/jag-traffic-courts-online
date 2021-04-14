@@ -22,10 +22,14 @@ namespace DisputeApi.Web.Models
     public class Offence
     {
         public int OffenceNumber { get; set; }
-        public decimal TicketAmount { get; set; }
-        public decimal AmountDue { get; set; }
-        public string DueDate { get; set; }
-        public string Description { get; set; }
+        public decimal TicketedAmount { get; set; }//total
+        public decimal AmountDue { get; set; } //total-discount-paid
+        public string ViolationDateTime { get; set; }
+        public string OffenceDescription { get; set; }
+        public string VehicleDescription { get; set; }
         public Dispute Dispute { get; set; }
+        public decimal DiscountAmount { get; set; }//discount
+        public string DiscountDueDate { get; set; }
+        public string InvoiceType { get; set; }
     }
 }
