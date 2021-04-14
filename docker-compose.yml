@@ -120,7 +120,57 @@ services:
       - 8088:8088
     networks:
       - traffic-court-net
+  #############################################################################################
+  ###                           RABBITMQ                                                    ###
+  #############################################################################################
+  rabbitmq-tco:
+    image: rabbitmq:3.7.15-management
+    container_name: rabbitmq-tco
+    hostname: rabbitmq
+    ports:
+      - 5671:5672
+      - 15671:15672
+    volumes:
+      - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
+    restart: always
+    networks:
+      - traffic-court-net
+  #############################################################################################
+  ###                           REDIS & REDIS COMMANDER                                     ###
+  #############################################################################################
+  redis:
+    container_name: redis
+    image: redis
+    hostname: ${REDIS__HOST}
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS__PASSWORD}"]
+    ports:
+      - "6379:6379"
+    networks:
+      - traffic-court-net
+    environment: 
+      - REDIS_PASSWORD="${REDIS__PASSWORD}"
+    volumes:
+      - data-redis:/data
+    restart: always
 
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander
+    restart: always
+    depends_on: [redis]
+    networks: 
+      - traffic-court-net
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOST=${REDIS__HOST}
+      - REDIS_PASSWORD="${REDIS__PASSWORD}"
+  
 networks:
   traffic-court-net:
     driver: "bridge"
+
+volumes:
+  data-rabbit:
+  data-redis:
