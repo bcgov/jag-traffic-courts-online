@@ -8,22 +8,22 @@
       <div class="row">
         <div class="col-4 mb-2">Offence Description</div>
         <div class="col-8 text-right mb-2">
-          {{ this.ticketDispute.offence.description }}
+          {{ this.ticketDispute.offence.offenceDescription }}
         </div>
       </div>
       <div class="row">
         <div class="col-6 mb-2">Ticket Amount</div>
         <div class="col-6 text-right mb-2">
-          {{ this.ticketDispute.offence.ticketAmount | currency }}
+          {{ this.ticketDispute.offence.ticketedAmount | currency }}
         </div>
       </div>
-      <div class="row" *ngIf="this.ticketDispute.offence.earlyAmount > 0">
+      <div class="row" *ngIf="this.ticketDispute.offence.discountAmount > 0">
         <div class="col-6 mb-2">
-          Ticket Amount (if paid by
-          {{ this.ticketDispute.offence.dueDate | formatDate }})
+          Ticket Discount (if paid by
+          {{ this.ticketDispute.offence.discountDueDate | formatDate }})
         </div>
         <div class="col-6 text-right mb-2">
-          {{ this.ticketDispute.offence.earlyAmount | currency }}
+          {{ this.ticketDispute.offence.discountAmount | currency }}
         </div>
       </div>
     </ng-container>

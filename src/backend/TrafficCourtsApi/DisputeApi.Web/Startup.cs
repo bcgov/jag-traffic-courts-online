@@ -232,7 +232,7 @@ namespace DisputeApi.Web
                 .AddHttpMessageHandler<OAuthHandler>();
             string operationMode = _configuration.GetSection("RSI:OPERATIONMODE").Value;
 
-            if (operationMode == Keys.RSI_OPERATION_MODE_FAKE)
+            if (operationMode == Keys.RsiOperationModeFake)
                 services.AddTransient<ITicketDisputeService, TicketDisputeFromFilesService>();
             else
             {

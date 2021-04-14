@@ -34,7 +34,7 @@ namespace DisputeApi.Web.Auth
 
         public async Task<Token> GetTokenAsync(CancellationToken cancellationToken)
         {
-            var token = _memoryCache.Get<Token>(Keys.OAUTH_TOKEN_KEY);
+            var token = _memoryCache.Get<Token>(Keys.OauthTokenKey);
             if (token == null)
             {
                 _logger.LogDebug("Cached token not found, requesting a new token.");
@@ -46,12 +46,12 @@ namespace DisputeApi.Web.Auth
         private async Task<Token> RefreshTokenAsync(CancellationToken cancellationToken)
         {
             Token token = await _oAuthClient.GetRefreshToken(cancellationToken);
-            int expiredSeconds = token.ExpiresIn - Keys.OAUTH_TOKEN_EXPIRE_BUFFER;
+            int expiredSeconds = token.ExpiresIn - Keys.OauthTokenExpireBuffer;
             _logger.LogInformation(
                 "Got new token and save it to memory(key={key}, expired in {expired} seconds.)", 
-                Keys.OAUTH_TOKEN_KEY, 
+                Keys.OauthTokenKey, 
                 expiredSeconds );
-            _memoryCache.Set(Keys.OAUTH_TOKEN_KEY, token, TimeSpan.FromSeconds(expiredSeconds));
+            _memoryCache.Set(Keys.OauthTokenKey, token, TimeSpan.FromSeconds(expiredSeconds));
             return token;
         }
     }
