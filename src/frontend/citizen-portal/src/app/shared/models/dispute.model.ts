@@ -17,8 +17,8 @@ export interface Dispute {
   witnessPresent: boolean;
 
   informationCertified: boolean;
+  status?: string;
 
   statusCode?: string;
-  status?: string;
   note?: string;
 }

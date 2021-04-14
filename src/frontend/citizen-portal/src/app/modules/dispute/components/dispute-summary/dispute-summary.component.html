@@ -37,6 +37,7 @@
         <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
           Ticket #{{ ticket.violationTicketNumber }}
           <span class="ml-4">
+            {{ ticket.violationDate | formatDate }}
             {{ ticket.violationTime }}
           </span>
         </h2>
@@ -52,6 +53,7 @@
               <!--
               COUNT #{{ row.offenceNumber }}
               -->
+              <small class="d-block">{{ row.invoiceType }}</small>
               <mat-chip-list>
                 <mat-chip selected class="p-3"
                   >Count #{{ row.offenceNumber }}</mat-chip
@@ -59,8 +61,13 @@
               </mat-chip-list>
             </div>
             <div class="col-md-9">
-              <small class="d-block">Description of Offence</small>
-              {{ row.description | titlecase }}
+              <small class="d-block">
+                Description of Offence
+                <span *ngIf="row.vehicleDescription"
+                  >for Vehicle {{ row.vehicleDescription }}</span
+                >
+              </small>
+              {{ row.offenceDescription | titlecase }}
             </div>
           </div>
         </h3>
@@ -68,7 +75,7 @@
         <div class="row">
           <div class="col-3 mb-2">
             <small class="d-block">Offence Amount</small>
-            <strong>{{ row?.ticketAmount | currency }}</strong>
+            <strong>{{ row?.ticketedAmount | currency }}</strong>
           </div>
           <div class="col-3">
             <small class="d-block">Amount Due</small>
@@ -140,13 +147,13 @@
           </div>
         </div>
 
-        <div class="row mt-1" *ngIf="row?.earlyAmount > 0">
+        <div class="row mt-1" *ngIf="row?.discountAmount > 0">
           <div class="col-md-9">
             <app-alert type="warning" icon="lightbulb">
               <ng-container #alertContent class="alert-content">
                 <strong>
-                  If paid by {{ row?.dueDate | formatDate }}, the amount due is
-                  {{ row?.earlyAmount | currency }}
+                  If paid by {{ row?.discountDueDate | formatDate }}, the amount
+                  due includes a {{ row?.discountAmount | currency }} discount
                 </strong>
               </ng-container>
             </app-alert>

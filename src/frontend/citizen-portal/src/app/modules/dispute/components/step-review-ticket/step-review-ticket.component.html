@@ -29,20 +29,20 @@
           Offence #{{ ticketDispute.offence.offenceNumber }}
         </div>
         <small class="col-lg-10 text-right">
-          {{ ticketDispute.offence.description }}
+          {{ ticketDispute.offence.offenceDescription }}
         </small>
       </h4>
 
       <div class="row pr-2">
         <div class="col-6 mb-2">Ticket Amount</div>
         <div class="col-6 text-right">
-          {{ ticketDispute.offence.ticketAmount | currency | default }}
+          {{ ticketDispute.offence.ticketedAmount | currency | default }}
         </div>
       </div>
       <div class="row pr-2">
         <div class="col-6 mb-2">
           Ticket Amount (if paid by
-          {{ ticketDispute.offence.dueDate | formatDate }})
+          {{ ticketDispute.offence.violationDateTime | formatDate }})
         </div>
         <div class="col-6 text-right">
           {{ ticketDispute.offence.amountDue | currency | default }}

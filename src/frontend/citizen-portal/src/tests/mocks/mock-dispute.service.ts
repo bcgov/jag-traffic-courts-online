@@ -11,7 +11,7 @@ export class MockDisputeService {
   private _tickets: BehaviorSubject<Ticket[]>;
 
   constructor() {
-    const ticketA = this.createRsiTicket();
+    const ticketA = this.createTicket();
     const ticketB = this.createTicket();
 
     this._ticket = new BehaviorSubject<Ticket>(ticketA);
@@ -46,42 +46,52 @@ export class MockDisputeService {
       offences: [
         {
           offenceNumber: 1,
-          ticketAmount: 109,
+          ticketedAmount: 109,
           amountDue: 77.76,
-          dueDate: '2020-09-18T09:54',
-          description:
+          violationDateTime: '2020-09-18T09:54',
+          offenceDescription:
             'LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH',
           dispute: null,
+          invoiceType: 'Traffic Violation Ticket',
+          vehicleDescription: 'Toyota Prius',
+          discountAmount: 25,
+          discountDueDate: faker.date.soon().toString(),
         },
         {
           offenceNumber: 2,
-          ticketAmount: 109,
+          ticketedAmount: 109,
           amountDue: 89.76,
-          dueDate: '2020-09-18T09:54',
-          description:
+          violationDateTime: '2020-09-18T09:54',
+          offenceDescription:
             'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01',
           dispute: null,
+          invoiceType: 'Traffic Violation Ticket',
+          vehicleDescription: 'Toyota Prius',
+          discountAmount: 0,
+          discountDueDate: null,
         },
         {
           offenceNumber: 3,
-          ticketAmount: 109,
+          ticketedAmount: 109,
           amountDue: 87.76,
-          dueDate: '2020-09-18T09:54',
-          description:
+          violationDateTime: '2020-09-18T09:54',
+          offenceDescription:
             'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH',
           dispute: null,
+          invoiceType: 'Traffic Violation Ticket',
+          vehicleDescription: 'Ford Focus',
+          discountAmount: 25,
+          discountDueDate: faker.date.soon().toString(),
         },
       ],
     };
 
     let balance = 0;
     ticket.offences.forEach((offence) => {
-      offence.earlyAmount = 0;
       offence.statusCode = 'UNPAID';
       offence.statusDesc = 'Outstanding Balance';
       offence.notes = '';
-      balance +=
-        offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+      balance += offence.amountDue;
     });
 
     // ------------------------------------
@@ -123,12 +133,16 @@ export class MockDisputeService {
     // --------------------------
     let offence: Offence = {
       offenceNumber: 1,
-      ticketAmount: 126,
+      ticketedAmount: 126,
       amountDue: 126,
-      dueDate: faker.date.soon().toString(),
-      description:
+      violationDateTime: faker.date.soon().toString(),
+      offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
       dispute: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 25,
+      discountDueDate: faker.date.soon().toString(),
     };
 
     let dispute: Dispute = this.createDispute(
@@ -140,66 +154,50 @@ export class MockDisputeService {
     dispute.informationCertified = true;
     offence.dispute = dispute;
 
-    offence.earlyAmount = 0;
     offence.statusCode = 'DISPUTE';
     offence.statusDesc = 'Dispute Submitted';
     offence.notes =
       'The dispute has been filed. An email with the court information will be sent soon.';
 
-    if (offence.amountDue > 0) {
-      const todayDate = new Date();
-      const dueDate = new Date(offence.dueDate);
-
-      if (todayDate <= dueDate) {
-        offence.earlyAmount = offence.ticketAmount - 25;
-        offence.amountDue = offence.earlyAmount;
-      }
-    }
-
-    balance +=
-      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+    balance += offence.amountDue;
 
     ticket.offences.push(offence);
 
     // --------------------------
     offence = {
       offenceNumber: 2,
-      ticketAmount: 126,
+      ticketedAmount: 126,
       amountDue: 0,
-      dueDate: faker.date.soon().toString(),
-      description:
+      violationDateTime: faker.date.recent().toString(),
+      offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
       dispute: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 0,
+      discountDueDate: null,
     };
 
-    offence.earlyAmount = 0;
     offence.statusCode = 'PAID';
     offence.statusDesc = 'Paid';
     offence.notes = '';
 
-    if (offence.amountDue > 0) {
-      const todayDate = new Date();
-      const dueDate = new Date(offence.dueDate);
-
-      if (todayDate <= dueDate) {
-        offence.earlyAmount = offence.ticketAmount - 25;
-        offence.amountDue = offence.earlyAmount;
-      }
-    }
-
-    balance +=
-      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+    balance += offence.amountDue;
 
     ticket.offences.push(offence);
 
     // --------------------------
     offence = {
       offenceNumber: 3,
-      ticketAmount: 167,
+      ticketedAmount: 167,
       amountDue: 167,
-      dueDate: faker.date.soon().toString(), // '2020-09-18T09:54',
-      description: 'Operate Vehicle Without Seatbelts',
+      violationDateTime: faker.date.recent().toString(),
+      offenceDescription: 'Operate Vehicle Without Seatbelts',
       dispute: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 25,
+      discountDueDate: faker.date.soon().toString(),
     };
 
     dispute = this.createDispute(
@@ -208,33 +206,25 @@ export class MockDisputeService {
     );
     offence.dispute = dispute;
 
-    offence.earlyAmount = 0;
     offence.statusCode = 'UNPAID';
     offence.statusDesc = 'Outstanding Balance';
     offence.notes = '';
 
-    if (offence.amountDue > 0) {
-      const todayDate = new Date();
-      const dueDate = new Date(offence.dueDate);
-
-      if (todayDate <= dueDate) {
-        offence.earlyAmount = offence.ticketAmount - 25;
-        offence.amountDue = offence.earlyAmount;
-      }
-    }
-
-    balance +=
-      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+    balance += offence.amountDue;
 
     ticket.offences.push(offence);
     // --------------------------
     offence = {
       offenceNumber: 4,
-      ticketAmount: 126,
+      ticketedAmount: 126,
       amountDue: 126,
-      dueDate: faker.date.soon().toString(),
-      description: 'Using Electronic Device While Driving',
+      violationDateTime: faker.date.recent().toString(),
+      offenceDescription: 'Using Electronic Device While Driving',
       dispute: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Ford Focus',
+      discountAmount: 25,
+      discountDueDate: faker.date.soon().toString(),
     };
 
     dispute = this.createDispute(
@@ -244,63 +234,12 @@ export class MockDisputeService {
     dispute.informationCertified = true;
     offence.dispute = dispute;
 
-    offence.earlyAmount = 0;
     offence.statusCode = 'COURT';
     offence.statusDesc = 'Dispute In Progress';
     offence.notes =
       'A court date has been set for this dispute. Check your email for more information.';
 
-    if (offence.amountDue > 0) {
-      const todayDate = new Date();
-      const dueDate = new Date(offence.dueDate);
-
-      if (todayDate <= dueDate) {
-        offence.earlyAmount = offence.ticketAmount - 25;
-        offence.amountDue = offence.earlyAmount;
-      }
-    }
-
-    balance +=
-      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
-
-    ticket.offences.push(offence);
-
-    // --------------------------
-    offence = {
-      offenceNumber: 5,
-      ticketAmount: 126,
-      amountDue: 0,
-      dueDate: faker.date.soon().toString(),
-      description:
-        'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      dispute: null,
-    };
-
-    dispute = this.createDispute(
-      ticket.violationTicketNumber,
-      offence.offenceNumber
-    );
-    dispute.lawyerPresent = true;
-    dispute.informationCertified = true;
-    offence.dispute = dispute;
-
-    offence.earlyAmount = 0;
-    offence.statusCode = 'COMPLETE';
-    offence.statusDesc = 'Dispute Settled';
-    offence.notes = '';
-
-    if (offence.amountDue > 0) {
-      const todayDate = new Date();
-      const dueDate = new Date(offence.dueDate);
-
-      if (todayDate <= dueDate) {
-        offence.earlyAmount = offence.ticketAmount - 25;
-        offence.amountDue = offence.earlyAmount;
-      }
-    }
-
-    balance +=
-      offence.earlyAmount > 0 ? offence.earlyAmount : offence.amountDue;
+    balance += offence.amountDue;
 
     ticket.offences.push(offence);
 
@@ -328,6 +267,7 @@ export class MockDisputeService {
       requestMoreTime: null,
       reductionReason: null,
       moreTimeReason: null,
+      status: null,
     };
 
     return dispute;
