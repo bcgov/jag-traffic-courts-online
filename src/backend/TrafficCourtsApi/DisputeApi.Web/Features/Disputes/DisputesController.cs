@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using TrafficCourts.Common.Contract;
 
 namespace DisputeApi.Web.Features.Disputes
 {
@@ -20,13 +21,14 @@ namespace DisputeApi.Web.Features.Disputes
     {
         private readonly ILogger _logger;
         private readonly IDisputeService _disputeService;
-        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ISendEndpointProvider _sendEndpointProvider;
 
-        public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService, IPublishEndpoint publishEndPoint, IPublishEndpoint publishEndpoint)
+        public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService,
+            ISendEndpointProvider sendEndpointProvider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
-            _publishEndpoint = publishEndpoint?? throw new ArgumentNullException(nameof(publishEndPoint));
+            _sendEndpointProvider = sendEndpointProvider ?? throw new ArgumentNullException(nameof(sendEndpointProvider));
         }
 
         [HttpPost]
@@ -34,8 +36,13 @@ namespace DisputeApi.Web.Features.Disputes
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
         {
+            dispute.Status = DisputeStatus.Submitted;
             var result = await _disputeService.CreateAsync(dispute);
-            await _publishEndpoint.Publish<Dispute>(dispute);
+
+            ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"rabbitmq://localhost:5672/DisputeWorker.Dispute"));
+
+            await sendEndpoint.Send<IDispute>(new Dispute(){OffenceNumber = 1, ViolationTicketNumber = "violationTicket"});
+
             if (result == null)
             {
                 ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");

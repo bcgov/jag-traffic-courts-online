@@ -3,7 +3,11 @@
     "DisputeWorker": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "RABBITMQ__HOST": "localhost",
+        "RABBITMQ__PORT": 5672,
+        "RABBITMQ__USERNAME": "guest",
+        "RABBITMQ__PASSWORD": "guest"
       }
     }
   }

@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DisputeApi.Web.Features.Disputes;
+using TrafficCourts.Common.Contract;
 
 namespace DisputeApi.Web.Models
 {
-    public class Dispute
+    public class Dispute : IDispute
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
+        [Key] [Required] public int Id { get; set; }
         public string ViolationTicketNumber { get; set; }
         public int OffenceNumber { get; set; }
         public string EmailAddress { get; set; }
-        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public TrafficCourts.Common.Contract.OffenceAgreementStatus OffenceAgreementStatus { get; set; }
         public bool RequestReduction { get; set; }
         public bool RequestMoreTime { get; set; }
         public string ReductionReason { get; set; }
@@ -20,21 +20,8 @@ namespace DisputeApi.Web.Models
         public bool WitnessPresent { get; set; }
         public string InterpreterLanguage { get; set; }
         public bool InformationCertified { get; set; }
-        public DisputeStatus Status { get; set; }
+        public TrafficCourts.Common.Contract.DisputeStatus Status { get; set; }
     }
 
-    public enum DisputeStatus
-    {
-        New,
-        Submitted,
-        InProgress,
-        Complete,
-    }
-
-    public enum OffenceAgreementStatus
-    {
-        AgreeOffenceNotInCourt,
-        AgreeOffenceInCourt,
-        NotAgreeOffence,
-    }
+ 
 }

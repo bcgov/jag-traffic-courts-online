@@ -7,6 +7,7 @@ using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -19,19 +20,22 @@ namespace DisputeApi.Web.Test.Features.Disputes
     {
         private Mock<ILogger<DisputesController>> _loggerMock;
         private Mock<IDisputeService> _disputeServiceMock;
+        private Mock<IPublishEndpoint> _publishEndpointMock;
 
         [SetUp]
         public void SetUp()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<DisputesController>();
             _disputeServiceMock = new Mock<IDisputeService>();
+            _publishEndpointMock = new Mock<IPublishEndpoint>();
         }
 
         [Test]
         public void throw_ArgumentNullException_if_passed_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _disputeServiceMock.Object, TODO));
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null, TODO));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _disputeServiceMock.Object, _publishEndpointMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null, _publishEndpointMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, null));
         }
 
         [Theory]
@@ -45,7 +49,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Returns(Task.FromResult(expected));
 
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, TODO);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
 
             var result = await sut.GetDisputes();
             Assert.IsNotNull(result);
@@ -68,7 +72,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.GetAsync(expected.Id))
                 .Returns(Task.FromResult(expected));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, TODO);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
 
             var result = await sut.GetDispute(expected.Id);
             Assert.IsNotNull(result);
@@ -86,7 +90,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.GetAsync(It.IsAny<int>()))
                 .Returns(Task.FromResult((Dispute)null));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, TODO);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
             
             var result = await sut.GetDispute(disputeId);
             Assert.IsNotNull(result);
@@ -101,7 +105,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.CreateAsync(dispute))
                 .Returns(Task.FromResult(dispute));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, TODO);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
 
             var result = await sut.CreateDispute(dispute);
             Assert.IsNotNull(result);
@@ -116,7 +120,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
                 .Setup(x => x.CreateAsync(dispute))
                 .Returns(Task.FromResult<Dispute>(null));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, TODO);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
 
             var result = (BadRequestObjectResult)await sut.CreateDispute(dispute);
             Assert.IsNotNull(result);
