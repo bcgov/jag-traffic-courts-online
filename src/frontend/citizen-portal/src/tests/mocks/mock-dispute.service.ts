@@ -38,68 +38,6 @@ export class MockDisputeService {
     return new ApiHttpResponse(200, null, this._ticket.value);
   }
 
-  private createRsiTicket(): Ticket {
-    const ticket: Ticket = {
-      violationTicketNumber: 'EZ02000461',
-      violationTime: '09:55',
-      violationDate: '2020-09-18',
-      offences: [
-        {
-          offenceNumber: 1,
-          ticketedAmount: 109,
-          amountDue: 77.76,
-          violationDateTime: '2020-09-18T09:54',
-          offenceDescription:
-            'LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH',
-          dispute: null,
-          invoiceType: 'Traffic Violation Ticket',
-          vehicleDescription: 'Toyota Prius',
-          discountAmount: 25,
-          discountDueDate: faker.date.soon().toString(),
-        },
-        {
-          offenceNumber: 2,
-          ticketedAmount: 109,
-          amountDue: 89.76,
-          violationDateTime: '2020-09-18T09:54',
-          offenceDescription:
-            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01',
-          dispute: null,
-          invoiceType: 'Traffic Violation Ticket',
-          vehicleDescription: 'Toyota Prius',
-          discountAmount: 0,
-          discountDueDate: null,
-        },
-        {
-          offenceNumber: 3,
-          ticketedAmount: 109,
-          amountDue: 87.76,
-          violationDateTime: '2020-09-18T09:54',
-          offenceDescription:
-            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH',
-          dispute: null,
-          invoiceType: 'Traffic Violation Ticket',
-          vehicleDescription: 'Ford Focus',
-          discountAmount: 25,
-          discountDueDate: faker.date.soon().toString(),
-        },
-      ],
-    };
-
-    let balance = 0;
-    ticket.offences.forEach((offence) => {
-      offence.statusCode = 'UNPAID';
-      offence.statusDesc = 'Outstanding Balance';
-      offence.notes = '';
-      balance += offence.amountDue;
-    });
-
-    // ------------------------------------
-    ticket.outstandingBalance = balance;
-
-    return ticket;
-  }
-
   private createTicket(): Ticket {
     const ticket: Ticket = {
       violationTicketNumber:
@@ -128,8 +66,6 @@ export class MockDisputeService {
       offences: [],
     };
 
-    let balance = 0;
-
     // --------------------------
     let offence: Offence = {
       offenceNumber: 1,
@@ -141,25 +77,19 @@ export class MockDisputeService {
       dispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 25,
-      discountDueDate: faker.date.soon().toString(),
+      discountAmount: 0,
+      discountDueDate: null,
     };
 
     let dispute: Dispute = this.createDispute(
       ticket.violationTicketNumber,
       offence.offenceNumber
     );
+    dispute.status = 1;
     dispute.interpreterRequired = true;
     dispute.interpreterLanguage = 'Spanish';
     dispute.informationCertified = true;
     offence.dispute = dispute;
-
-    offence.statusCode = 'DISPUTE';
-    offence.statusDesc = 'Dispute Submitted';
-    offence.notes =
-      'The dispute has been filed. An email with the court information will be sent soon.';
-
-    balance += offence.amountDue;
 
     ticket.offences.push(offence);
 
@@ -178,11 +108,7 @@ export class MockDisputeService {
       discountDueDate: null,
     };
 
-    offence.statusCode = 'PAID';
-    offence.statusDesc = 'Paid';
     offence.notes = '';
-
-    balance += offence.amountDue;
 
     ticket.offences.push(offence);
 
@@ -200,11 +126,7 @@ export class MockDisputeService {
       discountDueDate: faker.date.soon().toString(),
     };
 
-    offence.statusCode = 'UNPAID';
-    offence.statusDesc = 'Outstanding Balance';
     offence.notes = '';
-
-    balance += offence.amountDue;
 
     ticket.offences.push(offence);
     // --------------------------
@@ -225,20 +147,11 @@ export class MockDisputeService {
       ticket.violationTicketNumber,
       offence.offenceNumber
     );
+    dispute.status = 2;
     dispute.informationCertified = true;
     offence.dispute = dispute;
 
-    offence.statusCode = 'COURT';
-    offence.statusDesc = 'Dispute In Progress';
-    offence.notes =
-      'A court date has been set for this dispute. Check your email for more information.';
-
-    balance += offence.amountDue;
-
     ticket.offences.push(offence);
-
-    // ------------------------------------
-    ticket.outstandingBalance = balance;
 
     return ticket;
   }
@@ -250,6 +163,7 @@ export class MockDisputeService {
     const dispute: Dispute = {
       violationTicketNumber,
       offenceNumber,
+      status: 0,
       emailAddress: faker.internet.email(),
       lawyerPresent: null,
       interpreterRequired: null,
@@ -261,7 +175,6 @@ export class MockDisputeService {
       requestMoreTime: null,
       reductionReason: null,
       moreTimeReason: null,
-      status: null,
     };
 
     return dispute;

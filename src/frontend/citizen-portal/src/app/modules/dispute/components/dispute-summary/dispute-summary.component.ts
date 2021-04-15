@@ -74,4 +74,39 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
       this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
     });
   }
+
+  public onDisputeTicket(): void {
+    this.logger.info('onDisputeTicket');
+  }
+
+  public getOffenceStatus(row: Offence): number {
+    if (row.dispute) {
+      return row.dispute.status;
+    }
+    if (row.amountDue > 0) {
+      return -1;
+    }
+    return -2;
+  }
+
+  public getOffenceStatusDesc(row: Offence): string {
+    const disputeStatus = row.dispute ? row.dispute.status : null;
+    if (disputeStatus) {
+      if (disputeStatus === 0) {
+        return 'Created';
+      } else if (disputeStatus === 1) {
+        return 'Submitted';
+      } else if (disputeStatus === 2) {
+        return 'In Progress';
+      } else if (disputeStatus === 3) {
+        return 'Resolved';
+      } else if (disputeStatus === 4) {
+        return 'Rejected';
+      }
+    }
+    if (row.amountDue > 0) {
+      return 'Outstanding Balance';
+    }
+    return 'Paid';
+  }
 }

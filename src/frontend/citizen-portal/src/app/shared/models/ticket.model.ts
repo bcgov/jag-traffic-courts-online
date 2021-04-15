@@ -8,4 +8,5 @@ export interface Ticket {
 
   // derived later on
   outstandingBalance?: number;
+  disputesExist?: boolean;
 }

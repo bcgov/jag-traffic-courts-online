@@ -1,5 +1,6 @@
 export interface Dispute {
   id?: number;
+  status: number;
   violationTicketNumber: string;
   offenceNumber: number;
 
@@ -17,7 +18,6 @@ export interface Dispute {
   witnessPresent: boolean;
 
   informationCertified: boolean;
-  status?: string;
 
   statusCode?: string;
   note?: string;

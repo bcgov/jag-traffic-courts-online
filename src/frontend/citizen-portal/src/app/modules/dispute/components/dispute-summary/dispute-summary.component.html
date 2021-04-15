@@ -85,20 +85,21 @@
             <small class="d-block">Status</small>
             <small
               [ngClass]="{
-                'text-danger': row.statusCode === 'COURT',
-                'text-primary': row.statusCode === 'UNPAID',
+                'text-danger':
+                  row.offenceStatus === 2 || row.offenceStatus === 4,
+                'text-primary': row.offenceStatus === -1,
                 'text-success':
-                  row.statusCode === 'COMPLETE' || row.statusCode === 'PAID',
-                'text-info': row.statusCode === 'DISPUTE'
+                  row.offenceStatus === 3 || row.offenceStatus === -2,
+                'text-info': row.offenceStatus === 1
               }"
-              ><strong>{{ row.statusDesc }}</strong>
+              ><strong>{{ row.offenceStatusDesc }} </strong>
             </small>
           </div>
           <div class="col-md-3">
             <app-alert
               type="success"
               icon="check"
-              *ngIf="row.statusCode === 'PAID' || row.statusCode === 'COMPLETE'"
+              *ngIf="row.offenceStatus === -2 || row.offenceStatus === 3"
             >
               <ng-container #alertContent class="alert-content">
                 <strong> RESOLVED </strong>
@@ -109,9 +110,9 @@
               mat-flat-button
               color="accent"
               *ngIf="
-                row.statusCode === 'UNPAID' ||
-                row.statusCode === 'DISPUTE' ||
-                row.statusCode === 'COURT'
+                row.offenceStatus === -1 ||
+                row.offenceStatus === 1 ||
+                row.offenceStatus === 2
               "
             >
               <a
@@ -124,7 +125,7 @@
               </a>
             </button>
             <button
-              *ngIf="row.statusCode === 'UNPAID'"
+              *ngIf="row.offenceStatus === -1 && row.disputesExist"
               mat-flat-button
               color="primary"
               (click)="onDispute(row)"
@@ -174,14 +175,18 @@
             </a>
           </button>
         </div>
-        <!--
         <div class="col-md-6">
-          <button mat-flat-button color="primary" class="large">
+          <button
+            mat-flat-button
+            color="primary"
+            class="large"
+            (click)="onDisputeTicket()"
+            *ngIf="!ticket.disputesExist"
+          >
             <mat-icon inline="true">read_more</mat-icon>
-            Dispute All Counts
+            Dispute Ticket
           </button>
         </div>
-        -->
       </div>
     </div>
 

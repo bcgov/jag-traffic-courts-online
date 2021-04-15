@@ -15,7 +15,7 @@ export interface Offence {
   dispute: Dispute;
 
   // derived later on
-  statusCode?: string;
-  statusDesc?: string;
+  offenceStatus?: number;
+  offenceStatusDesc?: string;
   notes?: string;
 }

@@ -55,6 +55,7 @@ export class DisputeService {
     return {
       violationTicketNumber,
       offenceNumber,
+      status: 0,
       requestReduction: false,
       requestMoreTime: false,
       lawyerPresent: false,
