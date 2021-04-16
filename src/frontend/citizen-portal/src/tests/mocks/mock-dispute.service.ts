@@ -200,12 +200,6 @@ export class MockDisputeService {
       discountDueDate: faker.date.soon().toString(),
     };
 
-    dispute = this.createDispute(
-      ticket.violationTicketNumber,
-      offence.offenceNumber
-    );
-    offence.dispute = dispute;
-
     offence.statusCode = 'UNPAID';
     offence.statusDesc = 'Outstanding Balance';
     offence.notes = '';
