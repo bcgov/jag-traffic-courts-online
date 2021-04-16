@@ -4,13 +4,12 @@ metadata:
   name: traffic-courts-online
   description: >-
     Deployment template for the Traffic Courts Online App
-
 parameters:
 - name: NAME
   displayName: name
   description: A prefix appended to all objects
   required: true
-  value: traffic-courts
+  value: tco
 - name: OC_NAMESPACE
   required: true
   value: 0198bb
@@ -21,11 +20,6 @@ parameters:
   value: citizen-portal
 - name: FRONTEND_URL
   required: true
-- name: API_POD
-  required: true
-  value: dispute-api
-- name: API_URL
-  required: true
 - name: USE_KEYCLOAK
   required: true
   value: "true"
@@ -35,18 +29,25 @@ parameters:
 - name: URL_STUB
   value: "-0198bb-dev.apps.silver.devops.gov.bc.ca"
   required: false
-
+- name: WEB_SCHEMA
+  value: https
+- name: API_POD
+  required: true
+  value: dispute-api
 objects:
-### Citizen Portal Deployment Config ###
+### Frontend
+#   Deployment Config
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
+  namespace: ${OC_NAMESPACE}-${OC_APP}
   metadata:
     name: ${FRONTEND_POD}
+    namespace: ${OC_NAMESPACE}-${OC_APP}
     labels:
       app.kubernetes.io/part-of: ${NAME}
   spec:
     completionDeadlineSeconds: 1200
-    replicas: 3
+    replicas: 1
     selector:
       name: ${FRONTEND_POD}
     strategy:
@@ -55,25 +56,21 @@ objects:
       maxUnavailable: 0
     template:
       metadata:
-        labels:          
+        labels:
+          dev-app: ${NAME}
           name: ${FRONTEND_POD}
       spec:
         containers:
-        - args:
-          - nginx
-          - -g
-          - daemon off;
-          env:
+        - env:
           - name: USE_KEYCLOAK
             value: "${USE_KEYCLOAK}"
           - name: USE_MOCK_SERVICES
             value: "${USE_MOCK_SERVICES}"
-          image: ' '
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/citizen-portal:${OC_APP}
           name: ${FRONTEND_POD} 
           ports:
-          - containerPort: 8080
-          resources: {}
-        restartPolicy: Always
+            - containerPort: 8080
     triggers:
       - type: ConfigChange
       - type: ImageChange
@@ -84,100 +81,105 @@ objects:
           from:
             kind: ImageStreamTag
             namespace: "${OC_NAMESPACE}-tools"
-            name: '${FRONTEND_POD}:${OC_APP}'
+            name: 'citizen-portal:${OC_APP}'
   status: {}
-
 ### Citizen Portal Service ###
 - apiVersion: v1
   kind: Service
+  namespace: ${OC_NAMESPACE}-${OC_APP}
   metadata:
-    namespace: "${OC_NAMESPACE}-${OC_APP}"
-    name: ${FRONTEND_POD}    
+    name: ${FRONTEND_POD}
+    namespace: ${OC_NAMESPACE}-${OC_APP}
+    labels:
+      app.kubernetes.io/part-of: ${NAME}
   spec:
     ports:
-      - protocol: TCP
+      - name: "http"
         port: 80
         targetPort: 8080
     selector:
-      app: ${FRONTEND_POD}
-
-### Citizen Portal Imagestream ###
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    name: ${FRONTEND_POD}
-    namespace: "${OC_NAMESPACE}-tools"
-
+      name: ${FRONTEND_POD}
 ### Citizen Portal Routes ###
 - apiVersion: route.openshift.io/v1
   kind: Route
+  namespace: ${OC_NAMESPACE}-${OC_APP}
+  labels:
+    app: ${FRONTEND_POD}
+    app.kubernetes.io/component: ${NAME}
+    app.kubernetes.io/instance: ${NAME}
+    app.kubernetes.io/part-of: ${NAME}
   metadata:
     name: ${FRONTEND_POD}
-    namespace: "${OC_NAMESPACE}-${OC_APP}" 
+    namespace: ${OC_NAMESPACE}-${OC_APP}
   spec:
-    host: ${API_URL}${URL_STUB}
+    host: ${FRONTEND_URL}${URL_STUB}
     to:
       kind: Service
       name: ${FRONTEND_POD}
       weight: 100
     port:
-      targetPort: 80
+      targetPort: http
     tls:
       termination: edge
     wildcardPolicy: None
-
 ### Dispute API Deployment Configs ###
+
+#   Deployment Config
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
+  namespace: ${OC_NAMESPACE}-${OC_APP}
   metadata:
     name: ${API_POD}
+    namespace: ${OC_NAMESPACE}-${OC_APP}
     labels:
       app.kubernetes.io/part-of: ${NAME}
   spec:
-  selector:
-    app: ${API_POD}
-  replicas: 1  
-  strategy:
-    resources: {}
-  template:
-    metadata:
-      labels:
-        app: ${API_POD}
-      creationTimestamp: null     
-    spec:
-      containers:
-      - env:
-        - name: ASPNETCORE_ENVIRONMENT
-          value: Development
-        - name: SPLUNK_COLLECTOR_URL
-          value: ""
-        - name: SPLUNK_TOKEN
-          value: ""
-        image: ' '
-        name: ${API_POD}
-        ports:
-        - containerPort: 8080
-        resources: {}
-      restartPolicy: Always
-  test: false
-  triggers:
-  - type: ConfigChange
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - ${API_POD}
-      from:
-        kind: ImageStreamTag
-        namespace: "${OC_NAMESPACE}-tools"
-        name: ${API_POD}:${OC_APP}
-    type: ImageChange  
+    completionDeadlineSeconds: 1200
+    replicas: 1
+    selector:
+      name: ${API_POD}
+    strategy:
+      type: Recreate
+      maxSurge: 50%
+      maxUnavailable: 0
+    template:
+      metadata:
+        labels:
+          dev-app: ${NAME}
+          name: ${API_POD}
+      spec:
+        containers:
+          - env:
+              - name: ASPNETCORE_ENVIRONMENT
+                value: Development
+              - name: SPLUNK_COLLECTOR_URL
+                value: ""
+              - name: SPLUNK_TOKEN
+                value: ""
+            image: >-
+              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/dispute-api:${OC_APP}
+            name: ${API_POD}
+            ports:
+              - containerPort: 8080
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - ${API_POD}
+          from:
+            kind: ImageStreamTag
+            namespace: "${OC_NAMESPACE}-tools"
+            name: 'dispute-api:${OC_APP}'
   status: {}
-
 #### Dispute API Service ###
 - apiVersion: v1
+  namespace: ${OC_NAMESPACE}-${OC_APP}
   kind: Service
   metadata:
     name: ${API_POD}
+    namespace: ${OC_NAMESPACE}-${OC_APP}
     labels:
       app.kubernetes.io/part-of: ${NAME}
   spec:
@@ -187,25 +189,3 @@ objects:
         targetPort: 8080
     selector:
       name: ${API_POD}
-
-#### Dispute API Imagestream ###
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    creationTimestamp: null
-    labels:
-      app.kubernetes.io/part-of: ${NAME}
-    name: ${API_POD}
-    namespace: "${OC_NAMESPACE}-tools"
-  spec:
-    tags:
-    - annotations: null
-      from:
-        kind: DockerImage
-        name: ${API_POD}
-      generation: null
-      importPolicy: {}
-      name: latest
-  status:
-    dockerImageRepository: ""
-
