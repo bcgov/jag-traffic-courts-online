@@ -31,19 +31,19 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2.4.0
         with:
-          context: ./src/backend
+          context: ./src/backend/TrafficCourtsApi
           push: true
           tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:dev
           build-args:
             ASPNETCORE_ENVIRONMENT=Development
-            SPLUNK_COLLECTOR_URL=${{secrets.SPLUNK_COLLECTOR_URL}}
-            SPLUNK_TOKEN=${{secrets.SPLUNK_HEC_TOKEN}}
-            OAUTH__OAUTHURL=${{secrets.OAUTH__OAUTHURL}}
-            OAUTH__RESOURCEURL=${{secrets.OAUTH__RESOURCEURL}}
-            OAUTH__CLIENTID=${{secrets.OAUTH__CLIENTID}}
-            OAUTH__SECRET=${{secrets.OAUTH__SECRET}}
-            RSI__BASEADDRESS=${{secrets.RSI__BASEADDRESS}}
-
+            SPLUNK_COLLECTOR_URL='${{secrets.SPLUNK_COLLECTOR_URL}}'
+            SPLUNK_TOKEN='${{secrets.SPLUNK_HEC_TOKEN}}'
+            OAUTH__OAUTHURL='${{secrets.OAUTH__OAUTHURL}}'
+            OAUTH__RESOURCEURL='${{secrets.OAUTH__RESOURCEURL}}'
+            OAUTH__CLIENTID='${{secrets.OAUTH__CLIENTID}}'
+            OAUTH__SECRET='${{secrets.OAUTH__SECRET}}'
+            RSI__BASEADDRESS='${{secrets.RSI__BASEADDRESS}}'
+            
   build-frontend:
     runs-on: ubuntu-20.04
     environment: Main
@@ -75,9 +75,9 @@ jobs:
           push: true
           tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-portal:dev
           build-args:
-            API_URL=${{secrets.API_URL}} 
-            KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}} 
-            KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} 
-            KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}} 
-            USE_MOCK_SERVICES=${{secrets.USE_MOCK_SERVICES}} 
-            USE_KEYCLOAK=${{secrets.USE_KEYCLOAK}} 
+            API_URL='${{secrets.API_URL}}'
+            KEYCLOAK_URL='${{secrets.KEYCLOAK_URL}}'
+            KEYCLOAK_REALM='${{secrets.KEYCLOAK_REALM}}'
+            KEYCLOAK_CLIENT_ID='${{secrets.KEYCLOAK_CLIENT_ID}}'
+            USE_MOCK_SERVICES='${{secrets.USE_MOCK_SERVICES}}' 
+            USE_KEYCLOAK='${{secrets.USE_KEYCLOAK}}'

@@ -42,7 +42,7 @@ services:
     environment:
       USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
       USE_KEYCLOAK: ${USE_KEYCLOAK}
-    command: "nginx -g 'daemon off;'"
+    # command: "nginx -g 'daemon off;'"
     restart: always
     ports:
       - "8080:8080"
