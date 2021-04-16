@@ -1,94 +1,74 @@
 name: Test-Build .NET API Image and Push to Openshift Registry
 on:
   push:
-    branches: [test]
+    branches: [test,tools]
   workflow_dispatch:
-    branches: [test]
-
+    branches: [test,tools]
 jobs:
   build-api:
     runs-on: ubuntu-20.04
-    environment: test
-    env:
-      VERSION: v1
-      IMAGE_NAME: dispute-api
-      IMAGE_TAGS: test
-
+    environment: Development
     steps:
-      - uses: actions/checkout@v2
+      - name: Git Checkout
+        uses: actions/checkout@v2
 
-      - name: Build the Image
-        
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |          
-          docker login ${{secrets.REDHAT_REPO}} -u ${{secrets.REDHAT_REPO_USER}} -p ${{secrets.REDHAT_REPO_AUTH}}
-          docker-compose build --force-rm --no-cache $IMAGE_NAME
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - name: Login to RedHat
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.REDHAT_REPO}}
+          username: ${{secrets.REDHAT_REPO_USER}}
+          password: ${{secrets.REDHAT_REPO_AUTH}}
 
-      - name: Tag the Image
-        
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker tag jag-traffic-courts-online_${{env.IMAGE_NAME}} ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{env.IMAGE_NAME}}
-
-      - name: Push To Registry via Docker
-        
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker login ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}} -u ${{secrets.OPENSHIFT_SA_USERNAME}} -p ${{secrets.OPENSHIFT_SA_PASSWORD}}
-          docker image push --all-tags ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{env.IMAGE_NAME}}
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+      - name: Build and push
+        uses: docker/build-push-action@v2.4.0
+        with:
+          context: ./src/backend
+          push: true
+          tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:dev
 
   build-frontend:
     runs-on: ubuntu-20.04
     environment: test
-    env:
-      VERSION: v1
-      IMAGE_NAME: citizen-portal
-      IMAGE_TAGS: latest
-      API_URL: ${{secrets.API_URL}}
-      KEYCLOAK_URL: ${{secrets.KEYCLOAK_URL}}
-      KEYCLOAK_REALM: ${{secrets.KEYCLOAK_REALM}}
-      KEYCLOAK_CLIENT_ID: ${{secrets.KEYCLOAK_CLIENT_ID}}
-      USE_MOCK_SERVICES: ${{secrets.USE_MOCK_SERVICES}}
-      USE_KEYCLOAK: ${{secrets.USE_KEYCLOAK}}
     steps:
-      - uses: actions/checkout@v2
+      - name: Git Checkout
+        uses: actions/checkout@v2
 
-      - name: Build the Image
-        
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |          
-          docker login ${{secrets.REDHAT_REPO}} -u ${{secrets.REDHAT_REPO_USER}} -p ${{secrets.REDHAT_REPO_AUTH}}
-          docker-compose build --force-rm --no-cache \
-          --build-arg API_URL='${{secrets.API_URL}}' \
-          --build-arg KEYCLOAK_URL='${{secrets.KEYCLOAK_URL}}' \
-          --build-arg KEYCLOAK_REALM='${{secrets.KEYCLOAK_REALM}}' \
-          --build-arg KEYCLOAK_CLIENT_ID='${{secrets.KEYCLOAK_CLIENT_ID}}' \
-          --build-arg USE_MOCK_SERVICES='${{secrets.USE_MOCK_SERVICES}}' \
-          --build-arg USE_KEYCLOAK='${{secrets.USE_KEYCLOAK}}' \
-          $IMAGE_NAME
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Tag the frontend image
-      
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker tag jag-traffic-courts-online_${{env.IMAGE_NAME}} ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{env.IMAGE_NAME}}
+      - name: Login to RedHat
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.REDHAT_REPO}}
+          username: ${{secrets.REDHAT_REPO_USER}}
+          password: ${{secrets.REDHAT_REPO_AUTH}}
 
-      - name: Push frontend to Docker
-      
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |
-          docker login ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}} -u ${{secrets.OPENSHIFT_SA_USERNAME}} -p ${{secrets.OPENSHIFT_SA_PASSWORD}}
-          docker image push --all-tags ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/${{env.IMAGE_NAME}}
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
 
+      - name: Build and push
+        uses: docker/build-push-action@v2.4.0
+        with:
+          context: ./src/frontend/citizen-portal
+          push: true
+          tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-portal:dev
+          build-args:
+            API_URL=${{secrets.API_URL}} 
+            KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}} 
+            KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} 
+            KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}} 
+            USE_MOCK_SERVICES=${{secrets.USE_MOCK_SERVICES}} 
+            USE_KEYCLOAK=${{secrets.USE_KEYCLOAK}} 
