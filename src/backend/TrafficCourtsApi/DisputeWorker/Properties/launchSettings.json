@@ -2,6 +2,7 @@
   "profiles": {
     "DisputeWorker": {
       "commandName": "Project",
+      "dotnetRunMessages": "true",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development",
         "RABBITMQ__HOST": "localhost",

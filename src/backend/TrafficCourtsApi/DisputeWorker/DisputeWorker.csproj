@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>dotnet-DisputeWorker-7D0A8295-2E56-47C9-A477-F7E5711A50AE</UserSecretsId>
+    <UserSecretsId>dotnet-DisputeWorker-E2432967-AC5E-48EF-AA0A-738A11BC7CB5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="7.1.8" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.1.8" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.1.8" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

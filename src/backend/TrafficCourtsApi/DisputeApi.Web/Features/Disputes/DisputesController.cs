@@ -34,20 +34,20 @@ namespace DisputeApi.Web.Features.Disputes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
+        public async Task<IActionResult> CreateDispute([FromBody]DisputeViewModel dispute)
         {
             dispute.Status = DisputeStatus.Submitted;
             var result = await _disputeService.CreateAsync(dispute);
-
-            ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"rabbitmq://localhost:5672/DisputeWorker.Dispute"));
-
-            await sendEndpoint.Send<IDispute>(new Dispute(){OffenceNumber = 1, ViolationTicketNumber = "violationTicket"});
 
             if (result == null)
             {
                 ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
+
+            ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"rabbitmq://localhost:5672/DisputeOrdered_queue"));
+
+            await sendEndpoint.Send<Dispute>(new Dispute() { OffenceNumber = 1, ViolationTicketNumber = "violationTicket" });
 
             return Ok();
         }

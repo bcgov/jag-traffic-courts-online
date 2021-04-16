@@ -10,10 +10,10 @@ namespace DisputeApi.Web.Features.Disputes
 {
     public interface IDisputeService
     {
-        Task<Dispute> CreateAsync(Dispute dispute);
-        Task<IEnumerable<Dispute>> GetAllAsync();
-        Task<Dispute> GetAsync(int disputeId);
-        Task<Dispute> FindDispute(string ticketNumber, int offenceNumber);
+        Task<DisputeViewModel> CreateAsync(DisputeViewModel dispute);
+        Task<IEnumerable<DisputeViewModel>> GetAllAsync();
+        Task<DisputeViewModel> GetAsync(int disputeId);
+        Task<DisputeViewModel> FindDispute(string ticketNumber, int offenceNumber);
     }
 
     public class DisputeService : IDisputeService
@@ -28,7 +28,7 @@ namespace DisputeApi.Web.Features.Disputes
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Dispute> CreateAsync(Dispute dispute)
+        public async Task<DisputeViewModel> CreateAsync(DisputeViewModel dispute)
         {
 
             var existedDispute = await FindDispute(dispute.ViolationTicketNumber, dispute.OffenceNumber);
@@ -45,7 +45,7 @@ namespace DisputeApi.Web.Features.Disputes
 
         }
 
-        public async Task<IEnumerable<Dispute>> GetAllAsync()
+        public async Task<IEnumerable<DisputeViewModel>> GetAllAsync()
         {
             _logger.LogDebug("Getting all disputes");
 
@@ -54,16 +54,16 @@ namespace DisputeApi.Web.Features.Disputes
             return disputes;
         }
 
-        public async Task<Dispute> GetAsync(int disputeId)
+        public async Task<DisputeViewModel> GetAsync(int disputeId)
         {
             _logger.LogDebug("Get dispute");
 
-            Dispute dispute = await _context.Disputes.SingleOrDefaultAsync(_ => _.Id == disputeId);
+            DisputeViewModel dispute = await _context.Disputes.SingleOrDefaultAsync(_ => _.Id == disputeId);
 
             return dispute;
         }
 
-        public async Task<Dispute> FindDispute(string ticketNumber, int offenceNumber)
+        public async Task<DisputeViewModel> FindDispute(string ticketNumber, int offenceNumber)
         {
             _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}, offenceNumber {offenceNumber}",ticketNumber,offenceNumber);
 

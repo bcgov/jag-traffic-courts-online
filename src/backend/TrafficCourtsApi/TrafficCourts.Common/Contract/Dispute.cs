@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Common.Contract
 {
-    public interface IDispute
+ 
+    public class Dispute 
     {
-        public int Id { get; }
-        public string ViolationTicketNumber { get; }
-        public int OffenceNumber { get; }
-        public string EmailAddress { get; }
-        public OffenceAgreementStatus OffenceAgreementStatus { get; }
-        public bool RequestReduction { get; }
-        public bool RequestMoreTime { get; }
-        public string ReductionReason { get; }
-        public string MoreTimeReason { get; }
-        public bool LawyerPresent { get; }
-        public bool InterpreterRequired { get; }
-        public bool WitnessPresent { get; }
-        public string InterpreterLanguage { get; }
-        public bool InformationCertified { get; }
-        public DisputeStatus Status { get; }
+        public int Id { get; set; }
+        public string ViolationTicketNumber { get; set; }
+        public int OffenceNumber { get; set; }
+        public string EmailAddress { get; set; }
+        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public bool RequestReduction { get; set; }
+        public bool RequestMoreTime { get; set; }
+        public string ReductionReason { get; set; }
+        public string MoreTimeReason { get; set; }
+        public bool LawyerPresent { get; set; }
+        public bool InterpreterRequired { get; set; }
+        public bool WitnessPresent { get; set; }
+        public string InterpreterLanguage { get; set; }
+        public bool InformationCertified { get; set; }
+        public DisputeStatus Status { get; set; }
     }
-
     public enum DisputeStatus
     {
         New,

@@ -87,59 +87,6 @@ namespace DisputeApi.Web
             services.AddRouting(options => options.LowercaseUrls = true);
         }
 
-        private void ConfigureServiceBus(IServiceCollection services)
-        {
-            services.Configure<RabbitMqConfiguration>(_configuration.GetSection("RabbitMq"));
-
-            var rabbitMqSettings = _configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>();
-            var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
-
-            services.AddMassTransit(x =>
-            {
-                x.AddBus( provider => Bus.Factory.CreateUsingRabbitMq(cfg =>
-                {
-                    cfg.Host(new Uri(rabbitBaseUri), hostConfig =>
-                    {
-                        hostConfig.Username(rabbitMqSettings.Username);
-                        hostConfig.Password(rabbitMqSettings.Password);
-                    });
-                }));
-            });
-            services.AddMassTransitHostedService();
-        }
-
-        internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
-        {
-            string authority = _configuration["Jwt:Authority"];
-            string audience = _configuration["Jwt:Audience"];
-            if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
-            {
-                throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
-            }
-            if (!authority.EndsWith("/", StringComparison.InvariantCulture))
-            {
-                authority += "/";
-            }
-            string metadataAddress = authority + ".well-known/uma2-configuration";
-            o.Authority = authority;
-            o.Audience = audience;
-            o.MetadataAddress = metadataAddress;
-            if (_env.IsDevelopment())
-            {
-                o.RequireHttpsMetadata = false;
-            }
-
-            o.Events = new JwtBearerEvents
-            {
-                OnAuthenticationFailed = c =>
-                {
-                    c.NoResult();
-                    c.Response.StatusCode = 401;
-                    c.Response.ContentType = "text/plain";
-                    return c.Response.WriteAsync("An error occurred processing your authentication.");
-                }
-            };
-        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -186,6 +133,7 @@ namespace DisputeApi.Web
                 });
                 endpoints.MapControllers();
             });
+
         }
 
 
@@ -216,7 +164,7 @@ namespace DisputeApi.Web
             });
         }
 
-        private void ConfigureRsiClient(IServiceCollection services)
+        internal void ConfigureRsiClient(IServiceCollection services)
         {
             services.AddOptions<OAuthOptions>()
                 .Bind(_configuration.GetSection("OAuth"))
@@ -238,6 +186,60 @@ namespace DisputeApi.Web
             {
                 services.AddTransient<ITicketDisputeService, TicketDisputeFromRsiService>();
             }
+        }
+
+        internal void ConfigureServiceBus(IServiceCollection services)
+        {
+            services.Configure<RabbitMqConfiguration>(_configuration.GetSection("RabbitMq"));
+
+            var rabbitMqSettings = _configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>();
+            var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(new Uri(rabbitBaseUri), hostConfig =>
+                    {
+                        hostConfig.Username(rabbitMqSettings.Username);
+                        hostConfig.Password(rabbitMqSettings.Password);
+                    });
+                });
+            });
+            services.AddMassTransitHostedService();
+        }
+
+        internal void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
+        {
+            string authority = _configuration["Jwt:Authority"];
+            string audience = _configuration["Jwt:Audience"];
+            if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(authority))
+            {
+                throw new ConfigurationErrorsException("One or more required configuration parameters are missing Jwt:Audience or Jwt:Authority");
+            }
+            if (!authority.EndsWith("/", StringComparison.InvariantCulture))
+            {
+                authority += "/";
+            }
+            string metadataAddress = authority + ".well-known/uma2-configuration";
+            o.Authority = authority;
+            o.Audience = audience;
+            o.MetadataAddress = metadataAddress;
+            if (_env.IsDevelopment())
+            {
+                o.RequireHttpsMetadata = false;
+            }
+
+            o.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = c =>
+                {
+                    c.NoResult();
+                    c.Response.StatusCode = 401;
+                    c.Response.ContentType = "text/plain";
+                    return c.Response.WriteAsync("An error occurred processing your authentication.");
+                }
+            };
         }
 
     }

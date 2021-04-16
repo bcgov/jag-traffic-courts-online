@@ -1,9 +1,10 @@
-using System;
-using System.Configuration;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using System;
+using TrafficCourts.Common.Configuration;
 
 namespace DisputeWorker
 {
@@ -11,6 +12,7 @@ namespace DisputeWorker
     {
         public static void Main(string[] args)
         {
+            Log.Logger = SerilogLogging.GetDefaultLogger<Program>();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -19,66 +21,38 @@ namespace DisputeWorker
                 .ConfigureServices((hostContext, services) =>
                 {
                     IConfiguration configuration = hostContext.Configuration;
-                    var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>();
-                    services.AddMassTransit(x =>
-                    {
-                        x.AddConsumer<DisputeConsumer>();
-                        x.AddBus(provider => ConfigureBus(provider, rabbitMqSettings));
-                    });
-                    services.AddMassTransitHostedService(true);
+                    ConfigureServiceBus(services, configuration);
                     services.AddHostedService<Worker>();
+
                 });
 
-        private static IBusControl ConfigureBus(
-            IServiceProvider provider,
-            RabbitMqConfiguration rabbitMqConfigurations) => Bus.Factory.CreateUsingRabbitMq(
-            cfg =>
+        internal static void ConfigureServiceBus(IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<RabbitMQConfiguration>(configuration.GetSection("RabbitMq"));
+
+            var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMQConfiguration>();
+            var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+
+            services.AddMassTransit(config =>
             {
-                cfg.Host(
-                    rabbitMqConfigurations.Host,
-                    "/",
-                    hst =>
+                config.AddConsumer<DisputeOrderedConsumer>();
+
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(new Uri(rabbitBaseUri), hostConfig =>
                     {
-                        hst.Username(rabbitMqConfigurations.Username);
-                        hst.Password(rabbitMqConfigurations.Password);
+                        hostConfig.Username(rabbitMqSettings.Username);
+                        hostConfig.Password(rabbitMqSettings.Password);
                     });
 
-                cfg.ReceiveEndpoint($"{typeof(Dispute).Namespace}.{typeof(Dispute).Name}", endpoint =>
-                {
-                    endpoint.Consumer<DisputeConsumer>(provider);
+                    cfg.ReceiveEndpoint($"DisputeOrdered_queue", endpoint =>
+                    {
+                        endpoint.Consumer<DisputeOrderedConsumer>(ctx);
+                    });
                 });
-
             });
-    }
-
-    public class RabbitMqConfiguration
-    {
-        public RabbitMqConfiguration()
-        {
-            this.Host = "localhost";
-            this.Port = 5672;
-            this.Username = "guest";
-            this.Password = "guest";
+            services.AddMassTransitHostedService();
         }
-
-        /// <summary>
-        /// RabbitMq Host
-        /// </summary>
-        public string Host { get; set; }
-
-        /// <summary>
-        /// RabbitMq Port
-        /// </summary>
-        public int Port { get; set; }
-
-        /// <summary>
-        /// RabbitMq Username
-        /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
-        /// RabbitMq Password
-        /// </summary>
-        public string Password { get; set; }
     }
+ 
 }

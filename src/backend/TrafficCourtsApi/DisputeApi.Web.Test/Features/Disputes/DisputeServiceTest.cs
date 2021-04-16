@@ -47,21 +47,21 @@ namespace DisputeApi.Web.Test.Features.Disputes
         public async Task get_disputes()
         {
             var result = await _service.GetAllAsync();
-            Assert.IsInstanceOf<IEnumerable<Dispute>>(result);
+            Assert.IsInstanceOf<IEnumerable<DisputeViewModel>>(result);
             //_loggerMock.VerifyLog(LogLevel.Debug, "Returning list of mock disputes", Times.Once());
         }
 
         [Theory]
         [AutoData]
-        public async Task create_and_get_dispute(Dispute expected)
+        public async Task create_and_get_dispute(DisputeViewModel expected)
         {
             var result = await _service.CreateAsync(expected);
-            Assert.IsInstanceOf<Dispute>(result);
+            Assert.IsInstanceOf<DisputeViewModel>(result);
 
             //_loggerMock.VerifyLog(LogLevel.Debug, "Creating mock dispute", Times.Once());
 
             result = await _service.GetAsync(expected.Id);
-            Assert.IsInstanceOf<Dispute>(result);
+            Assert.IsInstanceOf<DisputeViewModel>(result);
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Id, expected.Id);
             //_loggerMock.VerifyLog(LogLevel.Information, "Returning a specific mock dispute", Times.Once());

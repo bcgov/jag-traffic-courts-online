@@ -13,7 +13,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Models
     {
         [Theory]
         [AutoData]
-        public void can_create_class(Dispute expected)
+        public void can_create_class(DisputeViewModel expected)
         {
             var actual = PropertyCopy.CopyProperties(expected);
 

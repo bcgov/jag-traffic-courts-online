@@ -9,6 +9,6 @@ namespace DisputeApi.Web.Infrastructure
         {
         }
         public DbSet<Ticket> Tickets { get; set; }
-        public DbSet<Dispute> Disputes { get; set; }
+        public DbSet<DisputeViewModel> Disputes { get; set; }
     }
 }

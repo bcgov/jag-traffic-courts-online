@@ -20,45 +20,45 @@ namespace DisputeApi.Web.Test.Features.Disputes
     {
         private Mock<ILogger<DisputesController>> _loggerMock;
         private Mock<IDisputeService> _disputeServiceMock;
-        private Mock<IPublishEndpoint> _publishEndpointMock;
+        private Mock<ISendEndpointProvider> _sendEndpointProviderMock;
 
         [SetUp]
         public void SetUp()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<DisputesController>();
             _disputeServiceMock = new Mock<IDisputeService>();
-            _publishEndpointMock = new Mock<IPublishEndpoint>();
+            _sendEndpointProviderMock = new Mock<ISendEndpointProvider>();
         }
 
         [Test]
         public void throw_ArgumentNullException_if_passed_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _disputeServiceMock.Object, _publishEndpointMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null, _publishEndpointMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _disputeServiceMock.Object, _sendEndpointProviderMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null, _sendEndpointProviderMock.Object));
             Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, null));
         }
 
         [Theory]
         [AutoData]
-        public async Task get_disputes(Dispute dispute)
+        public async Task get_disputes(DisputeViewModel dispute)
         {
-            IEnumerable<Dispute> expected = new List<Dispute> { dispute };
+            IEnumerable<DisputeViewModel> expected = new List<DisputeViewModel> { dispute };
 
             _disputeServiceMock
                 .Setup(x => x.GetAllAsync())
                 .Returns(Task.FromResult(expected));
 
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
 
             var result = await sut.GetDisputes();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkObjectResult>(result);
 
             var objectResult = (ObjectResult) result;
-            Assert.IsInstanceOf<IEnumerable<Dispute>>(objectResult.Value);
+            Assert.IsInstanceOf<IEnumerable<DisputeViewModel>>(objectResult.Value);
 
-            var values = (IEnumerable<Dispute>) objectResult.Value;
+            var values = (IEnumerable<DisputeViewModel>) objectResult.Value;
             Assert.AreEqual(values.Count(), 1);
 
             _disputeServiceMock.Verify(x => x.GetAllAsync(), Times.Once);
@@ -66,19 +66,19 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
-        public async Task get_dispute(Dispute expected)
+        public async Task get_dispute(DisputeViewModel expected)
         {
             _disputeServiceMock
                 .Setup(x => x.GetAsync(expected.Id))
                 .Returns(Task.FromResult(expected));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
 
             var result = await sut.GetDispute(expected.Id);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkObjectResult>(result);
 
-            Assert.IsInstanceOf<Dispute>(((OkObjectResult)result).Value);
+            Assert.IsInstanceOf<DisputeViewModel>(((OkObjectResult)result).Value);
             _disputeServiceMock.Verify(x => x.GetAsync(expected.Id), Times.Once);
         }
 
@@ -88,9 +88,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
         {
             _disputeServiceMock
                 .Setup(x => x.GetAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult((Dispute)null));
+                .Returns(Task.FromResult((DisputeViewModel)null));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
             
             var result = await sut.GetDispute(disputeId);
             Assert.IsNotNull(result);
@@ -99,13 +99,13 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
-        public async Task create_dispute(Dispute dispute)
+        public async Task create_dispute(DisputeViewModel dispute)
         {
             _disputeServiceMock
                 .Setup(x => x.CreateAsync(dispute))
                 .Returns(Task.FromResult(dispute));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
 
             var result = await sut.CreateDispute(dispute);
             Assert.IsNotNull(result);
@@ -114,13 +114,13 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
-        public async Task when_service_return_null_createDispute_return_badRequest(Dispute dispute)
+        public async Task when_service_return_null_createDispute_return_badRequest(DisputeViewModel dispute)
         {
             _disputeServiceMock
                 .Setup(x => x.CreateAsync(dispute))
-                .Returns(Task.FromResult<Dispute>(null));
+                .Returns(Task.FromResult<DisputeViewModel>(null));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _publishEndpointMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
 
             var result = (BadRequestObjectResult)await sut.CreateDispute(dispute);
             Assert.IsNotNull(result);
