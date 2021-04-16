@@ -43,10 +43,10 @@ jobs:
             OAUTH__CLIENTID='${{secrets.OAUTH__CLIENTID}}'
             OAUTH__SECRET='${{secrets.OAUTH__SECRET}}'
             RSI__BASEADDRESS='${{secrets.RSI__BASEADDRESS}}'
-            
+
   build-frontend:
     runs-on: ubuntu-20.04
-    environment: Main
+    environment: Development
     steps:
       - name: Git Checkout
         uses: actions/checkout@v2
