@@ -33,6 +33,7 @@ jobs:
         with:
           context: ./src/backend/TrafficCourtsApi
           push: true
+          no-cache: true
           tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:dev
           build-args:
             ASPNETCORE_ENVIRONMENT=Development
@@ -73,6 +74,7 @@ jobs:
         with:
           context: ./src/frontend/citizen-portal
           push: true
+          no-cache: true
           tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-portal:dev
           build-args:
             API_URL=${{secrets.API_URL}}
