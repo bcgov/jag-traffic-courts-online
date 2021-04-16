@@ -81,5 +81,9 @@ jobs:
             KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}}
             KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}}
             KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}}
+            KEYCLOAK_USER=${{secrets.KEYCLOAK_USER}}
+            KEYCLOAK_PASSWORD=${{secrets.KEYCLOAK_PASSWORD}}
+            KEYCLOAK_IMPORT=${{secrets.KEYCLOAK_IMPORT}}
+            KEYCLOAK_FRONTEND_URL=${{secrets.KEYCLOAK_FRONTEND_URL}}
             USE_MOCK_SERVICES=${{secrets.USE_MOCK_SERVICES}} 
             USE_KEYCLOAK=${{secrets.USE_KEYCLOAK}}
