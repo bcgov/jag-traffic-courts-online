@@ -1,4 +1,4 @@
-@import 'palette';
+@import "palette";
 
 //
 // MATERIAL BUTTON
@@ -8,4 +8,8 @@
   &.mat-button-base.mat-primary {
     border-color: theme-palette(blue);
   }
+}
+
+.mat-checkbox-inner-container {
+  margin-top: 5px !important;
 }

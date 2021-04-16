@@ -1,26 +1,11 @@
-export interface Ticket {
-  id?: number;
-  userId: string;
-  violationTicketNumber: string;
-  violationDate: string;
-  violationTime: string;
-  surname: string;
-  givenNames: string;
-  mailing: string;
-  postal: string;
-  city: string;
-  province: string;
-  license: string;
-  provLicense: string;
-  homePhone: string;
-  workPhone: string;
-  birthdate: Date;
-  counts: Count[];
-}
+import { Offence } from './offence.model';
 
-export interface Count {
-  id: number;
-  countNo: number;
-  statuteId: number;
-  description: string;
+export interface Ticket {
+  violationTicketNumber: string;
+  violationTime: string;
+  violationDate: string;
+  offences: Offence[];
+
+  // derived later on
+  outstandingBalance?: number;
 }

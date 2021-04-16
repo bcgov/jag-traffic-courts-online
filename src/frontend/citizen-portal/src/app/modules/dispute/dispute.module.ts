@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatStepperModule } from '@angular/material/stepper';
 
 import { SharedModule } from '@shared/shared.module';
-import { DashboardModule } from '../dashboard/dashboard.module';
 import { DisputeRoutingModule } from './dispute-routing.module';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
@@ -14,6 +13,8 @@ import { StepOverviewComponent } from './components/step-overview/step-overview.
 import { StepCourtComponent } from './components/step-court/step-court.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
+import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
+import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 
 @NgModule({
   declarations: [
@@ -26,14 +27,10 @@ import { DisputeListComponent } from './components/dispute-list/dispute-list.com
     StepCourtComponent,
     DisputeSubmitComponent,
     DisputeListComponent,
+    DisputeSummaryComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    DashboardModule,
-    DisputeRoutingModule,
-    MatStepperModule,
-  ],
+  imports: [CommonModule, SharedModule, DisputeRoutingModule, MatStepperModule],
+  providers: [CurrencyPipe, FormatDatePipe],
   exports: [DisputeRoutingModule],
 })
 export class DisputeModule {}

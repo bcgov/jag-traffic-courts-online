@@ -1,19 +1,19 @@
-<app-dashboard-header [hasMobileSidemenu]="false"></app-dashboard-header>
+<app-header></app-header>
 
 <div class="container">
   <div class="row mt-4">
-    <div class="col-lg-2">
+    <div class="col-lg-2 d-none d-lg-block">
       <div class="logo mt-4">
         <img
-          src="/assets/traffic_light.jpg"
-          style="width: 100px"
+          src="/assets/tco_ticket_types_small.png"
+          style="width: 150px"
           alt="Traffic Court Logo"
         />
       </div>
     </div>
 
     <div class="col-lg-10">
-      <app-page [busy]="busy" [mode]="pageMode">
+      <app-page [busy]="busy">
         <app-tco-page-header>
           <ng-container header>BC Traffic Court Dispute</ng-container>
         </app-tco-page-header>
@@ -23,38 +23,43 @@
           linear
           (selectionChange)="onSelectionChange($event)"
         >
-          <mat-step *ngFor="let step of disputeSteps; let i = index">
-            <ng-template matStepLabel>{{ step.title }}</ng-template>
+          <mat-step [stepControl]="reviewForm" label="Violation Ticket Review">
+            <app-step-review-ticket
+              id="stepReview"
+              [stepper]="disputeStepper"
+              (stepCancel)="onStepCancel()"
+              (stepSave)="onStepSave($event)"
+            ></app-step-review-ticket>
+          </mat-step>
 
-            <div *ngIf="step.pageName === 1">
-              <app-step-review-ticket
-                [stepper]="disputeStepper"
-                (stepSave)="onStepSave($event)"
-              ></app-step-review-ticket>
-            </div>
+          <mat-step [stepControl]="offenceForm">
+            <ng-template matStepLabel>Count Review and Action</ng-template>
+            <app-step-count
+              id="stepCount"
+              [stepper]="disputeStepper"
+              (stepSave)="onStepSave($event)"
+            ></app-step-count>
+          </mat-step>
 
-            <div *ngIf="step.pageName === 2">
-              <app-step-count
-                [stepper]="disputeStepper"
-                [step]="step"
-                (stepSave)="onStepSave($event)"
-              ></app-step-count>
-            </div>
+          <mat-step
+            label="Additional Information"
+            [stepControl]="courtForm"
+            *ngIf="showAdditionalInformationStep"
+          >
+            <app-step-court
+              id="stepCourt"
+              [stepper]="disputeStepper"
+              (stepSave)="onStepSave($event)"
+            ></app-step-court>
+          </mat-step>
 
-            <div *ngIf="step.pageName === 3">
-              <app-step-court
-                [stepper]="disputeStepper"
-                (stepSave)="onStepSave($event)"
-              ></app-step-court>
-            </div>
-
-            <div *ngIf="step.pageName === 5">
-              <app-step-overview
-                [stepper]="disputeStepper"
-                (busy)="(busy)"
-                (stepSave)="onStepSave($event)"
-              ></app-step-overview>
-            </div>
+          <mat-step label="Dispute Overview" [stepControl]="overviewForm">
+            <app-step-overview
+              id="stepOverview"
+              [stepper]="disputeStepper"
+              (busy)="(busy)"
+              (stepSave)="onStepSave($event)"
+            ></app-step-overview>
           </mat-step>
         </mat-vertical-stepper>
       </app-page>

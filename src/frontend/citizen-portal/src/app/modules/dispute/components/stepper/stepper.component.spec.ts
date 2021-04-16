@@ -6,6 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 import { StepperComponent } from './stepper.component';
+import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
+import { CurrencyPipe } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('StepperComponent', () => {
   let component: StepperComponent;
@@ -17,10 +20,12 @@ describe('StepperComponent', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),
+        RouterTestingModule,
         BrowserAnimationsModule,
         NgxMaterialModule,
       ],
       declarations: [StepperComponent],
+      providers: [FormatDatePipe, CurrencyPipe],
     }).compileComponents();
   });
 

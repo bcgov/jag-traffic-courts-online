@@ -1,27 +1,37 @@
-import { AbstractControl, FormGroup, ValidatorFn, Validator, Validators, ValidationErrors } from '@angular/forms';
+import {
+  AbstractControl,
+  ValidatorFn,
+  Validators,
+  ValidationErrors,
+} from '@angular/forms';
 
 export class FormControlValidators {
-
   /**
    * @description
    * Checks the form control value is letters.
    */
   public static alpha(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+    if (!control.value) {
+      return null;
+    }
     const regExp = /^[a-z]+$/i;
-    const valid = (control.valid && regExp.test(control.value));
-    return (valid) ? null : { alpha: true };
+    const valid = control.valid && regExp.test(control.value);
+    return valid ? null : { alpha: true };
   }
 
   /**
    * @description
    * Checks the form control value is letters or numerals.
    */
-  public static alphanumeric(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+  public static alphanumeric(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
     const regExp = new RegExp(/^[a-zA-Z0-9]*$/);
-    const valid = (control.valid && regExp.test(control.value));
-    return (valid) ? null : { alphanumeric: true };
+    const valid = control.valid && regExp.test(control.value);
+    return valid ? null : { alphanumeric: true };
   }
 
   /**
@@ -37,11 +47,13 @@ export class FormControlValidators {
    *                  of 2, or no fraction
    */
   public static currency(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+    if (!control.value) {
+      return null;
+    }
     // Doesn't allow . or .# only .## or no decimal
     const regExp = /^(0?|(?![0,])(,?[\d]{1,3})+)(\.[\d]{2})?$/;
-    const valid = (control.valid && regExp.test(control.value));
-    return (valid) ? null : { currency: true };
+    const valid = control.valid && regExp.test(control.value);
+    return valid ? null : { currency: true };
   }
 
   /**
@@ -49,17 +61,23 @@ export class FormControlValidators {
    * Checks the form control value is an email address.
    */
   public static email(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+    if (!control.value) {
+      return null;
+    }
     const regExp = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    const valid = (control.valid && regExp.test(control.value));
-    return (valid) ? null : { email: true };
+    const valid = control.valid && regExp.test(control.value);
+    return valid ? null : { email: true };
   }
 
-  public static multipleEmails(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+  public static multipleEmails(
+    control: AbstractControl
+  ): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
     const regExp = /^([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})(,(\s)?[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})*$/i;
-    const valid = (control.valid && regExp.test(control.value));
-    return (valid) ? null : { emails: true };
+    const valid = control.valid && regExp.test(control.value);
+    return valid ? null : { emails: true };
   }
 
   /**
@@ -67,11 +85,13 @@ export class FormControlValidators {
    * Checks the form control value is an phone number.
    */
   public static phone(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+    if (!control.value) {
+      return null;
+    }
     // Allows for () or not on area code
     // const regExp = /^((\([2-9]{1}[0-9]{2}\))|(([2-9]{1}[0-9]{2})))[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     const regExp = /^([2-9]{1}[0-9]{2})[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-    const valid = (control.valid && regExp.test(control.value));
+    const valid = control.valid && regExp.test(control.value);
     return valid ? null : { phone: true };
   }
 
@@ -79,11 +99,16 @@ export class FormControlValidators {
    * @description
    * Checks the form control value is a float.
    */
-  public static float(control: AbstractControl, precision: number = 2): ValidationErrors | null {
-    if (!control.value) { return null; }
+  public static float(
+    control: AbstractControl,
+    precision: number = 2
+  ): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
     // Doesn't allow . or .# only .##+ or no decimal
     const regExp = /^[-+]?(0?|(?![0,])(,?[\d]{1,3})+)(\.[\d]{2,})?$/;
-    const valid = (control.valid && regExp.test(control.value));
+    const valid = control.valid && regExp.test(control.value);
     return valid ? null : { float: true };
   }
 
@@ -92,9 +117,11 @@ export class FormControlValidators {
    * Checks the form control value is numeric.
    */
   public static numeric(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+    if (!control.value) {
+      return null;
+    }
     const regExp = /^[0-9]+$/;
-    const valid = (control.valid && regExp.test(control.value));
+    const valid = control.valid && regExp.test(control.value);
     return valid ? null : { numeric: true };
   }
 
@@ -103,9 +130,11 @@ export class FormControlValidators {
    * Checks the form control value is a percentage.
    */
   public static percent(control: AbstractControl): ValidationErrors | null {
-    if (!control.value) { return null; }
+    if (!control.value) {
+      return null;
+    }
     const regExp = /^([0-9]|([1-9][0-9])|100)(\.[\d]{0,2})?$/;
-    const valid = (control.valid && regExp.test(control.value));
+    const valid = control.valid && regExp.test(control.value);
     return valid ? null : { percent: true };
   }
 
@@ -113,9 +142,11 @@ export class FormControlValidators {
    * @description
    * Checks a form control is non-empty or false.
    */
-  public static requiredTruthful(control: AbstractControl): ValidationErrors | null {
+  public static requiredTruthful(
+    control: AbstractControl
+  ): ValidationErrors | null {
     // Not checking the control value on purpose!
-    return (typeof control.value === 'boolean')
+    return typeof control.value === 'boolean'
       ? Validators.requiredTrue(control)
       : Validators.required(control);
   }
@@ -124,11 +155,11 @@ export class FormControlValidators {
    * @description
    * Checks a form control is a boolean.
    */
-  public static requiredBoolean(control: AbstractControl): ValidationErrors | null {
+  public static requiredBoolean(
+    control: AbstractControl
+  ): ValidationErrors | null {
     // Not checking the control value on purpose!
-    return (typeof control.value === 'boolean')
-      ? null
-      : { boolean: true };
+    return typeof control.value === 'boolean' ? null : { boolean: true };
   }
 
   /**
@@ -136,14 +167,22 @@ export class FormControlValidators {
    * Checks a form control is within a valid length,
    * if there is no maxLength, it will be assumed to be the same as minLength.
    */
-  public static requiredLength(minLength: number, maxLength?: number): ValidatorFn {
+  public static requiredLength(
+    minLength: number,
+    maxLength?: number
+  ): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value) { return null; }
-      if (!maxLength) { maxLength = minLength; }
+      if (!control.value) {
+        return null;
+      }
+      if (!maxLength) {
+        maxLength = minLength;
+      }
       const currentLength = control.value.length;
-      const valid = (control.valid
-        && currentLength >= minLength
-        && currentLength <= maxLength);
+      const valid =
+        control.valid &&
+        currentLength >= minLength &&
+        currentLength <= maxLength;
       return valid ? null : { length: true };
     };
   }

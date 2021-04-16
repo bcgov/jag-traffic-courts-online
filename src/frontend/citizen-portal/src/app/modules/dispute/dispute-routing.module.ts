@@ -7,6 +7,7 @@ import { DisputePageComponent } from './components/dispute-page/dispute-page.com
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { AuthGuard } from '@core/guards/auth.guard';
+import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
       {
         path: DisputeRoutes.SUCCESS,
         component: DisputeSubmitComponent,
+      },
+      {
+        path: DisputeRoutes.SUMMARY,
+        component: DisputeSummaryComponent,
       },
     ],
   },

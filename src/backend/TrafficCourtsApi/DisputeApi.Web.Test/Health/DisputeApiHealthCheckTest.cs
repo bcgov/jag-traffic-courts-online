@@ -1,4 +1,5 @@
-﻿using DisputeApi.Web.Health;
+﻿using System.Diagnostics.CodeAnalysis;
+using DisputeApi.Web.Health;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DisputeApi.Web.Test.Health
 {
+    [ExcludeFromCodeCoverage]
     public class DisputeApiHealthCheckTest
     {
         private DisputeApiHealthCheck _sut;

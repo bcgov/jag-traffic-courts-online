@@ -22,9 +22,9 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "sourceMap": {
-              "scripts": true,
-              "styles": true,
-              "vendor": true
+              "scripts": false,
+              "styles": false,
+              "vendor": false
             },
             "tsConfig": "tsconfig.app.json",
             "aot": true,
@@ -71,7 +71,6 @@
                 }
               ]
             }
-            
           }
         },
         "serve": {

@@ -14,6 +14,7 @@ import { SurveyJsRoutes } from '@survey/survey-js.routes';
 })
 export class DisputeListComponent implements OnInit {
   public disputes: Dispute[];
+  public dispute: Dispute;
 
   public columnsToDisplay: string[] = [
     'violationTicketNumber',
@@ -29,18 +30,21 @@ export class DisputeListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.disputeResource.getDisputes().subscribe((response) => {
-      this.disputes = response;
-    });
+    // this.busy = this.disputeResource.getAllDisputes().subscribe((response) => {
+    //   this.disputes = response;
+    // });
+    // this.busy = this.disputeResource.getDispute().subscribe((response) => {
+    //   this.dispute = response;
+    // });
   }
 
-  public onSelect(dispute: Dispute): void {
-    this.disputeService.dispute$.next(dispute);
-    this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
-  }
+  // public onSelect(dispute: Dispute): void {
+  //   this.disputeService.dispute$.next(dispute);
+  //   this.route.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
+  // }
 
-  public onSelectSurvey(dispute: Dispute): void {
-    this.disputeService.dispute$.next(dispute);
-    this.route.navigate([SurveyJsRoutes.routePath(SurveyJsRoutes.HOME)]);
-  }
+  // public onSelectSurvey(dispute: Dispute): void {
+  //   this.disputeService.dispute$.next(dispute);
+  //   this.route.navigate([SurveyJsRoutes.routePath(SurveyJsRoutes.HOME)]);
+  // }
 }

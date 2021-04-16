@@ -1,11 +1,13 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -13,15 +15,38 @@ import { catchError, map } from 'rxjs/operators';
 export class DisputeResourceService {
   constructor(
     private apiResource: ApiResource,
+    private toastService: ToastService,
     private logger: LoggerService
   ) {}
 
-  public getTicket(): Observable<Ticket> {
-    return this.apiResource.get<Ticket>('ticket').pipe(
-      map((response: ApiHttpResponse<Ticket>) => response.result),
+  /**
+   * Get the ticket from RSI.
+   *
+   * @param params containing the ticketNumber and time
+   */
+  public getTicket(params: {
+    ticketNumber: string;
+    time: string;
+  }): Observable<Ticket> {
+    const httpParams = new HttpParams({ fromObject: params });
+
+    return this.apiResource.get<Ticket>('tickets', httpParams).pipe(
+      map((response: ApiHttpResponse<Ticket>) =>
+        response ? response.result : null
+      ),
+      tap((ticket: Ticket) =>
+        this.logger.info('DisputeResourceService::getTicket', ticket)
+      ),
+      map((ticket) => {
+        if (ticket) {
+          this.setOffenceInfo(ticket);
+        }
+        return ticket;
+      }),
       catchError((error: any) => {
+        this.toastService.openErrorToast('Ticket could not be retrieved');
         this.logger.error(
-          '[getTicket] DisputeResourceService::ticket error has occurred: ',
+          'DisputeResourceService::getTicket error has occurred: ',
           error
         );
         throw error;
@@ -29,53 +54,20 @@ export class DisputeResourceService {
     );
   }
 
-  public getTickets(): Observable<Ticket[]> {
-    return this.apiResource.get<Ticket[]>('tickets').pipe(
-      map((response: ApiHttpResponse<Ticket[]>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[getTickets] DisputeResourceService::tickets error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
-  public getDispute(): Observable<Dispute> {
-    return this.apiResource.get<Dispute>('dispute').pipe(
-      map((response: ApiHttpResponse<Dispute>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[getDispute] DisputeResourceService::dispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
-  public getDisputes(): Observable<Dispute[]> {
-    return this.apiResource.get<Dispute[]>('disputes').pipe(
-      map((response: ApiHttpResponse<Dispute[]>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[getDisputes] DisputeResourceService::disputes error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
+  /**
+   * Create the dispute
+   *
+   * @param dispute The dispute to be created
+   */
   public createDispute(dispute: Dispute): Observable<Dispute> {
     this.logger.info('createDispute', dispute);
 
-    return this.apiResource.post<Dispute>('ticket').pipe(
-      map((response: ApiHttpResponse<Dispute>) => response.result),
+    return this.apiResource.post<Dispute>('disputes', dispute).pipe(
+      map((response: ApiHttpResponse<Dispute>) => null),
       catchError((error: any) => {
+        this.toastService.openErrorToast('Dispute could not be created');
         this.logger.error(
-          '[createDispute] DisputeResourceService::dispute error has occurred: ',
+          'DisputeResourceService::createDispute error has occurred: ',
           error
         );
         throw error;
@@ -83,18 +75,39 @@ export class DisputeResourceService {
     );
   }
 
-  public updateDispute(dispute: Dispute): Observable<Dispute> {
-    this.logger.info('updateDispute', dispute);
+  /**
+   * populate the offence object with the calculated information
+   */
+  private setOffenceInfo(ticket: Ticket): void {
+    let balance = 0;
+    ticket.offences.forEach((offence) => {
+      offence.notes = '';
 
-    return this.apiResource.put<Dispute>('ticket').pipe(
-      map((response: ApiHttpResponse<Dispute>) => response.result),
-      catchError((error: any) => {
-        this.logger.error(
-          '[updateDispute] DisputeResourceService::dispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+      if (offence.amountDue === 0) {
+        offence.statusCode = 'PAID';
+        offence.statusDesc = 'Paid';
+      } else if (offence.dispute) {
+        offence.statusCode = 'DISPUTE';
+        offence.statusDesc = 'Dispute Submitted';
+        offence.notes =
+          'The dispute has been filed. An email with the court information will be sent soon.';
+
+        // offence.statusCode = 'COURT';
+        // offence.statusDesc = 'Dispute In Progress';
+        // offence.notes =
+        //   'A court date has been set for this dispute. Check your email for more information.';
+
+        // offence.statusCode = 'COMPLETE';
+        // offence.statusDesc = 'Dispute Settled';
+      } else {
+        offence.statusCode = 'UNPAID';
+        offence.statusDesc = 'Outstanding Balance';
+      }
+
+      balance += offence.amountDue;
+    });
+
+    // ------------------------------------
+    ticket.outstandingBalance = balance;
   }
 }

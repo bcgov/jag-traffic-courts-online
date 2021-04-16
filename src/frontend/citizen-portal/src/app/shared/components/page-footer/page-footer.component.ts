@@ -13,6 +13,7 @@ export class PageFooterComponent implements OnInit {
 
   @Input() public saveButtonLabel: string;
   @Input() public secondaryActionButtonLabel: string;
+  @Input() public secondaryActionButtonIcon: string;
 
   constructor() {
     this.hasSecondaryAction = true;
@@ -21,6 +22,7 @@ export class PageFooterComponent implements OnInit {
     this.back = new EventEmitter<void>();
     this.saveButtonLabel = 'Next';
     this.secondaryActionButtonLabel = 'Back';
+    this.secondaryActionButtonIcon = 'keyboard_arrow_left';
   }
 
   public ngOnInit(): void {

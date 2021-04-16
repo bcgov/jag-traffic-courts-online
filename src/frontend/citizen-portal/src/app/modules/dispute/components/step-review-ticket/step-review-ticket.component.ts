@@ -9,8 +9,6 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
-import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-step-review-ticket',
@@ -22,9 +20,10 @@ export class StepReviewTicketComponent
   implements OnInit {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
+  @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
-  public ticket: Ticket;
-  public isSubmitted = false;
+  public prevBtnLabel: string;
+  public prevBtnIcon: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -49,18 +48,17 @@ export class StepReviewTicketComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepReviewForm;
-    // this.patchForm();
+    this.ticketDispute = this.disputeService.ticketDispute;
 
-    this.ticket = this.disputeService.dispute?.ticket;
+    this.prevBtnLabel = 'Cancel';
+    this.prevBtnIcon = 'close';
+  }
 
-    // this.disputeService.dispute$.subscribe((dispute: Dispute) => {
-    //   this.ticket = dispute?.ticket;
-    //   this.form.patchValue(dispute);
-    // });
+  public onBack() {
+    this.stepCancel.emit();
   }
 
   public onSubmit(): void {
-    this.isSubmitted = true;
     if (this.formUtilsService.checkValidity(this.form)) {
       this.stepSave.emit(this.stepper);
     } else {

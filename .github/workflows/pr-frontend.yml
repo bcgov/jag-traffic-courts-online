@@ -7,9 +7,14 @@ jobs:
     environment: Development
     env:
       VERSION: v1
-      IMAGE_NAME: citizen-portal-demo
+      IMAGE_NAME: citizen-portal
       IMAGE_TAGS: latest
-     
+      API_URL: ${{ secrets.API_URL }}
+      KEYCLOAK_URL: ${{ secrets.KEYCLOAK_URL }}
+      KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+      KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+      USE_MOCK_SERVICES: ${{ secrets.USE_MOCK_SERVICES }}
+      USE_KEYCLOAK: ${{ secrets.USE_KEYCLOAK }}
     steps:
       - uses: actions/checkout@v2
 
@@ -19,10 +24,14 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
         run: |          
-          docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-          docker-compose build \
-          --build-arg API_URL=${{secrets.API_URL}} \
-          --build-arg KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}} \
-          --build-arg KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} \
-          --build-arg KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}} \
-          $IMAGE_NAME
+          docker login ${{ secrets.REDHAT_REPO }} \
+            -u ${{ secrets.REDHAT_REPO_USER }} \
+            -p ${{ secrets.REDHAT_REPO_AUTH }}
+          docker-compose build --force-rm --no-cache \
+            --build-arg API_URL=${{ secrets.API_URL }} \
+            --build-arg KEYCLOAK_URL=${{ secrets.KEYCLOAK_URL }} \
+            --build-arg KEYCLOAK_REALM=${{ secrets.KEYCLOAK_REALM }} \
+            --build-arg KEYCLOAK_CLIENT_ID=${{ secrets.KEYCLOAK_CLIENT_ID }} \
+            --build-arg USE_MOCK_SERVICES=${{ secrets.USE_MOCK_SERVICES }} \
+            --build-arg USE_KEYCLOAK=${{ secrets.USE_KEYCLOAK }} \
+            $IMAGE_NAME

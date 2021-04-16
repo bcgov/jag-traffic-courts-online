@@ -16,7 +16,7 @@ function initializer(
   keycloak: KeycloakService,
   injector: Injector
 ): () => Promise<void> {
-  console.log('real initializer');
+  console.log('using Keycloak initializer');
   const routeToDefault = () => injector.get(Router).navigateByUrl('/');
 
   return async (): Promise<void> => {

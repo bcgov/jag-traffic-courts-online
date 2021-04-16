@@ -1,4 +1,4 @@
-name: Generate/Upload all Coverage Reports
+name: Main-Generate/Upload all Coverage Reports
 
 on:
   push:
@@ -83,16 +83,14 @@ jobs:
         run: yarn --cwd src/frontend/citizen-portal run lint
 
       # Yarn Coverage - citizen Portal
-      - name: Run Yarn Coverage - citizen Portal
-        run: yarn --cwd /home/runner/work/jag-traffic-courts-online/jag-traffic-courts-online/src/frontend/citizen-portal coverage
-
-      # Copy .ts files to Current Working Directory as they are referred by lcov.info
-      - name: Copy .ts files to Current Working Directory
-        run: cp -r ${{github.workspace}}/src/frontend/citizen-portal/src/. ${{github.workspace}}/src
+      - name: Run Yarn Coverage - citizen Portal and format lcov.info
+        run: |
+          yarn --cwd ${{github.workspace}}/src/frontend/citizen-portal coverage
+          sed -i "s+SF:src+SF:src\\/frontend\\/citizen-portal\\/src+g" ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/report-lcov/lcov.info
 
       # Formatting the Frontend Citizen Portal Coverage Report
       - name: Format the Frontend Citizen Portal coverage report
-        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/lcov.info
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/citizen-portal-codeclimate.json ${{github.workspace}}/src/frontend/citizen-portal/coverage/citizen-portal/report-lcov/lcov.info
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
@@ -234,24 +232,15 @@ jobs:
         with:
           name: backend-coverage-report
 
-      # See what is inside
-      - name: List items inside .NET coverage report object
-        run: |
-          ls backend-coverage-report
-
       # Copy total java to outside directory
       - name: Copy .NET Coverage to directory
         run: |
           cp backend-coverage-report/backend-codeclimate.json coverage-reports/backend-codeclimate.json
 
-      # See what is inside coverage
-      - name: List items inside coverage-reports folder
-        run: |
-          ls coverage-reports
-
       # Sum the coverage reports
       - name: Summing the coverage reports generated
-        run: ./cc-test-reporter sum-coverage coverage-reports/*-codeclimate.json -p 2 -o coverage-reports/total-codeclimate.json
+        run: |
+          ./cc-test-reporter sum-coverage coverage-reports/*-codeclimate.json -p 2 -o coverage-reports/total-codeclimate.json
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
@@ -263,4 +252,3 @@ jobs:
       # Upload total coverage report to Code Climate
       - name: Upload coverage report to Code Climate
         run: ./cc-test-reporter upload-coverage -i coverage-reports/total-codeclimate.json
-

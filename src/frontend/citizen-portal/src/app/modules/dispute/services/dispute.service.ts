@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Dispute } from '@shared/models/dispute.model';
+import { Offence } from '@shared/models/offence.model';
+import { TicketDispute } from '@shared/models/ticket-dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { BehaviorSubject } from 'rxjs';
 
 export interface IDisputeService {
   ticket$: BehaviorSubject<Ticket>;
   ticket: Ticket;
-  dispute: Dispute;
+  ticketDispute: TicketDispute;
 }
 
 @Injectable({
@@ -18,12 +20,12 @@ export class DisputeService {
   // tslint:disable-next-line: variable-name
   private _ticket: BehaviorSubject<Ticket>;
   private _tickets: BehaviorSubject<Ticket[]>;
-  private _dispute: BehaviorSubject<Dispute>;
+  private _ticketDispute: BehaviorSubject<TicketDispute>;
 
   constructor() {
     this._ticket = new BehaviorSubject<Ticket>(null);
     this._tickets = new BehaviorSubject<Ticket[]>(null);
-    this._dispute = new BehaviorSubject<Dispute>(null);
+    this._ticketDispute = new BehaviorSubject<TicketDispute>(null);
   }
 
   public get ticket$(): BehaviorSubject<Ticket> {
@@ -38,15 +40,44 @@ export class DisputeService {
     return this._ticket.value;
   }
 
-  public get dispute$(): BehaviorSubject<Dispute> {
-    return this._dispute;
+  public get ticketDispute$(): BehaviorSubject<TicketDispute> {
+    return this._ticketDispute;
   }
 
-  public get dispute(): Dispute {
-    return this._dispute.value;
+  public get ticketDispute(): TicketDispute {
+    return this._ticketDispute.value;
   }
 
-  public get steps$(): BehaviorSubject<any[]> {
-    return this.disputeSteps;
+  private createDispute(
+    violationTicketNumber: string,
+    offenceNumber: number
+  ): Dispute {
+    return {
+      violationTicketNumber,
+      offenceNumber,
+      requestReduction: false,
+      requestMoreTime: false,
+      lawyerPresent: false,
+      interpreterRequired: false,
+      witnessPresent: false,
+      informationCertified: false,
+    };
+  }
+
+  public getDisputeTicket(ticket: Ticket, oneOffence: Offence): TicketDispute {
+    if (!oneOffence.dispute) {
+      oneOffence.dispute = this.createDispute(
+        ticket.violationTicketNumber,
+        oneOffence.offenceNumber
+      );
+    }
+
+    const ticketDispute = {
+      violationTicketNumber: ticket.violationTicketNumber,
+      violationTime: ticket.violationTime,
+      offence: oneOffence,
+    };
+
+    return ticketDispute;
   }
 }

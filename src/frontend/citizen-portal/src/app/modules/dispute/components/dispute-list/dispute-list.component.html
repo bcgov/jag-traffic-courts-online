@@ -4,6 +4,7 @@
     <ng-container subHeader>Here are your active tickets</ng-container>
   </app-tco-page-header>
 
+  <!--
   <section class="mb-4">
     <div class="pb-3 text-right">
       <button
@@ -11,6 +12,7 @@
         color="primary"
         class="large"
         style="background-color: #003366; color: white"
+        routerLink="/dispute/find"
       >
         I do not see my ticket
       </button>
@@ -63,8 +65,8 @@
             *ngIf="row.statusCode === 'ACT'"
             (click)="onSelect(row)"
           >
-            View
             <mat-icon inline="true">preview</mat-icon>
+            View
           </button>
           <button
             mat-stroked-button
@@ -72,8 +74,8 @@
             *ngIf="row.statusCode === 'INP'"
             (click)="onSelect(row)"
           >
-            Continue
             <mat-icon inline="true">read_more</mat-icon>
+            Continue
           </button>
           <button
             mat-stroked-button
@@ -81,11 +83,12 @@
             *ngIf="row.statusCode === 'NEW'"
             (click)="onSelectSurvey(row)"
           >
-            Start
             <mat-icon inline="true">read_more</mat-icon>
+            Start
           </button>
         </td>
       </tr>
     </table>
   </section>
+-->
 </app-page>

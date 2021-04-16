@@ -20,10 +20,10 @@ export class ToastService {
     action: string = null,
     config: MatSnackBarConfig = null
   ) {
-    // extraClasses: ['success']
     const defaultConfig: MatSnackBarConfig = {
       ...config,
       duration: this.duration,
+      panelClass: ['toast-success'],
     };
     this.openToast(message, action, defaultConfig);
   }
@@ -37,10 +37,10 @@ export class ToastService {
     action: string = null,
     config: MatSnackBarConfig = null
   ) {
-    // extraClasses: ['danger']
     const defaultConfig: MatSnackBarConfig = {
       ...config,
       duration: this.duration,
+      panelClass: ['toast-danger'],
     };
     this.openToast(message, action, defaultConfig);
   }

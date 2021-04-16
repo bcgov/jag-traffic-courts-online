@@ -1,34 +1,24 @@
-import { Ticket } from './ticket.model';
-
 export interface Dispute {
   id?: number;
-  emailAddress: string;
-  courtLocation: string;
+  violationTicketNumber: string;
+  offenceNumber: number;
+
+  emailAddress?: string;
+
+  offenceAgreementStatus?: string;
+  requestReduction: boolean;
+  requestMoreTime: boolean;
+  reductionReason?: string;
+  moreTimeReason?: string;
+
   lawyerPresent: boolean;
   interpreterRequired: boolean;
-  interpreterLanguage: string;
-  callWitness: boolean;
-  certifyCorrect: boolean;
-  counts?: Count[];
+  interpreterLanguage?: string;
+  witnessPresent: boolean;
+
+  informationCertified: boolean;
+  status?: string;
 
   statusCode?: string;
-  status?: string;
   note?: string;
-  ticketType?: string;
-
-  ticket: Ticket;
-}
-
-export interface Count {
-  id: number;
-  countNo: number;
-  statuteId: number;
-  description: string;
-  count?: string;
-  count1A1?: string;
-  count1A2?: string;
-  reductionReason?: string;
-  timeReason?: string;
-  count1B1?: string;
-  count1B2?: string;
 }
