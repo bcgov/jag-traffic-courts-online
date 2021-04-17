@@ -8,10 +8,10 @@ using System.Threading;
 
 namespace DisputeWorker
 {
-    public class DisputeOrderedConsumer : IConsumer<Dispute>
+    public class DisputeRequestedConsumer : IConsumer<Dispute>
     {
-        private readonly ILogger<DisputeOrderedConsumer> _logger;
-        public DisputeOrderedConsumer(ILogger<DisputeOrderedConsumer> logger)
+        private readonly ILogger<DisputeRequestedConsumer> _logger;
+        public DisputeRequestedConsumer(ILogger<DisputeRequestedConsumer> logger)
         {
             _logger = logger;
         }

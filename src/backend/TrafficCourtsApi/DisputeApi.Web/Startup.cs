@@ -190,9 +190,9 @@ namespace DisputeApi.Web
 
         internal void ConfigureServiceBus(IServiceCollection services)
         {
-            services.Configure<RabbitMqConfiguration>(_configuration.GetSection("RabbitMq"));
+            services.Configure<RabbitMQConfiguration>(_configuration.GetSection("RabbitMq"));
 
-            var rabbitMqSettings = _configuration.GetSection("RabbitMq").Get<RabbitMqConfiguration>();
+            var rabbitMqSettings = _configuration.GetSection("RabbitMq").Get<RabbitMQConfiguration>();
             var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
 
             services.AddMassTransit(config =>

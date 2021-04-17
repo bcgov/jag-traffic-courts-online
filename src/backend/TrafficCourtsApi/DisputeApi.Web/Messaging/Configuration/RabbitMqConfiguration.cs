@@ -1,8 +1,8 @@
 ﻿namespace DisputeApi.Web.Messaging.Configuration
 {
-    public class RabbitMqConfiguration
+    public class RabbitMQConfiguration
     {
-        public RabbitMqConfiguration()
+        public RabbitMQConfiguration()
         {
             this.Host = "localhost";
             this.Port = 5672;

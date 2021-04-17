@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
+using DisputeApi.Web.Messaging.Configuration;
 using MassTransit;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TrafficCourts.Common.Contract;
+using Microsoft.Extensions.Options;
 
 namespace DisputeApi.Web.Features.Disputes
 {
@@ -22,13 +22,15 @@ namespace DisputeApi.Web.Features.Disputes
         private readonly ILogger _logger;
         private readonly IDisputeService _disputeService;
         private readonly ISendEndpointProvider _sendEndpointProvider;
+        private readonly RabbitMQConfiguration _rabbitMQConfig;
 
         public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService,
-            ISendEndpointProvider sendEndpointProvider)
+            ISendEndpointProvider sendEndpointProvider, IOptions<RabbitMQConfiguration> rabbitMqOptions)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
             _sendEndpointProvider = sendEndpointProvider ?? throw new ArgumentNullException(nameof(sendEndpointProvider));
+            _rabbitMQConfig = rabbitMqOptions.Value?? throw new ArgumentNullException(nameof(rabbitMqOptions));
         }
 
         [HttpPost]
@@ -45,10 +47,7 @@ namespace DisputeApi.Web.Features.Disputes
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
 
-            ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"rabbitmq://localhost:5672/DisputeOrdered_queue"));
-
-            await sendEndpoint.Send<Dispute>(new Dispute() { OffenceNumber = 1, ViolationTicketNumber = "violationTicket" });
-
+            await SendToQueue(dispute);
             return Ok();
         }
 
@@ -73,6 +72,15 @@ namespace DisputeApi.Web.Features.Disputes
             }
 
             return NotFound();
+        }
+
+        private async Task SendToQueue(DisputeViewModel disputeViewMode)
+        {
+            ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"rabbitmq://{_rabbitMQConfig.Host}:{_rabbitMQConfig.Port}/{Constants.DisputeRequestedQueueName}"));
+
+            await sendEndpoint.Send<Dispute>(disputeViewMode.ToDispute());
+
+            return;
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Contract;
 
 namespace DisputeWorker
 {
@@ -18,6 +19,7 @@ namespace DisputeWorker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                //.UseSerilog(SplunkEventCollector.Configure)
                 .ConfigureServices((hostContext, services) =>
                 {
                     IConfiguration configuration = hostContext.Configuration;
@@ -35,7 +37,7 @@ namespace DisputeWorker
 
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<DisputeOrderedConsumer>();
+                config.AddConsumer<DisputeRequestedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -45,9 +47,9 @@ namespace DisputeWorker
                         hostConfig.Password(rabbitMqSettings.Password);
                     });
 
-                    cfg.ReceiveEndpoint($"DisputeOrdered_queue", endpoint =>
+                    cfg.ReceiveEndpoint( Constants.DisputeRequestedQueueName, endpoint =>
                     {
-                        endpoint.Consumer<DisputeOrderedConsumer>(ctx);
+                        endpoint.Consumer<DisputeRequestedConsumer>(ctx);
                     });
                 });
             });
