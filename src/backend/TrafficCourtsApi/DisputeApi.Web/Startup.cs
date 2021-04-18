@@ -57,7 +57,7 @@ namespace DisputeApi.Web
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 });
             }
-
+            services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
             services.AddMediatR(typeof(Startup));
 
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));

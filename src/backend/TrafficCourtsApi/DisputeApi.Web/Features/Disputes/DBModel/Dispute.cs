@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DisputeApi.Web.Features.Disputes;
-using TrafficCourts.Common.Contract;
 
-namespace DisputeApi.Web.Models
+namespace DisputeApi.Web.Features.Disputes.DBModel
 {
-    public class DisputeViewModel 
+    public class Dispute
     {
-        [Key] [Required] public int Id { get; set; }
+        [Key][Required]
+        public int Id { get; set; }
         public string ViolationTicketNumber { get; set; }
         public int OffenceNumber { get; set; }
         public string EmailAddress { get; set; }
@@ -21,9 +20,5 @@ namespace DisputeApi.Web.Models
         public string InterpreterLanguage { get; set; }
         public bool InformationCertified { get; set; }
         public TrafficCourts.Common.Contract.DisputeStatus Status { get; set; }
-
- 
     }
-
- 
 }

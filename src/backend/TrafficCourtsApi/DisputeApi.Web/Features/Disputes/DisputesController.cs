@@ -10,6 +10,9 @@ using DisputeApi.Web.Messaging.Configuration;
 using MassTransit;
 using TrafficCourts.Common.Contract;
 using Microsoft.Extensions.Options;
+using MediatR;
+using DisputeApi.Web.Features.Disputes.Commands;
+using DisputeApi.Web.Features.Disputes.Queries;
 
 namespace DisputeApi.Web.Features.Disputes
 {
@@ -20,34 +23,29 @@ namespace DisputeApi.Web.Features.Disputes
     public class DisputesController : ControllerBase
     {
         private readonly ILogger _logger;
+        private readonly IMediator _mediator;
         private readonly IDisputeService _disputeService;
-        private readonly ISendEndpointProvider _sendEndpointProvider;
-        private readonly RabbitMQConfiguration _rabbitMQConfig;
 
         public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService,
-            ISendEndpointProvider sendEndpointProvider, IOptions<RabbitMQConfiguration> rabbitMqOptions)
+            ISendEndpointProvider sendEndpointProvider, IOptions<RabbitMQConfiguration> rabbitMqOptions, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
-            _sendEndpointProvider = sendEndpointProvider ?? throw new ArgumentNullException(nameof(sendEndpointProvider));
-            _rabbitMQConfig = rabbitMqOptions.Value?? throw new ArgumentNullException(nameof(rabbitMqOptions));
+            _mediator = mediator;
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateDispute([FromBody]DisputeViewModel dispute)
+        public async Task<IActionResult> CreateDispute([FromBody]CreateDisputeCommand createDisputeCommand)
         {
-            dispute.Status = DisputeStatus.Submitted;
-            var result = await _disputeService.CreateAsync(dispute);
 
-            if (result == null)
+            var response = await _mediator.Send(createDisputeCommand);
+            if (response.Id == 0)
             {
                 ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
-
-            await SendToQueue(dispute);
             return Ok();
         }
 
@@ -55,7 +53,7 @@ namespace DisputeApi.Web.Features.Disputes
         [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDisputes()
         {
-            var disputes = await _disputeService.GetAllAsync();
+            var disputes = await _mediator.Send(new GetAllDisputesQuery());
 
             return Ok(disputes);
         }
@@ -64,8 +62,7 @@ namespace DisputeApi.Web.Features.Disputes
         [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDispute(int disputeId)
         {
-            var dispute = await _disputeService.GetAsync(disputeId);
-
+            var dispute = await _mediator.Send(new GetDisputeQuery { DisputeId=disputeId});
             if (dispute != null)
             {
                 return Ok(dispute);
@@ -74,13 +71,6 @@ namespace DisputeApi.Web.Features.Disputes
             return NotFound();
         }
 
-        private async Task SendToQueue(DisputeViewModel disputeViewMode)
-        {
-            ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"rabbitmq://{_rabbitMQConfig.Host}:{_rabbitMQConfig.Port}/{Constants.DisputeRequestedQueueName}"));
 
-            await sendEndpoint.Send<Dispute>(disputeViewMode.ToDispute());
-
-            return;
-        }
     }
 }

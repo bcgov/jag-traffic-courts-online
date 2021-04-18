@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using DisputeApi.Web.Features.Disputes;
-using TrafficCourts.Common.Contract;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace DisputeApi.Web.Models
+namespace DisputeApi.Web.Features.Disputes.Queries
 {
-    public class DisputeViewModel 
+    public class GetDisputeResponse
     {
-        [Key] [Required] public int Id { get; set; }
+        public int Id { get; set; }
         public string ViolationTicketNumber { get; set; }
         public int OffenceNumber { get; set; }
         public string EmailAddress { get; set; }
@@ -21,9 +22,5 @@ namespace DisputeApi.Web.Models
         public string InterpreterLanguage { get; set; }
         public bool InformationCertified { get; set; }
         public TrafficCourts.Common.Contract.DisputeStatus Status { get; set; }
-
- 
     }
-
- 
 }

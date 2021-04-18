@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TrafficCourts.Common.Contract
+﻿namespace TrafficCourts.Common.Contract
 {
- 
+
     public class Dispute 
     {
         public int Id { get; set; }

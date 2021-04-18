@@ -1,4 +1,5 @@
-﻿using DisputeApi.Web.Features.TicketLookup;
+﻿using DisputeApi.Web.Features.Disputes.DBModel;
+using DisputeApi.Web.Features.TicketLookup;
 using System.Collections.Generic;
 
 namespace DisputeApi.Web.Models
@@ -27,7 +28,7 @@ namespace DisputeApi.Web.Models
         public string ViolationDateTime { get; set; }
         public string OffenceDescription { get; set; }
         public string VehicleDescription { get; set; }
-        public DisputeViewModel Dispute { get; set; }
+        public Dispute Dispute { get; set; }
         public decimal DiscountAmount { get; set; }//discount
         public string DiscountDueDate { get; set; }
         public string InvoiceType { get; set; }
