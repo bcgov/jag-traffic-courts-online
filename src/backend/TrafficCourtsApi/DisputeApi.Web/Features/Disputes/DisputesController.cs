@@ -24,13 +24,11 @@ namespace DisputeApi.Web.Features.Disputes
     {
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
-        private readonly IDisputeService _disputeService;
 
         public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService,
             ISendEndpointProvider sendEndpointProvider, IOptions<RabbitMQConfiguration> rabbitMqOptions, IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
             _mediator = mediator;
         }
 

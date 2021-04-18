@@ -20,27 +20,6 @@ namespace DisputeApi.Web.Features.Disputes.Commands
         public string InterpreterLanguage { get; set; }
         public bool InformationCertified { get; set; }
         public TrafficCourts.Common.Contract.DisputeStatus Status { get; set; }
-        public Dispute ToDispute()
-        {
-            return new Dispute
-            {
-                Id = 0,
-                ViolationTicketNumber = this.ViolationTicketNumber,
-                OffenceNumber = this.OffenceNumber,
-                EmailAddress = this.EmailAddress,
-                OffenceAgreementStatus = this.OffenceAgreementStatus,
-                RequestReduction = this.RequestReduction,
-                RequestMoreTime = this.RequestMoreTime,
-                InformationCertified = this.InformationCertified,
-                InterpreterLanguage = this.InterpreterLanguage,
-                InterpreterRequired = this.InterpreterRequired,
-                LawyerPresent = this.LawyerPresent,
-                MoreTimeReason = this.MoreTimeReason,
-                ReductionReason = this.ReductionReason,
-                Status = TrafficCourts.Common.Contract.DisputeStatus.Submitted,
-                WitnessPresent = this.WitnessPresent,
-            };
-        }
 
     }
 
