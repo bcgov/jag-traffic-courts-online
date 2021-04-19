@@ -2,6 +2,7 @@ export class DisputeRoutes {
   public static DISPUTE = 'dispute';
   public static FIND = 'find';
   public static STEPPER = 'stepper';
+  public static ALL_STEPPER = 'dispute-all-stepper';
   public static SUCCESS = 'success';
   public static LIST = 'list';
   public static SUMMARY = 'summary';

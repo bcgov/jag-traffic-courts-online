@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -17,7 +17,9 @@ import { DisputeService } from '@dispute/services/dispute.service';
 })
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
+  @Input() public stepControl: FormGroup;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
+  @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
   constructor(
     protected route: ActivatedRoute,
@@ -41,7 +43,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit() {
-    this.form = this.disputeFormStateService.stepOffenceForm;
+    this.form = this.stepControl; //this.disputeFormStateService.stepOffence1Form;
     this.patchForm();
   }
 
@@ -75,5 +77,33 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public get moreTimeReason(): FormControl {
     return this.form.get('moreTimeReason') as FormControl;
+  }
+
+  public get includeOffenceInDispute(): FormControl {
+    return this.form.get('includeOffenceInDispute') as FormControl;
+  }
+
+  public get offenceDescription(): FormControl {
+    return this.form.get('offenceDescription') as FormControl;
+  }
+
+  public get offenceNumber(): FormControl {
+    return this.form.get('offenceNumber') as FormControl;
+  }
+
+  public get ticketedAmount(): FormControl {
+    return this.form.get('ticketedAmount') as FormControl;
+  }
+
+  public get amountDue(): FormControl {
+    return this.form.get('amountDue') as FormControl;
+  }
+
+  public get discountAmount(): FormControl {
+    return this.form.get('discountAmount') as FormControl;
+  }
+
+  public get discountDueDate(): FormControl {
+    return this.form.get('discountDueDate') as FormControl;
   }
 }

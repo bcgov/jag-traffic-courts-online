@@ -65,20 +65,92 @@ export class DisputeService {
     };
   }
 
-  public getDisputeTicket(ticket: Ticket, oneOffence: Offence): TicketDispute {
-    if (!oneOffence.dispute) {
-      oneOffence.dispute = this.createDispute(
-        ticket.violationTicketNumber,
-        oneOffence.offenceNumber
-      );
-    }
+  public getTicketDispute(ticket: Ticket, offences: Offence[]): TicketDispute {
+    let offence1: Offence = null;
+    let offence2: Offence = null;
+    let offence3: Offence = null;
+
+    offences.forEach((offence) => {
+      console.log('getTicketDispute', offence);
+      if (offence.offenceNumber === 1) {
+        if (!offence.dispute) {
+          offence1 = offence;
+          offence1.dispute = this.createDispute(
+            ticket.violationTicketNumber,
+            offence.offenceNumber
+          );
+        }
+      } else if (offence.offenceNumber === 2) {
+        if (!offence.dispute) {
+          offence2 = offence;
+          offence2.dispute = this.createDispute(
+            ticket.violationTicketNumber,
+            offence.offenceNumber
+          );
+        }
+      } else if (offence.offenceNumber === 3) {
+        if (!offence.dispute) {
+          offence3 = offence;
+          offence3.dispute = this.createDispute(
+            ticket.violationTicketNumber,
+            offence.offenceNumber
+          );
+        }
+      }
+    });
 
     const ticketDispute = {
       violationTicketNumber: ticket.violationTicketNumber,
       violationTime: ticket.violationTime,
-      offence: oneOffence,
+      offence1,
+      offence2,
+      offence3,
     };
 
     return ticketDispute;
   }
+
+  // public getAllTicketDispute(ticket: Ticket): TicketDispute {
+  //   let offence1: Offence;
+  //   let offence2: Offence;
+  //   let offence3: Offence;
+
+  //   ticket.offences.forEach((offence) => {
+  //     if (offence.offenceNumber === 1) {
+  //       if (!offence.dispute) {
+  //         offence1 = offence;
+  //         offence1.dispute = this.createDispute(
+  //           ticket.violationTicketNumber,
+  //           offence1.offenceNumber
+  //         );
+  //       }
+  //     } else if (offence.offenceNumber === 2) {
+  //       if (!offence.dispute) {
+  //         offence2 = offence;
+  //         offence2.dispute = this.createDispute(
+  //           ticket.violationTicketNumber,
+  //           offence2.offenceNumber
+  //         );
+  //       }
+  //     } else if (offence.offenceNumber === 3) {
+  //       if (!offence.dispute) {
+  //         offence3 = offence;
+  //         offence3.dispute = this.createDispute(
+  //           ticket.violationTicketNumber,
+  //           offence3.offenceNumber
+  //         );
+  //       }
+  //     }
+  //   });
+
+  //   const ticketDispute = {
+  //     violationTicketNumber: ticket.violationTicketNumber,
+  //     violationTime: ticket.violationTime,
+  //     offence1,
+  //     offence2,
+  //     offence3,
+  //   };
+
+  //   return ticketDispute;
+  // }
 }

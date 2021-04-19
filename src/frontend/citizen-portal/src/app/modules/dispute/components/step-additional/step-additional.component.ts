@@ -11,11 +11,13 @@ import { DisputeResourceService } from '@dispute/services/dispute-resource.servi
 import { DisputeService } from '@dispute/services/dispute.service';
 
 @Component({
-  selector: 'app-step-court',
-  templateUrl: './step-court.component.html',
-  styleUrls: ['./step-court.component.scss'],
+  selector: 'app-step-additional',
+  templateUrl: './step-additional.component.html',
+  styleUrls: ['./step-additional.component.scss'],
 })
-export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
+export class StepAdditionalComponent
+  extends BaseDisputeFormPage
+  implements OnInit {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
@@ -41,7 +43,7 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit() {
-    this.form = this.disputeFormStateService.stepCourtForm;
+    this.form = this.disputeFormStateService.stepAdditionalForm;
   }
 
   public onSubmit(): void {
@@ -58,5 +60,13 @@ export class StepCourtComponent extends BaseDisputeFormPage implements OnInit {
 
   public get interpreterRequired(): FormControl {
     return this.form.get('interpreterRequired') as FormControl;
+  }
+
+  public get emailAddress(): FormControl {
+    return this.form.get('emailAddress') as FormControl;
+  }
+
+  public get isCourtRequired(): boolean {
+    return this.disputeFormStateService.isCourtRequired;
   }
 }

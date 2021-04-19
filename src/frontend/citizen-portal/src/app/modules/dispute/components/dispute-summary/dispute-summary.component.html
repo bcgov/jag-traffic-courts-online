@@ -124,11 +124,12 @@
                 Pay Count
               </a>
             </button>
+            <!-- && ticket.disputesExist-->
             <button
-              *ngIf="row.offenceStatus === -1 && row.disputesExist"
+              *ngIf="row.offenceStatus === -1"
               mat-flat-button
               color="primary"
-              (click)="onDispute(row)"
+              (click)="onDisputeCount(row)"
             >
               <mat-icon inline="true">read_more</mat-icon>
               Dispute Count
@@ -176,12 +177,12 @@
           </button>
         </div>
         <div class="col-md-6">
+          <!-- *ngIf="!ticket.disputesExist"-->
           <button
             mat-flat-button
             color="primary"
             class="large"
             (click)="onDisputeTicket()"
-            *ngIf="!ticket.disputesExist"
           >
             <mat-icon inline="true">read_more</mat-icon>
             Dispute Ticket

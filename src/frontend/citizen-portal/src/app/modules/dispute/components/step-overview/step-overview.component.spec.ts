@@ -38,8 +38,8 @@ describe('StepOverviewComponent', () => {
       // Add the bound FormGroup to the component
       component.form = disputeFormStateService.buildStepOverviewForm();
       component.offenceForm = disputeFormStateService.buildStepOffenceForm();
-      component.courtForm = disputeFormStateService.buildStepCourtForm();
-      component.reviewForm = disputeFormStateService.buildStepReviewForm();
+      component.courtForm = disputeFormStateService.buildStepAdditionalForm();
+      component.disputantForm = disputeFormStateService.buildStepDisputantForm();
       fixture.detectChanges();
     }
   ));

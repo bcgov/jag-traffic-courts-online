@@ -8,6 +8,7 @@ import { DisputeSubmitComponent } from './components/dispute-submit/dispute-subm
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
+import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: DisputeRoutes.STEPPER,
     component: StepperComponent,
+  },
+  {
+    path: DisputeRoutes.ALL_STEPPER,
+    component: DisputeAllStepperComponent,
   },
 ];
 

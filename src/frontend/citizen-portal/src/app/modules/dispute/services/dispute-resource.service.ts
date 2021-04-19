@@ -141,6 +141,6 @@ export class DisputeResourceService {
 
     // ------------------------------------
     ticket.outstandingBalance = balance;
-    ticket.disputesExist = false; //disputesExist;
+    ticket.disputesExist = disputesExist;
   }
 }

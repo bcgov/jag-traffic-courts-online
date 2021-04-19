@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -11,14 +11,15 @@ import { DisputeResourceService } from '@dispute/services/dispute-resource.servi
 import { DisputeService } from '@dispute/services/dispute.service';
 
 @Component({
-  selector: 'app-step-review-ticket',
-  templateUrl: './step-review-ticket.component.html',
-  styleUrls: ['./step-review-ticket.component.scss'],
+  selector: 'app-step-single-count',
+  templateUrl: './step-single-count.component.html',
+  styleUrls: ['./step-single-count.component.scss'],
 })
-export class StepReviewTicketComponent
+export class StepSingleCountComponent
   extends BaseDisputeFormPage
   implements OnInit {
   @Input() public stepper: MatStepper;
+  @Input() public stepControl: FormGroup;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
@@ -47,15 +48,13 @@ export class StepReviewTicketComponent
   }
 
   public ngOnInit() {
-    this.form = this.disputeFormStateService.stepReviewForm;
-    this.ticketDispute = this.disputeService.ticketDispute;
+    this.form = this.stepControl;
+    console.log('on init', this.form.value);
+    // this.form = this.disputeFormStateService.stepOffence1Form;
+    this.patchForm();
 
     this.prevBtnLabel = 'Cancel';
     this.prevBtnIcon = 'close';
-  }
-
-  public onBack() {
-    this.stepCancel.emit();
   }
 
   public onSubmit(): void {
@@ -66,7 +65,51 @@ export class StepReviewTicketComponent
     }
   }
 
-  public get emailAddress(): FormControl {
-    return this.form.get('emailAddress') as FormControl;
+  public onBack() {
+    this.stepCancel.emit();
+  }
+
+  public get offenceAgreementStatus(): FormControl {
+    return this.form.get('offenceAgreementStatus') as FormControl;
+  }
+
+  public get requestReduction(): FormControl {
+    return this.form.get('requestReduction') as FormControl;
+  }
+
+  public get requestMoreTime(): FormControl {
+    return this.form.get('requestMoreTime') as FormControl;
+  }
+
+  public get reductionReason(): FormControl {
+    return this.form.get('reductionReason') as FormControl;
+  }
+
+  public get moreTimeReason(): FormControl {
+    return this.form.get('moreTimeReason') as FormControl;
+  }
+
+  public get offenceDescription(): FormControl {
+    return this.form.get('offenceDescription') as FormControl;
+  }
+
+  public get offenceNumber(): FormControl {
+    return this.form.get('offenceNumber') as FormControl;
+  }
+
+  public get ticketedAmount(): FormControl {
+    return this.form.get('ticketedAmount') as FormControl;
+  }
+
+  public get amountDue(): FormControl {
+    return this.form.get('amountDue') as FormControl;
+  }
+
+  public get discountAmount(): FormControl {
+    return this.form.get('discountAmount') as FormControl;
+  }
+
+  public get discountDueDate(): FormControl {
+    return this.form.get('discountDueDate') as FormControl;
   }
 }

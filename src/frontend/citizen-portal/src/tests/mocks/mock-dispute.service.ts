@@ -68,7 +68,7 @@ export class MockDisputeService {
 
     // --------------------------
     let offence: Offence = {
-      offenceNumber: 1,
+      offenceNumber: 2,
       ticketedAmount: 126,
       amountDue: 126,
       violationDateTime: faker.date.soon().toString(),
@@ -95,25 +95,6 @@ export class MockDisputeService {
 
     // --------------------------
     offence = {
-      offenceNumber: 2,
-      ticketedAmount: 126,
-      amountDue: 0,
-      violationDateTime: faker.date.recent().toString(),
-      offenceDescription:
-        'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      dispute: null,
-      invoiceType: 'Traffic Violation Ticket',
-      vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
-      discountDueDate: null,
-    };
-
-    offence.notes = '';
-
-    ticket.offences.push(offence);
-
-    // --------------------------
-    offence = {
       offenceNumber: 3,
       ticketedAmount: 167,
       amountDue: 167,
@@ -129,6 +110,28 @@ export class MockDisputeService {
     offence.notes = '';
 
     ticket.offences.push(offence);
+
+    // --------------------------
+    /*
+    offence = {
+      offenceNumber: 3,
+      ticketedAmount: 126,
+      amountDue: 0,
+      violationDateTime: faker.date.recent().toString(),
+      offenceDescription:
+        'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
+      dispute: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 0,
+      discountDueDate: null,
+    };
+
+    offence.notes = '';
+
+    ticket.offences.push(offence);
+*/
+    /*
     // --------------------------
     offence = {
       offenceNumber: 4,
@@ -151,7 +154,7 @@ export class MockDisputeService {
     dispute.informationCertified = true;
     offence.dispute = dispute;
 
-    ticket.offences.push(offence);
+    ticket.offences.push(offence);*/
 
     return ticket;
   }

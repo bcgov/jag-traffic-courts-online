@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
@@ -17,11 +17,11 @@ import { DisputeRoutes } from '@dispute/dispute.routes';
 import { UtilsService } from '@core/services/utils.service';
 
 @Component({
-  selector: 'app-stepper',
-  templateUrl: './stepper.component.html',
-  styleUrls: ['./stepper.component.scss'],
+  selector: 'app-dispute-all-stepper',
+  templateUrl: './dispute-all-stepper.component.html',
+  styleUrls: ['./dispute-all-stepper.component.scss'],
 })
-export class StepperComponent
+export class DisputeAllStepperComponent
   extends BaseDisputeFormPage
   implements OnInit, AfterViewInit {
   public busy: Subscription;
@@ -29,9 +29,15 @@ export class StepperComponent
   private stepper: MatStepper;
 
   public disputantForm: FormGroup;
-  public offenceForm: FormGroup;
+  public offence1Form: FormGroup;
+  public offence2Form: FormGroup;
+  public offence3Form: FormGroup;
   public additionalForm: FormGroup;
   public overviewForm: FormGroup;
+
+  public offence1Exists: boolean;
+  public offence2Exists: boolean;
+  public offence3Exists: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -53,6 +59,10 @@ export class StepperComponent
       disputeResource,
       disputeFormStateService
     );
+
+    this.offence1Exists = false;
+    this.offence2Exists = false;
+    this.offence3Exists = false;
   }
 
   public ngOnInit(): void {
@@ -65,15 +75,12 @@ export class StepperComponent
       this.patchForm();
     });
 
-    let offence1Form = null;
-    let offence2Form = null;
-    let offence3Form = null;
     const formsList = this.disputeFormStateService.forms;
     [
       this.disputantForm,
-      offence1Form,
-      offence2Form,
-      offence3Form,
+      this.offence1Form,
+      this.offence2Form,
+      this.offence3Form,
       this.additionalForm,
       this.overviewForm,
     ] = formsList as FormGroup[];
@@ -81,14 +88,14 @@ export class StepperComponent
     if (this.disputeService.ticket) {
       this.disputeService.ticket.offences.forEach((offence) => {
         if (offence.offenceNumber === 1) {
-          offence1Form.patchValue(offence);
-          this.offenceForm = offence1Form;
+          this.offence1Exists = true;
+          this.offence1Form.patchValue(offence);
         } else if (offence.offenceNumber === 2) {
-          offence2Form.patchValue(offence);
-          this.offenceForm = offence2Form;
+          this.offence2Exists = true;
+          this.offence2Form.patchValue(offence);
         } else if (offence.offenceNumber === 3) {
-          offence3Form.patchValue(offence);
-          this.offenceForm = offence3Form;
+          this.offence3Exists = true;
+          this.offence3Form.patchValue(offence);
         }
       });
     }
@@ -99,10 +106,10 @@ export class StepperComponent
   }
 
   public onStepCancel(): void {
-    const ticketDispute = this.disputeService.ticketDispute;
+    const ticket = this.disputeService.ticket;
     const params = {
-      ticketNumber: ticketDispute.violationTicketNumber,
-      time: ticketDispute.violationTime,
+      ticketNumber: ticket.violationTicketNumber,
+      time: ticket.violationTime,
     };
 
     this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
@@ -123,12 +130,6 @@ export class StepperComponent
       this.saveStep(stepper);
     }
   }
-
-  // private showCourtPage(): boolean {
-  //   const offenceStatus = this.disputeFormStateService.stepOffenceForm.controls
-  //     .offenceAgreementStatus.value;
-  //   return offenceStatus && offenceStatus !== '1' ? true : false;
-  // }
 
   /**
    * @description

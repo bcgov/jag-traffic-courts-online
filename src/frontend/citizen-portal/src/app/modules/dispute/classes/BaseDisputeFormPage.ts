@@ -32,6 +32,6 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
     this.ticketDispute = this.disputeService.ticketDispute;
 
     // Attempt to patch the form if not already patched
-    this.disputeFormStateService.setForm(this.ticketDispute?.offence.dispute);
+    // this.disputeFormStateService.setForm(this.ticketDispute?.offence.dispute);
   }
 }

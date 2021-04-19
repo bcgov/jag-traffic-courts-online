@@ -23,15 +23,43 @@
           linear
           (selectionChange)="onSelectionChange($event)"
         >
-          <mat-step [stepControl]="offenceForm">
-            <ng-template matStepLabel>Count Review and Action</ng-template>
-            <app-step-single-count
+          <mat-step [stepControl]="disputantForm" label="Disputant Information">
+            <app-step-disputant
+              id="stepDisputant"
+              [stepper]="disputeStepper"
+              (stepCancel)="onStepCancel()"
+              (stepSave)="onStepSave($event)"
+            ></app-step-disputant>
+          </mat-step>
+
+          <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
+            <ng-template matStepLabel>Count #1 Review and Action</ng-template>
+            <app-step-count
               id="stepCount"
-              [stepControl]="offenceForm"
+              [stepControl]="offence1Form"
               [stepper]="disputeStepper"
               (stepSave)="onStepSave($event)"
-              (stepCancel)="onStepCancel()"
-            ></app-step-single-count>
+            ></app-step-count>
+          </mat-step>
+
+          <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
+            <ng-template matStepLabel>Count #2 Review and Action</ng-template>
+            <app-step-count
+              id="stepCount"
+              [stepControl]="offence2Form"
+              [stepper]="disputeStepper"
+              (stepSave)="onStepSave($event)"
+            ></app-step-count>
+          </mat-step>
+
+          <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
+            <ng-template matStepLabel>Count #3 Review and Action</ng-template>
+            <app-step-count
+              id="stepCount"
+              [stepControl]="offence3Form"
+              [stepper]="disputeStepper"
+              (stepSave)="onStepSave($event)"
+            ></app-step-count>
           </mat-step>
 
           <mat-step

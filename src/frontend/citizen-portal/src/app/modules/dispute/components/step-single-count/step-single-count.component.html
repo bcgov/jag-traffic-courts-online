@@ -30,37 +30,10 @@
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section class="mb-2">
-      <app-alert type="warning">
-        <ng-container #alertContent class="alert-content">
-          <div class="row">
-            <div class="col">
-              <!--
-              <mat-checkbox
-                formControlName="includeOffenceInDispute"
-                color="primary"
-                class="w-100 pt-2"
-                ><strong>I wish to dispute this offence</strong></mat-checkbox
-              >-->
-
-              <mat-slide-toggle
-                formControlName="includeOffenceInDispute"
-                color="primary"
-                ><strong
-                  >I would like to dispute this offence</strong
-                ></mat-slide-toggle
-              >
-            </div>
-          </div>
-        </ng-container>
-      </app-alert>
-    </section>
-
-    <section *ngIf="includeOffenceInDispute.value">
       <div class="row">
         <div class="col">
           <label>For this offence:</label>
           <mat-radio-group
-            [attr.disabled]="!includeOffenceInDispute.value"
             formControlName="offenceAgreementStatus"
             class="w-100"
           >
@@ -81,6 +54,7 @@
                 I do not agree that I committed this offence (allegation)
               </span>
             </mat-radio-button>
+
             <mat-error
               *ngIf="
                 (offenceAgreementStatus.dirty ||
@@ -173,6 +147,8 @@
   <app-page-footer
     (save)="onSubmit()"
     (back)="onBack()"
+    [secondaryActionButtonLabel]="prevBtnLabel"
+    [secondaryActionButtonIcon]="prevBtnIcon"
     [hasSecondaryAction]="true"
   ></app-page-footer>
 </app-page>

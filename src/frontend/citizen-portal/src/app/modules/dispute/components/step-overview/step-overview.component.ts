@@ -24,9 +24,12 @@ export class StepOverviewComponent
 
   public nextBtnLabel: string;
 
-  public reviewForm: FormGroup;
-  public offenceForm: FormGroup;
-  public courtForm: FormGroup;
+  public disputantForm: FormGroup;
+  public offence1Form: FormGroup;
+  public offence2Form: FormGroup;
+  public offence3Form: FormGroup;
+  public additionalForm: FormGroup;
+  public offenceFormsList: any[];
 
   constructor(
     protected route: ActivatedRoute,
@@ -53,11 +56,17 @@ export class StepOverviewComponent
   public ngOnInit() {
     const formsList = this.disputeFormStateService.forms;
     [
-      this.reviewForm,
-      this.offenceForm,
-      this.courtForm,
+      this.disputantForm,
+      this.offence1Form,
+      this.offence2Form,
+      this.offence3Form,
+      this.additionalForm,
       this.form,
     ] = formsList as FormGroup[];
+
+    console.log('XXXXXXXXXXXXXXXXXXX');
+    this.offenceFormsList = this.disputeFormStateService.offences;
+    console.log('this.offenceFormsList', this.offenceFormsList);
 
     this.patchForm();
     this.nextBtnLabel = 'Submit';
@@ -86,50 +95,42 @@ export class StepOverviewComponent
   }
 
   public get emailAddress(): FormControl {
-    return this.reviewForm.get('emailAddress') as FormControl;
+    return this.additionalForm.get('emailAddress') as FormControl;
   }
 
   public get offenceAgreementStatus(): FormControl {
-    return this.offenceForm.get('offenceAgreementStatus') as FormControl;
+    return this.offence1Form.get('offenceAgreementStatus') as FormControl;
   }
 
   public get requestReduction(): FormControl {
-    return this.offenceForm.get('requestReduction') as FormControl;
+    return this.offence1Form.get('requestReduction') as FormControl;
   }
 
   public get requestMoreTime(): FormControl {
-    return this.offenceForm.get('requestMoreTime') as FormControl;
+    return this.offence1Form.get('requestMoreTime') as FormControl;
   }
 
   public get reductionReason(): FormControl {
-    return this.offenceForm.get('reductionReason') as FormControl;
+    return this.offence1Form.get('reductionReason') as FormControl;
   }
 
   public get moreTimeReason(): FormControl {
-    return this.offenceForm.get('moreTimeReason') as FormControl;
-  }
-
-  public get courtDataExists(): boolean {
-    return (
-      this.lawyerPresent.value ||
-      this.interpreterRequired.value ||
-      this.witnessPresent.value
-    );
+    return this.offence1Form.get('moreTimeReason') as FormControl;
   }
 
   public get lawyerPresent(): FormControl {
-    return this.courtForm.get('lawyerPresent') as FormControl;
+    return this.additionalForm.get('lawyerPresent') as FormControl;
   }
 
   public get interpreterRequired(): FormControl {
-    return this.courtForm.get('interpreterRequired') as FormControl;
+    return this.additionalForm.get('interpreterRequired') as FormControl;
   }
 
   public get interpreterLanguage(): FormControl {
-    return this.courtForm.get('interpreterLanguage') as FormControl;
+    return this.additionalForm.get('interpreterLanguage') as FormControl;
   }
 
   public get witnessPresent(): FormControl {
-    return this.courtForm.get('witnessPresent') as FormControl;
+    return this.additionalForm.get('witnessPresent') as FormControl;
   }
 }
