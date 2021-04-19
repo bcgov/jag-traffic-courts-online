@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.Disputes;
+using DisputeApi.Web.Features.Disputes.Queries;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
-using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -19,67 +21,65 @@ namespace DisputeApi.Web.Test.Features.Disputes
     public class DisputeControllerTest
     {
         private Mock<ILogger<DisputesController>> _loggerMock;
-        private Mock<IDisputeService> _disputeServiceMock;
-        private Mock<ISendEndpointProvider> _sendEndpointProviderMock;
+        private Mock<IMediator> _mediatorMock;
 
         [SetUp]
         public void SetUp()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<DisputesController>();
-            _disputeServiceMock = new Mock<IDisputeService>();
-            _sendEndpointProviderMock = new Mock<ISendEndpointProvider>();
+            _mediatorMock = new Mock<IMediator>();
+
         }
 
         [Test]
         public void throw_ArgumentNullException_if_passed_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _disputeServiceMock.Object, _sendEndpointProviderMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null, _sendEndpointProviderMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _mediatorMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null));
         }
 
         [Theory]
         [AutoData]
-        public async Task get_disputes(DisputeViewModel dispute)
+        public async Task get_disputes(GetDisputeResponse dispute)
         {
-            IEnumerable<DisputeViewModel> expected = new List<DisputeViewModel> { dispute };
+            IEnumerable<GetDisputeResponse> expected = new List<GetDisputeResponse> { dispute };
 
-            _disputeServiceMock
-                .Setup(x => x.GetAllAsync())
+            _mediatorMock
+                .Setup(x => x.Send(It.IsAny<IRequest>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(expected));
 
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
+            var sut = new DisputesController(_loggerMock.Object,_mediatorMock.Object);
 
             var result = await sut.GetDisputes();
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkObjectResult>(result);
 
             var objectResult = (ObjectResult) result;
-            Assert.IsInstanceOf<IEnumerable<DisputeViewModel>>(objectResult.Value);
+            Assert.IsInstanceOf<IEnumerable<GetDisputeResponse>>(objectResult.Value);
 
-            var values = (IEnumerable<DisputeViewModel>) objectResult.Value;
+            var values = (IEnumerable<GetDisputeResponse>) objectResult.Value;
             Assert.AreEqual(values.Count(), 1);
 
-            _disputeServiceMock.Verify(x => x.GetAllAsync(), Times.Once);
+            _mediatorMock.Verify(x => x.Send(), Times.Once);
         }
 
         [Theory]
         [AutoData]
-        public async Task get_dispute(DisputeViewModel expected)
+        public async Task get_dispute(GetDisputeResponse expected)
         {
-            _disputeServiceMock
-                .Setup(x => x.GetAsync(expected.Id))
+            _mediatorMock
+                .Setup(x => x.Send(It.IsAny<GetDisputeQuery>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(expected));
 
-            var sut = new DisputesController(_loggerMock.Object, _disputeServiceMock.Object, _sendEndpointProviderMock.Object);
+            var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.GetDispute(expected.Id);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkObjectResult>(result);
 
-            Assert.IsInstanceOf<DisputeViewModel>(((OkObjectResult)result).Value);
-            _disputeServiceMock.Verify(x => x.GetAsync(expected.Id), Times.Once);
+            Assert.IsInstanceOf<GetDisputeResponse>(((OkObjectResult)result).Value);
+            _mediatorMock.Verify(x => x.GetAsync(expected.Id), Times.Once);
         }
 
         [Theory]

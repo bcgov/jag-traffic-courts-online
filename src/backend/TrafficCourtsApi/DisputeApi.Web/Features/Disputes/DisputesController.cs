@@ -25,8 +25,7 @@ namespace DisputeApi.Web.Features.Disputes
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
 
-        public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService,
-            ISendEndpointProvider sendEndpointProvider, IOptions<RabbitMQConfiguration> rabbitMqOptions, IMediator mediator)
+        public DisputesController(ILogger<DisputesController> logger,IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mediator = mediator;
