@@ -62,10 +62,6 @@ export class StepAdditionalComponent
     return this.form.get('interpreterRequired') as FormControl;
   }
 
-  public get emailAddress(): FormControl {
-    return this.form.get('emailAddress') as FormControl;
-  }
-
   public get isCourtRequired(): boolean {
     return this.disputeFormStateService.isCourtRequired;
   }

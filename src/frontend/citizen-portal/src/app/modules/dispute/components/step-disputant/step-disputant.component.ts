@@ -54,7 +54,7 @@ export class StepDisputantComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepDisputantForm;
-    this.ticketDispute = this.disputeService.ticketDispute;
+    this.patchForm();
 
     this.prevBtnLabel = 'Cancel';
     this.prevBtnIcon = 'close';
@@ -78,5 +78,9 @@ export class StepDisputantComponent
 
   public get workPhone(): FormControl {
     return this.form.get('workPhone') as FormControl;
+  }
+
+  public get emailAddress(): FormControl {
+    return this.form.get('emailAddress') as FormControl;
   }
 }

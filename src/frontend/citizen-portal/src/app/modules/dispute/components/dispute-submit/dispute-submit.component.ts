@@ -12,18 +12,18 @@ export class DisputeSubmitComponent implements OnInit {
   constructor(private router: Router, private disputeService: DisputeService) {}
 
   ngOnInit(): void {
-    this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
-      if (!ticketDispute) {
+    this.disputeService.ticket$.subscribe((ticket) => {
+      if (!ticket) {
         this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
       }
     });
   }
 
   public onViewYourTicket(): void {
-    const ticketDispute = this.disputeService.ticketDispute;
+    const ticket = this.disputeService.ticket;
     const params = {
-      ticketNumber: ticketDispute.violationTicketNumber,
-      time: ticketDispute.violationTime,
+      ticketNumber: ticket.violationTicketNumber,
+      time: ticket.violationTime,
     };
 
     this.disputeService.ticket$.next(null);

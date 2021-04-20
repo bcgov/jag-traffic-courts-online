@@ -9,13 +9,13 @@ import {
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
-import { Dispute } from '@shared/models/dispute.model';
 import { Offence } from '@shared/models/offence.model';
+import { Ticket } from '@shared/models/ticket.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
+export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
   public stepDisputantForm: FormGroup;
   public stepOffence1Form: FormGroup;
   public stepOffence2Form: FormGroup;
@@ -41,17 +41,18 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
    * can't be loaded during instantiation.
    */
   public async setForm(
-    dispute: Dispute,
+    // dispute: Dispute,
+    ticket: Ticket,
     forcePatch: boolean = false
   ): Promise<void> {
-    super.setForm(dispute, forcePatch);
+    super.setForm(ticket, forcePatch);
   }
 
   /**
    * @description
    * Convert reactive form abstract controls into JSON.
    */
-  public get json(): Dispute {
+  public get json(): Ticket {
     const stepDisputant = this.stepDisputantForm.getRawValue();
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
@@ -59,15 +60,16 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
     const stepAdditional = this.stepAdditionalForm.getRawValue();
     const stepOverview = this.stepOverviewForm.getRawValue();
 
-    const obj = {
-      ...stepDisputant,
-      ...stepAdditional,
+    const ticket = {
       ...stepOverview,
     };
-    obj.offence1 = stepOffence1;
-    obj.offence2 = stepOffence2;
-    obj.offence3 = stepOffence3;
-    return obj;
+    ticket.disputant = stepDisputant;
+    ticket.offences = [];
+    ticket.offences.push(stepOffence1);
+    ticket.offences.push(stepOffence2);
+    ticket.offences.push(stepOffence3);
+    ticket.additional = stepAdditional;
+    return ticket;
   }
 
   public get offences(): Offence[] {
@@ -155,9 +157,9 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
    */
   protected buildForms() {
     this.stepDisputantForm = this.buildStepDisputantForm();
-    this.stepOffence1Form = this.buildStepOffenceForm(1);
-    this.stepOffence2Form = this.buildStepOffenceForm(2);
-    this.stepOffence3Form = this.buildStepOffenceForm(3);
+    this.stepOffence1Form = this.buildStepOffenceForm();
+    this.stepOffence2Form = this.buildStepOffenceForm();
+    this.stepOffence3Form = this.buildStepOffenceForm();
     this.stepAdditionalForm = this.buildStepAdditionalForm();
     this.stepOverviewForm = this.buildStepOverviewForm();
   }
@@ -166,17 +168,17 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
    * @description
    * Manage the conversion of JSON to reactive forms.
    */
-  protected patchForm(dispute: Dispute) {
-    if (!dispute) {
+  protected patchForm(ticket: Ticket) {
+    if (!ticket) {
       return;
     }
 
-    this.stepDisputantForm.patchValue(dispute);
-    this.stepOffence1Form.patchValue(dispute);
-    this.stepOffence2Form.patchValue(dispute);
-    this.stepOffence3Form.patchValue(dispute);
-    this.stepAdditionalForm.patchValue(dispute);
-    this.stepOverviewForm.patchValue(dispute);
+    this.stepDisputantForm.patchValue(ticket);
+    this.stepOffence1Form.patchValue(ticket);
+    this.stepOffence2Form.patchValue(ticket);
+    this.stepOffence3Form.patchValue(ticket);
+    this.stepAdditionalForm.patchValue(ticket);
+    this.stepOverviewForm.patchValue(ticket);
 
     // After patching the form is dirty, and needs to be pristine
     // to allow for deactivation modals to work properly
@@ -197,13 +199,14 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
       province: [null],
       license: [null],
       provLicense: [null],
+      emailAddress: [null], //, [Validators.required, Validators.email]
       homePhone: [null], //, [FormControlValidators.phone]],
       workPhone: [null], //, [FormControlValidators.phone]],
       birthdate: [null], //, []],
     });
   }
 
-  public buildStepOffenceForm(countNumber: number): FormGroup {
+  public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
       offenceNumber: [null],
       includeOffenceInDispute: [false],
@@ -224,7 +227,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Dispute> {
 
   public buildStepAdditionalForm(): FormGroup {
     return this.formBuilder.group({
-      emailAddress: [null], //, [Validators.required, Validators.email]
       lawyerPresent: [null],
       interpreterRequired: [null],
       interpreterLanguage: [null],

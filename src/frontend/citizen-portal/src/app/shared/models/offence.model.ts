@@ -1,4 +1,4 @@
-import { Dispute } from './dispute.model';
+import { OffenceDispute } from './offenceDispute.model';
 
 export interface Offence {
   invoiceType: string;
@@ -12,7 +12,8 @@ export interface Offence {
   discountAmount: number;
   discountDueDate: string;
 
-  dispute: Dispute;
+  // Part B
+  offenceDispute: OffenceDispute;
 
   // derived later on
   offenceStatus?: number;

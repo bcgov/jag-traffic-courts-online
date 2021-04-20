@@ -31,7 +31,6 @@
         </app-alert>
       </div>
     </ng-template>
-
     <div class="mb-2">
       <section class="mb-2">
         <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
@@ -50,9 +49,6 @@
         <h3>
           <div class="row">
             <div class="col-md-3 mb-2">
-              <!--
-              COUNT #{{ row.offenceNumber }}
-              -->
               <small class="d-block">{{ row.invoiceType }}</small>
               <mat-chip-list>
                 <mat-chip selected class="p-3"
@@ -124,12 +120,11 @@
                 Pay Count
               </a>
             </button>
-            <!-- && ticket.disputesExist-->
             <button
               *ngIf="row.offenceStatus === -1"
               mat-flat-button
               color="primary"
-              (click)="onDisputeCount(row)"
+              (click)="onDisputeOffence(row)"
             >
               <mat-icon inline="true">read_more</mat-icon>
               Dispute Count
@@ -177,7 +172,6 @@
           </button>
         </div>
         <div class="col-md-6">
-          <!-- *ngIf="!ticket.disputesExist"-->
           <button
             mat-flat-button
             color="primary"
@@ -216,4 +210,7 @@
       </div>
     </section>
   </div>
+
+  <!-- && ticket.disputesExist-->
+  <!-- *ngIf="!ticket.disputesExist"-->
 </app-page>

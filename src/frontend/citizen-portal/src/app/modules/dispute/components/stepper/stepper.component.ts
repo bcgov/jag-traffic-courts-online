@@ -32,6 +32,7 @@ export class StepperComponent
   public offenceForm: FormGroup;
   public additionalForm: FormGroup;
   public overviewForm: FormGroup;
+  private currentDisputeOffenceNumber: number;
 
   constructor(
     protected route: ActivatedRoute,
@@ -53,11 +54,21 @@ export class StepperComponent
       disputeResource,
       disputeFormStateService
     );
+
+    this.currentDisputeOffenceNumber = this.router.getCurrentNavigation().extras.state?.disputeOffenceNumber;
+    this.logger.info(
+      'Dispute Offence Number',
+      this.currentDisputeOffenceNumber
+    );
+
+    if (!this.currentDisputeOffenceNumber) {
+      this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
+    }
   }
 
   public ngOnInit(): void {
-    this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
-      if (!ticketDispute) {
+    this.disputeService.ticket$.subscribe((ticket) => {
+      if (!ticket) {
         this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
       }
 
@@ -80,15 +91,29 @@ export class StepperComponent
 
     if (this.disputeService.ticket) {
       this.disputeService.ticket.offences.forEach((offence) => {
-        if (offence.offenceNumber === 1) {
-          offence1Form.patchValue(offence);
-          this.offenceForm = offence1Form;
-        } else if (offence.offenceNumber === 2) {
-          offence2Form.patchValue(offence);
-          this.offenceForm = offence2Form;
-        } else if (offence.offenceNumber === 3) {
-          offence3Form.patchValue(offence);
-          this.offenceForm = offence3Form;
+        if (offence.offenceNumber === this.currentDisputeOffenceNumber) {
+          switch (offence.offenceNumber) {
+            case 1:
+              offence1Form.patchValue(offence);
+              this.offenceForm = offence1Form;
+              break;
+            case 2:
+              offence2Form.patchValue(offence);
+              this.offenceForm = offence2Form;
+              break;
+            case 3:
+              offence3Form.patchValue(offence);
+              this.offenceForm = offence3Form;
+              break;
+            default:
+              this.logger.error(
+                'Invalid disputeOffenceNumber',
+                this.currentDisputeOffenceNumber
+              );
+              this.router.navigate([
+                DisputeRoutes.routePath(DisputeRoutes.FIND),
+              ]);
+          }
         }
       });
     }
@@ -99,10 +124,10 @@ export class StepperComponent
   }
 
   public onStepCancel(): void {
-    const ticketDispute = this.disputeService.ticketDispute;
+    const ticket = this.disputeService.ticket;
     const params = {
-      ticketNumber: ticketDispute.violationTicketNumber,
-      time: ticketDispute.violationTime,
+      ticketNumber: ticket.violationTicketNumber,
+      time: ticket.violationTime,
     };
 
     this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.SUMMARY)], {
@@ -118,7 +143,7 @@ export class StepperComponent
 
     // on the last step
     if (numberOfSteps === currentStep) {
-      this.submitDispute();
+      this.submitOffenceDispute();
     } else {
       this.saveStep(stepper);
     }
@@ -146,23 +171,21 @@ export class StepperComponent
    * @description
    * Submit the dispute
    */
-  private submitDispute(): void {
+  private submitOffenceDispute(): void {
     const data: DialogOptions = {
-      title: 'Submit Dispute',
+      title: 'Submit Offence Dispute',
       message:
-        'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
+        'When your dispute of the offence is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
       actionText: 'Submit Dispute',
     };
-
     this.dialog
       .open(ConfirmDialogComponent, { data })
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
           this.logger.info('submitDispute', this.disputeFormStateService.json);
-
           this.busy = this.disputeResource
-            .createDispute(this.disputeFormStateService.json)
+            .createTicketDispute(this.disputeFormStateService.json)
             .subscribe(() => {
               this.toastService.openSuccessToast(
                 'Dispute has been successfully submitted'

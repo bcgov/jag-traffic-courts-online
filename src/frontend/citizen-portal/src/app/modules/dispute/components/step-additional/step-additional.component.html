@@ -7,27 +7,8 @@
   </app-page-header>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-    <section class="mb-2">
-      <div class="row">
-        <div class="col">
-          <mat-form-field class="w-100">
-            <input
-              matInput
-              formControlName="emailAddress"
-              placeholder="Email Address"
-              autocomplete="off"
-            />
-            <mat-error *ngIf="emailAddress.hasError('required')"
-              >Required</mat-error
-            >
-            <mat-error *ngIf="emailAddress.hasError('email')"
-              >Must be a valid email address</mat-error
-            >
-          </mat-form-field>
-        </div>
-      </div>
-    </section>
-    <section *ngIf="isCourtRequired">
+    <!--  *ngIf="isCourtRequired" -->
+    <section>
       <h3>Please indicate if the following apply:</h3>
       <div class="row">
         <div class="col">

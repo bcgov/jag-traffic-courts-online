@@ -7,6 +7,7 @@
     >
   </app-page-header>
 
+  <!--
   <section class="mb-2">
     <div class="row">
       <div class="col-6 mb-2">Violation Ticket Number</div>
@@ -21,9 +22,8 @@
       </div>
     </div>
   </section>
-
+-->
   <ng-container *ngFor="let offence of offenceFormsList; let i = index">
-    <p>{{ offence | json }}</p>
     <section class="mb-2" *ngIf="offence.offenceNumber">
       <div class="row">
         <div class="col-5 mb-2">Offence #{{ offence.offenceNumber }}</div>
@@ -74,70 +74,7 @@
     </section>
   </ng-container>
 
-  <!--
-  <form [formGroup]="offence1Form" novalidate>
-    <section class="mb-2">
-      <div class="row">
-        <div class="col-5 mb-2">
-          Offence #{{ ticketDispute?.offence.offenceNumber }}
-        </div>
-        <small class="col-7 text-right mb-2">{{
-          ticketDispute?.offence.offenceDescription
-        }}</small>
-      </div>
-      <div class="row">
-        <div class="col text-left mb-2">
-          <ul>
-            <li *ngIf="offenceAgreementStatus.value === '1'">
-              I agree that I committed this offence, and I do not want to appear
-              in court
-            </li>
-            <li *ngIf="offenceAgreementStatus.value === '2'">
-              I agree that I committed this offence, and I want to appear in
-              court
-            </li>
-            <li *ngIf="offenceAgreementStatus.value === '3'">
-              I do not agree that I committed this offence (allegation)
-            </li>
-            <li *ngIf="offenceAgreementStatus.value === '4'">
-              I do want to dispute this offence
-            </li>
-            <ng-container
-              *ngIf="
-                offenceAgreementStatus.value === '1' ||
-                offenceAgreementStatus.value === '2'
-              "
-            >
-              <li *ngIf="requestReduction.value">
-                I request a reduction of the ticketed amount
-              </li>
-              <div *ngIf="requestReduction.value">
-                {{ reductionReason.value }}
-              </div>
-              <li *ngIf="requestMoreTime.value">
-                I request time to pay the ticketed amount
-              </li>
-              <div *ngIf="requestMoreTime.value">
-                {{ moreTimeReason.value }}
-              </div>
-            </ng-container>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </form>
-      -->
-
   <section class="mb-2">
-    <div class="row">
-      <div class="col-12 mb-2">Additional Information</div>
-    </div>
-    <div class="row">
-      <div class="col-6 mb-2">Contact Email</div>
-      <div class="col-6 text-right">
-        {{ emailAddress.value | default }}
-      </div>
-    </div>
     <div class="row">
       <div class="col text-left mb-2">
         <form [formGroup]="additionalForm" novalidate>

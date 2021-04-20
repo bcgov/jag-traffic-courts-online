@@ -60,28 +60,29 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public onDisputeCount(offence: Offence): void {
-    this.logger.info('onDisputeCount offence', offence);
-
-    const ticketDispute = this.disputeService.getTicketDispute(this.ticket, [
-      offence,
-    ]);
-    this.disputeService.ticketDispute$.next(ticketDispute);
+  public onDisputeOffence(offence: Offence): void {
+    this.logger.info('onDisputeOffence offence', offence);
+    //   const ticketDispute = this.disputeService.getTicketDispute(this.ticket, [
+    //     offence,
+    //   ]);
+    //   this.disputeService.ticketDispute$.next(ticketDispute);
 
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)]);
+      this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)], {
+        state: { disputeOffenceNumber: offence.offenceNumber },
+      });
     });
   }
 
   public onDisputeTicket(): void {
-    this.logger.info('onDisputeTicket');
-
-    const ticketDispute = this.disputeService.getTicketDispute(
-      this.ticket,
-      this.ticket.offences
-    );
-    this.disputeService.ticketDispute$.next(ticketDispute);
+    this.logger.info('onDisputeTicket', this.disputeService.ticket);
+    // const ticketDispute = this.disputeService.getTicketDispute(
+    //   this.ticket,
+    //   this.ticket.offences
+    // );
+    // this.disputeService.ticketDispute$.next(ticketDispute);
+    // this.disputeService.ticket$.next(this.ticket);
 
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
@@ -89,36 +90,5 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
         DisputeRoutes.routePath(DisputeRoutes.ALL_STEPPER),
       ]);
     });
-  }
-
-  public getOffenceStatus(row: Offence): number {
-    if (row.dispute) {
-      return row.dispute.status;
-    }
-    if (row.amountDue > 0) {
-      return -1;
-    }
-    return -2;
-  }
-
-  public getOffenceStatusDesc(row: Offence): string {
-    const disputeStatus = row.dispute ? row.dispute.status : null;
-    if (disputeStatus) {
-      if (disputeStatus === 0) {
-        return 'Created';
-      } else if (disputeStatus === 1) {
-        return 'Submitted';
-      } else if (disputeStatus === 2) {
-        return 'In Progress';
-      } else if (disputeStatus === 3) {
-        return 'Resolved';
-      } else if (disputeStatus === 4) {
-        return 'Rejected';
-      }
-    }
-    if (row.amountDue > 0) {
-      return 'Outstanding Balance';
-    }
-    return 'Paid';
   }
 }

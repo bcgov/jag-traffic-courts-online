@@ -1,5 +1,6 @@
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
-import { Dispute } from '@shared/models/dispute.model';
+import { OffenceDispute } from '@shared/models/offenceDispute.model';
+import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { Ticket } from '@shared/models/ticket.model';
 import * as faker from 'faker';
@@ -63,7 +64,18 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
+      disputant: null,
       offences: [],
+      additional: null,
+    };
+
+    ticket.disputant = this.createDisputant();
+
+    ticket.additional = {
+      lawyerPresent: false,
+      interpreterRequired: true,
+      interpreterLanguage: 'Spanish',
+      witnessPresent: false,
     };
 
     // --------------------------
@@ -74,22 +86,21 @@ export class MockDisputeService {
       violationDateTime: faker.date.soon().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      dispute: null,
+      offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
     };
 
-    let dispute: Dispute = this.createDispute(
+    let offenceDispute: OffenceDispute = this.createOffenceDispute(
       ticket.violationTicketNumber,
       offence.offenceNumber
     );
-    dispute.status = 1;
-    dispute.interpreterRequired = true;
-    dispute.interpreterLanguage = 'Spanish';
-    dispute.informationCertified = true;
-    offence.dispute = dispute;
+    offenceDispute.status = 1;
+    offenceDispute.informationCertified = true;
+
+    offence.offenceDispute = offenceDispute;
 
     ticket.offences.push(offence);
 
@@ -100,7 +111,7 @@ export class MockDisputeService {
       amountDue: 167,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      dispute: null,
+      offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
@@ -120,7 +131,7 @@ export class MockDisputeService {
       violationDateTime: faker.date.recent().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      dispute: null,
+      offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
@@ -139,7 +150,7 @@ export class MockDisputeService {
       amountDue: 126,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Using Electronic Device While Driving',
-      dispute: null,
+      offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Ford Focus',
       discountAmount: 25,
@@ -159,27 +170,36 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createDispute(
+  private createDisputant(): Disputant {
+    return {
+      surname: faker.name.lastName(),
+      given: faker.name.firstName(),
+      mailingAddress: faker.address.streetAddress(),
+      city: faker.address.city(),
+      province: faker.address.state(),
+      postal: 'V8R3E3',
+      birthdate: faker.date.past().toDateString(),
+      emailAddress: faker.internet.email(),
+      license: '234234',
+      provLicense: 'BC',
+      homePhone: faker.phone.phoneNumber(),
+      workPhone: faker.phone.phoneNumber(),
+    };
+  }
+
+  private createOffenceDispute(
     violationTicketNumber: string,
     offenceNumber: number
-  ): Dispute {
-    const dispute: Dispute = {
-      violationTicketNumber,
-      offenceNumber,
+  ): OffenceDispute {
+    return {
       status: 0,
-      emailAddress: faker.internet.email(),
-      lawyerPresent: null,
-      interpreterRequired: null,
-      interpreterLanguage: null,
-      witnessPresent: null,
-      informationCertified: null,
-      offenceAgreementStatus: null,
-      requestReduction: null,
-      requestMoreTime: null,
+      includeOffenceInDispute: true,
+      offenceAgreementStatus: '3',
+      requestReduction: false,
+      requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
+      informationCertified: false,
     };
-
-    return dispute;
   }
 }

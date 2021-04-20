@@ -4,7 +4,6 @@ import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Dispute } from '@shared/models/dispute.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { Offence } from '@shared/models/offence.model';
 import { Observable, of } from 'rxjs';
@@ -60,15 +59,15 @@ export class DisputeResourceService {
    *
    * @param dispute The dispute to be created
    */
-  public createDispute(dispute: Dispute): Observable<Dispute> {
-    this.logger.info('createDispute', dispute);
+  public createTicketDispute(ticket: Ticket): Observable<Ticket> {
+    this.logger.info('createTicketDispute', ticket);
 
-    return this.apiResource.post<Dispute>('disputes', dispute).pipe(
-      map((response: ApiHttpResponse<Dispute>) => null),
+    return this.apiResource.post<Ticket>('disputes', ticket).pipe(
+      map((response: ApiHttpResponse<Ticket>) => null),
       catchError((error: any) => {
         this.toastService.openErrorToast('Dispute could not be created');
         this.logger.error(
-          'DisputeResourceService::createDispute error has occurred: ',
+          'DisputeResourceService::createTicketDispute error has occurred: ',
           error
         );
         throw error;
@@ -79,22 +78,29 @@ export class DisputeResourceService {
   private getOffenceInfo(
     row: Offence
   ): { status: number; desc: string; notes: string } {
-    const disputeStatus = row.dispute ? row.dispute.status : null;
-
+    const disputeStatus = row.offenceDispute ? row.offenceDispute.status : null;
     const status = disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
 
     let desc: string;
     if (disputeStatus) {
-      if (disputeStatus === 0) {
-        desc = 'Created';
-      } else if (disputeStatus === 1) {
-        desc = 'Submitted';
-      } else if (disputeStatus === 2) {
-        desc = 'In Progress';
-      } else if (disputeStatus === 3) {
-        desc = 'Resolved';
-      } else if (disputeStatus === 4) {
-        desc = 'Rejected';
+      switch (disputeStatus) {
+        case 0:
+          desc = 'Created';
+          break;
+        case 1:
+          desc = 'Submitted';
+          break;
+        case 2:
+          desc = 'In Progress';
+          break;
+        case 3:
+          desc = 'Resolved';
+          break;
+        case 4:
+          desc = 'Rejected';
+          break;
+        default:
+          desc = disputeStatus + ' Unknown';
       }
     } else if (row.amountDue > 0) {
       desc = 'Outstanding Balance';
@@ -132,7 +138,7 @@ export class DisputeResourceService {
       offence.offenceStatusDesc = desc;
       offence.notes = notes;
 
-      if (offence.dispute) {
+      if (offence.offenceDispute) {
         disputesExist = true;
       }
 

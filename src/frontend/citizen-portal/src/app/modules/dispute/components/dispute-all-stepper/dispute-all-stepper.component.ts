@@ -66,8 +66,17 @@ export class DisputeAllStepperComponent
   }
 
   public ngOnInit(): void {
-    this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
-      if (!ticketDispute) {
+    // this.disputeService.ticketDispute$.subscribe((ticketDispute) => {
+    //   if (!ticketDispute) {
+    //     this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
+    //   }
+
+    //   this.disputeFormStateService.reset();
+    //   this.patchForm();
+    // });
+
+    this.disputeService.ticket$.subscribe((ticket) => {
+      if (!ticket) {
         this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.FIND)]);
       }
 
@@ -163,7 +172,7 @@ export class DisputeAllStepperComponent
           this.logger.info('submitDispute', this.disputeFormStateService.json);
 
           this.busy = this.disputeResource
-            .createDispute(this.disputeFormStateService.json)
+            .createTicketDispute(this.disputeFormStateService.json)
             .subscribe(() => {
               this.toastService.openSuccessToast(
                 'Dispute has been successfully submitted'

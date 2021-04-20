@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { DisputeRoutes } from '@dispute/dispute.routes';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
-import { Dispute } from '@shared/models/dispute.model';
-import { SurveyJsRoutes } from '@survey/survey-js.routes';
+import { Ticket } from '@shared/models/ticket.model';
 
 @Component({
   selector: 'app-dispute-list',
@@ -13,8 +11,8 @@ import { SurveyJsRoutes } from '@survey/survey-js.routes';
   styleUrls: ['./dispute-list.component.scss'],
 })
 export class DisputeListComponent implements OnInit {
-  public disputes: Dispute[];
-  public dispute: Dispute;
+  public disputes: Ticket[];
+  public dispute: Ticket;
 
   public columnsToDisplay: string[] = [
     'violationTicketNumber',

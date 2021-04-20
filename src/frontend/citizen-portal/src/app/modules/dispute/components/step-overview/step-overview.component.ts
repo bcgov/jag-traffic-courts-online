@@ -29,7 +29,6 @@ export class StepOverviewComponent
   public offence2Form: FormGroup;
   public offence3Form: FormGroup;
   public additionalForm: FormGroup;
-  public offenceFormsList: any[];
 
   constructor(
     protected route: ActivatedRoute,
@@ -64,10 +63,6 @@ export class StepOverviewComponent
       this.form,
     ] = formsList as FormGroup[];
 
-    console.log('XXXXXXXXXXXXXXXXXXX');
-    this.offenceFormsList = this.disputeFormStateService.offences;
-    console.log('this.offenceFormsList', this.offenceFormsList);
-
     this.patchForm();
     this.nextBtnLabel = 'Submit';
   }
@@ -90,12 +85,12 @@ export class StepOverviewComponent
     this.utilsService.scrollToErrorSection();
   }
 
-  public get informationCertified(): FormControl {
-    return this.form.get('informationCertified') as FormControl;
+  public get offenceFormsList(): any[] {
+    return this.disputeFormStateService.offences;
   }
 
-  public get emailAddress(): FormControl {
-    return this.additionalForm.get('emailAddress') as FormControl;
+  public get informationCertified(): FormControl {
+    return this.form.get('informationCertified') as FormControl;
   }
 
   public get offenceAgreementStatus(): FormControl {
