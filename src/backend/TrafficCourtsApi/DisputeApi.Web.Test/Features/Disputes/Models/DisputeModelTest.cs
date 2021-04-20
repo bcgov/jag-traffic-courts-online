@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using AutoFixture;
 using AutoFixture.NUnit3;
-using DisputeApi.Web.Models;
+using DisputeApi.Web.Features.Disputes.DBModel;
 using DisputeApi.Web.Test.Utils;
 using NUnit.Framework;
 
@@ -13,7 +11,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Models
     {
         [Theory]
         [AutoData]
-        public void can_create_class(DisputeViewModel expected)
+        public void can_create_class(Dispute expected)
         {
             var actual = PropertyCopy.CopyProperties(expected);
 

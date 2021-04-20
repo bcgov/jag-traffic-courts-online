@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.Disputes;
+using DisputeApi.Web.Features.Disputes.DBModel;
 using DisputeApi.Web.Infrastructure;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 
@@ -19,7 +22,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
     {
         private IDisputeService _service;
         private readonly Mock<ILogger<DisputeService>> _loggerMock = LoggerServiceMock.LoggerMock<DisputeService>();
-
+        private ViolationContext _violationContext;
 
         private ViolationContext CreateContext()
         {
@@ -32,7 +35,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
         [SetUp]
         public void SetUp()
         {
-            _service = new DisputeService(_loggerMock.Object, CreateContext());
+            _violationContext = CreateContext();
+            _service = new DisputeService(_loggerMock.Object, _violationContext);
+
         }
 
 
@@ -47,24 +52,52 @@ namespace DisputeApi.Web.Test.Features.Disputes
         public async Task get_disputes()
         {
             var result = await _service.GetAllAsync();
-            Assert.IsInstanceOf<IEnumerable<DisputeViewModel>>(result);
-            //_loggerMock.VerifyLog(LogLevel.Debug, "Returning list of mock disputes", Times.Once());
+            Assert.IsInstanceOf<IEnumerable<Dispute>>(result);
+            _loggerMock.VerifyLog(LogLevel.Debug, "Getting all disputes", Times.Once());
         }
 
         [Theory]
         [AutoData]
-        public async Task create_and_get_dispute(DisputeViewModel expected)
+        public async Task create_new_and_get_dispute(Dispute toCreate)
         {
-            var result = await _service.CreateAsync(expected);
-            Assert.IsInstanceOf<DisputeViewModel>(result);
+            var result = await _service.CreateAsync(toCreate);
+            Assert.IsInstanceOf<Dispute>(result);
+            Assert.AreNotEqual(0, result.Id);
+            _loggerMock.VerifyLog(LogLevel.Debug, "Creating dispute", Times.Once());
 
-            //_loggerMock.VerifyLog(LogLevel.Debug, "Creating mock dispute", Times.Once());
-
-            result = await _service.GetAsync(expected.Id);
-            Assert.IsInstanceOf<DisputeViewModel>(result);
+            result = await _service.GetAsync(result.Id);
+            Assert.IsInstanceOf<Dispute>(result);
             Assert.IsNotNull(result);
-            Assert.AreEqual(result.Id, expected.Id);
-            //_loggerMock.VerifyLog(LogLevel.Information, "Returning a specific mock dispute", Times.Once());
+            _loggerMock.VerifyLog(LogLevel.Debug, "Get dispute", Times.Once());
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task create_existed_dispute_get_id0(Dispute toCreate)
+        {
+            var result = await _service.CreateAsync(toCreate);
+            Assert.IsInstanceOf<Dispute>(result);
+            Assert.AreNotEqual(0, result.Id);
+            _loggerMock.VerifyLog(LogLevel.Debug, "Creating dispute", Times.Once());
+
+            result = await _service.CreateAsync(toCreate);
+            Assert.IsInstanceOf<Dispute>(result);
+            Assert.AreEqual(0, result.Id);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task FindDispute_get_dispute(Dispute toCreate, string findTicketNumber, int findOffenceNumber)
+        {
+            toCreate.ViolationTicketNumber = findTicketNumber;
+            toCreate.OffenceNumber = findOffenceNumber;
+            var result = await _service.CreateAsync(toCreate);
+            Assert.IsInstanceOf<Dispute>(result);
+
+            result = await _service.FindDisputeAsync(findTicketNumber, findOffenceNumber);
+            Assert.IsInstanceOf<Dispute>(result);
+            Assert.AreEqual(findTicketNumber, result.ViolationTicketNumber);
+            Assert.AreEqual(findOffenceNumber, result.OffenceNumber);
         }
     }
 }

@@ -11,10 +11,15 @@ namespace DisputeApi.Web.Features.Disputes
 {
     public interface IDisputeService
     {
+        /// <summary>
+        /// create dispute in db. 
+        /// </summary>
+        /// <param name="dispute">the dispute to create</param>
+        /// <returns>the dispute created, with Id value. If the dispute existed, return id=0 </returns>
         Task<Dispute> CreateAsync(Dispute dispute);
         Task<IEnumerable<Dispute>> GetAllAsync();
         Task<Dispute> GetAsync(int disputeId);
-        Task<Dispute> FindDispute(string ticketNumber, int offenceNumber);
+        Task<Dispute> FindDisputeAsync(string ticketNumber, int offenceNumber);
     }
 
     public class DisputeService : IDisputeService
@@ -32,17 +37,17 @@ namespace DisputeApi.Web.Features.Disputes
         public async Task<Dispute> CreateAsync(Dispute dispute)
         {
 
-            var existedDispute = await FindDispute(dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            var existedDispute = await FindDisputeAsync(dispute.ViolationTicketNumber, dispute.OffenceNumber);
             if (existedDispute == null)
             {
-                _logger.LogInformation("Creating dispute");
-                await _context.Disputes.AddAsync(dispute);
+                _logger.LogDebug("Creating dispute");
+                var createdDispute = await _context.Disputes.AddAsync(dispute);
                 await _context.SaveChangesAsync();
-                return dispute;
+                return createdDispute.Entity;
 
             }
             _logger.LogError("found the dispute for the same offence, ticketNumber={ticketNumber}, offenceNumer={offenceNumber}", dispute.ViolationTicketNumber, dispute.OffenceNumber);
-            return null;
+            return new Dispute { Id=0};
 
         }
 
@@ -64,7 +69,7 @@ namespace DisputeApi.Web.Features.Disputes
             return dispute;
         }
 
-        public async Task<Dispute> FindDispute(string ticketNumber, int offenceNumber)
+        public async Task<Dispute> FindDisputeAsync(string ticketNumber, int offenceNumber)
         {
             _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}, offenceNumber {offenceNumber}",ticketNumber,offenceNumber);
 

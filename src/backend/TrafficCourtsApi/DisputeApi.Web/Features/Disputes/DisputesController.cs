@@ -52,7 +52,7 @@ namespace DisputeApi.Web.Features.Disputes
         {
             var disputes = await _mediator.Send(new GetAllDisputesQuery());
 
-            return Ok(disputes);
+            return disputes == null ? NoContent() : Ok(ApiResponse.Result(disputes));
         }
 
         [HttpGet("{disputeId}")]
@@ -60,12 +60,7 @@ namespace DisputeApi.Web.Features.Disputes
         public async Task<IActionResult> GetDispute(int disputeId)
         {
             var dispute = await _mediator.Send(new GetDisputeQuery { DisputeId=disputeId});
-            if (dispute != null)
-            {
-                return Ok(dispute);
-            }
-
-            return NotFound();
+            return dispute == null ? NoContent() : Ok(ApiResponse.Result(dispute));
         }
 
 
