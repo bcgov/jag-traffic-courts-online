@@ -10,6 +10,8 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
+import { Additional } from '@shared/models/additional.model';
+import { Disputant } from '@shared/models/disputant.model';
 
 @Component({
   selector: 'app-step-overview',
@@ -53,17 +55,9 @@ export class StepOverviewComponent
   }
 
   public ngOnInit() {
-    const formsList = this.disputeFormStateService.forms;
-    [
-      this.disputantForm,
-      this.offence1Form,
-      this.offence2Form,
-      this.offence3Form,
-      this.additionalForm,
-      this.form,
-    ] = formsList as FormGroup[];
-
+    this.form = this.disputeFormStateService.stepOverviewForm;
     this.patchForm();
+
     this.nextBtnLabel = 'Submit';
   }
 
@@ -87,6 +81,14 @@ export class StepOverviewComponent
 
   public get offenceFormsList(): any[] {
     return this.disputeFormStateService.offences;
+  }
+
+  public get disputantInfo(): Disputant {
+    return this.disputeFormStateService.disputant;
+  }
+
+  public get additionalInfo(): Additional {
+    return this.disputeFormStateService.additional;
   }
 
   public get informationCertified(): FormControl {

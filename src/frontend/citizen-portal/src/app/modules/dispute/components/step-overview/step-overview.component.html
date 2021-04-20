@@ -7,22 +7,99 @@
     >
   </app-page-header>
 
-  <!--
   <section class="mb-2">
     <div class="row">
       <div class="col-6 mb-2">Violation Ticket Number</div>
       <div class="col-6 text-right mb-2">
-        {{ ticketDispute?.violationTicketNumber | default }}
+        {{ ticket?.violationTicketNumber | default }}
       </div>
     </div>
     <div class="row">
       <div class="col-6 mb-2">Violation Time</div>
       <div class="col-6 text-right">
-        {{ ticketDispute?.violationTime }}
+        {{ ticket?.violationTime }}
       </div>
     </div>
   </section>
--->
+
+  <section class="mb-2" *ngIf="disputantInfo && disputantInfo.surname">
+    <div class="row">
+      <div class="col mb-2">Disputant Information</div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Surname of the Disputant</div>
+      <div class="col-6 text-right mb-2">
+        {{ disputantInfo.surname | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Given Names</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.given | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Mailing Address</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.mailingAddress | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">City</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.city | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Province</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.province | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Postal Code</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.postal | postal | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Driver's License Number</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.license | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Province</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.provLicense | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Home Phone Number</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.homePhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Work Phone Number</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.workPhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Email Address</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.emailAddress | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-5 offset-sm-1 mb-2">Birthdate</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.birthdate | formatDate | default }}
+      </div>
+    </div>
+  </section>
+
   <ng-container *ngFor="let offence of offenceFormsList; let i = index">
     <section class="mb-2" *ngIf="offence.offenceNumber">
       <div class="row">
@@ -35,6 +112,9 @@
       <div class="row">
         <div class="col text-left mb-2">
           <ul>
+            <li *ngIf="offence.includeOffenceInDispute === false">
+              This offence is NOT included in the dispute
+            </li>
             <li *ngIf="offence.offenceAgreementStatus === '1'">
               I agree that I committed this offence, and I do not want to appear
               in court
@@ -74,20 +154,23 @@
     </section>
   </ng-container>
 
-  <section class="mb-2">
+  <section class="mb-2" *ngIf="additionalInfo">
+    <div class="row">
+      <div class="col mb-2">Additional Information</div>
+    </div>
     <div class="row">
       <div class="col text-left mb-2">
-        <form [formGroup]="additionalForm" novalidate>
-          <ul>
-            <li *ngIf="lawyerPresent.value">
-              I intend to be represented at the hearing by a lawyer
-            </li>
-            <li *ngIf="interpreterRequired.value">
-              I require an interpreter - {{ interpreterLanguage.value }}
-            </li>
-            <li *ngIf="witnessPresent.value">I intend to call a witness</li>
-          </ul>
-        </form>
+        <ul>
+          <li *ngIf="additionalInfo.lawyerPresent">
+            I intend to be represented at the hearing by a lawyer
+          </li>
+          <li *ngIf="additionalInfo.interpreterRequired">
+            I require an interpreter - {{ additionalInfo.interpreterLanguage }}
+          </li>
+          <li *ngIf="additionalInfo.witnessPresent">
+            I intend to call a witness
+          </li>
+        </ul>
       </div>
     </div>
   </section>

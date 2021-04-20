@@ -9,6 +9,8 @@ import {
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
+import { Additional } from '@shared/models/additional.model';
+import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { Ticket } from '@shared/models/ticket.model';
 
@@ -70,6 +72,14 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
     ticket.offences.push(stepOffence3);
     ticket.additional = stepAdditional;
     return ticket;
+  }
+
+  public get disputant(): Disputant {
+    return this.stepDisputantForm.getRawValue();
+  }
+
+  public get additional(): Additional {
+    return this.stepAdditionalForm.getRawValue();
   }
 
   public get offences(): Offence[] {
@@ -193,7 +203,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
     return this.formBuilder.group({
       surname: [null], //, [Validators.required]],
       given: [null],
-      mailing: [null],
+      mailingAddress: [null],
       postal: [null],
       city: [null],
       province: [null],

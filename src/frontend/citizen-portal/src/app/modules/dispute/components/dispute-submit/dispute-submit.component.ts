@@ -32,4 +32,9 @@ export class DisputeSubmitComponent implements OnInit {
       queryParams: params,
     });
   }
+
+  public onExitTicket(): void {
+    this.disputeService.ticket$.next(null);
+    this.router.navigate(['/']);
+  }
 }
