@@ -69,14 +69,14 @@ namespace DisputeApi.Web.Test
             sut.ConfigureServices(services);
         }
 
-        [Test]
-        public async Task Returns_ok_if_for_health_check()
-        {
-            //do not know why it fails on openshift.
-            //using var httpClient = _webApplicationFactory.CreateClient();
-            //var response = await httpClient.GetAsync("health");
-            //Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        }
+        //do not know why it fails on openshift.
+        //[Test]
+        //public async Task Returns_ok_if_for_health_check()
+        //{
+        //using var httpClient = _webApplicationFactory.CreateClient();
+        //var response = await httpClient.GetAsync("health");
+        //Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        //}
 
         /* TODO Add back once authentication is figured out
         [Test]
