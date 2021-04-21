@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.DBModel;
 using DisputeApi.Web.Infrastructure;
-using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MockQueryable.Moq;
 using Moq;
 using NUnit.Framework;
 
@@ -37,9 +34,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
         {
             _violationContext = CreateContext();
             _service = new DisputeService(_loggerMock.Object, _violationContext);
-
         }
-
 
         [Test]
         public void throw_ArgumentNullException_if_passed_null()

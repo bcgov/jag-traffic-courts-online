@@ -13,14 +13,17 @@ namespace DisputeApi.Web.Features.Disputes.Queries
         private readonly ILogger _logger;
         private readonly IDisputeService _disputeService;
         private readonly IMapper _mapper;
-        public GetAllDisputesQueryHandler(ILogger<DisputesController> logger, IDisputeService disputeService, IMapper mapper)
+
+        public GetAllDisputesQueryHandler(ILogger<GetAllDisputesQueryHandler> logger, IDisputeService disputeService,
+            IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<IEnumerable<GetDisputeResponse>> Handle(GetAllDisputesQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<GetDisputeResponse>> Handle(GetAllDisputesQuery request,
+            CancellationToken cancellationToken)
         {
             var disputes = await _disputeService.GetAllAsync();
             return _mapper.Map<IEnumerable<GetDisputeResponse>>(disputes);

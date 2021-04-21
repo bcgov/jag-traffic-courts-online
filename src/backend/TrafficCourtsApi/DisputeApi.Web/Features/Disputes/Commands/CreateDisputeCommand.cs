@@ -1,13 +1,15 @@
-﻿using DisputeApi.Web.Features.Disputes.DBModel;
-using MediatR;
-
+﻿using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace DisputeApi.Web.Features.Disputes.Commands
 {
     public class CreateDisputeCommand : IRequest<CreateDisputeResponse>
     {
+        [Required]
         public string ViolationTicketNumber { get; set; }
+        [Required]
         public int OffenceNumber { get; set; }
+        [EmailAddress]
         public string EmailAddress { get; set; }
         public TrafficCourts.Common.Contract.OffenceAgreementStatus OffenceAgreementStatus { get; set; }
         public bool RequestReduction { get; set; }
