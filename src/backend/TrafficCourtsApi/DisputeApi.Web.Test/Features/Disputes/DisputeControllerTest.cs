@@ -9,7 +9,6 @@ using DisputeApi.Web.Features;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.Commands;
 using DisputeApi.Web.Features.Disputes.Queries;
-using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

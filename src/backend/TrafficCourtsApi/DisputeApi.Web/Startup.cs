@@ -193,8 +193,12 @@ namespace DisputeApi.Web
             services.Configure<RabbitMQConfiguration>(_configuration.GetSection("RabbitMq"));
 
             var rabbitMqSettings = _configuration.GetSection("RabbitMq").Get<RabbitMQConfiguration>();
-            var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+            if(rabbitMqSettings == null)
+            {
+                rabbitMqSettings = new RabbitMQConfiguration();
+            }
 
+            var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
             services.AddMassTransit(config =>
             {
                 config.UsingRabbitMq((ctx, cfg) =>

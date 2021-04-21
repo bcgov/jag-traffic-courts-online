@@ -58,12 +58,10 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var result = await _service.CreateAsync(toCreate);
             Assert.IsInstanceOf<Dispute>(result);
             Assert.AreNotEqual(0, result.Id);
-            _loggerMock.VerifyLog(LogLevel.Debug, "Creating dispute", Times.Once());
 
             result = await _service.GetAsync(result.Id);
             Assert.IsInstanceOf<Dispute>(result);
             Assert.IsNotNull(result);
-            _loggerMock.VerifyLog(LogLevel.Debug, "Get dispute", Times.Once());
         }
 
         [Theory]

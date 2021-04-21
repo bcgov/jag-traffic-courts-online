@@ -28,7 +28,7 @@ namespace DisputeApi.Web.Features.Disputes
         public DisputesController(ILogger<DisputesController> logger,IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mediator = mediator;
+            _mediator = mediator?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpPost]
