@@ -49,8 +49,6 @@ export class StepSingleCountComponent
 
   public ngOnInit() {
     this.form = this.stepControl;
-    console.log('on init', this.form.value);
-    // this.form = this.disputeFormStateService.stepOffence1Form;
     this.patchForm();
 
     this.prevBtnLabel = 'Cancel';

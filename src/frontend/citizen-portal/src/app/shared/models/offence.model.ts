@@ -1,8 +1,9 @@
 import { OffenceDispute } from './offenceDispute.model';
 
 export interface Offence {
-  invoiceType: string;
+  id?: string;
   offenceNumber: number;
+  invoiceType: string;
   offenceDescription: string;
   violationDateTime: string;
   vehicleDescription: string;

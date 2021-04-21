@@ -39,7 +39,6 @@ export class FindTicketComponent implements OnInit {
     this.busy = this.disputeResource
       .getTicket(formParams)
       .subscribe((response) => {
-        console.log('response', response);
         this.disputeService.ticket$.next(response);
 
         if (response) {

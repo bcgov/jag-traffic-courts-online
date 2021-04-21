@@ -105,17 +105,24 @@ export class MockDisputeService {
     ticket.offences.push(offence);
 
     // --------------------------
+    const soonDate =
+      faker.date.soon().getFullYear() +
+      '-' +
+      (faker.date.soon().getMonth() + 1) +
+      '-' +
+      faker.date.soon().getDate();
+
     offence = {
       offenceNumber: 3,
       ticketedAmount: 167,
-      amountDue: 167,
+      amountDue: 142,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
       offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      discountDueDate: faker.date.soon().toString(),
+      discountDueDate: soonDate,
     };
 
     offence.notes = '';
@@ -173,7 +180,7 @@ export class MockDisputeService {
   private createDisputant(): Disputant {
     return {
       surname: faker.name.lastName(),
-      given: faker.name.firstName(),
+      givenNames: faker.name.firstName(),
       mailingAddress: faker.address.streetAddress(),
       city: faker.address.city(),
       province: faker.address.state(),

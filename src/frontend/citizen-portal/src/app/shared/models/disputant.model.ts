@@ -1,7 +1,7 @@
 export interface Disputant {
   id?: string;
   surname: string;
-  given: string;
+  givenNames: string;
   mailingAddress: string;
   city: string;
   province: string;

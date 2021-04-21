@@ -16,6 +16,12 @@
           {{ ticketedAmount.value | currency }}
         </div>
       </div>
+      <div class="row">
+        <div class="col-6 mb-2">Amount Due</div>
+        <div class="col-6 text-right mb-2">
+          {{ amountDue.value | currency }}
+        </div>
+      </div>
       <div class="row" *ngIf="discountAmount.value > 0">
         <div class="col-6 mb-2">
           Ticket Discount (if paid by

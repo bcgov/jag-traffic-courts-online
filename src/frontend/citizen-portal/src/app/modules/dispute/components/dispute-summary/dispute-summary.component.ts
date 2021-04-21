@@ -62,11 +62,6 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
   public onDisputeOffence(offence: Offence): void {
     this.logger.info('onDisputeOffence offence', offence);
-    //   const ticketDispute = this.disputeService.getTicketDispute(this.ticket, [
-    //     offence,
-    //   ]);
-    //   this.disputeService.ticketDispute$.next(ticketDispute);
-
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
       this.router.navigate([DisputeRoutes.routePath(DisputeRoutes.STEPPER)], {
@@ -77,13 +72,6 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
   public onDisputeTicket(): void {
     this.logger.info('onDisputeTicket', this.disputeService.ticket);
-    // const ticketDispute = this.disputeService.getTicketDispute(
-    //   this.ticket,
-    //   this.ticket.offences
-    // );
-    // this.disputeService.ticketDispute$.next(ticketDispute);
-    // this.disputeService.ticket$.next(this.ticket);
-
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
       this.router.navigate([

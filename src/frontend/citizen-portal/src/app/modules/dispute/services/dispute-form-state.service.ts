@@ -10,9 +10,11 @@ import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { AbstractFormStateService } from '@dispute/classes/abstract-form-state-service.class';
 import { Additional } from '@shared/models/additional.model';
+import { CountDispute } from '@shared/models/countDispute.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { Ticket } from '@shared/models/ticket.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +45,6 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
    * can't be loaded during instantiation.
    */
   public async setForm(
-    // dispute: Dispute,
     ticket: Ticket,
     forcePatch: boolean = false
   ): Promise<void> {
@@ -72,6 +73,56 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
     ticket.offences.push(stepOffence3);
     ticket.additional = stepAdditional;
     return ticket;
+  }
+
+  public get jsonTicketDispute(): TicketDispute {
+    const stepDisputant = this.stepDisputantForm.getRawValue();
+    const stepOffence1 = this.stepOffence1Form.getRawValue();
+    const stepOffence2 = this.stepOffence2Form.getRawValue();
+    const stepOffence3 = this.stepOffence3Form.getRawValue();
+    const stepAdditional = this.stepAdditionalForm.getRawValue();
+    const stepOverview = this.stepOverviewForm.getRawValue();
+
+    const dispute: TicketDispute = {
+      ...stepOverview,
+    };
+    dispute.disputant = stepDisputant;
+    dispute.offences = [];
+    dispute.offences.push(stepOffence1);
+    dispute.offences.push(stepOffence2);
+    dispute.offences.push(stepOffence3);
+    dispute.additional = stepAdditional;
+    return dispute;
+  }
+
+  public get jsonCountDispute(): CountDispute {
+    const stepOffence1 = this.stepOffence1Form.getRawValue();
+    const stepOffence2 = this.stepOffence2Form.getRawValue();
+    const stepOffence3 = this.stepOffence3Form.getRawValue();
+    const stepAdditional = this.stepAdditionalForm.getRawValue();
+    const stepOverview = this.stepOverviewForm.getRawValue();
+
+    const dispute: CountDispute = {
+      ...stepOverview,
+    };
+    if (stepOffence1.offenceNumber) {
+      console.log('aaa');
+      dispute.offence = stepOffence1;
+    }
+    if (stepOffence2.offenceNumber) {
+      console.log('bbb');
+      dispute.offence = stepOffence2;
+    }
+    if (stepOffence3.offenceNumber) {
+      console.log('ccc');
+      dispute.offence = stepOffence3;
+    }
+    dispute.additional = stepAdditional;
+    console.log('jsonCountDispute1', stepOffence1);
+    console.log('jsonCountDispute2', stepOffence2);
+    console.log('jsonCountDispute3', stepOffence3);
+    console.log('jsonCountDispute', dispute);
+    return dispute;
   }
 
   public get disputant(): Disputant {
@@ -202,7 +253,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
   public buildStepDisputantForm(): FormGroup {
     return this.formBuilder.group({
       surname: [null], //, [Validators.required]],
-      given: [null],
+      givenNames: [null],
       mailingAddress: [null],
       postal: [null],
       city: [null],

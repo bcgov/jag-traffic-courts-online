@@ -8,6 +8,8 @@ import { Ticket } from '@shared/models/ticket.model';
 import { Offence } from '@shared/models/offence.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { CountDispute } from '@shared/models/countDispute.model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,19 +57,38 @@ export class DisputeResourceService {
   }
 
   /**
-   * Create the dispute
+   * Create the ticket dispute
    *
    * @param dispute The dispute to be created
    */
-  public createTicketDispute(ticket: Ticket): Observable<Ticket> {
-    this.logger.info('createTicketDispute', ticket);
+  public createTicketDispute(ticketDispute: TicketDispute): Observable<Ticket> {
+    this.logger.info('createTicketDispute', ticketDispute);
 
-    return this.apiResource.post<Ticket>('disputes', ticket).pipe(
+    return this.apiResource.post<Ticket>('disputes', ticketDispute).pipe(
       map((response: ApiHttpResponse<Ticket>) => null),
       catchError((error: any) => {
         this.toastService.openErrorToast('Dispute could not be created');
         this.logger.error(
           'DisputeResourceService::createTicketDispute error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Create a count dispute
+   */
+  public createCountDispute(countDispute: CountDispute): Observable<Ticket> {
+    this.logger.info('createCountDispute', countDispute);
+
+    return this.apiResource.post<Ticket>('disputes', countDispute).pipe(
+      map((response: ApiHttpResponse<Ticket>) => null),
+      catchError((error: any) => {
+        this.toastService.openErrorToast('Dispute could not be created');
+        this.logger.error(
+          'DisputeResourceService::createCountDispute error has occurred: ',
           error
         );
         throw error;

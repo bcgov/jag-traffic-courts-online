@@ -7,7 +7,6 @@ import { Ticket } from '@shared/models/ticket.model';
 
 export interface IBaseDisputeFormPage {
   form: FormGroup;
-  // ticketDispute: TicketDispute;
   ticket: Ticket;
 }
 
@@ -30,11 +29,9 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
    */
   protected patchForm(): void {
     // Store a local copy of the dispute for views
-    // this.ticketDispute = this.disputeService.ticketDispute;
     this.ticket = this.disputeService.ticket;
 
     // Attempt to patch the form if not already patched
-    // this.disputeFormStateService.setForm(this.ticketDispute); //this.ticketDispute?.offence.dispute);
-    // this.disputeFormStateService.setForm(this.ticket);
+    this.disputeFormStateService.setForm(this.ticket);
   }
 }

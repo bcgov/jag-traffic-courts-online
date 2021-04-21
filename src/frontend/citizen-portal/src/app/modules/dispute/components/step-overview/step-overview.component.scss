@@ -1,4 +1,18 @@
+@import "palette";
+@import "variables";
+
 .text-right,
 .text-left {
   font-weight: bold;
+}
+
+.page-subheader {
+  margin-bottom: 1rem;
+  padding-bottom: 0.25rem;
+
+  .title {
+    color: $h2-colour;
+    display: flex;
+    margin-bottom: 0.05rem;
+  }
 }

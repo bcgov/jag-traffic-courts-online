@@ -183,9 +183,9 @@ export class StepperComponent
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          this.logger.info('submitDispute', this.disputeFormStateService.json);
+          const payload = this.disputeFormStateService.jsonCountDispute;
           this.busy = this.disputeResource
-            .createTicketDispute(this.disputeFormStateService.json)
+            .createCountDispute(payload)
             .subscribe(() => {
               this.toastService.openSuccessToast(
                 'Dispute has been successfully submitted'
