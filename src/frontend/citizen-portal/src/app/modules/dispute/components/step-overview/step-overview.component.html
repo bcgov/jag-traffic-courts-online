@@ -7,21 +7,6 @@
     >
   </app-page-header>
 
-  <section class="mb-2">
-    <div class="row">
-      <div class="col-6 mb-2">Violation Ticket Number</div>
-      <div class="col-6 text-right mb-2">
-        {{ ticket?.violationTicketNumber | default }}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 mb-2">Violation Time</div>
-      <div class="col-6 text-right">
-        {{ ticket?.violationTime }}
-      </div>
-    </div>
-  </section>
-
   <section class="mb-2" *ngIf="disputantInfo && disputantInfo.surname">
     <div class="page-subheader">
       <h2 class="title">Disputant Information</h2>
@@ -103,21 +88,23 @@
     </div>
   </section>
 
-  <section class="mb-2">
+  <section>
     <div class="page-subheader">
       <h2 class="title">Offence Information</h2>
     </div>
     <ng-container *ngFor="let offence of offenceFormsList; let i = index">
       <ng-container *ngIf="offence.offenceNumber">
         <div class="row">
-          <div class="col-5 mb-2">Offence #{{ offence.offenceNumber }}</div>
+          <div class="col-5 text-left mb-2">
+            Offence #{{ offence.offenceNumber }}
+          </div>
           <small class="col-7 text-right mb-2">{{
             offence.offenceDescription
           }}</small>
         </div>
 
         <div class="row">
-          <div class="col text-left mb-2">
+          <div class="col">
             <ul>
               <li *ngIf="offence.includeOffenceInDispute === false">
                 This offence is NOT included in the dispute
@@ -167,13 +154,18 @@
       <h2 class="title">Additional Information</h2>
     </div>
     <div class="row">
-      <div class="col text-left mb-2">
+      <div class="col mb-2">
         <ul>
           <li *ngIf="additionalInfo.lawyerPresent">
             I intend to be represented at the hearing by a lawyer
           </li>
           <li *ngIf="additionalInfo.interpreterRequired">
-            I require an interpreter - {{ additionalInfo.interpreterLanguage }}
+            I require an interpreter -
+            {{
+              additionalInfo.interpreterLanguage
+                | configCode: "languages"
+                | default
+            }}
           </li>
           <li *ngIf="additionalInfo.witnessPresent">
             I intend to call a witness

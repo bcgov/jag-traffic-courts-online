@@ -1,5 +1,6 @@
 export interface Configuration {
   courtLocations: Config<string>[];
+  languages: Config<string>[];
   countries: Config<string>[];
   provinces: ProvinceConfig[];
   statuses: Config<number>[];

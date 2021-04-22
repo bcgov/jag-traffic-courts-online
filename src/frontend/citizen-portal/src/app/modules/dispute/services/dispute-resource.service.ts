@@ -98,11 +98,15 @@ export class DisputeResourceService {
 
   private getOffenceInfo(
     row: Offence
-  ): { status: number; desc: string; notes: string } {
+  ): {
+    status: number;
+    desc: string;
+    notes: string;
+  } {
     const disputeStatus = row.offenceDispute ? row.offenceDispute.status : null;
     const status = disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
 
-    let desc: string;
+    let desc: string = null;
     if (disputeStatus) {
       switch (disputeStatus) {
         case 0:
@@ -129,7 +133,7 @@ export class DisputeResourceService {
       desc = 'Paid';
     }
 
-    let notes: string;
+    let notes: string = null;
     if (disputeStatus) {
       if (disputeStatus === 1) {
         notes =

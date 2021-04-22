@@ -1,7 +1,7 @@
 export interface OffenceDispute {
   id?: string;
+  offenceNumber: number;
   status: number;
-  includeOffenceInDispute: boolean;
   offenceAgreementStatus?: string;
   requestReduction: boolean;
   requestMoreTime: boolean;

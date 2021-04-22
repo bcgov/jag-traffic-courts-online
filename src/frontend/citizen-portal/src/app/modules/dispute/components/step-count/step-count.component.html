@@ -64,9 +64,8 @@
     <section *ngIf="includeOffenceInDispute.value">
       <div class="row">
         <div class="col">
-          <label>For this offence:</label>
+          <label>For this offence:</label><br />
           <mat-radio-group
-            [attr.disabled]="!includeOffenceInDispute.value"
             formControlName="offenceAgreementStatus"
             class="w-100"
           >

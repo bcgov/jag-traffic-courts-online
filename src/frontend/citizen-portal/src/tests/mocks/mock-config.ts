@@ -523,22 +523,40 @@ export class MockConfig {
           name: 'Williams Lake Law Courts',
         },
       ],
-      statuses: [
+      languages: [
         {
-          code: 1,
-          name: 'Editable',
+          code: 'SPA',
+          name: 'Spanish',
         },
         {
-          code: 2,
+          code: 'MAN',
+          name: 'Mandarin',
+        },
+        {
+          code: 'GER',
+          name: 'German',
+        },
+      ],
+      statuses: [
+        {
+          code: 0,
+          name: 'New',
+        },
+        {
+          code: 1,
           name: 'Under Review',
         },
         {
+          code: 2,
+          name: 'In Progress',
+        },
+        {
           code: 3,
-          name: 'Locked',
+          name: 'Completed',
         },
         {
           code: 4,
-          name: 'Declined',
+          name: 'Rejected',
         },
       ],
       countries: [

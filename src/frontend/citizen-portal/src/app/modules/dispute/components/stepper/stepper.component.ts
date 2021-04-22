@@ -94,14 +94,17 @@ export class StepperComponent
         if (offence.offenceNumber === this.currentDisputeOffenceNumber) {
           switch (offence.offenceNumber) {
             case 1:
+              offence.includeOffenceInDispute = true;
               offence1Form.patchValue(offence);
               this.offenceForm = offence1Form;
               break;
             case 2:
+              offence.includeOffenceInDispute = true;
               offence2Form.patchValue(offence);
               this.offenceForm = offence2Form;
               break;
             case 3:
+              offence.includeOffenceInDispute = true;
               offence3Form.patchValue(offence);
               this.offenceForm = offence3Form;
               break;

@@ -5,7 +5,6 @@ import { OffenceDispute } from './offenceDispute.model';
 export interface TicketDispute {
   violationTicketNumber: string;
   violationTime: string;
-  violationDate: string;
 
   // Part A
   disputant: Disputant;

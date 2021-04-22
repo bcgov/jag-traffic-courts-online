@@ -15,7 +15,16 @@
     <div class="col-lg-10">
       <app-page [busy]="busy">
         <app-tco-page-header>
-          <ng-container header>BC Traffic Court Dispute</ng-container>
+          <ng-container header>BC Traffic Court Offence Dispute</ng-container>
+
+          <ng-container subHeader>
+            <h2 class="mb-2" *ngIf="ticket">
+              Ticket #{{ ticket.violationTicketNumber }}
+              <span class="ml-4">
+                {{ ticket.violationTime }}
+              </span>
+            </h2>
+          </ng-container>
         </app-tco-page-header>
 
         <mat-vertical-stepper

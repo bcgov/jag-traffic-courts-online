@@ -31,6 +31,10 @@ export class ConfigService implements IConfigService {
     return [...this.configuration.courtLocations].sort(this.sortConfigByName());
   }
 
+  public get languages(): Config<string>[] {
+    return [...this.configuration.languages].sort(this.sortConfigByName());
+  }
+
   public get countries(): Config<string>[] {
     return [...this.configuration.countries].sort(this.sortConfigByName());
   }

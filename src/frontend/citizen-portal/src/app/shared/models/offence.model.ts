@@ -17,6 +17,7 @@ export interface Offence {
   offenceDispute: OffenceDispute;
 
   // derived later on
+  includeOffenceInDispute?: boolean;
   offenceStatus?: number;
   offenceStatusDesc?: string;
   notes?: string;

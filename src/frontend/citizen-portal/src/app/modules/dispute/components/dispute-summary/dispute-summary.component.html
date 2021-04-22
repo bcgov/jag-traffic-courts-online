@@ -33,7 +33,7 @@
     </ng-template>
     <div class="mb-2">
       <section class="mb-2">
-        <h2 class="mb-2" style="border-bottom: 1px solid #ffb200">
+        <h2 class="mb-2">
           Ticket #{{ ticket.violationTicketNumber }}
           <span class="ml-4">
             {{ ticket.violationDate | formatDate }}
@@ -121,7 +121,7 @@
               </a>
             </button>
             <button
-              *ngIf="row.offenceStatus === -1"
+              *ngIf="row.offenceStatus === -1 && ticket.disputesExist"
               mat-flat-button
               color="primary"
               (click)="onDisputeOffence(row)"
@@ -177,6 +177,7 @@
             color="primary"
             class="large"
             (click)="onDisputeTicket()"
+            *ngIf="!ticket.disputesExist"
           >
             <mat-icon inline="true">read_more</mat-icon>
             Dispute Ticket
@@ -210,7 +211,4 @@
       </div>
     </section>
   </div>
-
-  <!-- && ticket.disputesExist-->
-  <!-- *ngIf="!ticket.disputesExist"-->
 </app-page>

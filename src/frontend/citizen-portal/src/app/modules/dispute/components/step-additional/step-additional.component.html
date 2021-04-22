@@ -41,11 +41,16 @@
       <div class="row" *ngIf="interpreterRequired.value">
         <div class="col">
           <mat-form-field class="w-100">
-            <input
-              matInput
-              placeholder="Interpreter Language"
-              formControlName="interpreterLanguage"
-            />
+            <mat-label>Interpreter Language</mat-label>
+            <mat-select formControlName="interpreterLanguage">
+              <mat-option
+                *ngFor="let language of languages"
+                [value]="language.code"
+              >
+                {{ language.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>Required</mat-error>
           </mat-form-field>
         </div>
       </div>
