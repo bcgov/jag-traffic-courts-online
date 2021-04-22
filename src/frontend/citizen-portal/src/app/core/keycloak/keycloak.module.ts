@@ -38,7 +38,7 @@ function initializer(
     if (authenticated) {
       // Ensure configuration is populated before the application
       // is fully initialized to prevent race conditions
-      await injector.get(ConfigService).load().toPromise();
+      // await injector.get(ConfigService).load().toPromise();
 
       // Force refresh to begin expiry timer.
       keycloak.updateToken(-1);

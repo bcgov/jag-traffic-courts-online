@@ -9,6 +9,8 @@ import { BaseDisputeFormPage } from '@dispute/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from '@dispute/services/dispute-form-state.service';
 import { DisputeResourceService } from '@dispute/services/dispute-resource.service';
 import { DisputeService } from '@dispute/services/dispute.service';
+import { ConfigService } from '@config/config.service';
+import { Config } from '@config/config.model';
 
 @Component({
   selector: 'app-step-additional',
@@ -21,6 +23,8 @@ export class StepAdditionalComponent
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
+  public languages: Config<string>[];
+
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -30,6 +34,7 @@ export class StepAdditionalComponent
     protected disputeFormStateService: DisputeFormStateService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
+    private configService: ConfigService,
     private logger: LoggerService
   ) {
     super(
@@ -40,6 +45,10 @@ export class StepAdditionalComponent
       disputeResource,
       disputeFormStateService
     );
+    // TODO remove this once bug is fixed
+    // this.configService.load().toPromise();
+    this.languages = this.configService.languages;
+    console.log('languages', this.languages);
   }
 
   public ngOnInit() {
@@ -56,6 +65,14 @@ export class StepAdditionalComponent
 
   public onBack() {
     this.stepper.previous();
+  }
+
+  // public isRequired(addressLine: AddressLine): boolean {
+  //   return this.formUtilsService.isRequired(this.form, addressLine);
+  // }
+
+  public get interpreterLanguage(): FormControl {
+    return this.form.get('interpreterLanguage') as FormControl;
   }
 
   public get interpreterRequired(): FormControl {
