@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigService } from '@config/config.service';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,14 @@ import { ConfigService } from '@config/config.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private translateService: TranslateService,
+    private titleService: Title
+  ) {}
 
   public ngOnInit(): void {
-    console.log('languages', this.configService.languages);
+    this.translateService.get(['app_heading']).subscribe((translations) => {
+      this.titleService.setTitle(this.translateService.instant('app_heading'));
+    });
   }
 }

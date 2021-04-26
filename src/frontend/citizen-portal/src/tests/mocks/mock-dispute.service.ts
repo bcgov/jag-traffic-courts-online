@@ -214,8 +214,6 @@ export class MockDisputeService {
       discountDueDate: soonDate,
     };
 
-    offence.notes = '';
-
     ticket.offences.push(offence);
 
     // --------------------------
@@ -233,8 +231,6 @@ export class MockDisputeService {
       discountAmount: 0,
       discountDueDate: null,
     };
-
-    offence.notes = '';
 
     ticket.offences.push(offence);
 */

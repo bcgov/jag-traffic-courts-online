@@ -23,6 +23,7 @@ import { ConfigModule } from 'app/config/config.module';
 import { PostalPipe } from './pipes/postal.pipe';
 import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 import { HeaderComponent } from './components/header/header.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { HeaderComponent } from './components/header/header.component';
     NgxMaskModule.forRoot(),
     NgxProgressModule,
     ConfigModule,
+    TranslateModule,
   ],
   exports: [
     CommonModule,

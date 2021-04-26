@@ -20,5 +20,4 @@ export interface Offence {
   includeOffenceInDispute?: boolean;
   offenceStatus?: number;
   offenceStatusDesc?: string;
-  notes?: string;
 }

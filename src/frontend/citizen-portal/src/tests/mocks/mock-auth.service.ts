@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'app/modules/auth/models/user.model';
+import { User } from '@shared/models/user.model';
 import { from, Observable, of } from 'rxjs';
 import { take } from 'rxjs/operators';
 

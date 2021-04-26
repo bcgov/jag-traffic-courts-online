@@ -1,0 +1,75 @@
+{
+  "app_heading": "BC Traffic Court Online",
+  "landing": {
+    "description1": "The online tool for submitting and resolving your BC Violation Ticket disputes.",
+    "description2": "If you would like to simply pay for your ticket, please click on the 'Pay Now' button.",
+    "step_1": {
+      "heading": "Initiate Dispute",
+      "detail": "Login using your BC Services card and initiate the online resolution process."
+    },
+    "step_2": {
+      "heading": "Violation Ticket Lookup",
+      "detail": "Find your Violation Ticket and ensure that the specifics of the ticket are correct. Through our step-by-step process, you can indicate your preferences and how you would like the ticket to be disputed."
+    },
+    "step_3": {
+      "heading": "Violation Ticket Resolution",
+      "detail": "Submit your resolution or save the details until you are ready to proceed with the resolution process. You have 365 days to dispute your ticket from the date the ticket was issued."
+    },
+    "self_resolution": {
+      "heading": "Self Resolution Wizard",
+      "detail": "Interact with an online wizard and explore reasons behind your ticket. The online wizard will take you through multiple options demonstrated through text, videos and images.",
+      "explore": "Explore My Options"
+    }
+  },
+  "find": {
+    "heading": "Find Your BC Traffic Ticket",
+    "sub_heading": "Enter the Violation Ticket Number and the Violation Time to find your ticket.",
+    "note_heading": "VIOLATION TICKET CENTRE CONTACT INFORMATION",
+    "note_phone": "Phone Toll Free",
+    "note_forms": "Forms are available on the website at",
+    "note_form_name": "Online Forms"
+  },
+  "summary": {
+    "heading": "Summary of your BC Traffic Ticket",
+    "sub_heading": "Summary of your ticket and any disputes that exist.",
+    "ticket_number": "Ticket #",
+    "ticket_outstanding": "Your Ticket is Outstanding",
+    "ticket_outstanding_detail": "See below to find out more information about your ticket.",
+    "dispute_status_1": "The dispute has been filed. An email with the court information will be sent soon.",
+    "dispute_status_2": "A court date has been set for this dispute. Check your email for more information.",
+    "paid_early_1": "If paid by",
+    "paid_early_2": "the amount due includes a",
+    "paid_early_3": "discount",
+    "dispute_count": "Dispute Count",
+    "dispute_ticket": "Dispute Ticket",
+    "questions": "Questions",
+    "questions_detail_1": "Any further questions about your dispute should be directed to:",
+    "questions_detail_2": "Phone Toll Free:"
+  },
+  "submit": {
+    "heading": "BC Traffic Ticket Dispute Submitted",
+    "sub_heading": "The dispute was successfully submitted."
+  },
+  "ticket_dispute": {
+    "heading": "BC Traffic Court Ticket Dispute"
+  },
+  "offence_dispute": { "heading": "BC Traffic Court Offence Dispute" },
+  "label": {
+    "search": "Search",
+    "back": "Back",
+    "pay_now": "Pay Now",
+    "pay_count": "Pay Count",
+    "pay_balance": "Pay Ticket Balance of",
+    "initiate_dispute": "Initiate Dispute",
+    "find_another_ticket": "Find Another Ticket",
+    "violation_ticket_number": "Violation Ticket Number",
+    "violation_ticket_number_hint": "A Violation Ticket Number is 2 letters and 8 numbers",
+    "violation_time": "Violation Time",
+    "count_number": "Count #",
+    "desc_of_offence": "Description of Offence",
+    "for_vehicle": "for Vehicle",
+    "offence_amount": "Offence Amount",
+    "amount_due": "Amount Due",
+    "status": "Status"
+  }
+}

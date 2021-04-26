@@ -28,6 +28,11 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     if (environment.useMockServices) {
       const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
+      // handle translations
+      if (currentRoutePath.includes('json')) {
+        return next.handle(request);
+      }
+
       if (
         currentRoutePath !== 'tickets' &&
         currentRoutePath !== 'disputes' &&

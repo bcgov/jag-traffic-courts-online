@@ -1,0 +1,229 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>{{ "summary.heading" | translate }}</ng-container>
+    <ng-container subHeader
+      >{{ "summary.sub_heading" | translate }}.</ng-container
+    >
+  </app-page-header>
+
+  <div *ngIf="ticket">
+    <div
+      class="row"
+      *ngIf="ticket.outstandingBalance <= 0; else ticketNotResolved"
+    >
+      <div class="col p-0">
+        <app-alert type="success" icon="check">
+          <ng-container #alertContent class="alert-content">
+            <strong>Your Ticket has been Resolved</strong><br />
+            No further actions are required.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+
+    <ng-template #ticketNotResolved>
+      <div class="col p-0">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong translate>summary.ticket_outstanding</strong><br />
+            {{ "summary.ticket_outstanding_detail" | translate }}
+          </ng-container>
+        </app-alert>
+      </div>
+    </ng-template>
+    <div class="mb-2">
+      <section class="mb-2">
+        <h2 class="mb-2">
+          {{ "summary.ticket_number" | translate
+          }}{{ ticket.violationTicketNumber }}
+          <span class="ml-4">
+            {{ ticket.violationDate | formatDate }}
+            {{ ticket.violationTime }}
+          </span>
+        </h2>
+      </section>
+
+      <section
+        class="px-4 py-2 mb-4 offence-section"
+        *ngFor="let row of ticket.offences; let i = index"
+      >
+        <h3>
+          <div class="row">
+            <div class="col-md-3 mb-2">
+              <small class="d-block">{{ row.invoiceType }}</small>
+              <mat-chip-list>
+                <mat-chip selected class="p-3"
+                  >{{ "label.count_number" | translate
+                  }}{{ row.offenceNumber }}</mat-chip
+                >
+              </mat-chip-list>
+            </div>
+            <div class="col-md-9">
+              <small class="d-block">
+                {{ "label.desc_of_offence" | translate }}
+                <span *ngIf="row.vehicleDescription"
+                  >{{ "label.for_vehicle" | translate }}
+                  {{ row.vehicleDescription }}</span
+                >
+              </small>
+              {{ row.offenceDescription | titlecase }}
+            </div>
+          </div>
+        </h3>
+
+        <div class="row">
+          <div class="col-3 mb-2">
+            <small class="d-block" translate>label.offence_amount</small>
+            <strong>{{ row?.ticketedAmount | currency }}</strong>
+          </div>
+          <div class="col-3">
+            <small class="d-block" translate>label.amount_due</small>
+            <strong>{{ row?.amountDue | currency }}</strong>
+          </div>
+          <div class="col-3 mb-2">
+            <small class="d-block" translate>label.status</small>
+            <small
+              [ngClass]="{
+                'text-danger':
+                  row.offenceStatus === 2 || row.offenceStatus === 4,
+                'text-primary': row.offenceStatus === -1,
+                'text-success':
+                  row.offenceStatus === 3 || row.offenceStatus === -2,
+                'text-info': row.offenceStatus === 1
+              }"
+              ><strong>{{ row.offenceStatusDesc }} </strong>
+            </small>
+          </div>
+          <div class="col-md-3">
+            <app-alert
+              type="success"
+              icon="check"
+              *ngIf="row.offenceStatus === -2 || row.offenceStatus === 3"
+            >
+              <ng-container #alertContent class="alert-content">
+                <strong> RESOLVED </strong>
+              </ng-container>
+            </app-alert>
+
+            <button
+              mat-flat-button
+              color="accent"
+              *ngIf="
+                row.offenceStatus === -1 ||
+                row.offenceStatus === 1 ||
+                row.offenceStatus === 2
+              "
+            >
+              <a
+                href="https://pay.gov.bc.ca"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <mat-icon inline="true">money</mat-icon>
+                {{ "label.pay_count" | translate }}
+              </a>
+            </button>
+            <button
+              *ngIf="row.offenceStatus === -1 && ticket.disputesExist"
+              mat-flat-button
+              color="primary"
+              (click)="onDisputeOffence(row)"
+            >
+              <mat-icon inline="true">read_more</mat-icon>
+              {{ "summary.dispute_count" | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="row mt-1" *ngIf="row.offenceStatus === 1">
+          <div class="col-md-9">
+            <app-alert type="info" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <strong translate>summary.dispute_status_1</strong>
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+
+        <div class="row mt-1" *ngIf="row.offenceStatus === 2">
+          <div class="col-md-9">
+            <app-alert type="info" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <strong translate>summary.dispute_status_2</strong>
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+
+        <div class="row mt-1" *ngIf="row?.discountAmount > 0">
+          <div class="col-md-9">
+            <app-alert type="warning" icon="lightbulb">
+              <ng-container #alertContent class="alert-content">
+                <strong>
+                  {{ "summary.paid_early_1" | translate }}
+                  {{ row?.discountDueDate | formatDate }},
+                  {{ "summary.paid_early_2" | translate }}
+                  {{ row?.discountAmount | currency }}
+                  {{ "summary.paid_early_3" | translate }}
+                </strong>
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+      </section>
+      <div class="row" *ngIf="ticket.outstandingBalance > 0">
+        <div class="col-md-6">
+          <button mat-flat-button color="accent" class="large">
+            <a
+              href="https://pay.gov.bc.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <mat-icon inline="true">money</mat-icon>
+              {{ "label.pay_balance" | translate }}
+              {{ ticket.outstandingBalance | currency: "EUR":true }}
+            </a>
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button
+            mat-flat-button
+            color="primary"
+            class="large"
+            (click)="onDisputeTicket()"
+            *ngIf="!ticket.disputesExist"
+          >
+            <mat-icon inline="true">read_more</mat-icon>
+            {{ "summary.dispute_ticket" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="mt-4 mb-2">
+      <h3 translate>summary.questions</h3>
+      <p>
+        {{ "summary.questions_detail_1" | translate }}<br />
+        {{ "summary.questions_detail_2" | translate }}
+        <a href="tel:+18776618026">1-877-661-8026</a>
+      </p>
+    </section>
+
+    <section class="mb-4 mt-4">
+      <div class="row">
+        <div class="col">
+          <button
+            id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            routerLink="/dispute/find"
+          >
+            <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+            {{ "label.find_another_ticket" | translate }}
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</app-page>

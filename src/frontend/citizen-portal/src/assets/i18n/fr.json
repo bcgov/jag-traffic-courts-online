@@ -1,0 +1,77 @@
+{
+  "app_heading": "Tribunal de la Circulation en Ligne CB",
+  "landing": {
+    "description1": "L'outil en ligne pour soumettre et résoudre vos BC litiges de contravention.",
+    "description2": "Si vous souhaitez simplement payer votre billet, veuillez cliquer sur le bouton 'Payez Maintenant'",
+    "step_1": {
+      "heading": "Lancer un Litige",
+      "detail": "Connectez-vous à l'aide de votre carte CB Services et lancez le processus de résolution en ligne."
+    },
+    "step_2": {
+      "heading": "Recherche de Tickets de Violation",
+      "detail": "Trouvez votre ticket de violation et assurez-vous que les spécificités du ticket sont correctes. Grâce à notre processus étape par étape, vous pouvez indiquer vos préférences et comment vous souhaitez que le ticket soit contesté."
+    },
+    "step_3": {
+      "heading": "Résolution des Tickets de Violation",
+      "detail": "Soumettez votre résolution ou enregistrez les détails jusqu'à ce que vous soyez prêt à poursuivre le processus de résolution. Vous disposez de 365 jours pour contester votre billet à compter de la date d'émission du billet."
+    },
+    "self_resolution": {
+      "heading": "Assistant d'Auto-Résolution",
+      "detail": "Interagissez avec un assistant en ligne et explorez les raisons de votre ticket. L'assistant en ligne vous guidera à travers plusieurs options illustrées à travers du texte, des vidéos et des images.",
+      "explore": "Explorez Mes Options"
+    }
+  },
+  "find": {
+    "heading": "Trouvez Votre Ticket de Trafic CB",
+    "sub_heading": "Entrez le numéro de ticket de violation et l'heure de violation pour trouver votre ticket.",
+    "note_heading": "COORDONNÉES DU CENTRE DE BILLETS DE VIOLATION",
+    "note_phone": "Téléphone sans Frais",
+    "note_forms": "Les formulaires sont disponibles sur le site Web à l'adresse",
+    "note_form_name": "Formulaires en Ligne"
+  },
+  "summary": {
+    "heading": "Récapitulatif de Votre Ticket de Circulation CB",
+    "sub_heading": "Récapitulatif de votre billet et des éventuels litiges.",
+    "ticket_number": "Billet #",
+    "ticket_outstanding": "Votre Billet est Exceptionnel",
+    "ticket_outstanding_detail": "Voir ci-dessous pour en savoir plus sur votre billet.",
+    "dispute_status_1": "Le litige a été déposé. Un e-mail avec les informations du tribunal sera envoyé prochainement.",
+    "dispute_status_2": "A court date has been set for this dispute. Check your email for more information.",
+    "paid_early_1": "Si payé par",
+    "paid_early_2": "le montant dû comprend un",
+    "paid_early_3": "remise",
+    "dispute_count": "Contestation",
+    "dispute_ticket": "Billet de Contestation",
+    "questions": "Des Questions",
+    "questions_detail_1": "Toute autre question concernant votre litige doit être adressée à:",
+    "questions_detail_2": "Téléphone sans frais:"
+  },
+  "submit": {
+    "heading": "Contestation de Contravention Soumise CB",
+    "sub_heading": "Le différend a été soumis avec succès."
+  },
+  "ticket_dispute": {
+    "heading": "Litige Concernant les Contraventions au Tribunal CB"
+  },
+  "offence_dispute": {
+    "heading": "Différend d'Infraction au Tribunal CB"
+  },
+  "label": {
+    "search": "Rechercher",
+    "back": "Dos",
+    "pay_now": "Payez Maintenant",
+    "pay_count": "Payer l'Infraction",
+    "pay_balance": "Payer le solde du billet de",
+    "initiate_dispute": "Lancer un Litige",
+    "find_another_ticket": "Trouver un Autre Billet",
+    "violation_ticket_number": "Numéro de Ticket de Violation",
+    "violation_ticket_number_hint": "Un numéro de ticket de violation est composé de 2 lettres et 8 chiffres",
+    "violation_time": "Temps de Biolation",
+    "count_number": "Infraction #",
+    "desc_of_offence": "Description de l'Infraction",
+    "for_vehicle": "pour Véhicule",
+    "offence_amount": "Montant de l'Infraction",
+    "amount_due": "Montant Dû",
+    "status": "Statut"
+  }
+}

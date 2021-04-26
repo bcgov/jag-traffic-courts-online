@@ -20,8 +20,7 @@
       "@config/*": ["./app/config/*"],
       "@core/*": ["./app/core/*"],
       "@shared/*": ["./app/shared/*"],
-      "@dashboard/*": ["./app/modules/dashboard/*"],
-      "@dispute/*": ["./app/modules/dispute/*"],
+      "@components/*": ["./app/components/*"],
       "@survey/*": ["./app/modules/survey-js/*"]
     }
   },

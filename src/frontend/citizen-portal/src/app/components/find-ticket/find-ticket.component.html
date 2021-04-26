@@ -1,0 +1,109 @@
+<app-page [busy]="busy">
+  <app-tco-page-header>
+    <h1 translate>heading</h1>
+    <ng-container header>{{ "find.heading" | translate }}</ng-container>
+    <ng-container subHeader> {{ "find.sub_heading" | translate }}</ng-container>
+  </app-tco-page-header>
+
+  <div class="row mt-4">
+    <div class="col-lg-6">
+      <app-alert type="danger" icon="error" *ngIf="notFound">
+        <ng-container #alertContent class="alert-content">
+          <strong>Ticket Not Found</strong><br />
+          Sorry, we are unable to find your ticket. <br />If your ticket starts
+          with the letter "E" or the letter "S", it is an electronic ticket.
+          Please allow for 24-48 hours for your ticket to appear in our system.
+        </ng-container>
+      </app-alert>
+
+      <form [formGroup]="form" novalidate>
+        <section>
+          <div class="row mb-4">
+            <div class="col">
+              {{ "label.violation_ticket_number" | translate }}
+              <mat-form-field class="w-100">
+                <input
+                  formControlName="ticketNumber"
+                  matInput
+                  type="text"
+                  oninput="this.value =
+              this.value.toUpperCase()"
+                  mask="SS00000000"
+                  autocomplete="off"
+                />
+                <button mat-button matSuffix mat-icon-button aria-label="Clear">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-hint>
+                  <small translate
+                    >label.violation_ticket_number_hint
+                  </small></mat-hint
+                >
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              {{ "label.violation_time" | translate }}
+              <mat-form-field class="w-100">
+                <input matInput type="time" formControlName="time" />
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button
+                id="secondaryButton"
+                mat-stroked-button
+                type="button"
+                color="primary"
+                routerLink="/"
+              >
+                <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+                {{ "label.back" | translate }}
+              </button>
+            </div>
+            <div class="col text-right">
+              <button
+                mat-flat-button
+                color="primary"
+                class="large"
+                (click)="onSearch()"
+              >
+                <mat-icon inline="true">search</mat-icon>
+                {{ "label.search" | translate }}
+              </button>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <section class="mb-4 mt-4">
+        <div class="row">
+          <div class="col-lg-12">
+            <app-alert type="info" icon="info">
+              <ng-container #alertContent class="alert-content">
+                <strong translate>find.note_heading</strong><br />
+                {{ "find.note_phone" | translate }}:
+                <a href="tel:+18776618026">1-877-661-8026</a><br />
+                {{ "find.note_forms" | translate }}:
+                <a
+                  href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
+                  target="_blank"
+                  >{{ "find.note_form_name" | translate }}</a
+                >
+              </ng-container>
+            </app-alert>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-lg-6 d-none d-lg-block">
+      <div class="info-graphic pl-4">
+        <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
+      </div>
+    </div>
+  </div>
+</app-page>

@@ -7,8 +7,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
-import { User } from 'app/modules/auth/models/user.model';
-import { AuthService } from 'app/modules/auth/services/auth.service';
+import { User } from '@shared/models/user.model';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-header',

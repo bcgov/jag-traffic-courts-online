@@ -13,7 +13,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { Subscription, timer } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeRoutes } from '@dispute/dispute.routes';
+import { AppRoutes } from 'app/app.routes';
 
 @Component({
   selector: 'app-home',
@@ -144,9 +144,7 @@ export class HomeComponent implements OnInit {
           this.busy = source.subscribe((val) => {
             this.tcoSurvey.doComplete();
             this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate([
-              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
-            ]);
+            this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
           });
         } else {
           this.tcoSurvey.isConfirming = false;

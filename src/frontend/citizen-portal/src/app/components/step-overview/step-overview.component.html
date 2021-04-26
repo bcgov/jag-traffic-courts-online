@@ -1,0 +1,220 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>Dispute Overview</ng-container>
+    <ng-container subHeader
+      >Please review the following information. You can go back to any step to
+      update the information.</ng-container
+    >
+  </app-page-header>
+
+  <section class="mb-2" *ngIf="disputantInfo && disputantInfo.surname">
+    <div class="page-subheader">
+      <h2 class="title">Disputant Information</h2>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Surname of the Disputant</div>
+      <div class="col-6 text-right mb-2">
+        {{ disputantInfo.surname | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Given Names</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.givenNames | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Driver's License Number</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.license | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Province</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.provLicense | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Home Phone Number</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.homePhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Work Phone Number</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.workPhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Email Address</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.emailAddress | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Birthdate</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.birthdate | formatDate | default }}
+      </div>
+    </div>
+    <div class="page-subheader mt-2 mb-0">
+      <strong class="title">Address</strong>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Mailing Address</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.mailingAddress | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">City</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.city | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Province</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.province | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">Postal Code</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.postal | postal | default }}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="page-subheader">
+      <h2 class="title">Offence Information</h2>
+    </div>
+    <ng-container *ngFor="let offence of offenceFormsList; let i = index">
+      <ng-container *ngIf="offence.offenceNumber">
+        <div class="row">
+          <div class="col-5 text-left mb-2">
+            Offence #{{ offence.offenceNumber }}
+          </div>
+          <small class="col-7 text-right mb-2">{{
+            offence.offenceDescription
+          }}</small>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <ul>
+              <li *ngIf="offence.includeOffenceInDispute === false">
+                This offence is NOT included in the dispute
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '1'">
+                I agree that I committed this offence, and I do not want to
+                appear in court
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '2'">
+                I agree that I committed this offence, and I want to appear in
+                court
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '3'">
+                I do not agree that I committed this offence (allegation)
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '4'">
+                I do want to dispute this offence
+              </li>
+              <ng-container
+                *ngIf="
+                  offence.offenceAgreementStatus === '1' ||
+                  offence.offenceAgreementStatus === '2'
+                "
+              >
+                <li *ngIf="offence.requestReduction">
+                  I request a reduction of the ticketed amount
+                </li>
+                <div *ngIf="offence.requestReduction">
+                  {{ offence.reductionReason }}
+                </div>
+                <li *ngIf="offence.requestMoreTime">
+                  I request time to pay the ticketed amount
+                </li>
+                <div *ngIf="offence.requestMoreTime">
+                  {{ offence.moreTimeReason }}
+                </div>
+              </ng-container>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </section>
+
+  <section class="mb-2" *ngIf="additionalInfo">
+    <div class="page-subheader">
+      <h2 class="title">Additional Information</h2>
+    </div>
+    <div class="row">
+      <div class="col mb-2">
+        <ul>
+          <li *ngIf="additionalInfo.lawyerPresent">
+            I intend to be represented at the hearing by a lawyer
+          </li>
+          <li *ngIf="additionalInfo.interpreterRequired">
+            I require an interpreter -
+            {{ additionalInfo.interpreterLanguage | default }}
+            <!-- | configCode: "languages" -->
+          </li>
+          <li *ngIf="additionalInfo.witnessPresent">
+            I intend to call a witness
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-2">
+      <div class="row">
+        <div class="col">
+          <mat-checkbox
+            class="mr-4 mb-2"
+            color="primary"
+            formControlName="informationCertified"
+          >
+            I certify that all information provided is true and complete. I
+            understand it is an offence under the law to knowingly provide false
+            or misleading information.
+            <mat-error
+              *ngIf="
+                (informationCertified.dirty || informationCertified.touched) &&
+                informationCertified.invalid &&
+                informationCertified.errors.required
+              "
+            >
+              Required
+            </mat-error>
+          </mat-checkbox>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <section class="mb-2">
+    <div class="row">
+      <div class="col">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>VIOLATION TICKET SUBMISSION</strong><br />
+            Once it has been submitted, it cannot be updated.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <app-page-footer
+    [saveButtonLabel]="nextBtnLabel"
+    (save)="onSubmit()"
+    (back)="onBack()"
+  ></app-page-footer>
+</app-page>
