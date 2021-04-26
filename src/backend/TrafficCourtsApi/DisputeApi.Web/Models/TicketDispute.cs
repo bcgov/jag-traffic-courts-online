@@ -1,4 +1,5 @@
-﻿using DisputeApi.Web.Features.TicketLookup;
+﻿using DisputeApi.Web.Features.Disputes.DBModel;
+using DisputeApi.Web.Features.TicketLookup;
 using System.Collections.Generic;
 
 namespace DisputeApi.Web.Models

@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using AutoFixture;
 using AutoFixture.NUnit3;
-using DisputeApi.Web.Models;
+using DisputeApi.Web.Features.Disputes.DBModel;
 using DisputeApi.Web.Test.Utils;
 using NUnit.Framework;
 

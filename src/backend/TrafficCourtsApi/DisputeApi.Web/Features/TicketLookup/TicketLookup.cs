@@ -45,7 +45,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                     foreach (var offence in ticketDispute.Offences)
                     {
                         offence.Dispute = await
-                            _disputeService.FindDispute(ticketDispute.ViolationTicketNumber, offence.OffenceNumber);
+                            _disputeService.FindDisputeAsync(ticketDispute.ViolationTicketNumber, offence.OffenceNumber);
                     }
                 }
 
