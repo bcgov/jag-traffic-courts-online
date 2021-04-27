@@ -39,7 +39,7 @@
                     >label.violation_ticket_number_hint
                   </small></mat-hint
                 >
-                <mat-error>Required</mat-error>
+                <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -48,7 +48,7 @@
               {{ "label.violation_time" | translate }}
               <mat-form-field class="w-100">
                 <input matInput type="time" formControlName="time" />
-                <mat-error>Required</mat-error>
+                <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
           </div>

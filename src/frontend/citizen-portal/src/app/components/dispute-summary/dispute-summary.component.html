@@ -37,7 +37,6 @@
           {{ "summary.ticket_number" | translate
           }}{{ ticket.violationTicketNumber }}
           <span class="ml-4">
-            {{ ticket.violationDate | formatDate }}
             {{ ticket.violationTime }}
           </span>
         </h2>
@@ -74,11 +73,17 @@
         <div class="row">
           <div class="col-3 mb-2">
             <small class="d-block" translate>label.offence_amount</small>
-            <strong>{{ row?.ticketedAmount | currency }}</strong>
+            <strong>{{
+              row?.ticketedAmount
+                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
           </div>
           <div class="col-3">
             <small class="d-block" translate>label.amount_due</small>
-            <strong>{{ row?.amountDue | currency }}</strong>
+            <strong>{{
+              row?.amountDue
+                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
           </div>
           <div class="col-3 mb-2">
             <small class="d-block" translate>label.status</small>
@@ -186,9 +191,15 @@
               <ng-container #alertContent class="alert-content">
                 <strong>
                   {{ "summary.paid_early_1" | translate }}
-                  {{ row?.discountDueDate | formatDate }},
+                  {{
+                    row?.discountDueDate
+                      | date: "MMM dd YYYY":"+0200":defaultLanguage
+                  }},
                   {{ "summary.paid_early_2" | translate }}
-                  {{ row?.discountAmount | currency }}
+                  {{
+                    row?.discountAmount
+                      | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+                  }}
                   {{ "summary.paid_early_3" | translate }}
                 </strong>
               </ng-container>
@@ -206,7 +217,10 @@
             >
               <mat-icon inline="true">money</mat-icon>
               {{ "label.pay_balance" | translate }}
-              {{ ticket.outstandingBalance | currency }}
+              {{
+                ticket.outstandingBalance
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
             </a>
           </button>
         </div>
@@ -229,7 +243,7 @@
       <h3 translate>summary.questions</h3>
       <p>
         {{ "summary.questions_detail_1" | translate }}<br />
-        {{ "summary.questions_detail_2" | translate }}
+        {{ "summary.questions_detail_2" | translate }}:
         <a href="tel:+18776618026">1-877-661-8026</a>
       </p>
     </section>

@@ -13,6 +13,7 @@ import { DisputeService } from 'app/services/dispute.service';
 import { Additional } from '@shared/models/additional.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { ConfigService } from '@config/config.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-step-overview',
@@ -25,6 +26,7 @@ export class StepOverviewComponent
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
+  public defaultLanguage: string;
   public previousButtonIcon: string = 'keyboard_arrow_left';
   public previousButtonKey: string = 'stepper.back';
   public saveButtonKey: string = 'stepper.submit';
@@ -46,7 +48,8 @@ export class StepOverviewComponent
     private utilsService: UtilsService,
     private logger: LoggerService,
     private toastService: ToastService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private translateService: TranslateService
   ) {
     super(
       route,
@@ -59,6 +62,7 @@ export class StepOverviewComponent
   }
 
   public ngOnInit() {
+    this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.disputeFormStateService.stepOverviewForm;
     this.patchForm();
   }

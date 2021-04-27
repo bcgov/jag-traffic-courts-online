@@ -20,7 +20,10 @@
           {{ "stepper.count.offence_amount" | translate }}
         </div>
         <div class="col-6 text-right mb-2">
-          {{ ticketedAmount.value | currency }}
+          {{
+            ticketedAmount.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}
         </div>
       </div>
       <div class="row">
@@ -28,16 +31,24 @@
           {{ "stepper.count.amount_due" | translate }}
         </div>
         <div class="col-6 text-right mb-2">
-          {{ amountDue.value | currency }}
+          {{
+            amountDue.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}
         </div>
       </div>
       <div class="row" *ngIf="discountAmount.value > 0">
         <div class="col-6 mb-2">
           {{ "stepper.count.discount_if_paid_by" | translate }}
-          {{ discountDueDate.value | formatDate }})
+          {{
+            discountDueDate.value | date: "MMM dd YYYY":"+0200":defaultLanguage
+          }})
         </div>
         <div class="col-6 text-right mb-2">
-          {{ discountAmount.value | currency }}
+          {{
+            discountAmount.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}
         </div>
       </div>
     </ng-container>
@@ -77,7 +88,7 @@
                 offenceAgreementStatus.errors.required
               "
             >
-              Required
+              {{ "error.required" | translate }}
             </mat-error>
           </mat-radio-group>
         </div>
@@ -125,7 +136,7 @@
               formControlName="reductionReason"
             ></textarea>
             <mat-error *ngIf="reductionReason.hasError('required')">
-              Required
+              {{ "error.required" | translate }}
             </mat-error>
           </mat-form-field>
         </div>
@@ -149,7 +160,7 @@
               formControlName="moreTimeReason"
             ></textarea>
             <mat-error *ngIf="moreTimeReason.hasError('required')">
-              Required
+              {{ "error.required" | translate }}
             </mat-error>
           </mat-form-field>
         </div>

@@ -44,7 +44,7 @@
     "dispute_ticket": "Billet de Contestation",
     "questions": "Des Questions",
     "questions_detail_1": "Toute autre question concernant votre litige doit être adressée à:",
-    "questions_detail_2": "Téléphone sans frais:",
+    "questions_detail_2": "Téléphone sans frais",
     "status_0": "Créé",
     "status_1": "Soumis",
     "status_2": "En Cours",
@@ -61,7 +61,19 @@
     "disputant": {
       "heading": "Informations sur le Litige",
       "sub_heading": "Veuillez remplir les informations suivantes.",
-      "note": "Un avis d'audience sera posté à l'adresse ci-dessus. Vous DEVEZ notifier par écrit au Violation Ticket Center toute nouvelle adresse de changement d'adresse."
+      "note": "Un avis d'audience sera posté à l'adresse ci-dessus. Vous DEVEZ notifier par écrit au Violation Ticket Center toute nouvelle adresse de changement d'adresse.",
+      "surname": "Nom de Famille du Contestant",
+      "given_names": "Prénoms",
+      "mailing_address": "Adresse Postale",
+      "city": "Ville",
+      "province": "Province",
+      "postal_code": "Code Postal",
+      "home_phone_number": "Numéro de Téléphone Résidentiel",
+      "work_phone_number": "Numéro de Téléphone Professionnel",
+      "driver_license_number": "Numéro de Permis de Conduire",
+      "driver_license_province": "Province ou État du Permis de Conduire",
+      "email_address": "Adresse E-Mail",
+      "birthdate": "Date de Naissance"
     },
     "count": {
       "heading": "Examen des Infractions et Mesures à Prendre",
@@ -86,10 +98,10 @@
       "heading": "Informations Complémentaires",
       "sub_heading": "Les questions suivantes s'appliquent à TOUTES les infractions pour ce ticket qui sont actuellement en litige. Si l'un de ces éléments est requis pour un décompte dans le litige, veuillez les sélectionner.",
       "requests": "Veuillez indiquer si les conditions suivantes s'appliquent",
-      "lawyer": "J'ai l'intention d'être représenté à l'audience par un avocat.",
-      "interpreter": "J'ai besoin d'un interprète parlant à l'audience.",
+      "lawyer": "J'ai l'intention d'être représenté à l'audience par un avocat",
+      "interpreter": "J'ai besoin d'un interprète parlant à l'audience",
       "interpreter_Language": "Langue de l'Interprète",
-      "witness": "J'ai l'intention d'appeler un témoin.",
+      "witness": "J'ai l'intention d'appeler un témoin",
       "note": "Si le défendeur ou l'agent du défendeur n'assiste pas à l'audience du tribunal, le tribunal traitera le ticket de violation comme non contesté, la ou les condamnations pour les allégations seront enregistrées contre le dossier du contestant, et le ticket prescrit sera inscrit. montant(s) deviendra immédiatement exigible et payable."
     },
     "overview": {
@@ -113,7 +125,7 @@
     "next_steps": "Prochaines Étapes",
     "next_steps_detail_1": "Votre litige est maintenant soumis aux tribunaux de la circulation. Vous serez informé une fois que votre litige aura été examiné.",
     "next_steps_detail_2": "Les questions concernant votre litige doivent être adressées à",
-    "next_steps_detail_3": "Téléphone sans Rrais:",
+    "next_steps_detail_3": "Téléphone sans Rrais",
     "view_your_ticket": "Consultez votre Billet",
     "exit": "Sortir"
   },
@@ -154,6 +166,7 @@
     "dispute_create_error": "Le litige n'a pas pu être créé"
   },
   "error": {
-    "required": "Obligatoire"
+    "required": "Obligatoire",
+    "email_address": "Doit être une adresse e-mail valide"
   }
 }

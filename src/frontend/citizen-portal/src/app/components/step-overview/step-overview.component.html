@@ -59,7 +59,11 @@
     <div class="row">
       <div class="col-6 mb-2">Birthdate</div>
       <div class="col-6 text-right">
-        {{ disputantInfo.birthdate | formatDate | default }}
+        {{
+          disputantInfo.birthdate
+            | date: "MMM dd YYYY":"+0200":defaultLanguage
+            | default
+        }}
       </div>
     </div>
     <div class="page-subheader mt-2 mb-0">
@@ -199,7 +203,7 @@
                 informationCertified.errors.required
               "
             >
-              Required
+              {{ "error.required" | translate }}
             </mat-error>
           </mat-checkbox>
         </div>

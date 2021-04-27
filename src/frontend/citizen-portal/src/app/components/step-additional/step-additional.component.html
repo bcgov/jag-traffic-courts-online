@@ -35,7 +35,7 @@
           </mat-checkbox>
           <!--
           <mat-error *ngIf="formStepCourt.hasError('requiredIfTrue')">
-            Required
+            {{ 'error.required' | translate }}
           </mat-error>-->
         </div>
       </div>
@@ -54,7 +54,7 @@
                 {{ language.name }}
               </mat-option>
             </mat-select>
-            <mat-error>Required</mat-error>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
       </div>

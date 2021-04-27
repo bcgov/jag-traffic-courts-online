@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
+import { TranslateService } from '@ngx-translate/core';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -21,6 +22,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
+  public defaultLanguage: string;
   public previousButtonIcon: string = 'keyboard_arrow_left';
   public previousButtonKey: string = 'stepper.cancel';
   public saveButtonKey: string = 'stepper.next';
@@ -34,7 +36,8 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     protected disputeFormStateService: DisputeFormStateService,
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private translateService: TranslateService
   ) {
     super(
       route,
@@ -47,6 +50,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   }
 
   public ngOnInit() {
+    this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.stepControl; //this.disputeFormStateService.stepOffence1Form;
     this.patchForm();
   }

@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
         this.titleService.setTitle(
           this.translateService.instant('app_heading')
         );
-        console.log('translations', translations);
 
         this.configService.dispute_submitted$.next(
           this.translateService.instant('toaster.dispute_submitted')

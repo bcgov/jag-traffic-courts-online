@@ -16,10 +16,10 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Surname of Disputant"
+                placeholder="{{ 'stepper.disputant.surname' | translate }}"
                 formControlName="surname"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -27,10 +27,10 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Given Names"
+                placeholder="{{ 'stepper.disputant.given_names' | translate }}"
                 formControlName="givenNames"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -40,10 +40,12 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Mailing Address"
+                placeholder="{{
+                  'stepper.disputant.mailing_address' | translate
+                }}"
                 formControlName="mailingAddress"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -51,8 +53,12 @@
         <div class="row">
           <div class="col">
             <mat-form-field class="w-100">
-              <input matInput placeholder="City" formControlName="city" />
-              <mat-error>Required</mat-error>
+              <input
+                matInput
+                placeholder="{{ 'stepper.disputant.city' | translate }}"
+                formControlName="city"
+              />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -62,10 +68,10 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Province"
+                placeholder="{{ 'stepper.disputant.province' | translate }}"
                 formControlName="province"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -73,13 +79,13 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Postal Code"
+                placeholder="{{ 'stepper.disputant.postal_code' | translate }}"
                 mask="S0S 0S0"
                 oninput="this.value = this.value.toUpperCase()"
                 formControlName="postal"
                 [showMaskTyped]="true"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -89,14 +95,16 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Home Phone Number"
+                placeholder="{{
+                  'stepper.disputant.home_phone_number' | translate
+                }}"
                 formControlName="homePhone"
                 mask="(000) 000-0000"
                 [showMaskTyped]="true"
               />
-              <mat-error *ngIf="homePhone.hasError('required')"
-                >Required</mat-error
-              >
+              <mat-error *ngIf="homePhone.hasError('required')">{{
+                "error.required" | translate
+              }}</mat-error>
               <mat-error *ngIf="homePhone.hasError('phone')"
                 >Must be a valid phone number</mat-error
               >
@@ -107,7 +115,9 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Work Phone Number"
+                placeholder="{{
+                  'stepper.disputant.work_phone_number' | translate
+                }}"
                 formControlName="workPhone"
                 mask="(000) 000-0000"
                 [showMaskTyped]="true"
@@ -124,12 +134,12 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Driver's License Number"
+                placeholder="{{ 'stepper.disputant.surname' | translate }}"
                 formControlName="license"
                 mask="0000000"
                 [showMaskTyped]="false"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -137,10 +147,12 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Province or State of Driver's License"
+                placeholder="{{
+                  'stepper.disputant.driver_license_province' | translate
+                }}"
                 formControlName="provLicense"
               />
-              <mat-error>Required</mat-error>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -151,15 +163,17 @@
               <input
                 matInput
                 formControlName="emailAddress"
-                placeholder="Email Address"
+                placeholder="{{
+                  'stepper.disputant.email_address' | translate
+                }}"
                 autocomplete="off"
               />
-              <mat-error *ngIf="emailAddress.hasError('required')"
-                >Required</mat-error
-              >
-              <mat-error *ngIf="emailAddress.hasError('email')"
-                >Must be a valid email address</mat-error
-              >
+              <mat-error *ngIf="emailAddress.hasError('required')">{{
+                "error.required" | translate
+              }}</mat-error>
+              <mat-error *ngIf="emailAddress.hasError('email')">{{
+                "error.email_address" | translate
+              }}</mat-error>
             </mat-form-field>
           </div>
 
@@ -167,7 +181,7 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="Birthdate"
+                placeholder="{{ 'stepper.disputant.birthdate' | translate }}"
                 [max]="maxDateOfBirth"
                 [matDatepicker]="picker"
                 formControlName="birthdate"
@@ -180,9 +194,9 @@
               ></mat-datepicker-toggle>
               <!--[touchUi]="isMobile"-->
               <mat-datepicker #picker startView="multi-year"></mat-datepicker>
-              <mat-error *ngIf="form.get('birthdate').hasError('required')"
-                >Required</mat-error
-              >
+              <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
+                "error.required" | translate
+              }}</mat-error>
             </mat-form-field>
           </div>
         </div>

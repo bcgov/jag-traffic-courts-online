@@ -29,7 +29,7 @@
           <small class="d-block text-muted">Ticket Number</small>
           {{ row.ticket?.violationTicketNumber | default }}
           <small class="d-block ml-2"
-            >Received: {{ row.ticket?.violationDate | formatDate | default }} at
+            >Received: {{ row.ticket?.violationDate  | default }} at
             {{ row.ticket?.violationTime | default }}
           </small>
         </th>

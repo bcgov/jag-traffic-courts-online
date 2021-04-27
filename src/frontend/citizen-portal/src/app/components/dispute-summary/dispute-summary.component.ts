@@ -8,6 +8,7 @@ import { Offence } from '@shared/models/offence.model';
 import { Ticket } from '@shared/models/ticket.model';
 import { Subscription, timer } from 'rxjs';
 import { AppRoutes } from 'app/app.routes';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dispute-summary',
@@ -17,6 +18,7 @@ import { AppRoutes } from 'app/app.routes';
 export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
   public ticket: Ticket;
+  public defaultLanguage: string;
 
   constructor(
     protected route: ActivatedRoute,
@@ -24,10 +26,13 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private translateService: TranslateService
   ) {}
 
   public ngOnInit(): void {
+    this.defaultLanguage = this.translateService.getDefaultLang();
+
     this.route.queryParams.subscribe((params) => {
       if (Object.keys(params).length === 0) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
