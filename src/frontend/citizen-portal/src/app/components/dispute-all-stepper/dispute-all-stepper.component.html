@@ -21,7 +21,8 @@
 
           <ng-container subHeader>
             <h2 class="mb-2" *ngIf="ticket">
-              Ticket #{{ ticket.violationTicketNumber }}
+              {{ "summary.ticket_number" | translate
+              }}{{ ticket.violationTicketNumber }}
               <span class="ml-4">
                 {{ ticket.violationTime }}
               </span>
