@@ -23,8 +23,9 @@ export class StepSingleCountComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
-  public prevBtnLabel: string;
-  public prevBtnIcon: string;
+  public previousButtonIcon: string = 'close';
+  public previousButtonKey: string = 'stepper.cancel';
+  public saveButtonKey: string = 'stepper.next';
 
   constructor(
     protected route: ActivatedRoute,
@@ -50,9 +51,6 @@ export class StepSingleCountComponent
   public ngOnInit() {
     this.form = this.stepControl;
     this.patchForm();
-
-    this.prevBtnLabel = 'Cancel';
-    this.prevBtnIcon = 'close';
   }
 
   public onSubmit(): void {

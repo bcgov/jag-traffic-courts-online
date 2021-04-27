@@ -36,7 +36,9 @@
           (selectionChange)="onSelectionChange($event)"
         >
           <mat-step [stepControl]="offenceForm">
-            <ng-template matStepLabel>Count Review and Action</ng-template>
+            <ng-template matStepLabel>{{
+              "stepper.count.heading" | translate
+            }}</ng-template>
             <app-step-single-count
               id="stepCount"
               [stepControl]="offenceForm"
@@ -46,10 +48,10 @@
             ></app-step-single-count>
           </mat-step>
 
-          <mat-step
-            label="Additional Information"
-            [stepControl]="additionalForm"
-          >
+          <mat-step [stepControl]="additionalForm">
+            <ng-template matStepLabel>{{
+              "stepper.additional.heading" | translate
+            }}</ng-template>
             <app-step-additional
               id="stepCourt"
               [stepper]="disputeStepper"
@@ -57,7 +59,10 @@
             ></app-step-additional>
           </mat-step>
 
-          <mat-step label="Dispute Overview" [stepControl]="overviewForm">
+          <mat-step [stepControl]="overviewForm">
+            <ng-template matStepLabel>{{
+              "stepper.overview.heading" | translate
+            }}</ng-template>
             <app-step-overview
               id="stepOverview"
               [stepper]="disputeStepper"

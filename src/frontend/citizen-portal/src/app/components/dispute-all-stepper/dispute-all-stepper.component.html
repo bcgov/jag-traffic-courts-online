@@ -34,7 +34,10 @@
           linear
           (selectionChange)="onSelectionChange($event)"
         >
-          <mat-step [stepControl]="disputantForm" label="Disputant Information">
+          <mat-step [stepControl]="disputantForm">
+            <ng-template matStepLabel>{{
+              "stepper.disputant.heading" | translate
+            }}</ng-template>
             <app-step-disputant
               id="stepDisputant"
               [stepper]="disputeStepper"
@@ -44,7 +47,10 @@
           </mat-step>
 
           <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
-            <ng-template matStepLabel>Count #1 Review and Action</ng-template>
+            <ng-template matStepLabel
+              >{{ "stepper.count.sub_heading_1" | translate }} #1
+              {{ "stepper.count.sub_heading_2" | translate }}</ng-template
+            >
             <app-step-count
               id="stepCount"
               [stepControl]="offence1Form"
@@ -54,7 +60,10 @@
           </mat-step>
 
           <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
-            <ng-template matStepLabel>Count #2 Review and Action</ng-template>
+            <ng-template matStepLabel
+              >{{ "stepper.count.sub_heading_1" | translate }} #2
+              {{ "stepper.count.sub_heading_2" | translate }}</ng-template
+            >
             <app-step-count
               id="stepCount"
               [stepControl]="offence2Form"
@@ -64,7 +73,10 @@
           </mat-step>
 
           <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
-            <ng-template matStepLabel>Count #3 Review and Action</ng-template>
+            <ng-template matStepLabel
+              >{{ "stepper.count.sub_heading_1" | translate }} #3
+              {{ "stepper.count.sub_heading_2" | translate }}</ng-template
+            >
             <app-step-count
               id="stepCount"
               [stepControl]="offence3Form"
@@ -73,10 +85,10 @@
             ></app-step-count>
           </mat-step>
 
-          <mat-step
-            label="Additional Information"
-            [stepControl]="additionalForm"
-          >
+          <mat-step [stepControl]="additionalForm">
+            <ng-template matStepLabel>{{
+              "stepper.additional.heading" | translate
+            }}</ng-template>
             <app-step-additional
               id="stepCourt"
               [stepper]="disputeStepper"
@@ -84,7 +96,10 @@
             ></app-step-additional>
           </mat-step>
 
-          <mat-step label="Dispute Overview" [stepControl]="overviewForm">
+          <mat-step [stepControl]="overviewForm">
+            <ng-template matStepLabel>{{
+              "stepper.overview.heading" | translate
+            }}</ng-template>
             <app-step-overview
               id="stepOverview"
               [stepper]="disputeStepper"

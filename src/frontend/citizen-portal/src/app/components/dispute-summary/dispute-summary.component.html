@@ -91,7 +91,32 @@
                   row.offenceStatus === 3 || row.offenceStatus === -2,
                 'text-info': row.offenceStatus === 1
               }"
-              ><strong>{{ row.offenceStatusDesc }} </strong>
+              ><strong>
+                <ng-container [ngSwitch]="row.offenceStatus">
+                  <span *ngSwitchCase="0">{{
+                    "summary.status_0" | translate
+                  }}</span>
+                  <span *ngSwitchCase="1">{{
+                    "summary.status_1" | translate
+                  }}</span>
+                  <span *ngSwitchCase="2">{{
+                    "summary.status_2" | translate
+                  }}</span>
+                  <span *ngSwitchCase="3">{{
+                    "summary.status_3" | translate
+                  }}</span>
+                  <span *ngSwitchCase="4">{{
+                    "summary.status_3" | translate
+                  }}</span>
+                  <span *ngSwitchCase="-2">{{
+                    "summary.status_paid" | translate
+                  }}</span>
+                  <span *ngSwitchCase="-1">{{
+                    "summary.status_unpaid" | translate
+                  }}</span>
+                  <span *ngSwitchDefault>Unknown</span>
+                </ng-container>
+              </strong>
             </small>
           </div>
           <div class="col-md-3">
@@ -181,17 +206,17 @@
             >
               <mat-icon inline="true">money</mat-icon>
               {{ "label.pay_balance" | translate }}
-              {{ ticket.outstandingBalance | currency: "EUR":true }}
+              {{ ticket.outstandingBalance | currency }}
             </a>
           </button>
         </div>
         <div class="col-md-6">
           <button
+            *ngIf="!ticket.disputesExist"
             mat-flat-button
             color="primary"
             class="large"
             (click)="onDisputeTicket()"
-            *ngIf="!ticket.disputesExist"
           >
             <mat-icon inline="true">read_more</mat-icon>
             {{ "summary.dispute_ticket" | translate }}

@@ -126,29 +126,29 @@ export class HomeComponent implements OnInit {
     if (!!this.tcoSurvey.isConfirming) {
       return;
     }
-    this.tcoSurvey.isConfirming = true;
+    // this.tcoSurvey.isConfirming = true;
 
-    const data: DialogOptions = {
-      title: 'Submit Dispute',
-      message:
-        'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
-      actionText: 'Submit Dispute',
-    };
+    // const data: DialogOptions = {
+    //   title: 'Submit Dispute',
+    //   message:
+    //     'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
+    //   actionText: 'Submit Dispute',
+    // };
 
-    this.dialog
-      .open(ConfirmDialogComponent, { data })
-      .afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          const source = timer(1000);
-          this.busy = source.subscribe((val) => {
-            this.tcoSurvey.doComplete();
-            this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
-          });
-        } else {
-          this.tcoSurvey.isConfirming = false;
-        }
-      });
+    // this.dialog
+    //   .open(ConfirmDialogComponent, { data })
+    //   .afterClosed()
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       const source = timer(1000);
+    //       this.busy = source.subscribe((val) => {
+    this.tcoSurvey.doComplete();
+    this.toastService.openSuccessToast('Dispute has been submitted');
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
+    //     });
+    //   } else {
+    //     this.tcoSurvey.isConfirming = false;
+    //   }
+    // });
   }
 }

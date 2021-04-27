@@ -44,11 +44,79 @@
     "dispute_ticket": "Dispute Ticket",
     "questions": "Questions",
     "questions_detail_1": "Any further questions about your dispute should be directed to:",
-    "questions_detail_2": "Phone Toll Free:"
+    "questions_detail_2": "Phone Toll Free:",
+    "status_0": "Created",
+    "status_1": "Submitted",
+    "status_2": "In Progress",
+    "status_3": "Resolved",
+    "status_4": "Rejected",
+    "status_unpaid": "Outstanding Balance",
+    "status_paid": "Paid"
+  },
+  "stepper": {
+    "next": "Next",
+    "cancel": "Cancel",
+    "back": "Back",
+    "submit": "Submit",
+    "disputant": {
+      "heading": "Disputant Information",
+      "sub_heading": "Please fill in the following information.",
+      "note": "A notice of hearing will be mailed to the above address. You MUST notify the Violation Ticket Centre of any new address of change of address in writing."
+    },
+    "count": {
+      "heading": "Count Review and Action",
+      "sub_heading_1": "Count",
+      "sub_heading_2": "Review and Action",
+      "desc_of_offence": "Description of Offence",
+      "offence_amount": "Offence Amount",
+      "amount_due": "Amount Due",
+      "discount_if_paid_by": "Ticket Discount (if paid by",
+      "dispute_yes_no": "I would like to dispute this offence",
+      "for_this_offence": "For this offence",
+      "offence_agreement_1": "I agree that I committed this offence, and I do not want to appear in court",
+      "offence_agreement_2": "I agree that I committed this offence, and I want to appear in court",
+      "offence_agreement_3": "I do not agree that I committed this offence (allegation)",
+      "requests": "Which requests would you like to make?",
+      "requestReduction": "I request a reduction of the ticketed amount: and/or",
+      "requestReductionReasonLabel": "What are your reasons for a reduction in the ticketed amount(s)?",
+      "requestMoreTime": "I request time to pay the ticketed amount",
+      "requestMoreTimeReasonLabel": "What are your reasons for requiring more time to pay the ticketed amount(s)?"
+    },
+    "additional": {
+      "heading": "Additional Information",
+      "sub_heading": "The following questions apply to ALL counts on this ticket that are currently under dispute. If any of these are required for any count in the dispute, please select them.",
+      "requests": "Please indicate if the following apply",
+      "lawyer": "I intend to be represented at the hearing by a lawyer.",
+      "interpreter": "I require a speaking interpreter at the hearing.",
+      "interpreter_Language": "Interpreter Language",
+      "witness": "I intend to call a witness.",
+      "note": "If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable."
+    },
+    "overview": {
+      "heading": "Dispute Overview",
+      "sub_heading": "Please review the following information. You can go back to any step to update the information.",
+      "disputant_information": "Disputant Information",
+      "count": "Count",
+      "count_information": "Count Information",
+      "additional_information": "Additional Information",
+      "offence_not_included": "This offence is NOT included in the dispute",
+      "offence_dispute": "I do want to dispute this offence",
+      "certify": "I certify that all information provided is true and complete. I understand it is an offence under the law to knowingly provide false or misleading information.",
+      "note_heading": "VIOLATION TICKET SUBMISSION",
+      "note_detail": "Once it has been submitted, it cannot be updated."
+    }
   },
   "submit": {
     "heading": "BC Traffic Ticket Dispute Submitted",
-    "sub_heading": "The dispute was successfully submitted."
+    "sub_heading": "The dispute was successfully submitted.",
+    "note_heading": "Dispute Received",
+    "note_detail": "Your dispute was successfully submitted. Please check your email (including your Junk folder) for updates.",
+    "next_steps": "Next Steps",
+    "next_steps_detail_1": "Your Dispute is now under by the Traffic Courts. You will be notified once your dispute has been reviewed.",
+    "next_steps_detail_2": "Question about your dispute should be directed to",
+    "next_steps_detail_3": "Phone Toll Free:",
+    "view_your_ticket": "View Your Ticket",
+    "exit": "Exit"
   },
   "ticket_dispute": {
     "heading": "BC Traffic Court Ticket Dispute"
@@ -71,5 +139,20 @@
     "offence_amount": "Offence Amount",
     "amount_due": "Amount Due",
     "status": "Status"
+  },
+  "submit_confirmation": {
+    "heading": "Submit Dispute",
+    "message": "When your dispute of the offence is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?",
+    "confirm": "Submit Dispute",
+    "cancel": "Cancel"
+  },
+  "toaster": {
+    "dispute_submitted": "Dispute has been successfully submitted",
+    "dispute_validation_error": "Your dispute has an error that needs to be corrected before you will be able to submit",
+    "ticket_error": "Ticket could not be retrieved",
+    "dispute_create_error": "Dispute could not be created"
+  },
+  "error": {
+    "required": "Required"
   }
 }

@@ -31,8 +31,8 @@ export class MockKeycloakService {
 
   public loadUserProfile(): Promise<UserProfile> {
     const profile: UserProfile = {
-      firstName: 'mockFirstName',
-      lastName: 'mockLastName',
+      firstName: 'John',
+      lastName: 'Brown',
     };
     return Promise.resolve(profile);
   }

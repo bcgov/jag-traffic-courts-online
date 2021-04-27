@@ -23,6 +23,10 @@ export class StepAdditionalComponent
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
+  public previousButtonIcon: string = 'keyboard_arrow_left';
+  public previousButtonKey: string = 'stepper.cancel';
+  public saveButtonKey: string = 'stepper.next';
+
   public languages: Config<string>[];
 
   constructor(

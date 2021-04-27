@@ -1,9 +1,11 @@
 <app-page>
   <app-page-header>
-    <ng-container header>Disputant Information</ng-container>
-    <ng-container subHeader
-      >Please fill in the following information.</ng-container
-    >
+    <ng-container header>{{
+      "stepper.disputant.heading" | translate
+    }}</ng-container>
+    <ng-container subHeader>{{
+      "stepper.disputant.sub_heading" | translate
+    }}</ng-container>
   </app-page-header>
 
   <div *ngIf="ticket; else noTicket">
@@ -187,9 +189,7 @@
 
         <app-alert type="info" icon="warning">
           <ng-container #alertContent class="alert-content">
-            A notice of hearing will be mailed to the above address. You MUST
-            notify the Violation Ticket Centre of any new address of change of
-            address in writing.
+            {{ "stepper.disputant.note" | translate }}
           </ng-container>
         </app-alert>
       </section>
@@ -200,11 +200,13 @@
     <h2>No current ticket</h2>
   </ng-template>
 
+  <!-- [secondaryActionButtonLabel]="prevBtnLabel"-->
   <app-page-footer
     (save)="onSubmit()"
     (back)="onBack()"
-    [secondaryActionButtonLabel]="prevBtnLabel"
-    [secondaryActionButtonIcon]="prevBtnIcon"
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
     [hasSecondaryAction]="true"
   ></app-page-footer>
 </app-page>

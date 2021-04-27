@@ -12,6 +12,7 @@ import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Additional } from '@shared/models/additional.model';
 import { Disputant } from '@shared/models/disputant.model';
+import { ConfigService } from '@config/config.service';
 
 @Component({
   selector: 'app-step-overview',
@@ -24,7 +25,9 @@ export class StepOverviewComponent
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
-  public nextBtnLabel: string;
+  public previousButtonIcon: string = 'keyboard_arrow_left';
+  public previousButtonKey: string = 'stepper.back';
+  public saveButtonKey: string = 'stepper.submit';
 
   public disputantForm: FormGroup;
   public offence1Form: FormGroup;
@@ -42,7 +45,8 @@ export class StepOverviewComponent
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private configService: ConfigService
   ) {
     super(
       route,
@@ -57,8 +61,6 @@ export class StepOverviewComponent
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepOverviewForm;
     this.patchForm();
-
-    this.nextBtnLabel = 'Submit';
   }
 
   public onBack() {
@@ -72,7 +74,7 @@ export class StepOverviewComponent
         return;
       } else {
         this.toastService.openErrorToast(
-          'Your dispute has an error that needs to be corrected before you will be able to submit'
+          this.configService.dispute_validation_error
         );
       }
     }

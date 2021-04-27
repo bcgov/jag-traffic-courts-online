@@ -46,8 +46,8 @@ describe('AuthService', () => {
     spyOn(keycloakService, 'loadUserProfile').and.callThrough();
     authService.getUser().then((result) => {
       expect(keycloakService.loadUserProfile).toHaveBeenCalled();
-      expect(result.firstName).toEqual('mockFirstName');
-      expect(result.lastName).toEqual('mockLastName');
+      expect(result.firstName).toEqual('John');
+      expect(result.lastName).toEqual('Brown');
       done();
     });
   });
@@ -64,8 +64,8 @@ describe('AuthService', () => {
 
   it('getUser$ should get userInfo', (done) => {
     authService.getUser$().subscribe((result) => {
-      expect(result.firstName).toEqual('mockFirstName');
-      expect(result.lastName).toEqual('mockLastName');
+      expect(result.firstName).toEqual('John');
+      expect(result.lastName).toEqual('Brown');
       done();
     });
   });

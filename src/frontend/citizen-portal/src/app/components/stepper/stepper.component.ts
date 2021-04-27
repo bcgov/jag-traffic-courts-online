@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { UtilsService } from '@core/services/utils.service';
 import { AppRoutes } from 'app/app.routes';
+import { ConfigService } from '@config/config.service';
 
 @Component({
   selector: 'app-stepper',
@@ -44,7 +45,8 @@ export class StepperComponent
     private utilsService: UtilsService,
     private toastService: ToastService,
     private dialog: MatDialog,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private configService: ConfigService
   ) {
     super(
       route,
@@ -174,10 +176,10 @@ export class StepperComponent
    */
   private submitOffenceDispute(): void {
     const data: DialogOptions = {
-      title: 'Submit Offence Dispute',
-      message:
-        'When your dispute of the offence is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
-      actionText: 'Submit Dispute',
+      titleKey: 'submit_confirmation.heading',
+      messageKey: 'submit_confirmation.message',
+      actionTextKey: 'submit_confirmation.confirm',
+      cancelTextKey: 'submit_confirmation.cancel',
     };
     this.dialog
       .open(ConfirmDialogComponent, { data })
@@ -189,7 +191,7 @@ export class StepperComponent
             .createCountDispute(payload)
             .subscribe(() => {
               this.toastService.openSuccessToast(
-                'Dispute has been successfully submitted'
+                this.configService.dispute_submitted
               );
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
             });

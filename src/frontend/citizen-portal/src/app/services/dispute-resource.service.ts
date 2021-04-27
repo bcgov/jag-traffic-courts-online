@@ -1,5 +1,5 @@
 import { HttpParams } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -10,35 +10,18 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { CountDispute } from '@shared/models/countDispute.model';
-import { TranslateService } from '@ngx-translate/core';
+import { ConfigService } from '@config/config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisputeResourceService {
-  private dispute_status_1: string;
-  private dispute_status_2: string;
-
   constructor(
     private apiResource: ApiResource,
     private toastService: ToastService,
     private logger: LoggerService,
-    private translateService: TranslateService
-  ) {
-    console.log('yyyyyyyyyyyyyy');
-    this.translateService
-      .get(['summary.dispute_status_1', 'summary.dispute_status_2'])
-      .subscribe((translations) => {
-        this.dispute_status_1 = this.translateService.instant(
-          'summary.dispute_status_1'
-        );
-        console.log('bbbb', this.dispute_status_1);
-
-        this.dispute_status_2 = this.translateService.instant(
-          'summary.dispute_status_2'
-        );
-      });
-  }
+    private configService: ConfigService
+  ) {}
 
   /**
    * Get the ticket from RSI.
@@ -65,7 +48,7 @@ export class DisputeResourceService {
         return ticket;
       }),
       catchError((error: any) => {
-        this.toastService.openErrorToast('Ticket could not be retrieved');
+        this.toastService.openErrorToast(this.configService.ticket_error);
         this.logger.error(
           'DisputeResourceService::getTicket error has occurred: ',
           error
@@ -86,7 +69,9 @@ export class DisputeResourceService {
     return this.apiResource.post<Ticket>('disputes', ticketDispute).pipe(
       map((response: ApiHttpResponse<Ticket>) => null),
       catchError((error: any) => {
-        this.toastService.openErrorToast('Dispute could not be created');
+        this.toastService.openErrorToast(
+          this.configService.dispute_create_error
+        );
         this.logger.error(
           'DisputeResourceService::createTicketDispute error has occurred: ',
           error
@@ -105,7 +90,9 @@ export class DisputeResourceService {
     return this.apiResource.post<Ticket>('disputes', countDispute).pipe(
       map((response: ApiHttpResponse<Ticket>) => null),
       catchError((error: any) => {
-        this.toastService.openErrorToast('Dispute could not be created');
+        this.toastService.openErrorToast(
+          this.configService.dispute_create_error
+        );
         this.logger.error(
           'DisputeResourceService::createCountDispute error has occurred: ',
           error
@@ -115,46 +102,10 @@ export class DisputeResourceService {
     );
   }
 
-  private getOffenceInfo(
-    row: Offence
-  ): {
-    status: number;
-    desc: string;
-  } {
+  private getOffenceInfo(row: Offence): number {
     const disputeStatus = row.offenceDispute ? row.offenceDispute.status : null;
     const status = disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
-
-    let desc: string = null;
-    if (disputeStatus) {
-      switch (disputeStatus) {
-        case 0:
-          desc = 'Created';
-          break;
-        case 1:
-          desc = 'Submitted';
-          break;
-        case 2:
-          desc = 'In Progress';
-          break;
-        case 3:
-          desc = 'Resolved';
-          break;
-        case 4:
-          desc = 'Rejected';
-          break;
-        default:
-          desc = disputeStatus + ' Unknown';
-      }
-    } else if (row.amountDue > 0) {
-      desc = 'Outstanding Balance';
-    } else {
-      desc = 'Paid';
-    }
-
-    return {
-      status,
-      desc,
-    };
+    return status;
   }
 
   /**
@@ -164,9 +115,7 @@ export class DisputeResourceService {
     let balance = 0;
     let disputesExist = false;
     ticket.offences.forEach((offence) => {
-      const { status, desc } = this.getOffenceInfo(offence);
-      offence.offenceStatus = status;
-      offence.offenceStatusDesc = desc;
+      offence.offenceStatus = this.getOffenceInfo(offence);
 
       if (offence.offenceDispute) {
         disputesExist = true;

@@ -8,7 +8,7 @@
       (click)="onSecondaryAction()"
     >
       <mat-icon inline="true">{{ secondaryActionButtonIcon }}</mat-icon>
-      {{ secondaryActionButtonLabel }}
+      {{ secondaryActionButtonKey | translate }}
     </button>
   </div>
   <div class="col pt-2 text-right">
@@ -20,7 +20,7 @@
       [disabled]="disableSave"
       (click)="onSave()"
     >
-      {{ saveButtonLabel }}
+      {{ saveButtonKey | translate }}
       <mat-icon inline="true">keyboard_arrow_right</mat-icon>
     </button>
   </div>

@@ -43,7 +43,7 @@ describe('HeaderComponent', () => {
 
   it('should have username after Angular calls ngOnInit', fakeAsync(() => {
     component.ngOnInit().then(() => {
-      expect(component.fullName).toContain('mockFirstName mockLastName');
+      expect(component.fullName).toContain('John Brown');
     });
     flush();
   }));

@@ -1,30 +1,39 @@
 <app-page>
   <app-page-header>
     <ng-container header
-      >Count #{{ offenceNumber.value }} Review and Action</ng-container
+      >{{ "stepper.count.sub_heading_1" | translate }} #{{
+        offenceNumber.value
+      }}
+      {{ "stepper.count.sub_heading_2" | translate }}</ng-container
     >
     <ng-container subHeader>
       <div class="row">
-        <div class="col-4 mb-2">Offence Description</div>
+        <div class="col-4 mb-2">
+          {{ "stepper.count.desc_of_offence" | translate }}
+        </div>
         <div class="col-8 text-right mb-2">
           {{ offenceDescription.value }}
         </div>
       </div>
       <div class="row">
-        <div class="col-6 mb-2">Ticket Amount</div>
+        <div class="col-6 mb-2">
+          {{ "stepper.count.offence_amount" | translate }}
+        </div>
         <div class="col-6 text-right mb-2">
           {{ ticketedAmount.value | currency }}
         </div>
       </div>
       <div class="row">
-        <div class="col-6 mb-2">Amount Due</div>
+        <div class="col-6 mb-2">
+          {{ "stepper.count.amount_due" | translate }}
+        </div>
         <div class="col-6 text-right mb-2">
           {{ amountDue.value | currency }}
         </div>
       </div>
       <div class="row" *ngIf="discountAmount.value > 0">
         <div class="col-6 mb-2">
-          Ticket Discount (if paid by
+          {{ "stepper.count.discount_if_paid_by" | translate }}
           {{ discountDueDate.value | formatDate }})
         </div>
         <div class="col-6 text-right mb-2">
@@ -38,26 +47,25 @@
     <section class="mb-2">
       <div class="row">
         <div class="col">
-          <label>For this offence:</label><br />
+          <label>{{ "stepper.count.for_this_offence" | translate }}:</label
+          ><br />
           <mat-radio-group
             formControlName="offenceAgreementStatus"
             class="w-100"
           >
             <mat-radio-button value="1"
-              ><span class="wrap-mat-radio-label"
-                >I agree that I committed this offence, and I do not want to
-                appear in court</span
-              ></mat-radio-button
+              ><span class="wrap-mat-radio-label">{{
+                "stepper.count.offence_agreement_1" | translate
+              }}</span></mat-radio-button
             >
             <mat-radio-button value="2"
-              ><span class="wrap-mat-radio-label"
-                >I agree that I committed this offence, and I want to appear in
-                court</span
-              ></mat-radio-button
+              ><span class="wrap-mat-radio-label">{{
+                "stepper.count.offence_agreement_2" | translate
+              }}</span></mat-radio-button
             >
             <mat-radio-button value="3">
               <span class="wrap-mat-radio-label">
-                I do not agree that I committed this offence (allegation)
+                {{ "stepper.count.offence_agreement_3" | translate }}
               </span>
             </mat-radio-button>
 
@@ -83,18 +91,18 @@
         "
       >
         <div class="col">
-          <label>Which requests would you like to make?</label>
+          <label>{{ "stepper.count.requests" | translate }}</label>
           <mat-checkbox
             formControlName="requestReduction"
             color="primary"
             class="w-100"
-            >I request a reduction of the ticketed amount: and/or</mat-checkbox
+            >{{ "stepper.count.requestReduction" | translate }}</mat-checkbox
           >
           <mat-checkbox
             formControlName="requestMoreTime"
             color="primary"
             class="w-100"
-            >I request time to pay the ticketed amount</mat-checkbox
+            >{{ "stepper.count.requestMoreTime" | translate }}</mat-checkbox
           >
         </div>
       </div>
@@ -106,7 +114,7 @@
         <div class="col">
           <mat-form-field class="w-100">
             <label>
-              What are your reasons for a reduction in the ticketed amount(s)?
+              {{ "stepper.count.requestReductionReasonLabel" | translate }}
             </label>
             <textarea
               matInput
@@ -130,8 +138,7 @@
         <div class="col">
           <mat-form-field class="w-100">
             <label>
-              What are your reasons for requiring more time to pay the ticketed
-              amount(s)?
+              {{ "stepper.count.requestMoreTimeReasonLabel" | translate }}
             </label>
             <textarea
               matInput
@@ -153,8 +160,9 @@
   <app-page-footer
     (save)="onSubmit()"
     (back)="onBack()"
-    [secondaryActionButtonLabel]="prevBtnLabel"
-    [secondaryActionButtonIcon]="prevBtnIcon"
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
     [hasSecondaryAction]="true"
   ></app-page-footer>
 </app-page>

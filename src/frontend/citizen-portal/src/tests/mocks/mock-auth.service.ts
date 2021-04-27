@@ -25,15 +25,15 @@ export class MockAuthService {
 
   public async getUser(forceReload?: boolean): Promise<User> {
     return Promise.resolve({
-      firstName: 'mockFirstName',
-      lastName: 'mockLastName',
+      firstName: 'John',
+      lastName: 'Brown',
     });
   }
 
   public getUser$(forceReload?: boolean): Observable<User> {
     return of({
-      firstName: 'mockFirstName',
-      lastName: 'mockLastName',
+      firstName: 'John',
+      lastName: 'Brown',
     });
   }
 }
