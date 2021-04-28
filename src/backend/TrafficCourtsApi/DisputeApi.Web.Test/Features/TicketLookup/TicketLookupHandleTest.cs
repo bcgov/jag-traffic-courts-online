@@ -15,11 +15,8 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
     public class TicketLookupHandleTest
     {
         [Test, AutoMockAutoData]
-        public async Task TicketDisputeHandler_handle_will_call_retrieveTicket(
-            Query query,
-            TicketDispute ticketDispute,
-            [Frozen]Mock<ITicketDisputeService> ticketDisputeServiceMock,
-            TicketDisputeHandler sut)
+        public async Task TicketDisputeHandler_handle_will_call_retrieveTicket(Query query, TicketDispute ticketDispute,
+            [Frozen] Mock<ITicketDisputeService> ticketDisputeServiceMock, TicketDisputeHandler sut)
         {
             ticketDisputeServiceMock
                 .Setup(m => m.RetrieveTicketDisputeAsync(It.IsAny<string>(), It.IsAny<string>(),

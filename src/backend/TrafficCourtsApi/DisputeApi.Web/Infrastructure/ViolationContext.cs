@@ -1,5 +1,7 @@
-﻿using DisputeApi.Web.Models;
+﻿using DisputeApi.Web.Features.Disputes.DBModel;
+using DisputeApi.Web.Models;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace DisputeApi.Web.Infrastructure
 {
