@@ -125,6 +125,7 @@ services:
   #############################################################################################
   rabbitmq-tco:
     image: rabbitmq:3.7.15-management
+    # image: registry.redhat.io/rhosp-rhel8/openstack-rabbitmq:16.1.5-4
     container_name: rabbitmq-tco
     hostname: rabbitmq
     ports:
@@ -163,7 +164,7 @@ services:
     networks: 
       - traffic-court-net
     ports:
-      - "8081:8081"
+      - "8082:8081"
     environment:
       - REDIS_HOST=${REDIS__HOST}
       - REDIS_PASSWORD="${REDIS__PASSWORD}"

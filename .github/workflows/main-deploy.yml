@@ -12,9 +12,6 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
       - name: Login to RedHat
         uses: docker/login-action@v1
         with:
@@ -28,22 +25,26 @@ jobs:
           registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
           password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
       - name: Build and push
-        uses: docker/build-push-action@v2.4.0
-        with:
-          context: ./src/backend/TrafficCourtsApi
-          push: true
-          no-cache: true
-          tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:dev
-          build-args:
-            ASPNETCORE_ENVIRONMENT=Development
-            SPLUNK_COLLECTOR_URL=${{secrets.SPLUNK_COLLECTOR_URL}}
-            SPLUNK_TOKEN=${{secrets.SPLUNK_HEC_TOKEN}}
-            OAUTH__OAUTHURL=${{secrets.OAUTH__OAUTHURL}}
-            OAUTH__RESOURCEURL=${{secrets.OAUTH__RESOURCEURL}}
-            OAUTH__CLIENTID=${{secrets.OAUTH__CLIENTID}}
-            OAUTH__SECRET=${{secrets.OAUTH__SECRET}}
-            RSI__BASEADDRESS=${{secrets.RSI__BASEADDRESS}}
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/backend/TrafficCourtsApi
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:${{secrets.OC_APP}}
+        run: |  
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=Development \
+            --build-arg SPLUNK_COLLECTOR_URL=${{secrets.SPLUNK_COLLECTOR_URL}} \
+            --build-arg SPLUNK_TOKEN=${{secrets.SPLUNK_HEC_TOKEN}} \
+            --build-arg OAUTH__OAUTHURL=${{secrets.OAUTH__OAUTHURL}} \
+            --build-arg OAUTH__RESOURCEURL=${{secrets.OAUTH__RESOURCEURL}} \
+            --build-arg OAUTH__CLIENTID=${{secrets.OAUTH__CLIENTID}} \
+            --build-arg OAUTH__SECRET=${{secrets.OAUTH__SECRET}} \
+            --build-arg RSI__BASEADDRESS=${{secrets.RSI__BASEADDRESS}} \
+            --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
 
   build-frontend:
     runs-on: ubuntu-20.04
@@ -52,9 +53,6 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
       - name: Login to RedHat
         uses: docker/login-action@v1
         with:
@@ -70,20 +68,23 @@ jobs:
           password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
 
       - name: Build and push
-        uses: docker/build-push-action@v2.4.0
-        with:
-          context: ./src/frontend/citizen-portal
-          push: true
-          no-cache: true
-          tags: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-portal:dev
-          build-args:
-            API_URL=${{secrets.API_URL}}
-            KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}}
-            KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}}
-            KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}}
-            KEYCLOAK_USER=${{secrets.KEYCLOAK_USER}}
-            KEYCLOAK_PASSWORD=${{secrets.KEYCLOAK_PASSWORD}}
-            KEYCLOAK_IMPORT=${{secrets.KEYCLOAK_IMPORT}}
-            KEYCLOAK_FRONTEND_URL=${{secrets.KEYCLOAK_FRONTEND_URL}}
-            USE_MOCK_SERVICES=${{secrets.USE_MOCK_SERVICES}} 
-            USE_KEYCLOAK=${{secrets.USE_KEYCLOAK}}
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/frontend/citizen-portal
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-portal:${{secrets.OC_APP}}
+        run: |  
+          docker build \
+            --build-arg API_URL=${{secrets.API_URL}} \
+            --build-arg KEYCLOAK_URL=${{secrets.KEYCLOAK_URL}} \
+            --build-arg KEYCLOAK_REALM=${{secrets.KEYCLOAK_REALM}} \
+            --build-arg KEYCLOAK_CLIENT_ID=${{secrets.KEYCLOAK_CLIENT_ID}} \
+            --build-arg KEYCLOAK_USER=${{secrets.KEYCLOAK_USER}} \
+            --build-arg KEYCLOAK_PASSWORD=${{secrets.KEYCLOAK_PASSWORD}} \
+            --build-arg KEYCLOAK_IMPORT=${{secrets.KEYCLOAK_IMPORT}} \
+            --build-arg KEYCLOAK_FRONTEND_URL=${{secrets.KEYCLOAK_FRONTEND_URL}} \
+            --build-arg USE_MOCK_SERVICES=${{secrets.USE_MOCK_SERVICES}} \
+            --build-arg USE_KEYCLOAK=${{secrets.USE_KEYCLOAK}} \
+            --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
