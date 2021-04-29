@@ -73,7 +73,7 @@ export class MockDisputeService {
     let offence: Offence = {
       offenceNumber: 2,
       ticketedAmount: 126,
-      amountDue: 126,
+      amountDue: 87.56,
       violationDateTime: faker.date.soon().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',

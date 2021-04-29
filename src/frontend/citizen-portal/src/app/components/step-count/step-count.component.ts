@@ -24,7 +24,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public defaultLanguage: string;
   public previousButtonIcon: string = 'keyboard_arrow_left';
-  public previousButtonKey: string = 'stepper.cancel';
+  public previousButtonKey: string = 'stepper.back';
   public saveButtonKey: string = 'stepper.next';
 
   constructor(

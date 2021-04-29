@@ -15,7 +15,7 @@
       </h2>
     </div>
     <div class="row">
-      <div class="col-6 mb-2">Surname of the Disputant</div>
+      <div class="col-6">Surname of the Disputant</div>
       <div class="col-6 text-right mb-2">
         {{ disputantInfo.surname | default }}
       </div>
@@ -103,18 +103,55 @@
     </div>
     <ng-container *ngFor="let offence of offenceFormsList; let i = index">
       <ng-container *ngIf="offence.offenceNumber">
-        <div class="row">
-          <div class="col-5 text-left mb-2">
-            {{ "stepper.overview.count" | translate }} #{{
-              offence.offenceNumber
-            }}
+        <div class="offence-header-section">
+          <div class="row page-subheader mb-0">
+            <div class="col-4 text-left">
+              {{ "stepper.overview.count" | translate }} #{{
+                offence.offenceNumber
+              }}
+            </div>
+            <div class="col-8 text-right">{{ offence.offenceDescription }}</div>
           </div>
-          <small class="col-7 text-right mb-2">{{
-            offence.offenceDescription
-          }}</small>
+          <div class="row">
+            <div class="col-5">
+              {{ "stepper.count.offence_amount" | translate }}
+            </div>
+            <div class="col-7 text-right">
+              {{
+                offence.ticketedAmount
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              {{ "stepper.count.amount_due" | translate }}
+            </div>
+            <div class="col-7 text-right">
+              {{
+                offence.amountDue
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
+            </div>
+          </div>
+          <div class="row" *ngIf="offence.discountAmount > 0">
+            <div class="col-8">
+              {{ "stepper.count.discount_if_paid_by" | translate }}
+              {{
+                offence.discountDueDate
+                  | date: "MMM dd YYYY":"+0200":defaultLanguage
+              }})
+            </div>
+            <div class="col-4 text-right">
+              {{
+                offence.discountAmount
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
+            </div>
+          </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-2">
           <div class="col">
             <ul>
               <li *ngIf="offence.includeOffenceInDispute === false">
@@ -167,20 +204,50 @@
     <div class="row">
       <div class="col mb-2">
         <ul>
-          <li *ngIf="additionalInfo.lawyerPresent">
-            {{ "stepper.additional.lawyer" | translate }}
-          </li>
-          <li *ngIf="additionalInfo.interpreterRequired">
-            {{ "stepper.additional.interpreter" | translate }} -
-            {{
-              additionalInfo.interpreterLanguage
-                | configCode: "languages"
-                | default
-            }}
-          </li>
-          <li *ngIf="additionalInfo.witnessPresent">
-            {{ "stepper.additional.witness" | translate }}
-          </li>
+          <ng-container
+            *ngIf="additionalInfo.lawyerPresent; else noLawyerPresent"
+          >
+            <li>
+              {{ "stepper.additional.lawyer" | translate }}
+            </li>
+          </ng-container>
+          <ng-template #noLawyerPresent>
+            <li>
+              {{ "stepper.additional.no_lawyer" | translate }}
+            </li>
+          </ng-template>
+          <ng-container
+            *ngIf="
+              additionalInfo.interpreterRequired;
+              else noInterpreterRequired
+            "
+          >
+            <li>
+              {{ "stepper.additional.interpreter" | translate }} -
+              {{
+                additionalInfo.interpreterLanguage
+                  | configCode: "languages"
+                  | default
+              }}
+            </li>
+          </ng-container>
+          <ng-template #noInterpreterRequired>
+            <li>
+              {{ "stepper.additional.no_interpreter" | translate }}
+            </li>
+          </ng-template>
+          <ng-container
+            *ngIf="additionalInfo.witnessPresent; else noWitnessPresent"
+          >
+            <li>
+              {{ "stepper.additional.witness" | translate }}
+            </li>
+          </ng-container>
+          <ng-template #noWitnessPresent>
+            <li>
+              {{ "stepper.additional.no_witness" | translate }}
+            </li>
+          </ng-template>
         </ul>
       </div>
     </div>

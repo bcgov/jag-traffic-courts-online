@@ -86,7 +86,7 @@
             ></app-step-count>
           </mat-step>
 
-          <mat-step [stepControl]="additionalForm">
+          <mat-step [stepControl]="additionalForm" *ngIf="isCourtRequired">
             <ng-template matStepLabel>{{
               "stepper.additional.heading" | translate
             }}</ng-template>

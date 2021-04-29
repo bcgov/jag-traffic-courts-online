@@ -192,15 +192,31 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
    * Check if any offence forms require court.
    */
   public get isCourtRequired(): boolean {
-    this.offenceForms.forEach((form: AbstractControl) => {
-      const status = form.get('offenceAgreementStatus') as FormControl;
-      const include = form.get('includeOffenceInDispute') as FormControl;
+    // console.log('this.offenceForms', this.offenceForms.length);
 
-      if (include.value && status.value && status.value != '1') {
-        return true;
-      }
-    });
-    return false;
+    // this.offenceForms.forEach((form: AbstractControl) => {
+    //   const offenceNumber = form.get('offenceNumber') as FormControl;
+    //   const status = form.get('offenceAgreementStatus') as FormControl;
+    //   const include = form.get('includeOffenceInDispute') as FormControl;
+
+    //   console.log(
+    //     'XXXXXXXXXX',
+    //     offenceNumber.value,
+    //     include.value,
+    //     status.value
+    //   );
+    // });
+
+    // const courtRequiredForm = this.offenceForms.find(
+    //   (form: AbstractControl) =>
+    //     (form.get('offenceNumber') as FormControl).value &&
+    //     (form.get('includeOffenceInDispute') as FormControl).value &&
+    //     (form.get('offenceAgreementStatus') as FormControl).value &&
+    //     (form.get('offenceAgreementStatus') as FormControl).value != '1'
+    // );
+
+    // return courtRequiredForm ? true : false;
+    return true;
   }
 
   /**

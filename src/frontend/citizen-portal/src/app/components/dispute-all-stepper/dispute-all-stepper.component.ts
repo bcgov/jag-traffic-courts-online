@@ -189,4 +189,8 @@ export class DisputeAllStepperComponent
       }, 250);
     }
   }
+
+  public get isCourtRequired(): boolean {
+    return this.disputeFormStateService.isCourtRequired;
+  }
 }

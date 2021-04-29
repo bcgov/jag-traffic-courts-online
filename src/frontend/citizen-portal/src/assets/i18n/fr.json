@@ -102,6 +102,9 @@
       "interpreter": "J'ai besoin d'un interprète parlant à l'audience",
       "interpreter_Language": "Langue de l'Interprète",
       "witness": "J'ai l'intention d'appeler un témoin",
+      "no_lawyer": "Je n'ai PAS l'intention d'être représenté à l'audience par un avocat",
+      "no_interpreter": "Je n'ai PAS besoin d'un interprète parlant à l'audience",
+      "no_witness": "Je n'ai PAS l'intention d'appeler un témoin",
       "note": "Si le défendeur ou l'agent du défendeur n'assiste pas à l'audience du tribunal, le tribunal traitera le ticket de violation comme non contesté, la ou les condamnations pour les allégations seront enregistrées contre le dossier du contestant, et le ticket prescrit sera inscrit. montant(s) deviendra immédiatement exigible et payable."
     },
     "overview": {

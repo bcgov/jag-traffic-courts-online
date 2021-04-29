@@ -24,7 +24,7 @@ export class StepAdditionalComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public previousButtonIcon: string = 'keyboard_arrow_left';
-  public previousButtonKey: string = 'stepper.cancel';
+  public previousButtonKey: string = 'stepper.back';
   public saveButtonKey: string = 'stepper.next';
 
   public languages: Config<string>[];
@@ -79,9 +79,5 @@ export class StepAdditionalComponent
 
   public get interpreterRequired(): FormControl {
     return this.form.get('interpreterRequired') as FormControl;
-  }
-
-  public get isCourtRequired(): boolean {
-    return this.disputeFormStateService.isCourtRequired;
   }
 }

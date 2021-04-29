@@ -102,6 +102,9 @@
       "interpreter": "I require a speaking interpreter at the hearing",
       "interpreter_Language": "Interpreter Language",
       "witness": "I intend to call a witness",
+      "no_lawyer": "I do NOT intend to be represented at the hearing by a lawyer",
+      "no_interpreter": "I do NOT require a speaking interpreter at the hearing",
+      "no_witness": "I do NOT intend to call a witness",
       "note": "If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable."
     },
     "overview": {
