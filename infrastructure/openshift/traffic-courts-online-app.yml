@@ -35,6 +35,7 @@ parameters:
   required: true
   value: dispute-api
 objects:
+
 ### Frontend
 #   Deployment Config
 - apiVersion: apps.openshift.io/v1
@@ -87,6 +88,11 @@ objects:
 - apiVersion: v1
   kind: Service
   namespace: ${OC_NAMESPACE}-${OC_APP}
+  labels:
+    app: ${FRONTEND_POD}
+    app.kubernetes.io/component: ${NAME}
+    app.kubernetes.io/instance: ${NAME}
+    app.kubernetes.io/part-of: ${NAME}
   metadata:
     name: ${FRONTEND_POD}
     namespace: ${OC_NAMESPACE}-${OC_APP}
@@ -128,6 +134,11 @@ objects:
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   namespace: ${OC_NAMESPACE}-${OC_APP}
+  labels:
+    app: ${API_POD}
+    app.kubernetes.io/component: ${NAME}
+    app.kubernetes.io/instance: ${NAME}
+    app.kubernetes.io/part-of: ${NAME}
   metadata:
     name: ${API_POD}
     namespace: ${OC_NAMESPACE}-${OC_APP}
@@ -173,6 +184,7 @@ objects:
             namespace: "${OC_NAMESPACE}-tools"
             name: 'dispute-api:${OC_APP}'
   status: {}
+
 #### Dispute API Service ###
 - apiVersion: v1
   namespace: ${OC_NAMESPACE}-${OC_APP}
@@ -189,3 +201,22 @@ objects:
         targetPort: 8080
     selector:
       name: ${API_POD}
+
+### Network Policy
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: allow-internal-traffic
+    namespace: ${OC_NAMESPACE}-${OC_APP}
+  spec:
+    podSelector: {}
+    ingress:
+      - ports:
+          - protocol: TCP
+            port: 8080
+          - protocol: TCP
+            port: 80
+          - protocol: TCP
+            port: 5672
+    policyTypes:
+      - Ingress
