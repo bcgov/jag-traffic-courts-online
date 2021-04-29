@@ -1,5 +1,4 @@
 ﻿using DisputeApi.Web.Features.Disputes.DBModel;
-using DisputeApi.Web.Models;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -10,7 +9,8 @@ namespace DisputeApi.Web.Infrastructure
         public ViolationContext(DbContextOptions<ViolationContext> options) : base(options)
         {
         }
-        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<DisputeApi.Web.Models.Ticket> Tickets { get; set; }
         public DbSet<Dispute> Disputes { get; set; }
+        public DbSet<OffenceDisputeDetail> OffenceDisputeDetails { get; set; }
     }
 }

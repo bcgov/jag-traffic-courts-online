@@ -19,7 +19,7 @@ namespace DisputeApi.Web.Features.Disputes
         Task<Dispute> CreateAsync(Dispute dispute);
         Task<IEnumerable<Dispute>> GetAllAsync();
         Task<Dispute> GetAsync(int disputeId);
-        Task<Dispute> FindDisputeAsync(string ticketNumber, int offenceNumber);
+        Task<Dispute> FindDisputeAsync(string ticketNumber);
     }
 
     public class DisputeService : IDisputeService
@@ -36,8 +36,7 @@ namespace DisputeApi.Web.Features.Disputes
 
         public async Task<Dispute> CreateAsync(Dispute dispute)
         {
-
-            var existedDispute = await FindDisputeAsync(dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            var existedDispute = await FindDisputeAsync(dispute.ViolationTicketNumber);
             if (existedDispute == null)
             {
                 _logger.LogDebug("Creating dispute");
@@ -46,8 +45,8 @@ namespace DisputeApi.Web.Features.Disputes
                 return createdDispute.Entity;
 
             }
-            _logger.LogError("found the dispute for the same offence, ticketNumber={ticketNumber}, offenceNumer={offenceNumber}", dispute.ViolationTicketNumber, dispute.OffenceNumber);
-            return new Dispute { Id=0};
+            _logger.LogError("found the dispute for the same ticketNumber={ticketNumber}", dispute.ViolationTicketNumber);
+            return new Dispute { Id = 0 };
 
         }
 
@@ -69,11 +68,11 @@ namespace DisputeApi.Web.Features.Disputes
             return dispute;
         }
 
-        public async Task<Dispute> FindDisputeAsync(string ticketNumber, int offenceNumber)
+        public async Task<Dispute> FindDisputeAsync(string ticketNumber)
         {
-            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}, offenceNumber {offenceNumber}",ticketNumber,offenceNumber);
+            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}",ticketNumber);
 
-            var dispute = await _context.Disputes.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber && _.OffenceNumber==offenceNumber);
+            var dispute = await _context.Disputes.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber);
 
             return dispute;
         }

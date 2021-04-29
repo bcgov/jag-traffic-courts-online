@@ -16,7 +16,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Models
             var actual = PropertyCopy.CopyProperties(expected);
 
             // to do: check all properties
-            Assert.AreEqual(expected.EmailAddress, actual.EmailAddress);
+            Assert.AreEqual(expected.DisputantEmailAddress, actual.DisputantEmailAddress);
             Assert.AreEqual(expected.InformationCertified, actual.InformationCertified);
         }
     }

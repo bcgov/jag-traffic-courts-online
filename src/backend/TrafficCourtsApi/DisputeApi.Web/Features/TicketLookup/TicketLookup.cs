@@ -40,14 +40,15 @@ namespace DisputeApi.Web.Features.TicketLookup
                 var ticketDispute =
                     await _ticketDisputeService.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time,
                         cancellationToken);
-                if (ticketDispute != null)
-                {
-                    foreach (var offence in ticketDispute.Offences)
-                    {
-                        offence.Dispute = await
-                            _disputeService.FindDisputeAsync(ticketDispute.ViolationTicketNumber, offence.OffenceNumber);
-                    }
-                }
+                //if (ticketDispute != null)
+                //{
+                //    _disputeService.FindTicketDisputeAsync(ticketDispute.ViolationTicketNumber);
+                //    foreach (var offence in ticketDispute.Offences)
+                //    {
+                //        offence.Dispute = await
+                //            _disputeService.FindDisputeAsync(ticketDispute.ViolationTicketNumber, offence.OffenceNumber);
+                //    }
+                //}
 
                 return ticketDispute;
             }

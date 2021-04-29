@@ -41,7 +41,7 @@ namespace DisputeApi.Web.Features.Disputes.Commands
                 return new CreateDisputeResponse {Id = 0};
             }
 
-            await SendToQueue(_mapper.Map<ContractDispute>(createDispute));
+            //await SendToQueue(_mapper.Map<ContractDispute>(createDispute));
             return new CreateDisputeResponse {Id = result.Id};
         }
 

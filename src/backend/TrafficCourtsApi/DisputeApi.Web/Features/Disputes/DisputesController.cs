@@ -17,7 +17,7 @@ using DisputeApi.Web.Features.Disputes.Queries;
 namespace DisputeApi.Web.Features.Disputes
 {
     [OpenApiTag("Dispute API")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [Produces("application/json")]
     [ApiController]
     public class DisputesController : ControllerBase
@@ -34,9 +34,8 @@ namespace DisputeApi.Web.Features.Disputes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateDispute([FromBody]CreateDisputeCommand createDisputeCommand)
+        public async Task<IActionResult> CreateTicketDispute([FromBody]CreateDisputeCommand createDisputeCommand)
         {
-
             var response = await _mediator.Send(createDisputeCommand);
             if (response.Id == 0)
             {
@@ -46,6 +45,22 @@ namespace DisputeApi.Web.Features.Disputes
             return Ok();
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateOffenceDispute([FromBody] CreateDisputeCommand createDisputeCommand)
+        {
+
+            var response = await _mediator.Send(createDisputeCommand);
+            if (response.Id == 0)
+            {
+                ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
+                return BadRequest(ApiResponse.BadRequest(ModelState));
+            }
+            return Ok();
+
+        }
+        
         [HttpGet]
         [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDisputes()

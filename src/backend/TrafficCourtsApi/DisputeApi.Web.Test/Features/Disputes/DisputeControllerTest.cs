@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -103,7 +103,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = await sut.CreateDispute(dispute);
+            var result = await sut.CreateTicketDispute(dispute);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
@@ -121,7 +121,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = (BadRequestObjectResult) await sut.CreateDispute(dispute);
+            var result = (BadRequestObjectResult) await sut.CreateTicketDispute(dispute);
             Assert.IsNotNull(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);

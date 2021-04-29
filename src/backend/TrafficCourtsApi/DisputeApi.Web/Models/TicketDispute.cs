@@ -9,9 +9,10 @@ namespace DisputeApi.Web.Models
         public string ViolationTicketNumber { get; set; }
         public string ViolationTime { get; set; }
         public string ViolationDate { get; set; }
-
+        public bool InformationCertified { get; set; }
+        public Disputant Disputant { get; set; }
+        public Additional Additional { get; set; }
         public List<Offence> Offences { get; set; }
-
         /// <summary>
         /// Gets or sets the raw response returned from the RSI Pay BC API.
         /// Used only for troubleshooting during development. Will be removed
@@ -20,17 +21,28 @@ namespace DisputeApi.Web.Models
         public RawTicketSearchResponse RawResponse { get; set; }
     }
 
-    public class Offence
+    public class Additional
     {
-        public int OffenceNumber { get; set; }
-        public decimal TicketedAmount { get; set; }//total
-        public decimal AmountDue { get; set; } //total-discount-paid
-        public string ViolationDateTime { get; set; }
-        public string OffenceDescription { get; set; }
-        public string VehicleDescription { get; set; }
-        public Dispute Dispute { get; set; }
-        public decimal DiscountAmount { get; set; }//discount
-        public string DiscountDueDate { get; set; }
-        public string InvoiceType { get; set; }
+        public string LawyerPresent { get; set; }
+        public bool InterpreterRequired { get; set; }
+        public string InterpreterLanguage { get; set; }
+        public string WitnessPresent { get; set; }
+    }
+
+    public class Disputant
+    {
+        public string LastName { get; set; }
+        public string GivenNames { get; set; }
+        public string MailingAddress { get; set; }
+        public string City { get; set; }
+        public string Province { get; set; }
+        public string PostalCode { get; set; }
+        public string BirthDate { get; set; }
+        public string EmailAddress { get; set; }
+        public string DriverLicense { get; set; }
+        public string DriverLicenseProvince { get; set; }
+        public string HomePhoneNumber { get; set; }
+        public string WorkPhoneNumber { get; set; }
+
     }
 }

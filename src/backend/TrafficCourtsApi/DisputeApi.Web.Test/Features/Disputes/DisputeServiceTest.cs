@@ -83,14 +83,14 @@ namespace DisputeApi.Web.Test.Features.Disputes
         public async Task FindDispute_get_dispute(Dispute toCreate, string findTicketNumber, int findOffenceNumber)
         {
             toCreate.ViolationTicketNumber = findTicketNumber;
-            toCreate.OffenceNumber = findOffenceNumber;
+            //toCreate.OffenceNumber = findOffenceNumber;
             var result = await _service.CreateAsync(toCreate);
             Assert.IsInstanceOf<Dispute>(result);
 
-            result = await _service.FindDisputeAsync(findTicketNumber, findOffenceNumber);
+            result = await _service.FindDisputeAsync(findTicketNumber);
             Assert.IsInstanceOf<Dispute>(result);
             Assert.AreEqual(findTicketNumber, result.ViolationTicketNumber);
-            Assert.AreEqual(findOffenceNumber, result.OffenceNumber);
+            //Assert.AreEqual(findOffenceNumber, result.OffenceNumber);
         }
     }
 }
