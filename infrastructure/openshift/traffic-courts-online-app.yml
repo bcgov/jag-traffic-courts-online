@@ -128,8 +128,8 @@ objects:
     tls:
       termination: edge
     wildcardPolicy: None
-### Dispute API Deployment Configs ###
 
+### Dispute API Deployment Configs ###
 #   Deployment Config
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
