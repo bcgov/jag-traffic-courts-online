@@ -31,7 +31,7 @@ Generating kubernetes yaml file using docker-compose.yaml to launch and deploy t
 
 # Creating Openshift Instance from scratch
 
-1.) We need to create .yaml file that can be used to create a template inside the Openshift Catalog. refer to the .github/openshift/traffic-courts-online-app.yml for the yaml generic template 
+1.) We need to create .yaml file that can be used to create a template inside the Openshift Catalog. refer to the .github/infrastructure/traffic-courts-online-app.yml for the yaml generic template 
 
 2.) There are two ways you can deploy the .yaml file inside the Openshift to create template.
 - Using OC CLI
@@ -49,7 +49,7 @@ Generating kubernetes yaml file using docker-compose.yaml to launch and deploy t
     2.) Using Openshift UI
     - Inside the project 0198bb-NAMESPACE switch to the 'Developer' mode from 'Administrator' mode. Go to the +Add --> YAML. 
 
-    - In the Import YAML portion copy and paste the .github/openshift/traffic-courts-online-app.yml content and click 'create'
+    - In the Import YAML portion copy and paste the .github/infrastructure/traffic-courts-online-app.yml content and click 'create'
 
     - Upon creation it will create a template name 'traffic-courts-online' inside the 'From Catalog' portion.
 
@@ -61,5 +61,5 @@ Generating kubernetes yaml file using docker-compose.yaml to launch and deploy t
 
 - This will open a form with required fields needed to be enter. Enter all the blank fields and click create.
 
-- This will launch the template and will create the whole environment in the desired namespae you entered.
+- This will launch the template and will create the whole environment in the desired namespace you entered.
 
