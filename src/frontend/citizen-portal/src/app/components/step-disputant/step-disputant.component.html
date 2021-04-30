@@ -16,8 +16,8 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="{{ 'stepper.disputant.surname' | translate }}"
-                formControlName="surname"
+                placeholder="{{ 'stepper.disputant.lastName' | translate }}"
+                formControlName="lastName"
               />
               <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
@@ -134,7 +134,9 @@
             <mat-form-field class="w-100">
               <input
                 matInput
-                placeholder="{{ 'stepper.disputant.surname' | translate }}"
+                placeholder="{{
+                  'stepper.disputant.driver_license_number' | translate
+                }}"
                 formControlName="license"
                 mask="0000000"
                 [showMaskTyped]="false"

@@ -3,16 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { Ticket } from '@shared/models/ticket.model';
+import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 
 export interface IBaseDisputeFormPage {
   form: FormGroup;
-  ticket: Ticket;
+  ticket: TcoTicketDispute;
 }
 
 export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
   public form: FormGroup;
-  public ticket: Ticket;
+  public ticket: TcoTicketDispute;
 
   constructor(
     protected route: ActivatedRoute,

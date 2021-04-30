@@ -2,7 +2,7 @@ import { Additional } from './additional.model';
 import { Disputant } from './disputant.model';
 import { Offence } from './offence.model';
 
-export interface Ticket {
+export interface TcoTicketDispute {
   violationTicketNumber: string;
   violationTime: string;
   violationDate: string;

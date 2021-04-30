@@ -7,13 +7,11 @@ import { SurveyJson } from 'tests/survey';
 import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
-import { Ticket } from '@shared/models/ticket.model';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '@core/services/toast.service';
 import { AppRoutes } from 'app/app.routes';
+import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +21,7 @@ import { AppRoutes } from 'app/app.routes';
 })
 export class HomeComponent implements OnInit {
   public busy: Subscription;
-  public ticket: Ticket;
+  public ticket: TcoTicketDispute;
 
   private tcoSurvey: Survey.Survey;
 
@@ -79,7 +77,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private handleSurveySetup(ticket: Ticket): void {
+  private handleSurveySetup(ticket: TcoTicketDispute): void {
     this.tcoSurvey.setValue(
       'info_violationTicketNumber',
       ticket.violationTicketNumber

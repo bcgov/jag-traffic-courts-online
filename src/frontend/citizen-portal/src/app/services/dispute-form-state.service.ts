@@ -13,13 +13,12 @@ import { Additional } from '@shared/models/additional.model';
 import { CountDispute } from '@shared/models/countDispute.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
-import { Ticket } from '@shared/models/ticket.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
+export class DisputeFormStateService extends AbstractFormStateService<TcoTicketDispute> {
   public stepDisputantForm: FormGroup;
   public stepOffence1Form: FormGroup;
   public stepOffence2Form: FormGroup;
@@ -45,7 +44,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
    * can't be loaded during instantiation.
    */
   public async setForm(
-    ticket: Ticket,
+    ticket: TcoTicketDispute,
     forcePatch: boolean = false
   ): Promise<void> {
     super.setForm(ticket, forcePatch);
@@ -55,7 +54,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
    * @description
    * Convert reactive form abstract controls into JSON.
    */
-  public get json(): Ticket {
+  public get json(): TcoTicketDispute {
     const stepDisputant = this.stepDisputantForm.getRawValue();
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
@@ -75,7 +74,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
     return ticket;
   }
 
-  public get jsonTicketDispute(): TicketDispute {
+  public get jsonTicketDispute(): TcoTicketDispute {
     const stepDisputant = this.stepDisputantForm.getRawValue();
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
@@ -83,14 +82,34 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
     const stepAdditional = this.stepAdditionalForm.getRawValue();
     const stepOverview = this.stepOverviewForm.getRawValue();
 
-    const dispute: TicketDispute = {
+    const dispute: TcoTicketDispute = {
       ...stepOverview,
     };
     dispute.disputant = stepDisputant;
     dispute.offences = [];
-    dispute.offences.push(stepOffence1);
-    dispute.offences.push(stepOffence2);
-    dispute.offences.push(stepOffence3);
+
+    if (stepOffence1.offenceNumber && stepOffence1.includeOffenceInDispute) {
+      const offence1: Offence = {
+        offenceNumber: stepOffence1.offenceNumber,
+        offenceDispute: stepOffence1,
+      };
+      dispute.offences.push(offence1);
+    }
+    if (stepOffence2.offenceNumber && stepOffence2.includeOffenceInDispute) {
+      const offence2: Offence = {
+        offenceNumber: stepOffence2.offenceNumber,
+        offenceDispute: stepOffence2,
+      };
+      dispute.offences.push(offence2);
+    }
+    if (stepOffence3.offenceNumber && stepOffence3.includeOffenceInDispute) {
+      const offence3: Offence = {
+        offenceNumber: stepOffence3.offenceNumber,
+        offenceDispute: stepOffence3,
+      };
+      dispute.offences.push(offence3);
+    }
+
     dispute.additional = stepAdditional;
     return dispute;
   }
@@ -106,22 +125,19 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
       ...stepOverview,
     };
     if (stepOffence1.offenceNumber) {
-      console.log('aaa');
-      dispute.offence = stepOffence1;
+      dispute.offenceDisputeDetail = stepOffence1;
     }
     if (stepOffence2.offenceNumber) {
-      console.log('bbb');
-      dispute.offence = stepOffence2;
+      dispute.offenceDisputeDetail = stepOffence2;
     }
     if (stepOffence3.offenceNumber) {
-      console.log('ccc');
-      dispute.offence = stepOffence3;
+      dispute.offenceDisputeDetail = stepOffence3;
     }
     dispute.additional = stepAdditional;
-    console.log('jsonCountDispute1', stepOffence1);
-    console.log('jsonCountDispute2', stepOffence2);
-    console.log('jsonCountDispute3', stepOffence3);
-    console.log('jsonCountDispute', dispute);
+    // console.log('jsonCountDispute1', stepOffence1);
+    // console.log('jsonCountDispute2', stepOffence2);
+    // console.log('jsonCountDispute3', stepOffence3);
+    // console.log('jsonCountDispute', dispute);
     return dispute;
   }
 
@@ -245,7 +261,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
    * @description
    * Manage the conversion of JSON to reactive forms.
    */
-  protected patchForm(ticket: Ticket) {
+  protected patchForm(ticket: TcoTicketDispute) {
     if (!ticket) {
       return;
     }
@@ -268,7 +284,7 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
 
   public buildStepDisputantForm(): FormGroup {
     return this.formBuilder.group({
-      surname: [null], //, [Validators.required]],
+      lastName: [null], //, [Validators.required]],
       givenNames: [null],
       mailingAddress: [null],
       postal: [null],
@@ -288,8 +304,8 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
       offenceNumber: [null],
       includeOffenceInDispute: [false],
       offenceAgreementStatus: [null], //, [Validators.required]],
-      requestReduction: [null],
-      requestMoreTime: [null],
+      requestReduction: [false],
+      requestMoreTime: [false],
       reductionReason: [null],
       moreTimeReason: [null],
 
@@ -304,10 +320,10 @@ export class DisputeFormStateService extends AbstractFormStateService<Ticket> {
 
   public buildStepAdditionalForm(): FormGroup {
     return this.formBuilder.group({
-      lawyerPresent: [null],
-      interpreterRequired: [null],
+      lawyerPresent: [false],
+      interpreterRequired: [false],
       interpreterLanguage: [null],
-      witnessPresent: [null],
+      witnessPresent: [false],
     });
   }
 

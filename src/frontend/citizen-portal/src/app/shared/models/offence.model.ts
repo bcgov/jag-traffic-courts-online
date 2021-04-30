@@ -3,15 +3,15 @@ import { OffenceDispute } from './offenceDispute.model';
 export interface Offence {
   id?: string;
   offenceNumber: number;
-  invoiceType: string;
-  offenceDescription: string;
-  violationDateTime: string;
-  vehicleDescription: string;
+  invoiceType?: string;
+  offenceDescription?: string;
+  violationDateTime?: string;
+  vehicleDescription?: string;
 
-  ticketedAmount: number;
-  amountDue: number;
-  discountAmount: number;
-  discountDueDate: string;
+  ticketedAmount?: number;
+  amountDue?: number;
+  discountAmount?: number;
+  discountDueDate?: string;
 
   // Part B
   offenceDispute: OffenceDispute;

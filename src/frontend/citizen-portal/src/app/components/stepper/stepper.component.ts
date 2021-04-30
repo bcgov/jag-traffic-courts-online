@@ -187,6 +187,9 @@ export class StepperComponent
       .subscribe((response: boolean) => {
         if (response) {
           const payload = this.disputeFormStateService.jsonCountDispute;
+          payload.violationTicketNumber = this.ticket.violationTicketNumber;
+          payload.violationTime = this.ticket.violationTime;
+
           this.busy = this.disputeResource
             .createCountDispute(payload)
             .subscribe(() => {

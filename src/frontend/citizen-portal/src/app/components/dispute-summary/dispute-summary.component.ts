@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Offence } from '@shared/models/offence.model';
-import { Ticket } from '@shared/models/ticket.model';
+import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 import { Subscription, timer } from 'rxjs';
 import { AppRoutes } from 'app/app.routes';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
-  public ticket: Ticket;
+  public ticket: TcoTicketDispute;
   public defaultLanguage: string;
 
   constructor(

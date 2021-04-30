@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { Ticket } from '@shared/models/ticket.model';
+import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 
 @Component({
   selector: 'app-dispute-list',
@@ -11,8 +11,8 @@ import { Ticket } from '@shared/models/ticket.model';
   styleUrls: ['./dispute-list.component.scss'],
 })
 export class DisputeListComponent implements OnInit {
-  public disputes: Ticket[];
-  public dispute: Ticket;
+  public disputes: TcoTicketDispute[];
+  public dispute: TcoTicketDispute;
 
   public columnsToDisplay: string[] = [
     'violationTicketNumber',

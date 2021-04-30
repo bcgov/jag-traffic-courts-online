@@ -1,6 +1,6 @@
 export interface Disputant {
   id?: string;
-  surname: string;
+  lastName: string;
   givenNames: string;
   mailingAddress: string;
   city: string;

@@ -6,7 +6,7 @@ export interface CountDispute {
   violationTime: string;
 
   // Part B
-  offence: OffenceDispute;
+  offenceDisputeDetail: OffenceDispute;
 
   // Part C
   additional: Additional;

@@ -4,13 +4,12 @@ import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Ticket } from '@shared/models/ticket.model';
 import { Offence } from '@shared/models/offence.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { CountDispute } from '@shared/models/countDispute.model';
 import { ConfigService } from '@config/config.service';
+import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,14 +30,14 @@ export class DisputeResourceService {
   public getTicket(params: {
     ticketNumber: string;
     time: string;
-  }): Observable<Ticket> {
+  }): Observable<TcoTicketDispute> {
     const httpParams = new HttpParams({ fromObject: params });
 
-    return this.apiResource.get<Ticket>('tickets', httpParams).pipe(
-      map((response: ApiHttpResponse<Ticket>) =>
+    return this.apiResource.get<TcoTicketDispute>('tickets', httpParams).pipe(
+      map((response: ApiHttpResponse<TcoTicketDispute>) =>
         response ? response.result : null
       ),
-      tap((ticket: Ticket) =>
+      tap((ticket: TcoTicketDispute) =>
         this.logger.info('DisputeResourceService::getTicket', ticket)
       ),
       map((ticket) => {
@@ -63,43 +62,51 @@ export class DisputeResourceService {
    *
    * @param dispute The dispute to be created
    */
-  public createTicketDispute(ticketDispute: TicketDispute): Observable<Ticket> {
+  public createTicketDispute(
+    ticketDispute: TcoTicketDispute
+  ): Observable<TcoTicketDispute> {
     this.logger.info('createTicketDispute', ticketDispute);
 
-    return this.apiResource.post<Ticket>('disputes', ticketDispute).pipe(
-      map((response: ApiHttpResponse<Ticket>) => null),
-      catchError((error: any) => {
-        this.toastService.openErrorToast(
-          this.configService.dispute_create_error
-        );
-        this.logger.error(
-          'DisputeResourceService::createTicketDispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    return this.apiResource
+      .post<TcoTicketDispute>('disputes', ticketDispute)
+      .pipe(
+        map((response: ApiHttpResponse<TcoTicketDispute>) => null),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(
+            this.configService.dispute_create_error
+          );
+          this.logger.error(
+            'DisputeResourceService::createTicketDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   /**
    * Create a count dispute
    */
-  public createCountDispute(countDispute: CountDispute): Observable<Ticket> {
+  public createCountDispute(
+    countDispute: CountDispute
+  ): Observable<TcoTicketDispute> {
     this.logger.info('createCountDispute', countDispute);
 
-    return this.apiResource.post<Ticket>('disputes', countDispute).pipe(
-      map((response: ApiHttpResponse<Ticket>) => null),
-      catchError((error: any) => {
-        this.toastService.openErrorToast(
-          this.configService.dispute_create_error
-        );
-        this.logger.error(
-          'DisputeResourceService::createCountDispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    return this.apiResource
+      .post<TcoTicketDispute>('disputes', countDispute)
+      .pipe(
+        map((response: ApiHttpResponse<TcoTicketDispute>) => null),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(
+            this.configService.dispute_create_error
+          );
+          this.logger.error(
+            'DisputeResourceService::createCountDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   private getOffenceInfo(row: Offence): number {
@@ -111,7 +118,7 @@ export class DisputeResourceService {
   /**
    * populate the offence object with the calculated information
    */
-  private setOffenceInfo(ticket: Ticket): void {
+  private setOffenceInfo(ticket: TcoTicketDispute): void {
     let balance = 0;
     let disputesExist = false;
     ticket.offences.forEach((offence) => {

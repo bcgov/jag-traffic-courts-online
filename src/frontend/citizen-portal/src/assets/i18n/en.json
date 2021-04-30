@@ -62,7 +62,7 @@
       "heading": "Disputant Information",
       "sub_heading": "Please fill in the following information.",
       "note": "A notice of hearing will be mailed to the above address. You MUST notify the Violation Ticket Centre of any new address of change of address in writing.",
-      "surname": "Surname of Disputant",
+      "lastName": "Surname of Disputant",
       "given_names": "Given Names",
       "mailing_address": "Mailing Address",
       "city": "City",
@@ -111,6 +111,7 @@
       "heading": "Dispute Overview",
       "sub_heading": "Please review the following information. You can go back to any step to update the information.",
       "disputant_information": "Disputant Information",
+      "address_information": "Address",
       "count": "Count",
       "count_information": "Count Information",
       "additional_information": "Additional Information",
@@ -157,7 +158,7 @@
   },
   "submit_confirmation": {
     "heading": "Submit Dispute",
-    "message": "When your dispute of the offence is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?",
+    "message": "When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?",
     "confirm": "Submit Dispute",
     "cancel": "Cancel"
   },

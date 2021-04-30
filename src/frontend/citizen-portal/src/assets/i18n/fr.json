@@ -62,7 +62,7 @@
       "heading": "Informations sur le Litige",
       "sub_heading": "Veuillez remplir les informations suivantes.",
       "note": "Un avis d'audience sera posté à l'adresse ci-dessus. Vous DEVEZ notifier par écrit au Violation Ticket Center toute nouvelle adresse de changement d'adresse.",
-      "surname": "Nom de Famille du Contestant",
+      "lastName": "Nom de Famille",
       "given_names": "Prénoms",
       "mailing_address": "Adresse Postale",
       "city": "Ville",
@@ -110,6 +110,8 @@
     "overview": {
       "heading": "Aperçu du Différend",
       "sub_heading": "Veuillez consulter les informations suivantes. Vous pouvez revenir à n'importe quelle étape pour mettre à jour les informations.",
+      "disputant_information": "Informations sur le Litige",
+      "address_information": "Adresse",
       "count": "Infraction",
       "count_information": "Information sur l'Infraction",
       "additional_information": "Informations Complémentaires",
@@ -158,7 +160,7 @@
   },
   "submit_confirmation": {
     "heading": "Soumettre un Litige",
-    "message": "Lorsque votre contestation de l'infraction est soumise pour décision, elle ne peut plus être mise à jour. Êtes-vous prêt à soumettre votre différend?",
+    "message": "Lorsque votre contestation est soumise pour décision, elle ne peut plus être mise à jour. Êtes-vous prêt à soumettre votre différend?",
     "confirm": "Soumettre un Litige",
     "cancel": "Annuler"
   },
