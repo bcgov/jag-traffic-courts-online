@@ -29,7 +29,7 @@ Generating kubernetes yaml file using docker-compose.yaml to launch and deploy t
 
     - After selecting correct project and namespace run command "oc process -f ${YAML_FILE_NAME} | oc create -f -
 
-Creating Openshift Instance from scratch
+# Creating Openshift Instance from scratch
 
 1.) We need to create .yaml file that can be used to create a template inside the Openshift Catalog. refer to the .github/openshift/traffic-courts-online-app.yml for the yaml generic template 
 
