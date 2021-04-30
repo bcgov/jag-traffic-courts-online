@@ -36,8 +36,8 @@ parameters:
   value: dispute-api
 objects:
 
-### Frontend
-#   Deployment Config
+### Frontend ###
+### Citizen Portal Deployment Configs ###
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   namespace: ${OC_NAMESPACE}-${OC_APP}
@@ -129,8 +129,8 @@ objects:
       termination: edge
     wildcardPolicy: None
 
-### Dispute API Deployment Configs ###
-#   Deployment Config
+### Back End ###
+### Dispute-API Deployment Configs ###
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   namespace: ${OC_NAMESPACE}-${OC_APP}
@@ -202,7 +202,7 @@ objects:
     selector:
       name: ${API_POD}
 
-### Network Policy
+### Network Policy ###
 - apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
