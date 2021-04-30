@@ -34,9 +34,16 @@ namespace DisputeApi.Web.Features.Disputes.Commands
             CancellationToken cancellationToken)
         {
             var result = await _disputeService.CreateAsync(_mapper.Map<DBModel.Dispute>(createDispute));
-            _logger.LogInformation("dispute created");
-            //await SendToQueue(_mapper.Map<DisputeContract>(result));
-            return result == null ? new CreateDisputeResponse {Id = 0} : new CreateDisputeResponse {Id = result.Id};
+            if(result.Id == 0)
+            {
+                return new CreateDisputeResponse { Id = 0 };
+            }
+            else
+            {
+                _logger.LogInformation("Dispute created. ");
+                await SendToQueue(_mapper.Map<DisputeContract>(result));
+                return new CreateDisputeResponse { Id = result.Id };
+            }
         }
 
         private async Task SendToQueue(DisputeContract dispute)

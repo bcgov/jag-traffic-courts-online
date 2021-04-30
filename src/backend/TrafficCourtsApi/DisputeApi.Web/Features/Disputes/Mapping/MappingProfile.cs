@@ -67,6 +67,8 @@ namespace DisputeApi.Web.Features.Disputes.Mapping
             CreateMap<DBModel.Dispute, DisputeContract>()
                 ;
 
+            CreateMap<DBModel.OffenceDisputeDetail, OffenceDisputeDetailContract>()
+                ;
             CreateMap<DBModel.Dispute, GetDisputeResponse>();
 
         }

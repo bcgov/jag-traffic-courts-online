@@ -39,7 +39,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Theory]
-        [AutoData]
+        [AllowCirculationAutoData]
         public async Task get_disputes(GetDisputeResponse dispute)
         {
             IEnumerable<GetDisputeResponse> expected = new List<GetDisputeResponse> {dispute};
@@ -64,7 +64,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Theory]
-        [AutoData]
+        [AllowCirculationAutoData]
         public async Task get_dispute(GetDisputeResponse expected)
         {
             _mediatorMock.Setup(x => x.Send(It.IsAny<GetDisputeQuery>(), It.IsAny<CancellationToken>()))

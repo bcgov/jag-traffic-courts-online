@@ -66,7 +66,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 foreach (Offence offence in ticketDispute.Offences)
                 {
                     var detail =
-                        dispute.OffenceDisputeDetails.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
+                        dispute.OffenceDisputeDetails?.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
                     if (detail != null)
                     {
                         offence.OffenceDisputeDetail = _mapper.Map<Models.OffenceDisputeDetail>(detail);
