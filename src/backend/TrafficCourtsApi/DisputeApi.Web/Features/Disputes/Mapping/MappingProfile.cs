@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DisputeApi.Web.Features.Disputes.Commands;
 using DisputeApi.Web.Features.Disputes.Queries;
-using ContractDispute = TrafficCourts.Common.Contract.Dispute;
+using TrafficCourts.Common.Contract;
 
 namespace DisputeApi.Web.Features.Disputes.Mapping
 {
@@ -64,9 +64,7 @@ namespace DisputeApi.Web.Features.Disputes.Mapping
                 .ForMember(dest => dest.WitnessPresent, opt => opt.MapFrom(src => src.WitnessPresent))
                  ;
 
-            CreateMap<CreateDisputeCommand, ContractDispute>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => 0))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => TrafficCourts.Common.Contract.DisputeStatus.Submitted))
+            CreateMap<DBModel.Dispute, DisputeContract>()
                 ;
 
             CreateMap<DBModel.Dispute, GetDisputeResponse>();

@@ -18,23 +18,25 @@ namespace DisputeApi.Web.Features.TicketLookup
         {
             [FromQuery(Name = "ticketNumber")]
             [Required]
-            [RegularExpression("^[A-Z]{2}[0-9]{6,}$", ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")]
+            [RegularExpression("^[A-Z]{2}[0-9]{6,}$",
+                ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")]
             public string TicketNumber { get; set; }
 
             [FromQuery(Name = "time")]
             [Required]
-            [RegularExpression("^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$", ErrorMessage = "time must be properly formatted 24 hour clock")]
+            [RegularExpression("^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+                ErrorMessage = "time must be properly formatted 24 hour clock")]
             public string Time { get; set; }
         }
-
- 
 
         public class TicketDisputeHandler : IRequestHandler<Query, TicketDispute>
         {
             private readonly ITicketDisputeService _ticketDisputeService;
             private readonly IDisputeService _disputeService;
             private readonly IMapper _mapper;
-            public TicketDisputeHandler(ITicketDisputeService ticketDisputeService, IDisputeService disputeService, IMapper mapper)
+
+            public TicketDisputeHandler(ITicketDisputeService ticketDisputeService, IDisputeService disputeService,
+                IMapper mapper)
             {
                 _ticketDisputeService = ticketDisputeService;
                 _disputeService = disputeService;
@@ -49,7 +51,7 @@ namespace DisputeApi.Web.Features.TicketLookup
                 if (ticketDispute != null)
                 {
                     Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticketDispute.ViolationTicketNumber);
-                    MergeDisputeToTicketDispute(ticketDispute, dispute);                    
+                    MergeDisputeToTicketDispute(ticketDispute, dispute);
                 }
 
                 return ticketDispute;
@@ -61,17 +63,16 @@ namespace DisputeApi.Web.Features.TicketLookup
                 ticketDispute.Disputant = _mapper.Map<Disputant>(dispute);
                 ticketDispute.Additional = _mapper.Map<Additional>(dispute);
                 ticketDispute.InformationCertified = dispute.InformationCertified;
-                foreach(Offence offence in ticketDispute.Offences)
+                foreach (Offence offence in ticketDispute.Offences)
                 {
-                    var detail = dispute.OffenceDisputeDetails.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
-                    if( detail != null)
+                    var detail =
+                        dispute.OffenceDisputeDetails.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
+                    if (detail != null)
                     {
-                        offence.OffenceDisputeDetail = _mapper.Map<Web.Models.OffenceDisputeDetail>(detail);
+                        offence.OffenceDisputeDetail = _mapper.Map<Models.OffenceDisputeDetail>(detail);
                     }
                 }
-                return;
             }
         }
-
     }
 }

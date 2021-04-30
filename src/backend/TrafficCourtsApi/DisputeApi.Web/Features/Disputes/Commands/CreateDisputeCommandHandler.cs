@@ -8,7 +8,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Contract;
-using ContractDispute = TrafficCourts.Common.Contract.Dispute;
 
 namespace DisputeApi.Web.Features.Disputes.Commands
 {
@@ -17,7 +16,7 @@ namespace DisputeApi.Web.Features.Disputes.Commands
         private readonly ILogger _logger;
         private readonly IDisputeService _disputeService;
         private readonly ISendEndpointProvider _sendEndpointProvider;
-        private readonly RabbitMQConfiguration _rabbitMQConfig;
+        private readonly RabbitMQConfiguration _rabbitMqConfig;
         private readonly IMapper _mapper;
 
         public CreateDisputeCommandHandler(ILogger<CreateDisputeCommandHandler> logger, IDisputeService disputeService,
@@ -27,7 +26,7 @@ namespace DisputeApi.Web.Features.Disputes.Commands
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
             _sendEndpointProvider =
                 sendEndpointProvider ?? throw new ArgumentNullException(nameof(sendEndpointProvider));
-            _rabbitMQConfig = rabbitMqOptions.Value ?? throw new ArgumentNullException(nameof(rabbitMqOptions));
+            _rabbitMqConfig = rabbitMqOptions.Value ?? throw new ArgumentNullException(nameof(rabbitMqOptions));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -35,25 +34,18 @@ namespace DisputeApi.Web.Features.Disputes.Commands
             CancellationToken cancellationToken)
         {
             var result = await _disputeService.CreateAsync(_mapper.Map<DBModel.Dispute>(createDispute));
-
-            if (result == null)
-            {
-                return new CreateDisputeResponse {Id = 0};
-            }
-
-            //await SendToQueue(_mapper.Map<ContractDispute>(createDispute));
-            return new CreateDisputeResponse {Id = result.Id};
+            _logger.LogInformation("dispute created");
+            await SendToQueue(_mapper.Map<DisputeContract>(result));
+            return result == null ? new CreateDisputeResponse {Id = 0} : new CreateDisputeResponse {Id = result.Id};
         }
 
-        private async Task SendToQueue(ContractDispute dispute)
+        private async Task SendToQueue(DisputeContract dispute)
         {
             ISendEndpoint sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(
                 new Uri(
-                    $"rabbitmq://{_rabbitMQConfig.Host}:{_rabbitMQConfig.Port}/{Constants.DisputeRequestedQueueName}"));
+                    $"rabbitmq://{_rabbitMqConfig.Host}:{_rabbitMqConfig.Port}/{Constants.DisputeRequestedQueueName}"));
 
-            await sendEndpoint.Send<ContractDispute>(dispute);
-
-            return;
+            await sendEndpoint.Send<DisputeContract>(dispute);
         }
     }
 }

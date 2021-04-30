@@ -12,9 +12,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.Disputes.DBModel;
 using System.Threading;
-using ContractDispute = TrafficCourts.Common.Contract.Dispute;
+using TrafficCourts.Common.Contract;
 using Microsoft.Extensions.Options;
 using System;
+using AutoFixture;
 
 namespace DisputeApi.Web.Test.Features.Disputes.Commands
 {
@@ -28,10 +29,14 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
         private Mock<IOptions<RabbitMQConfiguration>> _rabbitConfigMock;
         private Mock<ISendEndpoint> _sendEndpointMock;
         private CreateDisputeCommandHandler _sut;
+        private Fixture _fixture;
 
         [SetUp]
         public void SetUp()
         {
+            _fixture = new Fixture();
+            _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _loggerMock = LoggerServiceMock.LoggerMock<CreateDisputeCommandHandler>();
             _disputeServiceMock = new Mock<IDisputeService>();
             _sendEndPointProviderMock = new Mock<ISendEndpointProvider>();
@@ -50,7 +55,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
 
             _rabbitConfigMock.Setup(x => x.Value).Returns(rabbitMqConfiguration);
             _sendEndpointMock
-                .Setup(x => x.Send<ContractDispute>(It.IsAny<ContractDispute>(), It.IsAny<CancellationToken>()))
+                .Setup(x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(_sendEndpointMock));
             _sut = new CreateDisputeCommandHandler(_loggerMock.Object, _disputeServiceMock.Object,
                 _sendEndPointProviderMock.Object, _rabbitConfigMock.Object, _mapperMock.Object);
@@ -58,17 +63,18 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
 
         [Test, AutoData]
         public async Task CreateDisputeCommandHandler_handle_will_call_service_and_send_to_queue(
-            CreateDisputeCommand createDisputeCommand, Dispute createdDispute, ContractDispute contractDispute)
+            CreateDisputeCommand createDisputeCommand, DisputeContract contractDispute)
         {
+            var createdDispute = _fixture.Create<Dispute>();
             _mapperMock.Setup(m => m.Map<Dispute>(It.IsAny<CreateDisputeCommand>())).Returns(createdDispute);
-            _mapperMock.Setup(m => m.Map<ContractDispute>(It.IsAny<Dispute>())).Returns(contractDispute);
+            _mapperMock.Setup(m => m.Map<DisputeContract>(It.IsAny<Dispute>())).Returns(contractDispute);
             _disputeServiceMock.Setup(m => m.CreateAsync(It.IsAny<Dispute>()))
                 .Returns(Task.FromResult<Dispute>(createdDispute));
 
             var result = await _sut.Handle(createDisputeCommand, CancellationToken.None);
             _disputeServiceMock.Verify(x => x.CreateAsync(createdDispute), Times.Once);
             _sendEndpointMock.Verify(
-                x => x.Send<ContractDispute>(It.IsAny<ContractDispute>(), It.IsAny<CancellationToken>()),
+                x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()),
                 () => { return Times.Once(); });
             Assert.AreEqual(createdDispute.Id, result.Id);
         }

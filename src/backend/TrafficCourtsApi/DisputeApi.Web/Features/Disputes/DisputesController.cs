@@ -1,18 +1,14 @@
-﻿using DisputeApi.Web.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DisputeApi.Web.Messaging.Configuration;
-using MassTransit;
-using TrafficCourts.Common.Contract;
-using Microsoft.Extensions.Options;
 using MediatR;
 using DisputeApi.Web.Features.Disputes.Commands;
 using DisputeApi.Web.Features.Disputes.Queries;
+using DisputeApi.Web.Features.Disputes.DBModel;
 
 namespace DisputeApi.Web.Features.Disputes
 {
