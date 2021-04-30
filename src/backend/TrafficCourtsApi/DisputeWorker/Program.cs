@@ -38,6 +38,7 @@ namespace DisputeWorker
             services.AddMassTransit(config =>
             {
                 config.AddConsumer<DisputeRequestedConsumer>();
+                config.AddConsumer<DisputeUpdatedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -50,6 +51,11 @@ namespace DisputeWorker
                     cfg.ReceiveEndpoint( Constants.DisputeRequestedQueueName, endpoint =>
                     {
                         endpoint.Consumer<DisputeRequestedConsumer>(ctx);
+                    });
+
+                    cfg.ReceiveEndpoint(Constants.DisputeUpdatedQueueName, endpoint =>
+                    {
+                        endpoint.Consumer<DisputeUpdatedConsumer>(ctx);
                     });
                 });
             });

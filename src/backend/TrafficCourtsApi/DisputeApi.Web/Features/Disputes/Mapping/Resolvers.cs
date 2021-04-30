@@ -21,7 +21,7 @@ namespace DisputeApi.Web.Features.Disputes.Mapping
                 {
                     var detail = context.Mapper.Map<DBModel.OffenceDisputeDetail>(offence.OffenceDisputeDetail);
                     detail.OffenceNumber = offence.OffenceNumber;
-                    detail.Status = TrafficCourts.Common.Contract.DisputeStatus.New;
+                    detail.Status = TrafficCourts.Common.Contract.DisputeStatus.Submitted;
                     offenceDisputeDetails.Add(detail);
                 }
             }

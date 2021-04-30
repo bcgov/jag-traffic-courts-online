@@ -7,10 +7,10 @@ using System.Text.Json;
 
 namespace DisputeWorker
 {
-    public class DisputeRequestedConsumer : IConsumer<DisputeContract>
+    public class DisputeUpdatedConsumer : IConsumer<DisputeContract>
     {
-        private readonly ILogger<DisputeRequestedConsumer> _logger;
-        public DisputeRequestedConsumer(ILogger<DisputeRequestedConsumer> logger)
+        private readonly ILogger<DisputeUpdatedConsumer> _logger;
+        public DisputeUpdatedConsumer(ILogger<DisputeUpdatedConsumer> logger)
         {
             _logger = logger;
         }
@@ -19,7 +19,7 @@ namespace DisputeWorker
             try
             {
                 DisputeContract dispute = context.Message;
-                _logger.LogInformation("receive requested dispute {dispute}", JsonSerializer.Serialize<DisputeContract>(dispute));
+                _logger.LogInformation("receive updated dispute {dispute}", JsonSerializer.Serialize<DisputeContract>(dispute));
             }
             catch (Exception ex)
             {

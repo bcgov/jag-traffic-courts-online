@@ -35,7 +35,7 @@ namespace DisputeApi.Web.Features.Disputes
             var response = await _mediator.Send(createDisputeCommand);
             if (response.Id == 0)
             {
-                ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
+                ModelState.AddModelError("TicketNumber", "the dispute already exists for this ticket.");
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
             return Ok();
@@ -44,10 +44,10 @@ namespace DisputeApi.Web.Features.Disputes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateOffenceDispute([FromBody] CreateDisputeCommand createDisputeCommand)
+        public async Task<IActionResult> CreateOffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
         {
 
-            var response = await _mediator.Send(createDisputeCommand);
+            var response = await _mediator.Send(createOffenceDisputeCommand);
             if (response.Id == 0)
             {
                 ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");

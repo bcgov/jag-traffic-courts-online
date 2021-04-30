@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DisputeApi.Web.Features.Disputes.DBModel;
 using System.Linq;
 using System.Collections.ObjectModel;
+using OffenceDisputeDetail = DisputeApi.Web.Features.Disputes.DBModel.OffenceDisputeDetail;
 
 namespace DisputeApi.Web.Features.Disputes
 {
@@ -19,6 +20,7 @@ namespace DisputeApi.Web.Features.Disputes
         /// <param name="dispute">the dispute to create</param>
         /// <returns>the dispute created, with Id value. If the dispute existed, return id=0 </returns>
         Task<Dispute> CreateAsync(Dispute dispute);
+        Task<Dispute> UpdateAsync(Dispute dispute);
         Task<IEnumerable<Dispute>> GetAllAsync();
         Task<Dispute> GetAsync(int disputeId);
         Task<Dispute> FindTicketDisputeAsync(string ticketNumber);
@@ -49,7 +51,14 @@ namespace DisputeApi.Web.Features.Disputes
             }
             _logger.LogError("found the dispute for the same ticketNumber={ticketNumber}", dispute.ViolationTicketNumber);
             return new Dispute { Id = 0 };
+        }
 
+        public async Task<Dispute> UpdateAsync(Dispute dispute)
+        {
+            _logger.LogDebug("Update dispute");
+            var updatedDispute = _context.Disputes.Update(dispute);
+            await _context.SaveChangesAsync();
+            return updatedDispute.Entity;
         }
 
         public async Task<IEnumerable<Dispute>> GetAllAsync()
