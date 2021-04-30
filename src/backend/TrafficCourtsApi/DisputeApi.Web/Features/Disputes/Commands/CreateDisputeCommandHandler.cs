@@ -35,7 +35,7 @@ namespace DisputeApi.Web.Features.Disputes.Commands
         {
             var result = await _disputeService.CreateAsync(_mapper.Map<DBModel.Dispute>(createDispute));
             _logger.LogInformation("dispute created");
-            await SendToQueue(_mapper.Map<DisputeContract>(result));
+            //await SendToQueue(_mapper.Map<DisputeContract>(result));
             return result == null ? new CreateDisputeResponse {Id = 0} : new CreateDisputeResponse {Id = result.Id};
         }
 
