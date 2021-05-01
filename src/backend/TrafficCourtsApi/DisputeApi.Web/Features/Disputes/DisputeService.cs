@@ -55,10 +55,17 @@ namespace DisputeApi.Web.Features.Disputes
 
         public async Task<Dispute> UpdateAsync(Dispute dispute)
         {
-            _logger.LogDebug("Update dispute");
-            var updatedDispute = _context.Disputes.Update(dispute);
-            await _context.SaveChangesAsync();
-            return updatedDispute.Entity;
+            try
+            {
+                _logger.LogDebug("Update dispute");
+                var updatedDispute = _context.Disputes.Update(dispute);
+                await _context.SaveChangesAsync();
+                return updatedDispute.Entity;
+            }catch(Exception e)
+            {
+                string str = e.Message;
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Dispute>> GetAllAsync()
