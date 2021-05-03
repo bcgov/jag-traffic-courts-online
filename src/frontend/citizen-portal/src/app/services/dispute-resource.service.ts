@@ -68,7 +68,7 @@ export class DisputeResourceService {
     this.logger.info('createTicketDispute', ticketDispute);
 
     return this.apiResource
-      .post<TcoTicketDispute>('disputes', ticketDispute)
+      .post<TcoTicketDispute>('disputes/createTicketDispute', ticketDispute)
       .pipe(
         map((response: ApiHttpResponse<TcoTicketDispute>) => null),
         catchError((error: any) => {
@@ -110,7 +110,9 @@ export class DisputeResourceService {
   }
 
   private getOffenceInfo(row: Offence): number {
-    const disputeStatus = row.offenceDispute ? row.offenceDispute.status : null;
+    const disputeStatus = row.offenceDisputeDetail
+      ? row.offenceDisputeDetail.status
+      : null;
     const status = disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
     return status;
   }
@@ -124,7 +126,7 @@ export class DisputeResourceService {
     ticket.offences.forEach((offence) => {
       offence.offenceStatus = this.getOffenceInfo(offence);
 
-      if (offence.offenceDispute) {
+      if (offence.offenceDisputeDetail) {
         disputesExist = true;
       }
 

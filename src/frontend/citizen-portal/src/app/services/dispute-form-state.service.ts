@@ -91,21 +91,21 @@ export class DisputeFormStateService extends AbstractFormStateService<TcoTicketD
     if (stepOffence1.offenceNumber && stepOffence1.includeOffenceInDispute) {
       const offence1: Offence = {
         offenceNumber: stepOffence1.offenceNumber,
-        offenceDispute: stepOffence1,
+        offenceDisputeDetail: stepOffence1,
       };
       dispute.offences.push(offence1);
     }
     if (stepOffence2.offenceNumber && stepOffence2.includeOffenceInDispute) {
       const offence2: Offence = {
         offenceNumber: stepOffence2.offenceNumber,
-        offenceDispute: stepOffence2,
+        offenceDisputeDetail: stepOffence2,
       };
       dispute.offences.push(offence2);
     }
     if (stepOffence3.offenceNumber && stepOffence3.includeOffenceInDispute) {
       const offence3: Offence = {
         offenceNumber: stepOffence3.offenceNumber,
-        offenceDispute: stepOffence3,
+        offenceDisputeDetail: stepOffence3,
       };
       dispute.offences.push(offence3);
     }

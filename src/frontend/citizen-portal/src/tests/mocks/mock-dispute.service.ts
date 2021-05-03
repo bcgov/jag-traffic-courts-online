@@ -76,7 +76,7 @@ export class MockDisputeService {
       violationDateTime: faker.date.soon().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      offenceDispute: null,
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
@@ -99,7 +99,7 @@ export class MockDisputeService {
       amountDue: 142,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      offenceDispute: null,
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
@@ -158,7 +158,7 @@ export class MockDisputeService {
       violationDateTime: faker.date.soon().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      offenceDispute: null,
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
@@ -171,7 +171,7 @@ export class MockDisputeService {
     offenceDispute.status = 1;
     offenceDispute.informationCertified = true;
 
-    offence.offenceDispute = offenceDispute;
+    offence.offenceDisputeDetail = offenceDispute;
 
     ticket.offences.push(offence);
 
@@ -182,7 +182,7 @@ export class MockDisputeService {
       amountDue: 126,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      offenceDispute: null,
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
@@ -206,7 +206,7 @@ export class MockDisputeService {
       violationDateTime: faker.date.recent().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      offenceDispute: null,
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,

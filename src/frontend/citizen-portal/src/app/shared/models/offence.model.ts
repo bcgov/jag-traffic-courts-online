@@ -14,7 +14,7 @@ export interface Offence {
   discountDueDate?: string;
 
   // Part B
-  offenceDispute: OffenceDispute;
+  offenceDisputeDetail: OffenceDispute;
 
   // derived later on
   includeOffenceInDispute?: boolean;
