@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using TrafficCourts.Common.Contract;
+﻿using System.Collections.Generic;
 
-namespace DisputeApi.Web.Features.Disputes.DBModel
+namespace TrafficCourts.Common.Contract
 {
-    public class Dispute
+    public class DisputeContract
     {
-        [Key][Required]
-        public int Id { get; set; }
         public string ViolationTicketNumber { get; set; }
         public bool InformationCertified { get; set; }
         public string DisputantLastName { get; set; }
@@ -27,8 +22,22 @@ namespace DisputeApi.Web.Features.Disputes.DBModel
         public bool InterpreterRequired { get; set; }
         public string WitnessPresent { get; set; }
         public string InterpreterLanguage { get; set; }
-        public ICollection<OffenceDisputeDetail> OffenceDisputeDetails { get; set; }
+        public ICollection<OffenceDisputeDetailContract> OffenceDisputeDetails { get; set; }
     }
 
- 
+    public enum DisputeStatus
+    {
+        New,
+        Submitted,
+        InProgress,//ticket already verified
+        Complete,
+        Rejected,
+    }
+
+    public enum OffenceAgreementStatus
+    {
+        AgreeOffenceNotInCourt,
+        AgreeOffenceInCourt,
+        NotAgreeOffence,
+    }
 }

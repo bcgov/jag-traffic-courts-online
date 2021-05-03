@@ -1,23 +1,19 @@
-﻿using DisputeApi.Web.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DisputeApi.Web.Messaging.Configuration;
-using MassTransit;
-using TrafficCourts.Common.Contract;
-using Microsoft.Extensions.Options;
 using MediatR;
 using DisputeApi.Web.Features.Disputes.Commands;
 using DisputeApi.Web.Features.Disputes.Queries;
+using DisputeApi.Web.Features.Disputes.DBModel;
 
 namespace DisputeApi.Web.Features.Disputes
 {
     [OpenApiTag("Dispute API")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [Produces("application/json")]
     [ApiController]
     public class DisputesController : ControllerBase
@@ -34,18 +30,33 @@ namespace DisputeApi.Web.Features.Disputes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateDispute([FromBody]CreateDisputeCommand createDisputeCommand)
+        public async Task<IActionResult> TicketDispute([FromBody]CreateDisputeCommand createDisputeCommand)
+        {
+            var response = await _mediator.Send(createDisputeCommand);
+            if (response.Id == 0)
+            {
+                ModelState.AddModelError("TicketNumber", "the dispute already exists for this ticket.");
+                return BadRequest(ApiResponse.BadRequest(ModelState));
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> OffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
         {
 
-            var response = await _mediator.Send(createDisputeCommand);
+            var response = await _mediator.Send(createOffenceDisputeCommand);
             if (response.Id == 0)
             {
                 ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
             return Ok();
-        }
 
+        }
+        
         [HttpGet]
         [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDisputes()

@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.Disputes.DBModel;
+using System.Linq;
+using System.Collections.ObjectModel;
+using OffenceDisputeDetail = DisputeApi.Web.Features.Disputes.DBModel.OffenceDisputeDetail;
 
 namespace DisputeApi.Web.Features.Disputes
 {
@@ -17,9 +20,10 @@ namespace DisputeApi.Web.Features.Disputes
         /// <param name="dispute">the dispute to create</param>
         /// <returns>the dispute created, with Id value. If the dispute existed, return id=0 </returns>
         Task<Dispute> CreateAsync(Dispute dispute);
+        Task<Dispute> UpdateAsync(Dispute dispute);
         Task<IEnumerable<Dispute>> GetAllAsync();
         Task<Dispute> GetAsync(int disputeId);
-        Task<Dispute> FindDisputeAsync(string ticketNumber, int offenceNumber);
+        Task<Dispute> FindTicketDisputeAsync(string ticketNumber);
     }
 
     public class DisputeService : IDisputeService
@@ -36,8 +40,7 @@ namespace DisputeApi.Web.Features.Disputes
 
         public async Task<Dispute> CreateAsync(Dispute dispute)
         {
-
-            var existedDispute = await FindDisputeAsync(dispute.ViolationTicketNumber, dispute.OffenceNumber);
+            var existedDispute = await FindTicketDisputeAsync(dispute.ViolationTicketNumber);
             if (existedDispute == null)
             {
                 _logger.LogDebug("Creating dispute");
@@ -46,9 +49,23 @@ namespace DisputeApi.Web.Features.Disputes
                 return createdDispute.Entity;
 
             }
-            _logger.LogError("found the dispute for the same offence, ticketNumber={ticketNumber}, offenceNumer={offenceNumber}", dispute.ViolationTicketNumber, dispute.OffenceNumber);
-            return new Dispute { Id=0};
+            _logger.LogError("found the dispute for the same ticketNumber={ticketNumber}", dispute.ViolationTicketNumber);
+            return new Dispute { Id = 0 };
+        }
 
+        public async Task<Dispute> UpdateAsync(Dispute dispute)
+        {
+            try
+            {
+                _logger.LogDebug("Update dispute");
+                var updatedDispute = _context.Disputes.Update(dispute);
+                await _context.SaveChangesAsync();
+                return updatedDispute.Entity;
+            }catch(Exception e)
+            {
+                string str = e.Message;
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Dispute>> GetAllAsync()
@@ -69,12 +86,17 @@ namespace DisputeApi.Web.Features.Disputes
             return dispute;
         }
 
-        public async Task<Dispute> FindDisputeAsync(string ticketNumber, int offenceNumber)
+        public async Task<Dispute> FindTicketDisputeAsync(string ticketNumber)
         {
-            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}, offenceNumber {offenceNumber}",ticketNumber,offenceNumber);
+            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}",ticketNumber);
 
-            var dispute = await _context.Disputes.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber && _.OffenceNumber==offenceNumber);
-
+            var dispute = await _context.Disputes.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber);
+            if (dispute != null)
+            {
+                dispute.OffenceDisputeDetails = new Collection<DBModel.OffenceDisputeDetail>(
+                    _context.OffenceDisputeDetails.Where(m => m.DisputeId == dispute.Id).ToList()
+                    );
+            }
             return dispute;
         }
     }

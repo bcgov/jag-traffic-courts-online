@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using AutoFixture;
 using AutoFixture.NUnit3;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.DBModel;
@@ -51,8 +52,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
             _loggerMock.VerifyLog(LogLevel.Debug, "Getting all disputes", Times.Once());
         }
 
-        [Theory]
-        [AutoData]
+        [Theory, AllowCirculationAutoData]
         public async Task create_new_and_get_dispute(Dispute toCreate)
         {
             var result = await _service.CreateAsync(toCreate);
@@ -64,8 +64,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
             Assert.IsNotNull(result);
         }
 
-        [Theory]
-        [AutoData]
+        [Theory, AllowCirculationAutoData]
         public async Task create_existed_dispute_get_id0(Dispute toCreate)
         {
             var result = await _service.CreateAsync(toCreate);
@@ -79,18 +78,32 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Theory]
-        [AutoData]
+        [AllowCirculationAutoData]
         public async Task FindDispute_get_dispute(Dispute toCreate, string findTicketNumber, int findOffenceNumber)
         {
             toCreate.ViolationTicketNumber = findTicketNumber;
-            toCreate.OffenceNumber = findOffenceNumber;
+            //toCreate.OffenceNumber = findOffenceNumber;
             var result = await _service.CreateAsync(toCreate);
             Assert.IsInstanceOf<Dispute>(result);
 
-            result = await _service.FindDisputeAsync(findTicketNumber, findOffenceNumber);
+            result = await _service.FindTicketDisputeAsync(findTicketNumber);
             Assert.IsInstanceOf<Dispute>(result);
             Assert.AreEqual(findTicketNumber, result.ViolationTicketNumber);
-            Assert.AreEqual(findOffenceNumber, result.OffenceNumber);
+            //Assert.AreEqual(findOffenceNumber, result.OffenceNumber);
+        }
+
+        [Theory, AllowCirculationAutoData]
+        public async Task update_dispute_get_return_updatedRecords(Dispute toUpdate)
+        {
+            _violationContext.Disputes.Add(toUpdate);
+            await _violationContext.SaveChangesAsync();
+            toUpdate.DisputantFirstName = "updatedFirstName";
+
+            var result = await _service.UpdateAsync(toUpdate);
+            Assert.IsInstanceOf<Dispute>(result);
+            Assert.AreEqual(toUpdate.Id, result.Id);
+            Assert.AreEqual("updatedFirstName", result.DisputantFirstName);
+            _loggerMock.VerifyLog(LogLevel.Debug, "Update dispute", Times.Once());
         }
     }
 }

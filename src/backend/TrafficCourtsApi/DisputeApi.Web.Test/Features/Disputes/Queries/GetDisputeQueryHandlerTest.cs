@@ -31,7 +31,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Queries
             _sut = new GetDisputeQueryHandler(_loggerMock.Object, _disputeServiceMock.Object, _mapperMock.Object);
         }
 
-        [Test, AutoData]
+        [Test, AllowCirculationAutoData]
         public async Task GetDisputeQueryHandler_handle_will_call_service(GetDisputeQuery getDisputesQuery,
             Dispute dispute, GetDisputeResponse responseDispute)
         {

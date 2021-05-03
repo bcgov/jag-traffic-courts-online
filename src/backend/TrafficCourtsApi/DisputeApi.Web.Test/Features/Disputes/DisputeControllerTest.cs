@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -39,7 +39,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Theory]
-        [AutoData]
+        [AllowCirculationAutoData]
         public async Task get_disputes(GetDisputeResponse dispute)
         {
             IEnumerable<GetDisputeResponse> expected = new List<GetDisputeResponse> {dispute};
@@ -64,7 +64,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Theory]
-        [AutoData]
+        [AllowCirculationAutoData]
         public async Task get_dispute(GetDisputeResponse expected)
         {
             _mediatorMock.Setup(x => x.Send(It.IsAny<GetDisputeQuery>(), It.IsAny<CancellationToken>()))
@@ -103,7 +103,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = await sut.CreateDispute(dispute);
+            var result = await sut.TicketDispute(dispute);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
@@ -121,9 +121,43 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = (BadRequestObjectResult) await sut.CreateDispute(dispute);
+            var result = (BadRequestObjectResult) await sut.TicketDispute(dispute);
             Assert.IsNotNull(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+            Assert.AreEqual(400, result.StatusCode);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task create_offence_dispute(CreateOffenceDisputeCommand dispute, CreateOffenceDisputeResponse expected)
+        {
+            _mediatorMock.Setup(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<CreateOffenceDisputeResponse>(expected));
+
+            var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
+
+            var result = await sut.OffenceDispute(dispute);
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<OkResult>(result);
+            _mediatorMock.Verify(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task when_mediator_return_id_is_0_createOffenceDispute_return_badRequest(CreateOffenceDisputeCommand dispute,
+     CreateOffenceDisputeResponse response)
+        {
+            response.Id = 0;
+            _mediatorMock.Setup(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<CreateOffenceDisputeResponse>(response));
+
+            var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
+
+            var result = (BadRequestObjectResult)await sut.OffenceDispute(dispute);
+            Assert.IsNotNull(result);
+            _mediatorMock.Verify(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
             Assert.AreEqual(400, result.StatusCode);
         }
