@@ -7,7 +7,7 @@ import { ToastService } from '@core/services/toast.service';
 import { Offence } from '@shared/models/offence.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { CountDispute } from '@shared/models/countDispute.model';
+import { OffenceDispute } from '@shared/models/offenceDispute.model';
 import { ConfigService } from '@config/config.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 
@@ -83,15 +83,15 @@ export class DisputeResourceService {
   }
 
   /**
-   * Create a count dispute
+   * Create a offence dispute
    */
-  public createCountDispute(
-    countDispute: CountDispute
-  ): Observable<TicketDispute> {
-    this.logger.info('createCountDispute', countDispute);
+  public createOffenceDispute(
+    offenceDispute: OffenceDispute
+  ): Observable<null> {
+    this.logger.info('createOffenceDispute', offenceDispute);
 
     return this.apiResource
-      .post<TicketDispute>('disputes/offenceDispute', countDispute)
+      .post<TicketDispute>('disputes/offenceDispute', offenceDispute)
       .pipe(
         map((response: ApiHttpResponse<TicketDispute>) => null),
         catchError((error: any) => {
@@ -99,7 +99,7 @@ export class DisputeResourceService {
             this.configService.dispute_create_error
           );
           this.logger.error(
-            'DisputeResourceService::createCountDispute error has occurred: ',
+            'DisputeResourceService::createOffenceDispute error has occurred: ',
             error
           );
           throw error;

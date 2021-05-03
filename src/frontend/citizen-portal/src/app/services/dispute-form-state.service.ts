@@ -10,7 +10,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { AbstractFormStateService } from 'app/components/classes/abstract-form-state-service.class';
 import { Additional } from '@shared/models/additional.model';
-import { CountDispute } from '@shared/models/countDispute.model';
+import { OffenceDispute } from '@shared/models/offenceDispute.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
@@ -114,23 +114,26 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     return dispute;
   }
 
-  public get jsonCountDispute(): CountDispute {
+  public get jsonCountDispute(): OffenceDispute {
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
     const stepOffence3 = this.stepOffence3Form.getRawValue();
     const stepAdditional = this.stepAdditionalForm.getRawValue();
     const stepOverview = this.stepOverviewForm.getRawValue();
 
-    const dispute: CountDispute = {
+    const dispute: OffenceDispute = {
       ...stepOverview,
     };
     if (stepOffence1.offenceNumber) {
+      dispute.offenceNumber = stepOffence1.offenceNumber;
       dispute.offenceDisputeDetail = stepOffence1;
     }
     if (stepOffence2.offenceNumber) {
+      dispute.offenceNumber = stepOffence2.offenceNumber;
       dispute.offenceDisputeDetail = stepOffence2;
     }
     if (stepOffence3.offenceNumber) {
+      dispute.offenceNumber = stepOffence3.offenceNumber;
       dispute.offenceDisputeDetail = stepOffence3;
     }
     dispute.additional = stepAdditional;
@@ -333,7 +336,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      informationCertified: [null, [FormControlValidators.requiredTruthful]],
+      informationCertified: [false, [FormControlValidators.requiredTruthful]],
     });
   }
 }

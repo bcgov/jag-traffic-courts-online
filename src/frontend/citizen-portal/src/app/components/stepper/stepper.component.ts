@@ -76,50 +76,103 @@ export class StepperComponent
 
       this.disputeFormStateService.reset();
       this.patchForm();
+      // console.log('YYYYYYYYYYYYYYYYY');
+
+      let offence1Form = null;
+      let offence2Form = null;
+      let offence3Form = null;
+      const formsList = this.disputeFormStateService.forms;
+      [
+        this.disputantForm,
+        offence1Form,
+        offence2Form,
+        offence3Form,
+        this.additionalForm,
+        this.overviewForm,
+      ] = formsList as FormGroup[];
+
+      this.overviewForm.reset();
+      // console.log('XXXXXXXXaaaaXX', this.additionalForm.value);
+      this.additionalForm.patchValue(this.disputeService.ticket.additional);
+      // console.log('XXXXXXXXccccXX', this.additionalForm.value);
+      // console.log('XXXXXXXXbbbbXX', this.overviewForm.value);
+
+      if (this.disputeService.ticket) {
+        // console.log('XXXXXXXXXXXXX', this.disputeService.ticket);
+        this.disputeService.ticket.offences.forEach((offence) => {
+          if (offence.offenceNumber === this.currentDisputeOffenceNumber) {
+            switch (offence.offenceNumber) {
+              case 1:
+                offence.includeOffenceInDispute = true;
+                offence1Form.patchValue(offence);
+                this.offenceForm = offence1Form;
+                break;
+              case 2:
+                offence.includeOffenceInDispute = true;
+                offence2Form.patchValue(offence);
+                this.offenceForm = offence2Form;
+                break;
+              case 3:
+                offence.includeOffenceInDispute = true;
+                offence3Form.patchValue(offence);
+                this.offenceForm = offence3Form;
+                break;
+              default:
+                this.logger.error(
+                  'Invalid disputeOffenceNumber',
+                  this.currentDisputeOffenceNumber
+                );
+                this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+            }
+          }
+        });
+      }
     });
 
-    let offence1Form = null;
-    let offence2Form = null;
-    let offence3Form = null;
-    const formsList = this.disputeFormStateService.forms;
-    [
-      this.disputantForm,
-      offence1Form,
-      offence2Form,
-      offence3Form,
-      this.additionalForm,
-      this.overviewForm,
-    ] = formsList as FormGroup[];
+    // let offence1Form = null;
+    // let offence2Form = null;
+    // let offence3Form = null;
+    // const formsList = this.disputeFormStateService.forms;
+    // [
+    //   this.disputantForm,
+    //   offence1Form,
+    //   offence2Form,
+    //   offence3Form,
+    //   this.additionalForm,
+    //   this.overviewForm,
+    // ] = formsList as FormGroup[];
 
-    if (this.disputeService.ticket) {
-      this.disputeService.ticket.offences.forEach((offence) => {
-        if (offence.offenceNumber === this.currentDisputeOffenceNumber) {
-          switch (offence.offenceNumber) {
-            case 1:
-              offence.includeOffenceInDispute = true;
-              offence1Form.patchValue(offence);
-              this.offenceForm = offence1Form;
-              break;
-            case 2:
-              offence.includeOffenceInDispute = true;
-              offence2Form.patchValue(offence);
-              this.offenceForm = offence2Form;
-              break;
-            case 3:
-              offence.includeOffenceInDispute = true;
-              offence3Form.patchValue(offence);
-              this.offenceForm = offence3Form;
-              break;
-            default:
-              this.logger.error(
-                'Invalid disputeOffenceNumber',
-                this.currentDisputeOffenceNumber
-              );
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-          }
-        }
-      });
-    }
+    // console.log('XXXXXXXXaaaaXX', this.overviewForm.value);
+    // if (this.disputeService.ticket) {
+    //   console.log('XXXXXXXXXXXXX', this.disputeService.ticket);
+    //   this.disputeService.ticket.offences.forEach((offence) => {
+    //     if (offence.offenceNumber === this.currentDisputeOffenceNumber) {
+    //       switch (offence.offenceNumber) {
+    //         case 1:
+    //           offence.includeOffenceInDispute = true;
+    //           offence1Form.patchValue(offence);
+    //           this.offenceForm = offence1Form;
+    //           break;
+    //         case 2:
+    //           offence.includeOffenceInDispute = true;
+    //           offence2Form.patchValue(offence);
+    //           this.offenceForm = offence2Form;
+    //           break;
+    //         case 3:
+    //           offence.includeOffenceInDispute = true;
+    //           offence3Form.patchValue(offence);
+    //           this.offenceForm = offence3Form;
+    //           break;
+    //         default:
+    //           this.logger.error(
+    //             'Invalid disputeOffenceNumber',
+    //             this.currentDisputeOffenceNumber
+    //           );
+    //           this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+    //       }
+    //     }
+    //   });
+    // }
   }
 
   public ngAfterViewInit(): void {
@@ -191,7 +244,7 @@ export class StepperComponent
           payload.violationTime = this.ticket.violationTime;
 
           this.busy = this.disputeResource
-            .createCountDispute(payload)
+            .createOffenceDispute(payload)
             .subscribe(() => {
               this.toastService.openSuccessToast(
                 this.configService.dispute_submitted

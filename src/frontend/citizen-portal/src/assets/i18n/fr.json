@@ -100,7 +100,7 @@
       "requests": "Veuillez indiquer si les conditions suivantes s'appliquent",
       "lawyer": "J'ai l'intention d'être représenté à l'audience par un avocat",
       "interpreter": "J'ai besoin d'un interprète parlant à l'audience",
-      "interpreter_Language": "Langue de l'Interprète",
+      "interpreter_language": "Langue de l'Interprète",
       "witness": "J'ai l'intention d'appeler un témoin",
       "no_lawyer": "Je n'ai PAS l'intention d'être représenté à l'audience par un avocat",
       "no_interpreter": "Je n'ai PAS besoin d'un interprète parlant à l'audience",

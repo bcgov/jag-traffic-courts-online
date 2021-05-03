@@ -5,6 +5,7 @@ export interface TicketDispute {
   violationTicketNumber: string;
   violationTime: string;
   violationDate: string;
+  informationCertified: boolean;
 
   // Part A
   disputant: Disputant;

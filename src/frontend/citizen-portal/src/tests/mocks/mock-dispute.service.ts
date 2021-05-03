@@ -63,6 +63,7 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
+      informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,
@@ -136,6 +137,7 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
+      informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,

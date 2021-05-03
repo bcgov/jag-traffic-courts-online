@@ -100,7 +100,7 @@
       "requests": "Please indicate if the following apply",
       "lawyer": "I intend to be represented at the hearing by a lawyer",
       "interpreter": "I require a speaking interpreter at the hearing",
-      "interpreter_Language": "Interpreter Language",
+      "interpreter_language": "Interpreter Language",
       "witness": "I intend to call a witness",
       "no_lawyer": "I do NOT intend to be represented at the hearing by a lawyer",
       "no_interpreter": "I do NOT require a speaking interpreter at the hearing",
