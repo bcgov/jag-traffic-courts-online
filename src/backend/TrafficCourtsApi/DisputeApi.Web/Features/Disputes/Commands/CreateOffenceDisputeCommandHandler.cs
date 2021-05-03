@@ -44,10 +44,10 @@ namespace DisputeApi.Web.Features.Disputes.Commands
 
             //update existing to new additional
             dispute.InformationCertified = createOffenceDispute.InformationCertified;
-            dispute.LawyerPresent = createOffenceDispute.Additional?.LawyerPresent;
+            dispute.LawyerPresent = createOffenceDispute.Additional?.LawyerPresent??false;
             dispute.InterpreterRequired = createOffenceDispute.Additional?.InterpreterRequired ?? false;
             dispute.InterpreterLanguage = createOffenceDispute.Additional?.InterpreterLanguage;
-            dispute.WitnessPresent = createOffenceDispute.Additional?.WitnessPresent;
+            dispute.WitnessPresent = createOffenceDispute.Additional?.WitnessPresent??false;
 
             //if offenceDispute exists, do update, else add new on
             var details = dispute.OffenceDisputeDetails.FirstOrDefault(m => m.OffenceNumber == createOffenceDispute.OffenceNumber);

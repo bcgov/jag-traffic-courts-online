@@ -26,9 +26,9 @@ namespace DisputeApi.Web.Features.Disputes.Mapping
                 .ForMember(dest => dest.InformationCertified, opt => opt.MapFrom(src => src.InformationCertified))
                 .ForMember(dest => dest.InterpreterLanguage, opt => opt.MapFrom(src => src.Additional == null ? null : src.Additional.InterpreterLanguage))
                 .ForMember(dest => dest.InterpreterRequired, opt => opt.MapFrom(src => src.Additional == null ? false : src.Additional.InterpreterRequired))
-                .ForMember(dest => dest.LawyerPresent, opt => opt.MapFrom(src => src.Additional == null ? null : src.Additional.LawyerPresent))
+                .ForMember(dest => dest.LawyerPresent, opt => opt.MapFrom(src => src.Additional == null ? false : src.Additional.LawyerPresent))
                 .ForMember(dest => dest.ViolationTicketNumber, opt => opt.MapFrom(src => src.ViolationTicketNumber))
-                .ForMember(dest => dest.WitnessPresent, opt => opt.MapFrom(src => src.Additional == null ? null : src.Additional.WitnessPresent))
+                .ForMember(dest => dest.WitnessPresent, opt => opt.MapFrom(src => src.Additional == null ? false : src.Additional.WitnessPresent))
                 .ForMember(dest => dest.OffenceDisputeDetails, opt => opt.MapFrom<OffenceDisputeDetailsResolver>())
                 ;
 

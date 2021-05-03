@@ -18,9 +18,9 @@ namespace TrafficCourts.Common.Contract
         public string DriverLicenseProvince { get; set; }
         public string HomePhoneNumber { get; set; }
         public string WorkPhoneNumber { get; set; }
-        public string LawyerPresent { get; set; }
+        public bool LawyerPresent { get; set; }
         public bool InterpreterRequired { get; set; }
-        public string WitnessPresent { get; set; }
+        public bool WitnessPresent { get; set; }
         public string InterpreterLanguage { get; set; }
         public ICollection<OffenceDisputeDetailContract> OffenceDisputeDetails { get; set; }
     }
