@@ -1,4 +1,4 @@
-export interface OffenceDispute {
+export interface OffenceDisputeDetail {
   id?: string;
   offenceNumber: number;
   status: number;

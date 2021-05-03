@@ -1,4 +1,4 @@
-import { OffenceDispute } from './offenceDispute.model';
+import { OffenceDisputeDetail } from './offenceDisputeDetail.model';
 
 export interface Offence {
   id?: string;
@@ -14,7 +14,7 @@ export interface Offence {
   discountDueDate?: string;
 
   // Part B
-  offenceDisputeDetail: OffenceDispute;
+  offenceDisputeDetail: OffenceDisputeDetail;
 
   // derived later on
   includeOffenceInDispute?: boolean;

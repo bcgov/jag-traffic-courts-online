@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '@core/services/toast.service';
 import { AppRoutes } from 'app/app.routes';
-import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +21,7 @@ import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 })
 export class HomeComponent implements OnInit {
   public busy: Subscription;
-  public ticket: TcoTicketDispute;
+  public ticket: TicketDispute;
 
   private tcoSurvey: Survey.Survey;
 
@@ -77,7 +77,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private handleSurveySetup(ticket: TcoTicketDispute): void {
+  private handleSurveySetup(ticket: TicketDispute): void {
     this.tcoSurvey.setValue(
       'info_violationTicketNumber',
       ticket.violationTicketNumber

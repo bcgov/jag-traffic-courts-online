@@ -1,18 +1,18 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
 
 export interface IBaseDisputeFormPage {
   form: FormGroup;
-  ticket: TcoTicketDispute;
+  ticket: TicketDispute;
 }
 
 export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
   public form: FormGroup;
-  public ticket: TcoTicketDispute;
+  public ticket: TicketDispute;
 
   constructor(
     protected route: ActivatedRoute,

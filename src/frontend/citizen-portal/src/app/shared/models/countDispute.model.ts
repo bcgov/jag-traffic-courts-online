@@ -1,12 +1,12 @@
 import { Additional } from './additional.model';
-import { OffenceDispute } from './offenceDispute.model';
+import { OffenceDisputeDetail } from './offenceDisputeDetail.model';
 
 export interface CountDispute {
   violationTicketNumber: string;
   violationTime: string;
 
   // Part B
-  offenceDisputeDetail: OffenceDispute;
+  offenceDisputeDetail: OffenceDisputeDetail;
 
   // Part C
   additional: Additional;

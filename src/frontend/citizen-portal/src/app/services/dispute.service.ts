@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { BehaviorSubject } from 'rxjs';
 
 export interface IDisputeService {
-  ticket$: BehaviorSubject<TcoTicketDispute>;
-  ticket: TcoTicketDispute;
+  ticket$: BehaviorSubject<TicketDispute>;
+  ticket: TicketDispute;
 }
 
 @Injectable({
@@ -14,23 +14,23 @@ export class DisputeService {
   private disputeSteps: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   // tslint:disable-next-line: variable-name
-  private _ticket: BehaviorSubject<TcoTicketDispute>;
-  private _tickets: BehaviorSubject<TcoTicketDispute[]>;
+  private _ticket: BehaviorSubject<TicketDispute>;
+  private _tickets: BehaviorSubject<TicketDispute[]>;
 
   constructor() {
-    this._ticket = new BehaviorSubject<TcoTicketDispute>(null);
-    this._tickets = new BehaviorSubject<TcoTicketDispute[]>(null);
+    this._ticket = new BehaviorSubject<TicketDispute>(null);
+    this._tickets = new BehaviorSubject<TicketDispute[]>(null);
   }
 
-  public get ticket$(): BehaviorSubject<TcoTicketDispute> {
+  public get ticket$(): BehaviorSubject<TicketDispute> {
     return this._ticket;
   }
 
-  public get tickets$(): BehaviorSubject<TcoTicketDispute[]> {
+  public get tickets$(): BehaviorSubject<TicketDispute[]> {
     return this._tickets;
   }
 
-  public get ticket(): TcoTicketDispute {
+  public get ticket(): TicketDispute {
     return this._ticket.value;
   }
 }

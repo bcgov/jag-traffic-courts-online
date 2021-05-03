@@ -13,12 +13,12 @@ import { Additional } from '@shared/models/additional.model';
 import { CountDispute } from '@shared/models/countDispute.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
-import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DisputeFormStateService extends AbstractFormStateService<TcoTicketDispute> {
+export class DisputeFormStateService extends AbstractFormStateService<TicketDispute> {
   public stepDisputantForm: FormGroup;
   public stepOffence1Form: FormGroup;
   public stepOffence2Form: FormGroup;
@@ -44,7 +44,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TcoTicketD
    * can't be loaded during instantiation.
    */
   public async setForm(
-    ticket: TcoTicketDispute,
+    ticket: TicketDispute,
     forcePatch: boolean = false
   ): Promise<void> {
     super.setForm(ticket, forcePatch);
@@ -54,7 +54,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TcoTicketD
    * @description
    * Convert reactive form abstract controls into JSON.
    */
-  public get json(): TcoTicketDispute {
+  public get json(): TicketDispute {
     const stepDisputant = this.stepDisputantForm.getRawValue();
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
@@ -74,7 +74,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TcoTicketD
     return ticket;
   }
 
-  public get jsonTicketDispute(): TcoTicketDispute {
+  public get jsonTicketDispute(): TicketDispute {
     const stepDisputant = this.stepDisputantForm.getRawValue();
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
@@ -82,7 +82,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TcoTicketD
     const stepAdditional = this.stepAdditionalForm.getRawValue();
     const stepOverview = this.stepOverviewForm.getRawValue();
 
-    const dispute: TcoTicketDispute = {
+    const dispute: TicketDispute = {
       ...stepOverview,
     };
     dispute.disputant = stepDisputant;
@@ -261,7 +261,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TcoTicketD
    * @description
    * Manage the conversion of JSON to reactive forms.
    */
-  protected patchForm(ticket: TcoTicketDispute) {
+  protected patchForm(ticket: TicketDispute) {
     if (!ticket) {
       return;
     }

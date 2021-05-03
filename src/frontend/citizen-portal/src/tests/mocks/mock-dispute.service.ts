@@ -1,45 +1,45 @@
-import { OffenceDispute } from '@shared/models/offenceDispute.model';
+import { OffenceDisputeDetail } from '@shared/models/offenceDisputeDetail.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
-import { TcoTicketDispute } from '@shared/models/tcoTicketDispute.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import * as faker from 'faker';
 
 import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
-  private _ticket: BehaviorSubject<TcoTicketDispute>;
-  private _tickets: BehaviorSubject<TcoTicketDispute[]>;
+  private _ticket: BehaviorSubject<TicketDispute>;
+  private _tickets: BehaviorSubject<TicketDispute[]>;
 
   constructor() {
     const ticket = this.createTicketWithoutDisputes();
     // const ticket = this.createTicketWithDispute();
 
-    this._ticket = new BehaviorSubject<TcoTicketDispute>(ticket);
-    // this._tickets = new BehaviorSubject<TcoTicketDispute[]>([ticketA, ticketB]);
+    this._ticket = new BehaviorSubject<TicketDispute>(ticket);
+    // this._tickets = new BehaviorSubject<TicketDispute[]>([ticketA, ticketB]);
   }
 
-  public get ticket$(): BehaviorSubject<TcoTicketDispute> {
+  public get ticket$(): BehaviorSubject<TicketDispute> {
     return this._ticket;
   }
 
-  public get ticket(): TcoTicketDispute {
+  public get ticket(): TicketDispute {
     return this._ticket.value;
   }
 
-  // public get tickets$(): BehaviorSubject<TcoTicketDispute[]> {
+  // public get tickets$(): BehaviorSubject<TicketDispute[]> {
   //   return this._tickets;
   // }
 
-  // public get tickets(): TcoTicketDispute[] {
+  // public get tickets(): TicketDispute[] {
   //   return this._tickets.value;
   // }
 
-  // public get httpTicket(): ApiHttpResponse<TcoTicketDispute> {
+  // public get httpTicket(): ApiHttpResponse<TicketDispute> {
   //   return new ApiHttpResponse(200, null, this._ticket.value);
   // }
 
-  private createTicketWithoutDisputes(): TcoTicketDispute {
-    const ticket: TcoTicketDispute = {
+  private createTicketWithoutDisputes(): TicketDispute {
+    const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
         faker.random
@@ -111,8 +111,8 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createTicketWithDispute(): TcoTicketDispute {
-    const ticket: TcoTicketDispute = {
+  private createTicketWithDispute(): TicketDispute {
+    const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
         faker.random
@@ -165,7 +165,7 @@ export class MockDisputeService {
       discountDueDate: null,
     };
 
-    let offenceDispute: OffenceDispute = this.createOffenceDispute(
+    let offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
       offence.offenceNumber
     );
     offenceDispute.status = 1;
@@ -278,7 +278,7 @@ export class MockDisputeService {
     };
   }
 
-  private createOffenceDispute(offenceNumber: number): OffenceDispute {
+  private createOffenceDispute(offenceNumber: number): OffenceDisputeDetail {
     return {
       status: 0,
       offenceNumber: offenceNumber,
