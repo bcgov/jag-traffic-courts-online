@@ -9,6 +9,10 @@
 
   <span class="flex-fill"></span>
 
+  <a (click)="onLanguage()" class="language" style="color: white">{{
+    languageDesc
+  }}</a>
+  <!--
   <ng-container *ngIf="fullName">
     <span class="fullName d-none d-md-block">
       {{ fullName }}
@@ -18,7 +22,9 @@
     </span>
   </ng-container>
 </mat-toolbar>
+-->
 
-<div class="ngx-progress">
-  <ng-progress></ng-progress>
-</div>
+  <div class="ngx-progress">
+    <ng-progress></ng-progress>
+  </div>
+</mat-toolbar>
