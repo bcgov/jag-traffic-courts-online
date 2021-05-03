@@ -103,7 +103,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = await sut.CreateTicketDispute(dispute);
+            var result = await sut.TicketDispute(dispute);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
@@ -121,7 +121,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = (BadRequestObjectResult) await sut.CreateTicketDispute(dispute);
+            var result = (BadRequestObjectResult) await sut.TicketDispute(dispute);
             Assert.IsNotNull(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -137,7 +137,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = await sut.CreateOffenceDispute(dispute);
+            var result = await sut.OffenceDispute(dispute);
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<OkResult>(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()),
@@ -155,7 +155,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
-            var result = (BadRequestObjectResult)await sut.CreateOffenceDispute(dispute);
+            var result = (BadRequestObjectResult)await sut.OffenceDispute(dispute);
             Assert.IsNotNull(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);

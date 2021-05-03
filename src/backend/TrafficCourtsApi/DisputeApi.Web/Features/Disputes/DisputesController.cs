@@ -30,7 +30,7 @@ namespace DisputeApi.Web.Features.Disputes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateTicketDispute([FromBody]CreateDisputeCommand createDisputeCommand)
+        public async Task<IActionResult> TicketDispute([FromBody]CreateDisputeCommand createDisputeCommand)
         {
             var response = await _mediator.Send(createDisputeCommand);
             if (response.Id == 0)
@@ -44,7 +44,7 @@ namespace DisputeApi.Web.Features.Disputes
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateOffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
+        public async Task<IActionResult> OffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
         {
 
             var response = await _mediator.Send(createOffenceDisputeCommand);
