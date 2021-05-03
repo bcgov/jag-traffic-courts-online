@@ -70,8 +70,10 @@ namespace DisputeApi.Web.Features.Disputes.Commands
             }
             _logger.LogInformation("Offence Dispute created. ");
             var result = await _disputeService.UpdateAsync(dispute);
-            //temp remove
+            //temp remove: todo: uncomment
             //await SendToQueue(_mapper.Map<DisputeContract>(result));
+            //temp
+
             return new CreateOffenceDisputeResponse {Id = result.Id};
         }
 
