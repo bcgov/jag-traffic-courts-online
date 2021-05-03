@@ -28,3 +28,38 @@ Generating kubernetes yaml file using docker-compose.yaml to launch and deploy t
     - Select the appropriate project and its namespace using comman "oc project ${LICENSE_PLATE-NAMESPACE}" i.e. oc project 0198bb-dev
 
     - After selecting correct project and namespace run command "oc process -f ${YAML_FILE_NAME} | oc create -f -
+
+# Creating Openshift Instance from scratch
+
+1.) We need to create .yaml file that can be used to create a template inside the Openshift Catalog. refer to the .github/infrastructure/traffic-courts-online-app.yml for the yaml generic template 
+
+2.) There are two ways you can deploy the .yaml file inside the Openshift to create template.
+- Using OC CLI
+- Using Openshift UI
+    
+    1.) Using OC CLI
+    - Login in the OC4 using your login token "oc login --token=${LOGIN_TOKEN} --server=https://api.silver.devops.gov.bc.ca:6443"
+
+    - Select the appropriate project and its namespace using comman "oc project ${LICENSE_PLATE-NAMESPACE}" i.e. oc project 0198bb-dev
+
+    - After selecting correct project and namespace run command "oc process -f ${YAML_FILE_NAME} | oc create -f -
+
+    -  It will create a template name 'traffic-courts-online' inside the 'From Catalog' portion.
+
+    2.) Using Openshift UI
+    - Inside the project 0198bb-NAMESPACE switch to the 'Developer' mode from 'Administrator' mode. Go to the +Add --> YAML. 
+
+    - In the Import YAML portion copy and paste the .github/infrastructure/traffic-courts-online-app.yml content and click 'create'
+
+    - Upon creation it will create a template name 'traffic-courts-online' inside the 'From Catalog' portion.
+
+3.) Deploying the template to desire namespace
+
+- Inside the Developer --> +Add --> From Catalog choose 'traffic-courts-online' template
+
+- Instantiate the template 
+
+- This will open a form with required fields needed to be enter. Enter all the blank fields and click create.
+
+- This will launch the template and will create the whole environment in the desired namespace you entered.
+
