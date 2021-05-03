@@ -23,9 +23,9 @@ namespace DisputeApi.Web.Features.Disputes.DBModel
         public string DriverLicenseProvince { get; set; }
         public string HomePhoneNumber { get; set; }
         public string WorkPhoneNumber { get; set; }
-        public string LawyerPresent { get; set; }
+        public bool LawyerPresent { get; set; }
         public bool InterpreterRequired { get; set; }
-        public string WitnessPresent { get; set; }
+        public bool WitnessPresent { get; set; }
         public string InterpreterLanguage { get; set; }
         public ICollection<OffenceDisputeDetail> OffenceDisputeDetails { get; set; }
     }

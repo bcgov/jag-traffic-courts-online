@@ -23,10 +23,10 @@ namespace DisputeApi.Web.Models
 
     public class Additional
     {
-        public string LawyerPresent { get; set; }
+        public bool LawyerPresent { get; set; }
         public bool InterpreterRequired { get; set; }
         public string InterpreterLanguage { get; set; }
-        public string WitnessPresent { get; set; }
+        public bool WitnessPresent { get; set; }
     }
 
     public class Disputant
