@@ -101,31 +101,6 @@ export class DisputeAllStepperComponent
         });
       }
     });
-
-    // const formsList = this.disputeFormStateService.forms;
-    // [
-    //   this.disputantForm,
-    //   this.offence1Form,
-    //   this.offence2Form,
-    //   this.offence3Form,
-    //   this.additionalForm,
-    //   this.overviewForm,
-    // ] = formsList as FormGroup[];
-
-    // if (this.disputeService.ticket) {
-    //   this.disputeService.ticket.offences.forEach((offence) => {
-    //     if (offence.offenceNumber === 1) {
-    //       this.offence1Exists = true;
-    //       this.offence1Form.patchValue(offence);
-    //     } else if (offence.offenceNumber === 2) {
-    //       this.offence2Exists = true;
-    //       this.offence2Form.patchValue(offence);
-    //     } else if (offence.offenceNumber === 3) {
-    //       this.offence3Exists = true;
-    //       this.offence3Form.patchValue(offence);
-    //     }
-    //   });
-    // }
   }
 
   public ngAfterViewInit(): void {

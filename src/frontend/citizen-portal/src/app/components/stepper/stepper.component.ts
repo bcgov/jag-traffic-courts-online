@@ -76,7 +76,6 @@ export class StepperComponent
 
       this.disputeFormStateService.reset();
       this.patchForm();
-      // console.log('YYYYYYYYYYYYYYYYY');
 
       let offence1Form = null;
       let offence2Form = null;
@@ -92,13 +91,11 @@ export class StepperComponent
       ] = formsList as FormGroup[];
 
       this.overviewForm.reset();
-      // console.log('XXXXXXXXaaaaXX', this.additionalForm.value);
-      this.additionalForm.patchValue(this.disputeService.ticket.additional);
-      // console.log('XXXXXXXXccccXX', this.additionalForm.value);
-      // console.log('XXXXXXXXbbbbXX', this.overviewForm.value);
+      if (this.disputeService.ticket?.additional) {
+        this.additionalForm.patchValue(this.disputeService.ticket.additional);
+      }
 
       if (this.disputeService.ticket) {
-        // console.log('XXXXXXXXXXXXX', this.disputeService.ticket);
         this.disputeService.ticket.offences.forEach((offence) => {
           if (offence.offenceNumber === this.currentDisputeOffenceNumber) {
             switch (offence.offenceNumber) {
