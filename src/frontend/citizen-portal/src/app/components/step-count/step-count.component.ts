@@ -51,7 +51,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public ngOnInit() {
     this.defaultLanguage = this.translateService.getDefaultLang();
-    this.form = this.stepControl; //this.disputeFormStateService.stepOffence1Form;
+    this.form = this.stepControl; // this.disputeFormStateService.stepOffence1Form;
     this.patchForm();
   }
 

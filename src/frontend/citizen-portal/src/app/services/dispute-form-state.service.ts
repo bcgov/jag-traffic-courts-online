@@ -287,7 +287,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepDisputantForm(): FormGroup {
     return this.formBuilder.group({
-      lastName: [null], //, [Validators.required]],
+      lastName: [null], // , [Validators.required]],
       givenNames: [null],
       mailingAddress: [null],
       postal: [null],
@@ -295,10 +295,10 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       province: [null],
       license: [null],
       provLicense: [null],
-      emailAddress: [null], //, [Validators.required, Validators.email]
-      homePhone: [null], //, [FormControlValidators.phone]],
-      workPhone: [null], //, [FormControlValidators.phone]],
-      birthdate: [null], //, []],
+      emailAddress: [null], // , [Validators.required, Validators.email]
+      homePhone: [null], // , [FormControlValidators.phone]],
+      workPhone: [null], // , [FormControlValidators.phone]],
+      birthdate: [null], // , []],
     });
   }
 
@@ -306,7 +306,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     return this.formBuilder.group({
       offenceNumber: [null],
       includeOffenceInDispute: [false],
-      offenceAgreementStatus: [null], //, [Validators.required]],
+      offenceAgreementStatus: [null], // , [Validators.required]],
       requestReduction: [false],
       requestMoreTime: [false],
       reductionReason: [null],

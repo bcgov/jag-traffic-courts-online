@@ -167,7 +167,7 @@ export class MockDisputeService {
       discountDueDate: null,
     };
 
-    let offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
+    const offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
       offence.offenceNumber
     );
     offenceDispute.status = 1;
@@ -194,7 +194,7 @@ export class MockDisputeService {
     ticket.offences.push(offence);
 
     // --------------------------
-    let soonDate =
+    const soonDate =
       faker.date.soon().getFullYear() +
       '-' +
       (faker.date.soon().getMonth() + 1) +
@@ -283,7 +283,7 @@ export class MockDisputeService {
   private createOffenceDispute(offenceNumber: number): OffenceDisputeDetail {
     return {
       status: 0,
-      offenceNumber: offenceNumber,
+      offenceNumber,
       offenceAgreementStatus: '3',
       requestReduction: false,
       requestMoreTime: false,
