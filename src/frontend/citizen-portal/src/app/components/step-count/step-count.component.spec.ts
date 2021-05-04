@@ -46,7 +46,7 @@ describe('StepCountComponent', () => {
       fixture = TestBed.createComponent(StepCountComponent);
       component = fixture.componentInstance;
       // Add the bound FormGroup to the component
-      component.form = disputeFormStateService.buildStepOffenceForm();
+      component.stepControl = disputeFormStateService.buildStepOffenceForm();
       fixture.detectChanges();
     }
   ));

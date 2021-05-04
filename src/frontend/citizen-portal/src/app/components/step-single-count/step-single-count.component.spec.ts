@@ -3,11 +3,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ConfigService } from '@config/config.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
-import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepSingleCountComponent } from './step-single-count.component';
@@ -20,21 +18,14 @@ describe('StepSingleCountComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
         NgxMaterialModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [StepSingleCountComponent],
-      providers: [
-        MockDisputeService,
-        DisputeFormStateService,
-        {
-          provide: ConfigService,
-          useClass: MockConfigService,
-        },
-      ],
+      providers: [MockDisputeService, DisputeFormStateService],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
@@ -45,7 +36,7 @@ describe('StepSingleCountComponent', () => {
       fixture = TestBed.createComponent(StepSingleCountComponent);
       component = fixture.componentInstance;
       // Add the bound FormGroup to the component
-      component.form = disputeFormStateService.buildStepAdditionalForm();
+      component.stepControl = disputeFormStateService.buildStepOffenceForm();
       fixture.detectChanges();
     }
   ));

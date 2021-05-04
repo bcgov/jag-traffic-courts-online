@@ -13,7 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ConfigService } from '@config/config.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 
-describe('StepCourtComponent', () => {
+describe('StepAdditionalComponent', () => {
   let component: StepAdditionalComponent;
   let fixture: ComponentFixture<StepAdditionalComponent>;
 
