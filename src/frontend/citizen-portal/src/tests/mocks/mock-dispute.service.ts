@@ -1,107 +1,45 @@
-import { ApiHttpResponse } from '@core/models/api-http-response.model';
-import { Dispute } from '@shared/models/dispute.model';
+import { OffenceDisputeDetail } from '@shared/models/offenceDisputeDetail.model';
+import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
-import { Ticket } from '@shared/models/ticket.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import * as faker from 'faker';
 
 import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
-  private _ticket: BehaviorSubject<Ticket>;
-  private _tickets: BehaviorSubject<Ticket[]>;
+  private _ticket: BehaviorSubject<TicketDispute>;
+  private _tickets: BehaviorSubject<TicketDispute[]>;
 
   constructor() {
-    const ticketA = this.createTicket();
-    const ticketB = this.createTicket();
+    const ticket = this.createTicketWithoutDisputes();
+    // const ticket = this.createTicketWithDispute();
 
-    this._ticket = new BehaviorSubject<Ticket>(ticketA);
-    this._tickets = new BehaviorSubject<Ticket[]>([ticketA, ticketB]);
+    this._ticket = new BehaviorSubject<TicketDispute>(ticket);
+    // this._tickets = new BehaviorSubject<TicketDispute[]>([ticketA, ticketB]);
   }
 
-  public get ticket$(): BehaviorSubject<Ticket> {
+  public get ticket$(): BehaviorSubject<TicketDispute> {
     return this._ticket;
   }
 
-  public get ticket(): Ticket {
+  public get ticket(): TicketDispute {
     return this._ticket.value;
   }
 
-  public get tickets$(): BehaviorSubject<Ticket[]> {
-    return this._tickets;
-  }
+  // public get tickets$(): BehaviorSubject<TicketDispute[]> {
+  //   return this._tickets;
+  // }
 
-  public get tickets(): Ticket[] {
-    return this._tickets.value;
-  }
+  // public get tickets(): TicketDispute[] {
+  //   return this._tickets.value;
+  // }
 
-  public get httpTicket(): ApiHttpResponse<Ticket> {
-    return new ApiHttpResponse(200, null, this._ticket.value);
-  }
+  // public get httpTicket(): ApiHttpResponse<TicketDispute> {
+  //   return new ApiHttpResponse(200, null, this._ticket.value);
+  // }
 
-  private createRsiTicket(): Ticket {
-    const ticket: Ticket = {
-      violationTicketNumber: 'EZ02000461',
-      violationTime: '09:55',
-      violationDate: '2020-09-18',
-      offences: [
-        {
-          offenceNumber: 1,
-          ticketedAmount: 109,
-          amountDue: 77.76,
-          violationDateTime: '2020-09-18T09:54',
-          offenceDescription:
-            'LOAD OR PROJECTION OVER 1M IN FRONT WITHOUT REQUIRED RED FLAG OR CLOTH',
-          dispute: null,
-          invoiceType: 'Traffic Violation Ticket',
-          vehicleDescription: 'Toyota Prius',
-          discountAmount: 25,
-          discountDueDate: faker.date.soon().toString(),
-        },
-        {
-          offenceNumber: 2,
-          ticketedAmount: 109,
-          amountDue: 89.76,
-          violationDateTime: '2020-09-18T09:54',
-          offenceDescription:
-            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED LAMP DURING TIME SPECIFIED IN MR SECTION 4.01',
-          dispute: null,
-          invoiceType: 'Traffic Violation Ticket',
-          vehicleDescription: 'Toyota Prius',
-          discountAmount: 0,
-          discountDueDate: null,
-        },
-        {
-          offenceNumber: 3,
-          ticketedAmount: 109,
-          amountDue: 87.76,
-          violationDateTime: '2020-09-18T09:54',
-          offenceDescription:
-            'LOAD OR PROJECTION OVER 1.2M IN REAR WITHOUT REQUIRED RED FLAG OR CLOTH',
-          dispute: null,
-          invoiceType: 'Traffic Violation Ticket',
-          vehicleDescription: 'Ford Focus',
-          discountAmount: 25,
-          discountDueDate: faker.date.soon().toString(),
-        },
-      ],
-    };
-
-    let balance = 0;
-    ticket.offences.forEach((offence) => {
-      offence.statusCode = 'UNPAID';
-      offence.statusDesc = 'Outstanding Balance';
-      offence.notes = '';
-      balance += offence.amountDue;
-    });
-
-    // ------------------------------------
-    ticket.outstandingBalance = balance;
-
-    return ticket;
-  }
-
-  private createTicket(): Ticket {
-    const ticket: Ticket = {
+  private createTicketWithoutDisputes(): TicketDispute {
+    const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
         faker.random
@@ -125,10 +63,94 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
+      informationCertified: false,
+      disputant: null,
       offences: [],
+      additional: null,
     };
 
-    let balance = 0;
+    // --------------------------
+    let offence: Offence = {
+      offenceNumber: 2,
+      ticketedAmount: 126,
+      amountDue: 87.56,
+      violationDateTime: faker.date.soon().toString(),
+      offenceDescription:
+        'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
+      offenceDisputeDetail: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 0,
+      discountDueDate: null,
+    };
+
+    ticket.offences.push(offence);
+
+    // --------------------------
+    const soonDate =
+      faker.date.soon().getFullYear() +
+      '-' +
+      (faker.date.soon().getMonth() + 1) +
+      '-' +
+      faker.date.soon().getDate();
+
+    offence = {
+      offenceNumber: 3,
+      ticketedAmount: 167,
+      amountDue: 142,
+      violationDateTime: faker.date.recent().toString(),
+      offenceDescription: 'Operate Vehicle Without Seatbelts',
+      offenceDisputeDetail: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 25,
+      discountDueDate: soonDate,
+    };
+
+    ticket.offences.push(offence);
+
+    return ticket;
+  }
+
+  private createTicketWithDispute(): TicketDispute {
+    const ticket: TicketDispute = {
+      violationTicketNumber:
+        'EA' +
+        faker.random
+          .number({
+            min: 10000000,
+            max: 99999999,
+          })
+          .toString(),
+      violationTime:
+        faker.random
+          .number({
+            min: 10,
+            max: 23,
+          })
+          .toString() +
+        ':' +
+        faker.random
+          .number({
+            min: 10,
+            max: 59,
+          })
+          .toString(),
+      violationDate: null,
+      informationCertified: false,
+      disputant: null,
+      offences: [],
+      additional: null,
+    };
+
+    ticket.disputant = this.createDisputant();
+
+    ticket.additional = {
+      lawyerPresent: false,
+      interpreterRequired: true,
+      interpreterLanguage: 'Spanish',
+      witnessPresent: false,
+    };
 
     // --------------------------
     let offence: Offence = {
@@ -138,28 +160,20 @@ export class MockDisputeService {
       violationDateTime: faker.date.soon().toString(),
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      dispute: null,
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 25,
-      discountDueDate: faker.date.soon().toString(),
+      discountAmount: 0,
+      discountDueDate: null,
     };
 
-    let dispute: Dispute = this.createDispute(
-      ticket.violationTicketNumber,
+    const offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
       offence.offenceNumber
     );
-    dispute.interpreterRequired = true;
-    dispute.interpreterLanguage = 'Spanish';
-    dispute.informationCertified = true;
-    offence.dispute = dispute;
+    offenceDispute.status = 1;
+    offenceDispute.informationCertified = true;
 
-    offence.statusCode = 'DISPUTE';
-    offence.statusDesc = 'Dispute Submitted';
-    offence.notes =
-      'The dispute has been filed. An email with the court information will be sent soon.';
-
-    balance += offence.amountDue;
+    offence.offenceDisputeDetail = offenceDispute;
 
     ticket.offences.push(offence);
 
@@ -167,46 +181,61 @@ export class MockDisputeService {
     offence = {
       offenceNumber: 2,
       ticketedAmount: 126,
-      amountDue: 0,
+      amountDue: 126,
       violationDateTime: faker.date.recent().toString(),
-      offenceDescription:
-        'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      dispute: null,
+      offenceDescription: 'Operate Vehicle Without Seatbelts',
+      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
     };
 
-    offence.statusCode = 'PAID';
-    offence.statusDesc = 'Paid';
-    offence.notes = '';
+    ticket.offences.push(offence);
 
-    balance += offence.amountDue;
+    // --------------------------
+    const soonDate =
+      faker.date.soon().getFullYear() +
+      '-' +
+      (faker.date.soon().getMonth() + 1) +
+      '-' +
+      faker.date.soon().getDate();
+
+    offence = {
+      offenceNumber: 3,
+      ticketedAmount: 167,
+      amountDue: 142,
+      violationDateTime: faker.date.recent().toString(),
+      offenceDescription:
+        'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
+      offenceDisputeDetail: null,
+      invoiceType: 'Traffic Violation Ticket',
+      vehicleDescription: 'Toyota Prius',
+      discountAmount: 25,
+      discountDueDate: soonDate,
+    };
 
     ticket.offences.push(offence);
 
     // --------------------------
+    /*
     offence = {
       offenceNumber: 3,
-      ticketedAmount: 167,
-      amountDue: 167,
+      ticketedAmount: 126,
+      amountDue: 0,
       violationDateTime: faker.date.recent().toString(),
-      offenceDescription: 'Operate Vehicle Without Seatbelts',
-      dispute: null,
+      offenceDescription:
+        'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
+      offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 25,
-      discountDueDate: faker.date.soon().toString(),
+      discountAmount: 0,
+      discountDueDate: null,
     };
 
-    offence.statusCode = 'UNPAID';
-    offence.statusDesc = 'Outstanding Balance';
-    offence.notes = '';
-
-    balance += offence.amountDue;
-
     ticket.offences.push(offence);
+*/
+    /*
     // --------------------------
     offence = {
       offenceNumber: 4,
@@ -214,7 +243,7 @@ export class MockDisputeService {
       amountDue: 126,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Using Electronic Device While Driving',
-      dispute: null,
+      offenceDispute: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Ford Focus',
       discountAmount: 25,
@@ -225,45 +254,42 @@ export class MockDisputeService {
       ticket.violationTicketNumber,
       offence.offenceNumber
     );
+    dispute.status = 2;
     dispute.informationCertified = true;
     offence.dispute = dispute;
 
-    offence.statusCode = 'COURT';
-    offence.statusDesc = 'Dispute In Progress';
-    offence.notes =
-      'A court date has been set for this dispute. Check your email for more information.';
-
-    balance += offence.amountDue;
-
-    ticket.offences.push(offence);
-
-    // ------------------------------------
-    ticket.outstandingBalance = balance;
+    ticket.offences.push(offence);*/
 
     return ticket;
   }
 
-  private createDispute(
-    violationTicketNumber: string,
-    offenceNumber: number
-  ): Dispute {
-    const dispute: Dispute = {
-      violationTicketNumber,
-      offenceNumber,
+  private createDisputant(): Disputant {
+    return {
+      lastName: faker.name.lastName(),
+      givenNames: faker.name.firstName(),
+      mailingAddress: faker.address.streetAddress(),
+      city: faker.address.city(),
+      province: faker.address.state(),
+      postal: 'V8R3E3',
+      birthdate: faker.date.past().toDateString(),
       emailAddress: faker.internet.email(),
-      lawyerPresent: null,
-      interpreterRequired: null,
-      interpreterLanguage: null,
-      witnessPresent: null,
-      informationCertified: null,
-      offenceAgreementStatus: null,
-      requestReduction: null,
-      requestMoreTime: null,
+      license: '234234',
+      provLicense: 'BC',
+      homePhone: faker.phone.phoneNumber(),
+      workPhone: faker.phone.phoneNumber(),
+    };
+  }
+
+  private createOffenceDispute(offenceNumber: number): OffenceDisputeDetail {
+    return {
+      status: 0,
+      offenceNumber,
+      offenceAgreementStatus: '3',
+      requestReduction: false,
+      requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
-      status: null,
+      informationCertified: false,
     };
-
-    return dispute;
   }
 }

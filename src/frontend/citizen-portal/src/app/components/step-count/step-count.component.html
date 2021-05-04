@@ -1,0 +1,203 @@
+<app-page>
+  <app-page-header>
+    <ng-container header
+      >{{ "stepper.count.sub_heading_1" | translate }} #{{
+        offenceNumber.value
+      }}
+      {{ "stepper.count.sub_heading_2" | translate }}</ng-container
+    >
+    <ng-container subHeader>
+      <div class="row">
+        <div class="col-4 mb-2">
+          {{ "stepper.count.desc_of_offence" | translate }}
+        </div>
+        <div class="col-8 text-right mb-2">
+          {{ offenceDescription.value }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">
+          {{ "stepper.count.offence_amount" | translate }}
+        </div>
+        <div class="col-6 text-right mb-2">
+          {{
+            ticketedAmount.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-2">
+          {{ "stepper.count.amount_due" | translate }}
+        </div>
+        <div class="col-6 text-right mb-2">
+          {{
+            amountDue.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}
+        </div>
+      </div>
+      <div class="row" *ngIf="discountAmount.value > 0">
+        <div class="col-6 mb-2">
+          {{ "stepper.count.discount_if_paid_by" | translate }}
+          {{
+            discountDueDate.value | date: "MMM dd YYYY":"+0200":defaultLanguage
+          }})
+        </div>
+        <div class="col-6 text-right mb-2">
+          {{
+            discountAmount.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}
+        </div>
+      </div>
+    </ng-container>
+  </app-page-header>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-2">
+      <app-alert type="warning">
+        <ng-container #alertContent class="alert-content">
+          <div class="row">
+            <div class="col">
+              <!--
+              <mat-checkbox
+                formControlName="includeOffenceInDispute"
+                color="primary"
+                class="w-100 pt-2"
+                ><strong>I wish to dispute this offence</strong></mat-checkbox
+              >-->
+              <mat-slide-toggle
+                formControlName="includeOffenceInDispute"
+                color="primary"
+                ><strong>{{
+                  "stepper.count.dispute_yes_no" | translate
+                }}</strong></mat-slide-toggle
+              >
+            </div>
+          </div>
+        </ng-container>
+      </app-alert>
+    </section>
+
+    <section *ngIf="includeOffenceInDispute.value">
+      <div class="row">
+        <div class="col">
+          <label>{{ "stepper.count.for_this_offence" | translate }}:</label
+          ><br />
+          <mat-radio-group
+            formControlName="offenceAgreementStatus"
+            class="w-100"
+          >
+            <mat-radio-button value="1"
+              ><span class="wrap-mat-radio-label">{{
+                "stepper.count.offence_agreement_1" | translate
+              }}</span></mat-radio-button
+            >
+            <mat-radio-button value="2"
+              ><span class="wrap-mat-radio-label">{{
+                "stepper.count.offence_agreement_2" | translate
+              }}</span></mat-radio-button
+            >
+            <mat-radio-button value="3">
+              <span class="wrap-mat-radio-label">
+                {{ "stepper.count.offence_agreement_3" | translate }}
+              </span>
+            </mat-radio-button>
+            <mat-error
+              *ngIf="
+                (offenceAgreementStatus.dirty ||
+                  offenceAgreementStatus.touched) &&
+                offenceAgreementStatus.invalid &&
+                offenceAgreementStatus.errors.required
+              "
+            >
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          offenceAgreementStatus.value === '1' ||
+          offenceAgreementStatus.value === '2'
+        "
+      >
+        <div class="col">
+          <label>{{ "stepper.count.requests" | translate }}</label>
+          <mat-checkbox
+            formControlName="requestReduction"
+            color="primary"
+            class="w-100"
+            >{{ "stepper.count.requestReduction" | translate }}</mat-checkbox
+          >
+          <mat-checkbox
+            formControlName="requestMoreTime"
+            color="primary"
+            class="w-100"
+            >{{ "stepper.count.requestMoreTime" | translate }}</mat-checkbox
+          >
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="offenceAgreementStatus.value === '1' && requestReduction.value"
+      >
+        <div class="col">
+          <mat-form-field class="w-100">
+            <label>
+              {{ "stepper.count.requestReductionReasonLabel" | translate }}
+            </label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+              formControlName="reductionReason"
+            ></textarea>
+            <mat-error *ngIf="reductionReason.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="offenceAgreementStatus.value === '1' && requestMoreTime.value"
+      >
+        <div class="col">
+          <mat-form-field class="w-100">
+            <label>
+              {{ "stepper.count.requestMoreTimeReasonLabel" | translate }}
+            </label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+              formControlName="moreTimeReason"
+            ></textarea>
+            <mat-error *ngIf="moreTimeReason.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    (save)="onSubmit()"
+    (back)="onBack()"
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
+    [hasSecondaryAction]="true"
+  ></app-page-footer>
+</app-page>

@@ -7,13 +7,11 @@ import { SurveyJson } from 'tests/survey';
 import * as Survey from 'survey-angular';
 import * as widgets from 'surveyjs-widgets';
 import { PhonePipe } from '@shared/pipes/phone.pipe';
-import { Ticket } from '@shared/models/ticket.model';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeRoutes } from '@dispute/dispute.routes';
+import { AppRoutes } from 'app/app.routes';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +21,7 @@ import { DisputeRoutes } from '@dispute/dispute.routes';
 })
 export class HomeComponent implements OnInit {
   public busy: Subscription;
-  public ticket: Ticket;
+  public ticket: TicketDispute;
 
   private tcoSurvey: Survey.Survey;
 
@@ -79,7 +77,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private handleSurveySetup(ticket: Ticket): void {
+  private handleSurveySetup(ticket: TicketDispute): void {
     this.tcoSurvey.setValue(
       'info_violationTicketNumber',
       ticket.violationTicketNumber
@@ -126,31 +124,29 @@ export class HomeComponent implements OnInit {
     if (!!this.tcoSurvey.isConfirming) {
       return;
     }
-    this.tcoSurvey.isConfirming = true;
+    // this.tcoSurvey.isConfirming = true;
 
-    const data: DialogOptions = {
-      title: 'Submit Dispute',
-      message:
-        'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
-      actionText: 'Submit Dispute',
-    };
+    // const data: DialogOptions = {
+    //   title: 'Submit Dispute',
+    //   message:
+    //     'When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?',
+    //   actionText: 'Submit Dispute',
+    // };
 
-    this.dialog
-      .open(ConfirmDialogComponent, { data })
-      .afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          const source = timer(1000);
-          this.busy = source.subscribe((val) => {
-            this.tcoSurvey.doComplete();
-            this.toastService.openSuccessToast('Dispute has been submitted');
-            this.router.navigate([
-              DisputeRoutes.routePath(DisputeRoutes.SUCCESS),
-            ]);
-          });
-        } else {
-          this.tcoSurvey.isConfirming = false;
-        }
-      });
+    // this.dialog
+    //   .open(ConfirmDialogComponent, { data })
+    //   .afterClosed()
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       const source = timer(1000);
+    //       this.busy = source.subscribe((val) => {
+    this.tcoSurvey.doComplete();
+    this.toastService.openSuccessToast('Dispute has been submitted');
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
+    //     });
+    //   } else {
+    //     this.tcoSurvey.isConfirming = false;
+    //   }
+    // });
   }
 }

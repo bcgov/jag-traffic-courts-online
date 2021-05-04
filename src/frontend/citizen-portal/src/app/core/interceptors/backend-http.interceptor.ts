@@ -25,9 +25,19 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (environment.useMockServices) {
-      const currentRoutePath = RouteUtils.currentRoutePath(request.url);
+    const currentRoutePath = RouteUtils.currentRoutePath(request.url);
 
+    // handle translations
+    if (currentRoutePath.includes('json')) {
+      return next.handle(request);
+
+      // TODO: remove later
+      // for now, lookups always use mock
+    } else if (currentRoutePath === 'lookups') {
+      return this.handleLookupsRequests(request.method);
+    }
+
+    if (environment.useMockServices) {
       if (
         currentRoutePath !== 'tickets' &&
         currentRoutePath !== 'disputes' &&

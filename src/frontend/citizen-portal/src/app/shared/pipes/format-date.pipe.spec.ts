@@ -7,7 +7,7 @@ describe('DatePipe', () => {
   });
 
   it('should format date', () => {
-    const dateStr = '01/01/2020';
+    const dateStr = '2020-01-01';
     const pipe = new FormatDatePipe();
     const after = pipe.transform(dateStr);
     expect(after).toBe('1 Jan 2020');

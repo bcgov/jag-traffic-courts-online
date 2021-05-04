@@ -1,0 +1,93 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>{{
+      "stepper.additional.heading" | translate
+    }}</ng-container>
+    <ng-container subHeader>{{
+      "stepper.additional.sub_heading" | translate
+    }}</ng-container>
+  </app-page-header>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section>
+      <h3>{{ "stepper.additional.requests" | translate }}:</h3>
+      <div class="row">
+        <div class="col">
+          <mat-checkbox
+            class="mr-4 mb-2"
+            color="primary"
+            formControlName="lawyerPresent"
+          >
+            {{ "stepper.additional.lawyer" | translate }}
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-checkbox
+            class="mr-4 mb-2"
+            color="primary"
+            formControlName="interpreterRequired"
+          >
+            {{ "stepper.additional.interpreter" | translate }}
+          </mat-checkbox>
+          <!--
+          <mat-error *ngIf="formStepCourt.hasError('requiredIfTrue')">
+            {{ 'error.required' | translate }}
+          </mat-error>-->
+        </div>
+      </div>
+
+      <div class="row" *ngIf="interpreterRequired.value">
+        <div class="col">
+          <mat-form-field class="w-100">
+            <mat-label>{{
+              "stepper.additional.interpreter_language" | translate
+            }}</mat-label>
+            <mat-select formControlName="interpreterLanguage">
+              <mat-option
+                *ngFor="let language of languages"
+                [value]="language.code"
+              >
+                {{ language.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-checkbox
+            class="mr-4 mb-2"
+            color="primary"
+            formControlName="witnessPresent"
+          >
+            {{ "stepper.additional.witness" | translate }}
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <app-alert type="warning" icon="warning">
+            <ng-container #alertContent class="alert-content">
+              {{ "stepper.additional.note" | translate }}
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    (save)="onSubmit()"
+    (back)="onBack()"
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
+    [hasSecondaryAction]="true"
+  ></app-page-footer>
+</app-page>

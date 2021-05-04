@@ -1,21 +1,23 @@
-import { Dispute } from './dispute.model';
+import { OffenceDisputeDetail } from './offenceDisputeDetail.model';
 
 export interface Offence {
-  invoiceType: string;
+  id?: string;
   offenceNumber: number;
-  offenceDescription: string;
-  violationDateTime: string;
-  vehicleDescription: string;
+  invoiceType?: string;
+  offenceDescription?: string;
+  violationDateTime?: string;
+  vehicleDescription?: string;
 
-  ticketedAmount: number;
-  amountDue: number;
-  discountAmount: number;
-  discountDueDate: string;
+  ticketedAmount?: number;
+  amountDue?: number;
+  discountAmount?: number;
+  discountDueDate?: string;
 
-  dispute: Dispute;
+  // Part B
+  offenceDisputeDetail: OffenceDisputeDetail;
 
   // derived later on
-  statusCode?: string;
-  statusDesc?: string;
-  notes?: string;
+  includeOffenceInDispute?: boolean;
+  offenceStatus?: number;
+  offenceStatusDesc?: string;
 }

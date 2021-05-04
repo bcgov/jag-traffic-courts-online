@@ -1,0 +1,94 @@
+<app-page>
+  <app-tco-page-header>
+    <ng-container header>Your Violation Ticket Listing</ng-container>
+    <ng-container subHeader>Here are your active tickets</ng-container>
+  </app-tco-page-header>
+
+  <!--
+  <section class="mb-4">
+    <div class="pb-3 text-right">
+      <button
+        mat-stroked-button
+        color="primary"
+        class="large"
+        style="background-color: #003366; color: white"
+        routerLink="/dispute/find"
+      >
+        I do not see my ticket
+      </button>
+    </div>
+    <table>
+      <tr class="d-flex p-2" *ngFor="let row of disputes; let i = index">
+        <th scope="row" class="col-sm-2">
+          <small class="d-block text-muted">Ticket Type</small>
+          <div class="d-block ml-2">
+            {{ row.ticketType }}
+          </div>
+        </th>
+        <th scope="row" class="col-sm-4">
+          <small class="d-block text-muted">Ticket Number</small>
+          {{ row.ticket?.violationTicketNumber | default }}
+          <small class="d-block ml-2"
+            >Received: {{ row.ticket?.violationDate  | default }} at
+            {{ row.ticket?.violationTime | default }}
+          </small>
+        </th>
+        <td class="col">
+          <small class="d-block text-muted">Status</small>
+          <small
+            [ngClass]="{
+              'text-danger': row.statusCode === 'INP',
+              'text-primary': row.statusCode === 'NEW',
+              'text-success': row.statusCode === 'ACT',
+              'text-info': row.statusCode === 'PAID'
+            }"
+            >{{ row.status }}
+            <mat-icon *ngIf="row.statusCode === 'INP'">warning</mat-icon></small
+          >
+        </td>
+        <td class="col">
+          <small class="d-block text-muted" *ngIf="row.note">Note</small>
+          <small
+            [ngClass]="{
+              'text-danger': row.statusCode === 'INP',
+              'text-primary': row.statusCode === 'NEW',
+              'text-success': row.statusCode === 'ACT',
+              'text-info': row.statusCode === 'PAID'
+            }"
+            >{{ row.note }}</small
+          >
+        </td>
+        <td class="col text-right">
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="row.statusCode === 'ACT'"
+            (click)="onSelect(row)"
+          >
+            <mat-icon inline="true">preview</mat-icon>
+            View
+          </button>
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="row.statusCode === 'INP'"
+            (click)="onSelect(row)"
+          >
+            <mat-icon inline="true">read_more</mat-icon>
+            Continue
+          </button>
+          <button
+            mat-stroked-button
+            color="primary"
+            *ngIf="row.statusCode === 'NEW'"
+            (click)="onSelectSurvey(row)"
+          >
+            <mat-icon inline="true">read_more</mat-icon>
+            Start
+          </button>
+        </td>
+      </tr>
+    </table>
+  </section>
+-->
+</app-page>

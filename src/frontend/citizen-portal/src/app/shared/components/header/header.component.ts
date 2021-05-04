@@ -7,8 +7,9 @@ import {
   OnInit,
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
-import { User } from 'app/modules/auth/models/user.model';
-import { AuthService } from 'app/modules/auth/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
+import { User } from '@shared/models/user.model';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -22,12 +23,19 @@ export class HeaderComponent implements OnInit {
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
 
+  public languageCode: string;
+  public languageDesc: string;
+
   constructor(
     protected authService: AuthService,
-    protected logger: LoggerService
+    protected logger: LoggerService,
+    private translateService: TranslateService
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
+
+    this.languageCode = this.translateService.getDefaultLang();
+    this.onLanguage();
   }
 
   public async ngOnInit() {
@@ -48,5 +56,24 @@ export class HeaderComponent implements OnInit {
       `${window.location.protocol}//${window.location.host}`
     );
     return Promise.resolve();
+  }
+
+  private toggleLanguage(
+    lang: string
+  ): { languageCode: string; languageDesc: string } {
+    const toggleLang = lang === 'en' ? 'fr' : 'en';
+    return {
+      languageCode: toggleLang,
+      languageDesc: toggleLang === 'en' ? 'English' : 'Français',
+    };
+  }
+
+  public onLanguage(): void {
+    this.translateService.setDefaultLang(this.languageCode);
+    const { languageCode, languageDesc } = this.toggleLanguage(
+      this.languageCode
+    );
+    this.languageCode = languageCode;
+    this.languageDesc = languageDesc;
   }
 }

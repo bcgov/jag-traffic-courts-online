@@ -1,4 +1,4 @@
-@import 'palette';
+@import "palette";
 
 .mat-toolbar {
   height: 70px;
@@ -12,6 +12,12 @@
     }
   }
 
+  .language {
+    font-size: 0.8rem;
+    color: white;
+    cursor: pointer;
+  }
+
   .fullName {
     font-size: 0.8rem;
   }
@@ -19,12 +25,12 @@
   .mat-icon {
     cursor: pointer;
     font-size: 20px;
-    margin-top: .4em;
+    margin-top: 0.4em;
     user-select: none;
   }
 
   .logout {
     margin-left: 1.2em;
-    margin-right: .2em;
+    margin-right: 0.2em;
   }
 }

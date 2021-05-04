@@ -3,35 +3,32 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ConfirmDialogComponent', () => {
   let component: ConfirmDialogComponent;
   let fixture: ComponentFixture<ConfirmDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule(
-      {
-        imports: [
-          NgxMaterialModule
-        ],
-        declarations: [
-          ConfirmDialogComponent
-        ],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [NgxMaterialModule, TranslateModule.forRoot()],
+        declarations: [ConfirmDialogComponent],
         providers: [
           {
             provide: MatDialogRef,
             useValue: {
-              close: (dialogResult: any) => { }
-            }
+              close: (dialogResult: any) => {},
+            },
           },
           {
             provide: MAT_DIALOG_DATA,
-            useValue: {}
+            useValue: {},
           },
-        ]
-      }
-    ).compileComponents();
-  }));
+        ],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ConfirmDialogComponent);

@@ -1,0 +1,327 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>{{
+      "stepper.overview.heading" | translate
+    }}</ng-container>
+    <ng-container subHeader>{{
+      "stepper.overview.sub_heading" | translate
+    }}</ng-container>
+  </app-page-header>
+
+  <section class="mb-2" *ngIf="disputantInfo && disputantInfo.lastName">
+    <div class="page-subheader">
+      <h2 class="title">
+        {{ "stepper.overview.disputant_information" | translate }}
+      </h2>
+    </div>
+    <div class="row">
+      <div class="col-6">{{ "stepper.disputant.lastName" | translate }}</div>
+      <div class="col-6 text-right mb-2">
+        {{ disputantInfo.lastName | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.given_names" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.givenNames | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.driver_license_number" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.license | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.driver_license_province" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.provLicense | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.home_phone_number" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.homePhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.work_phone_number" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.workPhone | phone | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.email_address" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.emailAddress | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.birthdate" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{
+          disputantInfo.birthdate
+            | date: "MMM dd YYYY":"+0200":defaultLanguage
+            | default
+        }}
+      </div>
+    </div>
+    <div class="page-subheader mt-2 mb-0">
+      <strong class="title">{{
+        "stepper.overview.address_information" | translate
+      }}</strong>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.mailing_address" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.mailingAddress | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">{{ "stepper.disputant.city" | translate }}</div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.city | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.province" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.province | default }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-2">
+        {{ "stepper.disputant.postal_code" | translate }}
+      </div>
+      <div class="col-6 text-right">
+        {{ disputantInfo.postal | postal | default }}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="page-subheader">
+      <h2 class="title">
+        {{ "stepper.overview.count_information" | translate }}
+      </h2>
+    </div>
+    <ng-container *ngFor="let offence of offenceFormsList; let i = index">
+      <ng-container *ngIf="offence.offenceNumber">
+        <div class="offence-header-section">
+          <div class="row page-subheader mb-0">
+            <div class="col-4 text-left">
+              {{ "stepper.overview.count" | translate }} #{{
+                offence.offenceNumber
+              }}
+            </div>
+            <div class="col-8 text-right">{{ offence.offenceDescription }}</div>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              {{ "stepper.count.offence_amount" | translate }}
+            </div>
+            <div class="col-7 text-right">
+              {{
+                offence.ticketedAmount
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              {{ "stepper.count.amount_due" | translate }}
+            </div>
+            <div class="col-7 text-right">
+              {{
+                offence.amountDue
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
+            </div>
+          </div>
+          <div class="row" *ngIf="offence.discountAmount > 0">
+            <div class="col-8">
+              {{ "stepper.count.discount_if_paid_by" | translate }}
+              {{
+                offence.discountDueDate
+                  | date: "MMM dd YYYY":"+0200":defaultLanguage
+              }})
+            </div>
+            <div class="col-4 text-right">
+              {{
+                offence.discountAmount
+                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+              }}
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col">
+            <ul>
+              <li *ngIf="offence.includeOffenceInDispute === false">
+                {{ "stepper.overview.offence_not_included" | translate }}
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '1'">
+                {{ "stepper.count.offence_agreement_1" | translate }}
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '2'">
+                {{ "stepper.count.offence_agreement_2" | translate }}
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '3'">
+                {{ "stepper.count.offence_agreement_3" | translate }}
+              </li>
+              <li *ngIf="offence.offenceAgreementStatus === '4'">
+                {{ "stepper.overview.offence_dispute" | translate }}
+              </li>
+              <ng-container
+                *ngIf="
+                  offence.offenceAgreementStatus === '1' ||
+                  offence.offenceAgreementStatus === '2'
+                "
+              >
+                <li *ngIf="offence.requestReduction">
+                  {{ "stepper.count.requestReduction" | translate }}
+                </li>
+                <div *ngIf="offence.requestReduction">
+                  {{ offence.reductionReason }}
+                </div>
+                <li *ngIf="offence.requestMoreTime">
+                  {{ "stepper.count.requestMoreTime" | translate }}
+                </li>
+                <div *ngIf="offence.requestMoreTime">
+                  {{ offence.moreTimeReason }}
+                </div>
+              </ng-container>
+            </ul>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </section>
+
+  <section class="mb-2" *ngIf="additionalInfo">
+    <div class="page-subheader">
+      <h2 class="title">
+        {{ "stepper.overview.additional_information" | translate }}
+      </h2>
+    </div>
+    <div class="row">
+      <div class="col mb-2">
+        <ul>
+          <ng-container
+            *ngIf="additionalInfo.lawyerPresent; else noLawyerPresent"
+          >
+            <li>
+              {{ "stepper.additional.lawyer" | translate }}
+            </li>
+          </ng-container>
+          <ng-template #noLawyerPresent>
+            <li>
+              {{ "stepper.additional.no_lawyer" | translate }}
+            </li>
+          </ng-template>
+          <ng-container
+            *ngIf="
+              additionalInfo.interpreterRequired;
+              else noInterpreterRequired
+            "
+          >
+            <li>
+              {{ "stepper.additional.interpreter" | translate }} -
+              {{
+                additionalInfo.interpreterLanguage
+                  | configCode: "languages"
+                  | default
+              }}
+            </li>
+          </ng-container>
+          <ng-template #noInterpreterRequired>
+            <li>
+              {{ "stepper.additional.no_interpreter" | translate }}
+            </li>
+          </ng-template>
+          <ng-container
+            *ngIf="additionalInfo.witnessPresent; else noWitnessPresent"
+          >
+            <li>
+              {{ "stepper.additional.witness" | translate }}
+            </li>
+          </ng-container>
+          <ng-template #noWitnessPresent>
+            <li>
+              {{ "stepper.additional.no_witness" | translate }}
+            </li>
+          </ng-template>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-2">
+      <div class="row">
+        <div class="col">
+          <mat-checkbox
+            class="mr-4 mb-2"
+            color="primary"
+            formControlName="informationCertified"
+          >
+            {{ "stepper.overview.certify" | translate }}
+            <mat-error
+              *ngIf="
+                (informationCertified.dirty || informationCertified.touched) &&
+                informationCertified.invalid &&
+                informationCertified.errors.required
+              "
+            >
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-checkbox>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <section class="mb-2">
+    <div class="row">
+      <div class="col">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>{{ "stepper.overview.note_heading" | translate }}</strong
+            ><br />
+            {{ "stepper.overview.note_detail" | translate }}
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    [saveButtonLabel]="nextBtnLabel" -->
+  <app-page-footer
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
+    [hasSecondaryAction]="true"
+    (save)="onSubmit()"
+    (back)="onBack()"
+  ></app-page-footer>
+</app-page>

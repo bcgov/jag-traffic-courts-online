@@ -1,0 +1,24 @@
+@import "palette";
+@import "variables";
+
+.text-right,
+.text-left {
+  font-weight: bold;
+}
+
+.page-subheader {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+
+  .title {
+    color: $h2-colour;
+    display: flex;
+    margin-bottom: 0.05rem;
+  }
+}
+
+.offence-header-section {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}

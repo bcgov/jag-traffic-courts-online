@@ -82,6 +82,30 @@ export class FormUtilsService {
 
   /**
    * @description
+   * Check for the required validator applied to a FormControl,
+   * FormGroup, or FormArray.
+   *
+   * @example
+   * isRequired('controlName')
+   * isRequired('groupName')
+   * isRequired('groupName.controlName')
+   * isRequired('arrayName')
+   * isRequired('arrayName[#].groupName.controlName')
+   */
+  public isRequired(form: FormGroup, path: string): boolean {
+    const control = form.get(path);
+
+    if (control.validator) {
+      const validator = control.validator({} as AbstractControl);
+      if (validator && validator.required) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * @description
    * Get all the errors contained within a form.
    */
   public getFormErrors(

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'app/modules/auth/models/user.model';
+import { User } from '@shared/models/user.model';
 import { from, Observable, of } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -25,15 +25,15 @@ export class MockAuthService {
 
   public async getUser(forceReload?: boolean): Promise<User> {
     return Promise.resolve({
-      firstName: 'mockFirstName',
-      lastName: 'mockLastName',
+      firstName: 'John',
+      lastName: 'Brown',
     });
   }
 
   public getUser$(forceReload?: boolean): Observable<User> {
     return of({
-      firstName: 'mockFirstName',
-      lastName: 'mockLastName',
+      firstName: 'John',
+      lastName: 'Brown',
     });
   }
 }

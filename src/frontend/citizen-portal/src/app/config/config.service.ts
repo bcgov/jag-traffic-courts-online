@@ -1,13 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Configuration, Config, ProvinceConfig } from '@config/config.model';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { UtilsService, SortWeight } from '@core/services/utils.service';
-
 export interface IConfigService extends Configuration {
   load(): Observable<Configuration>;
 }
@@ -18,10 +17,55 @@ export interface IConfigService extends Configuration {
 export class ConfigService implements IConfigService {
   protected configuration: Configuration;
 
+  private disputeSubmitted: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
+  private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
+  private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
+  private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>(
+    ''
+  );
+
   constructor(
     protected apiResource: ApiResource,
     protected utilsService: UtilsService
   ) {}
+
+  public get dispute_submitted$(): BehaviorSubject<string> {
+    return this.disputeSubmitted;
+  }
+
+  public get dispute_submitted(): string {
+    return this.disputeSubmitted.value;
+  }
+
+  public get dispute_validation_error$(): BehaviorSubject<string> {
+    return this.disputeValidationError;
+  }
+
+  public get dispute_validation_error(): string {
+    return this.disputeValidationError.value;
+  }
+
+  public get ticket_error$(): BehaviorSubject<string> {
+    return this.ticketError;
+  }
+
+  public get ticket_error(): string {
+    return this.ticketError.value;
+  }
+
+  public get dispute_create_error$(): BehaviorSubject<string> {
+    return this.disputeCreateError;
+  }
+
+  public get dispute_create_error(): string {
+    return this.disputeCreateError.value;
+  }
 
   public get provinces(): ProvinceConfig[] {
     return [...this.configuration.provinces].sort(this.sortConfigByName());
@@ -29,6 +73,10 @@ export class ConfigService implements IConfigService {
 
   public get courtLocations(): Config<string>[] {
     return [...this.configuration.courtLocations].sort(this.sortConfigByName());
+  }
+
+  public get languages(): Config<string>[] {
+    return [...this.configuration.languages].sort(this.sortConfigByName());
   }
 
   public get countries(): Config<string>[] {
