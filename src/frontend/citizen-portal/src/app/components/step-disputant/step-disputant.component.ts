@@ -23,9 +23,9 @@ export class StepDisputantComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
-  public previousButtonIcon: string = 'close';
-  public previousButtonKey: string = 'stepper.cancel';
-  public saveButtonKey: string = 'stepper.next';
+  public previousButtonIcon = 'close';
+  public previousButtonKey = 'stepper.cancel';
+  public saveButtonKey = 'stepper.next';
 
   public maxDateOfBirth: moment.Moment;
 

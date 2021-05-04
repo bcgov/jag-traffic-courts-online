@@ -23,9 +23,9 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
   public defaultLanguage: string;
-  public previousButtonIcon: string = 'keyboard_arrow_left';
-  public previousButtonKey: string = 'stepper.back';
-  public saveButtonKey: string = 'stepper.next';
+  public previousButtonIcon = 'keyboard_arrow_left';
+  public previousButtonKey = 'stepper.back';
+  public saveButtonKey = 'stepper.next';
 
   constructor(
     protected route: ActivatedRoute,

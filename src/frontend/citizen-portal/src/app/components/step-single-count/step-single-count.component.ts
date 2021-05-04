@@ -25,9 +25,9 @@ export class StepSingleCountComponent
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
   public defaultLanguage: string;
-  public previousButtonIcon: string = 'close';
-  public previousButtonKey: string = 'stepper.cancel';
-  public saveButtonKey: string = 'stepper.next';
+  public previousButtonIcon = 'close';
+  public previousButtonKey = 'stepper.cancel';
+  public saveButtonKey = 'stepper.next';
 
   constructor(
     protected route: ActivatedRoute,

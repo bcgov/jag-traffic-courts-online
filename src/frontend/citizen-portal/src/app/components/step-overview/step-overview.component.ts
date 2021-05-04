@@ -27,9 +27,9 @@ export class StepOverviewComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public defaultLanguage: string;
-  public previousButtonIcon: string = 'keyboard_arrow_left';
-  public previousButtonKey: string = 'stepper.back';
-  public saveButtonKey: string = 'stepper.submit';
+  public previousButtonIcon = 'keyboard_arrow_left';
+  public previousButtonKey = 'stepper.back';
+  public saveButtonKey = 'stepper.submit';
 
   public disputantForm: FormGroup;
   public offence1Form: FormGroup;
