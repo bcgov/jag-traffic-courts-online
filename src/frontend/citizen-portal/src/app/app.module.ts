@@ -39,9 +39,8 @@ import { StepDisputantComponent } from './components/step-disputant/step-disputa
 import { StepSingleCountComponent } from './components/step-single-count/step-single-count.component';
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
-
-import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
+
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
 

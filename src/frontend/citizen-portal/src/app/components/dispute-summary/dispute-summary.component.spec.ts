@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { of } from 'rxjs';
@@ -22,6 +23,7 @@ describe('DisputeSummaryComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         NgxMaterialModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [DisputeSummaryComponent],
       providers: [

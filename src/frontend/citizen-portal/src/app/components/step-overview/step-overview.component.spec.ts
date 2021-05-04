@@ -10,6 +10,7 @@ import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepOverviewComponent } from './step-overview.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('StepOverviewComponent', () => {
   let component: StepOverviewComponent;
@@ -23,6 +24,7 @@ describe('StepOverviewComponent', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         NgxMaterialModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [StepOverviewComponent, DefaultPipe, FormatDatePipe],
       providers: [MockDisputeService, DisputeFormStateService],

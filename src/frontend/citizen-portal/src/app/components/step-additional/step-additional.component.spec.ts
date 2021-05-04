@@ -9,6 +9,9 @@ import { YesNoPipe } from '@shared/pipes/yes-no.pipe';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepAdditionalComponent } from './step-additional.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { ConfigService } from '@config/config.service';
+import { MockConfigService } from 'tests/mocks/mock-config.service';
 
 describe('StepCourtComponent', () => {
   let component: StepAdditionalComponent;
@@ -22,9 +25,17 @@ describe('StepCourtComponent', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         NgxMaterialModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [StepAdditionalComponent, YesNoPipe],
-      providers: [MockDisputeService, DisputeFormStateService],
+      providers: [
+        MockDisputeService,
+        DisputeFormStateService,
+        {
+          provide: ConfigService,
+          useClass: MockConfigService,
+        },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

@@ -7,6 +7,7 @@ import {
 
 import { PageFooterComponent } from './page-footer.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('PageFooterComponent', () => {
   let component: PageFooterComponent;
@@ -15,7 +16,7 @@ describe('PageFooterComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule],
+        imports: [RouterTestingModule, TranslateModule.forRoot()],
         declarations: [PageFooterComponent],
       }).compileComponents();
     })

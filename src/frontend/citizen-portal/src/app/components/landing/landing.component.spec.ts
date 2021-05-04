@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { LandingComponent } from './landing.component';
 
@@ -9,7 +10,7 @@ describe('LandingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterModule.forRoot([])],
+      imports: [RouterModule.forRoot([]), TranslateModule.forRoot()],
       declarations: [LandingComponent],
     }).compileComponents();
   });

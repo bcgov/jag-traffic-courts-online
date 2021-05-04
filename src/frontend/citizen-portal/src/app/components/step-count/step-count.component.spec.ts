@@ -12,6 +12,7 @@ import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepCountComponent } from './step-count.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('StepCountComponent', () => {
   let component: StepCountComponent;
@@ -25,6 +26,7 @@ describe('StepCountComponent', () => {
         ReactiveFormsModule,
         HttpClientTestingModule,
         NgxMaterialModule,
+        TranslateModule.forRoot(),
       ],
       declarations: [
         StepCountComponent,
