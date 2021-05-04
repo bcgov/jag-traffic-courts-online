@@ -9,9 +9,11 @@
 
   <span class="flex-fill"></span>
 
-  <a (click)="onLanguage()" class="language" style="color: white">{{
-    languageDesc
-  }}</a>
+  <a (click)="onLanguage()" class="language">
+    <mat-icon inline="true" class="mr-2">language</mat-icon>
+    <span style="vertical-align: 5px">{{ languageDesc }}</span>
+  </a>
+
   <!--
   <ng-container *ngIf="fullName">
     <span class="fullName d-none d-md-block">
@@ -21,10 +23,9 @@
       <mat-icon (click)="onLogout()">logout</mat-icon>
     </span>
   </ng-container>
+  -->
 </mat-toolbar>
--->
 
-  <div class="ngx-progress">
-    <ng-progress></ng-progress>
-  </div>
-</mat-toolbar>
+<div class="ngx-progress">
+  <ng-progress></ng-progress>
+</div>

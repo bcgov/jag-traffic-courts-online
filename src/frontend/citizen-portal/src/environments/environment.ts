@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   version: '1.0.0',
   useKeycloak: false,
-  useMockServices: false,
+  useMockServices: true,
   apiUrl: '/api',
   keycloakConfig: {
     config: {
