@@ -17,16 +17,16 @@ export interface IConfigService extends Configuration {
 export class ConfigService implements IConfigService {
   protected configuration: Configuration;
 
-  private _dispute_submitted: BehaviorSubject<string> = new BehaviorSubject<string>(
+  private disputeSubmitted: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
-  private _dispute_validation_error: BehaviorSubject<string> = new BehaviorSubject<string>(
+  private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
-  private _ticket_error: BehaviorSubject<string> = new BehaviorSubject<string>(
+  private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
-  private _dispute_create_error: BehaviorSubject<string> = new BehaviorSubject<string>(
+  private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
 
@@ -36,35 +36,35 @@ export class ConfigService implements IConfigService {
   ) {}
 
   public get dispute_submitted$(): BehaviorSubject<string> {
-    return this._dispute_submitted;
+    return this.disputeSubmitted;
   }
 
   public get dispute_submitted(): string {
-    return this._dispute_submitted.value;
+    return this.disputeSubmitted.value;
   }
 
   public get dispute_validation_error$(): BehaviorSubject<string> {
-    return this._dispute_validation_error;
+    return this.disputeValidationError;
   }
 
   public get dispute_validation_error(): string {
-    return this._dispute_validation_error.value;
+    return this.disputeValidationError.value;
   }
 
   public get ticket_error$(): BehaviorSubject<string> {
-    return this._ticket_error;
+    return this.ticketError;
   }
 
   public get ticket_error(): string {
-    return this._ticket_error.value;
+    return this.ticketError.value;
   }
 
   public get dispute_create_error$(): BehaviorSubject<string> {
-    return this._dispute_create_error;
+    return this.disputeCreateError;
   }
 
   public get dispute_create_error(): string {
-    return this._dispute_create_error.value;
+    return this.disputeCreateError.value;
   }
 
   public get provinces(): ProvinceConfig[] {
