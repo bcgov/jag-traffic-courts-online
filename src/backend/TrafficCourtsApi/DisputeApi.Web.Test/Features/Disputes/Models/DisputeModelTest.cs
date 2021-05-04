@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using AutoFixture;
 using AutoFixture.NUnit3;
-using DisputeApi.Web.Models;
+using DisputeApi.Web.Features.Disputes.DBModel;
 using DisputeApi.Web.Test.Utils;
 using NUnit.Framework;
 
@@ -13,12 +11,13 @@ namespace DisputeApi.Web.Test.Features.Disputes.Models
     {
         [Theory]
         [AutoData]
-        public void can_create_class(Dispute expected)
+        public void can_create_class()
         {
+            var expected = new Dispute { DisputantEmailAddress = "test@test.com", InformationCertified = true };
             var actual = PropertyCopy.CopyProperties(expected);
 
             // to do: check all properties
-            Assert.AreEqual(expected.EmailAddress, actual.EmailAddress);
+            Assert.AreEqual(expected.DisputantEmailAddress, actual.DisputantEmailAddress);
             Assert.AreEqual(expected.InformationCertified, actual.InformationCertified);
         }
     }

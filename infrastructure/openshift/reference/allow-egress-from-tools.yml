@@ -1,0 +1,12 @@
+apiVersion: security.devops.gov.bc.ca/v1alpha1
+kind: NetworkSecurityPolicy
+metadata:
+  name: allow-egress-from-tools
+  namespace: 0198bb-tools
+spec:
+  description: |
+    Allow all pods to talk to external systems
+  destination:
+    - - 'ext:network=any'
+  source:
+    - - $namespace=0198bb-tools

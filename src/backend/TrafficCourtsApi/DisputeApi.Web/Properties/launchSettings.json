@@ -13,6 +13,10 @@
         "OAUTH__OAUTHURL": "https://wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token",
         "OAUTH__RESOURCEURL": "https://wsgw.test.jag.gov.bc.ca:8443/paybc",
         "RSI__BASEADDRESS": "https://wsgw.test.jag.gov.bc.ca:8443",
+        "RABBITMQ__HOST": "localhost",
+        "RABBITMQ__PORT": 5672,
+        "RABBITMQ__USERNAME": "guest",
+        "RABBITMQ__PASSWORD": "guest",
         "RSI__OPERATIONMODE": "",
         "TICKET_DISCOUNT_VALID_DAYS": "30" 
       },

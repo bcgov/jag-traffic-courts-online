@@ -1,67 +1,79 @@
-﻿using DisputeApi.Web.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSwag.Annotations;
 using System;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using MediatR;
+using DisputeApi.Web.Features.Disputes.Commands;
+using DisputeApi.Web.Features.Disputes.Queries;
+using DisputeApi.Web.Features.Disputes.DBModel;
 
 namespace DisputeApi.Web.Features.Disputes
 {
     [OpenApiTag("Dispute API")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [Produces("application/json")]
     [ApiController]
     public class DisputesController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IDisputeService _disputeService;
+        private readonly IMediator _mediator;
 
-        public DisputesController(ILogger<DisputesController> logger, IDisputeService disputeService)
+        public DisputesController(ILogger<DisputesController> logger,IMediator mediator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
+            _mediator = mediator?? throw new ArgumentNullException(nameof(mediator));
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateDispute([FromBody] Dispute dispute)
+        public async Task<IActionResult> TicketDispute([FromBody]CreateDisputeCommand createDisputeCommand)
         {
-            var result = await _disputeService.CreateAsync(dispute);
-            if (result == null)
+            var response = await _mediator.Send(createDisputeCommand);
+            if (response.Id == 0)
             {
-                ModelState.AddModelError("DisputeOffenceNumber", "the dispute already exists for this offence.");
+                ModelState.AddModelError("TicketNumber", "the dispute already exists for this ticket.");
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
-
             return Ok();
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> OffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
+        {
+
+            var response = await _mediator.Send(createOffenceDisputeCommand);
+            if (response.Id == 0)
+            {
+                ModelState.AddModelError("DisputeOffenceNumber", "Cannot find the offence.");
+                return BadRequest(ApiResponse.BadRequest(ModelState));
+            }
+            return Ok();
+
+        }
+        
         [HttpGet]
         [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDisputes()
         {
-            var disputes = await _disputeService.GetAllAsync();
+            var disputes = await _mediator.Send(new GetAllDisputesQuery());
 
-            return Ok(disputes);
+            return disputes == null ? NoContent() : Ok(ApiResponse.Result(disputes));
         }
 
         [HttpGet("{disputeId}")]
         [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDispute(int disputeId)
         {
-            var dispute = await _disputeService.GetAsync(disputeId);
-
-            if (dispute != null)
-            {
-                return Ok(dispute);
-            }
-
-            return NotFound();
+            var dispute = await _mediator.Send(new GetDisputeQuery { DisputeId=disputeId});
+            return dispute == null ? NoContent() : Ok(ApiResponse.Result(dispute));
         }
+
+
     }
 }
