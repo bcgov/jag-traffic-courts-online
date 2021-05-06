@@ -175,10 +175,10 @@
 
         <div class="row mt-2">
           <div class="col">
+            <!--
+              "stepper.overview.offence_not_included"
+            -->
             <ul>
-              <li *ngIf="offence.includeOffenceInDispute === false">
-                {{ "stepper.overview.offence_not_included" | translate }}
-              </li>
               <li *ngIf="offence.offenceAgreementStatus === '1'">
                 {{ "stepper.count.offence_agreement_1" | translate }}
               </li>

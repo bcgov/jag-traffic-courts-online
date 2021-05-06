@@ -58,28 +58,28 @@
     <section class="mb-2">
       <div class="row">
         <div class="col">
-          <label>{{ "stepper.count.for_this_offence" | translate }}:</label
+          <label class="mt-0"
+            >{{ "stepper.count.for_this_offence" | translate }}:</label
           ><br />
           <mat-radio-group
             formControlName="offenceAgreementStatus"
             class="w-100"
           >
-            <mat-radio-button value="1"
-              ><span class="wrap-mat-radio-label">{{
-                "stepper.count.offence_agreement_1" | translate
-              }}</span></mat-radio-button
-            >
-            <mat-radio-button value="2"
-              ><span class="wrap-mat-radio-label">{{
-                "stepper.count.offence_agreement_2" | translate
-              }}</span></mat-radio-button
-            >
-            <mat-radio-button value="3">
+            <mat-radio-button value="1" class="w-100">
+              <span class="wrap-mat-radio-label">
+                {{ "stepper.count.offence_agreement_1" | translate }}
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="2" class="w-100">
+              <span class="wrap-mat-radio-label">
+                {{ "stepper.count.offence_agreement_2" | translate }}
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="3" class="w-100">
               <span class="wrap-mat-radio-label">
                 {{ "stepper.count.offence_agreement_3" | translate }}
               </span>
             </mat-radio-button>
-
             <mat-error
               *ngIf="
                 (offenceAgreementStatus.dirty ||

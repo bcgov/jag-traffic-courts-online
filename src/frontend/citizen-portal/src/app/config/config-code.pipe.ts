@@ -4,15 +4,17 @@ import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 
 @Pipe({
-  name: 'configCode'
+  name: 'configCode',
 })
 export class ConfigCodePipe implements PipeTransform {
-  constructor(
-    private config: ConfigService
-  ) { }
+  constructor(private config: ConfigService) {}
 
-  public transform<T>(code: T, configKey: string, key: string = 'name'): string {
-    return (code) ? this.configValue<T>(code, configKey, key) : '';
+  public transform<T>(
+    code: T,
+    configKey: string,
+    key: string = 'name'
+  ): string {
+    return code ? this.configValue<T>(code, configKey, key) : '';
   }
 
   private configValue<T>(code: T, configKey: string, key: string): string {

@@ -25,7 +25,9 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const currentRoutePath = RouteUtils.currentRoutePath(request.url);
+    const currentRoutePath = RouteUtils.currentRoutePath(
+      request.url
+    ).toLowerCase();
 
     // handle translations
     if (currentRoutePath.includes('json')) {
@@ -40,7 +42,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     if (environment.useMockServices) {
       if (
         currentRoutePath !== 'tickets' &&
-        currentRoutePath !== 'disputes' &&
+        !currentRoutePath.includes('dispute') &&
         currentRoutePath !== 'lookups'
       ) {
         throw new HttpErrorResponse({
@@ -54,7 +56,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return this.handleTicketsRequests(request.method);
 
         // Handle 'disputes' requests
-      } else if (currentRoutePath === 'disputes') {
+      } else if (currentRoutePath.includes('dispute')) {
+        console.log('yes');
         return this.handleDisputesRequests(request.method);
 
         // Handle 'lookups' requests
@@ -87,6 +90,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
   private handleDisputesRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
+    console.log('handleDisputesRequests');
     switch (requestMethod) {
       case 'POST':
         return of(new HttpResponse({ status: 200, body: {} }));

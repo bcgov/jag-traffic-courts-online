@@ -306,7 +306,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     return this.formBuilder.group({
       offenceNumber: [null],
       includeOffenceInDispute: [false],
-      offenceAgreementStatus: [null], // , [Validators.required]],
+      offenceAgreementStatus: [null], //, [Validators.required]],
       requestReduction: [false],
       requestMoreTime: [false],
       reductionReason: [null],
@@ -336,7 +336,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      informationCertified: [false, [FormControlValidators.requiredTruthful]],
+      informationCertified: [false], //, [FormControlValidators.requiredTruthful]],
     });
   }
 }

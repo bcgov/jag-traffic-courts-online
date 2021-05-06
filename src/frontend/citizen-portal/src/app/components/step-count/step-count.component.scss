@@ -12,3 +12,8 @@ label {
 .text-left {
   font-weight: bold;
 }
+
+.my-chip .mat-chip-selected {
+  background-color: rgb(112, 11, 11) !important;
+  color: #fff;
+}

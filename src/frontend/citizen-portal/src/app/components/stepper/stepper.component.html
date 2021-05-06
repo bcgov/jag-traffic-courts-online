@@ -39,13 +39,13 @@
             <ng-template matStepLabel>{{
               "stepper.count.heading" | translate
             }}</ng-template>
-            <app-step-single-count
+            <app-step-count
               id="stepCount"
               [stepControl]="offenceForm"
               [stepper]="disputeStepper"
               (stepSave)="onStepSave($event)"
               (stepCancel)="onStepCancel()"
-            ></app-step-single-count>
+            ></app-step-count>
           </mat-step>
 
           <mat-step [stepControl]="additionalForm">

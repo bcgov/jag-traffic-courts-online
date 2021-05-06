@@ -139,9 +139,10 @@
               mat-flat-button
               color="accent"
               *ngIf="
-                row.offenceStatus === -1 ||
-                row.offenceStatus === 1 ||
-                row.offenceStatus === 2
+                (row.offenceStatus === -1 ||
+                  row.offenceStatus === 1 ||
+                  row.offenceStatus === 2) &&
+                ticket.disputesExist
               "
             >
               <a
