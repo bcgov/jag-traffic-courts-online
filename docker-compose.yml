@@ -120,6 +120,25 @@ services:
       - 8088:8088
     networks:
       - traffic-court-net
+
+  #############################################################################################
+  ###                                  PostgreSQL Database                                  ###
+  #############################################################################################
+  postgres:
+    restart: always
+    container_name: disputedb
+    image: postgres:10.6
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USERNAME: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+    networks:
+      - traffic-court-net
+
   #############################################################################################
   ###                           RABBITMQ                                                    ###
   #############################################################################################
@@ -168,11 +187,17 @@ services:
     environment:
       - REDIS_HOST=${REDIS__HOST}
       - REDIS_PASSWORD="${REDIS__PASSWORD}"
-  
+
+####################### Networks Definition #######################
+
 networks:
   traffic-court-net:
     driver: "bridge"
 
+####################### Volumes Definition #######################
+
 volumes:
   data-rabbit:
   data-redis:
+  data-postgres:
+  
