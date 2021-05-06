@@ -27,14 +27,6 @@ jobs:
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:${{secrets.OC_APP}}
         run: |  
           docker build \
-            --build-arg ASPNETCORE_ENVIRONMENT=Development \
-            --build-arg SPLUNK_COLLECTOR_URL=${{secrets.SPLUNK_COLLECTOR_URL}} \
-            --build-arg SPLUNK_TOKEN=${{secrets.SPLUNK_HEC_TOKEN}} \
-            --build-arg OAUTH__OAUTHURL=${{secrets.OAUTH__OAUTHURL}} \
-            --build-arg OAUTH__RESOURCEURL=${{secrets.OAUTH__RESOURCEURL}} \
-            --build-arg OAUTH__CLIENTID=${{secrets.OAUTH__CLIENTID}} \
-            --build-arg OAUTH__SECRET=${{secrets.OAUTH__SECRET}} \
-            --build-arg RSI__BASEADDRESS=${{secrets.RSI__BASEADDRESS}} \
             --tag ${IMAGE} \
             ${CONTEXT}
             docker push ${IMAGE}
