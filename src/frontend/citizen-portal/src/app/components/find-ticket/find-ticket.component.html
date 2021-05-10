@@ -16,7 +16,7 @@
         </ng-container>
       </app-alert>
 
-      <form [formGroup]="form" novalidate>
+      <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
         <section>
           <div class="row mb-4">
             <div class="col">
@@ -66,12 +66,7 @@
               </button>
             </div>
             <div class="col text-right">
-              <button
-                mat-flat-button
-                color="primary"
-                class="large"
-                (click)="onSearch()"
-              >
+              <button mat-flat-button color="primary" class="large">
                 <mat-icon inline="true">search</mat-icon>
                 {{ "label.search" | translate }}
               </button>

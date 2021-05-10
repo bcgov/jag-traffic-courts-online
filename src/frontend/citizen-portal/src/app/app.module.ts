@@ -101,7 +101,7 @@ export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
   constructor(private translateService: TranslateService) {
-    translateService.addLangs(['en', 'fr']);
+    this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);
     console.log('Current Browser Language', currentLanguage);
@@ -110,6 +110,6 @@ export class AppModule {
     if (this.availableLanguages.includes(currentLanguage)) {
       defaultLanguage = currentLanguage;
     }
-    translateService.setDefaultLang(defaultLanguage);
+    this.translateService.setDefaultLang(defaultLanguage);
   }
 }
