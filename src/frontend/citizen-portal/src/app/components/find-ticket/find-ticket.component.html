@@ -72,6 +72,45 @@
               </button>
             </div>
           </div>
+          <br /><br /><br />
+          <div class="row">
+            <div class="col">
+              Count
+              <mat-form-field class="w-100">
+                <!--
+                  onfocus="this.select()"
+                -->
+                <input
+                  type="text"
+                  matInput
+                  formControlName="test"
+                  [matAutocomplete]="auto"
+                  (click)="$event.target.select()"
+                />
+                <mat-autocomplete
+                  autoActiveFirstOption
+                  #auto="matAutocomplete"
+                  [displayWith]="displayContactFn"
+                  (optionSelected)="onStatuteSelected($event)"
+                >
+                  <mat-option
+                    *ngFor="let option of filteredStatutes | async"
+                    [value]="option"
+                  >
+                    {{ option.name }}
+                  </mat-option>
+                </mat-autocomplete>
+
+                <mat-error *ngIf="test.hasError('required')">
+                  {{ "error.required" | translate }}
+                </mat-error>
+                <mat-error *ngIf="test.hasError('invalidAutocompleteObject')">
+                  Statute is not recognized. Select one from the list of
+                  options.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
         </section>
       </form>
 
