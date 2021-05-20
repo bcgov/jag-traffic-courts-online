@@ -53,10 +53,6 @@ export class FindTicketComponent implements OnInit {
     this.statutes = this.configService.statutes;
   }
 
-  public displayContactFn(contact?: Config<number>): string | undefined {
-    return contact ? contact.name : undefined;
-  }
-
   public ngOnInit(): void {
     // const testDefault = this.statutes[5];
     this.form = this.formBuilder.group({
@@ -65,17 +61,15 @@ export class FindTicketComponent implements OnInit {
       test: [null, [Validators.required, autocompleteObjectValidator()]],
     });
 
-    this.filteredStatutes = this.form.get('test').valueChanges.pipe(
+    this.filteredStatutes = this.test.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filterStatutes(value))
+      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
   }
 
-  private filterStatutes(value: any): Config<number>[] {
-    if (!value) return this.statutes.slice();
-
-    const currName = value.name ? value.name : value;
-    const trimValue = currName.toLowerCase().replace(/\s+/g, ''); // Get rid of whitespace
+  private filterStatutes(value: string): Config<number>[] {
+    const trimValue = value.toLowerCase().replace(/\s+/g, ''); // Get rid of whitespace
     const noBracketValue = trimValue.replace(/[\(\)']+/g, ''); // Get rid of brackets
 
     if (trimValue === noBracketValue) {
@@ -93,16 +87,20 @@ export class FindTicketComponent implements OnInit {
     );
   }
 
+  public onDisplayWithStatute(statute?: Config<number>): string | undefined {
+    return statute ? statute.name : undefined;
+  }
+
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
     console.log('onStatuteSelected', event$.option.value);
   }
 
   public onSearch(): void {
     const validity = this.formUtilsService.checkValidity(this.form);
-    console.log('validity', validity);
     const errors = this.formUtilsService.getFormErrors(this.form);
-    console.log('errors', errors);
 
+    console.log('validity', validity);
+    console.log('errors', errors);
     console.log('form.value', this.form.value);
 
     if (!validity) return;

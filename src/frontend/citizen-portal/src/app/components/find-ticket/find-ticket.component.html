@@ -90,7 +90,7 @@
                 <mat-autocomplete
                   autoActiveFirstOption
                   #auto="matAutocomplete"
-                  [displayWith]="displayContactFn"
+                  [displayWith]="onDisplayWithStatute"
                   (optionSelected)="onStatuteSelected($event)"
                 >
                   <mat-option
