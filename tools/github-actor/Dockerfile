@@ -1,4 +1,4 @@
-FROM registry.redhat.io/rhel8/s2i-core
+FROM registry.access.redhat.com/ubi8/s2i-core
 
 ARG GITHUB_RUNNER_VERSION="2.165.2"
 ARG GITHUB_PAT "${GITHUB_PAT}"
