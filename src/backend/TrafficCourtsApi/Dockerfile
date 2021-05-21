@@ -8,7 +8,7 @@ RUN dotnet restore "DisputeApi.Web/DisputeApi.Web.csproj"
 RUN dotnet build "DisputeApi.Web/DisputeApi.Web.csproj" -c Release -o /opt/app-root
 RUN dotnet publish "DisputeApi.Web/DisputeApi.Web.csproj" -c Release -o /opt/app-root
 
-FROM registry.redhat.io/ubi8/dotnet-50-runtime AS base
+FROM registry.access.redhat.com/ubi8/dotnet-50-runtime AS base
 WORKDIR /opt/app-root
 EXPOSE 8080
 COPY --from=build /opt/app-root .
