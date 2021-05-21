@@ -11,6 +11,7 @@ services:
       # args:
       #   PROJECT_NAME: DisputeApi.Web
     environment:
+      DB_CONNECTION_STRING: "host=postgres;port=5432;database=postgres;username=postgres;password=postgres"
       ASPNETCORE_ENVIRONMENT: Development
       SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
       SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
