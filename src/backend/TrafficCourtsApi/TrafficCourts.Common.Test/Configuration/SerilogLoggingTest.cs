@@ -1,16 +1,15 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework;
 using Serilog;
 using TrafficCourts.Common.Configuration;
+using Xunit;
 
 namespace TrafficCourts.Common.Test.Configuration
 {
     [ExcludeFromCodeCoverage]
-    [TestFixture]
     public class SerilogLoggingTest
     {
-        [Test]
+        [Fact]
         public void GetDefaultLogger_returns_a_logger()
         {
             ILogger actual = SerilogLogging.GetDefaultLogger<SerilogLoggingTest>();
@@ -18,7 +17,7 @@ namespace TrafficCourts.Common.Test.Configuration
             Assert.NotNull(actual);
         }
 
-        [Test]
+        [Fact]
         public void GetDefaultLogger_returns_a_logger_in_development()
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");

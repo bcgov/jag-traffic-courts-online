@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Moq;
-using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.TestCorrelator;
@@ -10,31 +9,29 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Security;
-using System.Runtime.InteropServices;
 using TrafficCourts.Common.Configuration;
+using Xunit;
 
 namespace TrafficCourts.Common.Test.Configuration
 {
     [ExcludeFromCodeCoverage]
-    [TestFixture]
     public class SplunkEventCollectorTest
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public SplunkEventCollectorTest()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.TestCorrelator()
                 .CreateLogger();
         }
 
-        [Test]
+        [Fact]
         public void SplunkEventCollector_custom_server_certificate_validator_returns_true()
         {
             // there are no parameter validations
             Assert.True(SplunkEventCollector.ServerCertificateCustomValidation(null, null, null, SslPolicyErrors.None));
         }
 
-        [Test]
+        [Fact]
         public void Configure_checks_for_null_arguments()
         {
             var hostBuilderContext = new HostBuilderContext(new Dictionary<object, object>());
@@ -44,7 +41,7 @@ namespace TrafficCourts.Common.Test.Configuration
             Assert.Throws<ArgumentNullException>(() => SplunkEventCollector.Configure(hostBuilderContext, null));
         }
 
-        [Test]
+        [Fact]
         public void Configure_logs_warning_if_splunk_configuration_settings_not_found()
         {
             var configuration = new ConfigurationBuilder()
@@ -62,14 +59,13 @@ namespace TrafficCourts.Common.Test.Configuration
 
                 var logEvent = TestCorrelator.GetLogEventsFromCurrentContext().Single();
 
-                Assert.AreEqual(LogEventLevel.Warning, logEvent.Level);
+                Assert.Equal(LogEventLevel.Warning, logEvent.Level);
 
                 Assert.NotNull(logEvent.RenderMessage()); // assert anything about this message?
             }
         }
 
-        [Test]
-        [Ignore("Having troubles with Serilog reading the configuration and also our reading of the configuration")]
+        [Fact(Skip = "Having troubles with Serilog reading the configuration and also our reading of the configuration")]
         public void Configure_will_configure_EventCollector_if_url_and_token_are_available()
         {
             var configurationValues = new Mock<IDictionary<string, string>>();
@@ -97,7 +93,7 @@ namespace TrafficCourts.Common.Test.Configuration
                 SplunkEventCollector.Configure(hostBuilderContext, loggerConfiguration);
 
                 var logEvents = TestCorrelator.GetLogEventsFromCurrentContext().ToList();
-                Assert.AreEqual(0, logEvents.Count); // this will fail due to the GetEnumerator returning empty list
+                Assert.Empty(logEvents); // this will fail due to the GetEnumerator returning empty list
 
             }
 
