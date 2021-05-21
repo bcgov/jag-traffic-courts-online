@@ -16,14 +16,6 @@ jobs:
       - name: Pull Git repo
         uses: actions/checkout@v2
 
-      - name: Login to RedHat Container Repo
-        id: build-image
-        env:
-          COMPOSE_DOCKER_CLI_BUILD: 1
-          DOCKER_BUILDKIT: 1
-        run: |          
-          docker login ${{ secrets.REDHAT_REPO }} -u ${{ secrets.REDHAT_REPO_USER }} -p ${{ secrets.REDHAT_REPO_AUTH }}
-
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
