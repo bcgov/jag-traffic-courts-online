@@ -200,4 +200,4 @@ volumes:
   data-rabbit:
   data-redis:
   data-postgres:
-  
+

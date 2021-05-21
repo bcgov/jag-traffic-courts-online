@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.Xunit2;
 using DisputeApi.Web.Features;
 using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Models;
@@ -13,7 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
 
 namespace DisputeApi.Web.Test.Features.Tickets
@@ -25,15 +25,14 @@ namespace DisputeApi.Web.Test.Features.Tickets
         private Mock<ITicketsService> _ticketsServiceMock;
         private Mock<IMediator> _mediatorMock;
 
-        [SetUp]
-        public void SetUp()
+        public TicketsControllerTest()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<TicketsController>();
             _ticketsServiceMock = new Mock<ITicketsService>();
             _mediatorMock = new Mock<IMediator>();
         }
 
-        [Test]
+        [Fact]
         public void throw_ArgumentNullException_if_passed_null()
         {
             Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object, _mediatorMock.Object));
@@ -54,9 +53,11 @@ namespace DisputeApi.Web.Test.Features.Tickets
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
 
             var result = (OkObjectResult)await sut.GetTickets();
-            Assert.IsInstanceOf<IEnumerable<Ticket>>(result.Value);
-            Assert.IsNotNull(result);
-            Assert.AreEqual(((IEnumerable<Ticket>)result.Value).Count(), 1);
+            Assert.IsAssignableFrom<IEnumerable<Ticket>>(result.Value);
+            Assert.NotNull(result);
+            var actual = result.Value as IEnumerable<Ticket>;
+
+            Assert.Single(actual);
 
             _ticketsServiceMock.Verify(x => x.GetTickets(), Times.Once);
         }
@@ -72,8 +73,8 @@ namespace DisputeApi.Web.Test.Features.Tickets
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
 
             var result = (OkObjectResult)await sut.SaveTicket(ticket);
-            Assert.IsInstanceOf<Ticket>(result.Value);
-            Assert.IsNotNull(result.Value);
+            Assert.IsAssignableFrom<Ticket>(result.Value);
+            Assert.NotNull(result.Value);
 
             _ticketsServiceMock.Verify(x => x.SaveTicket(ticket), Times.Once);
         }
@@ -87,9 +88,9 @@ namespace DisputeApi.Web.Test.Features.Tickets
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
             var result = (OkObjectResult)await sut.GetTicket(query);
-            Assert.IsInstanceOf<ApiResultResponse<TicketDispute>>(result.Value);
-            Assert.IsNotNull(result.Value);
-            Assert.AreEqual(200, result.StatusCode);
+            Assert.IsAssignableFrom<ApiResultResponse<TicketDispute>>(result.Value);
+            Assert.NotNull(result.Value);
+            Assert.Equal(200, result.StatusCode);
         }
 
         [Theory]
@@ -101,7 +102,7 @@ namespace DisputeApi.Web.Test.Features.Tickets
             query.TicketNumber = "EZ02000460";
             query.Time = "09:21";
             var result = (NoContentResult)await sut.GetTicket(query);
-            Assert.AreEqual(204, result.StatusCode);
+            Assert.Equal(204, result.StatusCode);
         }
     }
 }

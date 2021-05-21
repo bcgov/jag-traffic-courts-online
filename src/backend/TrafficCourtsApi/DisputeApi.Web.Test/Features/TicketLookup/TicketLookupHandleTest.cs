@@ -1,12 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.Xunit2;
 using DisputeApi.Web.Features.TicketLookup;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
 using Moq;
-using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 using static DisputeApi.Web.Features.TicketLookup.TicketLookup;
 
 namespace DisputeApi.Web.Test.Features.TicketLookup
@@ -14,7 +14,8 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
     [ExcludeFromCodeCoverage]
     public class TicketLookupHandleTest
     {
-        [Test, AutoMockAutoData]
+        [Theory]
+        [AutoMockAutoData]
         public async Task TicketDisputeHandler_handle_will_call_retrieveTicket(Query query, TicketDispute ticketDispute,
             [Frozen] Mock<ITicketDisputeService> ticketDisputeServiceMock, TicketDisputeHandler sut)
         {

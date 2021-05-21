@@ -1,5 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using AutoMapper;
+﻿using AutoMapper;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.Commands;
 using DisputeApi.Web.Messaging.Configuration;
@@ -7,7 +6,6 @@ using DisputeApi.Web.Test.Utils;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.Disputes.DBModel;
@@ -16,6 +14,8 @@ using TrafficCourts.Common.Contract;
 using Microsoft.Extensions.Options;
 using System;
 using AutoFixture;
+using AutoFixture.Xunit2;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Disputes.Commands
 {
@@ -31,8 +31,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
         private CreateDisputeCommandHandler _sut;
         private Fixture _fixture;
 
-        [SetUp]
-        public void SetUp()
+        public CreateDisputeCommandHandlerTest()
         {
             _fixture = new Fixture();
             _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
@@ -61,7 +60,8 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
                 _sendEndPointProviderMock.Object, _rabbitConfigMock.Object, _mapperMock.Object);
         }
 
-        [Test, AutoData]
+        [Theory]
+        [AutoData]
         public async Task CreateDisputeCommandHandler_handle_will_call_service_and_send_to_queue(
             CreateDisputeCommand createDisputeCommand, DisputeContract contractDispute)
         {
@@ -78,7 +78,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
             //    x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()),
             //    () => { return Times.Once(); });
             ////temp
-            Assert.AreEqual(createdDispute.Id, result.Id);
+            Assert.Equal(createdDispute.Id, result.Id);
         }
     }
 }

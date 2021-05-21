@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using AutoFixture.NUnit3;
+using AutoFixture.Xunit2;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
-using NUnit.Framework;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Tickets.Models
 {
@@ -16,8 +16,8 @@ namespace DisputeApi.Web.Test.Features.Tickets.Models
             var actual = PropertyCopy.CopyProperties(expected);
 
             // to do: check all properties
-            Assert.AreEqual(expected.GivenNames, actual.GivenNames);
-            Assert.AreEqual(expected.Licence, actual.Licence);
+            Assert.Equal(expected.GivenNames, actual.GivenNames);
+            Assert.Equal(expected.Licence, actual.Licence);
         }
     }
 }

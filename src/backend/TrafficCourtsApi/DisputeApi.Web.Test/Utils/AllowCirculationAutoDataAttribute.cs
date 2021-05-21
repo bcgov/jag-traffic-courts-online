@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using AutoFixture.NUnit3;
+using AutoFixture.Xunit2;
 
 
 namespace DisputeApi.Web.Test.Utils
