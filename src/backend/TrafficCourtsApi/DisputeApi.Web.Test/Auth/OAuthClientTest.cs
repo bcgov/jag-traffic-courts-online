@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
-using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -12,6 +11,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Auth
 {
@@ -25,8 +25,7 @@ namespace DisputeApi.Web.Test.Auth
         private Mock<ILogger<OAuthClient>> _loggerMock = new Mock<ILogger<OAuthClient>>();
         private Token _token;
 
-        [SetUp]
-        public void SetUp()
+        public OAuthClientTest()
         {
             Fixture fixture = new Fixture();
             // use real http client with mocked handler here
@@ -38,7 +37,8 @@ namespace DisputeApi.Web.Test.Auth
             _token = fixture.Create<Token>();
             _sut = new OAuthClient(_httpClient, _optionsMock.Object, _loggerMock.Object);
         }
-        [Test]
+
+        [Fact]
         public async Task GetRefreshToken_if_http_return_token_correctly_return_this_token()
         {
             _httpMessageHandlerMock
@@ -57,13 +57,13 @@ namespace DisputeApi.Web.Test.Auth
                 .Verifiable();
 
             Token token = await _sut.GetRefreshToken(CancellationToken.None);
-            Assert.AreEqual(_token.AccessToken, token.AccessToken);
-            Assert.AreEqual(_token.TokenType, token.TokenType);
-            Assert.AreEqual(_token.ExpiresIn, token.ExpiresIn);
-            Assert.AreEqual(_token.Scope, token.Scope);
+            Assert.Equal(_token.AccessToken, token.AccessToken);
+            Assert.Equal(_token.TokenType, token.TokenType);
+            Assert.Equal(_token.ExpiresIn, token.ExpiresIn);
+            Assert.Equal(_token.Scope, token.Scope);
         }
 
-        [Test]
+        [Fact]
         public void fixture_GetRefreshToken_if_http_return_token_correctly_return_this_token()
         {
             

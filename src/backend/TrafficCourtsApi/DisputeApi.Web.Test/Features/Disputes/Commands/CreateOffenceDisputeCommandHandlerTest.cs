@@ -1,5 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using AutoMapper;
+﻿using AutoMapper;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.Commands;
 using DisputeApi.Web.Messaging.Configuration;
@@ -7,7 +6,6 @@ using DisputeApi.Web.Test.Utils;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.Disputes.DBModel;
@@ -15,7 +13,7 @@ using System.Threading;
 using TrafficCourts.Common.Contract;
 using Microsoft.Extensions.Options;
 using System;
-using AutoFixture;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Disputes.Commands
 {
@@ -30,8 +28,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
         private Mock<ISendEndpoint> _sendEndpointMock;
         private CreateOffenceDisputeCommandHandler _sut;
 
-        [SetUp]
-        public void SetUp()
+        public CreateOffenceDisputeCommandHandlerTest()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<CreateOffenceDisputeCommandHandler>();
             _disputeServiceMock = new Mock<IDisputeService>();
@@ -57,7 +54,8 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
                 _sendEndPointProviderMock.Object, _rabbitConfigMock.Object, _mapperMock.Object);
         }
 
-        [Test, AllowCirculationAutoData]
+        [Theory]
+        [AllowCirculationAutoData]
         public async Task CreateOffenceDisputeCommandHandler_handle_will_call_service_and_send_to_queue(
             CreateOffenceDisputeCommand createOffenceDisputeCommand,
             Dispute updatedDispute, 
@@ -79,7 +77,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Commands
             //    x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()),
             //    () => { return Times.Once(); });
             //temp
-            Assert.AreEqual(updatedDispute.Id, result.Id);
+            Assert.Equal(updatedDispute.Id, result.Id);
         }
     }
 }

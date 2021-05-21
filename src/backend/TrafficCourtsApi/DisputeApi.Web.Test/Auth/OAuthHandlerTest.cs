@@ -1,11 +1,11 @@
-﻿using AutoFixture.NUnit3;
-using DisputeApi.Web.Auth;
+﻿using DisputeApi.Web.Auth;
 using DisputeApi.Web.Test.Utils;
 using Moq;
-using NUnit.Framework;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Auth
 {
@@ -15,13 +15,14 @@ namespace DisputeApi.Web.Test.Auth
         {
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
-                Assert.AreEqual("accessToken", request.Headers?.Authorization?.Parameter);
-                Assert.AreEqual("Bearer", request.Headers?.Authorization?.Scheme);
+                Assert.Equal("accessToken", request.Headers?.Authorization?.Parameter);
+                Assert.Equal("Bearer", request.Headers?.Authorization?.Scheme);
                 return await base.SendAsync(request, cancellationToken);
             }
         }
 
-        [Test, AutoMockAutoData]
+        [Theory]
+        [AutoMockAutoData]
         public async Task with_token_it_should_add_it_to_header(            
             [Frozen]Mock<ITokenService> tokenServiceMock,
             OAuthHandler sut,

@@ -1,21 +1,20 @@
-﻿using AutoFixture;
-using AutoFixture.AutoMoq;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.Xunit2;
 using DisputeApi.Web.Auth;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
-using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Auth
 {
     [ExcludeFromCodeCoverage]
     public class TokenServiceTest
     {
-        [Test, AutoMockAutoData]
+        [Theory]
+        [AutoMockAutoData]
         public async Task GetTokenAsync_if_token_not_expired_return_token_from_memory(
             [Frozen]Mock<IMemoryCache> memoryMock, 
             TokenService sut, 
@@ -28,10 +27,11 @@ namespace DisputeApi.Web.Test.Auth
                 .Returns(true);
 
             Token token = await sut.GetTokenAsync(cancellationToken);
-            Assert.AreEqual(expectedToken, token);
+            Assert.Equal(expectedToken, token);
         }
 
-        [Test, AutoMockAutoData]
+        [Theory]
+        [AutoMockAutoData]
         public async Task GetTokenAsync_if_token_expired_get_new_token_from_client(
             [Frozen] Mock<IMemoryCache> memoryMock,
             [Frozen] Mock<IOAuthClient> authClientMock,
@@ -48,7 +48,7 @@ namespace DisputeApi.Web.Test.Auth
                 .Returns(Task.FromResult(expectedToken));
 
             Token token = await sut.GetTokenAsync(CancellationToken.None);
-            Assert.AreEqual(expectedToken, token);
+            Assert.Equal(expectedToken, token);
         }
     }
 }

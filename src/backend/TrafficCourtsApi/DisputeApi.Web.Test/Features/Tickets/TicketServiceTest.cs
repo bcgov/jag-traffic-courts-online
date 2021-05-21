@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.Xunit2;
 using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Infrastructure;
 using DisputeApi.Web.Models;
@@ -10,7 +10,7 @@ using DisputeApi.Web.Test.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Tickets
 {
@@ -28,25 +28,24 @@ namespace DisputeApi.Web.Test.Features.Tickets
             return new ViolationContext(optionsBuilder.Options);
         }
 
-        [SetUp]
-        public void SetUp()
+        public TicketServiceTest()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<TicketsService>();
             _service = new TicketsService(_loggerMock.Object, CreateContext());
         }
 
-        [Test]
+        [Fact]
         public void throw_ArgumentNullException_if_passed_null()
         {
             Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext()));
             Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null));
         }
 
-        [Test]
+        [Fact]
         public async Task get_tickets()
         {
             var result = await _service.GetTickets();
-            Assert.IsInstanceOf<IEnumerable<Ticket>>(result);
+            Assert.IsAssignableFrom<IEnumerable<Ticket>>(result);
             //_loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
         }
 
@@ -55,7 +54,7 @@ namespace DisputeApi.Web.Test.Features.Tickets
         public async Task save_ticket(Ticket ticket)
         {
             var result = await _service.SaveTicket(ticket);
-            Assert.IsInstanceOf<Ticket>(result);
+            Assert.IsAssignableFrom<Ticket>(result);
             //_loggerMock.VerifyLog(LogLevel.Information, "Saving mock ticket", Times.Once());
         }
     }
