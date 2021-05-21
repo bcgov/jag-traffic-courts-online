@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.Xunit2;
 using DisputeApi.Web.Features;
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.Commands;
@@ -14,7 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Disputes
 {
@@ -24,14 +24,13 @@ namespace DisputeApi.Web.Test.Features.Disputes
         private Mock<ILogger<DisputesController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
 
-        [SetUp]
-        public void SetUp()
+        public DisputeControllerTest()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<DisputesController>();
             _mediatorMock = new Mock<IMediator>();
         }
 
-        [Test]
+        [Fact]
         public void throw_ArgumentNullException_if_passed_null()
         {
             Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _mediatorMock.Object));
@@ -50,14 +49,14 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.GetDisputes();
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<OkObjectResult>(result);
 
             var objectResult = (ObjectResult) result;
-            Assert.IsInstanceOf<ApiResultResponse<IEnumerable<GetDisputeResponse>>>(objectResult.Value);
+            Assert.IsAssignableFrom<ApiResultResponse<IEnumerable<GetDisputeResponse>>>(objectResult.Value);
 
             var values = ((ApiResultResponse<IEnumerable<GetDisputeResponse>>) objectResult.Value).Result;
-            Assert.AreEqual(values.Count(), 1);
+            Assert.Equal(values.Count(), 1);
 
             _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllDisputesQuery>(), It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -73,10 +72,10 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.GetDispute(expected.Id);
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkObjectResult>(result);
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<OkObjectResult>(result);
 
-            Assert.IsInstanceOf<ApiResultResponse<GetDisputeResponse>>(((OkObjectResult) result).Value);
+            Assert.IsAssignableFrom<ApiResultResponse<GetDisputeResponse>>(((OkObjectResult) result).Value);
             _mediatorMock.Verify(x => x.Send(It.IsAny<GetDisputeQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -90,8 +89,8 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.GetDispute(disputeId);
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<NoContentResult>(result);
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<NoContentResult>(result);
         }
 
         [Theory]
@@ -104,8 +103,8 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.TicketDispute(dispute);
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkResult>(result);
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<OkResult>(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -122,10 +121,10 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = (BadRequestObjectResult) await sut.TicketDispute(dispute);
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
-            Assert.AreEqual(400, result.StatusCode);
+            Assert.Equal(400, result.StatusCode);
         }
 
         [Theory]
@@ -138,8 +137,8 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.OffenceDispute(dispute);
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<OkResult>(result);
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<OkResult>(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -156,10 +155,10 @@ namespace DisputeApi.Web.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = (BadRequestObjectResult)await sut.OffenceDispute(dispute);
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
-            Assert.AreEqual(400, result.StatusCode);
+            Assert.Equal(400, result.StatusCode);
         }
     }
 }

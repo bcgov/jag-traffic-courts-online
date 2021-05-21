@@ -7,13 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;
 using NSwag.Generation;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
-using System.Threading.Tasks;
 using DisputeApi.Web.Features.Tickets;
+using Xunit;
 
 namespace DisputeApi.Web.Test
 {
@@ -24,8 +22,7 @@ namespace DisputeApi.Web.Test
         private Mock<IWebHostEnvironment> _webHostEnvironmentMock;
         private IConfiguration _configuration;
 
-        [SetUp]
-        public void SetUp()
+        public StartUpTest()
         {
             var configuration = new Dictionary<string, string>
             {
@@ -51,7 +48,7 @@ namespace DisputeApi.Web.Test
                 .Build();
         }
 
-        [Test]
+        [Fact]
         public void ConfigureOpenApi_does_not_throw_error()
         {
             var services = new ServiceCollection();
@@ -60,7 +57,7 @@ namespace DisputeApi.Web.Test
             sut.ConfigureOpenApi(services);
         }
         
-        [Test]
+        [Fact]
         public void ConfigureServices_does_not_throw_error()
         {
             var services = new ServiceCollection();
@@ -70,7 +67,7 @@ namespace DisputeApi.Web.Test
         }
 
         //do not know why it fails on openshift.
-        //[Test]
+        //[Fact]
         //public async Task Returns_ok_if_for_health_check()
         //{
         //using var httpClient = _webApplicationFactory.CreateClient();
@@ -79,7 +76,7 @@ namespace DisputeApi.Web.Test
         //}
 
         /* TODO Add back once authentication is figured out
-        [Test]
+        [Fact]
         public async Task Returns_unauthorized_for_missing_token()
         {
             using var httpClient = WebAppFactoryObj.CreateClient();
@@ -88,7 +85,7 @@ namespace DisputeApi.Web.Test
         }
         */
 
-        [Test]
+        [Fact]
         public void missing_jwt_config()
         {
             Dictionary<string, string> emptyConfig = new Dictionary<string, string>
@@ -104,28 +101,28 @@ namespace DisputeApi.Web.Test
             Assert.Throws<ConfigurationErrorsException>(() => target.ConfigureJwtBearerAuthentication(new JwtBearerOptions()));
         }
 
-        [Test]
+        [Fact]
         public void success_jwt_config()
         {
             var target = new Startup(_webHostEnvironmentMock.Object, _configuration);
             JwtBearerOptions options = new JwtBearerOptions();
             target.ConfigureJwtBearerAuthentication(options);
-            Assert.That(options.Authority, Is.EqualTo("http://localhost:8080/auth/realms/myrealm/"));
-            Assert.That(options.RequireHttpsMetadata, Is.EqualTo(false));
-            Assert.That(options.MetadataAddress, Is.EqualTo("http://localhost:8080/auth/realms/myrealm/.well-known/uma2-configuration"));
+            Assert.Equal("http://localhost:8080/auth/realms/myrealm/", options.Authority);
+            Assert.False(options.RequireHttpsMetadata);
+            Assert.Equal("http://localhost:8080/auth/realms/myrealm/.well-known/uma2-configuration", options.MetadataAddress);
         }
 
-        [Test]
+        [Fact]
         public void startup_should_registered_all_required_services()
         {
             var webHost = Microsoft.AspNetCore.WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build();
-            Assert.IsNotNull(webHost);
-            Assert.IsNotNull(webHost.Services.GetService<HealthCheckService>());
-            Assert.IsNotNull(webHost.Services.GetService<ITicketsService>());
-            Assert.IsNotNull(webHost.Services.GetService<IOpenApiDocumentGenerator>());
+            Assert.NotNull(webHost);
+            Assert.NotNull(webHost.Services.GetService<HealthCheckService>());
+            Assert.NotNull(webHost.Services.GetService<ITicketsService>());
+            Assert.NotNull(webHost.Services.GetService<IOpenApiDocumentGenerator>());
         }
 
-        [Test]
+        [Fact]
         public void configure_services_should_inject_services()
         {
             IServiceCollection services = new ServiceCollection();
@@ -134,8 +131,8 @@ namespace DisputeApi.Web.Test
             target.ConfigureServices(services);
             
             var serviceProvider = services.BuildServiceProvider();
-            Assert.IsNotNull(serviceProvider);
-            Assert.IsTrue(services.Count > 0);
+            Assert.NotNull(serviceProvider);
+            Assert.True(services.Count > 0);
         }
     }
 }
