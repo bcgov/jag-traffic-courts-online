@@ -40,6 +40,8 @@ import { StepSingleCountComponent } from './components/step-single-count/step-si
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
+import { WebcamModule } from 'ngx-webcam';
+import { PhotoComponent } from './components/photo/photo.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -64,6 +66,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeAllStepperComponent,
     StepDisputantComponent,
     StepSingleCountComponent,
+    PhotoComponent,
   ],
   imports: [
     CommonModule,
@@ -76,6 +79,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     SurveyJsModule,
     MatStepperModule,
+    WebcamModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

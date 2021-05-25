@@ -1,0 +1,108 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>Ticket Photo</ng-container>
+  </app-page-header>
+
+  <div>
+    <mat-button-toggle-group
+      (change)="toggleWebcam($event)"
+      [formControl]="photoCaptureType"
+      class="mb-4"
+      aria-label="Photo Capture"
+    >
+      <mat-button-toggle value="upload" class="col-sm"
+        >Upload Photo</mat-button-toggle
+      >
+      <mat-button-toggle value="take" class="col-sm"
+        >Take Photo</mat-button-toggle
+      >
+    </mat-button-toggle-group>
+
+    <div *ngIf="showWebcam; else noShowWebcamImage">
+      <div *ngIf="webcamImage; else noWebcamImage">
+        <img [src]="webcamImage.imageAsDataUrl" /><br />
+
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          class="mt-2 mb-4"
+          (click)="webcamImage = null"
+        >
+          Try Again
+        </button>
+      </div>
+
+      <ng-template #noWebcamImage>
+        <webcam
+          [trigger]="triggerObservable"
+          (imageCapture)="handleImage($event)"
+          *ngIf="showWebcam"
+          [allowCameraSwitch]="true"
+          [switchCamera]="nextWebcamObservable"
+          [videoOptions]="videoOptions"
+          [imageQuality]="1"
+          mirrorImage="never"
+          (cameraSwitched)="cameraWasSwitched($event)"
+          (initError)="handleInitError($event)"
+        >
+        </webcam
+        ><br />
+
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          class="mt-2"
+          (click)="triggerSnapshot()"
+        >
+          Take A Snapshot
+        </button>
+
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          class="ml-2"
+          (click)="showNextWebcam(true)"
+          [disabled]="!multipleWebcamsAvailable"
+        >
+          Show Next Webcam
+        </button>
+      </ng-template>
+
+      <h4 *ngIf="errors.length > 0">Messages:</h4>
+      <ul *ngFor="let error of errors">
+        <li>{{ error | json }}</li>
+      </ul>
+    </div>
+
+    <ng-template #noShowWebcamImage>
+      <div>
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          (click)="fileInput.click()"
+        >
+          <mat-icon inline="true">attach_file</mat-icon> Choose File
+        </button>
+        <h3>{{ fileName || "No file uploaded yet." }}</h3>
+        <input
+          hidden
+          (change)="onFileChange($event)"
+          #fileInput
+          type="file"
+          id="file"
+        />
+
+        <img
+          [src]="imageSrc"
+          *ngIf="imageSrc"
+          style="max-height: 500px; max-width: 500px"
+          class="mb-4"
+        />
+      </div>
+    </ng-template>
+  </div>
+</app-page>
