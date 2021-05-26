@@ -24,6 +24,7 @@ import { PostalPipe } from './pipes/postal.pipe';
 import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { TranslateModule } from '@ngx-translate/core';
     DialogContentDirective,
     AlertComponent,
     HeaderComponent,
+    FooterComponent,
   ],
   imports: [
     CommonModule,
@@ -81,6 +83,7 @@ import { TranslateModule } from '@ngx-translate/core';
     AlertComponent,
     ConfigModule,
     HeaderComponent,
+    FooterComponent,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

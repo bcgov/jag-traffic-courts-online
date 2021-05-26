@@ -94,13 +94,7 @@
         </div>
       </div>
 
-      <div
-        class="row"
-        *ngIf="
-          offenceAgreementStatus.value === '1' ||
-          offenceAgreementStatus.value === '2'
-        "
-      >
+      <div class="row" *ngIf="offenceAgreementStatus.value === '2'">
         <div class="col">
           <label>{{ "stepper.count.requests" | translate }}</label>
           <mat-checkbox
@@ -120,7 +114,7 @@
 
       <div
         class="row"
-        *ngIf="offenceAgreementStatus.value === '1' && requestReduction.value"
+        *ngIf="offenceAgreementStatus.value === '2' && requestReduction.value"
       >
         <div class="col">
           <mat-form-field class="w-100">
@@ -144,7 +138,7 @@
 
       <div
         class="row"
-        *ngIf="offenceAgreementStatus.value === '1' && requestMoreTime.value"
+        *ngIf="offenceAgreementStatus.value === '2' && requestMoreTime.value"
       >
         <div class="col">
           <mat-form-field class="w-100">
