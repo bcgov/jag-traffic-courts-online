@@ -10,12 +10,14 @@
       class="mb-4"
       aria-label="Photo Capture"
     >
-      <mat-button-toggle value="upload" class="col-sm"
-        >Upload Photo</mat-button-toggle
-      >
-      <mat-button-toggle value="take" class="col-sm"
-        >Take Photo</mat-button-toggle
-      >
+      <mat-button-toggle value="upload" class="col-sm">
+        <mat-icon inline="true">upload_file</mat-icon>
+        Upload Photo
+      </mat-button-toggle>
+      <mat-button-toggle value="take" class="col-sm">
+        <mat-icon inline="true">photo_camera</mat-icon>
+        Take Photo
+      </mat-button-toggle>
     </mat-button-toggle-group>
 
     <div *ngIf="showWebcam; else noShowWebcamImage">
@@ -85,7 +87,7 @@
           color="primary"
           (click)="fileInput.click()"
         >
-          <mat-icon inline="true">attach_file</mat-icon> Choose File
+          Select Ticket Photo
         </button>
         <h3>{{ fileName || "No file uploaded yet." }}</h3>
         <input

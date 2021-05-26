@@ -14,12 +14,15 @@
   margin-top: 5px !important;
 }
 
+.mat-button-toggle-group {
+  border: 1px solid theme-palette(blue);
+}
+
 .mat-button-toggle {
-  // background-color: theme-palette(grey, light);
   color: theme-palette(blue);
 }
 
 .mat-button-toggle-checked {
-  background-color: theme-palette(blue);
+  background-color: theme-palette(blue, light);
   color: white !important;
 }
