@@ -47,9 +47,9 @@ registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
 
 export function appInit(appConfigService: AppConfigService) {
-  () => appConfigService.load();
-
-  console.log(appConfigService.version);
+  return () => {
+    return appConfigService.loadAppConfig();
+  };
 }
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -107,8 +107,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: APP_INITIALIZER,
       useFactory: appInit,
       multi: true,
-      deps: [AppConfigService]
-    }
+      deps: [AppConfigService],
+    },
   ],
   bootstrap: [AppComponent],
 })

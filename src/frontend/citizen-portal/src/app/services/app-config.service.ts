@@ -1,23 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+
+export class AppConfig {
+  version: string;
+  useKeycloak: boolean;
+  apiBaseUrl: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppConfigService {
-
-  public version: string;
-  public useKeycloak: boolean;
+  private appConfig: AppConfig;
 
   constructor(private http: HttpClient) {}
 
-  load(): void  {
-      const configFile = '/assets/app.config.json';
-      console.log('Loading configuration from ' + configFile);
-      const promise = this.http.get(configFile)
-        .pipe(map(response => {
-          Object.assign(this, response);
-         }));
+  public loadAppConfig() {
+    return this.http
+      .get('/assets/app.config.json')
+      .toPromise()
+      .then((data: AppConfig) => {
+        this.appConfig = data;
+        console.log('AppConfigService.loadAppConfig', data);
+      });
+  }
+
+  get version(): string {
+    return this.appConfig?.version;
+  }
+
+  get useKeycloak(): boolean {
+    return this.appConfig?.useKeycloak;
+  }
+
+  get apiBaseUrl(): string {
+    return this.appConfig?.apiBaseUrl;
   }
 }
