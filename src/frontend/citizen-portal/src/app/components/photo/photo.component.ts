@@ -13,7 +13,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 export class PhotoComponent implements OnInit {
   public busy: Subscription;
 
-  //-------------------------------------------------
+  // -------------------------------------------------
 
   public photoCaptureType = new FormControl('upload');
 
@@ -38,7 +38,7 @@ export class PhotoComponent implements OnInit {
     boolean | string
   >();
 
-  //-------------------------------------------------
+  // -------------------------------------------------
   imageSrc: string;
   myForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -47,7 +47,7 @@ export class PhotoComponent implements OnInit {
   });
 
   // fileName = '';
-  //----------------------
+  // ----------------------
 
   @Input()
   requiredFileType: string;
@@ -66,13 +66,13 @@ export class PhotoComponent implements OnInit {
     );
   }
 
-  //-------------------
+  // -------------------
 
-  get f() {
+  public get f() {
     return this.myForm.controls;
   }
 
-  onFileChangex(event) {
+  public onFileChangex(event) {
     const reader = new FileReader();
 
     if (event.target.files && event.target.files.length) {
@@ -93,7 +93,7 @@ export class PhotoComponent implements OnInit {
     }
   }
 
-  submit() {
+  public submit() {
     console.log(this.myForm.value);
     this.http
       .post('http://localhost:8001/upload.php', this.myForm.value)
@@ -102,22 +102,23 @@ export class PhotoComponent implements OnInit {
         alert('Uploaded Successfully.');
       });
   }
-  //--------------------
-  onFileChange(event: any) {
+
+  // --------------------
+  public onFileChange(event: any) {
     //Angular 11, for stricter type
-    if (!event.target.files[0] || event.target.files[0].length == 0) {
+    if (!event.target.files[0] || event.target.files[0].length === 0) {
       console.log('You must select an image');
       return;
     }
 
-    var mimeType = event.target.files[0].type;
+    const mimeType = event.target.files[0].type;
 
     if (mimeType.match(/image\/*/) == null) {
       console.log('Only images are supported');
       return;
     }
 
-    let reader = new FileReader();
+    const reader = new FileReader();
     const file: File = event.target.files[0];
     this.fileName = file.name;
     reader.readAsDataURL(file);
@@ -148,7 +149,7 @@ export class PhotoComponent implements OnInit {
       });
     };
   }
-  //-----------------------
+  // -----------------------
 
   // onFileSelected(event) {
   //   const file: File = event.target.files[0];
@@ -185,16 +186,16 @@ export class PhotoComponent implements OnInit {
     }
   }
 
-  cancelUpload() {
+  public cancelUpload() {
     this.uploadSub.unsubscribe();
     this.reset();
   }
 
-  reset() {
+  public reset() {
     this.uploadProgress = null;
     this.uploadSub = null;
   }
-  //-------------------
+  // -------------------
 
   public triggerSnapshot(): void {
     this.trigger.next();
@@ -223,7 +224,7 @@ export class PhotoComponent implements OnInit {
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.info('received webcam image', webcamImage);
+    console.log('received webcam image', webcamImage);
     this.webcamImage = webcamImage;
   }
 
