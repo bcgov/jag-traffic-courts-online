@@ -1,16 +1,15 @@
-﻿using AutoFixture.NUnit3;
-using AutoMapper;
+﻿using AutoMapper;
 using DisputeApi.Web.Features.Disputes;
+using DisputeApi.Web.Features.Disputes.DBModel;
+using DisputeApi.Web.Features.Disputes.Queries;
 using DisputeApi.Web.Test.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using DisputeApi.Web.Features.Disputes.DBModel;
-using System.Threading;
-using DisputeApi.Web.Features.Disputes.Queries;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Disputes.Queries
 {
@@ -22,8 +21,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Queries
         private Mock<IMapper> _mapperMock;
         private GetAllDisputesQueryHandler _sut;
 
-        [SetUp]
-        public void SetUp()
+        public GetAllDisputesQueryHandlerTest()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<GetAllDisputesQueryHandler>();
             _disputeServiceMock = new Mock<IDisputeService>();
@@ -32,7 +30,8 @@ namespace DisputeApi.Web.Test.Features.Disputes.Queries
             _sut = new GetAllDisputesQueryHandler(_loggerMock.Object, _disputeServiceMock.Object, _mapperMock.Object);
         }
 
-        [Test, AllowCirculationAutoData]
+        [Theory]
+        [AllowCirculationAutoData]
         public async Task GetAllDisputesQueryHandler_handle_will_call_service(GetAllDisputesQuery getAllDisputesQuery,
             IEnumerable<Dispute> createdDisputes, IEnumerable<GetDisputeResponse> responseDisputes)
         {
@@ -43,7 +42,7 @@ namespace DisputeApi.Web.Test.Features.Disputes.Queries
 
             var result = await _sut.Handle(getAllDisputesQuery, CancellationToken.None);
             _disputeServiceMock.Verify(x => x.GetAllAsync(), Times.Once);
-            Assert.AreEqual(responseDisputes, result);
+            Assert.Equal(responseDisputes, result);
         }
     }
 }

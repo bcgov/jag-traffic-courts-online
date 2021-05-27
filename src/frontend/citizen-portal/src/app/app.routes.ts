@@ -7,6 +7,7 @@ export class AppRoutes {
   public static DISPUTE = 'dispute';
   public static STEPPER = 'stepper';
   public static ALL_STEPPER = 'dispute-all-stepper';
+  public static PHOTO = 'photo';
 
   public static MODULE_PATH = AppRoutes.DISPUTE;
 
