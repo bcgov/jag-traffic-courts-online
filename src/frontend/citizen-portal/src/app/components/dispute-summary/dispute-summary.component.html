@@ -60,10 +60,12 @@
             <div class="col-md-9">
               <small class="d-block">
                 {{ "label.desc_of_offence" | translate }}
+                <!--
                 <span *ngIf="row.vehicleDescription"
                   >{{ "label.for_vehicle" | translate }}
                   {{ row.vehicleDescription }}</span
                 >
+                -->
               </small>
               {{ row.offenceDescription | titlecase }}
             </div>
@@ -275,7 +277,7 @@
             routerLink="/dispute/photo"
           >
             <mat-icon inline="true">photo</mat-icon>
-            Attach Ticket Photo
+            Attach Photo of Ticket
           </button>
         </div>
       </div>

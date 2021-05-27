@@ -58,7 +58,7 @@ export class FindTicketComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: ['EZ02000460', [Validators.required]],
       time: ['09:54', [Validators.required]],
-      test: [null, [Validators.required, autocompleteObjectValidator()]],
+      test: [null, [autocompleteObjectValidator()]], //Validators.required,
     });
 
     this.filteredStatutes = this.test.valueChanges.pipe(
