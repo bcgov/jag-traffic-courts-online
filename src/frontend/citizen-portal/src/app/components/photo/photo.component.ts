@@ -13,11 +13,8 @@ import { Observable, Subject, Subscription } from 'rxjs';
 export class PhotoComponent implements OnInit {
   public busy: Subscription;
 
-  // -------------------------------------------------
-
   public photoCaptureType = new FormControl('upload');
 
-  // toggle webcam on/off
   public showWebcam = false;
   // public allowCameraSwitch = true;
   public multipleWebcamsAvailable = false;
@@ -33,28 +30,25 @@ export class PhotoComponent implements OnInit {
 
   // webcam snapshot trigger
   private trigger: Subject<void> = new Subject<void>();
+
   // switch to next / previous / specific webcam; true/false: forward/backwards, string: deviceId
   private nextWebcam: Subject<boolean | string> = new Subject<
     boolean | string
   >();
 
-  // -------------------------------------------------
-  imageSrc: string;
-  myForm = new FormGroup({
+  public imageSrc: string;
+  public myForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required]),
   });
 
-  // fileName = '';
-  // ----------------------
-
   @Input()
   requiredFileType: string;
 
-  fileName = '';
-  uploadProgress: number;
-  uploadSub: Subscription;
+  public fileName = '';
+  public uploadProgress: number;
+  public uploadSub: Subscription;
 
   constructor(private http: HttpClient) {}
 
@@ -66,46 +60,7 @@ export class PhotoComponent implements OnInit {
     );
   }
 
-  // -------------------
-
-  public get f() {
-    return this.myForm.controls;
-  }
-
-  public onFileChangex(event) {
-    const reader = new FileReader();
-
-    if (event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      reader.readAsDataURL(file);
-      // this.fileName = file.name;
-
-      // const fil2e: File;
-      console.log('file', file.name, file.lastModified);
-
-      reader.onload = () => {
-        this.imageSrc = reader.result as string;
-
-        this.myForm.patchValue({
-          fileSource: reader.result,
-        });
-      };
-    }
-  }
-
-  public submit() {
-    console.log(this.myForm.value);
-    this.http
-      .post('http://localhost:8001/upload.php', this.myForm.value)
-      .subscribe((res) => {
-        console.log(res);
-        alert('Uploaded Successfully.');
-      });
-  }
-
-  // --------------------
   public onFileChange(event: any) {
-    //Angular 11, for stricter type
     if (!event.target.files[0] || event.target.files[0].length === 0) {
       console.log('You must select an image');
       return;
@@ -123,23 +78,6 @@ export class PhotoComponent implements OnInit {
     this.fileName = file.name;
     reader.readAsDataURL(file);
     console.log('file', file.name, file.lastModified);
-    // reader.onload = (_event) => {
-    // 	// this.msg = "";
-    // 	this.url = reader.result;
-    // }
-
-    // reader.onload = () => {
-    //   this.imageSrc = reader.result as string;
-
-    //   this.myForm.patchValue({
-    //     fileSource: reader.result,
-    //   });
-    // };
-
-    // reader.onload = function(e) {
-    //   // The file's text will be printed here
-    //   console.log(e.target.result)
-    // };
 
     reader.onload = () => {
       this.imageSrc = reader.result as string;
@@ -149,53 +87,6 @@ export class PhotoComponent implements OnInit {
       });
     };
   }
-  // -----------------------
-
-  // onFileSelected(event) {
-  //   const file: File = event.target.files[0];
-
-  //   if (file) {
-  //     this.fileName = file.name;
-  //     const formData = new FormData();
-  //     formData.append('thumbnail', file);
-
-  //     const upload$ = this.http
-  //       .post('/api/thumbnail-upload', formData, {
-  //         reportProgress: true,
-  //         observe: 'events',
-  //       })
-  //       .pipe(finalize(() => this.reset()));
-
-  //     this.uploadSub = upload$.subscribe((event) => {
-  //       if (event.type == HttpEventType.UploadProgress) {
-  //         this.uploadProgress = Math.round(100 * (event.loaded / event.total));
-  //       }
-  //     });
-  //   }
-  // }
-
-  public onFileSelected(event) {
-    const file: File = event.target.files[0];
-
-    if (file) {
-      this.fileName = file.name;
-      const formData = new FormData();
-      formData.append('thumbnail', file);
-      const upload$ = this.http.post('/api/thumbnail-upload', formData);
-      upload$.subscribe();
-    }
-  }
-
-  public cancelUpload() {
-    this.uploadSub.unsubscribe();
-    this.reset();
-  }
-
-  public reset() {
-    this.uploadProgress = null;
-    this.uploadSub = null;
-  }
-  // -------------------
 
   public triggerSnapshot(): void {
     this.trigger.next();
@@ -203,7 +94,7 @@ export class PhotoComponent implements OnInit {
 
   public toggleWebcam($event: MatButtonToggleChange): void {
     console.log('toggleWebcam', $event);
-    this.showWebcam = $event.value === 'take'; //$event.checked; //!this.showWebcam;
+    this.showWebcam = $event.value === 'take'; // $event.checked; //!this.showWebcam;
   }
 
   public handleInitError(error: WebcamInitError): void {
