@@ -23,6 +23,7 @@ services:
     ports:
       - "5000:8080"
     restart: always
+    depends_on: [splunk,postgres,rabbitmq,redis]
 
   # #############################################################################################
   # ###                                 TrafficCourt FRONTEND                                 ###
@@ -45,6 +46,7 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    depends_on: [dispute-api,keycloak]
 
   #############################################################################################
   ###                                  KEYCLOAK                                             ###
@@ -60,7 +62,6 @@ services:
       KEYCLOAK_FRONTEND_URL: http://localhost:8081/auth
     volumes:
       - ./infrastructure/keycloak/realm-export.json:/tmp/realm-export.json
-      - ./infrastructure/keycloak/createuser.sh:/tmp/createuser.sh
     ports:
       - 8081:8080
 
@@ -68,12 +69,12 @@ services:
   # ###                                  KEYCLOAK CONFIG                                      ###
   # #############################################################################################
   keycloak-config:
-    container_name: keycloak-config
     build:
       context: ./infrastructure/keycloak
       args:
         - KEYCLOAK_URL=http://keycloak:8080
     command: sh -c "dockerize -wait http://keycloak:8080 -timeout 300s /tmp/createuser.sh"
+    depends_on: [keycloak]
 
   #############################################################################################
   ###                                  SPLUNK                                               ###
@@ -108,10 +109,10 @@ services:
   #############################################################################################
   ###                           RABBITMQ                                                    ###
   #############################################################################################
-  rabbitmq-tco:
+  rabbitmq:
     image: rabbitmq:3.7.15-management
     # image: registry.redhat.io/rhosp-rhel8/openstack-rabbitmq:16.1.5-4
-    container_name: rabbitmq-tco
+    container_name: rabbitmq
     hostname: rabbitmq
     ports:
       - 5671:5672
