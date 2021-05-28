@@ -1,5 +1,5 @@
 # base image
-FROM node:10.16 as build-deps
+FROM node:14.17 as build-deps
 RUN printenv
 
 # set working directory
