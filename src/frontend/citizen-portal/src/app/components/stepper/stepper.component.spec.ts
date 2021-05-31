@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 describe('StepperComponent', () => {
   let component: StepperComponent;
   let fixture: ComponentFixture<StepperComponent>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,7 +33,7 @@ describe('StepperComponent', () => {
   });
 
   beforeEach(() => {
-    router = TestBed.get(Router);
+    router = TestBed.inject(Router);
     spyOn(router, 'getCurrentNavigation').and.returnValues({
       id: 1,
       initialUrl: '',

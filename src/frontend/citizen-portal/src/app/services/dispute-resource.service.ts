@@ -93,7 +93,7 @@ export class DisputeResourceService {
     return this.apiResource
       .post<TicketDispute>('disputes/offenceDispute', offenceDispute)
       .pipe(
-        map((response: ApiHttpResponse<TicketDispute>) => null),
+        map((response: ApiHttpResponse<null>) => null),
         catchError((error: any) => {
           this.toastService.openErrorToast(
             this.configService.dispute_create_error

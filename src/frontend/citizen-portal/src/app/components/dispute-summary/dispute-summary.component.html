@@ -60,10 +60,12 @@
             <div class="col-md-9">
               <small class="d-block">
                 {{ "label.desc_of_offence" | translate }}
+                <!--
                 <span *ngIf="row.vehicleDescription"
                   >{{ "label.for_vehicle" | translate }}
                   {{ row.vehicleDescription }}</span
                 >
+                -->
               </small>
               {{ row.offenceDescription | titlecase }}
             </div>
@@ -139,9 +141,10 @@
               mat-flat-button
               color="accent"
               *ngIf="
-                row.offenceStatus === -1 ||
-                row.offenceStatus === 1 ||
-                row.offenceStatus === 2
+                (row.offenceStatus === -1 ||
+                  row.offenceStatus === 1 ||
+                  row.offenceStatus === 2) &&
+                ticket.disputesExist
               "
             >
               <a
@@ -250,7 +253,7 @@
 
     <section class="mb-4 mt-4">
       <div class="row">
-        <div class="col">
+        <div class="col-md-4">
           <button
             id="secondaryButton"
             mat-stroked-button
@@ -260,6 +263,21 @@
           >
             <mat-icon inline="true">keyboard_arrow_left</mat-icon>
             {{ "label.find_another_ticket" | translate }}
+          </button>
+        </div>
+
+        <div class="col-md-4"></div>
+
+        <div class="col-md-4">
+          <button
+            id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            routerLink="/dispute/photo"
+          >
+            <mat-icon inline="true">photo</mat-icon>
+            Attach Photo of Ticket
           </button>
         </div>
       </div>

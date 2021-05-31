@@ -84,15 +84,16 @@
       "amount_due": "Amount Due",
       "discount_if_paid_by": "Ticket Discount (if paid by",
       "dispute_yes_no": "I would like to dispute this offence",
-      "for_this_offence": "For this offence",
-      "offence_agreement_1": "I agree that I committed this offence, and I do not want to appear in court",
-      "offence_agreement_2": "I agree that I committed this offence, and I want to appear in court",
-      "offence_agreement_3": "I do not agree that I committed this offence (allegation)",
+      "for_this_offence": "Regarding Count",
+      "what_to_do": "what would you like to do?",
+      "offence_agreement_1": "Nothing, I will pay the fine for this count",
+      "offence_agreement_2": "Request a reduction or time to pay for the count",
+      "offence_agreement_3": "Dispute the charge",
       "requests": "Which requests would you like to make?",
-      "requestReduction": "I request a reduction of the ticketed amount: and/or",
-      "requestReductionReasonLabel": "What are your reasons for a reduction in the ticketed amount(s)?",
+      "requestReduction": "I request a reduction of the ticketed amount",
+      "requestReductionReasonLabel": "What are your reasons for a reduction in the ticketed amount?",
       "requestMoreTime": "I request time to pay the ticketed amount",
-      "requestMoreTimeReasonLabel": "What are your reasons for requiring more time to pay the ticketed amount(s)?"
+      "requestMoreTimeReasonLabel": "What are your reasons for requiring more time to pay the ticketed amount?"
     },
     "additional": {
       "heading": "Additional Information",

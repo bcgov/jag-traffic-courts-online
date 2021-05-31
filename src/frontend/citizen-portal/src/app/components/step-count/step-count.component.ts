@@ -1,5 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+  MatChip,
+  MatChipList,
+  MatChipSelectionChange,
+} from '@angular/material/chips';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -22,10 +34,13 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
+  @ViewChild(MatChipList) chipList!: MatChipList;
+
   public defaultLanguage: string;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.next';
+  public choice = 0;
 
   constructor(
     protected route: ActivatedRoute,
@@ -49,9 +64,21 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     );
   }
 
+  public offenceAgreementStatusOptions = [
+    { value: '0', desc: 'Nothing, I will pay the fine for this count' },
+    { value: '1', desc: 'Request a reduction or more time to pay' },
+    { value: '2', desc: 'Dispute the charge' },
+  ];
+
+  public toggleSelection(chip: MatChip) {
+    // chip.toggleSelected();
+    chip.select();
+    console.log('chip', chip);
+  }
+
   public ngOnInit() {
     this.defaultLanguage = this.translateService.getDefaultLang();
-    this.form = this.stepControl; // this.disputeFormStateService.stepOffence1Form;
+    this.form = this.stepControl;
     this.patchForm();
   }
 
@@ -85,10 +112,6 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public get moreTimeReason(): FormControl {
     return this.form.get('moreTimeReason') as FormControl;
-  }
-
-  public get includeOffenceInDispute(): FormControl {
-    return this.form.get('includeOffenceInDispute') as FormControl;
   }
 
   public get offenceDescription(): FormControl {

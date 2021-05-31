@@ -40,6 +40,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
   MomentDateAdapter,
   MatMomentDateModule,
@@ -93,6 +94,7 @@ const matFormFieldCustomOptions: MatFormFieldDefaultOptions = {
     MatTabsModule,
     MatNativeDateModule,
     MatMomentDateModule,
+    MatButtonToggleModule,
   ],
   providers: [
     {
