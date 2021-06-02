@@ -336,7 +336,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      informationCertified: [false, [FormControlValidators.requiredTruthful]],
+      informationCertified: [false], // , [FormControlValidators.requiredTruthful]],
     });
   }
 }

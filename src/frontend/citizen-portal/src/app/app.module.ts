@@ -42,6 +42,8 @@ import { AppConfigService } from './services/app-config.service';
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
+import { WebcamModule } from 'ngx-webcam';
+import { PhotoComponent } from './components/photo/photo.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -72,6 +74,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeAllStepperComponent,
     StepDisputantComponent,
     StepSingleCountComponent,
+    PhotoComponent,
   ],
   imports: [
     CommonModule,
@@ -84,6 +87,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     SurveyJsModule,
     MatStepperModule,
+    WebcamModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -116,7 +120,7 @@ export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
   constructor(private translateService: TranslateService) {
-    translateService.addLangs(['en', 'fr']);
+    this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);
     console.log('Current Browser Language', currentLanguage);
@@ -125,6 +129,6 @@ export class AppModule {
     if (this.availableLanguages.includes(currentLanguage)) {
       defaultLanguage = currentLanguage;
     }
-    translateService.setDefaultLang(defaultLanguage);
+    this.translateService.setDefaultLang(defaultLanguage);
   }
 }

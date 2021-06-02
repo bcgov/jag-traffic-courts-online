@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { PhotoComponent } from '@components/photo/photo.component';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { AppRoutes } from './app.routes';
 import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: AppRoutes.SUMMARY,
         component: DisputeSummaryComponent,
+      },
+      {
+        path: AppRoutes.PHOTO,
+        component: PhotoComponent,
       },
     ],
   },

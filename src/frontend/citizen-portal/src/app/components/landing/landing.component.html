@@ -1,156 +1,146 @@
 <app-header></app-header>
 
-<div class="container">
-  <div class="row mt-4">
-    <div class="col-md-2 logo d-none d-md-block">
-      <img
-        src="/assets/tco_ticket_types_small.png"
-        style="width: 150px"
-        alt="Traffic Court Logo"
-      />
-    </div>
-    <div class="col-md-7">
-      <div class="col-sm-12 header">
-        <h1 translate>app_heading</h1>
-      </div>
-      <div class="col-sm-12">
-        <p translate>landing.description1</p>
-        <p translate>landing.description2</p>
-      </div>
-      <div class="col-sm-12 mt-4">
-        <div class="row actions">
-          <div class="col col-md-6">
-            <button
-              mat-flat-button
-              color="primary"
-              class="large"
-              routerLink="/dispute/find"
-            >
-              {{ "label.initiate_dispute" | translate }}
-            </button>
-          </div>
-          <!--
-          <div class="col col-md-6">
-            <button
-              mat-flat-button
-              color="primary"
-              class="large light"
-              routerLink="/dispute/find"
-            >
-              Update Dispute Information
-            </button>
-          </div>
-          -->
+<div class="landing">
+  <div class="container">
+    <section>
+      <div class="summary-content">
+        <img
+          class="tco-logo"
+          src="/assets/images/emergency-support-services-logo.svg"
+          alt="Traffic Court Online"
+        />
+        <div>
+          <h1>Traffic Court Online</h1>
+          <p class="lead">
+            The online tool for submitting and resolving your BC Violation
+            Ticket disputes.
+          </p>
+          <p class="lead">
+            If you would like to simply pay for your ticket, please click on the
+            'Pay Now' button.
+          </p>
         </div>
       </div>
-    </div>
-    <div class="col-md-3">
-      <div class="col col-md-auto">
-        <button mat-flat-button color="accent" class="large">
-          <a
-            href="https://pay.gov.bc.ca"
-            target="_blank"
-            rel="noopener noreferrer"
+    </section>
+
+    <section class="tco-main">
+      <div class="tco-main-content center">
+        <h2>Would you like to dispute a ticket?</h2>
+        <p>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.
+        </p>
+        <button mat-flat-button class="main-button" routerLink="/dispute/find">
+          Find My Ticket
+          <mat-icon inline="true">keyboard_arrow_right</mat-icon>
+        </button>
+        <p>
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+          accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
+          ab illo inventore veritatis et quasi architecto beatae vitae dicta
+          sunt explicabo.
+        </p>
+      </div>
+    </section>
+
+    <section class="cards">
+      <div class="cards-content">
+        <div class="card center">
+          <div class="card__image">
+            <img class="step1" src="/assets/images/laptop-user.svg" />
+          </div>
+          <h3>Lorem Ipsum</h3>
+          <p>
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
+            fugit, sed quia consequuntur magni dolores eos qui ratione
+            voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
+            ipsum quia dolor sit amet, consectetur, adipisci velit.
+          </p>
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="large"
+            color="primary"
           >
-            {{ "label.pay_now" | translate }}
-          </a>
-        </button>
-        <!--
-        <button
-          mat-flat-button
-          color="primary"
-          class="large light"
-          routerLink="/survey/home"
-        >
-          SurveyJS
-        </button>
-        <button
-          mat-flat-button
-          color="primary"
-          class="large light"
-          routerLink="/dispute/find"
-        >
-          Find Ticket
-        </button>
-        <button
-          mat-flat-button
-          color="primary"
-          class="large light"
-          routerLink="/dispute/list"
-        >
-          Ticket Listing
-        </button>
-      --></div>
-    </div>
-    <div class="col-sm-12 col-md-4 steps step-1">
-      <div class="step-container">
-        <section class="content has-step-background mr-4 ml-4">
-          <h2>
-            <a routerLink="/dispute/find" class="step-anchor">{{
-              "landing.step_1.heading" | translate
-            }}</a>
-          </h2>
-          <p translate>landing.step_1.detail</p>
-        </section>
-
-        <div class="info-graphic clickable" (click)="onStep1()">
-          <img src="/assets/step_1_image.svg" alt="Step 1" />
+            <a href="http://www.google.ca">Find Out More</a>
+          </button>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-4 steps step-2">
-      <div class="step-container">
-        <section class="content has-step-background mr-4 ml-4">
-          <h2>{{ "landing.step_2.heading" | translate }}</h2>
-          <p translate>landing.step_2.detail</p>
-        </section>
 
-        <div class="info-graphic">
-          <img src="/assets/step_2_image.svg" alt="Step 2" />
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-4 steps step-3">
-      <div class="step-container">
-        <section class="content has-step-background mr-4 ml-4">
-          <h2>{{ "landing.step_3.heading" | translate }}</h2>
-          <p translate>landing.step_3.detail</p>
-        </section>
+        <div class="card center card--isblue">
+          <div class="card__image">
+            <img class="step2" src="/assets/images/invoice.svg" />
+          </div>
+          <h3>Lorem Ipsum</h3>
+          <p>
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
+            fugit, sed quia consequuntur magni dolores eos qui ratione
+            voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
+            ipsum quia dolor sit amet, consectetur, adipisci velit.
+          </p>
 
-        <div class="info-graphic">
-          <img src="/assets/step_3_image.svg" alt="Step 3" />
-        </div>
-      </div>
-    </div>
-    <div class="col-md-12 steps">
-      <hr />
-      <section class="content mt-4 mr-4 ml-4">
-        <h2>
-          <a
-            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-            target="_blank"
-            rel="noopener noreferrer"
-            >{{ "landing.self_resolution.heading" | translate }}</a
+          <button
+            mat-stroked-button
+            type="button"
+            class="large"
+            color="primary"
           >
-        </h2>
-
-        <div class="row actions">
-          <div class="col col-md-8">
-            <p translate>landing.self_resolution.detail</p>
-          </div>
-          <div class="col-md-4">
-            <button mat-flat-button color="primary" class="large light">
-              <a
-                class="anchor-button"
-                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ "landing.self_resolution.explore" | translate }}</a
-              >
-            </button>
-          </div>
+            <a
+              href="https://pay.gov.bc.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ "label.pay_now" | translate }}
+            </a>
+          </button>
         </div>
-      </section>
-    </div>
+
+        <div class="card center card--isdark">
+          <div class="card__image">
+            <img class="step3" src="/assets/images/users.svg" />
+          </div>
+          <h3>Lorem Ipsum</h3>
+          <p>
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
+            fugit, sed quia consequuntur magni dolores eos qui ratione
+            voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
+            ipsum quia dolor sit amet, consectetur, adipisci velit.
+          </p>
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="large"
+            color="primary"
+          >
+            <a
+              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ "landing.self_resolution.explore" | translate }}</a
+            >
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-cta pb-4">
+      <div class="contact-cta__content center">
+        <img
+          class="contact-cta__icon"
+          src="/assets/images/contact.svg"
+          alt="Phone"
+        />
+        <h3>Contact Us</h3>
+        <p>
+          If you have any questions or need assistance, please contact TCO
+          Support toll free at <a href="tel:+ 18445377377"> 1-844-537-7377</a>.
+        </p>
+      </div>
+    </section>
   </div>
 </div>
+
+<app-footer></app-footer>
