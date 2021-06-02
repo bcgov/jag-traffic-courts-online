@@ -1,0 +1,77 @@
+# Introduction
+This document is here to guide the reader in setting up the Traffic Courts Online application on OpenShift. It assumes the project will be deployed on the BC Government OpenShift platform. This document also provides the steps requires to deploy an equivalent environment on your local development machine using CodeReady Containers (CRC).  If you are testing or deploying to CRC, be sure to follow the instructions on setting up CRC to mimic the default  BC Government OpenShift environemnt.
+
+This document will focus primarily on the command line interfaces as opposed to the web console. 
+
+All commands assume the current working directory is the `devops` directory. 
+
+# Prerequisites
+
+## Knowledge Prerequisites
+This guide assumes the reader is familar with Kubernetes and OpenShift.  The reader is not expected to be an expert in Kubernetes or OpenShift.
+
+## Software Prerequisites
+
+The following software will be required to be installed to following sections.
+
+### OpenShift Command Line Tools
+
+The OpenShift Command Line Tools can be downloaded from the OpenShift web console.  ```https://console.apps.silver.devops.gov.bc.ca/command-line-tools``` or on CRC, ```https://console-openshift-console.apps-crc.testing/command-line-tools```
+
+### Kubernetes command-line tool
+
+The Kubernetes command-line tool, kubectl, allows you to run commands against Kubernetes clusters.  The instructions to install for various platforms can be found at the offical [Kubernetes Tools Istall](https://console-openshift-console.apps-crc.testing/command-line-tools) page.  You will need to install the ```kubectl``` tool.
+
+# Local development with OpenShift
+
+CodeReady Containers is the quickest way to get started building OpenShift clusters. It is designed to run on a local computer to simplify setup and testing, and emulate the cloud development environment locally with all of the tools needed to develop container-based applications. 
+
+## Install
+
+To create a minimal cluster on your desktop/laptop for local development and testing, follow the instructions on [Create an OpenShift cluster](https://cloud.redhat.com/openshift/create/local).
+
+## Setup Projects
+
+To mirror the BC Government OpenShift project conventions, create the equivalent `tools`, `dev`, `test` and `prod` namespaces in your local deployment.
+
+### Unix
+```bash
+oc login --username=developer --password=developer
+for SUFFIX in tools dev test prod; do echo oc new-project local-${SUFFIX}; done;
+```
+### Windows
+```cmd
+oc login --username=developer --password=developer
+@FOR %i IN (tools dev test prod) DO oc new-project local-%i
+```
+
+## 
+
+Create the local resources. These commands will create the default network policy, ```platform-services-controlled-deny-by-default``` created in each of your namespaces.
+```
+kubectl kustomize local/tools | oc apply -f -
+kubectl kustomize local/dev | oc apply -f -
+kubectl kustomize local/test | oc apply -f -
+kubectl kustomize local/prod | oc apply -f -
+```
+
+## Create Image Streams
+```kubectl kustomize local/tools | oc apply -f -```
+
+## Push Local Images to CRC
+
+
+## Cleaning Up
+
+To remove the local projects from CodeReady Containers, run the following command.
+
+### Unix
+```bash
+oc login --username=developer --password=developer
+for SUFFIX in tools dev test prod; do echo oc delete project local-${SUFFIX}; done;
+```
+### Windows
+```cmd
+oc login --username=developer --password=developer
+@FOR %i IN (tools dev test prod) DO oc delete project local-%i
+```
