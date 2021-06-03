@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "configure": "ts-node setenv.ts",
+    "start": "npm run configure -- --environment=dev && ng serve --host 0.0.0.0 --poll=500 --port=4000",
+    "build-dev": "npm run configure -- --environment=dev && ng build --source-map=false",
+    "build-prod": "npm run configure -- --environment=prod && ng build --prod  --source-map=false",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "coverage": "ng test --browsers=ChromeHeadless --watch=false --code-coverage"
   },
   "private": true,
   "dependencies": {
