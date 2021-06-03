@@ -1,0 +1,8 @@
+{
+  "realm": "traffic-court",
+  "auth-server-url": "http://localhost:8081/auth",
+  "ssl-required": "external",
+  "resource": "traffic-court-frontend",
+  "public-client": true,
+  "confidential-port": 0
+}

@@ -44,6 +44,7 @@ import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
 import { WebcamModule } from 'ngx-webcam';
 import { PhotoComponent } from './components/photo/photo.component';
+import { KeycloakService } from 'keycloak-angular';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -111,7 +112,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: APP_INITIALIZER,
       useFactory: appInit,
       multi: true,
-      deps: [AppConfigService],
+      deps: [AppConfigService, KeycloakService],
     },
   ],
   bootstrap: [AppComponent],

@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 export class AppConfig {
+  production: boolean;
   version: string;
-  useKeycloak: boolean;
+  useMockServices: boolean;
   apiBaseUrl: string;
 }
 
@@ -25,12 +26,16 @@ export class AppConfigService {
       });
   }
 
+  get production(): boolean {
+    return this.appConfig?.production;
+  }
+
   get version(): string {
     return this.appConfig?.version;
   }
 
-  get useKeycloak(): boolean {
-    return this.appConfig?.useKeycloak;
+  get useMockServices(): boolean {
+    return this.appConfig?.useMockServices;
   }
 
   get apiBaseUrl(): string {

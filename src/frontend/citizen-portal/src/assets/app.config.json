@@ -1,5 +1,6 @@
 {
+  "production": false,
   "version": "1.0.0",
-  "useKeycloak": false,
+  "useMockServices": true,
   "apiBaseUrl": "/api"
 }

@@ -8,16 +8,17 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { environment } from '@env/environment';
 import { RouteUtils } from '@core/utils/route-utils.class';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { MockConfig } from 'tests/mocks/mock-config';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Injectable()
 export class BackendHttpInterceptor implements HttpInterceptor {
   constructor(
     private mockDisputeService: MockDisputeService,
+    private appConfigService: AppConfigService,
     private logger: LoggerService
   ) {}
 
@@ -39,7 +40,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       return this.handleLookupsRequests(request.method);
     }
 
-    if (environment.useMockServices) {
+    if (this.appConfigService.useMockServices) {
       if (
         currentRoutePath !== 'tickets' &&
         !currentRoutePath.includes('dispute') &&
