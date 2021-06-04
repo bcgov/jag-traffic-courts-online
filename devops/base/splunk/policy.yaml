@@ -1,0 +1,27 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: splunk-allow-dispute-api-hec-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: dispute-api
+      component: api
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8088
+  policyTypes:
+    - Ingress
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: splunk-allow-splunkweb-ingress
+spec:
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 8000
+  policyTypes:
+    - Ingress

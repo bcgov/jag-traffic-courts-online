@@ -1,0 +1,38 @@
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: splunk
+  name: splunk
+spec:
+  ports:
+    - name: 8000-tcp
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
+    - name: 8088-tcp
+      protocol: TCP
+      port: 8088
+      targetPort: 8088
+  selector:
+    name: splunk
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: splunk
+spec:
+  selector:
+    matchLabels:
+      app: splunk
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: splunk
+    spec:
+      containers:
+        - name: splunk
+          image: image-registry.openshift-image-registry.svc:5000/0198bb-tools/splunk:latest
+          ports:
+            - containerPort: 8080
