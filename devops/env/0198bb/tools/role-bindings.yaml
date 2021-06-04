@@ -1,8 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: system:image-puller
-  namespace: 0198bb-tools
+  labels: 
+    provisioned-by: kustomize 
+  name: system:image-puller:dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -11,12 +12,33 @@ subjects:
 - kind: ServiceAccount
   name: default
   namespace: 0198bb-dev
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels: 
+    provisioned-by: kustomize 
+  name: system:image-puller:test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:image-puller
+subjects:
 - kind: ServiceAccount
   name: default
   namespace: 0198bb-test
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels: 
+    provisioned-by: kustomize 
+  name: system:image-puller:prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:image-puller
+subjects:
 - kind: ServiceAccount
   name: default
   namespace: 0198bb-prod
-- apiGroup: rbac.authorization.k8s.io
-  kind: User
-  name: 0198bb-tools

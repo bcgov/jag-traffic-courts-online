@@ -1,6 +1,8 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
+  labels:
+    provisioned-by: kustomize 
   name: dispute-api-allow-web-ingress
 spec:
   podSelector:

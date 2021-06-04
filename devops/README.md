@@ -96,7 +96,6 @@ echo ${SA_PASSWORD} | docker login ${REGISTRY} --username ${SA_USERNAME} --passw
 docker push ${REGISTRY}/${NAMESPACE}/dispute-api:latest
 ```
 
-
 ## Cleaning Up
 
 To remove the local projects from CodeReady Containers, run the following command.
@@ -104,7 +103,7 @@ To remove the local projects from CodeReady Containers, run the following comman
 ### Unix
 ```bash
 oc login --username=developer --password=developer
-for SUFFIX in tools dev test prod; do echo oc delete project local-${SUFFIX}; done;
+for SUFFIX in tools dev test prod; do oc delete project local-${SUFFIX}; done;
 ```
 ### Windows
 ```cmd

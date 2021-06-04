@@ -4,6 +4,7 @@ metadata:
   labels:
     app: dispute-api
     component: api
+    provisioned-by: kustomize 
   name: dispute-api
 spec:
   ports:
@@ -17,6 +18,8 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels: 
+    provisioned-by: kustomize 
   name: dispute-api
 spec:
   selector:
