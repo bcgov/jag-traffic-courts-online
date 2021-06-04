@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispute-api
+spec:
+  template:
+    spec:
+      containers:
+        - name: dispute-api
+          resources:
+            limits:
+              cpu: 400m
+              memory: 2048Mi
+            requests:
+              cpu: 200m
+              memory: 1024Mi
