@@ -16,8 +16,7 @@ jobs:
         id: build-image
         env:
           COMPOSE_DOCKER_CLI_BUILD: 1
+          CONTEXT: ./src/frontend/citizen-portal
           DOCKER_BUILDKIT: 1
         run: |          
-          docker build \
-            --tag ${IMAGE} \
-            ${CONTEXT}
+          docker build ${CONTEXT}
