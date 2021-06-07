@@ -1,16 +1,7 @@
 # base image
 FROM node:14.17 as build-deps
-RUN printenv
 
 # set working directory
-ARG USE_MOCK_SERVICES
-ARG USE_KEYCLOAK
-ARG API_URL
-ARG KEYCLOAK_URL
-ARG KEYCLOAK_REALM
-ARG KEYCLOAK_CLIENT_ID
-RUN printenv
-
 ENV NODE_ROOT /usr/src/app
 
 RUN mkdir -p /usr/src/app
@@ -23,9 +14,7 @@ RUN npm audit fix
 
 COPY . .
 
-RUN rm -rf dist
-RUN yarn cache clean
-RUN yarn build-dev
+RUN npm run build-prod
 
 FROM registry.access.redhat.com/ubi8/nginx-118
 
@@ -34,5 +23,4 @@ COPY --from=build-deps /usr/src/app/nginx.conf /opt/app-root/etc/nginx.default.d
 
 EXPOSE 8080
 
-RUN printenv
 CMD ["sh", "-c", "nginx -g 'daemon off;'"]
