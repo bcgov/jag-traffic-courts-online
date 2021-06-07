@@ -45,11 +45,4 @@ public class Steps {
 	public void user_navigates_to_bc_traffic_courts_online_website() {
 		driver.get("http://localhost:4200/");
 	}
-
-	@Then("Pay Ticket button should be displayed")
-	public void pay_ticket_button_should_be_displayed()  {
-		driver.findElement(By.partialLinkText("Pay Now"));
-		
-		driver.quit();
-	}
 }
