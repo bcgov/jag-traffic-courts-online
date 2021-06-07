@@ -11,3 +11,14 @@
 @import "./components/mat-progress";
 @import "./components/mat-sidenav";
 @import "./components/mat-snackbar";
+
+.mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+.mat-expansion-panel-header-title,
+.mat-expansion-indicator::after {
+  color: #4b96ae;
+  font-size: 1.2em;
+  font-weight: 500;
+}

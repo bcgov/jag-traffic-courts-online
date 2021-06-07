@@ -87,7 +87,7 @@
           color="primary"
           (click)="fileInput.click()"
         >
-          Select Photo of Ticket
+          Upload Photo of Ticket
         </button>
         <h3>{{ fileName || "No file uploaded yet." }}</h3>
         <input
@@ -106,5 +106,14 @@
         />
       </div>
     </ng-template>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-5">
+      <button mat-flat-button color="primary" class="large">
+        <mat-icon inline="true">read_more</mat-icon>
+        Attach Photo to Ticket
+      </button>
+    </div>
   </div>
 </app-page>

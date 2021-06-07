@@ -1,28 +1,59 @@
 <app-header></app-header>
 
-<div class="landing">
+<div class="landing-summary">
+  <div class="summary-header">
+    <ul class="summary-header-links">
+      <li>
+        <a href="https://www2.gov.bc.ca/gov/content/about-gov-bc-ca">
+          Understand Your Ticket
+        </a>
+      </li>
+      <span class="divider">|</span>
+      <li>
+        <a href="https://www2.gov.bc.ca/gov/content/about-gov-bc-ca">
+          Payment Options
+        </a>
+      </li>
+      <span class="divider">|</span>
+      <li>
+        <a href="https://www2.gov.bc.ca/gov/content/about-gov-bc-ca">
+          Resolution Options
+        </a>
+      </li>
+    </ul>
+  </div>
   <div class="container">
-    <section>
+    <section class="summary-section">
       <div class="summary-content">
-        <img
-          class="tco-logo"
-          src="/assets/images/emergency-support-services-logo.svg"
-          alt="Traffic Court Online"
-        />
         <div>
-          <h1>Traffic Court Online</h1>
+          <h1>Violation ticket information in British Columbia</h1>
           <p class="lead">
-            The online tool for submitting and resolving your BC Violation
-            Ticket disputes.
-          </p>
-          <p class="lead">
-            If you would like to simply pay for your ticket, please click on the
-            'Pay Now' button.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
           </p>
         </div>
       </div>
     </section>
+  </div>
+</div>
 
+<div class="container">
+  <!--
+  <section>
+    <div class="summary-content">
+      <div>
+        <h1>Violation ticket information in British Columbia</h1>
+        <p class="lead">
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.
+        </p>
+      </div>
+    </div>
+  </section>
     <section class="tco-main">
       <div class="tco-main-content center">
         <h2>Would you like to dispute a ticket?</h2>
@@ -44,88 +75,188 @@
         </p>
       </div>
     </section>
+  -->
 
-    <section class="cards">
-      <div class="cards-content">
-        <div class="card center">
-          <div class="card__image">
-            <img class="step1" src="/assets/images/laptop-user.svg" />
-          </div>
-          <h3>Lorem Ipsum</h3>
-          <p>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-            fugit, sed quia consequuntur magni dolores eos qui ratione
-            voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
-            ipsum quia dolor sit amet, consectetur, adipisci velit.
-          </p>
-
-          <button
-            mat-stroked-button
-            type="button"
-            class="large"
-            color="primary"
-          >
-            <a href="http://www.google.ca">Find Out More</a>
-          </button>
+  <section class="cards">
+    <div class="cards-content">
+      <div class="card center d-block d-lg-none">
+        <div class="card__image">
+          <img class="step1" src="/assets/images/laptop-user.svg" />
         </div>
+        <h3>Payment Options</h3>
 
-        <div class="card center card--isblue">
-          <div class="card__image">
-            <img class="step2" src="/assets/images/invoice.svg" />
-          </div>
-          <h3>Lorem Ipsum</h3>
-          <p>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-            fugit, sed quia consequuntur magni dolores eos qui ratione
-            voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
-            ipsum quia dolor sit amet, consectetur, adipisci velit.
-          </p>
-
-          <button
-            mat-stroked-button
-            type="button"
-            class="large"
-            color="primary"
+        <button mat-flat-button type="button" class="large" color="accent">
+          <a
+            href="https://pay.gov.bc.ca"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <a
-              href="https://pay.gov.bc.ca"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ "label.pay_now" | translate }}
-            </a>
-          </button>
-        </div>
-
-        <div class="card center card--isdark">
-          <div class="card__image">
-            <img class="step3" src="/assets/images/users.svg" />
-          </div>
-          <h3>Lorem Ipsum</h3>
-          <p>
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-            fugit, sed quia consequuntur magni dolores eos qui ratione
-            voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
-            ipsum quia dolor sit amet, consectetur, adipisci velit.
-          </p>
-
-          <button
-            mat-stroked-button
-            type="button"
-            class="large"
-            color="primary"
-          >
-            <a
-              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ "landing.self_resolution.explore" | translate }}</a
-            >
-          </button>
-        </div>
+            Find the ways to pay
+          </a>
+        </button>
       </div>
-    </section>
 
+      <div class="card center">
+        <div class="card__image">
+          <img class="step1" src="/assets/images/laptop-user.svg" />
+        </div>
+        <h3>Understand Your Ticket</h3>
+
+        <button mat-flat-button type="button" class="large" color="accent">
+          <a href="http://www.google.ca">Explore ticket options</a>
+        </button>
+      </div>
+
+      <div class="card center">
+        <div class="card__image">
+          <img class="step1" src="/assets/images/laptop-user.svg" />
+        </div>
+        <h3>Payment Options</h3>
+
+        <button mat-flat-button type="button" class="large" color="accent">
+          <a
+            href="https://pay.gov.bc.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Find the ways to pay
+          </a>
+        </button>
+      </div>
+
+      <div class="card center d-none d-lg-block">
+        <div class="card__image">
+          <img class="step1" src="/assets/images/laptop-user.svg" />
+        </div>
+        <h3>Resolution Options</h3>
+
+        <button mat-flat-button type="button" class="large" color="accent">
+          <a
+            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Learn resolution options</a
+          >
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="cards-two">
+    <div class="cards-two-content">
+      <div class="card-half">
+        <h3>Dispute Court Myths</h3>
+
+        <p>
+          There are some common misconceptions around disputing tickets in
+          court. Have you heard of any of these myths?
+        </p>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              If I dispute a ticket, the officer won't show up to court and it
+              will get thrown out.
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          The court hearing will be scheduled around the officers availability
+          to allow them to attend.
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Errors on the ticket will make it invalid.
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          Errors on the ticket, such as a spelling mistake, my not be grounds
+          for dismissal.
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              If a ticket has points attached to it, disputing it will remove
+              the points
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          If a ticket is disputed, there is not guarantee points will be
+          removed.
+        </mat-expansion-panel>
+      </div>
+
+      <div class="card-half">
+        <h3>Useful Links</h3>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> RoadSafetyBC </mat-panel-title>
+          </mat-expansion-panel-header>
+          RoadSafetyBC is responsible for road safety in the province. We govern
+          drivers, put in place road safety policies, and work with our partners
+          to help reach our goal of zero traffic fatalities.
+          <a
+            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-align:right;"
+          >
+            Visit Site >>
+          </a>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Insurance Corporation of BC (ICBC)
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title
+              >Provincial Courts of British Columbia</mat-panel-title
+            >
+          </mat-expansion-panel-header>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title
+              >Court Services Branch of British Columbia</mat-panel-title
+            >
+          </mat-expansion-panel-header>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title
+              >Attorney General of British Columbia</mat-panel-title
+            >
+          </mat-expansion-panel-header>
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+          proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </section>
+
+  <!--
     <section class="contact-cta pb-4">
       <div class="contact-cta__content center">
         <img
@@ -140,7 +271,7 @@
         </p>
       </div>
     </section>
-  </div>
+  -->
 </div>
 
 <app-footer></app-footer>
