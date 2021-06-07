@@ -1,28 +1,18 @@
 import { NgModule, APP_INITIALIZER, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 
-import {
-  KeycloakAngularModule,
-  KeycloakService,
-  KeycloakOptions,
-} from 'keycloak-angular';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
-import { environment } from '@env/environment';
 import { ToastService } from '@core/services/toast.service';
-import { MockKeycloakService } from 'tests/mocks/mock-keycloak.service';
-import { ConfigService } from '@config/config.service';
 
 function initializer(
   keycloak: KeycloakService,
   injector: Injector
 ): () => Promise<void> {
-  console.log('using Keycloak initializer');
   const routeToDefault = () => injector.get(Router).navigateByUrl('/');
 
   return async (): Promise<void> => {
-    const authenticated = await keycloak.init(
-      environment.keycloakConfig as KeycloakOptions
-    );
+    const authenticated = await keycloak.init();
 
     keycloak.getKeycloakInstance().onTokenExpired = () => {
       keycloak.updateToken().catch(() => {
@@ -50,16 +40,8 @@ function initializer(
   imports: [KeycloakAngularModule],
   providers: [
     {
-      provide: KeycloakService,
-      useClass: environment.useKeycloak ? KeycloakService : MockKeycloakService,
-    },
-    {
       provide: APP_INITIALIZER,
-      useFactory: () => {
-        return environment.useKeycloak
-          ? initializer
-          : MockKeycloakService.mockInitializer;
-      },
+      useFactory: initializer,
       multi: true,
       deps: [KeycloakService, Injector],
     },

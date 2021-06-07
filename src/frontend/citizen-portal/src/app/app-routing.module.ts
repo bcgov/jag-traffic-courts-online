@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PhotoComponent } from '@components/photo/photo.component';
-import { AuthGuard } from '@core/guards/auth.guard';
 import { AppRoutes } from './app.routes';
 import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
 import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
@@ -16,7 +15,6 @@ const routes: Routes = [
   {
     path: AppRoutes.DISPUTE,
     component: DisputePageComponent,
-    canActivate: [AuthGuard],
     children: [
       {
         path: AppRoutes.LIST,

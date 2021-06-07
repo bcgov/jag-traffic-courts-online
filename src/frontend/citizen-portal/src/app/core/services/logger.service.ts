@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 
-import { environment } from '@env/environment';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoggerService {
+  constructor(private appConfigService: AppConfigService) {}
 
   /**
    * @description
@@ -60,7 +61,11 @@ export class LoggerService {
    * Prints the logging information, but ONLY if not in production.
    */
   private print(type: string, params: { msg?: string; data?: any[] }): void {
-    if (!environment.production || type === 'error' || type === 'warn') {
+    if (
+      !this.appConfigService.production ||
+      type === 'error' ||
+      type === 'warn'
+    ) {
       const message = this.colorize(type, params.msg);
 
       if (params.msg && params.data.length) {

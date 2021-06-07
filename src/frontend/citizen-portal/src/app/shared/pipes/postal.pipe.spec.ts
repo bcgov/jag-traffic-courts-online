@@ -1,6 +1,3 @@
-import { TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
 import { PostalPipe } from './postal.pipe';
 
 describe('PostalPipe', () => {
