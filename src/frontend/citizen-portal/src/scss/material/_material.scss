@@ -12,8 +12,18 @@
 @import "./components/mat-sidenav";
 @import "./components/mat-snackbar";
 
+.mat-expansion-panel {
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+}
+
 .mat-expansion-panel-body {
   padding: 0 !important;
+}
+
+.mat-expansion-panel-header {
+  height: unset;
+  min-height: 48px;
 }
 
 .mat-expansion-panel-header-title,

@@ -26,7 +26,7 @@
     <section class="summary-section">
       <div class="summary-content">
         <div>
-          <h1>Violation ticket information in British Columbia</h1>
+          <h1>Ticket Information in British Columbia</h1>
           <p class="lead">
             Duis aute irure dolor in reprehenderit in voluptate velit esse
             cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
@@ -41,44 +41,7 @@
 
 <div class="container">
   <!--
-  <section>
-    <div class="summary-content">
-      <div>
-        <h1>Violation ticket information in British Columbia</h1>
-        <p class="lead">
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
-        </p>
-      </div>
-    </div>
-  </section>
-    <section class="tco-main">
-      <div class="tco-main-content center">
-        <h2>Would you like to dispute a ticket?</h2>
-        <p>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
-        </p>
-        <button mat-flat-button class="main-button" routerLink="/dispute/find">
-          Find My Ticket
-          <mat-icon inline="true">keyboard_arrow_right</mat-icon>
-        </button>
-        <p>
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-          accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
-          ab illo inventore veritatis et quasi architecto beatae vitae dicta
-          sunt explicabo.
-        </p>
-      </div>
-    </section>
-  -->
 
-  <section class="cards">
-    <div class="cards-content">
       <div class="card center d-block d-lg-none">
         <div class="card__image">
           <img class="step1" src="/assets/images/laptop-user.svg" />
@@ -96,11 +59,15 @@
         </button>
       </div>
 
+      <div class="card center d-none d-lg-block">
+   -->
+  <section class="cards">
+    <div class="cards-content">
       <div class="card center">
         <div class="card__image">
           <img class="step1" src="/assets/images/laptop-user.svg" />
         </div>
-        <h3>Understand Your Ticket</h3>
+        <h3>Understand<br />Your Ticket</h3>
 
         <button mat-flat-button type="button" class="large" color="accent">
           <a href="http://www.google.ca">Explore ticket options</a>
@@ -111,7 +78,7 @@
         <div class="card__image">
           <img class="step1" src="/assets/images/laptop-user.svg" />
         </div>
-        <h3>Payment Options</h3>
+        <h3>Payment<br />Options</h3>
 
         <button mat-flat-button type="button" class="large" color="accent">
           <a
@@ -124,11 +91,11 @@
         </button>
       </div>
 
-      <div class="card center d-none d-lg-block">
+      <div class="card center">
         <div class="card__image">
           <img class="step1" src="/assets/images/laptop-user.svg" />
         </div>
-        <h3>Resolution Options</h3>
+        <h3>Resolution<br />Options</h3>
 
         <button mat-flat-button type="button" class="large" color="accent">
           <a
@@ -142,15 +109,15 @@
     </div>
   </section>
 
-  <section class="cards-two">
-    <div class="cards-two-content">
-      <div class="card-half">
-        <h3>Dispute Court Myths</h3>
+  <section class="cards">
+    <div class="cards-content">
+      <div class="card card-2">
+        <h4>Courthouse Myths</h4>
 
-        <p>
+        <div class="card-text pb-2">
           There are some common misconceptions around disputing tickets in
           court. Have you heard of any of these myths?
-        </p>
+        </div>
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -159,8 +126,10 @@
               will get thrown out.
             </mat-panel-title>
           </mat-expansion-panel-header>
-          The court hearing will be scheduled around the officers availability
-          to allow them to attend.
+          <div class="card-text my-2">
+            The court hearing will be scheduled around the officers availability
+            to allow them to attend.
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -169,8 +138,10 @@
               Errors on the ticket will make it invalid.
             </mat-panel-title>
           </mat-expansion-panel-header>
-          Errors on the ticket, such as a spelling mistake, my not be grounds
-          for dismissal.
+          <div class="card-text my-2">
+            Errors on the ticket, such as a spelling mistake, my not be grounds
+            for dismissal.
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -180,29 +151,33 @@
               the points
             </mat-panel-title>
           </mat-expansion-panel-header>
-          If a ticket is disputed, there is not guarantee points will be
-          removed.
+          <div class="card-text my-2">
+            If a ticket is disputed, there is not guarantee points will be
+            removed.
+          </div>
         </mat-expansion-panel>
       </div>
 
-      <div class="card-half">
-        <h3>Useful Links</h3>
+      <div class="card card-2">
+        <h4>Useful Links</h4>
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title> RoadSafetyBC </mat-panel-title>
           </mat-expansion-panel-header>
-          RoadSafetyBC is responsible for road safety in the province. We govern
-          drivers, put in place road safety policies, and work with our partners
-          to help reach our goal of zero traffic fatalities.
-          <a
-            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-align:right;"
-          >
-            Visit Site >>
-          </a>
+          <div class="card-text my-2">
+            RoadSafetyBC is responsible for road safety in the province. We
+            govern drivers, put in place road safety policies, and work with our
+            partners to help reach our goal of zero traffic fatalities.
+            <a
+              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-align:right;"
+            >
+              Visit Site >>
+            </a>
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -211,10 +186,12 @@
               Insurance Corporation of BC (ICBC)
             </mat-panel-title>
           </mat-expansion-panel-header>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+          <div class="card-text my-2">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -223,10 +200,12 @@
               >Provincial Courts of British Columbia</mat-panel-title
             >
           </mat-expansion-panel-header>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+          <div class="card-text my-2">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -235,10 +214,12 @@
               >Court Services Branch of British Columbia</mat-panel-title
             >
           </mat-expansion-panel-header>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+          <div class="card-text my-2">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -247,10 +228,12 @@
               >Attorney General of British Columbia</mat-panel-title
             >
           </mat-expansion-panel-header>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-          dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-          proident, sunt in culpa qui officia deserunt mollit anim id est
-          laborum.
+          <div class="card-text my-2">
+            Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.
+          </div>
         </mat-expansion-panel>
       </div>
     </div>
