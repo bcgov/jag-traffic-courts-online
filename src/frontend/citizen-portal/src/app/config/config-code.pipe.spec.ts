@@ -4,12 +4,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigCodePipe } from './config-code.pipe';
 import { ConfigService } from './config.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ConfigCodePipe', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule],
+        imports: [RouterTestingModule, HttpClientTestingModule],
         providers: [
           {
             provide: ConfigService,
