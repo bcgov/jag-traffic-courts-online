@@ -1,19 +1,23 @@
 <div class="header">
   <mat-toolbar color="primary" class="container">
     <span>
-      <img
-        src="/assets/gov_bc_logo.png"
-        alt="Government of BC Logo"
-        routerLink="/"
-      />
+      <a
+        href="https://www2.gov.bc.ca/gov/content/home"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src="/assets/gov_bc_logo.png" alt="Government of BC Logo" />
+      </a>
     </span>
 
     <span class="flex-fill"></span>
 
+    <!--
     <a (click)="onLanguage()" class="language">
       <mat-icon inline="true" class="mr-2">language</mat-icon>
       <span style="vertical-align: 5px">{{ languageDesc }}</span>
     </a>
+  -->
 
     <!--
   <ng-container *ngIf="fullName">
