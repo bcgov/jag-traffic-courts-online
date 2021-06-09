@@ -88,7 +88,7 @@ div.summary-header {
   width: 100%;
   min-height: 60px;
   padding: 20px 0;
-  opacity: 0.7;
+  opacity: 0.9;
 }
 
 section.summary-section {
@@ -268,14 +268,14 @@ img {
 
 @media (min-width: 768px) {
   .card {
-    padding-top: 40px;
+    padding-top: 2em;
   }
 }
 
 @media (max-width: 991px) {
   .card {
-    padding-bottom: 40px;
-    padding-top: 40px;
+    padding-bottom: 2em;
+    padding-top: 2em;
   }
 
   .card + .card {
@@ -285,6 +285,11 @@ img {
 
   .card:last-child {
     border-bottom: solid 1px theme-palette(grey, light);
+  }
+
+  .card.info {
+    padding-top: 0;
+    border: none !important;
   }
 }
 
