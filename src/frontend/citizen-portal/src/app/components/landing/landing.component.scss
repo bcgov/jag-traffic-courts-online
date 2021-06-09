@@ -1,6 +1,27 @@
 @import "palette";
 @import "bootstrap/bootstrap-imports";
 
+h1 {
+  font-size: 2.8em;
+  line-height: 1.3em;
+  margin-bottom: 1em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+h3 {
+  font-size: 2em;
+  line-height: 1.4em;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
 div.landing-summary {
   background: url("/assets/landing-page-background.jpg") no-repeat center center
     fixed;
@@ -75,6 +96,12 @@ section.summary-section {
   margin-bottom: 3em;
 }
 
+@media (min-width: 992px) {
+  section.summary-section {
+    margin-bottom: 3em;
+  }
+}
+
 div.container {
   opacity: unset;
 
@@ -96,6 +123,10 @@ div.container {
   min-width: 200px;
   margin-top: 1em;
 
+  &:hover {
+    background-color: theme-palette(yellow, dark);
+  }
+
   @include media-breakpoint-down(md) {
     width: 100%;
   }
@@ -103,7 +134,6 @@ div.container {
   &.large {
     height: 46px;
     font-size: 1.2em;
-    margin-bottom: 1.2rem;
   }
 
   &.light {
@@ -126,26 +156,6 @@ div.container {
 
 img {
   width: 100%;
-}
-
-h1 {
-  font-size: 2.8em;
-  line-height: 1.3em;
-  margin-bottom: 1em;
-  font-weight: bold;
-}
-
-h3 {
-  font-size: 2em;
-  line-height: 1.4em;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-h4 {
-  font-size: 1.5em;
-  font-weight: 700;
-  margin-bottom: 20px;
 }
 
 .card-text {
@@ -198,7 +208,12 @@ h4 {
     display: block;
     width: 100%;
   }
+
+  .card:first-child {
+    padding-top: 0;
+  }
 }
+
 .cards .cards-content {
   margin-bottom: 2em;
 }
