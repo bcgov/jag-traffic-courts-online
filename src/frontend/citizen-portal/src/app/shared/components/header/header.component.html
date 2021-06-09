@@ -1,20 +1,21 @@
-<mat-toolbar color="primary">
-  <span>
-    <img
-      src="/assets/gov_bc_logo.png"
-      alt="Government of BC Logo"
-      routerLink="/"
-    />
-  </span>
+<div class="header">
+  <mat-toolbar color="primary" class="container">
+    <span>
+      <img
+        src="/assets/gov_bc_logo.png"
+        alt="Government of BC Logo"
+        routerLink="/"
+      />
+    </span>
 
-  <span class="flex-fill"></span>
+    <span class="flex-fill"></span>
 
-  <a (click)="onLanguage()" class="language">
-    <mat-icon inline="true" class="mr-2">language</mat-icon>
-    <span style="vertical-align: 5px">{{ languageDesc }}</span>
-  </a>
+    <a (click)="onLanguage()" class="language">
+      <mat-icon inline="true" class="mr-2">language</mat-icon>
+      <span style="vertical-align: 5px">{{ languageDesc }}</span>
+    </a>
 
-  <!--
+    <!--
   <ng-container *ngIf="fullName">
     <span class="fullName d-none d-md-block">
       {{ fullName }}
@@ -24,7 +25,8 @@
     </span>
   </ng-container>
   -->
-</mat-toolbar>
+  </mat-toolbar>
+</div>
 
 <div class="ngx-progress">
   <ng-progress></ng-progress>

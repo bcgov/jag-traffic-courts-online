@@ -1,18 +1,19 @@
 @import "palette";
 @import "bootstrap/bootstrap-imports";
 
-@media (min-width: 1200px) {
-  .container-xl,
-  .container-lg,
-  .container-md,
-  .container-sm,
-  .container {
-    max-width: 960px;
-  }
-}
+// @media (min-width: 1200px) {
+//   .container-xl,
+//   .container-lg,
+//   .container-md,
+//   .container-sm,
+//   .container {
+//     max-width: 960px;
+//   }
+// }
 
 div.landing-summary {
-  background: url("/assets/images/drive.jpg") no-repeat center center fixed;
+  background: url("/assets/landing-page-background.jpg") no-repeat center center
+    fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -260,7 +261,7 @@ h4 {
 
 .card__image {
   margin-bottom: 20px;
-  max-height: 113px;
+  // max-height: 113px;
 }
 
 @media (min-width: 768px) {
@@ -271,7 +272,6 @@ h4 {
 
 @media (min-width: 992px) {
   .card {
-    // max-width: 28%;
     min-height: 280px;
     padding-left: 50px;
     padding-right: 50px;
@@ -314,8 +314,12 @@ h4 {
   }
 }
 
-.step1 {
-  max-width: 108px;
+.icon-size1 {
+  max-width: 130px;
+}
+
+.icon-size2 {
+  max-width: 200px;
 }
 
 .lead {

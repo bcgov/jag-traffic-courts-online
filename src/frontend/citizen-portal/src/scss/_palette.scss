@@ -11,25 +11,28 @@ $palettes: (
     lightest: #f8f9fb,
     lighter: #d6ddec,
     light: #0f48ae,
-    base: #003366, // BC Gov. Primary
-    dark: #001b4a
+    base: #003366,
+    // BC Gov. Primary
+    dark: #001b4a,
   ),
   yellow: (
-    base: #ffb200 // BC Gov. Secondary
+    base: #fcba19 // BC Gov. Secondary,
   ),
   red: (
-    base: #ed202a
+    base: #ed202a,
   ),
   green: (
-    base: green
+    base: green,
   ),
   grey: (
     lightest: #eeeeee,
     lighter: #e1e1e1,
-    light: #bdbdbd, // divider colour
-    base: #575757, // secondary text colour
-    dark: #212121 // primary text colour
-  )
+    light: #bdbdbd,
+    // divider colour
+    base: #575757,
+    // secondary text colour
+    dark: #212121 // primary text colour,
+  ),
 );
 
 //
@@ -37,6 +40,6 @@ $palettes: (
 // Gets the colour and tone from the theme palette.
 // @use theme-palette( colour, tone );
 //
-@function theme-palette($palette, $tone: 'base') {
+@function theme-palette($palette, $tone: "base") {
   @return map-get(map-get($palettes, $palette), $tone);
 }

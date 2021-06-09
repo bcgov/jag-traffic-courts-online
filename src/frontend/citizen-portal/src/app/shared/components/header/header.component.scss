@@ -1,5 +1,9 @@
 @import "palette";
 
+.header {
+  background-color: theme-palette(blue);
+}
+
 .mat-toolbar {
   height: 70px;
 
