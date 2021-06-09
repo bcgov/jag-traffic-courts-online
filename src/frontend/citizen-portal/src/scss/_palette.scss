@@ -8,6 +8,8 @@
 
 $palettes: (
   blue: (
+    bg: #38598a,
+    link: #009cde,
     lightest: #f8f9fb,
     lighter: #d6ddec,
     light: #0f48ae,
@@ -16,7 +18,7 @@ $palettes: (
     dark: #001b4a,
   ),
   yellow: (
-    base: #fcba19 // BC Gov. Secondary,
+    base: #fcba19 // BC Gov. Secondary,,,
   ),
   red: (
     base: #ed202a,
@@ -27,11 +29,11 @@ $palettes: (
   grey: (
     lightest: #eeeeee,
     lighter: #e1e1e1,
-    light: #bdbdbd,
+    light: #9e9e9e,
     // divider colour
     base: #575757,
     // secondary text colour
-    dark: #212121 // primary text colour,
+    dark: #212121 // primary text colour,,,
   ),
 );
 

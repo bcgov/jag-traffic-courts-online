@@ -1,16 +1,6 @@
 @import "palette";
 @import "bootstrap/bootstrap-imports";
 
-// @media (min-width: 1200px) {
-//   .container-xl,
-//   .container-lg,
-//   .container-md,
-//   .container-sm,
-//   .container {
-//     max-width: 960px;
-//   }
-// }
-
 div.landing-summary {
   background: url("/assets/landing-page-background.jpg") no-repeat center center
     fixed;
@@ -38,28 +28,6 @@ div.landing-summary {
   }
 }
 
-// .card-divider {
-//   width: 2px;
-//   margin: 6px 0;
-//   color: #d7d7d7;
-//   display: none;
-//   -webkit-column-rule-width: 1px;
-//   -moz-column-rule-width: 1px;
-//   column-rule-width: 1px;
-//   -webkit-column-rule-style: solid;
-//   -moz-column-rule-style: solid;
-//   column-rule-style: solid;
-//   -webkit-column-rule-color: black;
-//   -moz-column-rule-color: black;
-//   column-rule-color: black;
-// }
-
-// @media (min-width: 768px) {
-//   .card-divider {
-//     display: inline-block;
-//   }
-// }
-
 .divider {
   color: #fff;
   display: none;
@@ -77,9 +45,6 @@ div.landing-summary {
     display: -ms-flexbox;
     display: flex;
     list-style: none;
-    // -webkit-box-pack: justify;
-    // -ms-flex-pack: justify;
-    // justify-content: space-between;
 
     li {
       margin-bottom: 0;
@@ -98,11 +63,11 @@ div.landing-summary {
 }
 
 div.summary-header {
-  background-color: theme-palette(blue, light);
+  background-color: theme-palette(blue, bg);
   width: 100%;
   min-height: 60px;
   padding: 20px 0;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 section.summary-section {
@@ -112,8 +77,13 @@ section.summary-section {
 
 div.container {
   opacity: unset;
+
+  button a {
+    color: theme-palette(blue);
+  }
+
   a {
-    color: theme-palette(blue, light);
+    color: theme-palette(blue, link);
     white-space: nowrap;
 
     &:hover {
@@ -137,7 +107,7 @@ div.container {
   }
 
   &.light {
-    background-color: theme-palette(blue, light);
+    background-color: theme-palette(blue, bg);
     color: white;
   }
 }
@@ -188,10 +158,10 @@ h4 {
 }
 
 .site-header {
-  background-color: #003366;
+  background-color: theme-palette(blue);
   width: 100%;
   height: 64px;
-  border-bottom: 2px solid #fcba19;
+  border-bottom: 2px solid theme-palette(yellow);
 }
 
 .site-header-content {
@@ -206,6 +176,7 @@ h4 {
 
 .summary-content {
   padding: 30px 0 10px 0;
+  color: #fff;
 }
 
 @media (min-width: 992px) {
@@ -229,8 +200,6 @@ h4 {
   }
 }
 .cards .cards-content {
-  max-width: 1022px;
-  // margin: 0 auto;
   margin-bottom: 2em;
 }
 
@@ -238,25 +207,16 @@ h4 {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
-  // display: flex;
+  align-items: stretch;
+  align-content: space-between;
 }
 
 .card {
   padding-left: 20px;
   padding-right: 20px;
   // flex: 1 1 auto;
-  // background: blue;
-  // position: relative;
-  // text-align: center;
-  // line-height: 40px;
-  // background: #fff;
   border: none;
-  // padding: 20px;
-  // width: 100%;
-  // margin-bottom: 20px;
+  flex: 1;
 }
 
 .card__image {
@@ -277,12 +237,11 @@ h4 {
     padding-right: 50px;
   }
 
-  .card-2 {
-    min-width: 50%;
+  .card {
+    border-right: solid 1px theme-palette(grey, light);
   }
-
-  .card + .card {
-    border-left: solid 3px #d7d7d7;
+  .card:last-child {
+    border-right: none;
   }
 
   .cards-content {
@@ -306,11 +265,11 @@ h4 {
 
   .card + .card {
     border-left: none;
-    border-top: solid 3px #d7d7d7;
+    border-top: solid 1px theme-palette(grey, light);
   }
 
   .card:last-child {
-    border-bottom: solid 3px #d7d7d7;
+    border-bottom: solid 1px theme-palette(grey, light);
   }
 }
 
@@ -324,16 +283,26 @@ h4 {
 
 .lead {
   font-size: 1.5em;
-  // line-height: 29px;
-  // max-width: 540px;
   margin-bottom: 20px;
   font-weight: 500;
+}
+
+.bullet-list ul {
+  padding-left: 1em;
+
+  li {
+    font-size: 1.2em;
+    font-weight: 500;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid theme-palette(grey, light);
+  }
 }
 
 mat-expansion-panel {
   box-shadow: none !important;
   padding-bottom: 1em;
-  border-bottom: 1px solid #d7d7d7;
+  border-bottom: 1px solid theme-palette(grey, light);
 }
 
 mat-expansion-panel-header {

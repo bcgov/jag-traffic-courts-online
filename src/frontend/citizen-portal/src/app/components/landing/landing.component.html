@@ -28,7 +28,7 @@
     <section class="summary-section">
       <div class="summary-content">
         <div>
-          <h1>Ticket Information in British Columbia</h1>
+          <h1>Ticket information in British Columbia</h1>
           <p class="lead">
             Looking for information on your violation or traffic ticket?
             Understand your ticket options and find out how to pay or dispute.
@@ -40,27 +40,6 @@
 </div>
 
 <div class="container">
-  <!--
-
-      <div class="card center d-block d-lg-none">
-        <div class="card__image">
-          <img class="icon-size2" src="/assets/images/laptop-user.svg" />
-        </div>
-        <h3>Payment Options</h3>
-
-        <button mat-flat-button type="button" class="large" color="accent">
-          <a
-            href="https://pay.gov.bc.ca"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Find the ways to pay
-          </a>
-        </button>
-      </div>
-
-      <div class="card center d-none d-lg-block">
-   -->
   <section class="cards">
     <div class="cards-content">
       <div class="card center">
@@ -69,6 +48,7 @@
         </div>
         <h3>Understand<br />Your Ticket</h3>
 
+        <span class="flex-fill"></span>
         <button mat-flat-button type="button" class="large" color="accent">
           <a href="http://www.google.ca">Explore ticket options</a>
         </button>
@@ -80,6 +60,7 @@
         </div>
         <h3>Payment<br />Options</h3>
 
+        <span class="flex-fill"></span>
         <button mat-flat-button type="button" class="large" color="accent">
           <a
             href="https://pay.gov.bc.ca"
@@ -97,6 +78,7 @@
         </div>
         <h3>Resolution<br />Options</h3>
 
+        <span class="flex-fill"></span>
         <button mat-flat-button type="button" class="large" color="accent">
           <a
             href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
@@ -111,88 +93,34 @@
 
   <section class="cards">
     <div class="cards-content">
-      <div class="card card-2">
-        <h4>Things your should know</h4>
+      <div class="card">
+        <h4>Did you know?</h4>
 
-        <div class="card-text pb-2">
-          Thinking of going to court? Here are some questions to keep in mind:
+        <div class="bullet-list">
+          <ul>
+            <li class="pt-0">
+              Minor errors on the ticket, such as a misspelled word, may not be
+              grounds for dismissing a ticket.
+            </li>
+            <li>The officer does not need to write the speed on the ticket.</li>
+            <li>You do not need to sign the ticket.</li>
+            <li>
+              Officers (including RCMP, Municipal detachment, and Integrated
+              Road Safety Unit members) can issue tickets across different
+              municipalities.
+            </li>
+            <li>
+              Court hearings are set taking into account the availability of the
+              officer, who is the prosecutor.
+            </li>
+          </ul>
         </div>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              If I dispute a ticket, will it be thrown out if the officer
-              doesn't appear at the hearing?
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="card-text my-2">
-            The court hearing will be scheduled at a time the officer can
-            attend.
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Do errors on the ticket will make it invalid?
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Does the officer have to write the spped on the ticket?
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              If I didn't sign my ticket when I received it, is it invalid?
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              I thought police officers could only issues tickets in the
-              jurisdiction where they work?
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
-          </div>
-        </mat-expansion-panel>
       </div>
 
-      <div class="card card-2">
-        <h4>Useful Links</h4>
+      <div class="card">
+        <h4>Useful links</h4>
 
-        <mat-expansion-panel>
+        <mat-expansion-panel class="pt-0">
           <mat-expansion-panel-header>
             <mat-panel-title> RoadSafetyBC </mat-panel-title>
           </mat-expansion-panel-header>
@@ -200,14 +128,17 @@
             RoadSafetyBC is responsible for road safety in the province. We
             govern drivers, put in place road safety policies, and work with our
             partners to help reach our goal of zero traffic fatalities.
-            <a
-              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-align:right;"
-            >
-              Visit Site >>
-            </a>
+            <div class="text-right pt-2">
+              <a
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-align:right;"
+              >
+                <mat-icon inline="true"> play_arrow</mat-icon>
+                Visit site
+              </a>
+            </div>
           </div>
         </mat-expansion-panel>
 
@@ -218,38 +149,63 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            Learn how to pay or dispute a ticket. And find out more about
+            penalties, including points, prohibitions, impoundments,
+            suspensions, and more.
+            <div class="text-right pt-2">
+              <a
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-align:right;"
+              >
+                <mat-icon inline="true"> play_arrow</mat-icon>
+                Visit site
+              </a>
+            </div>
           </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
-            <mat-panel-title>
-              Provincial Courts of British Columbia
-            </mat-panel-title>
+            <mat-panel-title> Provincial Court of BC </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            Deals with three types of tickets: Provincial Violation Tickets
+            (including traffic tickets), Federal Contravention Tickets and
+            Municipal Tickets.
+            <div class="text-right pt-2">
+              <a
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-align:right;"
+              >
+                <mat-icon inline="true"> play_arrow</mat-icon>
+                Visit site
+              </a>
+            </div>
           </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
           <mat-expansion-panel-header>
-            <mat-panel-title>
-              Court Services Branch of British Columbia
-            </mat-panel-title>
+            <mat-panel-title> Courthouse Services of BC </mat-panel-title>
           </mat-expansion-panel-header>
           <div class="card-text my-2">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-            cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.
+            Pay or dispute provincial violation or federal contravention
+            violation tickets.
+            <div class="text-right pt-2">
+              <a
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-align:right;"
+              >
+                <mat-icon inline="true"> play_arrow</mat-icon>
+                Visit site
+              </a>
+            </div>
           </div>
         </mat-expansion-panel>
 
@@ -264,6 +220,17 @@
             cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
             cupidatat non proident, sunt in culpa qui officia deserunt mollit
             anim id est laborum.
+            <div class="text-right pt-2">
+              <a
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-align:right;"
+              >
+                <mat-icon inline="true"> play_arrow</mat-icon>
+                Visit site
+              </a>
+            </div>
           </div>
         </mat-expansion-panel>
       </div>

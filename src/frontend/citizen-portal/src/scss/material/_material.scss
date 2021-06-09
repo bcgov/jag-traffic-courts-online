@@ -28,7 +28,16 @@
 
 .mat-expansion-panel-header-title,
 .mat-expansion-indicator::after {
-  color: #4b96ae;
+  color: theme-palette(blue, link);
   font-size: 1.2em;
   font-weight: 500;
+}
+
+.mat-expansion-panel-header {
+  height: unset;
+  min-height: 32px;
+}
+
+.mat-expansion-panel-header.mat-expanded {
+  height: 42px;
 }
