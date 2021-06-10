@@ -27,7 +27,6 @@
               "vendor": false
             },
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
             "assets": [
               "src/keycloak.json",
               "src/favicon.ico",
@@ -46,7 +45,12 @@
               "keycloak-js",
               "faker"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -76,7 +80,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
