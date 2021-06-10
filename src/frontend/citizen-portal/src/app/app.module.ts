@@ -108,12 +108,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       useClass: BackendHttpInterceptor,
       multi: true,
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInit,
-      multi: true,
-      deps: [AppConfigService, KeycloakService],
-    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: appInit,
+    //   multi: true,
+    //   deps: [AppConfigService, KeycloakService],
+    // },
   ],
   bootstrap: [AppComponent],
 })
