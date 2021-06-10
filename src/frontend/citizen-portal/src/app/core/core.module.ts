@@ -16,7 +16,7 @@ export function initConfig(config: ConfigService) {
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule], //, KeycloakModule],
+  imports: [CommonModule], // , KeycloakModule],
   providers: [
     {
       provide: ErrorHandler,
