@@ -40,9 +40,4 @@ export class DisputeListComponent implements OnInit {
   //   this.disputeService.dispute$.next(dispute);
   //   this.route.navigate([AppRoutes.routePath(AppRoutes.STEPPER)]);
   // }
-
-  // public onSelectSurvey(dispute: Dispute): void {
-  //   this.disputeService.dispute$.next(dispute);
-  //   this.route.navigate([SurveyJsRoutes.routePath(SurveyJsRoutes.HOME)]);
-  // }
 }

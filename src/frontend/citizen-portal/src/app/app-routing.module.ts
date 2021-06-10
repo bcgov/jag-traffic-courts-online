@@ -50,13 +50,6 @@ const routes: Routes = [
     path: AppRoutes.LANDING,
     component: LandingComponent,
   },
-  // {
-  //   path: 'survey',
-  //   loadChildren: () =>
-  //     import('./modules/survey-js/survey-js.module').then(
-  //       (m) => m.SurveyJsModule
-  //     ),
-  // },
   {
     path: '',
     redirectTo: '/landing',
