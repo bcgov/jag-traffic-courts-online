@@ -1,7 +1,15 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { CapitalizePipe } from './capitalize.pipe';
 
 describe('CapitalizePipe', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [CapitalizePipe],
+    }).compileComponents();
+  });
+
   it('create an instance', () => {
     const pipe = new CapitalizePipe();
     expect(pipe).toBeTruthy();
