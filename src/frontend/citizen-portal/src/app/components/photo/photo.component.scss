@@ -1,14 +1,14 @@
-.labelBeforeSlide {
-  vertical-align: top;
-  line-height: 24px;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
-}
-
 @media screen and (max-width: 960px) {
   img {
     width: 100% !important;
     height: 100% !important;
   }
+}
+
+.mat-flat-button.large {
+  width: 100%;
+
+  height: 46px;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
 }

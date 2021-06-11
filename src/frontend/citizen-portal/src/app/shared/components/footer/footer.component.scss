@@ -26,9 +26,9 @@
   text-decoration: none;
 }
 
-.site-footer .container {
-  max-width: 760px;
-}
+// .site-footer .container {
+//   max-width: 760px;
+// }
 
 .divider {
   color: #fff;
@@ -49,10 +49,12 @@
     list-style: none;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
-    justify-content: space-between;
+    // justify-content: space-between;
   }
 
   .site-footer-links li {
     margin-bottom: 0;
+    margin-left: 1em;
+    margin-right: 1em;
   }
 }

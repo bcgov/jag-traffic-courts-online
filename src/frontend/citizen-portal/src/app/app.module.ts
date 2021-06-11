@@ -13,7 +13,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
-import { SurveyJsModule } from './modules/survey-js/survey-js.module';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { SharedModule } from './shared/shared.module';
 import {
@@ -86,7 +85,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SharedModule,
     ConfigModule,
     HttpClientModule,
-    SurveyJsModule,
     MatStepperModule,
     WebcamModule,
     TranslateModule.forRoot({
@@ -108,12 +106,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       useClass: BackendHttpInterceptor,
       multi: true,
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInit,
-      multi: true,
-      deps: [AppConfigService, KeycloakService],
-    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: appInit,
+    //   multi: true,
+    //   deps: [AppConfigService, KeycloakService],
+    // },
   ],
   bootstrap: [AppComponent],
 })
