@@ -3,7 +3,7 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
@@ -13,7 +13,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
-import { SurveyJsModule } from './modules/survey-js/survey-js.module';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { SharedModule } from './shared/shared.module';
 import {
@@ -37,14 +36,23 @@ import { DisputeSummaryComponent } from './components/dispute-summary/dispute-su
 import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
 import { StepDisputantComponent } from './components/step-disputant/step-disputant.component';
 import { StepSingleCountComponent } from './components/step-single-count/step-single-count.component';
+import { AppConfigService } from './services/app-config.service';
+
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
 import { WebcamModule } from 'ngx-webcam';
 import { PhotoComponent } from './components/photo/photo.component';
+import { KeycloakService } from 'keycloak-angular';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
+
+export function appInit(appConfigService: AppConfigService) {
+  return () => {
+    return appConfigService.loadAppConfig();
+  };
+}
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -77,7 +85,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SharedModule,
     ConfigModule,
     HttpClientModule,
-    SurveyJsModule,
     MatStepperModule,
     WebcamModule,
     TranslateModule.forRoot({
@@ -92,12 +99,19 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   exports: [NgBusyModule, NgxMaterialModule, TranslateModule],
   providers: [
+    AppConfigService,
     MockDisputeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BackendHttpInterceptor,
       multi: true,
     },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: appInit,
+    //   multi: true,
+    //   deps: [AppConfigService, KeycloakService],
+    // },
   ],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,6 @@
+{
+  "production": false,
+  "version": "1.0.0",
+  "useMockServices": true,
+  "apiBaseUrl": "/api"
+}

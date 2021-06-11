@@ -3,18 +3,21 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { environment } from '@env/environment';
-
 import { AbstractResource } from '@core/resources/abstract-resource';
 import { LoggerService } from '@core/services/logger.service';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiHttpErrorResponse } from '@core/models/api-http-error-response.model';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiResource extends AbstractResource {
-  constructor(protected logger: LoggerService, private http: HttpClient) {
+  constructor(
+    protected logger: LoggerService,
+    private http: HttpClient,
+    private appConfigService: AppConfigService
+  ) {
     super(logger);
   }
 
@@ -24,7 +27,7 @@ export class ApiResource extends AbstractResource {
     options: { [key: string]: any } = {}
   ): Observable<ApiHttpResponse<T> | ApiHttpErrorResponse> {
     return this.http
-      .get(`${environment.apiUrl}/${path}`, {
+      .get(`${this.appConfigService.apiBaseUrl}/${path}`, {
         params,
         observe: 'response',
         ...options,
@@ -39,7 +42,7 @@ export class ApiResource extends AbstractResource {
     options: { [key: string]: any } = {}
   ): Observable<ApiHttpResponse<T> | ApiHttpErrorResponse> {
     return this.http
-      .post(`${environment.apiUrl}/${path}`, body, {
+      .post(`${this.appConfigService.apiBaseUrl}/${path}`, body, {
         params,
         observe: 'response',
         ...options,
@@ -54,7 +57,7 @@ export class ApiResource extends AbstractResource {
     options: { [key: string]: any } = {}
   ): Observable<ApiHttpResponse<T> | ApiHttpErrorResponse> {
     return this.http
-      .put(`${environment.apiUrl}/${path}`, body, {
+      .put(`${this.appConfigService.apiBaseUrl}/${path}`, body, {
         params,
         observe: 'response',
         ...options,
@@ -69,7 +72,7 @@ export class ApiResource extends AbstractResource {
     options: { [key: string]: any } = {}
   ): Observable<ApiHttpResponse<T> | ApiHttpErrorResponse> {
     return this.http
-      .patch(`${environment.apiUrl}/${path}`, body, {
+      .patch(`${this.appConfigService.apiBaseUrl}/${path}`, body, {
         params,
         observe: 'response',
         ...options,
@@ -83,7 +86,7 @@ export class ApiResource extends AbstractResource {
     options: { [key: string]: any } = {}
   ): Observable<ApiHttpResponse<T> | ApiHttpErrorResponse> {
     return this.http
-      .delete(`${environment.apiUrl}/${path}`, {
+      .delete(`${this.appConfigService.apiBaseUrl}/${path}`, {
         params,
         observe: 'response',
         ...options,

@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { LoggerService } from '@core/services/logger.service';
 import { KeycloakService } from 'keycloak-angular';
@@ -11,6 +12,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [
         AuthService,
         { provide: KeycloakService, useClass: MockKeycloakService },

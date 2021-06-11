@@ -27,8 +27,12 @@
               "vendor": false
             },
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
-            "assets": ["src/favicon.ico", "src/assets", "src/assets/i18n"],
+            "assets": [
+              "src/keycloak.json",
+              "src/favicon.ico",
+              "src/assets",
+              "src/assets/i18n"
+            ],
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
               "src/scss/app.scss"
@@ -36,12 +40,13 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/scss"]
             },
-            "allowedCommonJsDependencies": [
-              "surveyjs-widgets",
-              "keycloak-js",
-              "faker"
-            ],
-            "scripts": []
+            "allowedCommonJsDependencies": ["keycloak-js", "faker"],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -62,7 +67,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "6mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -71,7 +76,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

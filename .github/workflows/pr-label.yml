@@ -15,5 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/labeler@v2
+      # only label if the GITHUB_TOKEN is available, PRs from external repos do not have access to secrets vars
+      if: ${{ secrets.GITHUB_TOKEN }}
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
