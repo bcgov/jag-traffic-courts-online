@@ -6,7 +6,7 @@ h1 {
   line-height: 1.3em;
   margin-bottom: 1em;
   font-weight: bold;
-  letter-spacing: 0.05em;
+  text-shadow: 2px 2px #000;
 }
 
 h3 {
@@ -22,9 +22,16 @@ h4 {
   margin-bottom: 20px;
 }
 
+.lead {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  font-weight: 400;
+  line-height: 1.5em;
+  text-shadow: 1px 1px #000;
+}
+
 div.landing-summary {
-  background: url("/assets/landing-page-background.png") no-repeat center center
-    fixed;
+  background: url("/assets/landing-page-background.png") no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -299,13 +306,6 @@ img {
 
 .icon-size2 {
   max-width: 200px;
-}
-
-.lead {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-  font-weight: 400;
-  line-height: 1.5em;
 }
 
 .bullet-list ul {
