@@ -2,11 +2,11 @@
 @import "bootstrap/bootstrap-imports";
 
 h1 {
-  font-size: 2.8em;
+  font-size: 3.5em;
   line-height: 1.3em;
   margin-bottom: 1em;
   font-weight: bold;
-  text-shadow: 2px 2px #000;
+  text-shadow: 0.04em 0.02em #000;
 }
 
 h3 {
@@ -23,7 +23,7 @@ h4 {
 }
 
 .lead {
-  font-size: 1.5em;
+  font-size: 1.7em;
   margin-bottom: 20px;
   font-weight: 400;
   line-height: 1.5em;
@@ -168,6 +168,7 @@ img {
 
 .card-text {
   font-size: 1.2em;
+  line-height: 1.4em;
   font-weight: 500;
 }
 
@@ -314,6 +315,7 @@ img {
 
   li {
     font-size: 1.2em;
+    line-height: 1.4em;
     font-weight: 500;
     padding-top: 1em;
     padding-bottom: 1em;

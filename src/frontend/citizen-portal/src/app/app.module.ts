@@ -31,7 +31,6 @@ import { StepCountComponent } from './components/step-count/step-count.component
 import { StepOverviewComponent } from './components/step-overview/step-overview.component';
 import { StepAdditionalComponent } from './components/step-additional/step-additional.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
-import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
 import { StepDisputantComponent } from './components/step-disputant/step-disputant.component';
@@ -69,7 +68,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     StepOverviewComponent,
     StepAdditionalComponent,
     DisputeSubmitComponent,
-    DisputeListComponent,
     DisputeSummaryComponent,
     DisputeAllStepperComponent,
     StepDisputantComponent,

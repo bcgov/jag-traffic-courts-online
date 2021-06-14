@@ -5,28 +5,19 @@
     <div class="container">
       <ul class="summary-header-links">
         <li>
-          <a
-            href="https://staging-bcptb.cs138.force.com/apex/ES_Launch?tn=BCTC"
-            target="_blank"
-          >
+          <a [attr.href]="understandYourTicketLink" target="_blank">
             Understand Your Ticket
           </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a
-            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket"
-            target="_blank"
-          >
+          <a [attr.href]="paymentOptionsLink" target="_blank">
             Payment Options
           </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a
-            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-            target="_blank"
-          >
+          <a [attr.href]="resolutionOptionsLink" target="_blank">
             Resolution Options
           </a>
         </li>
@@ -52,54 +43,45 @@
   <section class="cards">
     <div class="cards-content">
       <div class="card center">
-        <div class="card__image">
-          <img class="icon-size1" src="/assets/understand-icon.png" />
-        </div>
-        <h3>Understand<br />Your Ticket</h3>
+        <a [attr.href]="understandYourTicketLink" target="_blank">
+          <div class="card__image">
+            <img class="icon-size1" src="/assets/understand-icon.png" />
+          </div>
+          <h3>Understand<br />Your Ticket</h3>
 
-        <span class="flex-fill"></span>
-        <button mat-flat-button type="button" class="large" color="accent">
-          <a
-            href="https://staging-bcptb.cs138.force.com/apex/ES_Launch?tn=BCTC"
-            target="_blank"
-            >Explore ticket options</a
-          >
-        </button>
+          <span class="flex-fill"></span>
+          <button mat-flat-button type="button" class="large" color="accent">
+            Explore ticket options
+          </button>
+        </a>
       </div>
 
       <div class="card center">
-        <div class="card__image">
-          <img class="icon-size2" src="/assets/pay-icon.png" />
-        </div>
-        <h3>Payment<br />Options</h3>
+        <a [attr.href]="paymentOptionsLink" target="_blank">
+          <div class="card__image">
+            <img class="icon-size2" src="/assets/pay-icon.png" />
+          </div>
+          <h3>Payment<br />Options</h3>
 
-        <span class="flex-fill"></span>
-        <button mat-flat-button type="button" class="large" color="accent">
-          <a
-            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <span class="flex-fill"></span>
+          <button mat-flat-button type="button" class="large" color="accent">
             Find the ways to pay
-          </a>
-        </button>
+          </button>
+        </a>
       </div>
 
       <div class="card center">
-        <div class="card__image">
-          <img class="icon-size1" src="/assets/dispute-icon.png" />
-        </div>
-        <h3>Resolution<br />Options</h3>
+        <a [attr.href]="resolutionOptionsLink" target="_blank">
+          <div class="card__image">
+            <img class="icon-size1" src="/assets/dispute-icon.png" />
+          </div>
+          <h3>Resolution<br />Options</h3>
 
-        <span class="flex-fill"></span>
-        <button mat-flat-button type="button" class="large" color="accent">
-          <a
-            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Learn resolution options</a
-          >
-        </button>
+          <span class="flex-fill"></span>
+          <button mat-flat-button type="button" class="large" color="accent">
+            Learn resolution options
+          </button>
+        </a>
       </div>
     </div>
   </section>

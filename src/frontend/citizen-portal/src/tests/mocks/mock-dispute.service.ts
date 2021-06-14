@@ -42,21 +42,21 @@ export class MockDisputeService {
     const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
-        faker.random
+        faker.datatype
           .number({
             min: 10000000,
             max: 99999999,
           })
           .toString(),
       violationTime:
-        faker.random
+        faker.datatype
           .number({
             min: 10,
             max: 23,
           })
           .toString() +
         ':' +
-        faker.random
+        faker.datatype
           .number({
             min: 10,
             max: 59,
@@ -116,21 +116,21 @@ export class MockDisputeService {
     const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
-        faker.random
+        faker.datatype
           .number({
             min: 10000000,
             max: 99999999,
           })
           .toString(),
       violationTime:
-        faker.random
+        faker.datatype
           .number({
             min: 10,
             max: 23,
           })
           .toString() +
         ':' +
-        faker.random
+        faker.datatype
           .number({
             min: 10,
             max: 59,
