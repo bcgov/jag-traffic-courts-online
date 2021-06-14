@@ -1,5 +1,5 @@
 export class AppRoutes {
-  public static LANDING = 'landing';
+  public static HOME = 'home';
   public static FIND = 'find';
   public static SUCCESS = 'success';
   public static LIST = 'list';

@@ -2,11 +2,11 @@
 @import "bootstrap/bootstrap-imports";
 
 h1 {
-  font-size: 2.8em;
+  font-size: 3.5em;
   line-height: 1.3em;
   margin-bottom: 1em;
   font-weight: bold;
-  letter-spacing: 0.05em;
+  text-shadow: 0.04em 0.02em #000;
 }
 
 h3 {
@@ -22,9 +22,16 @@ h4 {
   margin-bottom: 20px;
 }
 
+.lead {
+  font-size: 1.7em;
+  margin-bottom: 20px;
+  font-weight: 400;
+  line-height: 1.5em;
+  text-shadow: 1px 1px #000;
+}
+
 div.landing-summary {
-  background: url("/assets/landing-page-background.jpg") no-repeat center center
-    fixed;
+  background: url("/assets/landing-page-background.png") no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -134,6 +141,7 @@ div.container {
   &.large {
     height: 46px;
     font-size: 1.2em;
+    font-weight: bold;
   }
 
   &.light {
@@ -160,6 +168,7 @@ img {
 
 .card-text {
   font-size: 1.2em;
+  line-height: 1.4em;
   font-weight: 500;
 }
 
@@ -301,18 +310,12 @@ img {
   max-width: 200px;
 }
 
-.lead {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-  font-weight: 400;
-  line-height: 1.5em;
-}
-
 .bullet-list ul {
   padding-left: 1em;
 
   li {
     font-size: 1.2em;
+    line-height: 1.4em;
     font-weight: 500;
     padding-top: 1em;
     padding-bottom: 1em;

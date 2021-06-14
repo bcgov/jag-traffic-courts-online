@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Component({
   selector: 'app-header',
@@ -24,9 +25,13 @@ export class HeaderComponent implements OnInit {
   public languageCode: string;
   public languageDesc: string;
 
+  public environment: string;
+  public version: string;
+
   constructor(
     // protected authService: AuthService,
     protected logger: LoggerService,
+    private appConfigService: AppConfigService,
     private translateService: TranslateService
   ) {
     this.hasMobileSidemenu = false;
@@ -34,6 +39,9 @@ export class HeaderComponent implements OnInit {
 
     this.languageCode = this.translateService.getDefaultLang();
     this.onLanguage();
+
+    this.environment = this.appConfigService.environment;
+    this.version = this.appConfigService.version;
   }
 
   public async ngOnInit() {

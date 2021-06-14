@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 export class AppConfig {
   production: boolean;
+  environment: string;
   version: string;
   useMockServices: boolean;
   apiBaseUrl: string;
@@ -28,6 +29,10 @@ export class AppConfigService {
 
   get production(): boolean {
     return this.appConfig?.production;
+  }
+
+  get environment(): string {
+    return this.appConfig?.environment;
   }
 
   get version(): string {

@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { PhotoComponent } from '@components/photo/photo.component';
 import { AppRoutes } from './app.routes';
 import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
-import { DisputeListComponent } from './components/dispute-list/dispute-list.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
@@ -16,10 +15,6 @@ const routes: Routes = [
   //   path: AppRoutes.DISPUTE,
   //   component: DisputePageComponent,
   //   children: [
-  //     {
-  //       path: AppRoutes.LIST,
-  //       component: DisputeListComponent,
-  //     },
   //     {
   //       path: AppRoutes.FIND,
   //       component: FindTicketComponent,
@@ -47,12 +42,12 @@ const routes: Routes = [
   //   component: DisputeAllStepperComponent,
   // },
   {
-    path: AppRoutes.LANDING,
+    path: AppRoutes.HOME,
     component: LandingComponent,
   },
   {
     path: '',
-    redirectTo: '/landing',
+    redirectTo: '/home',
     pathMatch: 'full',
   },
 ];

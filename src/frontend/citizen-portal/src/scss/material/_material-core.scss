@@ -3,10 +3,11 @@
 //
 
 @use '~@angular/material' as mat;
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
+@import "variables";
 
 // Include the common styles for Angular Material, which provides a single CSS
 // file for Angular Material in the application.
 // ---
 // NOTE: Be sure that to ONLY include this mixin once!
-@include mat.core;
+@include mat.core($tco-typography);

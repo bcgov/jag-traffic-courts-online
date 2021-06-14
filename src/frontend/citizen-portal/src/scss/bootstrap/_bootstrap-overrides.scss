@@ -1,13 +1,15 @@
-@import 'palette';
-@import 'variables';
+@import "palette";
+@import "variables";
 
 //
 // HTML Reset
 //
 
-html, body {
+html,
+body {
   // Not provided in Bootstrap Reboot
   height: 100%;
+  font-size: 16px;
 }
 
 body {
