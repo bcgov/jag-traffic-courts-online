@@ -17,9 +17,14 @@ $tco-app-warn: mat.define-palette(mat.$red-palette);
 
 // Create the default theme object (a Sass map containing all of the palettes).
 $tco-app-theme: mat.define-light-theme(
-  $tco-app-primary,
-  $tco-app-accent,
-  $tco-app-warn
+  (
+    color: (
+      primary: $tco-app-primary,
+      accent: $tco-app-accent,
+      warn: $tco-app-warn,
+    ),
+    typography: $tco-typography,
+  )
 );
 
 // Include theme styles for core and each component used in your app.
@@ -27,10 +32,3 @@ $tco-app-theme: mat.define-light-theme(
 // that you are using.
 
 @include mat.all-component-themes($tco-app-theme);
-
-// Create the dark theme object (a Sass map containing all of the palettes).
-$tco-dark-app-theme: mat.define-dark-theme(
-  $tco-app-primary,
-  $tco-app-accent,
-  $tco-app-warn
-);
