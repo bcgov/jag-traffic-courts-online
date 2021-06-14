@@ -72,7 +72,6 @@ export class UtilsService {
    * The reversed attribute of ordered lists is not supported in IE or
    * pre-Chromium Edge, but has been supported in all other browsers
    * forevers!!!
-   * @see https://caniuse.com/?search=reversed
    */
   public isIEOrPreChromiumEdge(): boolean {
     return !('reversed' in document.createElement('ol'));

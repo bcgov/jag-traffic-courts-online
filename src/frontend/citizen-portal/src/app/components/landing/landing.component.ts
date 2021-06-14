@@ -1,6 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { UtilsService } from '@core/services/utils.service';
+import { AppConfigService } from 'app/services/app-config.service';
 
 @Component({
   selector: 'app-landing',
@@ -9,14 +9,19 @@ import { UtilsService } from '@core/services/utils.service';
 })
 export class LandingComponent implements AfterViewInit {
   // Urls for the various links
-  public understandYourTicketLink =
-    'https://staging-bcptb.cs138.force.com/apex/ES_Launch?tn=BCTC';
-  public paymentOptionsLink =
-    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket';
-  public resolutionOptionsLink =
-    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket';
+  public understandYourTicketLink: string;
+  public paymentOptionsLink: string;
+  public resolutionOptionsLink: string;
 
-  constructor(private route: Router, private utilsService: UtilsService) {}
+  constructor(
+    private utilsService: UtilsService,
+    private appConfigService: AppConfigService
+  ) {
+    this.understandYourTicketLink =
+      this.appConfigService.understandYourTicketLink;
+    this.paymentOptionsLink = this.appConfigService.paymentOptionsLink;
+    this.resolutionOptionsLink = this.appConfigService.resolutionOptionsLink;
+  }
 
   public ngAfterViewInit(): void {
     this.utilsService.scrollTop();

@@ -7,6 +7,9 @@ export class AppConfig {
   version: string;
   useMockServices: boolean;
   apiBaseUrl: string;
+  understandYourTicketLink: string;
+  paymentOptionsLink: string;
+  resolutionOptionsLink: string;
 }
 
 @Injectable({
@@ -45,5 +48,17 @@ export class AppConfigService {
 
   get apiBaseUrl(): string {
     return this.appConfig?.apiBaseUrl;
+  }
+
+  get understandYourTicketLink(): string {
+    return this.appConfig?.understandYourTicketLink;
+  }
+
+  get paymentOptionsLink(): string {
+    return this.appConfig?.paymentOptionsLink;
+  }
+
+  get resolutionOptionsLink(): string {
+    return this.appConfig?.resolutionOptionsLink;
   }
 }
