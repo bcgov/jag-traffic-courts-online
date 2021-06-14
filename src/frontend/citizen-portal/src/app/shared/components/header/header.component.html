@@ -12,7 +12,7 @@
 
     <span class="flex-fill"></span>
 
-    <span class="badge badge-pill badge-light">
+    <span class="badge badge-pill badge-light" *ngIf="environment != 'prod'">
       {{ environment }} - {{ version }}
     </span>
 
