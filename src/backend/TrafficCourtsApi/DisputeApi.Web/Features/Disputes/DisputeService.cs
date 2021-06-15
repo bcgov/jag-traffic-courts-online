@@ -61,7 +61,8 @@ namespace DisputeApi.Web.Features.Disputes
                 var updatedDispute = _context.Disputes.Update(dispute);
                 await _context.SaveChangesAsync();
                 return updatedDispute.Entity;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 string str = e.Message;
                 return null;
@@ -88,7 +89,7 @@ namespace DisputeApi.Web.Features.Disputes
 
         public async Task<Dispute> FindTicketDisputeAsync(string ticketNumber)
         {
-            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}",ticketNumber);
+            _logger.LogDebug("Find dispute for ticketNumber {ticketNumber}", ticketNumber);
 
             var dispute = await _context.Disputes.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber);
             if (dispute != null)

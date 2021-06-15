@@ -16,22 +16,31 @@ namespace DisputeApi.Web.Test.Features.Disputes
     [ExcludeFromCodeCoverage]
     public class DisputeServiceTest
     {
-        private IDisputeService _service;
         private readonly Mock<ILogger<DisputeService>> _loggerMock = LoggerServiceMock.LoggerMock<DisputeService>();
-        private ViolationContext _violationContext;
 
         private ViolationContext CreateContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
             optionsBuilder.UseInMemoryDatabase("DisputeApi");
 
-            return new ViolationContext(optionsBuilder.Options);
+            var context = new ViolationContext(optionsBuilder.Options);
+
+            return context;
+        }
+
+        private DisputeService CreateSubjectUnderTest(ViolationContext context)
+        {
+            return new DisputeService(_loggerMock.Object, context);
+        }
+
+        private DisputeService CreateSubjectUnderTest()
+        {
+            ViolationContext context = CreateContext();
+            return new DisputeService(_loggerMock.Object, context);
         }
 
         public DisputeServiceTest()
         {
-            _violationContext = CreateContext();
-            _service = new DisputeService(_loggerMock.Object, _violationContext);
         }
 
         [Fact]
@@ -44,7 +53,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
         [Fact]
         public async Task get_disputes()
         {
-            var result = await _service.GetAllAsync();
+            DisputeService service = CreateSubjectUnderTest();
+
+            var result = await service.GetAllAsync();
             Assert.IsAssignableFrom<IEnumerable<Dispute>>(result);
             _loggerMock.VerifyLog(LogLevel.Debug, "Getting all disputes", Times.Once());
         }
@@ -53,11 +64,13 @@ namespace DisputeApi.Web.Test.Features.Disputes
         [AllowCirculationAutoData]
         public async Task create_new_and_get_dispute(Dispute toCreate)
         {
-            var result = await _service.CreateAsync(toCreate);
+            DisputeService service = CreateSubjectUnderTest();
+
+            var result = await service.CreateAsync(toCreate);
             Assert.IsAssignableFrom<Dispute>(result);
             Assert.NotEqual(0, result.Id);
 
-            result = await _service.GetAsync(result.Id);
+            result = await service.GetAsync(result.Id);
             Assert.IsAssignableFrom<Dispute>(result);
             Assert.NotNull(result);
         }
@@ -66,12 +79,14 @@ namespace DisputeApi.Web.Test.Features.Disputes
         [AllowCirculationAutoData]
         public async Task create_existed_dispute_get_id0(Dispute toCreate)
         {
-            var result = await _service.CreateAsync(toCreate);
+            DisputeService service = CreateSubjectUnderTest();
+
+            var result = await service.CreateAsync(toCreate);
             Assert.IsType<Dispute>(result);
             Assert.NotEqual(0, result.Id);
             _loggerMock.VerifyLog(LogLevel.Debug, "Creating dispute", Times.Once());
 
-            result = await _service.CreateAsync(toCreate);
+            result = await service.CreateAsync(toCreate);
             Assert.IsAssignableFrom<Dispute>(result);
             Assert.Equal(0, result.Id);
         }
@@ -80,12 +95,14 @@ namespace DisputeApi.Web.Test.Features.Disputes
         [AllowCirculationAutoData]
         public async Task FindDispute_get_dispute(Dispute toCreate, string findTicketNumber, int findOffenceNumber)
         {
+            DisputeService service = CreateSubjectUnderTest();
+
             toCreate.ViolationTicketNumber = findTicketNumber;
             //toCreate.OffenceNumber = findOffenceNumber;
-            var result = await _service.CreateAsync(toCreate);
+            var result = await service.CreateAsync(toCreate);
             Assert.IsAssignableFrom<Dispute>(result);
 
-            result = await _service.FindTicketDisputeAsync(findTicketNumber);
+            result = await service.FindTicketDisputeAsync(findTicketNumber);
             Assert.IsAssignableFrom<Dispute>(result);
             Assert.Equal(findTicketNumber, result.ViolationTicketNumber);
             //Assert.Equal(findOffenceNumber, result.OffenceNumber);
@@ -95,11 +112,14 @@ namespace DisputeApi.Web.Test.Features.Disputes
         [AllowCirculationAutoData]
         public async Task update_dispute_get_return_updatedRecords(Dispute toUpdate)
         {
-            _violationContext.Disputes.Add(toUpdate);
-            await _violationContext.SaveChangesAsync();
+            ViolationContext context = CreateContext();
+            DisputeService service = CreateSubjectUnderTest(context);
+
+            context.Disputes.Add(toUpdate);
+            await context.SaveChangesAsync();
             toUpdate.DisputantFirstName = "updatedFirstName";
 
-            var result = await _service.UpdateAsync(toUpdate);
+            var result = await service.UpdateAsync(toUpdate);
             Assert.IsAssignableFrom<Dispute>(result);
             Assert.Equal(toUpdate.Id, result.Id);
             Assert.Equal("updatedFirstName", result.DisputantFirstName);
