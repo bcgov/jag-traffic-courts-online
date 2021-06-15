@@ -11,28 +11,29 @@ import { LandingComponent } from './components/landing/landing.component';
 import { StepperComponent } from './components/stepper/stepper.component';
 
 const routes: Routes = [
-  // {
-  //   path: AppRoutes.DISPUTE,
-  //   component: DisputePageComponent,
-  //   children: [
-  //     {
-  //       path: AppRoutes.FIND,
-  //       component: FindTicketComponent,
-  //     },
-  //     {
-  //       path: AppRoutes.SUCCESS,
-  //       component: DisputeSubmitComponent,
-  //     },
-  //     {
-  //       path: AppRoutes.SUMMARY,
-  //       component: DisputeSummaryComponent,
-  //     },
-  //     {
-  //       path: AppRoutes.PHOTO,
-  //       component: PhotoComponent,
-  //     },
-  //   ],
-  // },
+  {
+    path: AppRoutes.DISPUTE,
+    component: DisputePageComponent,
+    children: [
+      {
+        path: AppRoutes.FIND,
+        redirectTo: '/home',
+        // component: FindTicketComponent,
+      },
+      //     {
+      //       path: AppRoutes.SUCCESS,
+      //       component: DisputeSubmitComponent,
+      //     },
+      //     {
+      //       path: AppRoutes.SUMMARY,
+      //       component: DisputeSummaryComponent,
+      //     },
+      //     {
+      //       path: AppRoutes.PHOTO,
+      //       component: PhotoComponent,
+      //     },
+    ],
+  },
   // {
   //   path: AppRoutes.STEPPER,
   //   component: StepperComponent,
