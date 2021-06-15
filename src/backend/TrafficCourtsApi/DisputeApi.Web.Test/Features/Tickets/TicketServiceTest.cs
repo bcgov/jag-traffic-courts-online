@@ -17,10 +17,10 @@ namespace DisputeApi.Web.Test.Features.Tickets
     [ExcludeFromCodeCoverage]
     public class TicketServiceTest
     {
-        private ITicketsService _service;
-        private Mock<ILogger<TicketsService>> _loggerMock;
+        private readonly ITicketsService _service;
+        private readonly Mock<ILogger<TicketsService>> _loggerMock;
 
-        private ViolationContext CreateContext()
+        private static ViolationContext CreateContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
             // use a random name because the in-memory database is shared anywhere the same name is used.
@@ -36,14 +36,18 @@ namespace DisputeApi.Web.Test.Features.Tickets
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void throw_ArgumentNullException_if_passed_null()
+#pragma warning restore IDE1006 // Naming Styles
         {
             Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext()));
             Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null));
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task get_tickets()
+#pragma warning restore IDE1006 // Naming Styles
         {
             var result = await _service.GetTickets();
             Assert.IsAssignableFrom<IEnumerable<Ticket>>(result);
@@ -52,7 +56,9 @@ namespace DisputeApi.Web.Test.Features.Tickets
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task save_ticket(Ticket ticket)
+#pragma warning restore IDE1006 // Naming Styles
         {
             var result = await _service.SaveTicket(ticket);
             Assert.IsAssignableFrom<Ticket>(result);

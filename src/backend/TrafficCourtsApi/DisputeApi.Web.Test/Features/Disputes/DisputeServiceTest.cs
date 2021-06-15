@@ -18,7 +18,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
     {
         private readonly Mock<ILogger<DisputeService>> _loggerMock = LoggerServiceMock.LoggerMock<DisputeService>();
 
-        private ViolationContext CreateContext()
+        private static ViolationContext CreateContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
             // use a random name because the in-memory database is shared anywhere the same name is used.
@@ -45,14 +45,18 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void throw_ArgumentNullException_if_passed_null()
+#pragma warning restore IDE1006 // Naming Styles
         {
             Assert.Throws<ArgumentNullException>(() => new DisputeService(null, CreateContext()));
             Assert.Throws<ArgumentNullException>(() => new DisputeService(_loggerMock.Object, null));
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task get_disputes()
+#pragma warning restore IDE1006 // Naming Styles
         {
             DisputeService service = CreateSubjectUnderTest();
 
@@ -63,7 +67,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AllowCirculationAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task create_new_and_get_dispute(Dispute toCreate)
+#pragma warning restore IDE1006 // Naming Styles
         {
             DisputeService service = CreateSubjectUnderTest();
 
@@ -78,7 +84,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AllowCirculationAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task create_existed_dispute_get_id0(Dispute toCreate)
+#pragma warning restore IDE1006 // Naming Styles
         {
             DisputeService service = CreateSubjectUnderTest();
 
@@ -94,7 +102,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AllowCirculationAutoData]
-        public async Task FindDispute_get_dispute(Dispute toCreate, string findTicketNumber, int findOffenceNumber)
+        public async Task FindDispute_get_dispute(Dispute toCreate, string findTicketNumber)
         {
             DisputeService service = CreateSubjectUnderTest();
 
@@ -111,7 +119,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AllowCirculationAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task update_dispute_get_return_updatedRecords(Dispute toUpdate)
+#pragma warning restore IDE1006 // Naming Styles
         {
             ViolationContext context = CreateContext();
             DisputeService service = CreateSubjectUnderTest(context);

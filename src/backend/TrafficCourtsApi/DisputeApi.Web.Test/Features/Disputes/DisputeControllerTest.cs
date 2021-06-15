@@ -21,8 +21,8 @@ namespace DisputeApi.Web.Test.Features.Disputes
     [ExcludeFromCodeCoverage]
     public class DisputeControllerTest
     {
-        private Mock<ILogger<DisputesController>> _loggerMock;
-        private Mock<IMediator> _mediatorMock;
+        private readonly Mock<ILogger<DisputesController>> _loggerMock;
+        private readonly Mock<IMediator> _mediatorMock;
 
         public DisputeControllerTest()
         {
@@ -31,7 +31,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void throw_ArgumentNullException_if_passed_null()
+#pragma warning restore IDE1006 // Naming Styles
         {
             Assert.Throws<ArgumentNullException>(() => new DisputesController(null, _mediatorMock.Object));
             Assert.Throws<ArgumentNullException>(() => new DisputesController(_loggerMock.Object, null));
@@ -39,7 +41,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AllowCirculationAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task get_disputes(GetDisputeResponse dispute)
+#pragma warning restore IDE1006 // Naming Styles
         {
             IEnumerable<GetDisputeResponse> expected = new List<GetDisputeResponse> {dispute};
 
@@ -56,7 +60,7 @@ namespace DisputeApi.Web.Test.Features.Disputes
             Assert.IsAssignableFrom<ApiResultResponse<IEnumerable<GetDisputeResponse>>>(objectResult.Value);
 
             var values = ((ApiResultResponse<IEnumerable<GetDisputeResponse>>) objectResult.Value).Result;
-            Assert.Equal(values.Count(), 1);
+            Assert.Single(values);
 
             _mediatorMock.Verify(x => x.Send(It.IsAny<GetAllDisputesQuery>(), It.IsAny<CancellationToken>()),
                 Times.Once);
@@ -64,7 +68,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AllowCirculationAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task get_dispute(GetDisputeResponse expected)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _mediatorMock.Setup(x => x.Send(It.IsAny<GetDisputeQuery>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(expected));
@@ -81,7 +87,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task returns_not_found_if_dispute_service_returns_null(int disputeId)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _mediatorMock.Setup(x => x.Send(It.IsAny<GetDisputeQuery>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult<GetDisputeResponse>(null));
@@ -95,7 +103,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task create_dispute(CreateDisputeCommand dispute, CreateDisputeResponse expected)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _mediatorMock.Setup(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult<CreateDisputeResponse>(expected));
@@ -111,7 +121,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task when_mediator_return_id_is_0_createDispute_return_badRequest(CreateDisputeCommand dispute,
+#pragma warning restore IDE1006 // Naming Styles
             CreateDisputeResponse response)
         {
             response.Id = 0;
@@ -129,7 +141,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task create_offence_dispute(CreateOffenceDisputeCommand dispute, CreateOffenceDisputeResponse expected)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _mediatorMock.Setup(x => x.Send(It.IsAny<CreateOffenceDisputeCommand>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult<CreateOffenceDisputeResponse>(expected));
@@ -145,7 +159,9 @@ namespace DisputeApi.Web.Test.Features.Disputes
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task when_mediator_return_id_is_0_createOffenceDispute_return_badRequest(CreateOffenceDisputeCommand dispute,
+#pragma warning restore IDE1006 // Naming Styles
      CreateOffenceDisputeResponse response)
         {
             response.Id = 0;

@@ -33,7 +33,9 @@ namespace DisputeApi.Web.Test.Features.Tickets
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void throw_ArgumentNullException_if_passed_null()
+#pragma warning restore IDE1006 // Naming Styles
         {
             Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object, _mediatorMock.Object));
             Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, null, _mediatorMock.Object));
@@ -42,7 +44,9 @@ namespace DisputeApi.Web.Test.Features.Tickets
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task get_tickets(Ticket ticket)
+#pragma warning restore IDE1006 // Naming Styles
         {
             IEnumerable<Ticket> data = new List<Ticket> { ticket };
 
@@ -64,7 +68,9 @@ namespace DisputeApi.Web.Test.Features.Tickets
 
         [Theory]
         [AutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task save_ticket(Ticket ticket)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _ticketsServiceMock
                 .Setup(x => x.SaveTicket(ticket))

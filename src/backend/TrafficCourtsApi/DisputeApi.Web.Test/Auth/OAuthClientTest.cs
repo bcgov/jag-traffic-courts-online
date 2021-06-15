@@ -64,7 +64,9 @@ namespace DisputeApi.Web.Test.Auth
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void fixture_GetRefreshToken_if_http_return_token_correctly_return_this_token()
+#pragma warning restore IDE1006 // Naming Styles
         {
             
             _httpMessageHandlerMock
