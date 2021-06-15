@@ -21,7 +21,9 @@ namespace DisputeApi.Web.Test.Health
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task return_health_service_for_dispute()
+#pragma warning restore IDE1006 // Naming Styles
         {
             var result = await _sut.CheckHealthAsync(new HealthCheckContext(), CancellationToken.None);
             Assert.Equal(HealthStatus.Healthy, result.Status);

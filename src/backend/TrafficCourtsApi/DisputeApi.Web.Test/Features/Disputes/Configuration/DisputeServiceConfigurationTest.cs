@@ -11,7 +11,9 @@ namespace DisputeApi.Web.Test.Features.Disputes.Configuration
     public class DisputeServiceConfigurationExtensionTest
     {
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void should_register_necessary_service()
+#pragma warning restore IDE1006 // Naming Styles
         {
             var services = new ServiceCollection();
             services.AddDisputeService();

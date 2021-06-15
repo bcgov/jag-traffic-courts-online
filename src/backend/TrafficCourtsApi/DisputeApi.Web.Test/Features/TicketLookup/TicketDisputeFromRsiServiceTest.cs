@@ -17,7 +17,9 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
         [Theory]
         [AutoMockAutoData]
         public async Task
-            if_rsi_return_response_with_offence_RetrieveTicketDisputeAsync_should_return_response_correctly(           
+#pragma warning disable IDE1006 // Naming Styles
+            if_rsi_return_response_with_offence_RetrieveTicketDisputeAsync_should_return_response_correctly(
+#pragma warning restore IDE1006 // Naming Styles
             RawTicketSearchResponse rawResponse,
             Invoice invoice,
             [Frozen] Mock<IRsiRestApi> rsiApiMock,
@@ -26,14 +28,14 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
         {
             var fixture = new Fixture();
             Query query = fixture.Create<Query>();
-            rawResponse.Items = new List<Item> { 
+            rawResponse.Items = new List<Item> {
                 new Item{ SelectedInvoice=new SelectedInvoice{Reference="https://test/EZ020004601"}}
             };
             invoice.ViolationDateTime = "2020-09-18T21:40";
             invoice.InvoiceNumber = "EZ020004601";
             invoice.DiscountAmount = "25.00";
             rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>(), CancellationToken.None)).Returns(Task.FromResult(rawResponse));
-            rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m=>m=="EZ020004601"), CancellationToken.None)).Returns(Task.FromResult(invoice));
+            rsiApiMock.Setup(m => m.GetInvoice(It.Is<string>(m => m == "EZ020004601"), CancellationToken.None)).Returns(Task.FromResult(invoice));
             var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, CancellationToken.None);
             Assert.IsAssignableFrom<TicketDispute>(response);
             Assert.Single(response.Offences);
@@ -44,7 +46,9 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
 
         [Theory]
         [AutoMockAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task if_rsi_return_noOffences_RetrieveTicketDisputeAsync_should_return_null(
+#pragma warning restore IDE1006 // Naming Styles
             RawTicketSearchResponse rawResponse,
             [Frozen] Mock<IRsiRestApi> rsiApiMock,
             TicketDisputeFromRsiService sut
@@ -54,8 +58,8 @@ namespace DisputeApi.Web.Test.Features.TicketLookup
             var query = fixture.Create<Query>();
             rawResponse.Items = null;
             rsiApiMock.Setup(m => m.GetTicket(It.IsAny<GetTicketParams>(), CancellationToken.None)).Returns(Task.FromResult(rawResponse));
-            var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber,query.Time,CancellationToken.None);
-            Assert.Equal(null, response);
+            var response = await sut.RetrieveTicketDisputeAsync(query.TicketNumber, query.Time, CancellationToken.None);
+            Assert.Null(response);
         }
     }
 }

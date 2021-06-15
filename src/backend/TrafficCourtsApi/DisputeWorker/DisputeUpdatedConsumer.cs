@@ -14,21 +14,20 @@ namespace DisputeWorker
         {
             _logger = logger;
         }
-        public async Task Consume(ConsumeContext<DisputeContract> context)
+
+        public Task Consume(ConsumeContext<DisputeContract> context)
         {
             try
             {
                 DisputeContract dispute = context.Message;
-                _logger.LogInformation("receive updated dispute {dispute}", JsonSerializer.Serialize<DisputeContract>(dispute));
+                _logger.LogInformation("receive updated dispute {dispute}", JsonSerializer.Serialize(dispute));
             }
             catch (Exception ex)
             {
                 _logger.LogError("ProductChangedConsumerError", ex);
             }
 
+            return Task.CompletedTask;
         }
     }
-
-
-
 }

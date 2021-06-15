@@ -86,7 +86,9 @@ namespace DisputeApi.Web.Test
         */
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void missing_jwt_config()
+#pragma warning restore IDE1006 // Naming Styles
         {
             Dictionary<string, string> emptyConfig = new Dictionary<string, string>
             {
@@ -102,7 +104,9 @@ namespace DisputeApi.Web.Test
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void success_jwt_config()
+#pragma warning restore IDE1006 // Naming Styles
         {
             var target = new Startup(_webHostEnvironmentMock.Object, _configuration);
             JwtBearerOptions options = new JwtBearerOptions();
@@ -113,7 +117,9 @@ namespace DisputeApi.Web.Test
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void startup_should_registered_all_required_services()
+#pragma warning restore IDE1006 // Naming Styles
         {
             var webHost = Microsoft.AspNetCore.WebHost.CreateDefaultBuilder().UseStartup<Startup>().Build();
             Assert.NotNull(webHost);
@@ -123,7 +129,9 @@ namespace DisputeApi.Web.Test
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void configure_services_should_inject_services()
+#pragma warning restore IDE1006 // Naming Styles
         {
             IServiceCollection services = new ServiceCollection();
 

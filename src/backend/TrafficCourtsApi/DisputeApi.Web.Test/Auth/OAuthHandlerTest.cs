@@ -23,7 +23,9 @@ namespace DisputeApi.Web.Test.Auth
 
         [Theory]
         [AutoMockAutoData]
+#pragma warning disable IDE1006 // Naming Styles
         public async Task with_token_it_should_add_it_to_header(            
+#pragma warning restore IDE1006 // Naming Styles
             [Frozen]Mock<ITokenService> tokenServiceMock,
             OAuthHandler sut,
             Token token
