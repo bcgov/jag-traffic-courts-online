@@ -23,7 +23,8 @@ namespace DisputeApi.Web.Test.Features.Tickets
         private ViolationContext CreateContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ViolationContext>();
-            optionsBuilder.UseInMemoryDatabase("DisputeApi");
+            // use a random name because the in-memory database is shared anywhere the same name is used.
+            optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             return new ViolationContext(optionsBuilder.Options);
         }
