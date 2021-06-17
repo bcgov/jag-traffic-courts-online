@@ -12,6 +12,10 @@ export class LandingComponent implements AfterViewInit {
   public understandYourTicketLink: string;
   public paymentOptionsLink: string;
   public resolutionOptionsLink: string;
+  public roadSafetyBCVisitUsLink: string;
+  public icbcVisitUsLink: string;
+  public provincialCourtOfBCVisitUsLink: string;
+  public courthouseServicesOfBCVisitUsLink: string;
 
   constructor(
     private utilsService: UtilsService,
@@ -21,6 +25,13 @@ export class LandingComponent implements AfterViewInit {
       this.appConfigService.understandYourTicketLink;
     this.paymentOptionsLink = this.appConfigService.paymentOptionsLink;
     this.resolutionOptionsLink = this.appConfigService.resolutionOptionsLink;
+    this.roadSafetyBCVisitUsLink =
+      this.appConfigService.roadSafetyBCVisitUsLink;
+    this.icbcVisitUsLink = this.appConfigService.icbcVisitUsLink;
+    this.provincialCourtOfBCVisitUsLink =
+      this.appConfigService.provincialCourtOfBCVisitUsLink;
+    this.courthouseServicesOfBCVisitUsLink =
+      this.appConfigService.courthouseServicesOfBCVisitUsLink;
   }
 
   public ngAfterViewInit(): void {
