@@ -31,14 +31,6 @@ h4 {
   text-shadow: 2px 2px 4px #000;
 }
 
-div.landing-summary {
-  background: url("/assets/landing-page-background.png") no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
 @media (max-width: 375px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-375x420.png") no-repeat !important;
@@ -69,7 +61,7 @@ div.landing-summary {
 //   }
 // }
 
-@media (max-width: 768px) {
+@media (min-width: 376px) and (max-width: 768px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-768x420.png") no-repeat !important;
     -webkit-background-size: cover;
@@ -79,9 +71,19 @@ div.landing-summary {
   }
 }
 
-@media (max-width: 992px) {
+@media (min-width: 769px) and (max-width: 992px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-992x420.png") no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 993px) {
+  div.landing-summary {
+    background: url("/assets/landing-page-background.png") no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
