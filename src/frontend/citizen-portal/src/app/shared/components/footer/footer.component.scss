@@ -9,10 +9,15 @@
 .site-footer-links {
   list-style: none;
   margin-bottom: 0;
+  margin-left: 0;
 }
 
 .site-footer-links li {
   margin-bottom: 16px;
+
+  &:first-child {
+    margin-left: 0;
+  }
 }
 
 .site-footer-links a {
@@ -23,7 +28,7 @@
 }
 
 .site-footer-links a:hover {
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 // .site-footer .container {

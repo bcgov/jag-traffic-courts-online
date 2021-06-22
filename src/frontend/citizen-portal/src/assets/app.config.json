@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "useMockServices": true,
   "apiBaseUrl": "/api",
-  "understandYourTicketLink": "https://staging-bcptb.cs138.force.com/apex/ES_Launch?tn=BCTC",
+  "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
   "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
   "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
 }

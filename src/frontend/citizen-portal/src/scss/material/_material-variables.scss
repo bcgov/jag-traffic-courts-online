@@ -3,4 +3,5 @@
 
 $tco-typography: mat.define-typography-config(
   $font-family: theme-font(body),
+  $body-1: mat.define-typography-level(16px, 28px, 400),
 );
