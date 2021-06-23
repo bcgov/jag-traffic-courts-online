@@ -41,17 +41,17 @@ h4 {
   }
 }
 
-// @media (min-width: 376px) and (max-width: 400px) {
-//   div.landing-summary {
-//     background: url("/assets/landing-page-background-400x420.jpg") no-repeat !important;
-//     -webkit-background-size: cover;
-//     -moz-background-size: cover;
-//     -o-background-size: cover;
-//     background-size: cover;
-//   }
-// }
+@media (min-width: 376px) and (max-width: 414px) {
+  div.landing-summary {
+    background: url("/assets/landing-page-background-414x420.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
 
-@media (min-width: 376px) and (max-width: 600px) {
+@media (min-width: 415px) and (max-width: 600px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-600x420.jpg") no-repeat !important;
     -webkit-background-size: cover;
