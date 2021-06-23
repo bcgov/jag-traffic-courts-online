@@ -41,9 +41,9 @@ h4 {
   }
 }
 
-// @media (max-width: 400px) {
+// @media (min-width: 376px) and (max-width: 400px) {
 //   div.landing-summary {
-//     background: url("/assets/landing-page-background-400x500.jpg") no-repeat !important;
+//     background: url("/assets/landing-page-background-400x420.jpg") no-repeat !important;
 //     -webkit-background-size: cover;
 //     -moz-background-size: cover;
 //     -o-background-size: cover;
@@ -51,17 +51,17 @@ h4 {
 //   }
 // }
 
-// @media (max-width: 600px) {
-//   div.landing-summary {
-//     background: url("/assets/landing-page-background-600x300.jpg") no-repeat !important;
-//     -webkit-background-size: cover;
-//     -moz-background-size: cover;
-//     -o-background-size: cover;
-//     background-size: cover;
-//   }
-// }
+@media (min-width: 376px) and (max-width: 600px) {
+  div.landing-summary {
+    background: url("/assets/landing-page-background-600x420.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
 
-@media (min-width: 376px) and (max-width: 768px) {
+@media (min-width: 601px) and (max-width: 768px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-768x420.jpg") no-repeat !important;
     -webkit-background-size: cover;
