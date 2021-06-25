@@ -68,7 +68,8 @@ objects:
                 memory: 64Mi
             volumeMounts:
             - name: configuration-volume
-              mountPath: /usr/share/nginx/html/assets
+              mountPath: /usr/share/nginx/html/assets/app.config.json
+              subPath: app.config.json
         volumes:
           - name: configuration-volume
             configMap:
