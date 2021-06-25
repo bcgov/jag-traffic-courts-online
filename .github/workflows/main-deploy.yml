@@ -58,7 +58,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/frontend/citizen-portal
-          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-portal:${{secrets.OC_APP}}
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-web:${{secrets.OC_APP}}
         run: |  
           docker build \
             --tag ${IMAGE} \
