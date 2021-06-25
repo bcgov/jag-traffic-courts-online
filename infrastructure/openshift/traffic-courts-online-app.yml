@@ -44,7 +44,7 @@ objects:
     selector:
       name: ${FRONTEND_POD}
     strategy:
-      type: Recreate
+      type: Rolling
       maxSurge: 50%
       maxUnavailable: 0
     template:
