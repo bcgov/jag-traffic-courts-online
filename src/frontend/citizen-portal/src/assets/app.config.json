@@ -3,8 +3,5 @@
   "environment": "dev",
   "version": "1.0.0",
   "useMockServices": true,
-  "apiBaseUrl": "/api",
-  "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
-  "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
-  "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+  "apiBaseUrl": "/api"
 }
