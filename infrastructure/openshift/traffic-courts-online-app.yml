@@ -55,7 +55,7 @@ objects:
       spec:
         containers:
           - image: >-
-              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/citizen-portal:${OC_ENV}
+              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/citizen-web:${OC_ENV}
             name: ${FRONTEND_POD} 
             ports:
               - containerPort: 8080
@@ -66,6 +66,13 @@ objects:
               requests:
                 cpu: 10m
                 memory: 64Mi
+            volumeMounts:
+            - name: configuration-volume
+              mountPath: /usr/share/nginx/html/assets
+        volumes:
+          - name: configuration-volume
+            configMap:
+              name: citizen-web-configuration
     triggers:
       - type: ConfigChange
       - type: ImageChange
@@ -76,7 +83,7 @@ objects:
           from:
             kind: ImageStreamTag
             namespace: "${OC_NAMESPACE}-tools"
-            name: 'citizen-portal:${OC_ENV}'
+            name: 'citizen-web:${OC_ENV}'
   status: {}
 ### Citizen Portal Service ###
 - apiVersion: v1
