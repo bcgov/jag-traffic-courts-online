@@ -5,17 +5,25 @@
     <div class="container">
       <ul class="summary-header-links">
         <li>
-          <a [attr.href]="understandYourTicketLink" target="_blank">
+          <a href="https://understandmyticket.gov.bc.ca/" target="_blank">
             Understand Your Ticket
           </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a [attr.href]="paymentOptionsLink" target="_blank"> Pay Options </a>
+          <a
+            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket"
+            target="_blank"
+          >
+            Pay Options
+          </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a [attr.href]="resolutionOptionsLink" target="_blank">
+          <a
+            href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+            target="_blank"
+          >
             Resolution Options
           </a>
         </li>
@@ -43,7 +51,7 @@
     <div class="flex flex-first">
       <div class="flex-3-col flex-info">
         <a
-          [attr.href]="understandYourTicketLink"
+          href="https://understandmyticket.gov.bc.ca/"
           class="main-link"
           target="_blank"
         >
@@ -61,7 +69,11 @@
         </a>
       </div>
       <div class="flex-3-col flex-info">
-        <a [attr.href]="paymentOptionsLink" class="main-link" target="_blank">
+        <a
+          href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket"
+          class="main-link"
+          target="_blank"
+        >
           <div class="center">
             <div class="landing-card__image">
               <img class="icon-size2" src="/assets/pay-icon.svg" />
@@ -77,7 +89,7 @@
       </div>
       <div class="flex-3-col flex-info">
         <a
-          [attr.href]="resolutionOptionsLink"
+          href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
           class="main-link"
           target="_blank"
         >
@@ -139,7 +151,7 @@
             fatalities.
             <div class="text-right pt-2">
               <a
-                [attr.href]="roadSafetyBCVisitUsLink"
+                href="https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/roadsafetybc/intersection-safety-cameras"
                 target="_blank"
                 class="text-align:right;"
               >
@@ -160,7 +172,7 @@
             Learn how to pay or dispute a ticket, and more.
             <div class="text-right pt-2">
               <a
-                [attr.href]="icbcVisitUsLink"
+                href="https://www.icbc.com/driver-licensing/tickets/Pages/default.aspx"
                 target="_blank"
                 class="text-align:right;"
               >
@@ -181,7 +193,7 @@
             Municipal Tickets.
             <div class="text-right pt-2">
               <a
-                [attr.href]="provincialCourtOfBCVisitUsLink"
+                href="https://www.provincialcourt.bc.ca/types-of-cases/traffic-and-bylaw-matters"
                 target="_blank"
                 class="text-align:right;"
               >
@@ -201,7 +213,7 @@
             Tickets.
             <div class="text-right pt-2">
               <a
-                [attr.href]="courthouseServicesOfBCVisitUsLink"
+                href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments"
                 target="_blank"
                 class="text-align:right;"
               >
@@ -214,126 +226,6 @@
       </div>
     </div>
   </section>
-
-  <!-- ======================================= -->
-  <!--
-
-  <section class="landing-cards">
-    <div class="landing-cards-content">
-      <div class="landing-card info">
-        <h4>Did you know?</h4>
-
-        <div class="bullet-list">
-          <ul>
-            <li class="pt-0">
-              Minor errors on the ticket, such as a misspelled word, may not be
-              grounds for dismissing a ticket.
-            </li>
-            <li>The officer does not need to write the speed on the ticket.</li>
-            <li>You do not need to sign the ticket.</li>
-            <li>
-              Officers (including RCMP, Municipal detachment, and Integrated
-              Road Safety Unit members) can issue tickets across different
-              municipalities.
-            </li>
-            <li>
-              Officer schedules are checked before setting court hearing dates.
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="landing-card info">
-        <h4>Useful links</h4>
-
-        <mat-expansion-panel class="pt-0">
-          <mat-expansion-panel-header>
-            <mat-panel-title> RoadSafetyBC </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            RoadSafetyBC is responsible for road safety in the province. We
-            govern drivers, put in place road safety policies, and work with our
-            partners to help reach our goal of zero traffic fatalities.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="roadSafetyBCVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Insurance Corporation of BC (ICBC)
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            Learn how to pay or dispute a ticket. And find out more about
-            penalties, including points, prohibitions, impoundments,
-            suspensions, and more.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="icbcVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Provincial Court of BC </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            Deals with three types of tickets: Provincial Violation Tickets
-            (including traffic tickets), Federal Contravention Tickets and
-            Municipal Tickets.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="provincialCourtOfBCVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Courthouse Services of BC </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            Pay or dispute provincial violation or Federal Contravention
-            Tickets.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="courthouseServicesOfBCVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-      </div>
-    </div>
-  </section>
-  -->
 </div>
 
 <app-footer></app-footer>
