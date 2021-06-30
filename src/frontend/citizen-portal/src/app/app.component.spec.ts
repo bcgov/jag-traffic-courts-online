@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
+import { WindowRef } from './window-ref';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -12,6 +13,7 @@ describe('AppComponent', () => {
         HttpClientTestingModule,
         TranslateModule.forRoot(),
       ],
+      providers: [ WindowRef ],
       declarations: [AppComponent],
     }).compileComponents();
   });

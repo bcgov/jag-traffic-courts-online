@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { Meta, Title } from '@angular/platform-browser';
 import { ConfigService } from '@config/config.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SnowplowService } from './snowplow.service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +15,16 @@ export class AppComponent implements OnInit {
     private translateService: TranslateService,
     private titleService: Title,
     private configService: ConfigService,
-    private metaTagService: Meta
-  ) {}
+    private metaTagService: Meta,
+    router: Router, 
+    snowplow: SnowplowService
+  ) {
+    router.events.subscribe((evt) => {      
+      if (evt instanceof NavigationEnd) {
+        snowplow.trackPageView();
+      }
+  });
+  }
 
   public ngOnInit(): void {
     this.metaTagService.addTags([
