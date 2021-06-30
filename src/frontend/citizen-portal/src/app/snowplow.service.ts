@@ -11,11 +11,11 @@ export class SnowplowService {
   constructor(window: WindowRef) {
     this._window = window.nativeWindow;
     if (this._window.snowplow) {
-      const collector = "spt.apps.gov.bc.ca";
-      this._window.snowplow('newTracker', "rt", collector, {
+      const collector = 'spt.apps.gov.bc.ca';
+      this._window.snowplow('newTracker', 'rt', collector, {
         appId: 'Snowplow_standalone',
         cookieLifetime: 86400 * 548,
-        platform: "web",
+        platform: 'web',
         post: true,
         forceSecureTracker: true,
         contexts: {
