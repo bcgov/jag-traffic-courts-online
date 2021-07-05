@@ -1,9 +1,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { WindowRefService } from '@core/services/window-ref.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
-import { WindowRef } from './window-ref';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('AppComponent', () => {
         HttpClientTestingModule,
         TranslateModule.forRoot(),
       ],
-      providers: [ WindowRef ],
+      providers: [WindowRefService],
       declarations: [AppComponent],
     }).compileComponents();
   });
