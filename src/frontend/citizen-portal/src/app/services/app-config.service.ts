@@ -22,6 +22,13 @@ export class AppConfig {
 export class AppConfigService {
   private appConfig: AppConfig;
 
+  private UNDERSTAND_YOUR_TICKET_DEFAULT =
+    'https://understandmyticket.gov.bc.ca/' as const;
+  private PAYMENT_OPTIONS_DEFAULT =
+    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket' as const;
+  private RESOLUTION_OPTIONS_DEFAULTS =
+    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket' as const;
+
   private RSBC_VISIT_US_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/roadsafetybc/intersection-safety-cameras' as const;
   private ICBC_VISIT_US_DEFAULT =
@@ -64,46 +71,37 @@ export class AppConfigService {
   }
 
   get understandYourTicketLink(): string {
-    return this.appConfig?.understandYourTicketLink;
+    const link = this.appConfig?.understandYourTicketLink;
+    return link ? link : this.UNDERSTAND_YOUR_TICKET_DEFAULT;
   }
 
   get paymentOptionsLink(): string {
-    return this.appConfig?.paymentOptionsLink;
+    const link = this.appConfig?.paymentOptionsLink;
+    return link ? link : this.PAYMENT_OPTIONS_DEFAULT;
   }
 
   get resolutionOptionsLink(): string {
-    return this.appConfig?.resolutionOptionsLink;
+    const link = this.appConfig?.resolutionOptionsLink;
+    return link ? link : this.RESOLUTION_OPTIONS_DEFAULTS;
   }
 
   get roadSafetyBCVisitUsLink(): string {
     const link = this.appConfig?.roadSafetyBCVisitUsLink;
-    if (link) {
-      return link;
-    }
-    return this.RSBC_VISIT_US_DEFAULT;
+    return link ? link : this.RSBC_VISIT_US_DEFAULT;
   }
 
   get icbcVisitUsLink(): string {
     const link = this.appConfig?.icbcVisitUsLink;
-    if (link) {
-      return link;
-    }
-    return this.ICBC_VISIT_US_DEFAULT;
+    return link ? link : this.ICBC_VISIT_US_DEFAULT;
   }
 
   get provincialCourtOfBCVisitUsLink(): string {
     const link = this.appConfig?.provincialCourtOfBCVisitUsLink;
-    if (link) {
-      return link;
-    }
-    return this.PROV_CRT_VISIT_US_DEFAULT;
+    return link ? link : this.PROV_CRT_VISIT_US_DEFAULT;
   }
 
   get courthouseServicesOfBCVisitUsLink(): string {
     const link = this.appConfig?.courthouseServicesOfBCVisitUsLink;
-    if (link) {
-      return link;
-    }
-    return this.CTH_SERV_VISIT_US_DEFAULT;
+    return link ? link : this.CTH_SERV_VISIT_US_DEFAULT;
   }
 }
