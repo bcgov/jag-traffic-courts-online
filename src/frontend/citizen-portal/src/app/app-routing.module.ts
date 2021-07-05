@@ -17,7 +17,7 @@ const routes: Routes = [
     children: [
       {
         path: AppRoutes.FIND,
-        redirectTo: '/home',
+        redirectTo: '/',
         // component: FindTicketComponent,
       },
       //     {
@@ -43,12 +43,12 @@ const routes: Routes = [
   //   component: DisputeAllStepperComponent,
   // },
   {
-    path: AppRoutes.HOME,
+    path: '',
     component: LandingComponent,
   },
   {
-    path: '',
-    redirectTo: '/home',
+    path: '**',
+    redirectTo: '/',
     pathMatch: 'full',
   },
 ];
