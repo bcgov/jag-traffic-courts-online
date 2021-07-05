@@ -9,6 +9,7 @@
             [attr.href]="understandYourTicketLink"
             class="primary-navigation understand-your-ticket"
             target="_blank"
+            rel="noopener"
           >
             Understand Your Ticket
           </a>
@@ -19,6 +20,7 @@
             [attr.href]="paymentOptionsLink"
             class="primary-navigation payment-options"
             target="_blank"
+            rel="noopener"
           >
             Pay Options
           </a>
@@ -29,6 +31,7 @@
             [attr.href]="resolutionOptionsLink"
             class="primary-navigation resolution-options"
             target="_blank"
+            rel="noopener"
           >
             Resolution Options
           </a>
@@ -60,6 +63,7 @@
           [attr.href]="understandYourTicketLink"
           class="main-body-navigation understand-your-ticket"
           target="_blank"
+          rel="noopener"
         >
           <div class="center">
             <div class="landing-card__image">
@@ -79,6 +83,7 @@
           [attr.href]="paymentOptionsLink"
           class="main-body-navigation payment-options"
           target="_blank"
+          rel="noopener"
         >
           <div class="center">
             <div class="landing-card__image">
@@ -98,6 +103,7 @@
           [attr.href]="resolutionOptionsLink"
           class="main-body-navigation resolution-options"
           target="_blank"
+          rel="noopener"
         >
           <div class="center">
             <div class="landing-card__image">
@@ -159,6 +165,7 @@
               <a
                 [attr.href]="roadSafetyBCVisitUsLink"
                 target="_blank"
+                rel="noopener"
                 class="useful-links road-safety-bc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
@@ -180,6 +187,7 @@
               <a
                 [attr.href]="icbcVisitUsLink"
                 target="_blank"
+                rel="noopener"
                 class="useful-links icbc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
@@ -201,6 +209,7 @@
               <a
                 [attr.href]="provincialCourtOfBCVisitUsLink"
                 target="_blank"
+                rel="noopener"
                 class="useful-links provincial-court-of-bc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
@@ -221,6 +230,7 @@
               <a
                 [attr.href]="courthouseServicesOfBCVisitUsLink"
                 target="_blank"
+                rel="noopener"
                 class="useful-links courthouse-services-of-bc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
@@ -232,126 +242,6 @@
       </div>
     </div>
   </section>
-
-  <!-- ======================================= -->
-  <!--
-
-  <section class="landing-cards">
-    <div class="landing-cards-content">
-      <div class="landing-card info">
-        <h4>Did you know?</h4>
-
-        <div class="bullet-list">
-          <ul>
-            <li class="pt-0">
-              Minor errors on the ticket, such as a misspelled word, may not be
-              grounds for dismissing a ticket.
-            </li>
-            <li>The officer does not need to write the speed on the ticket.</li>
-            <li>You do not need to sign the ticket.</li>
-            <li>
-              Officers (including RCMP, Municipal detachment, and Integrated
-              Road Safety Unit members) can issue tickets across different
-              municipalities.
-            </li>
-            <li>
-              Officer schedules are checked before setting court hearing dates.
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="landing-card info">
-        <h4>Useful links</h4>
-
-        <mat-expansion-panel class="pt-0">
-          <mat-expansion-panel-header>
-            <mat-panel-title> RoadSafetyBC </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            RoadSafetyBC is responsible for road safety in the province. We
-            govern drivers, put in place road safety policies, and work with our
-            partners to help reach our goal of zero traffic fatalities.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="roadSafetyBCVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Insurance Corporation of BC (ICBC)
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            Learn how to pay or dispute a ticket. And find out more about
-            penalties, including points, prohibitions, impoundments,
-            suspensions, and more.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="icbcVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Provincial Court of BC </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            Deals with three types of tickets: Provincial Violation Tickets
-            (including traffic tickets), Federal Contravention Tickets and
-            Municipal Tickets.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="provincialCourtOfBCVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title> Courthouse Services of BC </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="landing-card-text my-2">
-            Pay or dispute provincial violation or Federal Contravention
-            Tickets.
-            <div class="text-right pt-2">
-              <a
-                [attr.href]="courthouseServicesOfBCVisitUsLink"
-                target="_blank"
-                class="text-align:right;"
-              >
-                <mat-icon inline="true"> play_arrow</mat-icon>
-                View site
-              </a>
-            </div>
-          </div>
-        </mat-expansion-panel>
-      </div>
-    </div>
-  </section>
-  -->
 </div>
 
 <app-footer></app-footer>
