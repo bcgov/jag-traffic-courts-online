@@ -5,17 +5,31 @@
     <div class="container">
       <ul class="summary-header-links">
         <li>
-          <a [attr.href]="understandYourTicketLink" target="_blank">
+          <a
+            [attr.href]="understandYourTicketLink"
+            class="primary-navigation understand-your-ticket"
+            target="_blank"
+          >
             Understand Your Ticket
           </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a [attr.href]="paymentOptionsLink" target="_blank"> Pay Options </a>
+          <a
+            [attr.href]="paymentOptionsLink"
+            class="primary-navigation payment-options"
+            target="_blank"
+          >
+            Pay Options
+          </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a [attr.href]="resolutionOptionsLink" target="_blank">
+          <a
+            [attr.href]="resolutionOptionsLink"
+            class="primary-navigation resolution-options"
+            target="_blank"
+          >
             Resolution Options
           </a>
         </li>
@@ -44,7 +58,7 @@
       <div class="flex-3-col flex-info">
         <a
           [attr.href]="understandYourTicketLink"
-          class="main-link"
+          class="main-body-navigation understand-your-ticket"
           target="_blank"
         >
           <div class="center">
@@ -61,7 +75,11 @@
         </a>
       </div>
       <div class="flex-3-col flex-info">
-        <a [attr.href]="paymentOptionsLink" class="main-link" target="_blank">
+        <a
+          [attr.href]="paymentOptionsLink"
+          class="main-body-navigation payment-options"
+          target="_blank"
+        >
           <div class="center">
             <div class="landing-card__image">
               <img class="icon-size2" src="/assets/pay-icon.svg" />
@@ -78,7 +96,7 @@
       <div class="flex-3-col flex-info">
         <a
           [attr.href]="resolutionOptionsLink"
-          class="main-link"
+          class="main-body-navigation resolution-options"
           target="_blank"
         >
           <div class="center">
@@ -141,7 +159,7 @@
               <a
                 [attr.href]="roadSafetyBCVisitUsLink"
                 target="_blank"
-                class="text-align:right;"
+                class="useful-links road-safety-bc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
@@ -162,7 +180,7 @@
               <a
                 [attr.href]="icbcVisitUsLink"
                 target="_blank"
-                class="text-align:right;"
+                class="useful-links icbc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
@@ -183,7 +201,7 @@
               <a
                 [attr.href]="provincialCourtOfBCVisitUsLink"
                 target="_blank"
-                class="text-align:right;"
+                class="useful-links provincial-court-of-bc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
@@ -203,7 +221,7 @@
               <a
                 [attr.href]="courthouseServicesOfBCVisitUsLink"
                 target="_blank"
-                class="text-align:right;"
+                class="useful-links courthouse-services-of-bc"
               >
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
