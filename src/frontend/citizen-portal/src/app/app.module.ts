@@ -122,7 +122,7 @@ export class AppModule {
     this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);
-    console.log('Current Browser Language', currentLanguage);
+    // console.log('Current Browser Language', currentLanguage);
 
     let defaultLanguage = 'en';
     if (this.availableLanguages.includes(currentLanguage)) {
