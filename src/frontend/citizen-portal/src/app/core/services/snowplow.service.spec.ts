@@ -1,16 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SnowplowService } from './snowplow.service';
-import { WindowRef } from './window-ref';
+import { WindowRefService } from './window-ref.service';
 
 describe('SnowplowService', () => {
   let service: SnowplowService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        WindowRef
-      ]
+      providers: [WindowRefService],
     });
     service = TestBed.inject(SnowplowService);
   });

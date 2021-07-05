@@ -1,8 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
+import { WindowRefService } from '@core/services/window-ref.service';
 import { TranslateModule } from '@ngx-translate/core';
-import { WindowRef } from '../../window-ref';
 
 import { LandingComponent } from './landing.component';
 
@@ -17,7 +17,7 @@ describe('LandingComponent', () => {
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
       ],
-      providers: [ WindowRef ],
+      providers: [WindowRefService],
       declarations: [LandingComponent],
     }).compileComponents();
   });

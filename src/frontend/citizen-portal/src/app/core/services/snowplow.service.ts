@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { WindowRef, ISnowplowWindow } from './window-ref';
+import {
+  ISnowplowWindow,
+  WindowRefService,
+} from '@core/services/window-ref.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnowplowService {
-
   private _window: ISnowplowWindow;
 
-  constructor(window: WindowRef) {
+  constructor(window: WindowRefService) {
     this._window = window.nativeWindow;
     if (this._window.snowplow) {
       const collector = 'spt.apps.gov.bc.ca';
@@ -21,7 +23,7 @@ export class SnowplowService {
         contexts: {
           webPage: true,
           performanceTiming: true,
-        }
+        },
       });
       this._window.snowplow('enableActivityTracking', 30, 30); // Ping every 30 seconds after 30 seconds
       this._window.snowplow('enableLinkClickTracking');
