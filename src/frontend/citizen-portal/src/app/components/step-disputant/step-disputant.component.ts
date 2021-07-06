@@ -51,6 +51,7 @@ export class StepDisputantComponent
       disputeFormStateService
     );
     const today = new Date();
+    this.maxDateOfBirth = new Date();
     this.maxDateOfBirth.setFullYear(today.getFullYear() - this.MINIMUM_AGE);
   }
 
