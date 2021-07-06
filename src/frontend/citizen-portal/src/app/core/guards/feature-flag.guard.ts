@@ -30,7 +30,8 @@ export class FeatureFlagGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const featureFlag = route.data['featureFlag'];
+    const key = 'featureFlag';
+    const featureFlag = route.data[key];
     const isEnabled = this.isFeatureFlagEnabled(featureFlag);
 
     if (!isEnabled) {
