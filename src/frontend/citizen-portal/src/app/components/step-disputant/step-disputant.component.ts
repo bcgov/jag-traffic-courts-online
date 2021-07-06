@@ -9,7 +9,6 @@ import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage'
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import moment from 'moment';
 
 @Component({
   selector: 'app-step-disputant',
@@ -18,7 +17,8 @@ import moment from 'moment';
 })
 export class StepDisputantComponent
   extends BaseDisputeFormPage
-  implements OnInit {
+  implements OnInit
+{
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
@@ -27,7 +27,7 @@ export class StepDisputantComponent
   public previousButtonKey = 'stepper.cancel';
   public saveButtonKey = 'stepper.next';
 
-  public maxDateOfBirth: moment.Moment;
+  public maxDateOfBirth: Date;
 
   private MINIMUM_AGE = 18;
 
@@ -50,7 +50,8 @@ export class StepDisputantComponent
       disputeResource,
       disputeFormStateService
     );
-    this.maxDateOfBirth = moment().subtract(this.MINIMUM_AGE, 'years');
+    const today = new Date();
+    this.maxDateOfBirth.setFullYear(today.getFullYear() - this.MINIMUM_AGE);
   }
 
   public ngOnInit() {

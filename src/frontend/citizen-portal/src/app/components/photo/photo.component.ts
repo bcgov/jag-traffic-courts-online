@@ -2,6 +2,10 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { Router } from '@angular/router';
+import { LoggerService } from '@core/services/logger.service';
+import { AppRoutes } from 'app/app.routes';
+import { DisputeService } from 'app/services/dispute.service';
 import { WebcamImage, WebcamInitError, WebcamUtil } from 'ngx-webcam';
 import { Observable, Subject, Subscription } from 'rxjs';
 
@@ -50,7 +54,15 @@ export class PhotoComponent implements OnInit {
   public uploadProgress: number;
   public uploadSub: Subscription;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private disputeService: DisputeService,
+    private logger: LoggerService
+  ) {
+    if (!this.disputeService.ticket) {
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+    }
+  }
 
   ngOnInit(): void {
     WebcamUtil.getAvailableVideoInputs().then(
@@ -62,14 +74,14 @@ export class PhotoComponent implements OnInit {
 
   public onFileChange(event: any) {
     if (!event.target.files[0] || event.target.files[0].length === 0) {
-      console.log('You must select an image');
+      this.logger.log('You must select an image');
       return;
     }
 
     const mimeType = event.target.files[0].type;
 
     if (mimeType.match(/image\/*/) == null) {
-      console.log('Only images are supported');
+      this.logger.log('Only images are supported');
       return;
     }
 
@@ -77,7 +89,7 @@ export class PhotoComponent implements OnInit {
     const file: File = event.target.files[0];
     this.fileName = file.name;
     reader.readAsDataURL(file);
-    console.log('file', file.name, file.lastModified);
+    this.logger.log('file', file.name, file.lastModified);
 
     reader.onload = () => {
       this.imageSrc = reader.result as string;
@@ -88,12 +100,24 @@ export class PhotoComponent implements OnInit {
     };
   }
 
-  public triggerSnapshot(): void {
+  public onSave(): void {
+    const ticket = this.disputeService.ticket;
+    const params = {
+      ticketNumber: ticket.violationTicketNumber,
+      time: ticket.violationTime,
+    };
+
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+      queryParams: params,
+    });
+  }
+
+  public onTriggerSnapshot(): void {
     this.trigger.next();
   }
 
   public toggleWebcam($event: MatButtonToggleChange): void {
-    console.log('toggleWebcam', $event);
+    this.logger.log('toggleWebcam', $event);
     this.showWebcam = $event.value === 'take'; // $event.checked; //!this.showWebcam;
   }
 
@@ -102,7 +126,7 @@ export class PhotoComponent implements OnInit {
       error.mediaStreamError &&
       error.mediaStreamError.name === 'NotAllowedError'
     ) {
-      console.warn('Camera access was not allowed by user!');
+      this.logger.warn('Camera access was not allowed by user!');
     }
     this.errors.push(error);
   }
@@ -115,12 +139,12 @@ export class PhotoComponent implements OnInit {
   }
 
   public handleImage(webcamImage: WebcamImage): void {
-    console.log('received webcam image', webcamImage);
+    this.logger.log('received webcam image', webcamImage);
     this.webcamImage = webcamImage;
   }
 
   public cameraWasSwitched(deviceId: string): void {
-    console.log('active device: ' + deviceId);
+    this.logger.log('active device: ' + deviceId);
     this.deviceId = deviceId;
   }
 

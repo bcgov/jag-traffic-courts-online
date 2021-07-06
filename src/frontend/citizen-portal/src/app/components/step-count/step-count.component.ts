@@ -73,7 +73,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   public toggleSelection(chip: MatChip) {
     // chip.toggleSelected();
     chip.select();
-    console.log('chip', chip);
+    this.logger.log('chip', chip);
   }
 
   public ngOnInit() {
