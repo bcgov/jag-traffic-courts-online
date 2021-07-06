@@ -9,11 +9,16 @@ export class FormatDatePipe implements PipeTransform {
   transform(date: string, format: string = APP_DATE_FORMAT): string {
     if (date) {
       const parts = date.split('-');
-      const newDate = new Date(
-        parseInt(parts[0]),
-        parseInt(parts[1]) - 1,
-        parseInt(parts[2])
-      );
+      let newDate;
+      if (parts.length === 3) {
+        newDate = new Date(
+          parseInt(parts[0]),
+          parseInt(parts[1]) - 1,
+          parseInt(parts[2])
+        );
+      } else {
+        newDate = new Date(date);
+      }
 
       date = `${newDate.getDate()} ${newDate.toLocaleString('default', {
         month: 'short',
