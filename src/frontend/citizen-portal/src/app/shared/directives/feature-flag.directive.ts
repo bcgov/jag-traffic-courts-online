@@ -6,10 +6,10 @@ export const featureType = {
 } as const;
 
 @Directive({
-  selector: '[featureFlag]',
+  selector: '[appFeatureFlag]',
 })
 export class FeatureFlagDirective {
-  @Input() set featureFlag(featureName: string) {
+  @Input() set appFeatureFlag(featureName: string) {
     const flagEnabled = this.appConfigService.isFeatureFlagEnabled(featureName);
 
     if (flagEnabled) {

@@ -1,10 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { SnowplowService } from '@core/services/snowplow.service';
 import { UtilsService } from '@core/services/utils.service';
-import {
-  FeatureFlagDirective,
-  featureType,
-} from '@shared/directives/feature-flag.directive';
 import { AppConfigService } from 'app/services/app-config.service';
 
 @Component({
