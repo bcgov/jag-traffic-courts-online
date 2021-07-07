@@ -3,7 +3,7 @@ name: Citizen API
 on:
   pull_request:
     paths:
-      - "./src/backend/TrafficCourtsApi/**"
+      - 'src/backend/TrafficCourtsApi/**'
 
 jobs:
   build:

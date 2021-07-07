@@ -3,7 +3,7 @@ name: Ticket Search
 on:
   pull_request:
     paths:
-      - "./src/ticket-search/**"
+      - 'src/ticket-search/**'
 
 jobs:
   build:
