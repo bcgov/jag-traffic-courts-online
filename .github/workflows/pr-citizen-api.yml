@@ -1,0 +1,23 @@
+name: .NET Core
+
+on:
+  pull_request:
+    paths:
+      - "./src/backend/TrafficCourtsApi/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+      - name: Build TrafficCourtsApi
+        run: dotnet build
+        working-directory: ./src/backend/TrafficCourtsApi
+      - name: Test TrafficCourtsApi
+        run: dotnet test
+        working-directory: ./src/backend/TrafficCourtsApi
