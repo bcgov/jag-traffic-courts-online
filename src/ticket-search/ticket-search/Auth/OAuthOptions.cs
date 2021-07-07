@@ -16,8 +16,5 @@ namespace Gov.TicketSearch.Auth
 
         [Required]
         public string Secret { get; set; }
-
-         [Range(1, 10)]
-        public int TokenTimeout { get; set; } = 1;
     }
 }

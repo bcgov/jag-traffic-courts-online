@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Gov.TicketSearch.Test
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public static class LoggerServiceMock
     {
         public static Mock<ILogger<T>> LoggerMock<T>() where T : class

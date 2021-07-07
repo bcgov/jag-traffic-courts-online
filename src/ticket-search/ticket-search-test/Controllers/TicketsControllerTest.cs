@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ using Xunit;
 
 namespace Gov.TicketSearch.Test.Controllers
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public class TicketsControllerTest
     {
         private Mock<ILogger<TicketsController>> _loggerMock;
@@ -29,7 +30,9 @@ namespace Gov.TicketSearch.Test.Controllers
         }
 
         [Fact]
+#pragma warning disable IDE1006 // Naming Styles
         public void throw_ArgumentNullException_if_passed_null()
+#pragma warning restore IDE1006 // Naming Styles
         {
             Assert.Throws<ArgumentNullException>(() => new TicketsController(null, _ticketsServiceMock.Object));
             Assert.Throws<ArgumentNullException>(() => new TicketsController(_loggerMock.Object, null));

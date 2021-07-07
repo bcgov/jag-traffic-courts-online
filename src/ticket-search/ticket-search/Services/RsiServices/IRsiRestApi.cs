@@ -1,6 +1,6 @@
-﻿using Gov.TicketSearch.Models;
-using Gov.TicketSearch.Services.RsiServices.Models;
+﻿using Gov.TicketSearch.Services.RsiServices.Models;
 using Refit;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,6 +15,7 @@ namespace Gov.TicketSearch.Services.RsiServices
         Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken);
     }
 
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class GetTicketParams
     {
         [AliasAs("in")]

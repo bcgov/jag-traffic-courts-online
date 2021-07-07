@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>ticket_search_test</RootNamespace>
+    <RootNamespace>Gov.TicketSearch.Test</RootNamespace>
 
     <IsPackable>false</IsPackable>
 
@@ -29,4 +29,7 @@
     <ProjectReference Include="..\ticket-search\ticket-search.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <Exclude>*Test</Exclude>
+  </PropertyGroup>
 </Project>

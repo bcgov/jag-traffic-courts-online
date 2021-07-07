@@ -29,8 +29,7 @@ namespace Gov.TicketSearch
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ticket_search", Version = "v1" });
             });
-            ConfigTicketsServices(services);
-            
+            ConfigTicketsServices(services);            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,22 +58,26 @@ namespace Gov.TicketSearch
         {
             string operationMode = Configuration.GetSection("RSI:OPERATIONMODE").Value;
             if (operationMode == Keys.RsiOperationModeFake)
+            {
                 services.AddTransient<ITicketsService, FakeTicketsService>();
+            }
             else
             {
                 services.AddOptions<OAuthOptions>()
                     .Bind(Configuration.GetSection("OAuth"))
                     .ValidateDataAnnotations();
+
                 services.AddMemoryCache();
                 services.AddHttpClient<IOAuthClient, OAuthClient>();
                 services.AddTransient<ITokenService, TokenService>();
                 services.AddTransient<OAuthHandler>();
+
                 services.AddRefitClient<IRsiRestApi>()
                     .ConfigureHttpClient(c => c.BaseAddress = new Uri(Configuration.GetSection("RSI:BASEADDRESS").Value))
                     .AddHttpMessageHandler<OAuthHandler>();
+                
                 services.AddTransient<ITicketsService, RsiTicketsService>();
             }
         }
     }
-
 }

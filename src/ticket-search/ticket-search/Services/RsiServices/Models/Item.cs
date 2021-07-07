@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Gov.TicketSearch.Services.RsiServices.Models
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Item
     {
         [JsonPropertyName("selected_invoice")]

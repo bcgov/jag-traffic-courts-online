@@ -1,18 +1,13 @@
-﻿using AutoFixture;
-using AutoFixture.Xunit2;
+﻿using AutoFixture.Xunit2;
 using Gov.TicketSearch.Services.RsiServices;
 using Gov.TicketSearch.Services.RsiServices.Models;
-using Gov.TicketSearch.Test;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ticket_search_test.Services
+namespace Gov.TicketSearch.Test.Services
 {
     public class RsiTicketsServiceTest
     {
@@ -25,9 +20,11 @@ namespace ticket_search_test.Services
                 RsiTicketsService sut
         )
         {
-            rawResponse.Items = new List<Item> {
+            rawResponse.Items = new List<Item> 
+            {
                 new Item{ SelectedInvoice=new SelectedInvoice{Reference="https://test/EZ020004601"}}
             };
+
             invoice.ViolationDateTime = "2020-09-18T21:40";
             invoice.InvoiceNumber = "EZ020004601";
             invoice.DiscountAmount = "25.00";

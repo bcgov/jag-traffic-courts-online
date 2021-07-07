@@ -1,6 +1,4 @@
-﻿
-using Gov.TicketSearch.Services.RsiServices;
-using Gov.TicketSearch.Services.RsiServices.Models;
+﻿using Gov.TicketSearch.Services.RsiServices.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +21,7 @@ namespace Gov.TicketSearch.Services.RsiServices
 
         }
 
-        protected override async Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken)
+        protected override async Task<Invoice> GetInvoiceAsync(string invoiceNumber, CancellationToken cancellationToken)
         {
             return await _rsiApi.GetInvoice(invoiceNumber: invoiceNumber, cancellationToken: cancellationToken);
         }

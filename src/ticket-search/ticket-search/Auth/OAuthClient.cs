@@ -13,11 +13,13 @@ namespace Gov.TicketSearch.Auth
     {
         public Task<Token> GetRefreshToken(CancellationToken cancellationToken);
     }
+
     public class OAuthClient : IOAuthClient
     {
         private readonly HttpClient _httpClient;
         private readonly OAuthOptions _oAuthOptions;
         private readonly ILogger<OAuthClient> _logger;
+
         public OAuthClient(HttpClient httpClient, IOptionsMonitor<OAuthOptions> oAuthOptions, ILogger<OAuthClient> logger)
         {
             _httpClient = httpClient;
@@ -41,20 +43,21 @@ namespace Gov.TicketSearch.Auth
             using var request = new HttpRequestMessage(HttpMethod.Post, _oAuthOptions.OAuthUrl) { Content = content };
             request.Headers.Add("return-client-request-id", "true");
             request.Headers.Add("Accept", "application/json");
-            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead,
-                cancellationToken);
+
+            var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
                 var responseData = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-                _logger.LogError("get oauth token failed. {responseData}", responseData); 
+                _logger.LogError("Get OAuth token failed. {responseData}", responseData); 
+
                 throw new OAuthException(
-                    "The HTTP status code of the response was not expected (" + (int)response.StatusCode + ").",
-                    (int)response.StatusCode, responseData,
+                    $"The HTTP status code of the response was not expected ({response.StatusCode})",
+                    response.StatusCode, responseData,
                     response.Headers.ToDictionary(x => x.Key, x => x.Value), null);
             }
 
-            _logger.LogInformation("get oauth token successfully");
+            _logger.LogDebug("get oauth token successfully");
             return await response.Content.ReadFromJsonAsync<Token>(cancellationToken:cancellationToken);
         }
     }

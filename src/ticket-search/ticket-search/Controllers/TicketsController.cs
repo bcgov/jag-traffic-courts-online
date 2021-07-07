@@ -52,6 +52,8 @@ namespace Gov.TicketSearch.Controllers
 
         private TicketSearchResponse BuildTicketSearchResponse(RawTicketSearchResponse rawResponse)
         {
+            // TODO: move this transformation out of the controller
+
             //string rawResponseJsonStr = JS
             //_logger.LogDebug("Raw response = ")
             if (rawResponse?.Items == null || rawResponse.Items.Count <= 0) return null;

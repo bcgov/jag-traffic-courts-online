@@ -14,7 +14,7 @@ namespace Gov.TicketSearch.Services
                 cancellationToken: cancellationToken);
         }
 
-        protected override async Task<Invoice> GetInvoice(string invoiceNumber, CancellationToken cancellationToken)
+        protected override async Task<Invoice> GetInvoiceAsync(string invoiceNumber, CancellationToken cancellationToken)
         {
             return await DeserializeAsync<Invoice>($"Services/FakeData/invoice-{invoiceNumber}.json",
                 cancellationToken: cancellationToken);

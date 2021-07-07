@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Gov.TicketSearch.Test.Auth
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public class OAuthClientTest
     {
         private OAuthClient _sut;
@@ -28,6 +28,7 @@ namespace Gov.TicketSearch.Test.Auth
         public OAuthClientTest()
         {
             Fixture fixture = new Fixture();
+
             // use real http client with mocked handler here
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object)
             {
@@ -65,7 +66,7 @@ namespace Gov.TicketSearch.Test.Auth
 
         [Fact]
 #pragma warning disable IDE1006 // Naming Styles
-        public void fixture_GetRefreshToken_if_http_return_token_correctly_return_this_token()
+        public async Task fixture_GetRefreshToken_if_http_return_token_correctly_return_this_token()
 #pragma warning restore IDE1006 // Naming Styles
         {
             
@@ -85,13 +86,12 @@ namespace Gov.TicketSearch.Test.Auth
                  .Verifiable();
 
 
-            Assert.ThrowsAsync<OAuthException>(async () =>
+            OAuthException actual = await Assert.ThrowsAsync<OAuthException>(async () =>
             {
                 var token = await _sut.GetRefreshToken(CancellationToken.None);
             });
+
+            Assert.Equal(HttpStatusCode.BadRequest, actual.StatusCode);
         }
-
-
- 
     }
 }

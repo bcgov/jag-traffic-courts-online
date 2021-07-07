@@ -10,6 +10,9 @@ namespace Gov.TicketSearch.Auth
         [JsonPropertyName("token_type")]
         public string TokenType { get; set; }
 
+        /// <summary>
+        /// The number of seconds after the token was issued that it expires.
+        /// </summary>
         [JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
 
