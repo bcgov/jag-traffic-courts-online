@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Gov.TicketSearch.Test.Auth
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public class TokenServiceTest
     {
         [Theory]

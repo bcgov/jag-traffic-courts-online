@@ -23,7 +23,24 @@ services:
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [splunk,postgres,rabbitmq,redis]
+    depends_on: [splunk, postgres, rabbitmq, redis]
+
+  ticket-search:
+    container_name: ticket-search
+    build:
+      context: ./src/ticket-search
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
+      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
+      OAUTH__OAUTHURL: ${OAUTH__OAUTHURL}
+      OAUTH__RESOURCEURL: ${OAUTH__RESOURCEURL}
+      OAUTH__CLIENTID: ${OAUTH__CLIENTID}
+      OAUTH__SECRET: ${OAUTH__SECRET}
+      RSI__BASEADDRESS: ${RSI__BASEADDRESS}
+    ports:
+      - "5100:8080"
+    restart: always
 
   # #############################################################################################
   # ###                                 TrafficCourt FRONTEND                                 ###
