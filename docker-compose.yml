@@ -41,6 +41,7 @@ services:
     ports:
       - "5100:8080"
     restart: always
+    depends_on: [splunk]
 
   # #############################################################################################
   # ###                                 TrafficCourt FRONTEND                                 ###
