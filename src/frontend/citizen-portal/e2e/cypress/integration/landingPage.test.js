@@ -21,7 +21,7 @@ describe("Testing the landing page components", () => {
 
     context("Testing the did you know component", () => {
         it("Test the did you know message", () => {
-            cy.get('h4').should('have.text', 'Did you know?');
+            cy.get('h4').should('contain.text', 'Did you know?');
         })
 
         it("Test the did you know list", () => {
@@ -37,7 +37,7 @@ describe("Testing the landing page components", () => {
 
     
     context("Testing the useful links section", () => {
-        it.only("Testing the RoadSafety link and subsection", () => {
+        it("Testing the RoadSafety link and subsection", () => {
              cy.contains('RoadSafetyBC').click().then(() => {
                 cy.get('.landing-card-text').should('contain.text', ' Governing drivers, putting road safety policies in place, and working with partners to help reach the goal of zero traffic fatalities. ')
                 cy.get('.useful-links.road-safety-bc').should('contain.text', 'View site').should('have.attr', 'href', 'https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/roadsafetybc/intersection-safety-cameras')
