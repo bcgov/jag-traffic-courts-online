@@ -20,9 +20,6 @@ using System.Configuration;
 using System.Collections.Generic;
 using DisputeApi.Web.Features.Tickets.Configuration;
 using MediatR;
-using DisputeApi.Web.Auth;
-using Refit;
-using DisputeApi.Web.Features.TicketLookup;
 using DisputeApi.Web.Messaging.Configuration;
 using MassTransit;
 
@@ -63,7 +60,6 @@ namespace DisputeApi.Web
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
             services.AddControllers().AddNewtonsoftJson();
 
-            ConfigureRsiClient(services);
             ConfigureOpenApi(services);
             ConfigureServiceBus(services);
 
@@ -162,30 +158,6 @@ namespace DisputeApi.Web
                     };
                 };
             });
-        }
-
-        internal void ConfigureRsiClient(IServiceCollection services)
-        {
-            services.AddOptions<OAuthOptions>()
-                .Bind(_configuration.GetSection("OAuth"))
-                .ValidateDataAnnotations();
-
-            services.AddMemoryCache();
-            services.AddHttpClient<IOAuthClient, OAuthClient>();
-            services.AddTransient<ITokenService, TokenService>();
-            services.AddTransient<OAuthHandler>();
-
-            services.AddRefitClient<IRsiRestApi>()
-                .ConfigureHttpClient(c => c.BaseAddress = new Uri(_configuration.GetSection("RSI:BASEADDRESS").Value))
-                .AddHttpMessageHandler<OAuthHandler>();
-            string operationMode = _configuration.GetSection("RSI:OPERATIONMODE").Value;
-
-            if (operationMode == Keys.RsiOperationModeFake)
-                services.AddTransient<ITicketDisputeService, TicketDisputeFromFilesService>();
-            else
-            {
-                services.AddTransient<ITicketDisputeService, TicketDisputeFromRsiService>();
-            }
         }
 
         internal void ConfigureServiceBus(IServiceCollection services)

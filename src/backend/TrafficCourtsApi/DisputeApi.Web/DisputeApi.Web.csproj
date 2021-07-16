@@ -44,12 +44,5 @@
     <_Parameter1>DisputeApi.Web.Test</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Include="Features\TicketLookup\invoice-EZ020004601.json" />
-    <EmbeddedResource Include="Features\TicketLookup\invoice-EZ020004602.json" />
-    <EmbeddedResource Include="Features\TicketLookup\invoice-EZ020004603.json" />
-    <EmbeddedResource Include="Features\TicketLookup\ticket-EZ02000460.json" />
-  </ItemGroup>
 
 </Project>

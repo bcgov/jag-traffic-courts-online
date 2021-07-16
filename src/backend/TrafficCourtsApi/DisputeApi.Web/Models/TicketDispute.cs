@@ -1,5 +1,4 @@
 ﻿using DisputeApi.Web.Features.Disputes.DBModel;
-using DisputeApi.Web.Features.TicketLookup;
 using System.Collections.Generic;
 
 namespace DisputeApi.Web.Models
@@ -13,12 +12,6 @@ namespace DisputeApi.Web.Models
         public Disputant Disputant { get; set; }
         public Additional Additional { get; set; }
         public List<Offence> Offences { get; set; }
-        /// <summary>
-        /// Gets or sets the raw response returned from the RSI Pay BC API.
-        /// Used only for troubleshooting during development. Will be removed
-        /// once the API usage is understood.
-        /// </summary>
-        public RawTicketSearchResponse RawResponse { get; set; }
     }
 
     public class Additional

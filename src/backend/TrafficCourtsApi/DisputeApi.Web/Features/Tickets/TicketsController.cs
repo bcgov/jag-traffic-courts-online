@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DisputeApi.Web.Features.Tickets.Queries;
 using DisputeApi.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -26,23 +27,23 @@ namespace DisputeApi.Web.Features.Tickets
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpPost]
-        [Route("saveticket")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SaveTicket([FromBody] Ticket ticket)
-        {
-            return Ok(await _ticketsService.SaveTicket(ticket));
-        }
+        //[HttpPost]
+        //[Route("saveticket")]
+        //[Produces("application/json")]
+        //[ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> SaveTicket([FromBody] Ticket ticket)
+        //{
+        //    return Ok(await _ticketsService.SaveTicket(ticket));
+        //}
 
-        [HttpGet]
-        [Route("getTickets")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTickets()
-        {
-            return Ok(await _ticketsService.GetTickets());
-        }
+        //[HttpGet]
+        //[Route("getTickets")]
+        //[Produces("application/json")]
+        //[ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> GetTickets()
+        //{
+        //    return Ok(await _ticketsService.GetTickets());
+        //}
 
 
         [HttpGet]
@@ -50,7 +51,7 @@ namespace DisputeApi.Web.Features.Tickets
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetTicket([FromQuery] TicketLookup.TicketLookup.Query query)
+        public async Task<IActionResult> GetTicket([FromQuery]TicketSearchQuery query)
         {
             var response = await _mediator.Send(query);
             return response == null ? (IActionResult) NoContent() : Ok(ApiResponse.Result(response));
