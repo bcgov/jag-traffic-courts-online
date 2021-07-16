@@ -2,43 +2,50 @@
 using DisputeApi.Web.Features.Disputes;
 using DisputeApi.Web.Features.Disputes.DBModel;
 using DisputeApi.Web.Models;
+using Gov.TicketSearch;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Offence = DisputeApi.Web.Models.Offence;
 
 namespace DisputeApi.Web.Features.Tickets.Queries
 {
     public class TicketSearchQueryHandler : IRequestHandler<TicketSearchQuery, TicketDispute>
     {
-        private readonly ITicketsService _ticketDisputeService;
+        private readonly ITicketSearchClient _ticketSearchClient;
         private readonly IDisputeService _disputeService;
         private readonly IMapper _mapper;
+        private readonly ILogger<TicketSearchQueryHandler> _logger;
 
-        public TicketSearchQueryHandler(ITicketsService ticketDisputeService, IDisputeService disputeService,
-            IMapper mapper)
+        public TicketSearchQueryHandler(ITicketSearchClient ticketSearchClient, IDisputeService disputeService, IMapper mapper, ILogger<TicketSearchQueryHandler> logger)
         {
-            _ticketDisputeService = ticketDisputeService;
-            _disputeService = disputeService;
+            _ticketSearchClient = ticketSearchClient ?? throw new ArgumentNullException(nameof(ticketSearchClient));
+            _disputeService = disputeService ?? throw new ArgumentNullException(nameof(ticketSearchClient));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<TicketDispute> Handle(TicketSearchQuery query, CancellationToken cancellationToken)
         {
-            //todo: change here to swagger generated httpClient to visit TicketSearch component.
-            var ticketDispute = new TicketDispute();
-            //todo
-            if (ticketDispute != null)
+            TicketSearchResponse ticketSearchResponse = await _ticketSearchClient.TicketsAsync(query.TicketNumber, query.Time, cancellationToken);
+            _logger.LogInformation("ticket search from rsi completed successfully");
+            if (ticketSearchResponse != null)
             {
-                Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticketDispute.ViolationTicketNumber);
-                MergeDisputeToTicketDispute(ticketDispute, dispute);
+                _logger.LogInformation("find the ticket from Rsi");
+                Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticketSearchResponse.ViolationTicketNumber);
+                return BuildTicketDispute(ticketSearchResponse, dispute);
             }
-            return ticketDispute;
+            _logger.LogInformation("no ticket found from Rsi");
+            return null;
+            
         }
-        private void MergeDisputeToTicketDispute(TicketDispute ticketDispute, Dispute dispute)
+        private TicketDispute BuildTicketDispute(TicketSearchResponse ticketSearchResponse, Dispute dispute)
         {
-            if (dispute == null) return;
+            TicketDispute ticketDispute = _mapper.Map<TicketDispute>(ticketSearchResponse);
+            if (dispute == null) return ticketDispute;
             ticketDispute.Disputant = _mapper.Map<Disputant>(dispute);
             ticketDispute.Additional = _mapper.Map<Additional>(dispute);
             ticketDispute.InformationCertified = dispute.InformationCertified;
@@ -51,6 +58,7 @@ namespace DisputeApi.Web.Features.Tickets.Queries
                     offence.OffenceDisputeDetail = _mapper.Map<Models.OffenceDisputeDetail>(detail);
                 }
             }
+            return ticketDispute;
         }
     }
 }

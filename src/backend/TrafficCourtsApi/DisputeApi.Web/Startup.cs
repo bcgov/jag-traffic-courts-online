@@ -22,6 +22,7 @@ using DisputeApi.Web.Features.Tickets.Configuration;
 using MediatR;
 using DisputeApi.Web.Messaging.Configuration;
 using MassTransit;
+using Gov.TicketSearch;
 
 namespace DisputeApi.Web
 {
@@ -61,6 +62,7 @@ namespace DisputeApi.Web
             services.AddControllers().AddNewtonsoftJson();
 
             ConfigureOpenApi(services);
+            ConfigureTicketSearchApi(services);
             ConfigureServiceBus(services);
 
 #if USE_AUTHENTICATION
@@ -158,6 +160,13 @@ namespace DisputeApi.Web
                     };
                 };
             });
+        }
+
+        internal void ConfigureTicketSearchApi(IServiceCollection services)
+        {
+            string baseUrl = _configuration.GetSection("TicketSearchApi:BaseUrl").Value;
+
+            services.AddHttpClient<ITicketSearchClient, TicketSearchClient>(c => c.BaseAddress = new Uri(baseUrl));
         }
 
         internal void ConfigureServiceBus(IServiceCollection services)

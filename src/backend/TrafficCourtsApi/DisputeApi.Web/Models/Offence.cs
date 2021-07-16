@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace DisputeApi.Web.Models
+﻿namespace DisputeApi.Web.Models
 {
     public class Offence
     {
