@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -10,15 +8,17 @@ using DisputeApi.Web.Features.Tickets;
 using DisputeApi.Web.Features.Tickets.Queries;
 using DisputeApi.Web.Models;
 using DisputeApi.Web.Test.Utils;
+using Gov.TicketSearch;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using TrafficCourts.Common;
 using Xunit;
 
 namespace DisputeApi.Web.Test.Features.Tickets
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public class TicketsControllerTest
     {
         private Mock<ILogger<TicketsController>> _loggerMock;
@@ -107,6 +107,34 @@ namespace DisputeApi.Web.Test.Features.Tickets
             query.Time = "09:21";
             var result = (NoContentResult)await sut.GetTicket(query);
             Assert.Equal(204, result.StatusCode);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task GetTicket_return_null_with_TicketSearchException_noContent(TicketSearchQuery query)
+        {
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Throws(
+                new TicketSearchException("message", 204,null,null,null)
+                );
+            query.TicketNumber = "EZ02000460";
+            query.Time = "09:21";
+            var result = (NoContentResult)await sut.GetTicket(query);
+            Assert.Equal(204, result.StatusCode);
+        }
+
+        [Theory]
+        [AutoData]
+        public async Task GetTicket_return_InternalServerError_when_server_throws_exception(TicketSearchQuery query)
+        {
+            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
+            _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Throws(
+                new TicketSearchException("message", 500, null, null, null)
+                );
+            query.TicketNumber = "EZ02000460";
+            query.Time = "09:21";
+            var result = (ObjectResult)await sut.GetTicket(query);
+            Assert.Equal(500, result.StatusCode);
         }
     }
 }

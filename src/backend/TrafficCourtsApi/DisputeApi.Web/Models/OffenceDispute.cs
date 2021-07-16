@@ -1,5 +1,9 @@
-﻿namespace DisputeApi.Web.Models
+﻿using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common;
+
+namespace DisputeApi.Web.Models
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class OffenceDispute
     {
         public string ViolationTicketNumber { get; set; }

@@ -1,8 +1,10 @@
-﻿using DisputeApi.Web.Features.Disputes.DBModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common;
 
 namespace DisputeApi.Web.Models
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class TicketDispute
     {
         public string ViolationTicketNumber { get; set; }
@@ -14,6 +16,7 @@ namespace DisputeApi.Web.Models
         public List<Offence> Offences { get; set; }
     }
 
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Additional
     {
         public bool LawyerPresent { get; set; }
@@ -22,6 +25,7 @@ namespace DisputeApi.Web.Models
         public bool WitnessPresent { get; set; }
     }
 
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Disputant
     {
         public string LastName { get; set; }

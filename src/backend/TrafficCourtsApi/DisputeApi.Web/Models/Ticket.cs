@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common;
 
 namespace DisputeApi.Web.Models
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Ticket
     {
         [Key]
