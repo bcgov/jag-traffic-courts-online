@@ -55,7 +55,8 @@
       <ClientName>TicketSearch</ClientName>
       <ClientNamespace>Gov.TicketSearch</ClientNamespace>
       <NswagFile>./Features/Tickets/nswag.json</NswagFile>
-      <GeneratedSwaggerClientFile Condition="'$(GeneratedSwaggerClientFile)' ==''">$(IntermediateOutputPath)$(MSBuildProjectName).$(ClientName)Client.cs</GeneratedSwaggerClientFile>
+      <OutputPath>./Generated/</OutputPath>
+      <GeneratedSwaggerClientFile Condition="'$(GeneratedSwaggerClientFile)' ==''">$(OutputPath)$(MSBuildProjectName).$(ClientName)Client.cs</GeneratedSwaggerClientFile>
     </PropertyGroup>
     <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
     <Exec Command="$(NSwagExe_Core31) run $(NswagFile) /variables:InputSwagger=$(InputSwagger),ClientName=$(ClientName),ClientNamespace=$(ClientNamespace),GeneratedSwaggerClientFile=$(GeneratedSwaggerClientFile)" />

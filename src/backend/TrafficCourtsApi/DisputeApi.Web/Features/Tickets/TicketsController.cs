@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DisputeApi.Web.Features.Tickets.Queries;
 using DisputeApi.Web.Models;
+using Gov.TicketSearch;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,8 +59,11 @@ namespace DisputeApi.Web.Features.Tickets
                 _logger.LogInformation("get ticket search query.");
                 var response = await _mediator.Send(query);
                 return response == null ? NoContent() : Ok(ApiResponse.Result(response));
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
+                if (e is TicketSearchException && ((TicketSearchException)e).StatusCode == 204)
+                    return NoContent();
                 _logger.LogError(e, "GetTicket failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
             }
