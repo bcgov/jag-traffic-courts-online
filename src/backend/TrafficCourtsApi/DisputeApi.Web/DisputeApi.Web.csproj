@@ -59,7 +59,7 @@
       <GeneratedSwaggerClientFile Condition="'$(GeneratedSwaggerClientFile)' ==''">$(OutputPath)$(MSBuildProjectName).$(ClientName)Client.cs</GeneratedSwaggerClientFile>
     </PropertyGroup>
     <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
-    <Exec Command="$(NSwagExe_Core31) run $(NswagFile) /variables:InputSwagger=$(InputSwagger),ClientName=$(ClientName),ClientNamespace=$(ClientNamespace),GeneratedSwaggerClientFile=$(GeneratedSwaggerClientFile)" />
+    <Exec Command="$(NSwagExe_Net50) run $(NswagFile) /variables:InputSwagger=$(InputSwagger),ClientName=$(ClientName),ClientNamespace=$(ClientNamespace),GeneratedSwaggerClientFile=$(GeneratedSwaggerClientFile)" />
     <RemoveDir Directories="$(OutDir)References" />
   </Target>
 
