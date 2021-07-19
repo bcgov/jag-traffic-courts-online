@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common;
 
 namespace DisputeApi.Web.Models
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Offence
     {
         public int OffenceNumber { get; set; }

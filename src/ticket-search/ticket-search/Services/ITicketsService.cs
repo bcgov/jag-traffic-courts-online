@@ -1,4 +1,5 @@
 ﻿using Gov.TicketSearch.Services.RsiServices.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,12 @@ namespace Gov.TicketSearch.Services
 
     public abstract class TicketsService : ITicketsService
     {
+        protected ILogger<TicketsService> _logger;
+        public TicketsService(ILogger<TicketsService> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
         public async Task<RawTicketSearchResponse> SearchTicketAsync(string ticketNumber, string time, CancellationToken cancellationToken)
         {
             RawTicketSearchResponse rawResponse = await GetTicket(ticketNumber, time, cancellationToken);
@@ -21,6 +28,7 @@ namespace Gov.TicketSearch.Services
             List<Item> items = rawResponse?.Items;
             if (items == null || items.Count == 0)
             {
+                _logger.LogDebug("no items from RawTicketSearchResponse");
                 return null;
             }
 

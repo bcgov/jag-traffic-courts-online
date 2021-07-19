@@ -1,5 +1,6 @@
 ﻿using Gov.TicketSearch.Services.RsiServices.Models;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,15 +9,19 @@ namespace Gov.TicketSearch.Services
 {
     public class FakeTicketsService : TicketsService
     {
+        public FakeTicketsService(ILogger<TicketsService> logger) : base(logger)
+        {
+        }
+
         protected override async Task<RawTicketSearchResponse> GetTicket(string ticketNumber, string time, CancellationToken cancellationToken)
         {
-            return await DeserializeAsync<RawTicketSearchResponse>($"Services/FakeData/ticket-{ticketNumber}.json",
+            return await DeserializeAsync<RawTicketSearchResponse>($"Services/FakeServices/FakeData/ticket-{ticketNumber}.json",
                 cancellationToken: cancellationToken);
         }
 
         protected override async Task<Invoice> GetInvoiceAsync(string invoiceNumber, CancellationToken cancellationToken)
         {
-            return await DeserializeAsync<Invoice>($"Services/FakeData/invoice-{invoiceNumber}.json",
+            return await DeserializeAsync<Invoice>($"Services/FakeServices/FakeData/invoice-{invoiceNumber}.json",
                 cancellationToken: cancellationToken);
         }
 

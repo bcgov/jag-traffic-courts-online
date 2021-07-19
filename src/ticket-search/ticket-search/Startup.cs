@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Refit;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace Gov.TicketSearch
 {
@@ -27,7 +29,17 @@ namespace Gov.TicketSearch
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ticket_search", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo 
+                { 
+                    Title = "ticket_search", 
+                    Version = "v1",
+                    Description = "A ticket search web api for searching detail information for a traffic violation ticket"
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
             ConfigTicketsServices(services);            
         }
