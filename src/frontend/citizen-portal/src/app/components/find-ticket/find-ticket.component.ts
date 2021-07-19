@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,6 +22,7 @@ import { map, startWith } from 'rxjs/operators';
 import { ConfigService } from '@config/config.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormUtilsService } from '@core/services/form-utils.service';
+import { UtilsService } from '@core/services/utils.service';
 
 export function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -33,7 +39,7 @@ export function autocompleteObjectValidator(): ValidatorFn {
   styleUrls: ['./find-ticket.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class FindTicketComponent implements OnInit {
+export class FindTicketComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
   public form: FormGroup;
 
@@ -48,7 +54,8 @@ export class FindTicketComponent implements OnInit {
     private disputeResource: DisputeResourceService,
     private configService: ConfigService,
     private formUtilsService: FormUtilsService,
-    private disputeService: DisputeService
+    private disputeService: DisputeService,
+    private utilsService: UtilsService
   ) {
     this.statutes = this.configService.statutes;
   }
@@ -66,6 +73,10 @@ export class FindTicketComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
+  }
+
+  public ngAfterViewInit(): void {
+    this.utilsService.scrollTop();
   }
 
   private filterStatutes(value: string): Config<number>[] {
