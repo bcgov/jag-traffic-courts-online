@@ -19,6 +19,8 @@ namespace Gov.TicketSearch
     public partial interface ITicketSearchClient
     {
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="ticketNumber">The traffic violation ticket number</param>
+        /// <param name="time">The time of traffic violation</param>
         /// <returns>Success</returns>
         /// <exception cref="TicketSearchException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<TicketSearchResponse> TicketsAsync(string ticketNumber, string time, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
@@ -53,6 +55,8 @@ namespace Gov.TicketSearch
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="ticketNumber">The traffic violation ticket number</param>
+        /// <param name="time">The time of traffic violation</param>
         /// <returns>Success</returns>
         /// <exception cref="TicketSearchException">A server side error occurred.</exception>
         public async System.Threading.Tasks.Task<TicketSearchResponse> TicketsAsync(string ticketNumber, string time, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
@@ -256,30 +260,39 @@ namespace Gov.TicketSearch
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Offence 
     {
+        /// <summary>The offence number, should be 1, 2 or 3</summary>
         [Newtonsoft.Json.JsonProperty("offenceNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int OffenceNumber { get; set; }
     
+        /// <summary>The total ticketed amount</summary>
         [Newtonsoft.Json.JsonProperty("ticketedAmount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double TicketedAmount { get; set; }
     
+        /// <summary>The total discounted amount due.</summary>
         [Newtonsoft.Json.JsonProperty("amountDue", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double AmountDue { get; set; }
     
+        /// <summary>The offence happened time in format of yyyy-mm-ddThh:mm.</summary>
         [Newtonsoft.Json.JsonProperty("violationDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ViolationDateTime { get; set; }
     
+        /// <summary>The offence description.</summary>
         [Newtonsoft.Json.JsonProperty("offenceDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string OffenceDescription { get; set; }
     
+        /// <summary>The vehicle description.</summary>
         [Newtonsoft.Json.JsonProperty("vehicleDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string VehicleDescription { get; set; }
     
+        /// <summary>The disount amount.</summary>
         [Newtonsoft.Json.JsonProperty("discountAmount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DiscountAmount { get; set; }
     
+        /// <summary>The discount amount due date</summary>
         [Newtonsoft.Json.JsonProperty("discountDueDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DiscountDueDate { get; set; }
     
+        /// <summary>The invoice type.</summary>
         [Newtonsoft.Json.JsonProperty("invoiceType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string InvoiceType { get; set; }
     
@@ -289,15 +302,19 @@ namespace Gov.TicketSearch
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class TicketSearchResponse 
     {
+        /// <summary>The traffic violation ticket number of the searching result</summary>
         [Newtonsoft.Json.JsonProperty("violationTicketNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ViolationTicketNumber { get; set; }
     
+        /// <summary>The traffic violation time of the searching result in format of hh:mm</summary>
         [Newtonsoft.Json.JsonProperty("violationTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ViolationTime { get; set; }
     
+        /// <summary>The traffic violation date of the searching result in format of yyyy-mm-dd</summary>
         [Newtonsoft.Json.JsonProperty("violationDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string ViolationDate { get; set; }
     
+        /// <summary>The list of all offences of the searching ticket</summary>
         [Newtonsoft.Json.JsonProperty("offences", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Offence> Offences { get; set; }
     

@@ -11,6 +11,5 @@
         /// Generated code or standard framework type of code.
         /// </summary>
         public const string Framework = "framework or generated";
-        public const string UnitTestClass = "Unit test class";
     }
 }

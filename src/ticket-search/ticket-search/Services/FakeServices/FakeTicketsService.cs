@@ -15,13 +15,13 @@ namespace Gov.TicketSearch.Services
 
         protected override async Task<RawTicketSearchResponse> GetTicket(string ticketNumber, string time, CancellationToken cancellationToken)
         {
-            return await DeserializeAsync<RawTicketSearchResponse>($"Services/FakeData/ticket-{ticketNumber}.json",
+            return await DeserializeAsync<RawTicketSearchResponse>($"Services/FakeServices/FakeData/ticket-{ticketNumber}.json",
                 cancellationToken: cancellationToken);
         }
 
         protected override async Task<Invoice> GetInvoiceAsync(string invoiceNumber, CancellationToken cancellationToken)
         {
-            return await DeserializeAsync<Invoice>($"Services/FakeData/invoice-{invoiceNumber}.json",
+            return await DeserializeAsync<Invoice>($"Services/FakeServices/FakeData/invoice-{invoiceNumber}.json",
                 cancellationToken: cancellationToken);
         }
 

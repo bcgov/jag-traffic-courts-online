@@ -60,10 +60,12 @@ namespace DisputeApi.Web.Features.Tickets
                 var response = await _mediator.Send(query);
                 return response == null ? NoContent() : Ok(ApiResponse.Result(response));
             }
+            catch (TicketSearchException exception) when (exception.StatusCode == 204)
+            {
+                return NoContent();
+            }
             catch(Exception e)
             {
-                if (e is TicketSearchException && ((TicketSearchException)e).StatusCode == 204)
-                    return NoContent();
                 _logger.LogError(e, "GetTicket failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
             }
