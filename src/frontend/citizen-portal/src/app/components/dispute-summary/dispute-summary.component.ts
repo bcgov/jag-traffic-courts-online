@@ -69,7 +69,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     this.logger.info('onDisputeOffence offence', offence);
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      this.router.navigate([AppRoutes.routePath(AppRoutes.STEPPER)], {
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)], {
         state: { disputeOffenceNumber: offence.offenceNumber },
       });
     });
@@ -79,7 +79,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     this.logger.info('onDisputeTicket', this.disputeService.ticket);
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      this.router.navigate([AppRoutes.routePath(AppRoutes.ALL_STEPPER)]);
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.ALL_STEPPER)]);
     });
   }
 }

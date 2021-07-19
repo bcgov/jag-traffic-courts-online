@@ -35,6 +35,14 @@ const routes: Routes = [
         path: AppRoutes.PHOTO,
         component: PhotoComponent,
       },
+      {
+        path: AppRoutes.STEPPER,
+        component: StepperComponent,
+      },
+      {
+        path: AppRoutes.ALL_STEPPER,
+        component: DisputeAllStepperComponent,
+      },
     ],
   },
   {
@@ -48,14 +56,6 @@ const routes: Routes = [
         component: FindTicketComponent,
       },
     ],
-  },
-  {
-    path: AppRoutes.STEPPER,
-    component: StepperComponent,
-  },
-  {
-    path: AppRoutes.ALL_STEPPER,
-    component: DisputeAllStepperComponent,
   },
   {
     path: '',
