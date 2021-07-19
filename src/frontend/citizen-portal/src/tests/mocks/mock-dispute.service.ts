@@ -11,8 +11,8 @@ export class MockDisputeService {
   private _tickets: BehaviorSubject<TicketDispute[]>;
 
   constructor() {
-    // const ticket = this.createTicketWithoutDisputes();
-    const ticket = this.createTicketWithDispute();
+    const ticket = this.createTicketWithoutDisputes();
+    // const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDispute>(ticket);
     // this._tickets = new BehaviorSubject<TicketDispute[]>([ticketA, ticketB]);
