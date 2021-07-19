@@ -21,7 +21,7 @@ namespace Gov.TicketSearch.Services.RsiServices
             var result = await _rsiApi.GetTicket(
                 new GetTicketParams { TicketNumber = ticketNumber, Prn = "10006", IssuedTime = time.Replace(":", "") },
                 cancellationToken);
-            _logger.LogDebug("get ticket info from Rsi : {result}", JsonSerializer.Serialize(result));
+            _logger.LogDebug("get ticket info from Rsi : {@result}", result);
             return result;
 
         }
@@ -29,7 +29,7 @@ namespace Gov.TicketSearch.Services.RsiServices
         protected override async Task<Invoice> GetInvoiceAsync(string invoiceNumber, CancellationToken cancellationToken)
         {
             var invoice = await _rsiApi.GetInvoice(invoiceNumber: invoiceNumber, cancellationToken: cancellationToken);
-            _logger.LogDebug("get invoice from Rsi : {invoice}", JsonSerializer.Serialize(invoice));
+            _logger.LogDebug("get invoice from Rsi : {@invoice}", invoice);
             return invoice;
         }
     }
