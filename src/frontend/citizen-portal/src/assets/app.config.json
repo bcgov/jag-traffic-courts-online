@@ -3,5 +3,8 @@
   "environment": "dev",
   "version": "1.0.0",
   "useMockServices": true,
-  "apiBaseUrl": "/api"
+  "apiBaseUrl": "/api",
+  "features": {
+    "dispute": true
+  }
 }

@@ -9,10 +9,11 @@ using DisputeApi.Web.Features.Disputes.DBModel;
 using System.Threading;
 using DisputeApi.Web.Features.Disputes.Queries;
 using Xunit;
+using TrafficCourts.Common;
 
 namespace DisputeApi.Web.Test.Features.Disputes.Queries
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public class GetDisputeQueryHandlerTest
     {
         private Mock<ILogger<GetDisputeQueryHandler>> _loggerMock;

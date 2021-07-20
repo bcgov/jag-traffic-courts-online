@@ -16,10 +16,11 @@ using System;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using Xunit;
+using TrafficCourts.Common;
 
 namespace DisputeApi.Web.Test.Features.Disputes.Commands
 {
-    [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage(Justification = Justifications.UnitTestClass)]
     public class CreateDisputeCommandHandlerTest
     {
         private Mock<ILogger<CreateDisputeCommandHandler>> _loggerMock;
