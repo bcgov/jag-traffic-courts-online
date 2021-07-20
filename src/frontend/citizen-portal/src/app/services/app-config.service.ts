@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-export class AppConfig {
+export interface IAppConfig {
   production: boolean;
   environment: string;
   version: string;
@@ -14,6 +14,27 @@ export class AppConfig {
   icbcVisitUsLink: string;
   provincialCourtOfBCVisitUsLink: string;
   courthouseServicesOfBCVisitUsLink: string;
+  features: {
+    [name: string]: boolean;
+  };
+}
+
+export class AppConfig implements IAppConfig {
+  production: boolean;
+  environment: string;
+  version: string;
+  useMockServices: boolean;
+  apiBaseUrl: string;
+  understandYourTicketLink: string;
+  paymentOptionsLink: string;
+  resolutionOptionsLink: string;
+  roadSafetyBCVisitUsLink: string;
+  icbcVisitUsLink: string;
+  provincialCourtOfBCVisitUsLink: string;
+  courthouseServicesOfBCVisitUsLink: string;
+  features: {
+    dispute: boolean;
+  };
 }
 
 @Injectable({
@@ -48,7 +69,6 @@ export class AppConfigService {
       .toPromise()
       .then((data: AppConfig) => {
         this.appConfig = data;
-        console.log('AppConfigService.loadAppConfig', data);
       });
   }
 
@@ -105,5 +125,18 @@ export class AppConfigService {
   get courthouseServicesOfBCVisitUsLink(): string {
     const link = this.appConfig?.courthouseServicesOfBCVisitUsLink;
     return link ? link : this.CTH_SERV_VISIT_US_DEFAULT;
+  }
+
+  get featureFlagDispute(): boolean {
+    const flag = this.appConfig?.features?.dispute;
+    return flag ? flag : false;
+  }
+
+  public isFeatureFlagEnabled(featureName: string): boolean {
+    // Read the value from the config service
+    if (this.appConfig?.features?.hasOwnProperty(featureName)) {
+      return this.appConfig?.features[featureName];
+    }
+    return false; // if feature not found, default to turned off
   }
 }

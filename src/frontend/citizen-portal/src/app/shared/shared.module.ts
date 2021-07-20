@@ -25,6 +25,7 @@ import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-he
 import { HeaderComponent } from './components/header/header.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { FooterComponent } from './components/footer/footer.component';
+import { FeatureFlagDirective } from './directives/feature-flag.directive';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { FooterComponent } from './components/footer/footer.component';
     AlertComponent,
     HeaderComponent,
     FooterComponent,
+    FeatureFlagDirective,
   ],
   imports: [
     CommonModule,
@@ -84,6 +86,7 @@ import { FooterComponent } from './components/footer/footer.component';
     ConfigModule,
     HeaderComponent,
     FooterComponent,
+    FeatureFlagDirective,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

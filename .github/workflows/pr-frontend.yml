@@ -1,5 +1,9 @@
 name: Build NodeJS Image
-on: [pull_request]
+
+on:
+  pull_request:
+    paths:
+      - 'src/frontend/citizen-portal/**'
 
 jobs:
   build-main:

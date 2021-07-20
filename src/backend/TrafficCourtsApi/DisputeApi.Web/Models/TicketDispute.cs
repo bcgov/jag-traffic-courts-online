@@ -1,9 +1,10 @@
-﻿using DisputeApi.Web.Features.Disputes.DBModel;
-using DisputeApi.Web.Features.TicketLookup;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common;
 
 namespace DisputeApi.Web.Models
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class TicketDispute
     {
         public string ViolationTicketNumber { get; set; }
@@ -13,14 +14,9 @@ namespace DisputeApi.Web.Models
         public Disputant Disputant { get; set; }
         public Additional Additional { get; set; }
         public List<Offence> Offences { get; set; }
-        /// <summary>
-        /// Gets or sets the raw response returned from the RSI Pay BC API.
-        /// Used only for troubleshooting during development. Will be removed
-        /// once the API usage is understood.
-        /// </summary>
-        public RawTicketSearchResponse RawResponse { get; set; }
     }
 
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Additional
     {
         public bool LawyerPresent { get; set; }
@@ -29,6 +25,7 @@ namespace DisputeApi.Web.Models
         public bool WitnessPresent { get; set; }
     }
 
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class Disputant
     {
         public string LastName { get; set; }

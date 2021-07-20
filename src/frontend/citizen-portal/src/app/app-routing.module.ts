@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PhotoComponent } from '@components/photo/photo.component';
+import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
 import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
@@ -14,34 +15,35 @@ const routes: Routes = [
   {
     path: AppRoutes.DISPUTE,
     component: DisputePageComponent,
+    canActivate: [FeatureFlagGuard],
+    data: { featureFlag: 'dispute' },
     children: [
       {
         path: AppRoutes.FIND,
-        redirectTo: '/',
-        // component: FindTicketComponent,
+        component: FindTicketComponent,
       },
-      //     {
-      //       path: AppRoutes.SUCCESS,
-      //       component: DisputeSubmitComponent,
-      //     },
-      //     {
-      //       path: AppRoutes.SUMMARY,
-      //       component: DisputeSummaryComponent,
-      //     },
-      //     {
-      //       path: AppRoutes.PHOTO,
-      //       component: PhotoComponent,
-      //     },
+      {
+        path: AppRoutes.SUCCESS,
+        component: DisputeSubmitComponent,
+      },
+      {
+        path: AppRoutes.SUMMARY,
+        component: DisputeSummaryComponent,
+      },
+      {
+        path: AppRoutes.PHOTO,
+        component: PhotoComponent,
+      },
     ],
   },
-  // {
-  //   path: AppRoutes.STEPPER,
-  //   component: StepperComponent,
-  // },
-  // {
-  //   path: AppRoutes.ALL_STEPPER,
-  //   component: DisputeAllStepperComponent,
-  // },
+  {
+    path: AppRoutes.STEPPER,
+    component: StepperComponent,
+  },
+  {
+    path: AppRoutes.ALL_STEPPER,
+    component: DisputeAllStepperComponent,
+  },
   {
     path: '',
     component: LandingComponent,

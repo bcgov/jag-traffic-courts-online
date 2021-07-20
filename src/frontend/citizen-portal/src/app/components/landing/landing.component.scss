@@ -31,7 +31,17 @@ h4 {
   text-shadow: 2px 2px 4px #000;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 320px) {
+  div.landing-summary {
+    background: url("/assets/landing-page-background-320x500.jpg") no-repeat !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 375px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-375x420.jpg") no-repeat !important;
     -webkit-background-size: cover;
