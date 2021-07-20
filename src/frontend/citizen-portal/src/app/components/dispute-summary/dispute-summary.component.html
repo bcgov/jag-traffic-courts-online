@@ -207,19 +207,21 @@
         </div>
       </section>
       <div class="row" *ngIf="ticket.outstandingBalance > 0">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <button mat-flat-button color="accent" class="large">
             <a href="https://pay.gov.bc.ca" target="_blank" rel="noopener">
               <mat-icon inline="true">money</mat-icon>
+              Pay Ticket Balance
+              <!--
               {{ "label.pay_balance" | translate }}
               {{
                 ticket.outstandingBalance
                   | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-              }}
+              }}-->
             </a>
           </button>
         </div>
-        <div class="col-md-6">
+        <div class="offset-md-4 col-md-4">
           <button
             *ngIf="!ticket.disputesExist"
             mat-flat-button
@@ -257,10 +259,8 @@
             {{ "label.find_another_ticket" | translate }}
           </button>
         </div>
-
-        <div class="col-md-4"></div>
-
-        <div class="col-md-4">
+        <!--
+        <div class="offset-md-4 col-md-4">
           <button
             id="secondaryButton"
             mat-stroked-button
@@ -272,7 +272,7 @@
             Attach Photo of Ticket
           </button>
         </div>
-      </div>
+      --></div>
     </section>
   </div>
 </app-page>

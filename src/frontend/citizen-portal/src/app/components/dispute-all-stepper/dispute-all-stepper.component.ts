@@ -24,7 +24,8 @@ import { ConfigService } from '@config/config.service';
 })
 export class DisputeAllStepperComponent
   extends BaseDisputeFormPage
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   public busy: Subscription;
   @ViewChild(MatStepper)
   private stepper: MatStepper;
@@ -169,6 +170,8 @@ export class DisputeAllStepperComponent
           this.busy = this.disputeResource
             .createTicketDispute(payload)
             .subscribe(() => {
+              this.disputeService.ticket$.next(payload);
+
               this.toastService.openSuccessToast(
                 this.configService.dispute_submitted
               );

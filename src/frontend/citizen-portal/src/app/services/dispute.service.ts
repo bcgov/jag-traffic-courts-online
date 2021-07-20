@@ -11,7 +11,7 @@ export interface IDisputeService {
   providedIn: 'root',
 })
 export class DisputeService {
-  private disputeSteps: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  // private disputeSteps: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   // tslint:disable-next-line: variable-name
   private _ticket: BehaviorSubject<TicketDispute>;
