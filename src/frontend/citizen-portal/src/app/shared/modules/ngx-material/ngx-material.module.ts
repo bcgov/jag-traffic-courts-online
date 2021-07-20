@@ -4,12 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import {
-  MAT_DATE_FORMATS,
-  MatNativeDateModule,
-  MAT_DATE_LOCALE,
-  DateAdapter,
-} from '@angular/material/core';
+import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MatDialogModule,
@@ -41,10 +36,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import {
-  MomentDateAdapter,
-  MatMomentDateModule,
-} from '@angular/material-moment-adapter';
 
 export const APP_DATE_FORMAT = 'D MMM YYYY';
 export const APP_DATE_FORMATS = {
@@ -93,18 +84,12 @@ const matFormFieldCustomOptions: MatFormFieldDefaultOptions = {
     MatRadioModule,
     MatTabsModule,
     MatNativeDateModule,
-    MatMomentDateModule,
     MatButtonToggleModule,
   ],
   providers: [
     {
       provide: MAT_DATE_FORMATS,
       useValue: APP_DATE_FORMATS,
-    },
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE],
     },
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,

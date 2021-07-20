@@ -1,7 +1,5 @@
 import { FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-import * as moment from 'moment';
-
 export class FormGroupValidators {
   /**
    * @description
@@ -37,7 +35,7 @@ export class FormGroupValidators {
       return atLeastOne ? null : { atleastone: true };
     };
   }
-  
+
   /**
    * @description
    * Checks that the start key value is less than end key value.
@@ -87,9 +85,11 @@ export class FormGroupValidators {
       if (!start.value || !end.value) {
         return null;
       }
-      const rangeStart = moment(start.value);
-      const rangeEnd = moment(end.value);
-      const valid = rangeEnd.isSameOrAfter(rangeStart);
+
+      const rangeStart = new Date(Date.parse(start.value));
+      const rangeEnd = new Date(Date.parse(end.value));
+
+      const valid = rangeEnd.getTime() >= rangeStart.getTime();
       return valid ? null : { [rangeName]: true };
     };
   }
