@@ -12,9 +12,9 @@ export class FormatDatePipe implements PipeTransform {
       let newDate;
       if (parts.length === 3) {
         newDate = new Date(
-          parseInt(parts[0]),
-          parseInt(parts[1]) - 1,
-          parseInt(parts[2])
+          parseInt(parts[0], 10),
+          parseInt(parts[1], 10) - 1,
+          parseInt(parts[2], 10)
         );
       } else {
         newDate = new Date(date);
