@@ -11,7 +11,7 @@ export class FormatDatePipe implements PipeTransform {
       let parts = date.split('-');
       let newDate;
 
-      if (parts.length != 3) {
+      if (parts.length !== 3) {
         parts = date.split(' ');
       }
 
