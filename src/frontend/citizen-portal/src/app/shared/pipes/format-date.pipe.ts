@@ -8,8 +8,13 @@ import { APP_DATE_FORMAT } from '@shared/modules/ngx-material/ngx-material.modul
 export class FormatDatePipe implements PipeTransform {
   transform(date: string, format: string = APP_DATE_FORMAT): string {
     if (date) {
-      const parts = date.split('-');
+      let parts = date.split('-');
       let newDate;
+
+      if (parts.length != 3) {
+        parts = date.split(' ');
+      }
+
       if (parts.length === 3) {
         newDate = new Date(
           parseInt(parts[0], 10),
@@ -18,6 +23,11 @@ export class FormatDatePipe implements PipeTransform {
         );
       } else {
         newDate = new Date(date);
+      }
+
+      // If not a date, then return the input date as is.
+      if (isNaN(newDate)) {
+        return date;
       }
 
       date = `${newDate.getDate()} ${newDate.toLocaleString('default', {

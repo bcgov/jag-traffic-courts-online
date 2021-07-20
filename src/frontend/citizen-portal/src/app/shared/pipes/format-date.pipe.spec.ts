@@ -21,10 +21,31 @@ describe('DatePipe', () => {
   });
 
   it('should format date3', () => {
-    const dateStr = '01 Jan 2020';
+    const dateStr = '1 Jan 2020';
     const pipe = new FormatDatePipe();
     const after = pipe.transform(dateStr);
     expect(after).toBe('1 Jan 2020');
+  });
+
+  it('should fail format date1', () => {
+    const dateStr = 'a-1-1';
+    const pipe = new FormatDatePipe();
+    const after = pipe.transform(dateStr);
+    expect(after).toBe('a-1-1');
+  });
+
+  it('should fail format date2', () => {
+    const dateStr = 'a 1 1';
+    const pipe = new FormatDatePipe();
+    const after = pipe.transform(dateStr);
+    expect(after).toBe('a 1 1');
+  });
+
+  it('should fail format date3', () => {
+    const dateStr = 'test';
+    const pipe = new FormatDatePipe();
+    const after = pipe.transform(dateStr);
+    expect(after).toBe('test');
   });
 
   it('should handle null', () => {
