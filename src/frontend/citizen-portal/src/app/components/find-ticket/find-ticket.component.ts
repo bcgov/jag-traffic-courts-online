@@ -22,9 +22,11 @@ import { map, startWith } from 'rxjs/operators';
 import { ConfigService } from '@config/config.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormUtilsService } from '@core/services/form-utils.service';
+
 import { UtilsService } from '@core/services/utils.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { LoggerService } from '@core/services/logger.service';
 
 export function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -58,7 +60,8 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private logger: LoggerService
   ) {
     this.statutes = this.configService.statutes;
   }
@@ -112,16 +115,16 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
-    console.log('onStatuteSelected', event$.option.value);
+    this.logger.log('onStatuteSelected', event$.option.value);
   }
 
   public onSearch(): void {
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 
-    console.log('validity', validity);
-    console.log('errors', errors);
-    console.log('form.value', this.form.value);
+    this.logger.log('validity', validity);
+    this.logger.log('errors', errors);
+    this.logger.log('form.value', this.form.value);
 
     if (!validity) {
       return;

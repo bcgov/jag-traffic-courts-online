@@ -58,7 +58,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
         // Handle 'disputes' requests
       } else if (currentRoutePath.includes('dispute')) {
-        console.log('yes');
         return this.handleDisputesRequests(request.method);
 
         // Handle 'lookups' requests
@@ -91,7 +90,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
   private handleDisputesRequests(
     requestMethod: string
   ): Observable<HttpEvent<unknown>> {
-    console.log('handleDisputesRequests');
     switch (requestMethod) {
       case 'POST':
         return of(new HttpResponse({ status: 200, body: {} }));
