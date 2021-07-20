@@ -1,0 +1,85 @@
+@import "palette";
+@import "bootstrap/bootstrap-imports";
+
+.header-summary-links {
+  list-style: none;
+  margin-bottom: 0;
+  text-align: center;
+  padding: 0;
+
+  li {
+    line-height: 2em;
+  }
+
+  a {
+    font-size: 1.125em;
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 400;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.divider {
+  color: #fff;
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .divider {
+    display: inline-block;
+  }
+
+  .header-summary-links {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    list-style: none;
+
+    li {
+      margin-bottom: 0;
+      margin-left: 1em;
+      margin-right: 1em;
+      line-height: unset;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    a {
+      font-size: 1.125em;
+      color: #fff !important;
+      text-decoration: none;
+      font-weight: 400;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+div.summary-header {
+  background-color: theme-palette(blue, bg);
+  width: 100%;
+  min-height: 60px;
+  padding: 20px 0;
+  opacity: 0.8;
+}
+
+div.container {
+  opacity: unset;
+
+  button a {
+    color: theme-palette(blue);
+  }
+
+  a {
+    color: theme-palette(blue, link);
+    white-space: nowrap;
+  }
+}

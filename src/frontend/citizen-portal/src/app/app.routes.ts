@@ -3,12 +3,12 @@ export class AppRoutes {
   public static SUCCESS = 'success';
   public static LIST = 'list';
   public static SUMMARY = 'summary';
-  public static DISPUTE = 'dispute';
+  public static TICKET = 'ticket';
   public static STEPPER = 'stepper';
   public static ALL_STEPPER = 'dispute-all-stepper';
   public static PHOTO = 'photo';
 
-  public static MODULE_PATH = AppRoutes.DISPUTE;
+  public static MODULE_PATH = AppRoutes.TICKET;
 
   public static disputePath(route: string): string {
     return `/${AppRoutes.MODULE_PATH}/${route}`;

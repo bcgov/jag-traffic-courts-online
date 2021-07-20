@@ -44,6 +44,8 @@ import { WebcamModule } from 'ngx-webcam';
 import { PhotoComponent } from './components/photo/photo.component';
 import { KeycloakService } from 'keycloak-angular';
 import { WindowRefService } from '@core/services/window-ref.service';
+import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
+import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -74,6 +76,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     StepDisputantComponent,
     StepSingleCountComponent,
     PhotoComponent,
+    TicketPageComponent,
+    DisputeTicketSummaryComponent,
   ],
   imports: [
     CommonModule,

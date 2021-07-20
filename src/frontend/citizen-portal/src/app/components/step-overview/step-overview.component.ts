@@ -22,7 +22,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class StepOverviewComponent
   extends BaseDisputeFormPage
-  implements OnInit {
+  implements OnInit
+{
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 

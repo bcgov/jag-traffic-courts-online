@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,6 +22,10 @@ import { map, startWith } from 'rxjs/operators';
 import { ConfigService } from '@config/config.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormUtilsService } from '@core/services/form-utils.service';
+
+import { UtilsService } from '@core/services/utils.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { LoggerService } from '@core/services/logger.service';
 
 export function autocompleteObjectValidator(): ValidatorFn {
@@ -34,7 +43,7 @@ export function autocompleteObjectValidator(): ValidatorFn {
   styleUrls: ['./find-ticket.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class FindTicketComponent implements OnInit {
+export class FindTicketComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
   public form: FormGroup;
 
@@ -50,6 +59,8 @@ export class FindTicketComponent implements OnInit {
     private configService: ConfigService,
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
+    private utilsService: UtilsService,
+    private dialog: MatDialog,
     private logger: LoggerService
   ) {
     this.statutes = this.configService.statutes;
@@ -68,6 +79,16 @@ export class FindTicketComponent implements OnInit {
       map((value) => (typeof value === 'string' ? value : value.name)),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
+  }
+
+  public ngAfterViewInit(): void {
+    this.utilsService.scrollTop();
+  }
+
+  public onViewTicketExample(): void {
+    this.dialog.open(TicketExampleDialogComponent, {
+      width: '600px',
+    });
   }
 
   private filterStatutes(value: string): Config<number>[] {
