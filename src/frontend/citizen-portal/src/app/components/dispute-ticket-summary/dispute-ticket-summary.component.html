@@ -64,11 +64,7 @@
         {{ "stepper.disputant.birthdate" | translate }}
       </div>
       <div class="col-6 text-right">
-        {{
-          ticket.disputant.birthdate
-            | date: "MMM dd YYYY":"+0200":defaultLanguage
-            | default
-        }}
+        {{ ticket.disputant.birthdate | formatDate | default }}
       </div>
     </div>
     <div class="page-subheader mt-2 mb-0">
