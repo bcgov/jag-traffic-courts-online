@@ -23,6 +23,8 @@ import { ConfigService } from '@config/config.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { UtilsService } from '@core/services/utils.service';
+import { MatDialog } from '@angular/material/dialog';
+import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 
 export function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -55,7 +57,8 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
     private configService: ConfigService,
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private dialog: MatDialog
   ) {
     this.statutes = this.configService.statutes;
   }
@@ -77,6 +80,12 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     this.utilsService.scrollTop();
+  }
+
+  public onViewTicketExample(): void {
+    this.dialog.open(TicketExampleDialogComponent, {
+      width: '600px',
+    });
   }
 
   private filterStatutes(value: string): Config<number>[] {

@@ -6,7 +6,7 @@
   </app-tco-page-header>
 
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
       <app-alert type="danger" icon="error" *ngIf="notFound">
         <ng-container #alertContent class="alert-content">
           <strong>Ticket Not Found</strong><br />
@@ -19,8 +19,8 @@
       <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
         <section>
           <div class="row mb-4">
-            <div class="col">
-              {{ "label.violation_ticket_number" | translate }}
+            <div class="col-md-6">
+              Enter ticket number
               <mat-form-field class="w-100">
                 <input
                   formControlName="ticketNumber"
@@ -42,10 +42,8 @@
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              {{ "label.violation_time" | translate }}
+            <div class="col-md-6">
+              Enter ticket time
               <mat-form-field class="w-100">
                 <input matInput type="time" formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -53,7 +51,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col">
+            <div class="col-md-6">
               <button
                 id="secondaryButton"
                 mat-stroked-button
@@ -64,11 +62,20 @@
                 <mat-icon inline="true">keyboard_arrow_left</mat-icon>
                 {{ "label.back" | translate }}
               </button>
+              <button
+                type="button"
+                class="ml-4"
+                mat-button
+                (click)="onViewTicketExample()"
+              >
+                <mat-icon>article</mat-icon>
+                View example
+              </button>
             </div>
-            <div class="col text-right">
+            <div class="col-md-6 text-right">
               <button mat-flat-button color="primary" class="large">
                 <mat-icon inline="true">search</mat-icon>
-                {{ "label.search" | translate }}
+                Find ticket
               </button>
             </div>
           </div>
@@ -134,11 +141,6 @@
           </div>
         </div>
       </section>
-    </div>
-    <div class="col-lg-6 d-none d-lg-block">
-      <div class="info-graphic pl-4">
-        <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
-      </div>
     </div>
   </div>
 </app-page>
