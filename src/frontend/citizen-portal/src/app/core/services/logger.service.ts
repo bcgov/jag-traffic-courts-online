@@ -90,7 +90,7 @@ export class LoggerService {
 
     switch (type) {
       case 'log':
-        color = 'Yellow';
+        color = 'Black';
         break;
       case 'info':
         color = 'DodgerBlue';

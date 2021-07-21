@@ -17,18 +17,15 @@ export interface IConfigService extends Configuration {
 export class ConfigService implements IConfigService {
   protected configuration: Configuration;
 
-  private disputeSubmitted: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
-  );
-  private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
-  );
+  private disputeSubmitted: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
+  private disputeValidationError: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
   private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
-  private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
-  );
+  private disputeCreateError: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
 
   constructor(
     protected apiResource: ApiResource,
@@ -73,6 +70,12 @@ export class ConfigService implements IConfigService {
 
   public get courtLocations(): Config<string>[] {
     return [...this.configuration.courtLocations].sort(this.sortConfigByName());
+  }
+
+  public get policeLocations(): Config<string>[] {
+    return [...this.configuration.policeLocations].sort(
+      this.sortConfigByName()
+    );
   }
 
   public get languages(): Config<string>[] {

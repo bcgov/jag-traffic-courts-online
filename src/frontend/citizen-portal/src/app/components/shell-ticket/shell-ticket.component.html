@@ -1,0 +1,277 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>Create your Shell Ticket</ng-container>
+    <ng-container subHeader>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit et dolore magna
+      aliqua.
+    </ng-container>
+  </app-page-header>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-2">
+      <div class="row">
+        <div class="col-sm-12 col-lg-6 col-xl-5 pb-4">
+          <mat-form-field class="w-100 mb-4">
+            <input
+              formControlName="ticketNumber"
+              matInput
+              type="text"
+              placeholder="Ticket Number"
+              oninput="this.value = this.value.toUpperCase()"
+              mask="SS00000000"
+              autocomplete="off"
+            />
+            <mat-hint>
+              <strong>A Ticket number is 2 letters and 8 numbers</strong>
+            </mat-hint>
+            <mat-error *ngIf="ticketNumber.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="ticketNumber.hasError('mask')">
+              This ticket number is not valid. It must be 2 letters and 8
+              numbers.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Violation Date"
+              [matDatepicker]="picker"
+              formControlName="offenceDate"
+              [max]="todayDate"
+              readonly
+              (click)="picker.open()"
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker">
+            </mat-datepicker-toggle>
+            <mat-datepicker
+              #picker
+              [touchUi]="isMobile"
+              startView="multi-year"
+            ></mat-datepicker>
+            <mat-error *ngIf="form.get('offenceDate').hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              type="time"
+              placeholder="Violation time"
+              formControlName="offenceTime"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Surname" formControlName="lastName" />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="Given Names"
+              formControlName="givenNames"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="{{
+                'stepper.disputant.driver_license_number' | translate
+              }}"
+              formControlName="driverLicense"
+              mask="0000000"
+              [showMaskTyped]="false"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              placeholder="{{ 'stepper.disputant.birthdate' | translate }}"
+              [matDatepicker]="picker2"
+              formControlName="birthdate"
+              [max]="maxDateOfBirth"
+              readonly
+              (click)="picker2.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+
+            <mat-datepicker
+              #picker2
+              [touchUi]="isMobile"
+              startView="multi-year"
+            ></mat-datepicker>
+            <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
+              "error.required" | translate
+            }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select placeholder="Gender" formControlName="gender">
+              <mat-option value="F">Female</mat-option>
+              <mat-option value="M">Male</mat-option>
+              <mat-option value="O">Other</mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <label id="charge_count" class="w-100"
+            >Number of counts on your ticket</label
+          >
+          <mat-radio-group
+            aria-labelledby="charge_count"
+            formControlName="chargeCount"
+            class="w-100"
+          >
+            <mat-radio-button [value]="1" class="w-33">1</mat-radio-button>
+            <mat-radio-button [value]="2" class="w-33">2</mat-radio-button>
+            <mat-radio-button [value]="3" class="w-33 mb-4">
+              3
+            </mat-radio-button>
+          </mat-radio-group>
+
+          <!--
+          {{ chargeCount.value }}<br />
+          -->
+          <!---------------------------------------------------------->
+          <!---------------------------------------------------------->
+
+          <label class="w-100">Count 1</label>
+          <mat-form-field class="w-100">
+            <input
+              type="text"
+              matInput
+              placeholder="Count 1 Act Regulation"
+              formControlName="count1"
+              [matAutocomplete]="auto"
+              (click)="$event.target.select()"
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto="matAutocomplete"
+              [displayWith]="onDisplayWithStatute"
+              (optionSelected)="onStatuteSelected($event)"
+            >
+              <mat-option
+                *ngFor="let option of filteredStatutes1 | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-error *ngIf="count1.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count1.hasError('invalidAutocompleteObject')">
+              Statute is not recognized. Select one from the list of options.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              type="number"
+              placeholder="Count 1 Fine Amount"
+              formControlName="count1FineAmount"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <!---------------------------------------------------------->
+
+          <label class="w-100">Count 2</label>
+          <mat-form-field class="w-100">
+            <input
+              type="text"
+              matInput
+              placeholder="Count 2 Act Regulation"
+              formControlName="count2"
+              [matAutocomplete]="auto"
+              (click)="$event.target.select()"
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto="matAutocomplete"
+              [displayWith]="onDisplayWithStatute"
+              (optionSelected)="onStatuteSelected($event)"
+            >
+              <mat-option
+                *ngFor="let option of filteredStatutes2 | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-error *ngIf="count2.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count2.hasError('invalidAutocompleteObject')">
+              Statute is not recognized. Select one from the list of options.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              type="number"
+              placeholder="Count 2 Fine Amount"
+              formControlName="count2FineAmount"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <!---------------------------------------------------------->
+          <!---------------------------------------------------------->
+          <mat-form-field class="w-100">
+            <mat-label>Provincial Court Hearing Location</mat-label>
+            <mat-select formControlName="courtHearingLocation">
+              <mat-option
+                *ngFor="let locn of courtLocations"
+                [value]="locn.code"
+              >
+                {{ locn.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-label>Organization / Detachment / Location</mat-label>
+            <mat-select formControlName="orgDetachmentLocation">
+              <mat-option
+                *ngFor="let locn of policeLocations"
+                [value]="locn.code"
+              >
+                {{ locn.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+
+          <button
+            type="submit"
+            mat-flat-button
+            color="primary"
+            class="large mt-2"
+          >
+            <mat-icon inline="true">save</mat-icon>
+            Save
+          </button>
+        </div>
+      </div>
+    </section>
+  </form>
+</app-page>
