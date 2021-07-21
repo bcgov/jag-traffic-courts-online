@@ -46,6 +46,8 @@ import { KeycloakService } from 'keycloak-angular';
 import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
+import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
+import { CountFormFieldComponent } from './components/shell-ticket/count-form-field/count-form-field.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -78,6 +80,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PhotoComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
+    ShellTicketComponent,
+    CountFormFieldComponent,
   ],
   imports: [
     CommonModule,

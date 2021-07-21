@@ -7,20 +7,11 @@
 
   <div class="row">
     <div class="col-lg-12">
-      <app-alert type="danger" icon="error" *ngIf="notFound">
-        <ng-container #alertContent class="alert-content">
-          <strong>Ticket Not Found</strong><br />
-          Sorry, we are unable to find your ticket. <br />If your ticket starts
-          with the letter "E" or the letter "S", it is an electronic ticket.
-          Please allow for 24-48 hours for your ticket to appear in our system.
-        </ng-container>
-      </app-alert>
-
       <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
         <section>
           <div class="row mb-4">
             <div class="col-md-6">
-              Enter ticket number
+              <strong>Enter ticket number</strong>
               <mat-form-field class="w-100">
                 <input
                   formControlName="ticketNumber"
@@ -43,7 +34,7 @@
               </mat-form-field>
             </div>
             <div class="col-md-6">
-              Enter ticket time
+              <strong>Enter ticket time</strong>
               <mat-form-field class="w-100">
                 <input matInput type="time" formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -120,6 +111,29 @@
           </div>
         </section>
       </form>
+
+      <section class="mb-4 mt-4">
+        <app-alert type="danger" icon="error">
+          <ng-container #alertContent class="alert-content">
+            <strong>Ticket Not Found</strong><br />
+            Sorry, we are unable to find your ticket. <br />If your ticket
+            starts with the letter <strong>E</strong> or the letter
+            <strong>S</strong>, it is an electronic ticket. Please allow for
+            24-48 hours for your ticket to appear in our system.
+          </ng-container>
+        </app-alert>
+
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          class="large"
+          routerLink="/ticket/shell"
+        >
+          <mat-icon inline="true">add</mat-icon>
+          Create shell ticket</button
+        ><br /><br />
+      </section>
 
       <section class="mb-4 mt-4">
         <div class="row">

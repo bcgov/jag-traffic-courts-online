@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PhotoComponent } from '@components/photo/photo.component';
+import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
@@ -23,6 +24,10 @@ const routes: Routes = [
       //   path: AppRoutes.FIND,
       //   component: FindTicketComponent,
       // },
+      {
+        path: AppRoutes.SHELL,
+        component: ShellTicketComponent,
+      },
       {
         path: AppRoutes.SUCCESS,
         component: DisputeSubmitComponent,

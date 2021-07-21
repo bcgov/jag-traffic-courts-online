@@ -11,6 +11,27 @@
     <section class="mb-2">
       <div class="row">
         <div class="col-sm-12 col-lg-6 col-xl-5 pb-4">
+          <app-count-form-field
+            [parentForm]="form"
+            [parentFormControlName]="'test'"
+            [fieldLabel]="'Count 1 Act Regulation'"
+          ></app-count-form-field>
+
+          <!--
+          <app-count-form-field
+            [parentForm]="form"
+            [parentFormControlName]="'tonk'"
+            [fieldLabel]="'Count 2 Act Regulation'"
+          ></app-count-form-field>
+
+          <app-count-form-field
+            [parentForm]="form"
+            [parentFormControlName]="'tink'"
+            [fieldLabel]="'Count 3 Act Regulation'"
+          ></app-count-form-field>
+          -->
+          <br /><br /><br />
+
           <mat-form-field class="w-100 mb-4">
             <input
               formControlName="ticketNumber"
@@ -146,7 +167,7 @@
           -->
           <!---------------------------------------------------------->
           <!---------------------------------------------------------->
-
+          <!--
           <label class="w-100">Count 1</label>
           <mat-form-field class="w-100">
             <input
@@ -164,7 +185,7 @@
               (optionSelected)="onStatuteSelected($event)"
             >
               <mat-option
-                *ngFor="let option of filteredStatutes1 | async"
+                *ngFor="let option of filteredStatutes | async"
                 [value]="option"
               >
                 {{ option.name }}
@@ -188,51 +209,7 @@
             />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
-
-          <!---------------------------------------------------------->
-
-          <label class="w-100">Count 2</label>
-          <mat-form-field class="w-100">
-            <input
-              type="text"
-              matInput
-              placeholder="Count 2 Act Regulation"
-              formControlName="count2"
-              [matAutocomplete]="auto"
-              (click)="$event.target.select()"
-            />
-            <mat-autocomplete
-              autoActiveFirstOption
-              #auto="matAutocomplete"
-              [displayWith]="onDisplayWithStatute"
-              (optionSelected)="onStatuteSelected($event)"
-            >
-              <mat-option
-                *ngFor="let option of filteredStatutes2 | async"
-                [value]="option"
-              >
-                {{ option.name }}
-              </mat-option>
-            </mat-autocomplete>
-
-            <mat-error *ngIf="count2.hasError('required')">
-              {{ "error.required" | translate }}
-            </mat-error>
-            <mat-error *ngIf="count2.hasError('invalidAutocompleteObject')">
-              Statute is not recognized. Select one from the list of options.
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="w-100">
-            <input
-              matInput
-              type="number"
-              placeholder="Count 2 Fine Amount"
-              formControlName="count2FineAmount"
-            />
-            <mat-error>{{ "error.required" | translate }}</mat-error>
-          </mat-form-field>
-
+-->
           <!---------------------------------------------------------->
           <!---------------------------------------------------------->
           <mat-form-field class="w-100">

@@ -1,0 +1,34 @@
+<label [formGroup]="parentForm" class="w-100">
+  <mat-form-field class="w-100">
+    <input
+      type="text"
+      matInput
+      placeholder="{{ fieldLabel }}"
+      formControlName="test"
+      [matAutocomplete]="auto"
+      (click)="$event.target.select()"
+    />
+    <mat-autocomplete
+      autoActiveFirstOption
+      #auto="matAutocomplete"
+      [displayWith]="onDisplayWithStatute"
+      (optionSelected)="onStatuteSelected($event)"
+    >
+      <mat-option
+        *ngFor="let option of filteredStatutes | async"
+        [value]="option"
+      >
+        {{ option.name }}
+      </mat-option>
+    </mat-autocomplete>
+
+    <mat-error *ngIf="countFormControlName.hasError('required')">
+      {{ "error.required" | translate }}
+    </mat-error>
+    <mat-error
+      *ngIf="countFormControlName.hasError('invalidAutocompleteObject')"
+    >
+      Statute is not recognized. Select one from the list of options.
+    </mat-error>
+  </mat-form-field>
+</label>

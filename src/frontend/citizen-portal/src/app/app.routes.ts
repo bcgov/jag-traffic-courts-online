@@ -1,7 +1,7 @@
 export class AppRoutes {
   public static FIND = 'find';
   public static SUCCESS = 'success';
-  public static LIST = 'list';
+  public static SHELL = 'shell';
   public static SUMMARY = 'summary';
   public static TICKET = 'ticket';
   public static STEPPER = 'stepper';
