@@ -7,43 +7,31 @@
     </ng-container>
   </app-page-header>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+  <app-alert type="info" icon="info">
+    <ng-container #alertContent class="alert-content">
+      <strong>Note:</strong>
+      you can now upload an image or take a photo of your paper ticket if you
+      have it available. If you cannot upload an image or take a photo, please
+      manually enter the fields below:
+    </ng-container>
+  </app-alert>
+
+  <form class="mt-4" (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section class="mb-2">
       <div class="row">
-        <div class="col-sm-12 col-lg-6 col-xl-5 pb-4">
-          <app-count-form-field
-            [parentForm]="form"
-            [parentFormControlName]="'test'"
-            [fieldLabel]="'Count 1 Act Regulation'"
-          ></app-count-form-field>
-
-          <!--
-          <app-count-form-field
-            [parentForm]="form"
-            [parentFormControlName]="'tonk'"
-            [fieldLabel]="'Count 2 Act Regulation'"
-          ></app-count-form-field>
-
-          <app-count-form-field
-            [parentForm]="form"
-            [parentFormControlName]="'tink'"
-            [fieldLabel]="'Count 3 Act Regulation'"
-          ></app-count-form-field>
-          -->
-          <br /><br /><br />
-
-          <mat-form-field class="w-100 mb-4">
+        <div class="col-md-4 pb-4">
+          <mat-form-field class="w-100 mb-2">
+            <mat-label>Violation ticket number</mat-label>
             <input
               formControlName="ticketNumber"
               matInput
               type="text"
-              placeholder="Ticket Number"
               oninput="this.value = this.value.toUpperCase()"
               mask="SS00000000"
               autocomplete="off"
             />
             <mat-hint>
-              <strong>A Ticket number is 2 letters and 8 numbers</strong>
+              <strong>A ticket number is 2 letters and 8 numbers</strong>
             </mat-hint>
             <mat-error *ngIf="ticketNumber.hasError('required')">
               {{ "error.required" | translate }}
@@ -53,11 +41,13 @@
               numbers.
             </mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-4">
           <mat-form-field class="w-100">
+            <mat-label>Violation date</mat-label>
             <input
               matInput
-              placeholder="Violation Date"
               [matDatepicker]="picker"
               formControlName="offenceDate"
               [max]="todayDate"
@@ -75,48 +65,52 @@
               {{ "error.required" | translate }}
             </mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input
-              matInput
-              type="time"
-              placeholder="Violation time"
-              formControlName="offenceTime"
-            />
+            <mat-label>Violation time</mat-label>
+            <input matInput type="time" formControlName="offenceTime" />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col-md-3">
           <mat-form-field class="w-100">
-            <input matInput placeholder="Surname" formControlName="lastName" />
+            <mat-label>Surname</mat-label>
+            <input matInput formControlName="lastName" />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-3">
           <mat-form-field class="w-100">
-            <input
-              matInput
-              placeholder="Given Names"
-              formControlName="givenNames"
-            />
+            <mat-label>Given names</mat-label>
+            <input matInput formControlName="givenNames" />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-2">
           <mat-form-field class="w-100">
+            <mat-label>Driver's license #</mat-label>
             <input
               matInput
-              placeholder="{{
-                'stepper.disputant.driver_license_number' | translate
-              }}"
               formControlName="driverLicense"
               mask="0000000"
               [showMaskTyped]="false"
             />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-2">
           <mat-form-field class="w-100">
+            <mat-label>Birthdate</mat-label>
             <input
               matInput
-              placeholder="{{ 'stepper.disputant.birthdate' | translate }}"
               [matDatepicker]="picker2"
               formControlName="birthdate"
               [max]="maxDateOfBirth"
@@ -137,16 +131,170 @@
               "error.required" | translate
             }}</mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-2">
           <mat-form-field class="w-100">
-            <mat-select placeholder="Gender" formControlName="gender">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
               <mat-option value="F">Female</mat-option>
               <mat-option value="M">Male</mat-option>
               <mat-option value="O">Other</mat-option>
             </mat-select>
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
+      </div>
 
+      <!--
+      <div class="row">
+        <div class="col-md-2"><strong>Count</strong></div>
+        <div class="col-md-7"><strong>Act / reg / section</strong></div>
+        <div class="col-md-3"><strong>Fine amount ($)</strong></div>
+      </div>
+      -->
+
+      <div class="row">
+        <div class="col-md-2" style="text-align: right">
+          <strong>Count 1</strong>
+        </div>
+        <div class="col-md-7">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 1 Act / reg / section</mat-label>
+            <input matInput formControlName="givenNames" />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 1 Fine Amount ($)</mat-label>
+            <input
+              matInput
+              formControlName="givenNames"
+              style="text-align: right"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2" style="text-align: right">
+          <strong>Count 2</strong>
+        </div>
+        <div class="col-md-7">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 3 Act / reg / section</mat-label>
+            <input matInput formControlName="givenNames" />
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 2 Fine Amount ($)</mat-label>
+            <input
+              matInput
+              formControlName="givenNames"
+              style="text-align: right"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2" style="text-align: right">
+          <strong>Count 3</strong>
+        </div>
+        <div class="col-md-7">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 3 Act / reg / section</mat-label>
+            <input matInput formControlName="givenNames" />
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 3 Fine Amount ($)</mat-label>
+            <input
+              matInput
+              formControlName="givenNames"
+              style="text-align: right"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">&nbsp;</div>
+        <div class="col-md-7" style="text-align: right">
+          <strong>Amount owing</strong>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              formControlName="amountOwing"
+              style="text-align: right"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!--
+      <table class="table table-sm table-striped mb-4">
+        <thead>
+          <tr>
+            <th scope="col">Count</th>
+            <th scope="col">Act / reg / section</th>
+            <th scope="col">Fine amount ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="vertical-align">1</th>
+            <td>
+              <mat-form-field class="w-100">
+                <input matInput formControlName="givenNames" />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <input matInput formControlName="givenNames" />
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <th class="vertical-align">2</th>
+            <td>
+              <mat-form-field class="w-100">
+                <input matInput formControlName="givenNames" />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <input matInput formControlName="givenNames" />
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <th class="vertical-align">3</th>
+            <td>
+              <mat-form-field class="w-100">
+                <input matInput formControlName="givenNames" />
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field>
+                <input matInput formControlName="givenNames" />
+              </mat-form-field>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    -->
+
+      <div class="row mt-4">
+        <div class="col-md-3">
+          <!--
           <label id="charge_count" class="w-100"
             >Number of counts on your ticket</label
           >
@@ -161,6 +309,26 @@
               3
             </mat-radio-button>
           </mat-radio-group>
+
+          <app-count-form-field
+            [parentForm]="form"
+            [parentFormControlName]="'test'"
+            [fieldLabel]="'Count 1 Act Regulation'"
+          ></app-count-form-field>
+-->
+          <!--
+          <app-count-form-field
+            [parentForm]="form"
+            [parentFormControlName]="'tonk'"
+            [fieldLabel]="'Count 2 Act Regulation'"
+          ></app-count-form-field>
+
+          <app-count-form-field
+            [parentForm]="form"
+            [parentFormControlName]="'tink'"
+            [fieldLabel]="'Count 3 Act Regulation'"
+          ></app-count-form-field>
+          -->
 
           <!--
           {{ chargeCount.value }}<br />
@@ -212,8 +380,13 @@
 -->
           <!---------------------------------------------------------->
           <!---------------------------------------------------------->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
           <mat-form-field class="w-100">
-            <mat-label>Provincial Court Hearing Location</mat-label>
+            <mat-label>Provincial court hearing location</mat-label>
             <mat-select formControlName="courtHearingLocation">
               <mat-option
                 *ngFor="let locn of courtLocations"
@@ -224,9 +397,11 @@
             </mat-select>
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
 
+        <div class="col-md-6">
           <mat-form-field class="w-100">
-            <mat-label>Organization / Detachment / Location</mat-label>
+            <mat-label>Organization / detachment / location</mat-label>
             <mat-select formControlName="orgDetachmentLocation">
               <mat-option
                 *ngFor="let locn of policeLocations"
@@ -237,7 +412,23 @@
             </mat-select>
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
+        </div>
+      </div>
 
+      <div class="row">
+        <div class="col-md-6">
+          <button
+            id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            routerLink="/ticket/find"
+          >
+            <mat-icon inline="true">keyboard_arrow_left</mat-icon>
+            Back
+          </button>
+        </div>
+        <div class="col-md-6 text-right">
           <button
             type="submit"
             mat-flat-button
@@ -245,7 +436,7 @@
             class="large mt-2"
           >
             <mat-icon inline="true">save</mat-icon>
-            Save
+            Validate
           </button>
         </div>
       </div>

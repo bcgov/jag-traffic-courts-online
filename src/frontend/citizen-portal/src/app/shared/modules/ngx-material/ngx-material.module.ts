@@ -63,6 +63,7 @@ export const APP_DATE_FORMATS = {
 const matFormFieldCustomOptions: MatFormFieldDefaultOptions = {
   hideRequiredMarker: true,
   floatLabel: 'always',
+  appearance: 'fill',
 };
 
 export const GRI_DATE_FORMATS: MatDateFormats = {

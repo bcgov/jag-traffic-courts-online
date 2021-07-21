@@ -11,7 +11,7 @@
         <section>
           <div class="row mb-4">
             <div class="col-md-6">
-              <strong>Enter ticket number</strong>
+              <mat-label><strong>Enter ticket number</strong></mat-label>
               <mat-form-field class="w-100">
                 <input
                   formControlName="ticketNumber"
@@ -26,15 +26,13 @@
                   <mat-icon>close</mat-icon>
                 </button>
                 <mat-hint>
-                  <small translate
-                    >label.violation_ticket_number_hint
-                  </small></mat-hint
-                >
+                  <small> A Ticket number is 2 letters and 8 numbers </small>
+                </mat-hint>
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
             <div class="col-md-6">
-              <strong>Enter ticket time</strong>
+              <mat-label><strong>Enter ticket time</strong></mat-label>
               <mat-form-field class="w-100">
                 <input matInput type="time" formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -70,49 +68,11 @@
               </button>
             </div>
           </div>
-          <br /><br /><br />
-          <div class="row">
-            <div class="col">
-              Count
-              <mat-form-field class="w-100">
-                <!--
-                  onfocus="this.select()"
-                -->
-                <input
-                  type="text"
-                  matInput
-                  formControlName="test"
-                  [matAutocomplete]="auto"
-                  (click)="$event.target.select()"
-                />
-                <mat-autocomplete
-                  autoActiveFirstOption
-                  #auto="matAutocomplete"
-                  [displayWith]="onDisplayWithStatute"
-                  (optionSelected)="onStatuteSelected($event)"
-                >
-                  <mat-option
-                    *ngFor="let option of filteredStatutes | async"
-                    [value]="option"
-                  >
-                    {{ option.name }}
-                  </mat-option>
-                </mat-autocomplete>
-
-                <mat-error *ngIf="test.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <mat-error *ngIf="test.hasError('invalidAutocompleteObject')">
-                  Statute is not recognized. Select one from the list of
-                  options.
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
         </section>
       </form>
+      <br /><br />
 
-      <section class="mb-4 mt-4">
+      <section class="mb-4">
         <app-alert type="danger" icon="error">
           <ng-container #alertContent class="alert-content">
             <strong>Ticket Not Found</strong><br />
@@ -131,9 +91,10 @@
           routerLink="/ticket/shell"
         >
           <mat-icon inline="true">add</mat-icon>
-          Create shell ticket</button
-        ><br /><br />
+          Create shell ticket
+        </button>
       </section>
+      <br />
 
       <section class="mb-4 mt-4">
         <div class="row">

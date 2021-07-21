@@ -61,6 +61,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       orgDetachmentLocation: [null, [Validators.required]],
       driverLicense: [null, [Validators.required]],
       chargeCount: [1],
+      amountOwing: ['$125'],
       test: [null],
       tonk: [null],
       tink: [null],
