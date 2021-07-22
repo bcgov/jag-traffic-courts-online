@@ -1,6 +1,17 @@
 @import "palette";
 @import "bootstrap/bootstrap-imports";
 
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.flex-footer {
+  margin-top: auto;
+}
+
 h1 {
   font-size: 3em;
   line-height: 1.1em;
@@ -121,7 +132,7 @@ div.summary-header {
 
 section.summary-section {
   min-height: 300px;
-  margin-bottom: 3em;
+  margin-bottom: 1.5em;
 }
 
 div.container {

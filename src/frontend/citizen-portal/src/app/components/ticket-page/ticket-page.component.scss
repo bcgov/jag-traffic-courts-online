@@ -1,6 +1,17 @@
 @import "palette";
 @import "bootstrap/bootstrap-imports";
 
+.flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.flex-footer {
+  margin-top: auto;
+}
+
 .header-summary-links {
   list-style: none;
   margin-bottom: 0;

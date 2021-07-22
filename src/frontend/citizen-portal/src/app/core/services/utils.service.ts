@@ -123,4 +123,10 @@ export class UtilsService {
   public sort<T>(a: T, b: T): SortWeight {
     return a > b ? 1 : a < b ? -1 : 0;
   }
+
+  public isMobile(): boolean {
+    const width = this.window.innerWidth;
+
+    return width < 768;
+  }
 }

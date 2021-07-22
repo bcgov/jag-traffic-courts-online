@@ -5,37 +5,21 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Config } from '@config/config.model';
+import { FormUtilsService } from '@core/services/form-utils.service';
+import { LoggerService } from '@core/services/logger.service';
+import { UtilsService } from '@core/services/utils.service';
+import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { ConfigService } from '@config/config.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormUtilsService } from '@core/services/form-utils.service';
-
-import { UtilsService } from '@core/services/utils.service';
-import { MatDialog } from '@angular/material/dialog';
-import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
-import { LoggerService } from '@core/services/logger.service';
-
-export function autocompleteObjectValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
-    if (typeof control.value === 'string') {
-      return { invalidAutocompleteObject: { value: control.value } };
-    }
-    return null; /* valid option selected */
-  };
-}
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-find-ticket',
@@ -49,36 +33,24 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
 
   public notFound = false;
 
-  public statutes: Config<number>[];
-  public filteredStatutes: Observable<Config<number>[]>;
-
   constructor(
     private route: Router,
     private formBuilder: FormBuilder,
     private disputeResource: DisputeResourceService,
-    private configService: ConfigService,
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {
-    this.statutes = this.configService.statutes;
+    //
   }
 
   public ngOnInit(): void {
-    // const testDefault = this.statutes[5];
     this.form = this.formBuilder.group({
       ticketNumber: ['EZ02000460', [Validators.required]],
       time: ['09:54', [Validators.required]],
-      test: [null, [autocompleteObjectValidator()]], // Validators.required,
     });
-
-    this.filteredStatutes = this.test.valueChanges.pipe(
-      startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
-    );
   }
 
   public ngAfterViewInit(): void {
@@ -89,33 +61,6 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
     this.dialog.open(TicketExampleDialogComponent, {
       width: '600px',
     });
-  }
-
-  private filterStatutes(value: string): Config<number>[] {
-    const trimValue = value.toLowerCase().replace(/\s+/g, ''); // Get rid of whitespace
-    const noBracketValue = trimValue.replace(/[\(\)']+/g, ''); // Get rid of brackets
-
-    if (trimValue === noBracketValue) {
-      return this.statutes.filter((option) =>
-        option.name
-          .toLowerCase()
-          .replace(/\s+/g, '') // Get rid of whitespace
-          .replace(/[\(\)']+/g, '') // Get rid of brackets
-          .includes(noBracketValue)
-      );
-    }
-
-    return this.statutes.filter((option) =>
-      option.name.toLowerCase().replace(/\s+/g, '').includes(trimValue)
-    );
-  }
-
-  public onDisplayWithStatute(statute?: Config<number>): string | undefined {
-    return statute ? statute.name : undefined;
-  }
-
-  public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
-    this.logger.log('onStatuteSelected', event$.option.value);
   }
 
   public onSearch(): void {
@@ -148,7 +93,7 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
       });
   }
 
-  public get test(): FormControl {
-    return this.form.get('test') as FormControl;
+  public get ticketNumber(): FormControl {
+    return this.form.get('ticketNumber') as FormControl;
   }
 }

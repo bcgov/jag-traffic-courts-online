@@ -7,194 +7,6 @@ export class MockConfig {
     return {
       courtLocations: [
         {
-          code: '19227.0734',
-          name: '100 Mile House Law Courts',
-        },
-        {
-          code: '9393.0001',
-          name: 'Abbotsford Court',
-        },
-        {
-          code: '18817.0045',
-          name: 'Adjudicator Listing',
-        },
-        {
-          code: '10230.0001',
-          name: 'Alert Bay',
-        },
-        {
-          code: '104.0001',
-          name: 'Alexis Creek Provincial Court',
-        },
-        {
-          code: '105.0001',
-          name: 'Anahim Lake Provincial Court',
-        },
-        {
-          code: '22.0001',
-          name: 'Ashcroft Provincial Court',
-        },
-        {
-          code: '106.0001',
-          name: 'Atlin Provincial Court',
-        },
-        {
-          code: '19187.0734',
-          name: 'B.C. Court of Appeal',
-        },
-        {
-          code: '16262.0026',
-          name: 'BELLA BELLA Provincial Court',
-        },
-        {
-          code: '10244.0001',
-          name: 'Bella Bella Law Courts',
-        },
-        {
-          code: '10245.0001',
-          name: 'Bella Coola Law Courts',
-        },
-        {
-          code: '8823.0001',
-          name: 'Burnaby Court',
-        },
-        {
-          code: '107.0001',
-          name: 'Burns Lake Court',
-        },
-        {
-          code: '9067.0001',
-          name: 'Campbell River Court',
-        },
-        {
-          code: '108.0001',
-          name: 'Cassiar Court',
-        },
-        {
-          code: '23.0001',
-          name: 'Castlegar Provincial Court',
-        },
-        {
-          code: '27.0001',
-          name: 'Chase Provincial Court',
-        },
-        {
-          code: '109.0001',
-          name: 'Chetwynd Provincial Court',
-        },
-        {
-          code: '8824.0001',
-          name: 'Chilliwack Law Courts',
-        },
-        {
-          code: '28.0001',
-          name: 'Clearwater Provincial Court',
-        },
-        {
-          code: '19625.0734',
-          name: 'Court of Appeal of BC - Kamloops',
-        },
-        {
-          code: '19626.0734',
-          name: 'Court of Appeal of BC - Kelowna',
-        },
-        {
-          code: '19622.0734',
-          name: 'Court of Appeal of BC - Vancouver',
-        },
-        {
-          code: '19627.0734',
-          name: 'Court of Appeal of BC - Victoria',
-        },
-        {
-          code: '9068.0001',
-          name: 'Courtenay Law Courts',
-        },
-        {
-          code: '29.0001',
-          name: 'Cranbrook Law Courts',
-        },
-        {
-          code: '77.0001',
-          name: 'Creston Law Courts',
-        },
-        {
-          code: '110.0001',
-          name: 'Dawson Creek Law Courts',
-        },
-        {
-          code: '111.0001',
-          name: 'Dease Lake Provincial Court',
-        },
-        {
-          code: '9066.0001',
-          name: 'Delta Provincial Court',
-        },
-        {
-          code: '10231.0001',
-          name: 'Duncan Law Courts',
-        },
-        {
-          code: '78.0001',
-          name: 'Fernie Law Courts',
-        },
-        {
-          code: '112.0001',
-          name: 'Fort Nelson Law Courts',
-        },
-        {
-          code: '113.0001',
-          name: 'Fort St. James Provincial Court',
-        },
-        {
-          code: '114.0001',
-          name: 'Fort St. John Law Courts',
-        },
-        {
-          code: '10257.0001',
-          name: 'Fort Ware Provincial Court',
-        },
-        {
-          code: '115.0001',
-          name: 'Fraser Lake Provincial Court',
-        },
-        {
-          code: '10232.0001',
-          name: 'Ganges Provincial Court',
-        },
-        {
-          code: '10233.0001',
-          name: 'Gold River Provincial Court',
-        },
-        {
-          code: '79.0001',
-          name: 'Golden Law Court',
-        },
-        {
-          code: '80.0001',
-          name: 'Grand Forks Law Courts',
-        },
-        {
-          code: '10253.0001',
-          name: 'Hope Provincial Court',
-        },
-        {
-          code: '116.0001',
-          name: 'Houston Provincial Court',
-        },
-        {
-          code: '117.0001',
-          name: 'Hudsons Hope Provincial Court',
-        },
-        {
-          code: '81.0001',
-          name: 'Invermere Law Courts',
-        },
-        {
-          code: '19247.0734',
-          name: 'Justice Centre (Judicial)',
-        },
-        {
           code: '82.0001',
           name: 'Kamloops Court',
         },
@@ -1244,8 +1056,7 @@ export class MockConfig {
         { code: 11574, name: 'MVA 187(a) Fail to Stop at Stop Sign' },
         {
           code: 11716,
-          name:
-            'MVA 190(1)(j)(iv) Park on hwy to sell flowers,fr uits,veg,seafood,et',
+          name: 'MVA 190(1)(j)(iv) Park on hwy to sell flowers,fr uits,veg,seafood,et',
         },
         {
           code: 11717,
@@ -1286,8 +1097,7 @@ export class MockConfig {
         { code: 11632, name: 'MVA 135 Disobey green arrow' },
         {
           code: 11624,
-          name:
-            'MVA 133(1)(a) Yellow Light, intersection-no stop before intersec',
+          name: 'MVA 133(1)(a) Yellow Light, intersection-no stop before intersec',
         },
         { code: 11625, name: 'MVA 133(1)(b) Disobey yellow light' },
         { code: 11626, name: 'MVA 134 Red Light' },
@@ -1414,8 +1224,7 @@ export class MockConfig {
         { code: 11698, name: 'MVA 185(2)(a) Riding Cycle on Sidewalk' },
         {
           code: 11699,
-          name:
-            'MVA 186(6)(c) Not stop with part of vehicle on or over the railr',
+          name: 'MVA 186(6)(c) Not stop with part of vehicle on or over the railr',
         },
         { code: 11700, name: 'MVA 186 Railway Crossings' },
         { code: 11687, name: 'MVA 185(6)(b) Disobey duties of cyclist' },
@@ -1437,14 +1246,12 @@ export class MockConfig {
         },
         {
           code: 11708,
-          name:
-            'MVA 186(2)(b) Fail to stop or leave safely at railway crossing',
+          name: 'MVA 186(2)(b) Fail to stop or leave safely at railway crossing',
         },
         { code: 11692, name: 'MVA 185(2)(c) Cycle two abreast' },
         {
           code: 11693,
-          name:
-            'MVA 185(2)(d) Cycle without at least one hand on the handlebars',
+          name: 'MVA 185(2)(d) Cycle without at least one hand on the handlebars',
         },
         { code: 11694, name: 'MVA 185(2)(e) Disobey duties of cyclist' },
         { code: 11695, name: 'MVA 185(2)(f) Ride on hwy prohib by sign' },
@@ -1472,13 +1279,11 @@ export class MockConfig {
         },
         {
           code: 11702,
-          name:
-            'MVA 186(6)(b) Not shift gears of vehicle while crossing railroad',
+          name: 'MVA 186(6)(b) Not shift gears of vehicle while crossing railroad',
         },
         {
           code: 11703,
-          name:
-            'MVA 186(2)(c) Fail to stop or leave safely at railway crossing',
+          name: 'MVA 186(2)(c) Fail to stop or leave safely at railway crossing',
         },
         { code: 11398, name: 'MVA 157(1)(a) Pass on Solid Double Line' },
         { code: 11399, name: 'MVA 157 Pass on Solid Double Line' },
@@ -1683,8 +1488,7 @@ export class MockConfig {
         { code: 15492, name: 'MVA 189(4) Police may move parked vehicle' },
         {
           code: 15493,
-          name:
-            'MVA 189(1)(d) Parked vehicle interferes with normal flow of traf',
+          name: 'MVA 189(1)(d) Parked vehicle interferes with normal flow of traf',
         },
         { code: 15494, name: 'MVA 189(3)(a) Police may move parked vehicle' },
         { code: 15495, name: 'MVA 189(1)(e) Police may move parked vehicle' },
@@ -2137,8 +1941,7 @@ export class MockConfig {
         { code: 16262, name: 'MVA 88(3)(b)(ii) Driving while Suspended' },
         {
           code: 16263,
-          name:
-            'MVA 83(6)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(6)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16264,
@@ -2163,8 +1966,7 @@ export class MockConfig {
         },
         {
           code: 16270,
-          name:
-            'MVA 84(1)(a) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 84(1)(a) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 16271,
@@ -2201,13 +2003,11 @@ export class MockConfig {
         { code: 16279, name: 'MVA 88.1 Driving while prohibited or suspended' },
         {
           code: 16280,
-          name:
-            'MVA 84(2)(c) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 84(2)(c) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 16281,
-          name:
-            'MVA 84(2)(b) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 84(2)(b) Prohibition against driving where unsatisfied judg',
         },
         { code: 16654, name: 'MVA 150(1) Slow Driving to Impede Traffic' },
         { code: 16655, name: 'MVA 149(1)(c) Speed Relative to Conditions' },
@@ -2280,8 +2080,7 @@ export class MockConfig {
         { code: 16679, name: 'MVA 133(2)(a) Yellow light-no intersection' },
         {
           code: 16681,
-          name:
-            'MVA 174(1)(a) No proper signalling equipment for right hand driv',
+          name: 'MVA 174(1)(a) No proper signalling equipment for right hand driv',
         },
         {
           code: 15601,
@@ -2355,8 +2154,7 @@ export class MockConfig {
         { code: 16686, name: 'MVA 133(1)(b) Disobey yellow light' },
         {
           code: 16687,
-          name:
-            'MVA 133(1)(a) Yellow Light, intersection-no stop before intersec',
+          name: 'MVA 133(1)(a) Yellow Light, intersection-no stop before intersec',
         },
         {
           code: 16688,
@@ -2376,15 +2174,13 @@ export class MockConfig {
         { code: 16694, name: 'MVA 172(2) Inadequate Signal on Turn' },
         {
           code: 16695,
-          name:
-            'MVA 174(1)(b) No proper signalling equipment for right hand driv',
+          name: 'MVA 174(1)(b) No proper signalling equipment for right hand driv',
         },
         { code: 16696, name: 'MVA 172 Signals on Turning' },
         { code: 16698, name: 'MVA 170(b)(v) Illegal U-Turn' },
         {
           code: 16699,
-          name:
-            'MVA 185(2)(d) Cycle without at least one hand on the handlebars',
+          name: 'MVA 185(2)(d) Cycle without at least one hand on the handlebars',
         },
         { code: 16700, name: 'MVA 167(2) Improper left turn at intersection' },
         {
@@ -2551,8 +2347,7 @@ export class MockConfig {
         },
         {
           code: 16163,
-          name:
-            'MVA 62(2)(b)(i) Fail to leave info. aft accid. wunattended vhcl.',
+          name: 'MVA 62(2)(b)(i) Fail to leave info. aft accid. wunattended vhcl.',
         },
         {
           code: 16164,
@@ -2586,13 +2381,11 @@ export class MockConfig {
         },
         {
           code: 16180,
-          name:
-            'MVA 62(2)(b)(iii) Fail to leave info. aft accid. wunattended vhcl.',
+          name: 'MVA 62(2)(b)(iii) Fail to leave info. aft accid. wunattended vhcl.',
         },
         {
           code: 16181,
-          name:
-            'MVA 62(2)(b)(ii) Fail to leave info. aft accid. wunattended vhcl.',
+          name: 'MVA 62(2)(b)(ii) Fail to leave info. aft accid. wunattended vhcl.',
         },
         { code: 16182, name: 'MVA 61(3)(b) Accident Reports' },
         { code: 16183, name: 'MVA 61(3)(a) Accident Reports' },
@@ -2621,28 +2414,23 @@ export class MockConfig {
         },
         {
           code: 16286,
-          name:
-            'MVA 83(1)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(1)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16287,
-          name:
-            'MVA 83(6)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(6)(a) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16288,
-          name:
-            'MVA 83(1)(a)(ii) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(1)(a)(ii) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16289,
-          name:
-            'MVA 83(1)(a)(i) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(1)(a)(i) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16290,
-          name:
-            'MVA 83(1)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(1)(a) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16291,
@@ -2650,8 +2438,7 @@ export class MockConfig {
         },
         {
           code: 16292,
-          name:
-            'MVA 83(3)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(3)(a) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16293,
@@ -2659,23 +2446,19 @@ export class MockConfig {
         },
         {
           code: 16294,
-          name:
-            'MVA 83(2)(d) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(2)(d) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16295,
-          name:
-            'MVA 83(2)(c) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(2)(c) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16296,
-          name:
-            'MVA 83(2)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(2)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16297,
-          name:
-            'MVA 83(2)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(2)(a) Suspension and cancellation of vehicle licences et',
         },
         { code: 16298, name: 'MVA 88(1) Driving while Suspended' },
         { code: 16299, name: 'MVA 88 Driving while Suspended' },
@@ -2693,13 +2476,11 @@ export class MockConfig {
         },
         {
           code: 16303,
-          name:
-            'MVA 83(1)(a)(iii) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(1)(a)(iii) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16304,
-          name:
-            'MVA 83(3)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 83(3)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 16305,
@@ -2724,8 +2505,7 @@ export class MockConfig {
         },
         {
           code: 15499,
-          name:
-            'MVA 186(6)(a) Gear of vehicle must not require changing crossing',
+          name: 'MVA 186(6)(a) Gear of vehicle must not require changing crossing',
         },
         {
           code: 15500,
@@ -2760,21 +2540,18 @@ export class MockConfig {
         { code: 16581, name: 'MVA 16(5) Fail to transfer vehicle' },
         {
           code: 16583,
-          name:
-            'MVA 19(1)(b) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 19(1)(b) Notice of removal or destruction of motor vehicle',
         },
         { code: 16584, name: 'MVA 22(2) Improper class of Drivers licence' },
         { code: 16585, name: 'MVA 2(6) Application of Act' },
         {
           code: 16586,
-          name:
-            'MVA 19(1)(c) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 19(1)(c) Notice of removal or destruction of motor vehicle',
         },
         { code: 16587, name: 'MVA 16(2) Fail to transfer vehicle' },
         {
           code: 16588,
-          name:
-            'MVA 19(1)(a) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 19(1)(a) Notice of removal or destruction of motor vehicle',
         },
         { code: 16589, name: 'MVA 16(3) Fail to transfer vehicle' },
         {
@@ -2788,8 +2565,7 @@ export class MockConfig {
         { code: 16592, name: 'MVA 17 Transfer on death where estate small' },
         {
           code: 16593,
-          name:
-            'MVA 19(5)(b) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 19(5)(b) Notice of removal or destruction of motor vehicle',
         },
         { code: 16594, name: 'MVA 2(6)(a) Application of Act' },
         { code: 15512, name: 'MVA 189(1)(f) Police may move parked vehicle' },
@@ -2908,8 +2684,7 @@ export class MockConfig {
         { code: 15796, name: 'MVA 93(10) Stay of prohibition against driving' },
         {
           code: 15797,
-          name:
-            'MVA 97(2)(b) Non resident without proof of financial responsibi',
+          name: 'MVA 97(2)(b) Non resident without proof of financial responsibi',
         },
         { code: 15798, name: 'MVA 97(7)(b) Proof of financial responsibility' },
         { code: 15799, name: 'MVA 93(11) Stay of prohibition against driving' },
@@ -2962,8 +2737,7 @@ export class MockConfig {
         },
         {
           code: 15879,
-          name:
-            'MVA 24.1(1)(b.1)(viii) Refusal to issue a licence, permit etc.',
+          name: 'MVA 24.1(1)(b.1)(viii) Refusal to issue a licence, permit etc.',
         },
         {
           code: 15880,
@@ -2986,8 +2760,7 @@ export class MockConfig {
         },
         {
           code: 16284,
-          name:
-            'MVA 84(1)(b) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 84(1)(b) Prohibition against driving where unsatisfied judg',
         },
         { code: 15947, name: 'MVA 43(5) Driving demo vehicle - no consent' },
         { code: 15948, name: 'MVA 51(2) No inspection - hiring books' },
@@ -3031,8 +2804,7 @@ export class MockConfig {
         { code: 16378, name: 'MVA 31.1(4)(c) Exemption-non resident driver' },
         {
           code: 16080,
-          name:
-            'MVA 64(1)(b) Illegal use or no inspection of licence or permit',
+          name: 'MVA 64(1)(b) Illegal use or no inspection of licence or permit',
         },
         { code: 16081, name: 'MVA 71 Limitation of actions' },
         {
@@ -3047,8 +2819,7 @@ export class MockConfig {
         { code: 16085, name: 'MVA 64(2) Illegal use of permitt' },
         {
           code: 16087,
-          name:
-            'MVA 64(1)(a) Illegal use or no inspection of licence or permit',
+          name: 'MVA 64(1)(a) Illegal use or no inspection of licence or permit',
         },
         {
           code: 16088,
@@ -3133,8 +2904,7 @@ export class MockConfig {
         },
         {
           code: 15818,
-          name:
-            'MVA 97(2)(a) Non resident without proof of financial responsibi',
+          name: 'MVA 97(2)(a) Non resident without proof of financial responsibi',
         },
         { code: 15820, name: 'MVA 95(5)(c) Reporting conviction or judgment' },
         { code: 15821, name: 'MVA 95(5)(b) Reporting conviction or judgment' },
@@ -3166,8 +2936,7 @@ export class MockConfig {
         },
         {
           code: 16324,
-          name:
-            'MVA 85(a)(ii) Prohibition against driving relating to fitness or',
+          name: 'MVA 85(a)(ii) Prohibition against driving relating to fitness or',
         },
         {
           code: 16325,
@@ -3175,8 +2944,7 @@ export class MockConfig {
         },
         {
           code: 16326,
-          name:
-            'MVA 6(2)(b) Licence to Person Under 18 with no Parent or Guard',
+          name: 'MVA 6(2)(b) Licence to Person Under 18 with no Parent or Guard',
         },
         { code: 16327, name: 'MVA 9(3) Special licence for tractors, etc.' },
         {
@@ -3195,8 +2963,7 @@ export class MockConfig {
         },
         {
           code: 16333,
-          name:
-            'MVA 6(2)(a) Licence to Person Under 18 with no Parent or Guard',
+          name: 'MVA 6(2)(a) Licence to Person Under 18 with no Parent or Guard',
         },
         { code: 16334, name: 'MVA 9 Special licence for tractors, etc.' },
         { code: 16335, name: 'MVA 8 Unlicenced industrial vehicle' },
@@ -3269,8 +3036,7 @@ export class MockConfig {
         { code: 16501, name: 'MVA 21 Reciprocal arrangements' },
         {
           code: 16502,
-          name:
-            'MVA 19(5)(a) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 19(5)(a) Notice of removal or destruction of motor vehicle',
         },
         { code: 16503, name: 'MVA 21(2) Reciprocal arrangements' },
         { code: 16504, name: 'MVA 14(1)(c) Fail to notify vehicle change' },
@@ -3285,18 +3051,15 @@ export class MockConfig {
         { code: 16513, name: 'MVA 21(1)(a)(i) No vehicle licence' },
         {
           code: 16514,
-          name:
-            'MVA 20(1)(c) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(1)(c) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 16515,
-          name:
-            'MVA 20(1)(b) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(1)(b) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 16516,
-          name:
-            'MVA 20(1)(a) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(1)(a) Registration of Foreign Motor Vehicles and Trailer',
         },
         { code: 16194, name: 'MVA 90(3) Prohibition against driving by court' },
         {
@@ -3410,8 +3173,7 @@ export class MockConfig {
         },
         {
           code: 16750,
-          name:
-            'MVA 157(1)(b)(i) Fail to keep right of double broken solid line',
+          name: 'MVA 157(1)(b)(i) Fail to keep right of double broken solid line',
         },
         {
           code: 16751,
@@ -3528,8 +3290,7 @@ export class MockConfig {
         },
         {
           code: 16611,
-          name:
-            'MVA 137(3) Disobey do not walk sign or walk against wait light',
+          name: 'MVA 137(3) Disobey do not walk sign or walk against wait light',
         },
         {
           code: 16612,
@@ -3640,8 +3401,7 @@ export class MockConfig {
         { code: 15977, name: 'MVA 45.3(3)(a) Role of the superintendent' },
         {
           code: 15653,
-          name:
-            'MVA 174(1)(c) No proper signalling equipment for right hand driv',
+          name: 'MVA 174(1)(c) No proper signalling equipment for right hand driv',
         },
         {
           code: 15654,
@@ -3805,8 +3565,7 @@ export class MockConfig {
         { code: 16351, name: 'MVA 27(4) Failure to Change Address or Name' },
         {
           code: 16352,
-          name:
-            'MVA 30(2)(b) Production of Licence and Liability Card, Duplicat',
+          name: 'MVA 30(2)(b) Production of Licence and Liability Card, Duplicat',
         },
         {
           code: 16353,
@@ -3930,8 +3689,7 @@ export class MockConfig {
         { code: 16130, name: 'MVA 56(2) Fees' },
         {
           code: 16517,
-          name:
-            'MVA 20(2)(b) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(2)(b) Registration of Foreign Motor Vehicles and Trailer',
         },
         { code: 16518, name: 'MVA 21(1)(a)(ii) No vehicle licence' },
         { code: 16519, name: 'MVA 22(1) Classes of drivers licences' },
@@ -3943,8 +3701,7 @@ export class MockConfig {
         },
         {
           code: 16523,
-          name:
-            'MVA 20(2)(a) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(2)(a) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 15767,
@@ -4037,13 +3794,11 @@ export class MockConfig {
         { code: 16359, name: 'MVA 25 Examination of licensees' },
         {
           code: 16360,
-          name:
-            'MVA 24.2(b) Inspection of vehicles and refusal to issue licenc',
+          name: 'MVA 24.2(b) Inspection of vehicles and refusal to issue licenc',
         },
         {
           code: 16361,
-          name:
-            'MVA 24.2(a) Inspection of vehicles and refusal to issue licenc',
+          name: 'MVA 24.2(a) Inspection of vehicles and refusal to issue licenc',
         },
         {
           code: 16362,
@@ -4062,8 +3817,7 @@ export class MockConfig {
         { code: 16367, name: 'MVA 31.1(3)(b) Exemption-non resident driver' },
         {
           code: 16368,
-          name:
-            'MVA 30(2)(a) Production of Licence and Liability Card, Duplicat',
+          name: 'MVA 30(2)(a) Production of Licence and Liability Card, Duplicat',
         },
         {
           code: 16370,
@@ -4079,8 +3833,7 @@ export class MockConfig {
         { code: 16763, name: 'MVA 157(2) Highway Lines' },
         {
           code: 16764,
-          name:
-            'MVA 157(1)(c) Fail to Keep Right of Single Broken or Solid Line',
+          name: 'MVA 157(1)(c) Fail to Keep Right of Single Broken or Solid Line',
         },
         { code: 16765, name: 'MVA 157(1)(b)(ii) Cross solid broken line' },
         { code: 16766, name: 'MVA 196(1) Drive while control obstructed' },
@@ -4091,8 +3844,7 @@ export class MockConfig {
         { code: 16403, name: 'MVA 12(2) Licence Plate Offences' },
         {
           code: 16404,
-          name:
-            'MVA 12(1)(c) Displaying Number Plate other than that Issued for',
+          name: 'MVA 12(1)(c) Displaying Number Plate other than that Issued for',
         },
         {
           code: 16405,
@@ -4152,8 +3904,7 @@ export class MockConfig {
         { code: 16525, name: 'MVA 20(1)(e) Fail to register motor vehicle' },
         {
           code: 16526,
-          name:
-            'MVA 20(1)(d) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(1)(d) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 16527,
@@ -4165,8 +3916,7 @@ export class MockConfig {
         },
         {
           code: 16529,
-          name:
-            'MVA 20(2.1) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 20(2.1) Registration of Foreign Motor Vehicles and Trailer',
         },
         { code: 16531, name: 'MVA 3.1(2)(b) Fail to register vehicle' },
         {
@@ -4181,8 +3931,7 @@ export class MockConfig {
         { code: 16535, name: 'MVA 20(5)(a)(i) Fail to change foreign vehicle' },
         {
           code: 16536,
-          name:
-            'MVA 20(5)(a) Driving Motor Vehicle or Trailer after Permit Expi',
+          name: 'MVA 20(5)(a) Driving Motor Vehicle or Trailer after Permit Expi',
         },
         {
           code: 16537,
@@ -4237,18 +3986,15 @@ export class MockConfig {
         },
         {
           code: 16249,
-          name:
-            'MVA 92(2)(c) Automatic Prohibition Against Driving on Convictio',
+          name: 'MVA 92(2)(c) Automatic Prohibition Against Driving on Convictio',
         },
         {
           code: 16250,
-          name:
-            'MVA 92(2)(b) Automatic Prohibition Against Driving on Convictio',
+          name: 'MVA 92(2)(b) Automatic Prohibition Against Driving on Convictio',
         },
         {
           code: 16251,
-          name:
-            'MVA 92(2)(a) Automatic Prohibition Against Driving on Convictio',
+          name: 'MVA 92(2)(a) Automatic Prohibition Against Driving on Convictio',
         },
         { code: 16252, name: 'MVA 92.1(1)(a)(i) Fail to stop police pursuit' },
         {
@@ -4298,8 +4044,7 @@ export class MockConfig {
         },
         {
           code: 16796,
-          name:
-            'MVA 220.1(2) Driving with more than 80 milligrams of alcohol in',
+          name: 'MVA 220.1(2) Driving with more than 80 milligrams of alcohol in',
         },
         { code: 16797, name: 'MVA 214(8) 24 hr prohibition' },
         { code: 16798, name: 'MVA 220.2(1) Demand for blood sample' },
@@ -4391,8 +4136,7 @@ export class MockConfig {
         { code: 16642, name: 'MVA 135 Disobey green arrow' },
         {
           code: 16643,
-          name:
-            'MVA 149(1)(b) Careless Driving without Reasonable Consideration',
+          name: 'MVA 149(1)(b) Careless Driving without Reasonable Consideration',
         },
         {
           code: 16644,
@@ -4403,8 +4147,7 @@ export class MockConfig {
         { code: 16648, name: 'MVA 150 Slow Driving' },
         {
           code: 16649,
-          name:
-            'MVA 135(2)(a)(i) Fail to stop - yellow arrow - marked crosswalk',
+          name: 'MVA 135(2)(a)(i) Fail to stop - yellow arrow - marked crosswalk',
         },
         { code: 16650, name: 'MVA 151(2) Disregarding Speed Sign' },
         { code: 16651, name: 'MVA 151(1) Speed in outside municipality' },
@@ -4520,13 +4263,11 @@ export class MockConfig {
         { code: 19404, name: 'MVA 194(2) Improperly seated passenger' },
         {
           code: 19268,
-          name:
-            'MVA 172(1)(a) No proper signalling equipment for right hand driv',
+          name: 'MVA 172(1)(a) No proper signalling equipment for right hand driv',
         },
         {
           code: 19269,
-          name:
-            'MVA 172(1)(b) No proper signalling equipment for right hand driv',
+          name: 'MVA 172(1)(b) No proper signalling equipment for right hand driv',
         },
         {
           code: 19335,
@@ -4534,18 +4275,15 @@ export class MockConfig {
         },
         {
           code: 19336,
-          name:
-            'MVA 185(5)(a) Gear of vehicle must not require changing crossing',
+          name: 'MVA 185(5)(a) Gear of vehicle must not require changing crossing',
         },
         {
           code: 19337,
-          name:
-            'MVA 185(5)(b) Not shift gears of vehicle while crossing railroad',
+          name: 'MVA 185(5)(b) Not shift gears of vehicle while crossing railroad',
         },
         {
           code: 19338,
-          name:
-            'MVA 185(5)(c) Not stop with part of vehicle on or over the railr',
+          name: 'MVA 185(5)(c) Not stop with part of vehicle on or over the railr',
         },
         {
           code: 19339,
@@ -4571,8 +4309,7 @@ export class MockConfig {
         { code: 19351, name: 'MVA 188(1)(c) Police may move parked vehicle' },
         {
           code: 19352,
-          name:
-            'MVA 188(1)(d) Parked vehicle interferes with normal flow of traf',
+          name: 'MVA 188(1)(d) Parked vehicle interferes with normal flow of traf',
         },
         { code: 19353, name: 'MVA 188(1)(e) Police may move parked vehicle' },
         { code: 19354, name: 'MVA 188(1)(f) Police may move parked vehicle' },
@@ -4679,8 +4416,7 @@ export class MockConfig {
         },
         {
           code: 19091,
-          name:
-            'MVA 130(2)(a)(i) Fail to stop - yellow arrow - marked crosswalk',
+          name: 'MVA 130(2)(a)(i) Fail to stop - yellow arrow - marked crosswalk',
         },
         {
           code: 19092,
@@ -4779,8 +4515,7 @@ export class MockConfig {
         { code: 19305, name: 'MVA 183(2)(c) Cycle two abreast' },
         {
           code: 19306,
-          name:
-            'MVA 183(2)(d) Cycle without at least one hand on the handlebars',
+          name: 'MVA 183(2)(d) Cycle without at least one hand on the handlebars',
         },
         { code: 19307, name: 'MVA 183(2)(e) Disobey duties of cyclist' },
         { code: 19308, name: 'MVA 183(2)(f) Ride on hwy prohib by sign' },
@@ -4797,8 +4532,7 @@ export class MockConfig {
         { code: 19313, name: 'MVA 183(14)(a) Careless cycling' },
         {
           code: 19314,
-          name:
-            'MVA 183(14)(b) Operating a Cycle With Undue Care and Attention',
+          name: 'MVA 183(14)(b) Operating a Cycle With Undue Care and Attention',
         },
         {
           code: 19315,
@@ -4810,13 +4544,11 @@ export class MockConfig {
         },
         {
           code: 19317,
-          name:
-            'MVA 185(1)(b) Fail to stop or leave safely at railway crossing',
+          name: 'MVA 185(1)(b) Fail to stop or leave safely at railway crossing',
         },
         {
           code: 19318,
-          name:
-            'MVA 185(1)(c) Fail to stop or leave safely at railway crossing',
+          name: 'MVA 185(1)(c) Fail to stop or leave safely at railway crossing',
         },
         {
           code: 19319,
@@ -4874,13 +4606,11 @@ export class MockConfig {
         },
         {
           code: 18921,
-          name:
-            'MVA 223(3)(b) Canada Safety Standards - modification of vehicle',
+          name: 'MVA 223(3)(b) Canada Safety Standards - modification of vehicle',
         },
         {
           code: 18922,
-          name:
-            'MVA 223(3)(a) Canada Safety Standards - install unsafe component',
+          name: 'MVA 223(3)(a) Canada Safety Standards - install unsafe component',
         },
         { code: 18923, name: 'MVA 223(3) Canada Safety Standards - creation' },
         {
@@ -4905,8 +4635,7 @@ export class MockConfig {
         },
         {
           code: 18932,
-          name:
-            'MVA 220(9)(c)(ii) Exemption for class or group of drivers passangers',
+          name: 'MVA 220(9)(c)(ii) Exemption for class or group of drivers passangers',
         },
         {
           code: 18933,
@@ -4914,8 +4643,7 @@ export class MockConfig {
         },
         {
           code: 18934,
-          name:
-            'MVA 220(7)(a)(i) Valid and subsisting certificate by authorized psn',
+          name: 'MVA 220(7)(a)(i) Valid and subsisting certificate by authorized psn',
         },
         {
           code: 18935,
@@ -4927,8 +4655,7 @@ export class MockConfig {
         },
         {
           code: 18937,
-          name:
-            'MVA 220(7)(a)(iv) Unable to wear seatbelt due to size or build',
+          name: 'MVA 220(7)(a)(iv) Unable to wear seatbelt due to size or build',
         },
         {
           code: 18938,
@@ -4944,8 +4671,7 @@ export class MockConfig {
         },
         {
           code: 19001,
-          name:
-            'MVA 212(4)(a) Adopting with or without modification of provision',
+          name: 'MVA 212(4)(a) Adopting with or without modification of provision',
         },
         { code: 19002, name: 'MVA 212(4)(b) Prohibiting unsafe vehicle' },
         { code: 19003, name: 'MVA 212(4)(c) Respecting safety certificates' },
@@ -4965,19 +4691,16 @@ export class MockConfig {
         },
         {
           code: 19009,
-          name:
-            'MVA 212(4)(i) Agreements with outside parties regarding safety',
+          name: 'MVA 212(4)(i) Agreements with outside parties regarding safety',
         },
         { code: 19010, name: 'MVA 212(4)(j)(i) Cancellation of licence.' },
         {
           code: 19011,
-          name:
-            'MVA 212(4)(j)(ii) Restrict or prohibit the use of motor vehicles',
+          name: 'MVA 212(4)(j)(ii) Restrict or prohibit the use of motor vehicles',
         },
         {
           code: 19012,
-          name:
-            'MVA 212(4)(j)(iii) Direct ICBC to cancel any licence or permit',
+          name: 'MVA 212(4)(j)(iii) Direct ICBC to cancel any licence or permit',
         },
         { code: 19408, name: 'MVA 195(1)(a) Drive while control obstructed' },
         { code: 19409, name: 'MVA 195(1)(b) Obstructed View of Driver' },
@@ -5026,8 +4749,7 @@ export class MockConfig {
         },
         {
           code: 19376,
-          name:
-            'MVA 189(1)(j)(iv) Park on hwy to sell flowers,fr uits,veg,seafood,et',
+          name: 'MVA 189(1)(j)(iv) Park on hwy to sell flowers,fr uits,veg,seafood,et',
         },
         {
           code: 19378,
@@ -5087,8 +4809,7 @@ export class MockConfig {
         { code: 19124, name: 'MVA 132(3)(b) Disobey pedestrian controls' },
         {
           code: 19125,
-          name:
-            'MVA 132(3) Disobey do not walk sign or walk against wait light',
+          name: 'MVA 132(3) Disobey do not walk sign or walk against wait light',
         },
         { code: 19126, name: 'MVA 132 Pedestrian controls' },
         {
@@ -5205,8 +4926,7 @@ export class MockConfig {
         { code: 19486, name: 'MVA 122(2)(c) Exemption for emergency vehicles' },
         {
           code: 18941,
-          name:
-            'MVA 220(5)(iv) Unable to wear safety belt due to size or build',
+          name: 'MVA 220(5)(iv) Unable to wear safety belt due to size or build',
         },
         {
           code: 18942,
@@ -5233,13 +4953,11 @@ export class MockConfig {
         },
         {
           code: 18950,
-          name:
-            'MVA 219(2)(a)(ii) Tow a vehicle for inspection by peace officer',
+          name: 'MVA 219(2)(a)(ii) Tow a vehicle for inspection by peace officer',
         },
         {
           code: 18951,
-          name:
-            'MVA 219(2)(b) Removal of inspection certificate for unsafe car',
+          name: 'MVA 219(2)(b) Removal of inspection certificate for unsafe car',
         },
         {
           code: 18952,
@@ -5285,8 +5003,7 @@ export class MockConfig {
         },
         {
           code: 19020,
-          name:
-            'MVA 127(1)(a)(iii) Yield to vehicles in intersection on green light',
+          name: 'MVA 127(1)(a)(iii) Yield to vehicles in intersection on green light',
         },
         {
           code: 19021,
@@ -5294,8 +5011,7 @@ export class MockConfig {
         },
         {
           code: 19022,
-          name:
-            'MVA 1271271271(2222)(bbb)(iiiii) A pedestrian in a crosswalk must proceed quickly',
+          name: 'MVA 1271271271(2222)(bbb)(iiiii) A pedestrian in a crosswalk must proceed quickly',
         },
         {
           code: 19023,
@@ -5303,8 +5019,7 @@ export class MockConfig {
         },
         {
           code: 19024,
-          name:
-            'MVA 127(2)(c)(ii) Pedestrian crosses when instructed to do so.',
+          name: 'MVA 127(2)(c)(ii) Pedestrian crosses when instructed to do so.',
         },
         { code: 19025, name: 'MVA 210(4) Specific powers to make regulations' },
         { code: 19026, name: 'MVA 210(5) Specific powers to make regulations' },
@@ -5362,26 +5077,22 @@ export class MockConfig {
         { code: 16309, name: 'MVA 88(1)(a) Driving while prohibited' },
         {
           code: 16310,
-          name:
-            'MVA 85(a)(i) Prohibition against driving relating to fitness or',
+          name: 'MVA 85(a)(i) Prohibition against driving relating to fitness or',
         },
         {
           code: 16311,
-          name:
-            'MVA 86(1)(a) Prohibition due to Failure to Comply with Act or U',
+          name: 'MVA 86(1)(a) Prohibition due to Failure to Comply with Act or U',
         },
         { code: 16312, name: 'MVA 88(1)(b) Driving while prohib suspended' },
         { code: 16314, name: 'MVA 88(3)(b) Driving while Suspended' },
         { code: 16315, name: 'MVA 88(3)(a) Driving while Suspended' },
         {
           code: 16317,
-          name:
-            'MVA 86(1)(a)(ii) Prohibition due to Failure to Comply with Act or U',
+          name: 'MVA 86(1)(a)(ii) Prohibition due to Failure to Comply with Act or U',
         },
         {
           code: 16318,
-          name:
-            'MVA 86(1)(a)(i) Prohibition due to Failure to Comply with Act or U',
+          name: 'MVA 86(1)(a)(i) Prohibition due to Failure to Comply with Act or U',
         },
         { code: 15876, name: 'MVA 23(6)(b) Offences- Licences and Insurance' },
         {
@@ -5399,8 +5110,7 @@ export class MockConfig {
         { code: 16071, name: 'MVA 72(c) Arrest without warrant' },
         {
           code: 16282,
-          name:
-            'MVA 84(2)(a) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 84(2)(a) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 15783,
@@ -5465,13 +5175,11 @@ export class MockConfig {
         { code: 18967, name: 'MVA 216(1)(c)(i) Duties of inspectors' },
         {
           code: 18968,
-          name:
-            'MVA 216(1)(c)(ii) Cancellation or suspension by the superintendent',
+          name: 'MVA 216(1)(c)(ii) Cancellation or suspension by the superintendent',
         },
         {
           code: 18969,
-          name:
-            'MVA 216(1)(d) Prescribing the form and period of certification',
+          name: 'MVA 216(1)(d) Prescribing the form and period of certification',
         },
         {
           code: 18970,
@@ -5489,8 +5197,7 @@ export class MockConfig {
         },
         {
           code: 18975,
-          name:
-            'MVA 216(1)(g) Maintenance of vehicles with prescribed standards',
+          name: 'MVA 216(1)(g) Maintenance of vehicles with prescribed standards',
         },
         {
           code: 18976,
@@ -5597,8 +5304,7 @@ export class MockConfig {
         { code: 19193, name: 'MVA 155(1)(a) Cross Solid Double Line' },
         {
           code: 19194,
-          name:
-            'MVA 155(1)(b)(i) Fail to keep right of double broken solid line',
+          name: 'MVA 155(1)(b)(i) Fail to keep right of double broken solid line',
         },
         { code: 19195, name: 'MVA 155(1)(b)(ii) Cross solid broken line' },
         {
@@ -5607,8 +5313,7 @@ export class MockConfig {
         },
         {
           code: 19197,
-          name:
-            'MVA 155(1)(c) Fail to Keep Right of Single Broken or Solid Line',
+          name: 'MVA 155(1)(c) Fail to Keep Right of Single Broken or Solid Line',
         },
         { code: 19198, name: 'MVA 155(1) Cross solid double line' },
         { code: 19199, name: 'MVA 155(2) Highway Lines' },
@@ -5826,8 +5531,7 @@ export class MockConfig {
         { code: 19064, name: 'MVA 209 Power to establish forms' },
         {
           code: 19065,
-          name:
-            'MVA 128(1)(a) Yellow Light, intersection-no stop before intersec',
+          name: 'MVA 128(1)(a) Yellow Light, intersection-no stop before intersec',
         },
         { code: 19066, name: 'MVA 128(1)(b) Disobey yellow light' },
         {
@@ -6040,13 +5744,11 @@ export class MockConfig {
         },
         {
           code: 20403,
-          name:
-            'MVA 93.2(1)(b) Notice of appeal of imposition, cancellation, etc',
+          name: 'MVA 93.2(1)(b) Notice of appeal of imposition, cancellation, etc',
         },
         {
           code: 20404,
-          name:
-            'MVA 93.2(2) ICBC must record the imposition, cancellation, etc',
+          name: 'MVA 93.2(2) ICBC must record the imposition, cancellation, etc',
         },
         { code: 20405, name: 'MVA 90(8)(a) Superintendent suspends permit' },
         { code: 20406, name: 'MVA 90(8)(b) Superintendent cancel permit' },
@@ -6088,8 +5790,7 @@ export class MockConfig {
         { code: 20418, name: 'MVA 83.1(10)(b) Location of motor vehicle' },
         {
           code: 20419,
-          name:
-            'MVA 83.1(10)(c) Identity of operator of speed monitoring device',
+          name: 'MVA 83.1(10)(c) Identity of operator of speed monitoring device',
         },
         {
           code: 19514,
@@ -6113,13 +5814,11 @@ export class MockConfig {
         { code: 19521, name: 'MVA 106(1) Proof of financial responsibility' },
         {
           code: 19522,
-          name:
-            'MVA 106(2)(a) Non resident w o proof of financial responsibility',
+          name: 'MVA 106(2)(a) Non resident w o proof of financial responsibility',
         },
         {
           code: 19523,
-          name:
-            'MVA 106(2)(b) Non resident w o proof of financial responsibility',
+          name: 'MVA 106(2)(b) Non resident w o proof of financial responsibility',
         },
         {
           code: 19524,
@@ -6181,18 +5880,15 @@ export class MockConfig {
         { code: 19651, name: 'MVA 94 Appeal of prohibition against driving' },
         {
           code: 19652,
-          name:
-            'MVA 93(1)(a)(i) Prohibition due to Failure to Comply with Act or U',
+          name: 'MVA 93(1)(a)(i) Prohibition due to Failure to Comply with Act or U',
         },
         {
           code: 19653,
-          name:
-            'MVA 93(1)(a)(ii) Prohibition due to Failure to Comply with Act or U',
+          name: 'MVA 93(1)(a)(ii) Prohibition due to Failure to Comply with Act or U',
         },
         {
           code: 19654,
-          name:
-            'MVA 93(1)(a) Prohibition due to Failure to Comply with Act or U',
+          name: 'MVA 93(1)(a) Prohibition due to Failure to Comply with Act or U',
         },
         {
           code: 19655,
@@ -6220,13 +5916,11 @@ export class MockConfig {
         },
         {
           code: 19661,
-          name:
-            'MVA 92(a)(i) Prohibition against driving relating to fitness or',
+          name: 'MVA 92(a)(i) Prohibition against driving relating to fitness or',
         },
         {
           code: 19662,
-          name:
-            'MVA 92(a)(ii) Prohibition against driving relating to fitness or',
+          name: 'MVA 92(a)(ii) Prohibition against driving relating to fitness or',
         },
         {
           code: 19663,
@@ -6243,8 +5937,7 @@ export class MockConfig {
         { code: 20420, name: 'MVA 83.1(10)(d) Speed of motor vehicle' },
         {
           code: 20421,
-          name:
-            'MVA 83.1(10)(e) Direction of vehicle relative to speed monitor',
+          name: 'MVA 83.1(10)(e) Direction of vehicle relative to speed monitor',
         },
         { code: 20422, name: 'MVA 83.1(10)(f) Record other information' },
         { code: 20423, name: 'MVA 83.2(8) Certificate as evidence' },
@@ -6291,13 +5984,11 @@ export class MockConfig {
         },
         {
           code: 19668,
-          name:
-            'MVA 91(1)(a) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 91(1)(a) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 19669,
-          name:
-            'MVA 91(1)(b) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 91(1)(b) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 20030,
@@ -6434,8 +6125,7 @@ export class MockConfig {
         { code: 20284, name: 'MVA 74(1)(a)(ii) Alteration of numbered decal' },
         {
           code: 20285,
-          name:
-            'MVA 74(1)(a)(iii) Alteration of any document issued under this act',
+          name: 'MVA 74(1)(a)(iii) Alteration of any document issued under this act',
         },
         { code: 20546, name: 'MVA 219 Equipment of motor vehicles' },
         { code: 20053, name: 'MVA 25(1) Application for Licence' },
@@ -6507,8 +6197,7 @@ export class MockConfig {
         },
         {
           code: 20140,
-          name:
-            'MVA 13(1)(c) Displaying Number Plate other than that Issued for',
+          name: 'MVA 13(1)(c) Displaying Number Plate other than that Issued for',
         },
         { code: 20141, name: 'MVA 13(1) No vehicle licence' },
         { code: 20142, name: 'MVA 13(2) Licence Plate Offences' },
@@ -6619,8 +6308,7 @@ export class MockConfig {
         },
         {
           code: 20435,
-          name:
-            'MVA 83.1(12)(b)(ii) Reproduction contain a statement of authentication',
+          name: 'MVA 83.1(12)(b)(ii) Reproduction contain a statement of authentication',
         },
         { code: 20436, name: 'MVA 210(3)(a) Power to make regulations' },
         { code: 20437, name: 'MVA 210(3)(b) Power to make regulations' },
@@ -6686,18 +6374,15 @@ export class MockConfig {
         },
         {
           code: 19671,
-          name:
-            'MVA 91(2)(a) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 91(2)(a) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 19672,
-          name:
-            'MVA 91(2)(b) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 91(2)(b) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 19673,
-          name:
-            'MVA 91(2)(c) Prohibition against driving where unsatisfied judg',
+          name: 'MVA 91(2)(c) Prohibition against driving where unsatisfied judg',
         },
         {
           code: 19674,
@@ -6725,13 +6410,11 @@ export class MockConfig {
         },
         {
           code: 19680,
-          name:
-            'MVA 90(6)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(6)(a) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19681,
-          name:
-            'MVA 90(6)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(6)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19682,
@@ -6747,13 +6430,11 @@ export class MockConfig {
         },
         {
           code: 19685,
-          name:
-            'MVA 90(3)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(3)(a) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19686,
-          name:
-            'MVA 90(3)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(3)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19687,
@@ -6761,8 +6442,7 @@ export class MockConfig {
         },
         {
           code: 19688,
-          name:
-            'MVA 90(2)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(2)(a) Suspension and cancellation of vehicle licences et',
         },
         { code: 20441, name: 'MVA 210(3)(f) Power to make regulations' },
         { code: 20442, name: 'MVA 210(3)(g)(i) Power to make regulations' },
@@ -6829,18 +6509,15 @@ export class MockConfig {
         { code: 19963, name: 'MVA 35(4) Exemption-non resident driver' },
         {
           code: 19689,
-          name:
-            'MVA 90(2)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(2)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19690,
-          name:
-            'MVA 90(2)(c) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(2)(c) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19691,
-          name:
-            'MVA 90(2)(d) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(2)(d) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19692,
@@ -6848,8 +6525,7 @@ export class MockConfig {
         },
         {
           code: 19693,
-          name:
-            'MVA 90(1)(a)(i) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(1)(a)(i) Suspension and cancellation of vehicle licences et',
         },
         { code: 20056, name: 'MVA 24(7) Offences- Licences and Insurance' },
         {
@@ -6902,13 +6578,11 @@ export class MockConfig {
         { code: 19799, name: 'MVA 60(1)(c) Term and duration of licences' },
         {
           code: 20161,
-          name:
-            'MVA 7(2)(a) Licence to Person Under 18 with no Parent or Guard',
+          name: 'MVA 7(2)(a) Licence to Person Under 18 with no Parent or Guard',
         },
         {
           code: 20162,
-          name:
-            'MVA 7(2)(b) Licence to Person Under 18 with no Parent or Guard',
+          name: 'MVA 7(2)(b) Licence to Person Under 18 with no Parent or Guard',
         },
         {
           code: 20163,
@@ -6979,8 +6653,7 @@ export class MockConfig {
         },
         {
           code: 20086,
-          name:
-            'MVA 21(7)(a) Driving Motor Vehicle or Trailer after Permit Expi',
+          name: 'MVA 21(7)(a) Driving Motor Vehicle or Trailer after Permit Expi',
         },
         { code: 20087, name: 'MVA 21(7)(b) Fail to register vehicle' },
         { code: 20362, name: 'MVA 102(a) Driving while prohibited' },
@@ -7189,18 +6862,15 @@ export class MockConfig {
         },
         {
           code: 19602,
-          name:
-            'MVA 99(2)(a) Automatic Prohibition Against Driving on Convictio',
+          name: 'MVA 99(2)(a) Automatic Prohibition Against Driving on Convictio',
         },
         {
           code: 19603,
-          name:
-            'MVA 99(2)(b) Automatic Prohibition Against Driving on Convictio',
+          name: 'MVA 99(2)(b) Automatic Prohibition Against Driving on Convictio',
         },
         {
           code: 19604,
-          name:
-            'MVA 99(2)(c) Automatic Prohibition Against Driving on Convictio',
+          name: 'MVA 99(2)(c) Automatic Prohibition Against Driving on Convictio',
         },
         {
           code: 19605,
@@ -7229,23 +6899,19 @@ export class MockConfig {
         },
         {
           code: 19694,
-          name:
-            'MVA 90(1)(a)(ii) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(1)(a)(ii) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19695,
-          name:
-            'MVA 90(1)(a)(iii) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(1)(a)(iii) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19696,
-          name:
-            'MVA 90(1)(a) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(1)(a) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19697,
-          name:
-            'MVA 90(1)(b) Suspension and cancellation of vehicle licences et',
+          name: 'MVA 90(1)(b) Suspension and cancellation of vehicle licences et',
         },
         {
           code: 19698,
@@ -7423,13 +7089,11 @@ export class MockConfig {
         },
         {
           code: 19975,
-          name:
-            'MVA 33(2)(a) Production of Licence and Liability Card, Duplicat',
+          name: 'MVA 33(2)(a) Production of Licence and Liability Card, Duplicat',
         },
         {
           code: 19976,
-          name:
-            'MVA 33(2)(b) Production of Licence and Liability Card, Duplicat',
+          name: 'MVA 33(2)(b) Production of Licence and Liability Card, Duplicat',
         },
         {
           code: 19977,
@@ -7492,13 +7156,11 @@ export class MockConfig {
         },
         {
           code: 20094,
-          name:
-            'MVA 21(2)(a) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 21(2)(a) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 20095,
-          name:
-            'MVA 21(2)(b) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 21(2)(b) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 20096,
@@ -7506,23 +7168,19 @@ export class MockConfig {
         },
         {
           code: 20097,
-          name:
-            'MVA 21(1)(a) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 21(1)(a) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 20098,
-          name:
-            'MVA 21(1)(b) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 21(1)(b) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 20099,
-          name:
-            'MVA 21(1)(c) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 21(1)(c) Registration of Foreign Motor Vehicles and Trailer',
         },
         {
           code: 20100,
-          name:
-            'MVA 21(1)(d) Registration of Foreign Motor Vehicles and Trailer',
+          name: 'MVA 21(1)(d) Registration of Foreign Motor Vehicles and Trailer',
         },
         { code: 20101, name: 'MVA 21(1)(e) Fail to register motor vehicle' },
         {
@@ -7531,18 +7189,15 @@ export class MockConfig {
         },
         {
           code: 20103,
-          name:
-            'MVA 20(1)(a) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 20(1)(a) Notice of removal or destruction of motor vehicle',
         },
         {
           code: 20104,
-          name:
-            'MVA 20(1)(b) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 20(1)(b) Notice of removal or destruction of motor vehicle',
         },
         {
           code: 20105,
-          name:
-            'MVA 20(1)(c) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 20(1)(c) Notice of removal or destruction of motor vehicle',
         },
         {
           code: 20106,
@@ -7625,13 +7280,11 @@ export class MockConfig {
         },
         {
           code: 20110,
-          name:
-            'MVA 20(5)(a) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 20(5)(a) Notice of removal or destruction of motor vehicle',
         },
         {
           code: 20111,
-          name:
-            'MVA 20(5)(b) Notice of removal or destruction of motor vehicle',
+          name: 'MVA 20(5)(b) Notice of removal or destruction of motor vehicle',
         },
         {
           code: 20112,
@@ -7763,8 +7416,7 @@ export class MockConfig {
         { code: 19259, name: 'MVA 170(2) Inadequate Signal on Turn' },
         {
           code: 19270,
-          name:
-            'MVA 172(1)(c) No proper signalling equipment for right hand driv',
+          name: 'MVA 172(1)(c) No proper signalling equipment for right hand driv',
         },
         { code: 19362, name: 'MVA 188(3)(b) Police may move parked vehicle' },
         { code: 19377, name: 'MVA 189(1)(j) Unlaw. stop park to advertise' },
@@ -7798,13 +7450,11 @@ export class MockConfig {
         },
         {
           code: 19748,
-          name:
-            'MVA 70(1)(a) Illegal use or no inspection of licence or permit',
+          name: 'MVA 70(1)(a) Illegal use or no inspection of licence or permit',
         },
         {
           code: 19749,
-          name:
-            'MVA 70(1)(b) Illegal use or no inspection of licence or permit',
+          name: 'MVA 70(1)(b) Illegal use or no inspection of licence or permit',
         },
         {
           code: 19750,
@@ -7832,18 +7482,15 @@ export class MockConfig {
         },
         {
           code: 19765,
-          name:
-            'MVA 68(2)(b)(i) Fail to leave info. aft accid. wunattended vhcl.',
+          name: 'MVA 68(2)(b)(i) Fail to leave info. aft accid. wunattended vhcl.',
         },
         {
           code: 19766,
-          name:
-            'MVA 68(2)(b)(ii) Fail to leave info. aft accid. wunattended vhcl.',
+          name: 'MVA 68(2)(b)(ii) Fail to leave info. aft accid. wunattended vhcl.',
         },
         {
           code: 19767,
-          name:
-            'MVA 68(2)(b)(iii) Fail to leave info. aft accid. wunattended vhcl.',
+          name: 'MVA 68(2)(b)(iii) Fail to leave info. aft accid. wunattended vhcl.',
         },
         {
           code: 19768,
@@ -8061,6 +7708,16 @@ export class MockConfig {
         {
           code: 20213,
           name: 'MVA 3(3)(a) Application for registration and licence.',
+        },
+      ],
+      policeLocations: [
+        {
+          code: '19227.0734',
+          name: 'Kelowna RCMP',
+        },
+        {
+          code: '9393.0001',
+          name: 'Delta Police',
         },
       ],
     };

@@ -1,0 +1,391 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>Ticket details</ng-container>
+    <ng-container subHeader>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit et dolore magna
+      aliqua.
+    </ng-container>
+  </app-page-header>
+
+  <form class="mt-4" (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section class="mb-2">
+      <div class="row">
+        <div class="col-md-4 pb-4">
+          <mat-form-field class="w-100 mb-2">
+            <mat-label>Violation ticket number</mat-label>
+            <input
+              formControlName="ticketNumber"
+              matInput
+              type="text"
+              oninput="this.value = this.value.toUpperCase()"
+              mask="SS00000000"
+              autocomplete="off"
+            />
+            <mat-hint>
+              <strong>A ticket number is 2 letters and 8 numbers</strong>
+            </mat-hint>
+            <mat-error *ngIf="ticketNumber.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="ticketNumber.hasError('mask')">
+              This ticket number is not valid. It must be 2 letters and 8
+              numbers.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <mat-label>Violation date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="offenceDate"
+              [max]="todayDate"
+              readonly
+              (click)="picker.open()"
+            />
+            <mat-datepicker-toggle matSuffix [for]="picker">
+            </mat-datepicker-toggle>
+            <mat-datepicker
+              #picker
+              [touchUi]="isMobile"
+              startView="multi-year"
+            ></mat-datepicker>
+            <mat-error *ngIf="offenceDate.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <mat-label>Violation time</mat-label>
+            <input matInput type="time" formControlName="offenceTime" />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field class="w-100">
+            <mat-label>Surname</mat-label>
+            <input matInput formControlName="lastName" />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field class="w-100">
+            <mat-label>Given names</mat-label>
+            <input matInput formControlName="givenNames" />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+          <mat-form-field class="w-100">
+            <mat-label>Driver's license #</mat-label>
+            <input
+              matInput
+              formControlName="driverLicense"
+              mask="0000000"
+              autocomplete="off"
+              [showMaskTyped]="false"
+            />
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+          <mat-form-field class="w-100">
+            <mat-label>Birthdate</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              formControlName="birthdate"
+              [max]="maxDateOfBirth"
+              readonly
+              (click)="picker2.open()"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+
+            <mat-datepicker
+              #picker2
+              [touchUi]="isMobile"
+              startView="multi-year"
+            ></mat-datepicker>
+            <mat-error *ngIf="birthdate.hasError('required')">{{
+              "error.required" | translate
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+          <mat-form-field class="w-100">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option value="F">Female</mat-option>
+              <mat-option value="M">Male</mat-option>
+              <mat-option value="O">Other</mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2 mt-2">
+        <div class="col-md-3">
+          <mat-label class="w-100"><strong>Number of counts</strong></mat-label>
+        </div>
+        <div class="col-md-4">
+          <mat-radio-group
+            aria-labelledby="Number of Counts"
+            formControlName="chargeCount"
+          >
+            <mat-radio-button class="w-33" [value]="1">1</mat-radio-button>
+            <mat-radio-button class="w-33" [value]="2">2</mat-radio-button>
+            <mat-radio-button class="w-33" [value]="3">3</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2" style="text-align: right">
+          <strong>Count 1</strong>
+        </div>
+        <div class="col-md-7">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 1 Act / reg / section</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="count1"
+              [matAutocomplete]="auto1"
+              (click)="$event.target.select()"
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto1="matAutocomplete"
+              [displayWith]="onDisplayWithStatute"
+              (optionSelected)="onStatuteSelected($event)"
+            >
+              <mat-option
+                *ngFor="let option of filteredStatutes1 | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="count1.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count1.hasError('invalidAutocompleteObject')">
+              Statute is not recognized. Select one from the list of options.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 1 fine amount ($)</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="count1FineAmount"
+              style="text-align: right"
+            />
+            <mat-error *ngIf="count1FineAmount.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count1FineAmount.hasError('currency')">
+              This must be numeric
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="chargeCount.value > 1">
+        <div class="col-md-2" style="text-align: right">
+          <strong>Count 2</strong>
+        </div>
+        <div class="col-md-7">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 2 Act / reg / section</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="count2"
+              [matAutocomplete]="auto2"
+              (click)="$event.target.select()"
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto2="matAutocomplete"
+              [displayWith]="onDisplayWithStatute"
+              (optionSelected)="onStatuteSelected($event)"
+            >
+              <mat-option
+                *ngFor="let option of filteredStatutes2 | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="count2.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count2.hasError('invalidAutocompleteObject')">
+              Statute is not recognized. Select one from the list of options.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 2 fine amount ($)</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="count2FineAmount"
+              style="text-align: right"
+            />
+            <mat-error *ngIf="count2FineAmount.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count2FineAmount.hasError('currency')">
+              This must be numeric
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="chargeCount.value > 2">
+        <div class="col-md-2" style="text-align: right">
+          <strong>Count 3</strong>
+        </div>
+        <div class="col-md-7">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 3 Act / reg / section</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="count3"
+              [matAutocomplete]="auto3"
+              (click)="$event.target.select()"
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto3="matAutocomplete"
+              [displayWith]="onDisplayWithStatute"
+              (optionSelected)="onStatuteSelected($event)"
+            >
+              <mat-option
+                *ngFor="let option of filteredStatutes3 | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="count3.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count3.hasError('invalidAutocompleteObject')">
+              Statute is not recognized. Select one from the list of options.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="table-cell w-100">
+            <mat-label>Count 3 fine amount ($)</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="count3FineAmount"
+              style="text-align: right"
+            />
+            <mat-error *ngIf="count3FineAmount.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+            <mat-error *ngIf="count3FineAmount.hasError('currency')">
+              This must be numeric
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2">&nbsp;</div>
+        <div class="col-md-7" style="text-align: right">
+          <strong>Amount owing</strong>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field class="w-100">
+            <input
+              matInput
+              formControlName="amountOwing"
+              style="text-align: right"
+              readonly
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="w-100">
+            <mat-label>Provincial court hearing location</mat-label>
+            <mat-select formControlName="courtHearingLocation">
+              <mat-option
+                *ngFor="let locn of courtLocations"
+                [value]="locn.code"
+              >
+                {{ locn.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field class="w-100">
+            <mat-label>Organization / detachment / location</mat-label>
+            <mat-select formControlName="orgDetachmentLocation">
+              <mat-option
+                *ngFor="let locn of policeLocations"
+                [value]="locn.code"
+              >
+                {{ locn.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-4 mt-4">
+        <div class="col-md-4">
+          <button
+            id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            class="large"
+            routerLink="/ticket/find"
+          >
+            <mat-icon inline="true">close</mat-icon>
+            Cancel
+          </button>
+        </div>
+        <div class="offset-md-4 col-md-4">
+          <button type="submit" mat-flat-button color="primary" class="large">
+            <mat-icon inline="true">save</mat-icon>
+            Save
+          </button>
+        </div>
+      </div>
+    </section>
+  </form>
+</app-page>

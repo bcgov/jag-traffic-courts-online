@@ -1,39 +1,45 @@
-<app-header></app-header>
+<div class="flex-wrapper">
+  <div class="flex-header">
+    <app-header></app-header>
 
-<div class="header-summary">
-  <div class="summary-header mb-4">
+    <div class="header-summary">
+      <div class="summary-header mb-4">
+        <div class="container">
+          <ul class="header-summary-links">
+            <li>
+              <a
+                [routerLink]="['/']"
+                class="primary-navigation understand-your-ticket"
+                rel="noopener"
+              >
+                Home
+              </a>
+            </li>
+            <span class="divider">|</span>
+            <li>
+              <a
+                [routerLink]="['/ticket/find']"
+                class="primary-navigation payment-options"
+                rel="noopener"
+              >
+                Ticket Services
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex-content">
     <div class="container">
-      <ul class="header-summary-links">
-        <li>
-          <a
-            [routerLink]="['/']"
-            class="primary-navigation understand-your-ticket"
-            rel="noopener"
-          >
-            Home
-          </a>
-        </li>
-        <span class="divider">|</span>
-        <li>
-          <a
-            [routerLink]="['/ticket/find']"
-            class="primary-navigation payment-options"
-            rel="noopener"
-          >
-            Ticket Services
-          </a>
-        </li>
-      </ul>
+      <div class="row">
+        <div class="col-lg-12">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <router-outlet></router-outlet>
-    </div>
+  <div class="flex-footer">
+    <app-footer></app-footer>
   </div>
 </div>
-
-<app-footer></app-footer>

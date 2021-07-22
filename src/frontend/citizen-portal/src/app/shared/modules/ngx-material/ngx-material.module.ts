@@ -4,7 +4,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import {
+  MAT_DATE_FORMATS,
+  MatNativeDateModule,
+  MatDateFormats,
+  MAT_DATE_LOCALE,
+  DateAdapter,
+  NativeDateAdapter,
+  NativeDateModule,
+  MAT_NATIVE_DATE_FORMATS,
+} from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MatDialogModule,
@@ -54,6 +63,19 @@ export const APP_DATE_FORMATS = {
 const matFormFieldCustomOptions: MatFormFieldDefaultOptions = {
   hideRequiredMarker: true,
   floatLabel: 'always',
+  appearance: 'fill',
+};
+
+export const GRI_DATE_FORMATS: MatDateFormats = {
+  ...MAT_NATIVE_DATE_FORMATS,
+  display: {
+    ...MAT_NATIVE_DATE_FORMATS.display,
+    dateInput: {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    } as Intl.DateTimeFormatOptions,
+  },
 };
 
 @NgModule({
@@ -89,7 +111,7 @@ const matFormFieldCustomOptions: MatFormFieldDefaultOptions = {
   providers: [
     {
       provide: MAT_DATE_FORMATS,
-      useValue: APP_DATE_FORMATS,
+      useValue: GRI_DATE_FORMATS,
     },
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,

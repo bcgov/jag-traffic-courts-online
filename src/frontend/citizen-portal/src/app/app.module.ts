@@ -23,7 +23,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
@@ -46,6 +46,8 @@ import { KeycloakService } from 'keycloak-angular';
 import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
+import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
+import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -78,6 +80,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PhotoComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
+    ShellTicketComponent,
+    TicketImageComponent,
   ],
   imports: [
     CommonModule,
@@ -102,6 +106,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   exports: [NgBusyModule, NgxMaterialModule, TranslateModule],
   providers: [
+    CurrencyPipe,
     AppConfigService,
     MockDisputeService,
     {
