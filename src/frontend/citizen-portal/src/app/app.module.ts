@@ -23,7 +23,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { StepperComponent } from './components/stepper/stepper.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
@@ -48,6 +48,7 @@ import { TicketPageComponent } from './components/ticket-page/ticket-page.compon
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { CountFormFieldComponent } from './components/shell-ticket/count-form-field/count-form-field.component';
+import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -82,6 +83,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
     CountFormFieldComponent,
+    TicketImageComponent,
   ],
   imports: [
     CommonModule,
@@ -106,6 +108,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   ],
   exports: [NgBusyModule, NgxMaterialModule, TranslateModule],
   providers: [
+    CurrencyPipe,
     AppConfigService,
     MockDisputeService,
     {

@@ -1,0 +1,68 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>Upload Ticket Image</ng-container>
+    <ng-container subHeader>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit et dolore magna
+      aliqua.
+    </ng-container>
+  </app-page-header>
+
+  <app-alert type="info" icon="info">
+    <ng-container #alertContent class="alert-content">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit et dolore magna
+      aliqua.
+    </ng-container>
+  </app-alert>
+
+  <!--
+      <button type="button" class="ml-4 mt-4" mat-button>
+        <mat-icon>photo_camera</mat-icon>
+        Take Photo
+      </button>
+      -->
+
+  <div class="mb-4">
+    <button type="button" mat-button (click)="fileInput.click()">
+      <mat-icon>upload_file</mat-icon>
+      Upload Image
+    </button>
+
+    <input
+      hidden
+      (change)="onFileChange($event)"
+      #fileInput
+      type="file"
+      id="file"
+    />
+
+    <p class="mt-4" *ngIf="fileName">Filename: {{ fileName }}</p>
+  </div>
+
+  <img [src]="imageSrc" *ngIf="imageSrc" style="max-width: 600px" />
+
+  <div class="row mt-4 mb-4">
+    <div class="col-md-6">
+      <button
+        id="secondaryButton"
+        mat-stroked-button
+        type="button"
+        color="primary"
+        routerLink="/ticket/find"
+      >
+        <mat-icon inline="true">close</mat-icon>
+        Cancel
+      </button>
+    </div>
+    <div class="col-md-6 text-right">
+      <button
+        type="button"
+        mat-flat-button
+        color="primary"
+        class="large"
+        routerLink="/ticket/shell"
+      >
+        Continue to ticket details
+      </button>
+    </div>
+  </div>
+</app-page>

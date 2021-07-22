@@ -98,4 +98,8 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
+  public get ticketNumber(): FormControl {
+    return this.form.get('ticketNumber') as FormControl;
+  }
 }
