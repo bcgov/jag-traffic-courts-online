@@ -91,13 +91,14 @@
               matInput
               formControlName="driverLicense"
               mask="0000000"
+              autocomplete="off"
               [showMaskTyped]="false"
             />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-3">
           <mat-form-field class="w-100">
             <mat-label>Birthdate</mat-label>
             <input
@@ -190,7 +191,7 @@
         </div>
         <div class="col-md-3">
           <mat-form-field class="table-cell w-100">
-            <mat-label>Count 1 Fine Amount ($)</mat-label>
+            <mat-label>Count 1 fine amount ($)</mat-label>
             <input
               matInput
               type="number"
@@ -244,7 +245,7 @@
         </div>
         <div class="col-md-3">
           <mat-form-field class="table-cell w-100">
-            <mat-label>Count 2 Fine Amount ($)</mat-label>
+            <mat-label>Count 2 fine amount ($)</mat-label>
             <input
               matInput
               type="number"
@@ -298,7 +299,7 @@
         </div>
         <div class="col-md-3">
           <mat-form-field class="table-cell w-100">
-            <mat-label>Count 3 Fine Amount ($)</mat-label>
+            <mat-label>Count 3 fine amount ($)</mat-label>
             <input
               matInput
               type="number"
