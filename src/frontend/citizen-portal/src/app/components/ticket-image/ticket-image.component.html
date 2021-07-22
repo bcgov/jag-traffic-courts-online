@@ -41,19 +41,20 @@
   <img [src]="imageSrc" *ngIf="imageSrc" style="max-width: 600px" />
 
   <div class="row mt-4 mb-4">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <button
         id="secondaryButton"
         mat-stroked-button
         type="button"
         color="primary"
+        class="large"
         routerLink="/ticket/find"
       >
         <mat-icon inline="true">close</mat-icon>
         Cancel
       </button>
     </div>
-    <div class="col-md-6 text-right">
+    <div class="offset-md-4 col-md-4">
       <button
         type="button"
         mat-flat-button

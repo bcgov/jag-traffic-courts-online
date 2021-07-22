@@ -44,15 +44,26 @@
         </mat-form-field>
       </div>
     </div>
+
     <div class="row">
-      <div class="col-md-6">
-        <button type="button" mat-button (click)="onViewTicketExample()">
+      <div class="col-md-4">
+        <button
+          type="button"
+          mat-stroked-button
+          class="find-large"
+          (click)="onViewTicketExample()"
+        >
           <mat-icon>article</mat-icon>
           View example
         </button>
       </div>
-      <div class="col-md-6 text-right">
-        <button mat-flat-button color="primary" class="large">
+      <div class="offset-md-4 col-md-4">
+        <button
+          type="submit"
+          mat-flat-button
+          color="primary"
+          class="find-large"
+        >
           <mat-icon inline="true">search</mat-icon>
           Find ticket
         </button>
@@ -73,16 +84,20 @@
       </ng-container>
     </app-alert>
 
-    <button
-      type="button"
-      mat-flat-button
-      color="primary"
-      class="large"
-      routerLink="/ticket/image"
-    >
-      <mat-icon inline="true">file_upload</mat-icon>
-      Upload ticket image
-    </button>
+    <div class="row">
+      <div class="col-md-4">
+        <button
+          type="button"
+          mat-flat-button
+          color="primary"
+          class="find-large"
+          routerLink="/ticket/image"
+        >
+          <mat-icon inline="true">file_upload</mat-icon>
+          Upload ticket image
+        </button>
+      </div>
+    </div>
   </section>
 
   <section class="mb-4 mt-4">

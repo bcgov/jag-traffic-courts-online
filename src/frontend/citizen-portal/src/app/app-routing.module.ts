@@ -21,10 +21,6 @@ const routes: Routes = [
     canActivate: [FeatureFlagGuard],
     data: { featureFlag: 'dispute' },
     children: [
-      // {
-      //   path: AppRoutes.FIND,
-      //   component: FindTicketComponent,
-      // },
       {
         path: AppRoutes.SHELL,
         component: ShellTicketComponent,

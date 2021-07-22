@@ -1,8 +1,7 @@
-.mat-option.mat-active {
-  background: rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.87);
-}
-.mat-option:hover:not(.mat-option-disabled),
-.mat-option:focus:not(.mat-option-disabled) {
-  background: rgba(0, 0, 0, 0.14);
+.find-large {
+  width: 100%;
+  margin-bottom: 1em !important;
+
+  height: 46px;
+  font-size: 1rem;
 }
