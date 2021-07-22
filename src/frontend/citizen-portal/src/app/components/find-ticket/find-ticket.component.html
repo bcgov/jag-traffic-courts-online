@@ -46,22 +46,7 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        <button
-          id="secondaryButton"
-          mat-stroked-button
-          type="button"
-          color="primary"
-          routerLink="/"
-        >
-          <mat-icon inline="true">keyboard_arrow_left</mat-icon>
-          {{ "label.back" | translate }}
-        </button>
-        <button
-          type="button"
-          class="ml-4"
-          mat-button
-          (click)="onViewTicketExample()"
-        >
+        <button type="button" mat-button (click)="onViewTicketExample()">
           <mat-icon>article</mat-icon>
           View example
         </button>
@@ -75,29 +60,7 @@
     </div>
   </form>
 
-  <section class="mb-4 mt-4">
-    <div class="row">
-      <div class="col-lg-12">
-        <app-alert type="info" icon="info">
-          <ng-container #alertContent class="alert-content">
-            <strong>Violation ticket centre contact information</strong><br />
-            {{ "find.note_phone" | translate }}:
-            <a href="tel:+18776618026">1-877-661-8026</a><br />
-            {{ "find.note_forms" | translate }}:
-            <a
-              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
-              target="_blank"
-              rel="noopener"
-              >{{ "find.note_form_name" | translate }}</a
-            >
-          </ng-container>
-        </app-alert>
-      </div>
-    </div>
-  </section>
-  <br /><br />
-
-  <section class="mb-4">
+  <section class="mb-4" *ngIf="notFound">
     <app-alert type="danger" icon="error">
       <ng-container #alertContent class="alert-content">
         <strong>No result found</strong>
@@ -117,7 +80,29 @@
       class="large"
       routerLink="/ticket/image"
     >
+      <mat-icon inline="true">file_upload</mat-icon>
       Upload ticket image
     </button>
+  </section>
+
+  <section class="mb-4 mt-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="info" icon="info" (click)="this.notFound = true">
+          <ng-container #alertContent class="alert-content">
+            <strong>Violation ticket centre contact information</strong><br />
+            {{ "find.note_phone" | translate }}:
+            <a href="tel:+18776618026">1-877-661-8026</a><br />
+            {{ "find.note_forms" | translate }}:
+            <a
+              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
+              target="_blank"
+              rel="noopener"
+              >{{ "find.note_form_name" | translate }}</a
+            >
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
   </section>
 </app-page>

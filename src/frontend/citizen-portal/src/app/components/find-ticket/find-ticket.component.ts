@@ -5,27 +5,21 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Config } from '@config/config.model';
+import { FormUtilsService } from '@core/services/form-utils.service';
+import { LoggerService } from '@core/services/logger.service';
+import { UtilsService } from '@core/services/utils.service';
+import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormUtilsService } from '@core/services/form-utils.service';
-
-import { UtilsService } from '@core/services/utils.service';
-import { MatDialog } from '@angular/material/dialog';
-import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
-import { LoggerService } from '@core/services/logger.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-find-ticket',
