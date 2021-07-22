@@ -47,7 +47,6 @@ import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
-import { CountFormFieldComponent } from './components/shell-ticket/count-form-field/count-form-field.component';
 import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 
 registerLocaleData(localeEn, 'en');
@@ -82,7 +81,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
-    CountFormFieldComponent,
     TicketImageComponent,
   ],
   imports: [
