@@ -25,16 +25,43 @@ jobs:
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/backend/TrafficCourtsApi
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:${{secrets.OC_APP}}
-        run: |  
+        run: |
           docker build \
             --build-arg ASPNETCORE_ENVIRONMENT=Development \
-            --build-arg SPLUNK_COLLECTOR_URL=${{secrets.SPLUNK_COLLECTOR_URL}} \
-            --build-arg SPLUNK_TOKEN=${{secrets.SPLUNK_HEC_TOKEN}} \
-            --build-arg OAUTH__OAUTHURL=${{secrets.OAUTH__OAUTHURL}} \
-            --build-arg OAUTH__RESOURCEURL=${{secrets.OAUTH__RESOURCEURL}} \
-            --build-arg OAUTH__CLIENTID=${{secrets.OAUTH__CLIENTID}} \
-            --build-arg OAUTH__SECRET=${{secrets.OAUTH__SECRET}} \
-            --build-arg RSI__BASEADDRESS=${{secrets.RSI__BASEADDRESS}} \
+            --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
+
+  build-ticket-search:
+    runs-on: ubuntu-20.04
+    environment: Development
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Set git short sha
+        id: sha
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Display short sha
+        run: echo ${{ steps.sha.outputs.sha_short }}
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/ticket-search
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-search:${{steps.sha.outputs.sha_short}}
+        run: |
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=Development \
             --tag ${IMAGE} \
             ${CONTEXT}
             docker push ${IMAGE}
@@ -59,7 +86,7 @@ jobs:
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/frontend/citizen-portal
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-web:${{secrets.OC_APP}}
-        run: |  
+        run: |
           docker build \
             --tag ${IMAGE} \
             ${CONTEXT}
