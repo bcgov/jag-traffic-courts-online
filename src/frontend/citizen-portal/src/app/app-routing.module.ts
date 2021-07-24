@@ -53,7 +53,7 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.TICKET,
-    component: DisputePageComponent,
+    component: TicketPageComponent,
     canActivate: [FeatureFlagGuard],
     data: { featureFlag: 'dispute' },
     children: [
