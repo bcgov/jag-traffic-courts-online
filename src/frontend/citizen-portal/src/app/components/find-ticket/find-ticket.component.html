@@ -2,16 +2,15 @@
   <app-tco-page-header>
     <ng-container header>Find your BC traffic ticket</ng-container>
     <ng-container subHeader>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit et dolore magna
-      aliqua.
+      Enter your ticket number and your ticket time to find your ticket.
     </ng-container>
   </app-tco-page-header>
 
   <form class="mb-4" [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
     <div class="row mb-4">
       <div class="col-md-6">
-        <mat-label><strong>Enter ticket number</strong></mat-label>
         <mat-form-field class="w-100">
+          <mat-label>Ticket number</mat-label>
           <input
             formControlName="ticketNumber"
             matInput
@@ -37,8 +36,8 @@
         </mat-form-field>
       </div>
       <div class="col-md-6">
-        <mat-label><strong>Enter ticket time</strong></mat-label>
         <mat-form-field class="w-100">
+          <mat-label>Ticket time</mat-label>
           <input matInput type="time" formControlName="time" />
           <mat-error>{{ "error.required" | translate }}</mat-error>
         </mat-form-field>
@@ -54,7 +53,7 @@
           (click)="onViewTicketExample()"
         >
           <mat-icon>article</mat-icon>
-          View example
+          View ticket example
         </button>
       </div>
       <div class="offset-md-4 col-md-4">
