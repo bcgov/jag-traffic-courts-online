@@ -1,8 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { ConfigService } from '@config/config.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
@@ -17,10 +19,11 @@ describe('ShellTicketComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         HttpClientTestingModule,
-        FormsModule,
         ReactiveFormsModule,
+        RouterModule.forRoot([]),
+        RouterTestingModule,
+        BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
