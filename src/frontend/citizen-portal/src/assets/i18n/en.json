@@ -172,5 +172,11 @@
   "error": {
     "required": "Required",
     "email_address": "Must be a valid email address"
+  },
+  "shell_ticket_confirmation": {
+    "heading": "Create your traffic ticket",
+    "message": "Are you sure the information is correct and you want to create this ticket?",
+    "confirm": "Yes, create ticket",
+    "cancel": "No, do not create ticket"
   }
 }

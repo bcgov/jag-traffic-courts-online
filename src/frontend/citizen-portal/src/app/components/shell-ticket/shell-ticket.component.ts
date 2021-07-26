@@ -9,12 +9,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { AppRoutes } from 'app/app.routes';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -52,6 +58,9 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     private configService: ConfigService,
     private utilsService: UtilsService,
     private currencyPipe: CurrencyPipe,
+    private dialog: MatDialog,
+    private router: Router,
+    private toastService: ToastService,
     private logger: LoggerService
   ) {
     this.form = this.formBuilder.group({
@@ -173,6 +182,26 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     if (!validity) {
       return;
     }
+
+    const data: DialogOptions = {
+      titleKey: 'shell_ticket_confirmation.heading',
+      messageKey: 'shell_ticket_confirmation.message',
+      actionTextKey: 'shell_ticket_confirmation.confirm',
+      cancelTextKey: 'shell_ticket_confirmation.cancel',
+    };
+    this.dialog
+      .open(ConfirmDialogComponent, { data })
+      .afterClosed()
+      .subscribe((response: boolean) => {
+        if (response) {
+          this.toastService.openSuccessToast(
+            'The ticket has successfully been created'
+          );
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+            queryParams: { ticketNumber: 'EZ02000460', time: '09:54' },
+          });
+        }
+      });
   }
 
   private filterStatutes(value: string): Config<number>[] {
