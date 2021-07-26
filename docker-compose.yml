@@ -15,15 +15,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
       SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
-      OAUTH__OAUTHURL: ${OAUTH__OAUTHURL}
-      OAUTH__RESOURCEURL: ${OAUTH__RESOURCEURL}
-      OAUTH__CLIENTID: ${OAUTH__CLIENTID}
-      OAUTH__SECRET: ${OAUTH__SECRET}
-      RSI__BASEADDRESS: ${RSI__BASEADDRESS}
+      TICKETSEARCHAPI__BASEURL: http://ticket-search:8080/
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [splunk, postgres, rabbitmq, redis]
+    depends_on: [splunk, rabbitmq]
 
   ticket-search:
     container_name: ticket-search
