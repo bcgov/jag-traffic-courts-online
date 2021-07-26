@@ -106,18 +106,26 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     // Listen for typeahead changes in the statute fields
     this.filteredStatutes1 = this.count1.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
+      map((name) => (name ? this.filterStatutes(name) : []))
     );
+
     this.filteredStatutes2 = this.count2.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
+      map((name) => (name ? this.filterStatutes(name) : []))
     );
+
     this.filteredStatutes3 = this.count3.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
+      map((name) => (name ? this.filterStatutes(name) : []))
     );
 
     // Calculate the amount owing
