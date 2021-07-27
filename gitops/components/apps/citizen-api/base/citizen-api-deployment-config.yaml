@@ -2,12 +2,15 @@ apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   name: citizen-api
+  annotations:
+    app.openshift.io/connects-to: ticket-search
   labels:
     app: citizen-api
     app.kubernetes.io/name: citizen-api
     app.kubernetes.io/component: backend
     app.kubernetes.io/instance: citizen-api
     app.kubernetes.io/part-of: traffic-court
+    app.openshift.io/runtime: dotnet
 spec:
   completionDeadlineSeconds: 1200
   replicas: 1
