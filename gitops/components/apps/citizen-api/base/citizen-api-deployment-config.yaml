@@ -32,7 +32,7 @@ spec:
             - containerPort: 8080
           env:
             - name: TicketSearchApi__BaseUrl
-              value: "http://ticket-search/"
+              value: "http://ticket-search"
             - name: Serilog__MinimumLevel
               value: Debug
           resources:
