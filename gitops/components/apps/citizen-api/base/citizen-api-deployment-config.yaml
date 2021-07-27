@@ -80,5 +80,5 @@ spec:
         from:
           kind: ImageStreamTag
           namespace: "0198bb-tools"
-          name: "dispute-api:dev"
+          name: "citizen-api:dev"
 status: {}
