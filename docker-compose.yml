@@ -4,17 +4,15 @@ services:
   # #############################################################################################
   # ###                                 TrafficCourt BACKEND                                  ###
   # #############################################################################################
-  dispute-api:
-    container_name: dispute-api
+  citizen-api:
+    container_name: citizen-api
     build:
       context: ./src/backend/TrafficCourtsApi
-      # args:
-      #   PROJECT_NAME: DisputeApi.Web
     environment:
       DB_CONNECTION_STRING: "host=postgres;port=5432;database=postgres;username=postgres;password=postgres"
       ASPNETCORE_ENVIRONMENT: Development
-      SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
-      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
+      SPLUNK__URL: ${SPLUNK_COLLECTOR_URL}
+      SPLUNK__TOKEN: ${SPLUNK_HEC_TOKEN}
       TICKETSEARCHAPI__BASEURL: http://ticket-search:8080/
     ports:
       - "5000:8080"
@@ -60,7 +58,7 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    depends_on: [dispute-api,keycloak]
+    depends_on: [citizen-api, keycloak]
 
   #############################################################################################
   ###                                  KEYCLOAK                                             ###

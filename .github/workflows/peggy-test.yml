@@ -1,102 +1,102 @@
-# name: Peggy test
-# on:
-#   push:
-#     branches: [devops/ticketSearch/dc]
-# jobs:
-#   build-citizen-api:
-#     runs-on: ubuntu-20.04
-#     environment: Development
-#     steps:
-#       - name: Git Checkout
-#         uses: actions/checkout@v2
+name: Peggy test
+on:
+  push:
+    branches: [feature/citizenapi/docker]
+jobs:
+  build-citizen-api:
+    runs-on: ubuntu-20.04
+    environment: Development
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
 
-#       - name: Get git commit short sha
-#         id: sha
-#         run: |
-#           shortSha=$(echo $(git rev-parse --short HEAD) | cut -c1-6)
-#           echo "::set-output name=sha_short::$shortSha"
+      - name: Get git commit short sha
+        id: sha
+        run: |
+          shortSha=$(echo $(git rev-parse --short HEAD) | cut -c1-6)
+          echo "::set-output name=sha_short::$shortSha"
 
-#       - name: Display short sha
-#         run: echo ${{ steps.sha.outputs.sha_short }}
+      - name: Display short sha
+        run: echo ${{ steps.sha.outputs.sha_short }}
 
-#       - name: Login to OpenShift
-#         uses: docker/login-action@v1
-#         with:
-#           registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
-#           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
-#           password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
 
-#       - name: Build and push
-#         env:
-#           COMPOSE_DOCKER_CLI_BUILD: 1
-#           DOCKER_BUILDKIT: 1
-#           CONTEXT: ./src/backend/TrafficCourtsApi
-#           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:${{secrets.OC_APP}}
-#         run: |
-#           docker build \
-#             --build-arg ASPNETCORE_ENVIRONMENT=Development \
-#             --tag ${IMAGE} \
-#             ${CONTEXT}
-#             docker push ${IMAGE}
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/backend/TrafficCourtsApi
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-api:${{secrets.OC_APP}}
+        run: |
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=Development \
+            --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
 
-#   build-ticket-search:
-#     runs-on: ubuntu-20.04
-#     environment: Development
-#     steps:
-#       - name: Git Checkout
-#         uses: actions/checkout@v2
+  build-ticket-search:
+    runs-on: ubuntu-20.04
+    environment: Development
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
 
-#       - name: Get git commit short sha
-#         id: sha
-#         run: |
-#           shortSha=$(echo $(git rev-parse --short HEAD) | cut -c1-6)
-#           echo "::set-output name=sha_short::$shortSha"
+      - name: Get git commit short sha
+        id: sha
+        run: |
+          shortSha=$(echo $(git rev-parse --short HEAD) | cut -c1-6)
+          echo "::set-output name=sha_short::$shortSha"
 
-#       - name: Display short sha
-#         run: echo ${{ steps.sha.outputs.sha_short }}
+      - name: Display short sha
+        run: echo ${{ steps.sha.outputs.sha_short }}
 
-#       - name: Login to OpenShift
-#         uses: docker/login-action@v1
-#         with:
-#           registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
-#           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
-#           password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
 
-#       - name: Build and push
-#         env:
-#           COMPOSE_DOCKER_CLI_BUILD: 1
-#           DOCKER_BUILDKIT: 1
-#           CONTEXT: ./src/ticket-search
-#           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-search:${{secrets.OC_APP}}
-#         run: |
-#           docker build \
-#             --build-arg ASPNETCORE_ENVIRONMENT=Development \
-#             --tag ${IMAGE} \
-#             ${CONTEXT}
-#             docker push ${IMAGE}
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/ticket-search
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-search:${{secrets.OC_APP}}
+        run: |
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=Development \
+            --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
 
-#   build-frontend:
-#     runs-on: ubuntu-20.04
-#     environment: Development
-#     steps:
-#       - name: Git Checkout
-#         uses: actions/checkout@v2
+  build-frontend:
+    runs-on: ubuntu-20.04
+    environment: Development
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
 
-#       - name: Login to OpenShift
-#         uses: docker/login-action@v1
-#         with:
-#           registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
-#           username: ${{secrets.OPENSHIFT_SA_USERNAME}}
-#           password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
 
-#       - name: Build and push
-#         env:
-#           COMPOSE_DOCKER_CLI_BUILD: 1
-#           DOCKER_BUILDKIT: 1
-#           CONTEXT: ./src/frontend/citizen-portal
-#           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-web:${{secrets.OC_APP}}
-#         run: |
-#           docker build \
-#             --tag ${IMAGE} \
-#             ${CONTEXT}
-#             docker push ${IMAGE}
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/frontend/citizen-portal
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-web:${{secrets.OC_APP}}
+        run: |
+          docker build \
+            --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
