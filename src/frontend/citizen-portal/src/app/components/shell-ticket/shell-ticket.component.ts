@@ -109,7 +109,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       map((value) =>
         value ? (typeof value === 'string' ? value : value.name) : null
       ),
-      map((name) => (name ? this.filterStatutes(name) : []))
+      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
     this.filteredStatutes2 = this.count2.valueChanges.pipe(
@@ -117,7 +117,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       map((value) =>
         value ? (typeof value === 'string' ? value : value.name) : null
       ),
-      map((name) => (name ? this.filterStatutes(name) : []))
+      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
     this.filteredStatutes3 = this.count3.valueChanges.pipe(
@@ -125,7 +125,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       map((value) =>
         value ? (typeof value === 'string' ? value : value.name) : null
       ),
-      map((name) => (name ? this.filterStatutes(name) : []))
+      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
     // Calculate the amount owing
