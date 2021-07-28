@@ -14,7 +14,7 @@
           <mat-form-field class="w-100 mb-2">
             <mat-label>Violation ticket number</mat-label>
             <input
-              formControlName="ticketNumber"
+              formControlName="violationTicketNumber"
               matInput
               type="text"
               oninput="this.value = this.value.toUpperCase()"
@@ -24,10 +24,10 @@
             <mat-hint>
               <strong>A ticket number is 2 letters and 8 numbers</strong>
             </mat-hint>
-            <mat-error *ngIf="ticketNumber.hasError('required')">
+            <mat-error *ngIf="violationTicketNumber.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="ticketNumber.hasError('mask')">
+            <mat-error *ngIf="violationTicketNumber.hasError('mask')">
               This ticket number is not valid. It must be 2 letters and 8
               numbers.
             </mat-error>
@@ -40,7 +40,7 @@
             <input
               matInput
               [matDatepicker]="picker"
-              formControlName="offenceDate"
+              formControlName="violationDate"
               [max]="todayDate"
               readonly
               (click)="picker.open()"
@@ -52,7 +52,7 @@
               [touchUi]="isMobile"
               startView="multi-year"
             ></mat-datepicker>
-            <mat-error *ngIf="offenceDate.hasError('required')">
+            <mat-error *ngIf="violationDate.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
           </mat-form-field>
@@ -61,7 +61,7 @@
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Violation time</mat-label>
-            <input matInput type="time" formControlName="offenceTime" />
+            <input matInput type="time" formControlName="violationTime" />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
