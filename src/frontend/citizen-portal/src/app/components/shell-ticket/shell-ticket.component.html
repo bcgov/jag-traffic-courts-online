@@ -184,7 +184,12 @@
             <mat-error *ngIf="count1.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="count1.hasError('invalidAutocompleteObject')">
+            <mat-error
+              *ngIf="
+                count1.hasError('invalidAutocompleteObject') &&
+                !count1.hasError('required')
+              "
+            >
               Statute is not recognized. Select one from the list of options.
             </mat-error>
           </mat-form-field>
@@ -238,7 +243,12 @@
             <mat-error *ngIf="count2.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="count2.hasError('invalidAutocompleteObject')">
+            <mat-error
+              *ngIf="
+                count2.hasError('invalidAutocompleteObject') &&
+                !count2.hasError('required')
+              "
+            >
               Statute is not recognized. Select one from the list of options.
             </mat-error>
           </mat-form-field>
@@ -292,7 +302,12 @@
             <mat-error *ngIf="count3.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="count3.hasError('invalidAutocompleteObject')">
+            <mat-error
+              *ngIf="
+                count3.hasError('invalidAutocompleteObject') &&
+                !count3.hasError('required')
+              "
+            >
               Statute is not recognized. Select one from the list of options.
             </mat-error>
           </mat-form-field>

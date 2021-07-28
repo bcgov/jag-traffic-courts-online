@@ -106,17 +106,25 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     // Listen for typeahead changes in the statute fields
     this.filteredStatutes1 = this.count1.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
+
     this.filteredStatutes2 = this.count2.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
+
     this.filteredStatutes3 = this.count3.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
