@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/instance: ticket-search
     app.kubernetes.io/part-of: traffic-court
+    app.openshift.io/runtime: dotnet
 spec:
   completionDeadlineSeconds: 1200
   replicas: 1

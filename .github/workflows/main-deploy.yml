@@ -33,7 +33,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/backend/TrafficCourtsApi
-          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/dispute-api:${{secrets.OC_APP}}
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-api:${{secrets.OC_APP}}
         run: |
           docker build \
             --build-arg ASPNETCORE_ENVIRONMENT=Development \
