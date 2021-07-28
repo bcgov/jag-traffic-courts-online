@@ -64,9 +64,9 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     private logger: LoggerService
   ) {
     this.form = this.formBuilder.group({
-      ticketNumber: [null, [Validators.required]],
-      offenceDate: [null, [Validators.required]],
-      offenceTime: [null, [Validators.required]],
+      violationTicketNumber: [null, [Validators.required]],
+      violationDate: [null, [Validators.required]],
+      violationTime: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
@@ -206,7 +206,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
             'The ticket has successfully been created'
           );
           this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-            queryParams: { ticketNumber: 'EZ02000460', time: '09:54' },
+            queryParams: { violationTicketNumber: 'EZ02000460', time: '09:54' },
           });
         }
       });
@@ -239,12 +239,12 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     console.log('onStatuteSelected', event$.option.value);
   }
 
-  public get ticketNumber(): FormControl {
-    return this.form.get('ticketNumber') as FormControl;
+  public get violationTicketNumber(): FormControl {
+    return this.form.get('violationTicketNumber') as FormControl;
   }
 
-  public get offenceDate(): FormControl {
-    return this.form.get('offenceDate') as FormControl;
+  public get violationDate(): FormControl {
+    return this.form.get('violationDate') as FormControl;
   }
 
   public get birthdate(): FormControl {

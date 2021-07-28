@@ -40,8 +40,6 @@ import { AppConfigService } from './services/app-config.service';
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
-import { WebcamModule } from 'ngx-webcam';
-import { PhotoComponent } from './components/photo/photo.component';
 import { KeycloakService } from 'keycloak-angular';
 import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
@@ -77,7 +75,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeAllStepperComponent,
     StepDisputantComponent,
     StepSingleCountComponent,
-    PhotoComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
@@ -93,7 +90,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
-    WebcamModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

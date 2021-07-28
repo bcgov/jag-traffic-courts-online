@@ -27,6 +27,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FooterComponent } from './components/footer/footer.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ti
     FooterComponent,
     FeatureFlagDirective,
     TicketExampleDialogComponent,
+    StepperPageComponent,
   ],
   imports: [
     CommonModule,
@@ -89,6 +91,7 @@ import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ti
     HeaderComponent,
     FooterComponent,
     FeatureFlagDirective,
+    StepperPageComponent,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

@@ -1,35 +1,71 @@
-<h2 mat-dialog-title class="d-flex align-items-stretch">Ticket example</h2>
 <mat-dialog-content>
-  <p>
-    See the top right for your ticket number, the correct format is 2 letters
-    followed by 8 numbers: <strong>XX00000000</strong>
-  </p>
-  <img
-    src="/assets/violation_ticket_sample.jpg"
-    style="max-width: 550px"
-    alt="Ticket"
-  />
   <h2>Ticket types</h2>
   <p>
     What letters does your ticket start with? That will tell you your ticket
     type:
   </p>
   <p>
-    <strong>A</strong> or <strong>E</strong> is a
-    <i>Motor Vehicle Act - Violation Ticket</i>
+    <strong>A</strong> is a
+    <strong><i>Motor Vehicle Act - Violation Ticket</i></strong>
+  </p>
+  <p>
+    <strong>E</strong> is an
+    <strong><i>Electronic Motor Vehicle Act - Violation Ticket</i></strong>
   </p>
   <p>
     <strong>ST</strong> or <strong>SG</strong> is a
-    <i
-      >Motor Vehicle Act - Intersection Safety Violation Ticket (Red light and
-      Speed)</i
+    <strong
+      ><i
+        >Motor Vehicle Act - Intersection Safety Violation Ticket (Red light and
+        Speed)</i
+      ></strong
     >
   </p>
+
+  <h2>Ticket example</h2>
+  <mat-expansion-panel class="pt-0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Motor Vehicle Act Violation ticket</mat-panel-title>
+    </mat-expansion-panel-header>
+    <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
+    <p>
+      This ticket is a handwritten paper ticket, you will receive a blue carbon
+      copy from the police officer.
+      <strong>The ticket number starts with an A.</strong>
+    </p>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title
+        >Electronic Motor Vehicle Act Violation ticket</mat-panel-title
+      >
+    </mat-expansion-panel-header>
+    <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
+    <p>
+      This ticket is an electronic generated ticket, you will receive a white
+      printed copy from the police officer.
+      <strong>The ticket number starts with an E.</strong>
+    </p>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title
+        >Motor Vehicle Act - Intersection Safety Violation Ticket (Intersection
+        and red light tickets)</mat-panel-title
+      >
+    </mat-expansion-panel-header>
+    <img src="/assets/violation_ticket_sample.jpg" alt="Ticket" />
+    <p>
+      This ticket is an electronic generated ticket, you will receive a white
+      printed copy in the mail.
+      <strong>The ticket number can starts with ST or SG.</strong>
+    </p>
+  </mat-expansion-panel>
 </mat-dialog-content>
-<!--
 <mat-dialog-actions>
   <button mat-flat-button mat-dialog-close color="primary" class="my-2 mr-1">
     Close
   </button>
 </mat-dialog-actions>
--->

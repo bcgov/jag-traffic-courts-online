@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PhotoComponent } from '@components/photo/photo.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketImageComponent } from '@components/ticket-image/ticket-image.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
@@ -36,10 +35,6 @@ const routes: Routes = [
       {
         path: AppRoutes.SUMMARY,
         component: DisputeSummaryComponent,
-      },
-      {
-        path: AppRoutes.PHOTO,
-        component: PhotoComponent,
       },
       {
         path: AppRoutes.STEPPER,
