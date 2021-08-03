@@ -25,16 +25,13 @@ import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
-import { StepperComponent } from './components/stepper/stepper.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
 import { StepCountComponent } from './components/step-count/step-count.component';
 import { StepOverviewComponent } from './components/step-overview/step-overview.component';
 import { StepAdditionalComponent } from './components/step-additional/step-additional.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
-import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
 import { StepDisputantComponent } from './components/step-disputant/step-disputant.component';
-import { StepSingleCountComponent } from './components/step-single-count/step-single-count.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -46,6 +43,7 @@ import { TicketPageComponent } from './components/ticket-page/ticket-page.compon
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
+import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -65,16 +63,14 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AppComponent,
     LandingComponent,
     FindTicketComponent,
-    StepperComponent,
     DisputePageComponent,
     StepCountComponent,
     StepOverviewComponent,
     StepAdditionalComponent,
     DisputeSubmitComponent,
     DisputeSummaryComponent,
-    DisputeAllStepperComponent,
+    DisputeStepperComponent,
     StepDisputantComponent,
-    StepSingleCountComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ShellTicketComponent,

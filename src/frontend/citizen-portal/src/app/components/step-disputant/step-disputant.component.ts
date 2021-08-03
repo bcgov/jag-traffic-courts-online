@@ -23,6 +23,7 @@ export class StepDisputantComponent
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
+  public isMobile: boolean;
   public previousButtonIcon = 'close';
   public previousButtonKey = 'stepper.cancel';
   public saveButtonKey = 'stepper.next';
@@ -53,6 +54,7 @@ export class StepDisputantComponent
     const today = new Date();
     this.maxDateOfBirth = new Date();
     this.maxDateOfBirth.setFullYear(today.getFullYear() - this.MINIMUM_AGE);
+    this.isMobile = this.utilsService.isMobile();
   }
 
   public ngOnInit() {
@@ -72,8 +74,8 @@ export class StepDisputantComponent
     }
   }
 
-  public get homePhone(): FormControl {
-    return this.form.get('homePhone') as FormControl;
+  public get phoneNumber(): FormControl {
+    return this.form.get('phoneNumber') as FormControl;
   }
 
   public get workPhone(): FormControl {

@@ -179,6 +179,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     this.utilsService.scrollTop();
   }
 
+  public onClearBirthdate(): void {
+    this.birthdate.setValue(null);
+  }
+
   public onSubmit(): void {
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);

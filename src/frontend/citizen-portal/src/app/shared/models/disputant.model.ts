@@ -10,6 +10,5 @@ export interface Disputant {
   emailAddress: string;
   license: string;
   provLicense: string;
-  homePhone: string;
-  workPhone: string;
+  phoneNumber: string;
 }

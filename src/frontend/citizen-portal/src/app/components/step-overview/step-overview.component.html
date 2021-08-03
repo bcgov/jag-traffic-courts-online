@@ -49,15 +49,7 @@
         {{ "stepper.disputant.home_phone_number" | translate }}
       </div>
       <div class="col-6 text-right">
-        {{ disputantInfo.homePhone | phone | default }}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 mb-2">
-        {{ "stepper.disputant.work_phone_number" | translate }}
-      </div>
-      <div class="col-6 text-right">
-        {{ disputantInfo.workPhone | phone | default }}
+        {{ disputantInfo.phoneNumber | phone | default }}
       </div>
     </div>
     <div class="row">
@@ -180,16 +172,17 @@
             -->
             <ul>
               <li *ngIf="offence.offenceAgreementStatus === '1'">
-                {{ "stepper.count.offence_agreement_1" | translate }}
+                I do not wish to take any action on this count at this time.
               </li>
               <li *ngIf="offence.offenceAgreementStatus === '2'">
-                {{ "stepper.count.offence_agreement_2" | translate }}
+                I would like to pay for this count.
               </li>
               <li *ngIf="offence.offenceAgreementStatus === '3'">
-                {{ "stepper.count.offence_agreement_3" | translate }}
+                I would like to request a fine reduction and/or more time to pay
+                for this count.
               </li>
               <li *ngIf="offence.offenceAgreementStatus === '4'">
-                {{ "stepper.overview.offence_dispute" | translate }}
+                I would like to dispute this count.
               </li>
               <ng-container
                 *ngIf="

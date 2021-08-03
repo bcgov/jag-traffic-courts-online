@@ -6,30 +6,29 @@ import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { DisputeStepperComponent } from './dispute-stepper.component';
 
-import { DisputeAllStepperComponent } from './dispute-all-stepper.component';
-
-describe('DisputeAllStepperComponent', () => {
-  let component: DisputeAllStepperComponent;
-  let fixture: ComponentFixture<DisputeAllStepperComponent>;
+describe('DisputeStepperComponent', () => {
+  let component: DisputeStepperComponent;
+  let fixture: ComponentFixture<DisputeStepperComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        ReactiveFormsModule,
         RouterModule.forRoot([]),
+        ReactiveFormsModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [DisputeAllStepperComponent],
+      declarations: [DisputeStepperComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisputeAllStepperComponent);
+    fixture = TestBed.createComponent(DisputeStepperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

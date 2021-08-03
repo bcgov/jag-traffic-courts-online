@@ -296,7 +296,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       license: [null],
       provLicense: [null],
       emailAddress: [null], // , [Validators.required, Validators.email]
-      homePhone: [null], // , [FormControlValidators.phone]],
+      phoneNumber: [null], // , [FormControlValidators.phone]],
       workPhone: [null], // , [FormControlValidators.phone]],
       birthdate: [null], // , []],
     });
