@@ -68,7 +68,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Surname</mat-label>
             <input matInput formControlName="lastName" />
@@ -76,7 +76,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Given names</mat-label>
             <input matInput formControlName="givenNames" />
@@ -84,7 +84,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Driver's license #</mat-label>
             <input
@@ -97,8 +97,10 @@
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
+      </div>
 
-        <div class="col-md-2">
+      <div class="row">
+        <div class="offset-md-4 col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Birthdate</mat-label>
             <input
@@ -113,6 +115,9 @@
               matSuffix
               [for]="picker2"
             ></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix (click)="onClearBirthdate()">
+              <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+            </mat-datepicker-toggle>
 
             <mat-datepicker
               #picker2
@@ -125,7 +130,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender">

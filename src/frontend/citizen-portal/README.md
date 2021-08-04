@@ -37,7 +37,7 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 To build, run, and open the Angular application in the default browser at http://localhost:4200 for development go to the Citizen Portal project repository in the terminal and type:
 
 ```bash
-ng serve -o
+npm run start
 ```
 
 To test the production build locally before pushing features to the repository for deployment type:

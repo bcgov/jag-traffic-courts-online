@@ -6,7 +6,6 @@ export class AppRoutes {
   public static SUMMARY = 'summary';
   public static TICKET = 'ticket';
   public static STEPPER = 'stepper';
-  public static ALL_STEPPER = 'dispute-all-stepper';
   public static PHOTO = 'photo';
 
   public static MODULE_PATH = AppRoutes.TICKET;

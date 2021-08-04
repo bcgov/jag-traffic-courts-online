@@ -18,11 +18,11 @@ import { AppRoutes } from 'app/app.routes';
 import { ConfigService } from '@config/config.service';
 
 @Component({
-  selector: 'app-dispute-all-stepper',
-  templateUrl: './dispute-all-stepper.component.html',
-  styleUrls: ['./dispute-all-stepper.component.scss'],
+  selector: 'app-dispute-stepper',
+  templateUrl: './dispute-stepper.component.html',
+  styleUrls: ['./dispute-stepper.component.scss'],
 })
-export class DisputeAllStepperComponent
+export class DisputeStepperComponent
   extends BaseDisputeFormPage
   implements OnInit, AfterViewInit
 {

@@ -24,7 +24,7 @@
   <div class="mb-4">
     <button type="button" mat-button (click)="fileInput.click()">
       <mat-icon>upload_file</mat-icon>
-      Upload Image
+      Upload image
     </button>
 
     <input
@@ -32,6 +32,7 @@
       (change)="onFileChange($event)"
       #fileInput
       type="file"
+      accept="image/*"
       id="file"
     />
 

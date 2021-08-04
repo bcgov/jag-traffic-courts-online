@@ -9,6 +9,10 @@ import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { Subscription, timer } from 'rxjs';
 import { AppRoutes } from 'app/app.routes';
 import { TranslateService } from '@ngx-translate/core';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
+import { ToastService } from '@core/services/toast.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dispute-summary',
@@ -27,7 +31,9 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private logger: LoggerService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private toastService: ToastService,
+    private dialog: MatDialog
   ) {}
 
   public ngOnInit(): void {
@@ -65,21 +71,31 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public onDisputeOffence(offence: Offence): void {
-    this.logger.info('onDisputeOffence offence', offence);
-    const source = timer(1000);
-    this.busy = source.subscribe((val) => {
-      this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)], {
-        state: { disputeOffenceNumber: offence.offenceNumber },
-      });
-    });
-  }
-
   public onDisputeTicket(): void {
     this.logger.info('onDisputeTicket', this.disputeService.ticket);
     const source = timer(1000);
     this.busy = source.subscribe((val) => {
-      this.router.navigate([AppRoutes.disputePath(AppRoutes.ALL_STEPPER)]);
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
     });
+  }
+
+  public onPayTicket(): void {
+    const data: DialogOptions = {
+      titleKey: 'submit_confirmation.heading',
+      messageKey: 'submit_confirmation.message',
+      actionTextKey: 'submit_confirmation.confirm',
+      cancelTextKey: 'submit_confirmation.cancel',
+    };
+
+    this.dialog
+      .open(TicketPaymentDialogComponent, { data })
+      .afterClosed()
+      .subscribe((response: boolean) => {
+        console.log('response', response);
+        if (response) {
+          this.toastService.openSuccessToast('Ticket payment is successful');
+          // this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)]);
+        }
+      });
   }
 }

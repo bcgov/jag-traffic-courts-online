@@ -3,26 +3,31 @@
     <div class="col-lg-12">
       <app-page [busy]="busy">
         <app-tco-page-header>
-          <ng-container header>
-            Take action on your BC traffic ticket
-          </ng-container>
-
+          <ng-container header> Initiate dispute form </ng-container>
           <ng-container subHeader>
-            <h2 class="mb-2" *ngIf="ticket">
-              {{ "summary.ticket_number" | translate
-              }}{{ ticket.violationTicketNumber }}
-              <span class="ml-4">
-                {{ ticket.violationTime }}
-              </span>
-            </h2>
+            Please enter your contact information below, and then choose the
+            action you would like to take for each ticket count and follow the
+            instructions provided.
           </ng-container>
         </app-tco-page-header>
+
+        <h2 class="mb-2" *ngIf="ticket">
+          {{ "summary.ticket_number" | translate
+          }}{{ ticket.violationTicketNumber }}
+          <span class="ml-4">
+            {{ ticket.violationTime }}
+          </span>
+        </h2>
 
         <mat-vertical-stepper
           #disputeStepper
           linear
           (selectionChange)="onSelectionChange($event)"
         >
+          <ng-template matStepperIcon="edit">
+            <mat-icon>done</mat-icon>
+          </ng-template>
+
           <mat-step [stepControl]="disputantForm">
             <ng-template matStepLabel>{{
               "stepper.disputant.heading" | translate

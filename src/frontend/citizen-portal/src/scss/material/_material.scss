@@ -14,14 +14,12 @@
 @import "./components/mat-snackbar";
 @import "./components/mat-expansion-panel";
 
-// .mat-form-field-label span {
-//   // font-size: 18px !important;
-//   color: #003366;
-// }
-// .mat-form-field-label mat-label {
-//   // font-size: 18px !important;
-//   color: #003366;
-// }
 mat-label {
   color: #003366;
+}
+
+.mat-step-header .mat-step-icon-state-done,
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: #155724 !important;
+  color: #fff !important;
 }

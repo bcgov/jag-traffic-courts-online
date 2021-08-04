@@ -28,6 +28,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
+import { TicketPaymentDialogComponent } from './dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { StepperPageComponent } from './components/stepper-page/stepper-page.com
     FeatureFlagDirective,
     TicketExampleDialogComponent,
     StepperPageComponent,
+    TicketPaymentDialogComponent,
   ],
   imports: [
     CommonModule,

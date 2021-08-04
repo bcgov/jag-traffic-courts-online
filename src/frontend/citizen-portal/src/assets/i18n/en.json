@@ -50,7 +50,7 @@
     "status_2": "In Progress",
     "status_3": "Resolved",
     "status_4": "Rejected",
-    "status_unpaid": "Outstanding Balance",
+    "status_unpaid": "Balance outstanding",
     "status_paid": "Paid"
   },
   "stepper": {
