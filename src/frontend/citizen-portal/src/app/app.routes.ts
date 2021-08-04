@@ -5,6 +5,7 @@ export class AppRoutes {
   public static IMAGE = 'image';
   public static SUMMARY = 'summary';
   public static TICKET = 'ticket';
+  public static PAYMENT = 'payment';
   public static STEPPER = 'stepper';
   public static PHOTO = 'photo';
 

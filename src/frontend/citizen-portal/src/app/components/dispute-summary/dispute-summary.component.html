@@ -6,18 +6,17 @@
     </ng-container>
   </app-page-header>
 
-  <section class="mb-2">
-    <h2>
-      <small class="mr-2">Ticket #:</small>
-      <strong>{{ ticket.violationTicketNumber }}</strong>
-      <span class="ml-4">
-        <small class="mr-2">Offence time:</small>
-        <strong>{{ ticket.violationTime }}</strong>
-      </span>
-    </h2>
-  </section>
-
   <div *ngIf="ticket">
+    <section class="mb-2">
+      <h2>
+        <small class="mr-2">Ticket #:</small>
+        <strong>{{ ticket.violationTicketNumber }}</strong>
+        <span class="ml-4">
+          <small class="mr-2">Offence time:</small>
+          <strong>{{ ticket.violationTime }}</strong>
+        </span>
+      </h2>
+    </section>
     <!--
     <div
       class="row mb-2"

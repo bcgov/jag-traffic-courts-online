@@ -7,11 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {
-  MatChip,
-  MatChipList,
-  MatChipSelectionChange,
-} from '@angular/material/chips';
+import { MatChip, MatChipList } from '@angular/material/chips';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';

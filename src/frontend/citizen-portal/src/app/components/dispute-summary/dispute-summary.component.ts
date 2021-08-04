@@ -1,18 +1,15 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
+import { TranslateService } from '@ngx-translate/core';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { Offence } from '@shared/models/offence.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
-import { Subscription, timer } from 'rxjs';
-import { AppRoutes } from 'app/app.routes';
-import { TranslateService } from '@ngx-translate/core';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
-import { ToastService } from '@core/services/toast.service';
-import { MatDialog } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dispute-summary',
@@ -73,29 +70,34 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
   public onDisputeTicket(): void {
     this.logger.info('onDisputeTicket', this.disputeService.ticket);
-    const source = timer(1000);
-    this.busy = source.subscribe((val) => {
-      this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
-    });
+    // const source = timer(1000);
+    // this.busy = source.subscribe((val) => {
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
+    // });
   }
 
   public onPayTicket(): void {
-    const data: DialogOptions = {
-      titleKey: 'submit_confirmation.heading',
-      messageKey: 'submit_confirmation.message',
-      actionTextKey: 'submit_confirmation.confirm',
-      cancelTextKey: 'submit_confirmation.cancel',
-    };
+    this.logger.info('onPayTicket', this.disputeService.ticket);
+    // const source = timer(1000);
+    // this.busy = source.subscribe((val) => {
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT)]);
+    // });
+    // const data: DialogOptions = {
+    //   titleKey: 'submit_confirmation.heading',
+    //   messageKey: 'submit_confirmation.message',
+    //   actionTextKey: 'submit_confirmation.confirm',
+    //   cancelTextKey: 'submit_confirmation.cancel',
+    // };
 
-    this.dialog
-      .open(TicketPaymentDialogComponent, { data })
-      .afterClosed()
-      .subscribe((response: boolean) => {
-        console.log('response', response);
-        if (response) {
-          this.toastService.openSuccessToast('Ticket payment is successful');
-          // this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)]);
-        }
-      });
+    // this.dialog
+    //   .open(TicketPaymentDialogComponent, { data })
+    //   .afterClosed()
+    //   .subscribe((response: boolean) => {
+    //     console.log('response', response);
+    //     if (response) {
+    //       this.toastService.openSuccessToast('Ticket payment is successful');
+    //       // this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)]);
+    //     }
+    //   });
   }
 }
