@@ -47,6 +47,8 @@ REDIS__HOST will be `redis` which is the service name.
 docker-compose up
 ```
 
+The frontend app citizen-portal will be accessible in the browser at http://localhost:8080 
+
 To remove services run (all services and networking)
 ```
 docker-compose down
