@@ -36,6 +36,10 @@ Welcome to Traffic Courts Online
 
 https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
 
+#### Docker
+
+[Download](https://www.docker.com/products/docker-desktop) and install Docker
+
 # Run docker-compose
 
 Copy the `.env.template` to `.env` and then run docker-compose up.
