@@ -1,11 +1,9 @@
 <app-stepper-page>
   <app-page-header>
-    <ng-container header>{{
-      "stepper.additional.heading" | translate
-    }}</ng-container>
-    <ng-container subHeader>{{
-      "stepper.additional.sub_heading" | translate
-    }}</ng-container>
+    <ng-container subHeader>
+      The following options apply to all counts on this ticket that are being
+      disputed.
+    </ng-container>
   </app-page-header>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
@@ -18,7 +16,7 @@
             color="primary"
             formControlName="lawyerPresent"
           >
-            {{ "stepper.additional.lawyer" | translate }}
+            I intend to be represented by a lawyer in court.
           </mat-checkbox>
         </div>
       </div>
@@ -30,7 +28,7 @@
             color="primary"
             formControlName="interpreterRequired"
           >
-            {{ "stepper.additional.interpreter" | translate }}
+            I require a language interpreter at the hearing.
           </mat-checkbox>
           <!--
           <mat-error *ngIf="formStepCourt.hasError('requiredIfTrue')">
@@ -65,7 +63,8 @@
             color="primary"
             formControlName="witnessPresent"
           >
-            {{ "stepper.additional.witness" | translate }}
+            I intent to call a witness(es). You may have a maximum of 5
+            witnesses.
           </mat-checkbox>
         </div>
       </div>

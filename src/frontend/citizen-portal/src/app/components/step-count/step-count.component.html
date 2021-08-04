@@ -1,54 +1,17 @@
 <app-stepper-page>
   <app-page-header>
-    <ng-container header
-      >{{ "stepper.count.sub_heading_1" | translate }} #{{
-        offenceNumber.value
-      }}
-      {{ "stepper.count.sub_heading_2" | translate }}</ng-container
-    >
     <ng-container subHeader>
-      <div class="row">
-        <div class="col-4 mb-2">
-          {{ "stepper.count.desc_of_offence" | translate }}
+      <div class="row mt-2">
+        <div class="col-md-8">
+          <small class="d-block"> Description of offence </small>
+          <strong>{{ offenceDescription.value | titlecase }}</strong>
         </div>
-        <div class="col-8 text-right mb-2">
-          {{ offenceDescription.value }}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 mb-2">
-          {{ "stepper.count.offence_amount" | translate }}
-        </div>
-        <div class="col-6 text-right mb-2">
-          {{
+        <div class="col-md-4">
+          <small class="d-block">Amount due</small>
+          <strong>{{
             ticketedAmount.value
               | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6 mb-2">
-          {{ "stepper.count.amount_due" | translate }}
-        </div>
-        <div class="col-6 text-right mb-2">
-          {{
-            amountDue.value
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}
-        </div>
-      </div>
-      <div class="row" *ngIf="discountAmount.value > 0">
-        <div class="col-6 mb-2">
-          {{ "stepper.count.discount_if_paid_by" | translate }}
-          {{
-            discountDueDate.value | date: "MMM dd YYYY":"+0200":defaultLanguage
-          }})
-        </div>
-        <div class="col-6 text-right mb-2">
-          {{
-            discountAmount.value
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}
+          }}</strong>
         </div>
       </div>
     </ng-container>
@@ -58,11 +21,7 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="mt-0"
-            >{{ "stepper.count.for_this_offence" | translate }} #{{
-              offenceNumber.value
-            }}, {{ "stepper.count.what_to_do" | translate }}</label
-          ><br />
+          <label class="mt-0 w-100">What action would you like to take?</label>
           <!--
           <app-chips-multi-select
             [options]="offenceAgreementStatusOptions"

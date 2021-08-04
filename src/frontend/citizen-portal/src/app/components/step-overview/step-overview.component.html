@@ -8,6 +8,7 @@
     }}</ng-container>
   </app-page-header>
 
+  <!--
   <section class="mb-2" *ngIf="disputantInfo && disputantInfo.lastName">
     <div class="page-subheader">
       <h2 class="title">
@@ -108,15 +109,54 @@
       </div>
     </div>
   </section>
+-->
 
   <section>
-    <div class="page-subheader">
-      <h2 class="title">
-        {{ "stepper.overview.count_information" | translate }}
-      </h2>
-    </div>
+    <!--
     <ng-container *ngFor="let offence of offenceFormsList; let i = index">
       <ng-container *ngIf="offence.offenceNumber">
+        <div class="row mt-2">
+          <div class="col-md-2">
+            <mat-chip-list>
+              <mat-chip selected class="p-3"
+                >Count {{ offence.offenceNumber }}</mat-chip
+              >
+            </mat-chip-list>
+          </div>
+          <div class="col-md-8">
+            <small class="d-block"> Description of offence </small>
+            <strong>{{ offence.offenceDescription | titlecase }}</strong>
+          </div>
+          <div class="col-md-2">
+            <small class="d-block">Test</small>
+            <strong>test</strong>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+-->
+    <ng-container *ngFor="let offence of offenceFormsList; let i = index">
+      <ng-container *ngIf="offence.offenceNumber">
+        <!--
+        <div class="row mt-2">
+          <div class="col-md-2">
+            <mat-chip-list>
+              <mat-chip selected class="p-3"
+                >Count {{ offence.offenceNumber }}</mat-chip
+              >
+            </mat-chip-list>
+          </div>
+          <div class="col-md-8">
+            <small class="d-block"> Description of offence </small>
+            <strong>{{ offence.offenceDescription | titlecase }}</strong>
+          </div>
+          <div class="col-md-2">
+            <small class="d-block">Test</small>
+            <strong>test</strong>
+          </div>
+        </div>
+      -->
+
         <div class="offence-header-section">
           <div class="row page-subheader mb-0">
             <div class="col-4 text-left">
@@ -210,11 +250,31 @@
     </ng-container>
   </section>
 
-  <section class="mb-2" *ngIf="additionalInfo">
+  <!--
+  <section class="px-4 py-2 mb-3 card-section">
+    <div class="row mt-2">
+      <div class="offset-md-5 col-md-5">
+        Balance due if paid after Aug 15, 2021
+      </div>
+      <div class="col-md-2">
+        <strong>{{
+          200 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+        }}</strong>
+      </div>
+    </div>
+  </section>
+-->
+
+  <section class="px-4 py-2 mb-2 card-section" *ngIf="additionalInfo">
     <div class="page-subheader">
-      <h2 class="title">
+      <strong>
         {{ "stepper.overview.additional_information" | translate }}
-      </h2>
+      </strong>
+      <p>
+        The following options apply to all counts on this ticket that are being
+        disputed.
+      </p>
+      <hr />
     </div>
     <div class="row">
       <div class="col mb-2">
@@ -298,9 +358,10 @@
       <div class="col">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
-            <strong>{{ "stepper.overview.note_heading" | translate }}</strong
-            ><br />
-            {{ "stepper.overview.note_detail" | translate }}
+            <strong>
+              Once a request has been submitted, you may not make changes.
+              Please review and ensure details are correct before submission.
+            </strong>
           </ng-container>
         </app-alert>
       </div>

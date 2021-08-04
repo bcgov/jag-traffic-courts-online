@@ -6,9 +6,21 @@
     </ng-container>
   </app-page-header>
 
+  <section class="mb-2">
+    <h2>
+      <small class="mr-2">Ticket #:</small>
+      <strong>{{ ticket.violationTicketNumber }}</strong>
+      <span class="ml-4">
+        <small class="mr-2">Offence time:</small>
+        <strong>{{ ticket.violationTime }}</strong>
+      </span>
+    </h2>
+  </section>
+
   <div *ngIf="ticket">
+    <!--
     <div
-      class="row"
+      class="row mb-2"
       *ngIf="ticket.outstandingBalance <= 0; else ticketNotResolved"
     >
       <div class="col p-0">
@@ -22,7 +34,7 @@
     </div>
 
     <ng-template #ticketNotResolved>
-      <div class="col p-0">
+      <div class="col mb-2 p-0">
         <app-alert type="success" icon="info">
           <ng-container #alertContent class="alert-content">
             <strong>You are within 30 days of your violation date.</strong
@@ -33,21 +45,20 @@
         </app-alert>
       </div>
     </ng-template>
+-->
+    <div class="col mb-4 p-0">
+      <app-alert type="success" icon="info">
+        <ng-container #alertContent class="alert-content">
+          <strong>You are within 30 days of your violation date.</strong><br />
+          If you pay your ticket by <strong>Aug 15, 2021</strong>, you will save
+          $25 per ticket count.
+        </ng-container>
+      </app-alert>
+    </div>
 
     <div class="mb-2">
-      <section class="mb-2">
-        <h2 class="mb-2">
-          <small class="mr-2">Ticket #:</small>
-          <strong>{{ ticket.violationTicketNumber }}</strong>
-          <span class="ml-4">
-            <small class="mr-2">Offence time:</small>
-            <strong>{{ ticket.violationTime }}</strong>
-          </span>
-        </h2>
-      </section>
-
       <section
-        class="px-4 py-2 mb-4 offence-section"
+        class="px-4 py-2 mb-3 card-section"
         *ngFor="let row of ticket.offences; let i = index"
       >
         <div class="row mt-2">
@@ -112,52 +123,33 @@
             }}
           </div>
         </div>
+      </section>
 
-        <!--
-        <div class="row mt-1" *ngIf="row.offenceStatus === 1">
-          <div class="col-md-9">
-            <app-alert type="info" icon="info">
-              <ng-container #alertContent class="alert-content">
-                <strong translate>summary.dispute_status_1</strong>
-              </ng-container>
-            </app-alert>
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-md-5 col-md-5 text-success">Balance due today</div>
+          <div class="col-md-2 text-success">
+            <strong>{{
+              225 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
           </div>
         </div>
+      </section>
 
-        <div class="row mt-1" *ngIf="row.offenceStatus === 2">
-          <div class="col-md-9">
-            <app-alert type="info" icon="info">
-              <ng-container #alertContent class="alert-content">
-                <strong translate>summary.dispute_status_2</strong>
-              </ng-container>
-            </app-alert>
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-md-5 col-md-5">
+            Balance due if paid after Aug 15, 2021
+          </div>
+          <div class="col-md-2">
+            <strong>{{
+              200 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
           </div>
         </div>
+      </section>
 
-        <div class="row mt-1" *ngIf="row?.discountAmount > 0">
-          <div class="col-md-9">
-            <app-alert type="warning" icon="lightbulb">
-              <ng-container #alertContent class="alert-content">
-                <strong>
-                  {{ "summary.paid_early_1" | translate }}
-                  {{
-                    row?.discountDueDate
-                      | date: "MMM dd YYYY":"+0200":defaultLanguage
-                  }},
-                  {{ "summary.paid_early_2" | translate }}
-                  {{
-                    row?.discountAmount
-                      | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-                  }}
-                  {{ "summary.paid_early_3" | translate }}
-                </strong>
-              </ng-container>
-            </app-alert>
-          </div>
-        </div>
-      --></section>
-
-      <div class="row" *ngIf="ticket.outstandingBalance > 0">
+      <div class="row mt-4" *ngIf="ticket.outstandingBalance > 0">
         <div class="col-md-4">
           <button
             id="secondaryButton"
@@ -192,6 +184,8 @@
           </button>
         </div>
       </div>
+
+      <app-dispute-footer></app-dispute-footer>
     </div>
   </div>
 </app-page>
