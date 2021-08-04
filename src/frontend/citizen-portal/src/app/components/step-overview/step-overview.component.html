@@ -207,28 +207,22 @@
 
         <div class="row mt-2">
           <div class="col">
-            <!--
-              "stepper.overview.offence_not_included"
-            -->
             <ul>
-              <li *ngIf="offence.offenceAgreementStatus === '1'">
+              <li *ngIf="offence.offenceAgreementStatus === 'NOTHING'">
                 I do not wish to take any action on this count at this time.
               </li>
-              <li *ngIf="offence.offenceAgreementStatus === '2'">
+              <li *ngIf="offence.offenceAgreementStatus === 'PAY'">
                 I would like to pay for this count.
               </li>
-              <li *ngIf="offence.offenceAgreementStatus === '3'">
+              <li *ngIf="offence.offenceAgreementStatus === 'REDUCTION'">
                 I would like to request a fine reduction and/or more time to pay
                 for this count.
               </li>
-              <li *ngIf="offence.offenceAgreementStatus === '4'">
+              <li *ngIf="offence.offenceAgreementStatus === 'DISPUTE'">
                 I would like to dispute this count.
               </li>
               <ng-container
-                *ngIf="
-                  offence.offenceAgreementStatus === '1' ||
-                  offence.offenceAgreementStatus === '2'
-                "
+                *ngIf="offence.offenceAgreementStatus === 'REDUCTION'"
               >
                 <li *ngIf="offence.requestReduction">
                   {{ "stepper.count.requestReduction" | translate }}

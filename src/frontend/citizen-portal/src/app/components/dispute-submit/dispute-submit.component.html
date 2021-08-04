@@ -8,16 +8,13 @@
       <div class="col-lg-12">
         <app-alert type="success" icon="check">
           <ng-container #alertContent class="alert-content">
-            <strong>{{ "submit.note_heading" | translate }}</strong
-            ><br />
-            {{ "submit.note_detail" | translate }}
+            <strong>Ticket request sent successfully</strong><br />
+            Ticket reference #: <strong>TR-001-00001</strong>
           </ng-container>
         </app-alert>
       </div>
     </div>
   </section>
-
-  <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
 
   <section class="mb-2 mt-4">
     <h3 class="mt-4">{{ "submit.next_steps" | translate }}</h3>
@@ -30,6 +27,36 @@
       <a href="tel:+18776618026">1-877-661-8026</a>
     </p>
   </section>
+
+  <p>
+    A confirmation email of the request information has been sent to: <br />
+    <strong>sally123@hotmail.com</strong>
+  </p>
+
+  <p>
+    You have select 'Pay count' for Count 3, please use the button below to
+    proceed to payment.
+    <button type="button" mat-stroked-button>Make payment</button>
+  </p>
+
+  <hr />
+
+  <strong>Submission details</strong>
+
+  <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
+
+  <!--
+  <section class="mb-2">
+    <h2>
+      <small class="mr-2">Ticket #:</small>
+      <strong>{{ ticket.violationTicketNumber }}</strong>
+      <span class="ml-4">
+        <small class="mr-2">Offence time:</small>
+        <strong>{{ ticket.violationTime }}</strong>
+      </span>
+    </h2>
+  </section>
+-->
 
   <section class="mb-4 mt-4">
     <div class="row">

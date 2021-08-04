@@ -1,28 +1,38 @@
 <hr />
 
-<p class="w-100 p-4 mb-4" style="border: 1px solid #fcba19">
-  dispute-footer works!
-
-  <!--
-  <section class="mb-4 mt-4">
-    <div class="row">
-      <div class="col-lg-12">
-        <app-alert type="info" icon="info">
-          <ng-container #alertContent class="alert-content">
-            <strong>Violation ticket centre contact information</strong><br />
-            {{ "find.note_phone" | translate }}:
-            <a href="tel:+18776618026">1-877-661-8026</a><br />
-            {{ "find.note_forms" | translate }}:
-            <a
-              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
-              target="_blank"
-              rel="noopener"
-              >{{ "find.note_form_name" | translate }}</a
-            >
-          </ng-container>
-        </app-alert>
+<div class="dispute-footer w-100 mb-4">
+  <div class="flex flex-last p-2">
+    <div class="flex-2-col info">
+      <div class="flex-last-info-content">
+        <div class="p-2 dispute-footer-table">
+          <span class="icon-col">
+            <img class="icon-size" src="/assets/understand-icon.svg" />
+          </span>
+          <span class="text-col">
+            <strong>Understand your ticket</strong>
+            <p class="mt-2">
+              If you would like to explore your ticket options in detail use our
+              <a href="http://www.google.ca" target="_blank" rel="noopener"
+                >self-resolution tool</a
+              >.
+            </p>
+          </span>
+        </div>
       </div>
     </div>
-  </section>
-  -->
-</p>
+    <div class="flex-2-col info">
+      <div class="p-2 dispute-footer-table">
+        <span class="icon-col">
+          <img class="icon-size" src="/assets/resolution-icon.svg" />
+        </span>
+        <span class="text-col">
+          <strong>Looking for more support?</strong>
+          <p class="mt-2">
+            Contact the Violation Ticket Centre toll free
+            <a href="tel:+18776618026">1-877-661-8026</a>
+          </p>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UtilsService } from '@core/services/utils.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeService } from 'app/services/dispute.service';
@@ -9,12 +10,17 @@ import { DisputeService } from 'app/services/dispute.service';
   templateUrl: './dispute-submit.component.html',
   styleUrls: ['./dispute-submit.component.scss'],
 })
-export class DisputeSubmitComponent implements OnInit {
+export class DisputeSubmitComponent implements OnInit, AfterViewInit {
   public ticket: TicketDispute;
 
-  constructor(private router: Router, private disputeService: DisputeService) {}
+  constructor(
+    private router: Router,
+    private disputeService: DisputeService,
 
-  ngOnInit(): void {
+    private utilsService: UtilsService
+  ) {}
+
+  public ngOnInit(): void {
     this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;
 
@@ -22,6 +28,10 @@ export class DisputeSubmitComponent implements OnInit {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
       }
     });
+  }
+
+  public ngAfterViewInit(): void {
+    this.utilsService.scrollTop();
   }
 
   public onViewYourTicket(): void {

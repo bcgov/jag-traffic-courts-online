@@ -2,7 +2,7 @@
   <app-tco-page-header>
     <ng-container header>British Columbia Ticket Resolution</ng-container>
     <ng-container subHeader>
-      Use this service to pay ticket fines, ask for fine reductions ro more time
+      Use this service to pay ticket fines, ask for fine reductions or more time
       to pay, or initiate a dispute.
     </ng-container>
   </app-tco-page-header>
@@ -51,9 +51,7 @@
           <div class="row">
             <div class="col-md-4">
               <a class="examples" (click)="onViewTicketExample()">
-                <mat-icon class="anchor-icon mt-2 mr-2" inline="true"
-                  >article</mat-icon
-                >
+                <mat-icon class="anchor-icon mt-2 mr-2">article</mat-icon>
                 View ticket examples
               </a>
             </div>
@@ -64,7 +62,7 @@
                 color="primary"
                 class="find-large"
               >
-                <mat-icon inline="true">search</mat-icon>
+                <mat-icon class="mr-2">search</mat-icon>
                 Find ticket
               </button>
             </div>
@@ -92,8 +90,17 @@
             class="find-large"
             routerLink="/ticket/image"
           >
-            <mat-icon inline="true">camera</mat-icon>
+            <mat-icon class="mr-2">photo_camera</mat-icon>
             Take photo of ticket
+          </button>
+          <button
+            type="button"
+            mat-stroked-button
+            color="primary"
+            class="find-large"
+          >
+            <mat-icon class="mr-2">upload_file</mat-icon>
+            Upload ticket image
           </button>
         </div>
       </div>

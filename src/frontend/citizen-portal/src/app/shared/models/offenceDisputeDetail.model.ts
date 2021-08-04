@@ -3,6 +3,7 @@ export interface OffenceDisputeDetail {
   offenceNumber: number;
   status: number;
   offenceAgreementStatus?: string;
+  reductionAppearInCourt?: string;
   requestReduction: boolean;
   requestMoreTime: boolean;
 

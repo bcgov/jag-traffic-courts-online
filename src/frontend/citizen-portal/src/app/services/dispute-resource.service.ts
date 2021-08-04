@@ -120,19 +120,19 @@ export class DisputeResourceService {
    */
   private setOffenceInfo(ticket: TicketDispute): void {
     let balance = 0;
-    let disputesExist = false;
+    // let disputesExist = false;
     ticket.offences.forEach((offence) => {
       offence.offenceStatus = this.getOffenceInfo(offence);
 
-      if (offence.offenceDisputeDetail) {
-        disputesExist = true;
-      }
+      // if (offence.offenceDisputeDetail) {
+      //   disputesExist = true;
+      // }
 
       balance += offence.amountDue;
     });
 
     // ------------------------------------
     ticket.outstandingBalance = balance;
-    ticket.disputesExist = disputesExist;
+    // ticket.disputesExist = disputesExist;
   }
 }
