@@ -13,9 +13,10 @@ Welcome to Traffic Courts Online
     ├── docs                                    # docs and images
     ├── src                                     # application source files
     |   ├── backend                             # backend apis
-    |   |   └── DisputeApi.Web                  # mock dispute api
+    |   |   └── CitizenApi.Web                  # Citizen api
+            └── TicketSearchApi.Web             # Ticket Search api
     │   └── frontend                            # frontend applications
-    │       └── citizen-portal                  # citizen poral
+    │       └── citizen-portal                  # citizen portal
     ├── COMPLIANCE.yaml                         #
     ├── CONTRIBUTING.md                         #
     ├── LICENSE                                 # Apache License
@@ -26,13 +27,18 @@ Welcome to Traffic Courts Online
 | Name                | Description                                  | Doc                             |
 | ------------------- | -------------------------------------------- | --------------------------------|
 | backend             | all server side services                     |                                 |
-| disute api          | base dispute api                             | [README](src/backend/README.md)|
+| citizen api          | base citizen api                            | [README](src/backend/README.md)|
+| ticket search api    | ticket search api called from citizen api   | [README](src/backend/README.md)|
 | frontend            | all client side applications                 | [README](src/frontend/README.md)|
 
 
 # Splunk Docker Examples
 
 https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
+
+#### Docker
+
+[Download](https://www.docker.com/products/docker-desktop) and install Docker
 
 # Run docker-compose
 
@@ -44,6 +50,8 @@ REDIS__HOST will be `redis` which is the service name.
 ```
 docker-compose up
 ```
+
+The frontend app citizen-portal will be accessible in the browser at http://localhost:8080 
 
 To remove services run (all services and networking)
 ```
