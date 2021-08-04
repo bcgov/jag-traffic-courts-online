@@ -9,7 +9,3 @@
 # Add 'DevOps' to changes in openshift folder
 "DevOps":
   - infrastructure/**/*
-
-# Add 'Ticket Search' to changes in ticket search
-"Ticket Search":
-  - src/ticket-search/**/*
