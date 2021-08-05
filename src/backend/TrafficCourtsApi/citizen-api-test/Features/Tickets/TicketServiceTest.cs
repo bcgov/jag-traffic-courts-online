@@ -44,25 +44,25 @@ namespace Gov.CitizenApi.Test.Features.Tickets
             Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null));
         }
 
-        [Fact]
-#pragma warning disable IDE1006 // Naming Styles
-        public async Task get_tickets()
-#pragma warning restore IDE1006 // Naming Styles
-        {
-            var result = await _service.GetTickets();
-            Assert.IsAssignableFrom<IEnumerable<Ticket>>(result);
-            //_loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
-        }
+//        [Fact]
+//#pragma warning disable IDE1006 // Naming Styles
+//        public async Task get_tickets()
+//#pragma warning restore IDE1006 // Naming Styles
+//        {
+//            var result = await _service.GetTickets();
+//            Assert.IsAssignableFrom<IEnumerable<Ticket>>(result);
+//            //_loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
+//        }
 
-        [Theory]
-        [AutoData]
-#pragma warning disable IDE1006 // Naming Styles
-        public async Task save_ticket(Ticket ticket)
-#pragma warning restore IDE1006 // Naming Styles
-        {
-            var result = await _service.SaveTicket(ticket);
-            Assert.IsAssignableFrom<Ticket>(result);
-            //_loggerMock.VerifyLog(LogLevel.Information, "Saving mock ticket", Times.Once());
-        }
+//        [Theory]
+//        [AutoData]
+//#pragma warning disable IDE1006 // Naming Styles
+//        public async Task save_ticket(Ticket ticket)
+//#pragma warning restore IDE1006 // Naming Styles
+//        {
+//            var result = await _service.SaveTicket(ticket);
+//            Assert.IsAssignableFrom<Ticket>(result);
+//            //_loggerMock.VerifyLog(LogLevel.Information, "Saving mock ticket", Times.Once());
+//        }
     }
 }
