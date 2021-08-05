@@ -33,28 +33,30 @@ export class DisputeResourceService {
   }): Observable<TicketDispute> {
     const httpParams = new HttpParams({ fromObject: params });
 
-    return this.apiResource.get<TicketDispute>('ticket', httpParams).pipe(
-      map((response: ApiHttpResponse<TicketDispute>) =>
-        response ? response.result : null
-      ),
-      tap((ticket: TicketDispute) =>
-        this.logger.info('DisputeResourceService::getTicket', ticket)
-      ),
-      map((ticket) => {
-        if (ticket) {
-          this.setOffenceInfo(ticket);
-        }
-        return ticket;
-      }),
-      catchError((error: any) => {
-        this.toastService.openErrorToast(this.configService.ticket_error);
-        this.logger.error(
-          'DisputeResourceService::getTicket error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    return this.apiResource
+      .get<TicketDispute>('ticket/tickets', httpParams)
+      .pipe(
+        map((response: ApiHttpResponse<TicketDispute>) =>
+          response ? response.result : null
+        ),
+        tap((ticket: TicketDispute) =>
+          this.logger.info('DisputeResourceService::getTicket', ticket)
+        ),
+        map((ticket) => {
+          if (ticket) {
+            this.setOffenceInfo(ticket);
+          }
+          return ticket;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.ticket_error);
+          this.logger.error(
+            'DisputeResourceService::getTicket error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   /**
@@ -90,17 +92,19 @@ export class DisputeResourceService {
   public createShellTicket(ticket: ShellTicket): Observable<null> {
     this.logger.info('createShellTicket', ticket);
 
-    return this.apiResource.post<TicketDispute>('shellTicket', ticket).pipe(
-      map((response: ApiHttpResponse<null>) => null),
-      catchError((error: any) => {
-        this.toastService.openErrorToast('Ticket could not be created');
-        this.logger.error(
-          'DisputeResourceService::createShellTicket error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    return this.apiResource
+      .post<TicketDispute>('tickets/shellTicket', ticket)
+      .pipe(
+        map((response: ApiHttpResponse<null>) => null),
+        catchError((error: any) => {
+          this.toastService.openErrorToast('Ticket could not be created');
+          this.logger.error(
+            'DisputeResourceService::createShellTicket error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
   private getOffenceInfo(row: Offence): number {
