@@ -17,13 +17,15 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
     {
         private readonly ITicketSearchClient _ticketSearchClient;
         private readonly IDisputeService _disputeService;
+        private readonly ITicketsService _ticketService;
         private readonly IMapper _mapper;
         private readonly ILogger<TicketSearchQueryHandler> _logger;
 
-        public TicketSearchQueryHandler(ITicketSearchClient ticketSearchClient, IDisputeService disputeService, IMapper mapper, ILogger<TicketSearchQueryHandler> logger)
+        public TicketSearchQueryHandler(ITicketSearchClient ticketSearchClient, IDisputeService disputeService, IMapper mapper, ILogger<TicketSearchQueryHandler> logger, ITicketsService ticketsService)
         {
             _ticketSearchClient = ticketSearchClient ?? throw new ArgumentNullException(nameof(ticketSearchClient));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(ticketSearchClient));
+            _ticketService = ticketsService;
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -39,6 +41,13 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                 return BuildTicketDispute(ticketSearchResponse, dispute);
             }
             _logger.LogInformation("no ticket found from Rsi");
+
+            //get ticket from DB, check if there is shell ticket created.
+            //todo: following code is quite possible to change when we get to know where to save the shell ticket and if user can select ticket again.
+            //Gov.CitizenApi.Features.Tickets.DBModel.Ticket ticket = await _ticketService.FindTicketAsync(query.TicketNumber);
+            //if (ticket.ViolationTime == query.Time)
+            //{ 
+            //}
             return null;
             
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Gov.CitizenApi.Features.Tickets.Commands;
 using Gov.CitizenApi.Features.Tickets.Queries;
 using Gov.CitizenApi.Models;
 using Gov.TicketSearch;
@@ -11,9 +12,9 @@ using NSwag.Annotations;
 
 namespace Gov.CitizenApi.Features.Tickets
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    [OpenApiTag("Citizen API")]
+    [OpenApiTag("Ticket API")]
     public class TicketsController : ControllerBase
     {
         private readonly ILogger _logger;
@@ -67,6 +68,30 @@ namespace Gov.CitizenApi.Features.Tickets
             catch(Exception e)
             {
                 _logger.LogError(e, "GetTicket failed");
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateShellTicket([FromBody]CreateShellTicketCommand createShellTicket)
+        {
+            try
+            {
+                _logger.LogInformation("get create shell ticket request.");
+                var response = await _mediator.Send(createShellTicket);
+                if(response.Id == 0)
+                {
+                    ModelState.AddModelError("TicketNumber", "the ticket shell already exists .");
+                    return BadRequest(ApiResponse.BadRequest(ModelState));
+                }
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "create shell ticket failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
             }
         }
