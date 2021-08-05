@@ -29,6 +29,7 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
 import { TicketPaymentDialogComponent } from './dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
+import { DisputeFooterComponent } from './components/dispute-footer/dispute-footer.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { TicketPaymentDialogComponent } from './dialogs/ticket-payment-dialog/ti
     TicketExampleDialogComponent,
     StepperPageComponent,
     TicketPaymentDialogComponent,
+    DisputeFooterComponent,
   ],
   imports: [
     CommonModule,
@@ -92,6 +94,7 @@ import { TicketPaymentDialogComponent } from './dialogs/ticket-payment-dialog/ti
     ConfigModule,
     HeaderComponent,
     FooterComponent,
+    DisputeFooterComponent,
     FeatureFlagDirective,
     StepperPageComponent,
   ],

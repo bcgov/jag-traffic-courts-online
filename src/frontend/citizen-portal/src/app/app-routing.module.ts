@@ -4,6 +4,7 @@ import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-ste
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketImageComponent } from '@components/ticket-image/ticket-image.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
+import { TicketPaymentComponent } from '@components/ticket-payment/ticket-payment.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
@@ -37,6 +38,10 @@ const routes: Routes = [
       {
         path: AppRoutes.STEPPER,
         component: DisputeStepperComponent,
+      },
+      {
+        path: AppRoutes.PAYMENT,
+        component: TicketPaymentComponent,
       },
     ],
   },

@@ -26,12 +26,12 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
-import { StepCountComponent } from './components/step-count/step-count.component';
-import { StepOverviewComponent } from './components/step-overview/step-overview.component';
-import { StepAdditionalComponent } from './components/step-additional/step-additional.component';
+import { StepCountComponent } from './components/stepper/step-count/step-count.component';
+import { StepOverviewComponent } from './components/stepper/step-overview/step-overview.component';
+import { StepAdditionalComponent } from './components/stepper/step-additional/step-additional.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
-import { StepDisputantComponent } from './components/step-disputant/step-disputant.component';
+import { StepDisputantComponent } from './components/stepper/step-disputant/step-disputant.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -44,6 +44,7 @@ import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summa
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
+import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -75,6 +76,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
     TicketImageComponent,
+    TicketPaymentComponent,
   ],
   imports: [
     CommonModule,

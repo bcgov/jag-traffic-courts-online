@@ -22,3 +22,16 @@
   border-bottom-style: solid;
   border-bottom-color: rgba(0, 0, 0, 0.12);
 }
+
+.card-section {
+  background-color: #ededed !important;
+  border-left: 3px solid theme-palette(blue);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+hr {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}

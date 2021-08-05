@@ -12,10 +12,11 @@
         </app-tco-page-header>
 
         <h2 class="mb-2" *ngIf="ticket">
-          {{ "summary.ticket_number" | translate
-          }}{{ ticket.violationTicketNumber }}
+          <small class="mr-2">Ticket #:</small>
+          <strong>{{ ticket.violationTicketNumber }}</strong>
           <span class="ml-4">
-            {{ ticket.violationTime }}
+            <small class="mr-2">Offence time:</small>
+            <strong>{{ ticket.violationTime }}</strong>
           </span>
         </h2>
 
@@ -29,9 +30,9 @@
           </ng-template>
 
           <mat-step [stepControl]="disputantForm">
-            <ng-template matStepLabel>{{
-              "stepper.disputant.heading" | translate
-            }}</ng-template>
+            <ng-template matStepLabel
+              >Disputant contact information</ng-template
+            >
             <app-step-disputant
               id="stepDisputant"
               [stepper]="disputeStepper"
@@ -41,10 +42,7 @@
           </mat-step>
 
           <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
-            <ng-template matStepLabel
-              >{{ "stepper.count.sub_heading_1" | translate }} #1
-              {{ "stepper.count.sub_heading_2" | translate }}</ng-template
-            >
+            <ng-template matStepLabel>Count 1: Review and action</ng-template>
             <app-step-count
               id="stepCount"
               [stepControl]="offence1Form"
@@ -54,10 +52,7 @@
           </mat-step>
 
           <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
-            <ng-template matStepLabel
-              >{{ "stepper.count.sub_heading_1" | translate }} #2
-              {{ "stepper.count.sub_heading_2" | translate }}</ng-template
-            >
+            <ng-template matStepLabel>Count 2: Review and action</ng-template>
             <app-step-count
               id="stepCount"
               [stepControl]="offence2Form"
@@ -67,10 +62,7 @@
           </mat-step>
 
           <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
-            <ng-template matStepLabel
-              >{{ "stepper.count.sub_heading_1" | translate }} #3
-              {{ "stepper.count.sub_heading_2" | translate }}</ng-template
-            >
+            <ng-template matStepLabel>Count 3: Review and action</ng-template>
             <app-step-count
               id="stepCount"
               [stepControl]="offence3Form"
@@ -80,9 +72,7 @@
           </mat-step>
 
           <mat-step [stepControl]="additionalForm" *ngIf="isCourtRequired">
-            <ng-template matStepLabel>{{
-              "stepper.additional.heading" | translate
-            }}</ng-template>
+            <ng-template matStepLabel>Additional information</ng-template>
             <app-step-additional
               id="stepCourt"
               [stepper]="disputeStepper"
@@ -91,9 +81,7 @@
           </mat-step>
 
           <mat-step [stepControl]="overviewForm">
-            <ng-template matStepLabel>{{
-              "stepper.overview.heading" | translate
-            }}</ng-template>
+            <ng-template matStepLabel>Dispute overview</ng-template>
             <app-step-overview
               id="stepOverview"
               [stepper]="disputeStepper"
@@ -102,6 +90,8 @@
             ></app-step-overview>
           </mat-step>
         </mat-vertical-stepper>
+
+        <app-dispute-footer></app-dispute-footer>
       </app-page>
     </div>
   </div>
