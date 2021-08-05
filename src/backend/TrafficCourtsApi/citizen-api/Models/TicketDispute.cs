@@ -36,10 +36,9 @@ namespace Gov.CitizenApi.Models
         public string PostalCode { get; set; }
         public string BirthDate { get; set; }
         public string EmailAddress { get; set; }
-        public string DriverLicense { get; set; }
+        public string DriverLicenseNumber { get; set; }
         public string DriverLicenseProvince { get; set; }
-        public string HomePhoneNumber { get; set; }
-        public string WorkPhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
     }
 }

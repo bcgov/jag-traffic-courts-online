@@ -16,7 +16,10 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
 
             CreateMap<TicketSearchOffence, DisputeOffence>();
 
-            CreateMap<CreateShellTicketCommand, Ticket>();
+            CreateMap<CreateShellTicketCommand, Ticket>()
+                .ForMember(dest => dest.Offences, opt => opt.MapFrom<TicketOffencesResolver>())
+                ;
+
             CreateMap<DisputeOffence, Gov.CitizenApi.Features.Tickets.DBModel.Offence>();
         }
     }

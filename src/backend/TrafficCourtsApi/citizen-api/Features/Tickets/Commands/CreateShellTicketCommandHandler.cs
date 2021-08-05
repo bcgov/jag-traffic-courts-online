@@ -36,6 +36,7 @@ namespace Gov.CitizenApi.Features.Tickets.Commands
             var result = await _ticketsService.CreateTicketAsync(_mapper.Map<DBModel.Ticket>(createTicket));
             if (result.Id == 0)
             {
+                _logger.LogInformation("Shell ticket already exists. ");
                 return new CreateShellTicketResponse { Id = 0 };
             }
             else

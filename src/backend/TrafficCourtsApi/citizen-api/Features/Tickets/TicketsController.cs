@@ -53,7 +53,7 @@ namespace Gov.CitizenApi.Features.Tickets
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetTicket([FromQuery]TicketSearchQuery query)
+        public async Task<IActionResult> Ticket([FromQuery]TicketSearchQuery query)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Gov.CitizenApi.Features.Tickets
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateShellTicket([FromBody]CreateShellTicketCommand createShellTicket)
+        public async Task<IActionResult> ShellTicket([FromBody]CreateShellTicketCommand createShellTicket)
         {
             try
             {

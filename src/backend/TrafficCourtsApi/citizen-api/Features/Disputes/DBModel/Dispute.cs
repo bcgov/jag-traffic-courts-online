@@ -21,8 +21,7 @@ namespace Gov.CitizenApi.Features.Disputes.DBModel
         public string DisputantEmailAddress { get; set; }
         public string DriverLicense { get; set; }
         public string DriverLicenseProvince { get; set; }
-        public string HomePhoneNumber { get; set; }
-        public string WorkPhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } 
         public bool LawyerPresent { get; set; }
         public bool InterpreterRequired { get; set; }
         public bool WitnessPresent { get; set; }

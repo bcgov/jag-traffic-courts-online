@@ -10,14 +10,20 @@ namespace Gov.CitizenApi.Models
         public string ViolationTicketNumber { get; set; }
         public string ViolationTime { get; set; }
         public string ViolationDate { get; set; }
-        public string SurName { get; set; }
-        public string GivenName { get; set; }
+        public string LastName { get; set; }
+        public string GivenNames { get; set; }
         public string DriverLicenseNumber { get; set; }
-        public string Birthdate { get; set; }
-        public string Gender { get; set; }
-        public string ProvincialHearingLocation { get; set; }
-        public string OrganizationLocation { get; set; }
-        public List<Offence> Offences { get; set; }
+        public string Birthdate { get; set; } //2012-09-18
+        public string Gender { get; set; } //M,F,O
+        public string CourtHearingLocation { get; set; }//code
+        public string DetachmentLocation { get; set; } //code
+        public string Count1Charge { get; set; } // charge code: 19023
+        public decimal Count1FineAmount { get; set; } //140.90
+        public string Count2Charge { get; set; } // charge code: 19023
+        public decimal Count2FineAmount { get; set; } //140.90
+        public string Count3Charge { get; set; }// charge code: 19023
+        public decimal Count3FineAmount { get; set; } //140.90
+        public string Photo { get; set; } //base64 encoded image data.
 
     }
 }
