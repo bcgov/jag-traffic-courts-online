@@ -83,58 +83,58 @@ namespace Gov.CitizenApi.Test.Features.Tickets
 //            _ticketsServiceMock.Verify(x => x.SaveTicket(ticket), Times.Once);
 //        }
 
-        [Theory]
-        [AutoData]
-        public async Task GetTicket_return_response_with_OK(TicketSearchQuery query, TicketDispute response)
-        {
-            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
-            _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Returns(Task.FromResult(response));
-            query.TicketNumber = "EZ02000460";
-            query.Time = "09:21";
-            var result = (OkObjectResult)await sut.GetTicket(query);
-            Assert.IsAssignableFrom<ApiResultResponse<TicketDispute>>(result.Value);
-            Assert.NotNull(result.Value);
-            Assert.Equal(200, result.StatusCode);
-        }
+        //[Theory]
+        //[AutoData]
+        //public async Task GetTicket_return_response_with_OK(TicketSearchQuery query, TicketDispute response)
+        //{
+        //    TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
+        //    _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Returns(Task.FromResult(response));
+        //    query.TicketNumber = "EZ02000460";
+        //    query.Time = "09:21";
+        //    var result = (OkObjectResult)await sut.GetTicket(query);
+        //    Assert.IsAssignableFrom<ApiResultResponse<TicketDispute>>(result.Value);
+        //    Assert.NotNull(result.Value);
+        //    Assert.Equal(200, result.StatusCode);
+        //}
 
-        [Theory]
-        [AutoData]
-        public async Task GetTicket_return_null_with_NoContent(TicketSearchQuery query)
-        {
-            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
-            _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Returns(Task.FromResult<TicketDispute>(null));
-            query.TicketNumber = "EZ02000460";
-            query.Time = "09:21";
-            var result = (NoContentResult)await sut.GetTicket(query);
-            Assert.Equal(204, result.StatusCode);
-        }
+        //[Theory]
+        //[AutoData]
+        //public async Task GetTicket_return_null_with_NoContent(TicketSearchQuery query)
+        //{
+        //    TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
+        //    _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Returns(Task.FromResult<TicketDispute>(null));
+        //    query.TicketNumber = "EZ02000460";
+        //    query.Time = "09:21";
+        //    var result = (NoContentResult)await sut.GetTicket(query);
+        //    Assert.Equal(204, result.StatusCode);
+        //}
 
-        [Theory]
-        [AutoData]
-        public async Task GetTicket_return_null_with_TicketSearchException_noContent(TicketSearchQuery query)
-        {
-            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
-            _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Throws(
-                new TicketSearchException("message", 204,null,null,null)
-                );
-            query.TicketNumber = "EZ02000460";
-            query.Time = "09:21";
-            var result = (NoContentResult)await sut.GetTicket(query);
-            Assert.Equal(204, result.StatusCode);
-        }
+        //[Theory]
+        //[AutoData]
+        //public async Task GetTicket_return_null_with_TicketSearchException_noContent(TicketSearchQuery query)
+        //{
+        //    TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
+        //    _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Throws(
+        //        new TicketSearchException("message", 204,null,null,null)
+        //        );
+        //    query.TicketNumber = "EZ02000460";
+        //    query.Time = "09:21";
+        //    var result = (NoContentResult)await sut.GetTicket(query);
+        //    Assert.Equal(204, result.StatusCode);
+        //}
 
-        [Theory]
-        [AutoData]
-        public async Task GetTicket_return_InternalServerError_when_server_throws_exception(TicketSearchQuery query)
-        {
-            TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
-            _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Throws(
-                new TicketSearchException("message", 500, null, null, null)
-                );
-            query.TicketNumber = "EZ02000460";
-            query.Time = "09:21";
-            var result = (ObjectResult)await sut.GetTicket(query);
-            Assert.Equal(500, result.StatusCode);
-        }
+        //[Theory]
+        //[AutoData]
+        //public async Task GetTicket_return_InternalServerError_when_server_throws_exception(TicketSearchQuery query)
+        //{
+        //    TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
+        //    _mediatorMock.Setup(m => m.Send(It.IsAny<TicketSearchQuery>(), CancellationToken.None)).Throws(
+        //        new TicketSearchException("message", 500, null, null, null)
+        //        );
+        //    query.TicketNumber = "EZ02000460";
+        //    query.Time = "09:21";
+        //    var result = (ObjectResult)await sut.GetTicket(query);
+        //    Assert.Equal(500, result.StatusCode);
+        //}
     }
 }
