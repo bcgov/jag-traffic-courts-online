@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
@@ -28,9 +26,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private logger: LoggerService,
-    private translateService: TranslateService,
-    private toastService: ToastService,
-    private dialog: MatDialog
+    private translateService: TranslateService
   ) {}
 
   public ngOnInit(): void {
@@ -77,27 +73,6 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   }
 
   public onPayTicket(): void {
-    this.logger.info('onPayTicket', this.disputeService.ticket);
-    // const source = timer(1000);
-    // this.busy = source.subscribe((val) => {
     this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT)]);
-    // });
-    // const data: DialogOptions = {
-    //   titleKey: 'submit_confirmation.heading',
-    //   messageKey: 'submit_confirmation.message',
-    //   actionTextKey: 'submit_confirmation.confirm',
-    //   cancelTextKey: 'submit_confirmation.cancel',
-    // };
-
-    // this.dialog
-    //   .open(TicketPaymentDialogComponent, { data })
-    //   .afterClosed()
-    //   .subscribe((response: boolean) => {
-    //     console.log('response', response);
-    //     if (response) {
-    //       this.toastService.openSuccessToast('Ticket payment is successful');
-    //       // this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)]);
-    //     }
-    //   });
   }
 }

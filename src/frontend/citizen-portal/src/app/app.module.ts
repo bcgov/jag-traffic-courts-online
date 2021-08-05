@@ -45,6 +45,7 @@ import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.comp
 import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
+import { CountSummaryComponent } from './components/count-summary/count-summary.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -77,6 +78,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ShellTicketComponent,
     TicketImageComponent,
     TicketPaymentComponent,
+    CountSummaryComponent,
   ],
   imports: [
     CommonModule,
