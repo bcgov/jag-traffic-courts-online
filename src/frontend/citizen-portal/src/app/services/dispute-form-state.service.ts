@@ -88,21 +88,24 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     dispute.disputant = stepDisputant;
     dispute.offences = [];
 
-    if (stepOffence1.offenceNumber && stepOffence1.includeOffenceInDispute) {
+    if (stepOffence1.offenceNumber) {
+      // && stepOffence1.includeOffenceInDispute) {
       const offence1: Offence = {
         offenceNumber: stepOffence1.offenceNumber,
         offenceDisputeDetail: stepOffence1,
       };
       dispute.offences.push(offence1);
     }
-    if (stepOffence2.offenceNumber && stepOffence2.includeOffenceInDispute) {
+    if (stepOffence2.offenceNumber) {
+      // && stepOffence2.includeOffenceInDispute) {
       const offence2: Offence = {
         offenceNumber: stepOffence2.offenceNumber,
         offenceDisputeDetail: stepOffence2,
       };
       dispute.offences.push(offence2);
     }
-    if (stepOffence3.offenceNumber && stepOffence3.includeOffenceInDispute) {
+    if (stepOffence3.offenceNumber) {
+      // && stepOffence3.includeOffenceInDispute) {
       const offence3: Offence = {
         offenceNumber: stepOffence3.offenceNumber,
         offenceDisputeDetail: stepOffence3,
@@ -305,9 +308,9 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
       offenceNumber: [null],
-      includeOffenceInDispute: [false],
+      // includeOffenceInDispute: [false],
       offenceAgreementStatus: [null], // , [Validators.required]],
-      reductionAppearInCourt: [null],
+      // reductionAppearInCourt: [null],
       requestReduction: [false],
       requestMoreTime: [false],
       reductionReason: [null],
@@ -337,7 +340,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      informationCertified: [false], // , [FormControlValidators.requiredTruthful]],
+      // informationCertified: [false], // , [FormControlValidators.requiredTruthful]],
     });
   }
 }

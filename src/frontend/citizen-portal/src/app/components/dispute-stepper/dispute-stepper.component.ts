@@ -122,6 +122,9 @@ export class DisputeStepperComponent
   public onStepSave(stepper: MatStepper): void {
     this.logger.info('Dispute Data:', this.disputeFormStateService.json);
 
+    const payload = this.disputeFormStateService.jsonTicketDispute;
+    this.logger.info('**********Dispute Data Payload:', payload);
+
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
 

@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
-import { YesNoPipe } from '@shared/pipes/yes-no.pipe';
 import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepAdditionalComponent } from './step-additional.component';
@@ -27,7 +26,7 @@ describe('StepAdditionalComponent', () => {
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [StepAdditionalComponent, YesNoPipe],
+      declarations: [StepAdditionalComponent],
       providers: [
         MockDisputeService,
         DisputeFormStateService,

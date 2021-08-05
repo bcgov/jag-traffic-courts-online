@@ -63,7 +63,7 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
-      informationCertified: false,
+      // informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,
@@ -136,7 +136,7 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
-      informationCertified: false,
+      // informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,
@@ -168,11 +168,11 @@ export class MockDisputeService {
       discountDueDate: null,
     };
 
-    const offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
+    let offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
       offence.offenceNumber
     );
     offenceDispute.status = 1;
-    offenceDispute.informationCertified = true;
+    // offenceDispute.informationCertified = true;
 
     offence.offenceDisputeDetail = offenceDispute;
 
@@ -191,6 +191,12 @@ export class MockDisputeService {
       discountAmount: 0,
       discountDueDate: null,
     };
+
+    offenceDispute = this.createOffenceMoreTime(offence.offenceNumber);
+    offenceDispute.status = 1;
+    // offenceDispute.informationCertified = true;
+
+    offence.offenceDisputeDetail = offenceDispute;
 
     ticket.offences.push(offence);
 
@@ -215,6 +221,12 @@ export class MockDisputeService {
       discountAmount: 25,
       discountDueDate: soonDate,
     };
+
+    offenceDispute = this.createOffencePay(offence.offenceNumber);
+    offenceDispute.status = 1;
+    // offenceDispute.informationCertified = true;
+
+    offence.offenceDisputeDetail = offenceDispute;
 
     ticket.offences.push(offence);
 
@@ -289,7 +301,60 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
-      informationCertified: false,
+      // informationCertified: false,
+    };
+  }
+
+  private createOffenceNothing(offenceNumber: number): OffenceDisputeDetail {
+    return {
+      status: 0,
+      offenceNumber,
+      offenceAgreementStatus: 'NOTHING',
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: null,
+      moreTimeReason: null,
+      // informationCertified: false,
+    };
+  }
+
+  private createOffencePay(offenceNumber: number): OffenceDisputeDetail {
+    return {
+      status: 0,
+      offenceNumber,
+      offenceAgreementStatus: 'PAY',
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: null,
+      moreTimeReason: null,
+      // informationCertified: false,
+    };
+  }
+
+  private createOffenceReduction(offenceNumber: number): OffenceDisputeDetail {
+    return {
+      status: 0,
+      offenceNumber,
+      offenceAgreementStatus: 'REDUCTION',
+      requestReduction: true,
+      requestMoreTime: false,
+      reductionReason: 'I have been unable to work for the past 6 months.',
+      moreTimeReason: null,
+      // informationCertified: false,
+    };
+  }
+
+  private createOffenceMoreTime(offenceNumber: number): OffenceDisputeDetail {
+    return {
+      status: 0,
+      offenceNumber,
+      offenceAgreementStatus: 'REDUCTION',
+      requestReduction: true,
+      requestMoreTime: true,
+      reductionReason:
+        'I have been unable to work for the past 6 months and cannot pay my rent.',
+      moreTimeReason: 'I have a new job starting next week.',
+      // informationCertified: false,
     };
   }
 }

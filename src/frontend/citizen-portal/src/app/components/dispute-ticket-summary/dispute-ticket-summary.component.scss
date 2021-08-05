@@ -1,0 +1,79 @@
+@import "palette.scss";
+
+h3 {
+  font-weight: bold;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+a {
+  color: theme-palette(blue, light);
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+tr {
+  background-color: rgba(theme-palette(blue), 0.05) !important;
+  border-left: 3px solid theme-palette(blue);
+
+  &:hover {
+    background-color: rgba(theme-palette(blue), 0.125) !important;
+  }
+
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+td,
+label,
+small {
+  user-select: none;
+}
+
+label {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+mat-icon {
+  vertical-align: middle;
+}
+
+button.mat-flat-button .mat-icon {
+  vertical-align: top;
+  font-size: 1.25em;
+}
+
+small {
+  color: theme-palette(blue);
+}
+
+.mat-flat-button,
+.mat-stroked-button {
+  width: 100%;
+  margin-bottom: 1em;
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+  }
+}
+
+.card-section {
+  background-color: #ededed !important;
+  border-left: 3px solid theme-palette(blue);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+hr {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}

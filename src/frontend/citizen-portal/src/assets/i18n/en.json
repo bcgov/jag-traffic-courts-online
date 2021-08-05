@@ -55,9 +55,9 @@
   },
   "stepper": {
     "next": "Next",
-    "cancel": "Cancel",
+    "cancel": "Back to search",
     "back": "Back",
-    "submit": "Submit",
+    "submit": "Submit request",
     "disputant": {
       "heading": "Disputant Information",
       "sub_heading": "Please fill in the following information.",

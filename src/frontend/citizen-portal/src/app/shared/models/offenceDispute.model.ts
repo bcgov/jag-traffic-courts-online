@@ -5,7 +5,7 @@ export interface OffenceDispute {
   violationTicketNumber: string;
   violationTime: string;
   offenceNumber: number;
-  informationCertified: boolean;
+  // informationCertified: boolean;
 
   // Part B
   offenceDisputeDetail: OffenceDisputeDetail;

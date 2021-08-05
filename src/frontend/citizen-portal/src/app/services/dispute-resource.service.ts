@@ -1,15 +1,15 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigService } from '@config/config.service';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { Offence } from '@shared/models/offence.model';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { OffenceDispute } from '@shared/models/offenceDispute.model';
-import { ConfigService } from '@config/config.service';
+import { ShellTicket } from '@shared/models/shellTicket.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +33,7 @@ export class DisputeResourceService {
   }): Observable<TicketDispute> {
     const httpParams = new HttpParams({ fromObject: params });
 
-    return this.apiResource.get<TicketDispute>('tickets', httpParams).pipe(
+    return this.apiResource.get<TicketDispute>('ticket', httpParams).pipe(
       map((response: ApiHttpResponse<TicketDispute>) =>
         response ? response.result : null
       ),
@@ -83,28 +83,24 @@ export class DisputeResourceService {
   }
 
   /**
-   * Create a offence dispute
+   * Create the shell ticket
+   *
+   * @param dispute The dispute to be created
    */
-  public createOffenceDispute(
-    offenceDispute: OffenceDispute
-  ): Observable<null> {
-    this.logger.info('createOffenceDispute', offenceDispute);
+  public createShellTicket(ticket: ShellTicket): Observable<null> {
+    this.logger.info('createShellTicket', ticket);
 
-    return this.apiResource
-      .post<TicketDispute>('disputes/offenceDispute', offenceDispute)
-      .pipe(
-        map((response: ApiHttpResponse<null>) => null),
-        catchError((error: any) => {
-          this.toastService.openErrorToast(
-            this.configService.dispute_create_error
-          );
-          this.logger.error(
-            'DisputeResourceService::createOffenceDispute error has occurred: ',
-            error
-          );
-          throw error;
-        })
-      );
+    return this.apiResource.post<TicketDispute>('shellTicket', ticket).pipe(
+      map((response: ApiHttpResponse<null>) => null),
+      catchError((error: any) => {
+        this.toastService.openErrorToast('Ticket could not be created');
+        this.logger.error(
+          'DisputeResourceService::createShellTicket error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
   }
 
   private getOffenceInfo(row: Offence): number {

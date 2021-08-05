@@ -16,37 +16,30 @@
     </div>
   </section>
 
-  <p>
+  <div>
     A confirmation email of the request information has been sent to: <br />
     <strong>sally123@hotmail.com</strong>
-  </p>
+  </div>
 
-  <p class="mt-2">
-    You have selected 'Pay count' for Count 3, please use the button below to
-    proceed to payment.<br />
-    <button type="button" mat-flat-button color="accent" class="large">
+  <div class="mt-4">
+    You have selected '<strong>Pay count</strong>' for <strong>Count 3</strong>,
+    please use the button below to proceed to payment.<br />
+    <button
+      type="button"
+      mat-flat-button
+      color="accent"
+      class="large mt-3"
+      style="width: unset"
+    >
       Make payment
     </button>
-  </p>
+  </div>
 
   <hr />
 
   <strong>Submission details</strong>
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
-
-  <!--
-  <section class="mb-2">
-    <h2>
-      <small class="mr-2">Ticket #:</small>
-      <strong>{{ ticket.violationTicketNumber }}</strong>
-      <span class="ml-4">
-        <small class="mr-2">Offence time:</small>
-        <strong>{{ ticket.violationTime }}</strong>
-      </span>
-    </h2>
-  </section>
--->
 
   <section class="mb-4 mt-4">
     <div class="row">

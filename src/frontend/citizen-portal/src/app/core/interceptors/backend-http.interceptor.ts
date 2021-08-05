@@ -42,7 +42,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
 
     if (this.appConfigService.useMockServices) {
       if (
-        currentRoutePath !== 'tickets' &&
+        !currentRoutePath.includes('ticket') &&
         !currentRoutePath.includes('dispute') &&
         currentRoutePath !== 'lookups'
       ) {
@@ -52,11 +52,11 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         });
       }
 
-      // Handle 'tickets' requests
-      if (currentRoutePath === 'tickets') {
+      // Handle 'ticket' requests
+      if (currentRoutePath.includes('ticket')) {
         return this.handleTicketsRequests(request.method);
 
-        // Handle 'disputes' requests
+        // Handle 'dispute' requests
       } else if (currentRoutePath.includes('dispute')) {
         return this.handleDisputesRequests(request.method);
 

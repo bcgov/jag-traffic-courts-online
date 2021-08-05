@@ -90,17 +90,17 @@ export class StepOverviewComponent
     return this.disputeFormStateService.offences;
   }
 
-  public get disputantInfo(): Disputant {
-    return this.disputeFormStateService.disputant;
-  }
+  // public get disputantInfo(): Disputant {
+  //   return this.disputeFormStateService.disputant;
+  // }
 
   public get additionalInfo(): Additional {
     return this.disputeFormStateService.additional;
   }
 
-  public get informationCertified(): FormControl {
-    return this.form.get('informationCertified') as FormControl;
-  }
+  // public get informationCertified(): FormControl {
+  //   return this.form.get('informationCertified') as FormControl;
+  // }
 
   public get offenceAgreementStatus(): FormControl {
     return this.offence1Form.get('offenceAgreementStatus') as FormControl;

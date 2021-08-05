@@ -3,16 +3,29 @@ export interface OffenceDisputeDetail {
   offenceNumber: number;
   status: number;
   offenceAgreementStatus?: string;
-  reductionAppearInCourt?: string;
+  // reductionAppearInCourt?: string;
   requestReduction: boolean;
   requestMoreTime: boolean;
 
   reductionReason?: string;
   moreTimeReason?: string;
-  informationCertified: boolean;
+  // informationCertified: boolean;
 
   /*
-  requestMethod: string;
-  offenceAgreementStatus
+  offenceAgreementStatus:
+    NOTHING
+                    I do not wish to take any action on this count at this time.
+
+    PAY
+                    I would like to pay for this count.
+
+    REDUCTION
+                    I agree I committed this offence and I would like to request a
+                    fine reduction and/or more time to pay for this count.
+
+    DISPUTE
+                    I do not agree that I committed this offence and I would like to
+                    dispute this count.
+
   */
 }

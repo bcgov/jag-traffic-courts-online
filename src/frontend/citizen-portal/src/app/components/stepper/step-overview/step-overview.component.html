@@ -111,217 +111,169 @@
   </section>
 -->
 
-  <section>
-    <!--
-    <ng-container *ngFor="let offence of offenceFormsList; let i = index">
-      <ng-container *ngIf="offence.offenceNumber">
-        <div class="row mt-2">
-          <div class="col-md-2">
-            <mat-chip-list>
-              <mat-chip selected class="p-3"
-                >Count {{ offence.offenceNumber }}</mat-chip
-              >
-            </mat-chip-list>
-          </div>
-          <div class="col-md-8">
-            <small class="d-block"> Description of offence </small>
-            <strong>{{ offence.offenceDescription | titlecase }}</strong>
-          </div>
-          <div class="col-md-2">
-            <small class="d-block">Test</small>
-            <strong>test</strong>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
--->
-    <ng-container *ngFor="let offence of offenceFormsList; let i = index">
-      <ng-container *ngIf="offence.offenceNumber">
-        <!--
-        <div class="row mt-2">
-          <div class="col-md-2">
-            <mat-chip-list>
-              <mat-chip selected class="p-3"
-                >Count {{ offence.offenceNumber }}</mat-chip
-              >
-            </mat-chip-list>
-          </div>
-          <div class="col-md-8">
-            <small class="d-block"> Description of offence </small>
-            <strong>{{ offence.offenceDescription | titlecase }}</strong>
-          </div>
-          <div class="col-md-2">
-            <small class="d-block">Test</small>
-            <strong>test</strong>
-          </div>
-        </div>
-      -->
-
-        <div class="offence-header-section">
-          <div class="row page-subheader mb-0">
-            <div class="col-4 text-left">
-              {{ "stepper.overview.count" | translate }} #{{
-                offence.offenceNumber
-              }}
-            </div>
-            <div class="col-8 text-right">{{ offence.offenceDescription }}</div>
-          </div>
-          <div class="row">
-            <div class="col-5">
-              {{ "stepper.count.offence_amount" | translate }}
-            </div>
-            <div class="col-7 text-right">
-              {{
-                offence.ticketedAmount
-                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-              }}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-5">
-              {{ "stepper.count.amount_due" | translate }}
-            </div>
-            <div class="col-7 text-right">
-              {{
-                offence.amountDue
-                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-              }}
-            </div>
-          </div>
-          <div class="row" *ngIf="offence.discountAmount > 0">
-            <div class="col-8">
-              {{ "stepper.count.discount_if_paid_by" | translate }}
-              {{
-                offence.discountDueDate
-                  | date: "MMM dd YYYY":"+0200":defaultLanguage
-              }})
-            </div>
-            <div class="col-4 text-right">
-              {{
-                offence.discountAmount
-                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-              }}
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-2">
-          <div class="col">
-            <ul>
-              <li *ngIf="offence.offenceAgreementStatus === 'NOTHING'">
-                I do not wish to take any action on this count at this time.
-              </li>
-              <li *ngIf="offence.offenceAgreementStatus === 'PAY'">
-                I would like to pay for this count.
-              </li>
-              <li *ngIf="offence.offenceAgreementStatus === 'REDUCTION'">
-                I would like to request a fine reduction and/or more time to pay
-                for this count.
-              </li>
-              <li *ngIf="offence.offenceAgreementStatus === 'DISPUTE'">
-                I would like to dispute this count.
-              </li>
-              <ng-container
-                *ngIf="offence.offenceAgreementStatus === 'REDUCTION'"
-              >
-                <li *ngIf="offence.requestReduction">
-                  {{ "stepper.count.requestReduction" | translate }}
-                </li>
-                <div *ngIf="offence.requestReduction">
-                  {{ offence.reductionReason }}
-                </div>
-                <li *ngIf="offence.requestMoreTime">
-                  {{ "stepper.count.requestMoreTime" | translate }}
-                </li>
-                <div *ngIf="offence.requestMoreTime">
-                  {{ offence.moreTimeReason }}
-                </div>
-              </ng-container>
-            </ul>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
-  </section>
-
   <!--
-  <section class="px-4 py-2 mb-3 card-section">
-    <div class="row mt-2">
-      <div class="offset-md-5 col-md-5">
-        Balance due if paid after Aug 15, 2021
-      </div>
-      <div class="col-md-2">
-        <strong>{{
-          200 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-        }}</strong>
-      </div>
+          <div class="row mt-2">
+            <div class="col-md-2">
+              <mat-chip-list>
+                <mat-chip selected class="p-3">Count 0</mat-chip>
+              </mat-chip-list>
+            </div>
+            <div class="col-md-8">
+              <small class="d-block"> Description of offence </small>
+              <strong>Test</strong>
+            </div>
+            <div class="col-md-2">
+              <small class="d-block">Test</small>
+              <strong>test</strong>
+            </div>
+          </div>
+-->
+  <section>
+    <div *ngIf="offenceFormsList">
+      <ng-container *ngFor="let offence of offenceFormsList; let i = index">
+        <ng-container *ngIf="offence.offenceNumber">
+          <div class="offence-header-section">
+            <div class="row page-subheader mb-0">
+              <div class="col-4 text-left">
+                {{ "stepper.overview.count" | translate }} #{{
+                  offence.offenceNumber
+                }}
+              </div>
+              <div class="col-8 text-right">
+                {{ offence.offenceDescription }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-5">
+                {{ "stepper.count.offence_amount" | translate }}
+              </div>
+              <div class="col-7 text-right">
+                {{
+                  offence.ticketedAmount
+                    | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+                }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-5">
+                {{ "stepper.count.amount_due" | translate }}
+              </div>
+              <div class="col-7 text-right">
+                {{
+                  offence.amountDue
+                    | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+                }}
+              </div>
+            </div>
+            <div class="row" *ngIf="offence.discountAmount > 0">
+              <div class="col-8">
+                {{ "stepper.count.discount_if_paid_by" | translate }}
+                {{
+                  offence.discountDueDate
+                    | date: "MMM dd YYYY":"+0200":defaultLanguage
+                }})
+              </div>
+              <div class="col-4 text-right">
+                {{
+                  offence.discountAmount
+                    | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+                }}
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col">
+              <ul>
+                <li *ngIf="offence.offenceAgreementStatus === 'NOTHING'">
+                  I do not wish to take any action on this count at this time.
+                </li>
+                <li *ngIf="offence.offenceAgreementStatus === 'PAY'">
+                  I would like to pay for this count.
+                </li>
+                <li *ngIf="offence.offenceAgreementStatus === 'REDUCTION'">
+                  I would like to request a fine reduction and/or more time to
+                  pay for this count.
+                </li>
+                <li *ngIf="offence.offenceAgreementStatus === 'DISPUTE'">
+                  I would like to dispute this count.
+                </li>
+                <ng-container
+                  *ngIf="offence.offenceAgreementStatus === 'REDUCTION'"
+                >
+                  <li *ngIf="offence.requestReduction">
+                    {{ "stepper.count.requestReduction" | translate }}
+                  </li>
+                  <div *ngIf="offence.requestReduction">
+                    {{ offence.reductionReason }}
+                  </div>
+                  <li *ngIf="offence.requestMoreTime">
+                    {{ "stepper.count.requestMoreTime" | translate }}
+                  </li>
+                  <div *ngIf="offence.requestMoreTime">
+                    {{ offence.moreTimeReason }}
+                  </div>
+                </ng-container>
+              </ul>
+            </div>
+          </div>
+          -
+        </ng-container>
+      </ng-container>
     </div>
   </section>
--->
 
-  <section class="px-4 py-2 mb-2 card-section" *ngIf="additionalInfo">
+  <section class="px-4 py-4 mb-4 card-section" *ngIf="additionalInfo">
     <div class="page-subheader">
-      <strong>
-        {{ "stepper.overview.additional_information" | translate }}
-      </strong>
+      <strong> Additional information </strong>
       <p>
         The following options apply to all counts on this ticket that are being
         disputed.
       </p>
       <hr />
     </div>
-    <div class="row">
-      <div class="col mb-2">
-        <ul>
-          <ng-container
-            *ngIf="additionalInfo.lawyerPresent; else noLawyerPresent"
-          >
-            <li>
-              {{ "stepper.additional.lawyer" | translate }}
-            </li>
-          </ng-container>
-          <ng-template #noLawyerPresent>
-            <li>
-              {{ "stepper.additional.no_lawyer" | translate }}
-            </li>
-          </ng-template>
-          <ng-container
-            *ngIf="
-              additionalInfo.interpreterRequired;
-              else noInterpreterRequired
-            "
-          >
-            <li>
-              {{ "stepper.additional.interpreter" | translate }} -
-              {{
-                additionalInfo.interpreterLanguage
-                  | configCode: "languages"
-                  | default
-              }}
-            </li>
-          </ng-container>
-          <ng-template #noInterpreterRequired>
-            <li>
-              {{ "stepper.additional.no_interpreter" | translate }}
-            </li>
-          </ng-template>
-          <ng-container
-            *ngIf="additionalInfo.witnessPresent; else noWitnessPresent"
-          >
-            <li>
-              {{ "stepper.additional.witness" | translate }}
-            </li>
-          </ng-container>
-          <ng-template #noWitnessPresent>
-            <li>
-              {{ "stepper.additional.no_witness" | translate }}
-            </li>
-          </ng-template>
-        </ul>
+
+    <div class="row" *ngIf="additionalInfo.lawyerPresent">
+      <div class="col-md-8">
+        <small class="d-block">Action</small>
+        <strong>
+          {{ "stepper.additional.lawyer" | translate }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="additionalInfo.interpreterRequired">
+      <div class="col-md-8">
+        <small class="d-block">Action</small>
+        <strong> I require an interpreter </strong>
+      </div>
+
+      <div class="col-md-4">
+        <small class="d-block">Language</small>
+        <strong>
+          {{
+            additionalInfo.interpreterLanguage
+              | configCode: "languages"
+              | default
+          }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="additionalInfo.witnessPresent">
+      <div class="col-md-8">
+        <small class="d-block">Action</small>
+        <strong> I intend to call witness(es) </strong>
+      </div>
+
+      <div class="col-md-4">
+        <small class="d-block"># of witness(es)</small>
+        <strong>0</strong>
       </div>
     </div>
   </section>
 
+  <!--
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section class="mb-2">
       <div class="row">
@@ -346,6 +298,7 @@
       </div>
     </section>
   </form>
+-->
 
   <section class="mb-2">
     <div class="row">
