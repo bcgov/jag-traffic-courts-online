@@ -228,6 +228,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
               this.toastService.openSuccessToast(
                 'The ticket has successfully been created'
               );
+
               // TODO: CAROL FIX
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
                 queryParams: {

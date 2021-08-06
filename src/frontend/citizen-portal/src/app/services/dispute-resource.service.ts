@@ -34,7 +34,7 @@ export class DisputeResourceService {
     const httpParams = new HttpParams({ fromObject: params });
 
     return this.apiResource
-      .get<TicketDispute>('ticket/tickets', httpParams)
+      .get<TicketDispute>('tickets/ticket', httpParams)
       .pipe(
         map((response: ApiHttpResponse<TicketDispute>) =>
           response ? response.result : null
