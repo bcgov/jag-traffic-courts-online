@@ -28,25 +28,6 @@ namespace Gov.CitizenApi.Features.Tickets
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        //[HttpPost]
-        //[Route("saveticket")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
-        //public async Task<IActionResult> SaveTicket([FromBody] Ticket ticket)
-        //{
-        //    return Ok(await _ticketsService.SaveTicket(ticket));
-        //}
-
-        //[HttpGet]
-        //[Route("getTickets")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
-        //public async Task<IActionResult> GetTickets()
-        //{
-        //    return Ok(await _ticketsService.GetTickets());
-        //}
-
-
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]

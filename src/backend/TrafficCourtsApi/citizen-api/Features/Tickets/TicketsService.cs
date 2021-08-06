@@ -60,7 +60,7 @@ namespace Gov.CitizenApi.Features.Tickets
 
         public async Task<IEnumerable<Ticket>> GetTickets()
         {
-            _logger.LogDebug("Returning list of mock tickets");
+            _logger.LogDebug("Returning all tickets");
             var tickets = await _context.Tickets.ToListAsync();
 
             return tickets;

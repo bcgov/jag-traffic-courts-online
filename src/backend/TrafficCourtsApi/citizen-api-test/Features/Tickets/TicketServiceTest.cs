@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Gov.CitizenApi.Features.Lookups;
 using Gov.CitizenApi.Features.Tickets;
+using Gov.CitizenApi.Features.Tickets.DBModel;
 using Gov.CitizenApi.Infrastructure;
 using Gov.CitizenApi.Models;
 using Gov.CitizenApi.Test.Utils;
@@ -47,25 +48,23 @@ namespace Gov.CitizenApi.Test.Features.Tickets
             Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null, _lookupsMock.Object));
         }
 
-//        [Fact]
-//#pragma warning disable IDE1006 // Naming Styles
-//        public async Task get_tickets()
-//#pragma warning restore IDE1006 // Naming Styles
-//        {
-//            var result = await _service.GetTickets();
-//            Assert.IsAssignableFrom<IEnumerable<Ticket>>(result);
-//            //_loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
-//        }
+        [Fact]
+#pragma warning disable IDE1006 // Naming Styles
+        public async Task get_tickets()
+#pragma warning restore IDE1006 // Naming Styles
+        {
+            var result = await _service.GetTickets();
+            Assert.IsAssignableFrom<IEnumerable<Ticket>>(result);
+            //_loggerMock.VerifyLog(LogLevel.Information, "Returning list of mock tickets", Times.Once());
+        }
 
-//        [Theory]
-//        [AutoData]
-//#pragma warning disable IDE1006 // Naming Styles
-//        public async Task save_ticket(Ticket ticket)
-//#pragma warning restore IDE1006 // Naming Styles
-//        {
-//            var result = await _service.SaveTicket(ticket);
-//            Assert.IsAssignableFrom<Ticket>(result);
-//            //_loggerMock.VerifyLog(LogLevel.Information, "Saving mock ticket", Times.Once());
-//        }
+        [Theory]
+        [AutoData]
+        public async Task CreateTicket(Ticket ticket)
+
+        {
+            var result = await _service.CreateTicketAsync(ticket);
+            Assert.IsAssignableFrom<Ticket>(result);
+        }
     }
 }
