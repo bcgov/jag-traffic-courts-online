@@ -9,7 +9,7 @@ namespace Gov.CitizenApi.Features.Tickets.DBModel
         public int Id { get; set; }
         public int OffenceNumber { get; set; }
         public string OffenceCode { get; set; }
-        public decimal TicketedAmount { get; set; }//total
+        public decimal? TicketedAmount { get; set; }//total
         public decimal AmountDue { get; set; } //total-discount-paid
         public string ViolationDateTime { get; set; }
         public string OffenceDescription { get; set; }
