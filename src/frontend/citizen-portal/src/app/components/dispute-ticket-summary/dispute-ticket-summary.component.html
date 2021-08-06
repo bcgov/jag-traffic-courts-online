@@ -65,11 +65,7 @@
         <div class="col-lg-3">
           <small class="d-block">I will appear in court</small>
           <strong>
-            <!--
-            {{
-            row.offenceDisputeDetail?.reductionAppearInCourt | yesNo
-          }}-->
-            TODO
+            {{ row.offenceDisputeDetail?.reductionAppearInCourt | yesNo }}
           </strong>
         </div>
       </div>
@@ -151,7 +147,7 @@
 
         <div class="col-lg-4">
           <small class="d-block"># of witness(es)</small>
-          <strong>0</strong>
+          <strong>{{ ticket.additional.numberOfWitnesses }}</strong>
         </div>
       </div>
     </section>

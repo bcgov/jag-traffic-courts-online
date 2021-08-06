@@ -29,7 +29,7 @@ import { DisputePageComponent } from './components/dispute-page/dispute-page.com
 import { StepCountComponent } from './components/stepper/step-count/step-count.component';
 import { StepOverviewComponent } from './components/stepper/step-overview/step-overview.component';
 import { StepAdditionalComponent } from './components/stepper/step-additional/step-additional.component';
-import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
+import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 import { StepDisputantComponent } from './components/stepper/step-disputant/step-disputant.component';
 import { AppConfigService } from './services/app-config.service';
@@ -46,6 +46,7 @@ import { TicketImageComponent } from './components/ticket-image/ticket-image.com
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
+import { TicketPaymentSuccessComponent } from './components/ticket-payment-success/ticket-payment-success.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -69,7 +70,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     StepCountComponent,
     StepOverviewComponent,
     StepAdditionalComponent,
-    DisputeSubmitComponent,
+    DisputeSubmitSuccessComponent,
     DisputeSummaryComponent,
     DisputeStepperComponent,
     StepDisputantComponent,
@@ -79,6 +80,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketImageComponent,
     TicketPaymentComponent,
     CountSummaryComponent,
+    TicketPaymentSuccessComponent,
   ],
   imports: [
     CommonModule,

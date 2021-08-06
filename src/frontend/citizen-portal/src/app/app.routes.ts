@@ -1,6 +1,7 @@
 export class AppRoutes {
   public static FIND = 'find';
-  public static SUCCESS = 'success';
+  public static PAYMENT_SUCCESS = 'paymentSuccess';
+  public static SUBMIT_SUCCESS = 'submitSuccess';
   public static SHELL = 'shell';
   public static IMAGE = 'image';
   public static SUMMARY = 'summary';

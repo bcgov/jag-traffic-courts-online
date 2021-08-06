@@ -177,7 +177,9 @@ export class DisputeStepperComponent
               this.toastService.openSuccessToast(
                 this.configService.dispute_submitted
               );
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
+              this.router.navigate([
+                AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS),
+              ]);
             });
         }
       });

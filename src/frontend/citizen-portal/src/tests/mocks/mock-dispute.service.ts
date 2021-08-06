@@ -149,6 +149,7 @@ export class MockDisputeService {
       interpreterRequired: true,
       interpreterLanguage: 'SPA',
       witnessPresent: false,
+      numberOfWitnesses: null,
     };
 
     const offenceDate = faker.date.soon().toString();
@@ -297,11 +298,11 @@ export class MockDisputeService {
       status: 0,
       offenceNumber,
       offenceAgreementStatus: 'DISPUTE',
+      reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
-      // informationCertified: false,
     };
   }
 
@@ -310,11 +311,11 @@ export class MockDisputeService {
       status: 0,
       offenceNumber,
       offenceAgreementStatus: 'NOTHING',
+      reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
-      // informationCertified: false,
     };
   }
 
@@ -323,11 +324,11 @@ export class MockDisputeService {
       status: 0,
       offenceNumber,
       offenceAgreementStatus: 'PAY',
+      reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
-      // informationCertified: false,
     };
   }
 
@@ -336,11 +337,11 @@ export class MockDisputeService {
       status: 0,
       offenceNumber,
       offenceAgreementStatus: 'REDUCTION',
+      reductionAppearInCourt: true,
       requestReduction: true,
       requestMoreTime: false,
       reductionReason: 'I have been unable to work for the past 6 months.',
       moreTimeReason: null,
-      // informationCertified: false,
     };
   }
 
@@ -349,12 +350,12 @@ export class MockDisputeService {
       status: 0,
       offenceNumber,
       offenceAgreementStatus: 'REDUCTION',
+      reductionAppearInCourt: true,
       requestReduction: true,
       requestMoreTime: true,
       reductionReason:
         'I have been unable to work for the past 6 months and cannot pay my rent.',
       moreTimeReason: 'I have a new job starting next week.',
-      // informationCertified: false,
     };
   }
 }

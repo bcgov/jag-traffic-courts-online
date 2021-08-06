@@ -64,9 +64,12 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
             time: this.ticket.violationTime,
           };
 
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-            queryParams: params,
-          });
+          this.router.navigate(
+            [AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS)],
+            {
+              queryParams: params,
+            }
+          );
         }
       });
   }

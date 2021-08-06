@@ -71,6 +71,15 @@
 
       <div class="row">
         <div class="col">
+          <mat-form-field>
+            <mat-label>Number of witnesses</mat-label>
+            <input matInput type="number" formControlName="numberOfWitnesses" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
           <app-alert type="warning" icon="warning">
             <ng-container #alertContent class="alert-content">
               {{ "stepper.additional.note" | translate }}

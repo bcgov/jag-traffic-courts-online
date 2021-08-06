@@ -8,11 +8,11 @@ import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 
 @Component({
-  selector: 'app-dispute-submit',
-  templateUrl: './dispute-submit.component.html',
-  styleUrls: ['./dispute-submit.component.scss'],
+  selector: 'app-ticket-payment-success',
+  templateUrl: './ticket-payment-success.component.html',
+  styleUrls: ['./ticket-payment-success.component.scss'],
 })
-export class DisputeSubmitComponent implements OnInit, AfterViewInit {
+export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
   public ticket: TicketDispute;
 
   constructor(
@@ -41,24 +41,5 @@ export class DisputeSubmitComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     this.utilsService.scrollTop();
-  }
-
-  public onViewYourTicket(): void {
-    const ticket = this.disputeService.ticket;
-    const params = {
-      ticketNumber: ticket.violationTicketNumber,
-      time: ticket.violationTime,
-    };
-
-    this.disputeService.ticket$.next(null);
-
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-      queryParams: params,
-    });
-  }
-
-  public onExitTicket(): void {
-    this.disputeService.ticket$.next(null);
-    this.router.navigate(['/']);
   }
 }

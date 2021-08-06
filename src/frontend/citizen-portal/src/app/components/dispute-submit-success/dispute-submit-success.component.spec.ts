@@ -6,11 +6,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
-import { DisputeSubmitComponent } from './dispute-submit.component';
+import { DisputeSubmitSuccessComponent } from './dispute-submit-success.component';
 
-describe('DisputeSubmitComponent', () => {
-  let component: DisputeSubmitComponent;
-  let fixture: ComponentFixture<DisputeSubmitComponent>;
+describe('DisputeSubmitSuccessComponent', () => {
+  let component: DisputeSubmitSuccessComponent;
+  let fixture: ComponentFixture<DisputeSubmitSuccessComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,12 +22,12 @@ describe('DisputeSubmitComponent', () => {
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [DisputeSubmitComponent],
+      declarations: [DisputeSubmitSuccessComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisputeSubmitComponent);
+    fixture = TestBed.createComponent(DisputeSubmitSuccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

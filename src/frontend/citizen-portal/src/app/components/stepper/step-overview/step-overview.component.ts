@@ -137,4 +137,8 @@ export class StepOverviewComponent
   public get witnessPresent(): FormControl {
     return this.additionalForm.get('witnessPresent') as FormControl;
   }
+
+  public get numberOfWitnesses(): FormControl {
+    return this.additionalForm.get('numberOfWitnesses') as FormControl;
+  }
 }
