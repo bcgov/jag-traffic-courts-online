@@ -80,7 +80,6 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
             if (dispute == null) return ticketDispute;
             ticketDispute.Disputant = _mapper.Map<Disputant>(dispute);
             ticketDispute.Additional = _mapper.Map<Additional>(dispute);
-            ticketDispute.InformationCertified = dispute.InformationCertified;
             foreach (Offence offence in ticketDispute.Offences)
             {
                 var detail =

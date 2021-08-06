@@ -10,7 +10,6 @@ namespace Gov.CitizenApi.Models
         public string ViolationTicketNumber { get; set; }
         public string ViolationTime { get; set; }
         public string ViolationDate { get; set; }
-        public bool InformationCertified { get; set; }
         public Disputant Disputant { get; set; }
         public Additional Additional { get; set; }
         public List<Offence> Offences { get; set; }
@@ -23,6 +22,7 @@ namespace Gov.CitizenApi.Models
         public bool InterpreterRequired { get; set; }
         public string InterpreterLanguage { get; set; }
         public bool WitnessPresent { get; set; }
+        public int? NumberOfWitnesses { get; set; }
     }
 
     [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]

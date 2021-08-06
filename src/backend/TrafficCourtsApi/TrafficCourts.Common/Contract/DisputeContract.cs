@@ -36,8 +36,9 @@ namespace TrafficCourts.Common.Contract
 
     public enum OffenceAgreementStatus
     {
-        AgreeOffenceNotInCourt,
-        AgreeOffenceInCourt,
-        NotAgreeOffence,
+        NOTHING,
+        PAY,
+        REDUCTION,
+        DISPUTE
     }
 }

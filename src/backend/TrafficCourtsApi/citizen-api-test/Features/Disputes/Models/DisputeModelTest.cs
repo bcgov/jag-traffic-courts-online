@@ -14,12 +14,12 @@ namespace Gov.CitizenApi.Test.Features.Disputes.Models
         public void can_create_class()
 #pragma warning restore IDE1006 // Naming Styles
         {
-            var expected = new Dispute { DisputantEmailAddress = "test@test.com", InformationCertified = true };
+            var expected = new Dispute { DisputantEmailAddress = "test@test.com"};
             var actual = PropertyCopy.CopyProperties(expected);
 
             // to do: check all properties
             Assert.Equal(expected.DisputantEmailAddress, actual.DisputantEmailAddress);
-            Assert.Equal(expected.InformationCertified, actual.InformationCertified);
+
         }
     }
 }

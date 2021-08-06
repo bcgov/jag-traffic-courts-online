@@ -10,6 +10,7 @@ namespace Gov.CitizenApi.Features.Disputes.DBModel
         public int Id { get; set; }
         public int OffenceNumber { get; set; }
         public bool RequestReduction { get; set; }
+        public bool? ReductionAppearInCourt { get; set; }
         public bool RequestMoreTime { get; set; }
         public string ReductionReason { get; set; }
         public string MoreTimeReason { get; set; }

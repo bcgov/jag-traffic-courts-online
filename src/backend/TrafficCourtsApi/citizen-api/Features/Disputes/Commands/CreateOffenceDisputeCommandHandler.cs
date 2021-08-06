@@ -43,7 +43,6 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
             if (dispute == null) return new CreateOffenceDisputeResponse { Id=0};
 
             //update existing to new additional
-            dispute.InformationCertified = createOffenceDispute.InformationCertified;
             dispute.LawyerPresent = createOffenceDispute.Additional?.LawyerPresent??false;
             dispute.InterpreterRequired = createOffenceDispute.Additional?.InterpreterRequired ?? false;
             dispute.InterpreterLanguage = createOffenceDispute.Additional?.InterpreterLanguage;
@@ -55,7 +54,7 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
             {
                 details.OffenceNumber = createOffenceDispute.OffenceNumber;
                 details.MoreTimeReason = createOffenceDispute.OffenceDisputeDetail?.MoreTimeReason;
-                details.OffenceAgreementStatus = createOffenceDispute.OffenceDisputeDetail?.OffenceAgreementStatus??OffenceAgreementStatus.AgreeOffenceInCourt;
+                details.OffenceAgreementStatus = createOffenceDispute.OffenceDisputeDetail?.OffenceAgreementStatus??OffenceAgreementStatus.NOTHING;
                 details.ReductionReason = createOffenceDispute.OffenceDisputeDetail?.ReductionReason;
                 details.RequestMoreTime = createOffenceDispute.OffenceDisputeDetail?.RequestMoreTime ?? false;
                 details.RequestReduction = createOffenceDispute.OffenceDisputeDetail?.RequestReduction ?? false;
