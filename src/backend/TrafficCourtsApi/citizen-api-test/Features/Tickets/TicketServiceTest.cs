@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Gov.CitizenApi.Features.Lookups;
 using Gov.CitizenApi.Features.Tickets;
 using Gov.CitizenApi.Infrastructure;
 using Gov.CitizenApi.Models;
@@ -19,6 +20,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets
     {
         private readonly ITicketsService _service;
         private readonly Mock<ILogger<TicketsService>> _loggerMock;
+        private readonly Mock<ILookupsService> _lookupsMock;
 
         private static ViolationContext CreateContext()
         {
@@ -32,7 +34,8 @@ namespace Gov.CitizenApi.Test.Features.Tickets
         public TicketServiceTest()
         {
             _loggerMock = LoggerServiceMock.LoggerMock<TicketsService>();
-            _service = new TicketsService(_loggerMock.Object, CreateContext());
+            _lookupsMock = new Mock<ILookupsService>();
+            _service = new TicketsService(_loggerMock.Object, CreateContext(),_lookupsMock.Object);
         }
 
         [Fact]
@@ -40,8 +43,8 @@ namespace Gov.CitizenApi.Test.Features.Tickets
         public void throw_ArgumentNullException_if_passed_null()
 #pragma warning restore IDE1006 // Naming Styles
         {
-            Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext()));
-            Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext(),_lookupsMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null, _lookupsMock.Object));
         }
 
 //        [Fact]
