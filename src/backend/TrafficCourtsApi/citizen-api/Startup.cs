@@ -23,6 +23,7 @@ using MediatR;
 using Gov.CitizenApi.Messaging.Configuration;
 using MassTransit;
 using Gov.TicketSearch;
+using Gov.CitizenApi.Features.Lookups.Configuration;
 
 namespace Gov.CitizenApi
 {
@@ -79,9 +80,10 @@ namespace Gov.CitizenApi
                      .Build();
             });
 #endif
-            services.AddHealthChecks().AddCheck<DisputeApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
+            services.AddHealthChecks().AddCheck<CitizenApiHealthCheck>("service_health_check", failureStatus: HealthStatus.Degraded);
             services.AddTicketService();
             services.AddDisputeService();
+            services.AddLookupsService();
             services.AddRouting(options => options.LowercaseUrls = true);
         }
 

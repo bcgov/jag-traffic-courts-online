@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Gov.CitizenApi.Health
 {
-    public class DisputeApiHealthCheck : IHealthCheck
+    public class CitizenApiHealthCheck : IHealthCheck
     {
 
-        private readonly ILogger<DisputeApiHealthCheck> _logger;
+        private readonly ILogger<CitizenApiHealthCheck> _logger;
 
-        public DisputeApiHealthCheck(ILogger<DisputeApiHealthCheck> logger)
+        public CitizenApiHealthCheck(ILogger<CitizenApiHealthCheck> logger)
         {
             _logger = logger;
         }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Offence = Gov.CitizenApi.Models.Offence;
+using DBModelTicket = Gov.CitizenApi.Features.Tickets.DBModel.Ticket;
 
 namespace Gov.CitizenApi.Features.Tickets.Queries
 {
@@ -32,25 +33,47 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
 
         public async Task<TicketDispute> Handle(TicketSearchQuery query, CancellationToken cancellationToken)
         {
-            TicketSearchResponse ticketSearchResponse = await _ticketSearchClient.TicketsAsync(query.TicketNumber, query.Time, cancellationToken);
-            _logger.LogInformation("ticket search from rsi completed successfully");
+            TicketSearchResponse ticketSearchResponse;
+            try
+            {
+                _logger.LogInformation("search ticket from rsi");
+                ticketSearchResponse = await _ticketSearchClient.TicketsAsync(query.TicketNumber, query.Time, cancellationToken);
+                _logger.LogInformation("ticket search from rsi completed successfully");
+            }
+            catch (TicketSearchException exception) when (exception.StatusCode == 204)
+            {
+                ticketSearchResponse = null;
+            }
+
             if (ticketSearchResponse != null)
             {
-                _logger.LogInformation("find the ticket from Rsi");
+                _logger.LogInformation("find the dispute for the ticket");
                 Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticketSearchResponse.ViolationTicketNumber);
+                _logger.LogInformation("return ticketDispute.");
                 return BuildTicketDispute(ticketSearchResponse, dispute);
             }
             _logger.LogInformation("no ticket found from Rsi");
 
             //get ticket from DB, check if there is shell ticket created.
             //todo: following code is quite possible to change when we get to know where to save the shell ticket and if user can select ticket again.
-            //Gov.CitizenApi.Features.Tickets.DBModel.Ticket ticket = await _ticketService.FindTicketAsync(query.TicketNumber);
-            //if (ticket.ViolationTime == query.Time)
-            //{ 
-            //}
-            return null;
-            
+            return await GetTicketDisputeFromShellTicket(query.TicketNumber, query.Time);
         }
+
+        private async Task<TicketDispute> GetTicketDisputeFromShellTicket(string ticketNumber, string ticketTime)
+        {
+            _logger.LogInformation("find ticket from db");
+            DBModelTicket ticket = await _ticketService.FindTicketAsync(ticketNumber, ticketTime);
+            if (ticket != null)
+            {
+                _logger.LogInformation("find the dispute for the ticket");
+                Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticket.ViolationTicketNumber);
+                _logger.LogInformation("return ticketDispute.");
+                TicketSearchResponse response = _mapper.Map<TicketSearchResponse>(ticket);
+                return BuildTicketDispute(response, dispute);
+            }
+            return null;
+        }
+
         private TicketDispute BuildTicketDispute(TicketSearchResponse ticketSearchResponse, Dispute dispute)
         {
             TicketDispute ticketDispute = _mapper.Map<TicketDispute>(ticketSearchResponse);
@@ -69,5 +92,6 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
             }
             return ticketDispute;
         }
+
     }
 }

@@ -87,7 +87,8 @@ namespace Gov.CitizenApi.Features.Tickets
                     ModelState.AddModelError("TicketNumber", "the ticket shell already exists .");
                     return BadRequest(ApiResponse.BadRequest(ModelState));
                 }
-                return Ok();
+                return RedirectToAction("Ticket", new { ticketNumber = createShellTicket.ViolationTicketNumber, time = createShellTicket.ViolationTime });
+                //return Ok();
             }
             catch (Exception e)
             {

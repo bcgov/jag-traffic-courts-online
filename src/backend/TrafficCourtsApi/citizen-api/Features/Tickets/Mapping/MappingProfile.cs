@@ -21,6 +21,12 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
                 ;
 
             CreateMap<DisputeOffence, Gov.CitizenApi.Features.Tickets.DBModel.Offence>();
+
+            CreateMap<Ticket, TicketSearchResponse>()
+                .ForMember(dest => dest.Offences, opt => opt.MapFrom(src=>src.Offences))
+                ;
+
+            CreateMap<DBModel.Offence, TicketSearchOffence>();
         }
     }
 }

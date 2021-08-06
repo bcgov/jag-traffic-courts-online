@@ -1,6 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Gov.CitizenApi.Features.Tickets.Commands;
-using Gov.CitizenApi.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
