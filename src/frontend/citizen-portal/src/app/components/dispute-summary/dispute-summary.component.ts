@@ -33,6 +33,8 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     this.defaultLanguage = this.translateService.getDefaultLang();
 
     this.route.queryParams.subscribe((params) => {
+      this.logger.info('DisputeSummaryComponent::params', params);
+
       if (Object.keys(params).length === 0) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
       }
@@ -45,7 +47,12 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
       }
 
       const ticket = this.disputeService.ticket;
-      if (ticket) {
+      this.logger.info('DisputeSummaryComponent::ticket', ticket);
+      if (
+        ticket &&
+        ticket.violationTicketNumber === ticketNumber &&
+        ticket.violationTime === ticketTime
+      ) {
         this.ticket = ticket;
       } else {
         this.performSearch(params);
@@ -59,20 +66,28 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
   private performSearch(params): void {
     this.busy = this.disputeResource.getTicket(params).subscribe((response) => {
+      this.logger.info(
+        'DisputeSummaryComponent::performSearch response',
+        response
+      );
       this.disputeService.ticket$.next(response);
       this.ticket = response;
     });
   }
 
   public onDisputeTicket(): void {
-    this.logger.info('onDisputeTicket', this.disputeService.ticket);
-    // const source = timer(1000);
-    // this.busy = source.subscribe((val) => {
+    this.logger.info(
+      'DisputeSummaryComponent::onDisputeTicket',
+      this.disputeService.ticket
+    );
     this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
-    // });
   }
 
   public onPayTicket(): void {
+    this.logger.info(
+      'DisputeSummaryComponent::onPayTicket',
+      this.disputeService.ticket
+    );
     this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT)]);
   }
 }

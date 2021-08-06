@@ -232,8 +232,8 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
               // TODO: CAROL FIX
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
                 queryParams: {
-                  violationTicketNumber: 'EZ02000460',
-                  time: '09:54',
+                  ticketNumber: payload.violationTicketNumber,
+                  time: payload.violationTime,
                 },
               });
             });

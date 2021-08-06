@@ -86,17 +86,24 @@ export class DisputeStepperComponent
         this.overviewForm,
       ] = formsList as FormGroup[];
 
-      if (this.disputeService.ticket) {
+      const currentTicket = this.disputeService.ticket;
+      if (currentTicket) {
+        this.disputantForm.patchValue(currentTicket.disputant);
+        this.additionalForm.patchValue(currentTicket.additional);
+
         this.disputeService.ticket.offences.forEach((offence) => {
           if (offence.offenceNumber === 1) {
             this.offence1Exists = true;
             this.offence1Form.patchValue(offence);
+            this.offence1Form.patchValue(offence.offenceDisputeDetail);
           } else if (offence.offenceNumber === 2) {
             this.offence2Exists = true;
             this.offence2Form.patchValue(offence);
+            this.offence2Form.patchValue(offence.offenceDisputeDetail);
           } else if (offence.offenceNumber === 3) {
             this.offence3Exists = true;
             this.offence3Form.patchValue(offence);
+            this.offence3Form.patchValue(offence.offenceDisputeDetail);
           }
         });
       }

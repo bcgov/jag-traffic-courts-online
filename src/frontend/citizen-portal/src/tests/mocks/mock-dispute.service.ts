@@ -136,7 +136,6 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
-      // informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,
@@ -145,11 +144,11 @@ export class MockDisputeService {
     ticket.disputant = this.createDisputant();
 
     ticket.additional = {
-      lawyerPresent: false,
+      lawyerPresent: true,
       interpreterRequired: true,
       interpreterLanguage: 'SPA',
-      witnessPresent: false,
-      numberOfWitnesses: null,
+      witnessPresent: true,
+      numberOfWitnesses: 3,
     };
 
     const offenceDate = faker.date.soon().toString();
@@ -285,9 +284,9 @@ export class MockDisputeService {
       city: faker.address.city(),
       province: faker.address.state(),
       postal: 'V8R3E3',
-      birthdate: faker.date.past().toDateString(),
+      birthdate: null, //faker.date.past().toDateString(),
       emailAddress: faker.internet.email(),
-      license: '234234',
+      license: '2342342',
       provLicense: 'BC',
       phoneNumber: faker.phone.phoneNumber(),
     };
