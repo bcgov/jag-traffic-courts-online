@@ -18,12 +18,13 @@
 
   <div>
     A confirmation email of the request information has been sent to: <br />
-    <strong>sally123@hotmail.com</strong>
+    <strong>{{ ticket?.disputant?.emailAddress }}</strong>
   </div>
 
   <div class="mt-4">
-    You have selected '<strong>Pay count</strong>' for <strong>Count 3</strong>,
-    please use the button below to proceed to payment.<br />
+    You have selected '<strong>Pay count</strong>' for
+    <strong>Count TODO</strong>, please use the button below to proceed to
+    payment.<br />
     <button
       type="button"
       mat-flat-button
@@ -41,6 +42,7 @@
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
 
+  <!--
   <section class="mb-4 mt-4">
     <div class="row">
       <div class="col-md-4 col-xs-12">
@@ -71,4 +73,5 @@
       </div>
     </div>
   </section>
+-->
 </app-page>

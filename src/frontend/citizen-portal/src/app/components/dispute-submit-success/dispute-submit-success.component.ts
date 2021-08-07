@@ -24,10 +24,10 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   ) {}
 
   public ngOnInit(): void {
-    const formParams = { ticketNumber: 'EZ02000460', time: '09:54' };
-    this.disputeResource.getTicket(formParams).subscribe((response) => {
-      this.disputeService.ticket$.next(response);
-    });
+    // const formParams = { ticketNumber: 'EZ02000460', time: '09:54' };
+    // this.disputeResource.getTicket(formParams).subscribe((response) => {
+    //   this.disputeService.ticket$.next(response);
+    // });
 
     this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;

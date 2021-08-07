@@ -6,7 +6,6 @@ export interface OffenceDisputeDetail {
   reductionAppearInCourt: boolean;
   requestReduction: boolean;
   requestMoreTime: boolean;
-
   reductionReason?: string;
   moreTimeReason?: string;
 

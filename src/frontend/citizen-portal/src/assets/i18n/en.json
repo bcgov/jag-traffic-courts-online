@@ -55,7 +55,7 @@
   },
   "stepper": {
     "next": "Next",
-    "cancel": "Back to search",
+    "cancel": "Back to summary",
     "back": "Back",
     "submit": "Submit request",
     "disputant": {
@@ -158,9 +158,9 @@
     "status": "Status"
   },
   "submit_confirmation": {
-    "heading": "Submit Dispute",
-    "message": "When your dispute is submitted for adjudication, it can no longer be updated. Are you ready to submit your dispute?",
-    "confirm": "Submit Dispute",
+    "heading": "Submit request",
+    "message": "When your request is submitted for adjudication, it can no longer be updated. Are you ready to submit your request?",
+    "confirm": "Submit request",
     "cancel": "Cancel"
   },
   "toaster": {

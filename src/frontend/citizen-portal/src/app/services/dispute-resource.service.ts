@@ -89,13 +89,21 @@ export class DisputeResourceService {
    *
    * @param dispute The dispute to be created
    */
-  public createShellTicket(ticket: ShellTicket): Observable<null> {
+  public createShellTicket(ticket: ShellTicket): Observable<TicketDispute> {
     this.logger.info('createShellTicket', ticket);
 
     return this.apiResource
       .post<TicketDispute>('tickets/shellTicket', ticket)
       .pipe(
-        map((response: ApiHttpResponse<null>) => null),
+        map((response: ApiHttpResponse<TicketDispute>) =>
+          response ? response.result : null
+        ),
+        tap((newShellTicket: TicketDispute) => {
+          this.toastService.openSuccessToast(
+            'The ticket has successfully been created'
+          );
+          this.logger.info('NEW_SHELL_TICKET', newShellTicket);
+        }),
         catchError((error: any) => {
           this.toastService.openErrorToast('Ticket could not be created');
           this.logger.error(
