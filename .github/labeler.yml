@@ -1,3 +1,7 @@
+# Add 'Ticket Search' to changes in ticket search
+"Ticket Search":
+  - src/ticket-search/**/*
+
 # Add 'Citizens Portal' to changes in citizen portal
 "Citizens Portal":
   - src/frontend/citizen-portal/**/*
@@ -9,7 +13,3 @@
 # Add 'DevOps' to changes in openshift folder
 "DevOps":
   - infrastructure/**/*
-
-# Add 'Ticket Search' to changes in ticket search
-"Ticket Search":
-  - src/ticket-search/**/*

@@ -7,11 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {
-  MatChip,
-  MatChipList,
-  MatChipSelectionChange,
-} from '@angular/material/chips';
+import { MatChip, MatChipList } from '@angular/material/chips';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -66,15 +62,18 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public offenceAgreementStatusOptions = [
     {
-      value: '0',
+      value: 'NOTHING',
       desc: 'I do not wish to take any action on this count at this time.',
     },
-    { value: '1', desc: 'I would like to pay for this count.' },
+    { value: 'PAY', desc: 'I would like to pay for this count.' },
     {
-      value: '2',
-      desc: 'I would like to request a fine reduction and/or more time to pay for this count.',
+      value: 'REDUCTION',
+      desc: 'I agree I committed this offence and I would like to request a fine reduction and/or more time to pay for this count.',
     },
-    { value: '3', desc: 'I would like to dispute this count.' },
+    {
+      value: 'DISPUTE',
+      desc: 'I do not agree that I committed this offence and I would like to dispute this count.',
+    },
   ];
 
   public toggleSelection(chip: MatChip) {

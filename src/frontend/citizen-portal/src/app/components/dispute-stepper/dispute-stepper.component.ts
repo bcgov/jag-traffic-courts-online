@@ -1,21 +1,20 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
-import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
-import { DisputeResourceService } from 'app/services/dispute-resource.service';
-import { DisputeService } from 'app/services/dispute.service';
-import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
-import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import { UtilsService } from '@core/services/utils.service';
-import { AppRoutes } from 'app/app.routes';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfigService } from '@config/config.service';
+import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
+import { UtilsService } from '@core/services/utils.service';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { AppRoutes } from 'app/app.routes';
+import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
+import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
+import { DisputeResourceService } from 'app/services/dispute-resource.service';
+import { DisputeService } from 'app/services/dispute.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dispute-stepper',

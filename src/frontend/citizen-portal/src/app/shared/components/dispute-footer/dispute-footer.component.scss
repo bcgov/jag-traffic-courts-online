@@ -1,16 +1,14 @@
 @import "palette";
 
-.find-large {
-  width: 100%;
-  margin-bottom: 1em !important;
-
-  height: 46px;
-  font-size: 1rem;
+.dispute-footer {
+  border: 2px solid theme-palette(yellow);
 }
 
-.examples {
-  display: inline-flex;
-  vertical-align: middle;
+hr {
+  border-top: 1px solid theme-palette(grey, light);
+
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
 .flex {
@@ -30,7 +28,7 @@
     flex-direction: column;
 
     &:first-child {
-      padding-right: 50px;
+      padding-right: 20px;
     }
 
     .flex-last-info-content {
@@ -39,7 +37,7 @@
   }
 
   &-2-col + &-2-col {
-    padding-left: 50px;
+    padding-left: 20px;
     border-left: solid 1px theme-palette(grey, light);
   }
 }
@@ -85,5 +83,19 @@
         padding-bottom: 50px;
       }
     }
+  }
+}
+
+.dispute-footer-table {
+  display: table;
+
+  .icon-size {
+    width: 60px;
+    margin-right: 10px;
+  }
+
+  .text-col {
+    display: table-cell;
+    vertical-align: top;
   }
 }

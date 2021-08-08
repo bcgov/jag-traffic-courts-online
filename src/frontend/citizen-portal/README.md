@@ -22,6 +22,11 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 
 [Download](https://nodejs.org/en/) and install **Node v14.x**
 
+#### Angular cli
+
+Install Angular cli using command:
+npm install -g @angular/cli
+
 #### VS Code
 
 [Download](https://code.visualstudio.com/) and install VSCode and accept the prompt to install the recommended extensions when the PRIME repository is initially opened in VSCode.

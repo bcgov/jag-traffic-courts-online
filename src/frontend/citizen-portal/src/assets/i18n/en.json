@@ -91,9 +91,9 @@
       "offence_agreement_3": "Dispute the charge",
       "requests": "Which requests would you like to make?",
       "requestReduction": "I request a reduction of the ticketed amount",
-      "requestReductionReasonLabel": "What are your reasons for a reduction in the ticketed amount?",
+      "requestReductionReasonLabel": "Please enter your reasons for why you are requesting a fine reduction.",
       "requestMoreTime": "I request time to pay the ticketed amount",
-      "requestMoreTimeReasonLabel": "What are your reasons for requiring more time to pay the ticketed amount?"
+      "requestMoreTimeReasonLabel": "Please enter your reasons for why you are requesting more time to pay."
     },
     "additional": {
       "heading": "Additional Information",

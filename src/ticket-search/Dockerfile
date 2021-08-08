@@ -6,12 +6,12 @@ FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_SDK_VERSION AS build
 
 WORKDIR /src
 COPY . .
-RUN dotnet publish $DOTNET_STARTUP_PROJECT -c Release -o /opt/app-root
+RUN dotnet publish $DOTNET_STARTUP_PROJECT -c Release -o /opt/app-root/app
 
 FROM $DOTNET_RUNTIME_BASE AS base
-WORKDIR /opt/app-root
+WORKDIR /opt/app-root/app
 EXPOSE 8080
-COPY --from=build /opt/app-root .
+COPY --from=build /opt/app-root/app .
 
 ENV DOTNET_ASSEMBLY_NAME=Gov.TicketSearch.dll
 ENTRYPOINT ["sh","-c", "dotnet ${DOTNET_ASSEMBLY_NAME}"]

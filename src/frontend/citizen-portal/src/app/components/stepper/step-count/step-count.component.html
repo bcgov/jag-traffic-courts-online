@@ -1,0 +1,226 @@
+<app-stepper-page>
+  <app-page-header>
+    <ng-container subHeader>
+      <div class="row mt-2">
+        <div class="col-md-8">
+          <small class="d-block"> Description of offence </small>
+          <strong>{{ offenceDescription.value | titlecase }}</strong>
+        </div>
+        <div class="col-md-4">
+          <small class="d-block">Amount due</small>
+          <strong>{{
+            ticketedAmount.value
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}</strong>
+        </div>
+      </div>
+    </ng-container>
+  </app-page-header>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+    <section>
+      <div class="row">
+        <div class="col">
+          <label class="mt-0 w-100">What action would you like to take?</label>
+          <!--
+          <app-chips-multi-select
+            [options]="offenceAgreementStatusOptions"
+            [formControl]="offenceAgreementStatus"
+          ></app-chips-multi-select>
+          <mat-error
+            *ngIf="
+              (offenceAgreementStatus.dirty ||
+                offenceAgreementStatus.touched) &&
+              offenceAgreementStatus.invalid &&
+              offenceAgreementStatus.errors.required
+            "
+          >
+            {{ "error.required" | translate }}
+          </mat-error>
+
+          -->
+          <mat-radio-group
+            formControlName="offenceAgreementStatus"
+            class="w-100"
+          >
+            <mat-radio-button value="NOTHING" class="w-100">
+              <span class="wrap-mat-radio-label">
+                I do not wish to take any action on this count at this time.
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="PAY" class="w-100">
+              <span class="wrap-mat-radio-label">
+                I would like to pay for this count.
+              </span>
+              <span
+                matTooltip="Information about radio button 1."
+                (mouseenter)="$event.stopImmediatePropagation()"
+                (mouseleave)="$event.stopImmediatePropagation()"
+                #tooltip1="matTooltip"
+                (click)="
+                  $event.preventDefault();
+                  tooltip2.hide();
+                  tooltip3.hide();
+                  tooltip1.toggle()
+                "
+              >
+                <mat-icon>info</mat-icon>
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="REDUCTION" class="w-100">
+              <span class="wrap-mat-radio-label">
+                I agree I committed this offence and I would like to request a
+                fine reduction and/or more time to pay for this count.
+              </span>
+              <span
+                matTooltip="Information about radio button 2."
+                (mouseenter)="$event.stopImmediatePropagation()"
+                (mouseleave)="$event.stopImmediatePropagation()"
+                #tooltip2="matTooltip"
+                (click)="
+                  $event.preventDefault();
+                  tooltip1.hide();
+                  tooltip3.hide();
+                  tooltip2.toggle()
+                "
+              >
+                <mat-icon>info</mat-icon>
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="DISPUTE" class="w-100">
+              <span class="wrap-mat-radio-label">
+                I do not agree that I committed this offence and I would like to
+                dispute this count.
+              </span>
+              <span
+                matTooltip="Information about radio button 3."
+                (mouseenter)="$event.stopImmediatePropagation()"
+                (mouseleave)="$event.stopImmediatePropagation()"
+                #tooltip3="matTooltip"
+                (click)="
+                  $event.preventDefault();
+                  tooltip1.hide();
+                  tooltip2.hide();
+                  tooltip3.toggle()
+                "
+              >
+                <mat-icon>info</mat-icon>
+              </span>
+            </mat-radio-button>
+            <mat-error
+              *ngIf="
+                (offenceAgreementStatus.dirty ||
+                  offenceAgreementStatus.touched) &&
+                offenceAgreementStatus.invalid &&
+                offenceAgreementStatus.errors.required
+              "
+            >
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div class="row" *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
+        <div class="col-12">
+          <label
+            >Please make your selection(s) below and enter additional
+            information as required.</label
+          >
+
+          <mat-radio-group
+            formControlName="reductionAppearInCourt"
+            class="w-100"
+          >
+            <mat-radio-button value="NO" class="w-50">
+              <span class="wrap-mat-radio-label">
+                I do not wish to appear in court.
+              </span>
+            </mat-radio-button>
+            <mat-radio-button value="YES" class="w-50">
+              <span class="wrap-mat-radio-label">
+                I would like to appear in court to discuss in person.
+              </span>
+            </mat-radio-button>
+          </mat-radio-group>
+
+          <mat-checkbox
+            formControlName="requestReduction"
+            color="primary"
+            class="w-100"
+            >I would like to request a fine reduction on this
+            count.</mat-checkbox
+          >
+          <strong>and/or</strong>
+          <mat-checkbox
+            formControlName="requestMoreTime"
+            color="primary"
+            class="w-100"
+            >I would like to request more time to pay on this
+            count.</mat-checkbox
+          >
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          offenceAgreementStatus.value == 'REDUCTION' && requestReduction.value
+        "
+      >
+        <div class="col">
+          <mat-form-field class="w-100">
+            <mat-label>{{
+              "stepper.count.requestReductionReasonLabel" | translate
+            }}</mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+              formControlName="reductionReason"
+            ></textarea>
+            <mat-error *ngIf="reductionReason.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div
+        class="row"
+        *ngIf="
+          offenceAgreementStatus.value == 'REDUCTION' && requestMoreTime.value
+        "
+      >
+        <div class="col">
+          <mat-form-field class="w-100">
+            <mat-label>{{
+              "stepper.count.requestMoreTimeReasonLabel" | translate
+            }}</mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+              formControlName="moreTimeReason"
+            ></textarea>
+            <mat-error *ngIf="moreTimeReason.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <app-page-footer
+    (save)="onSubmit()"
+    (back)="onBack()"
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
+    [hasSecondaryAction]="true"
+  ></app-page-footer>
+</app-stepper-page>
