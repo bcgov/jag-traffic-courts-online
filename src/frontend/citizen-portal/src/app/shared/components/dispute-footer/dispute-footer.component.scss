@@ -49,12 +49,12 @@ hr {
     justify-content: center;
 
     &.flex-first {
-      padding-bottom: 1em;
+      padding-bottom: 0;
       padding-top: 0;
     }
 
     &.flex-last {
-      padding-bottom: 1.5em;
+      padding-bottom: 0;
     }
 
     &-2-col {
@@ -74,13 +74,13 @@ hr {
     &-2-col + &-2-col {
       border-left: none;
       margin-top: 0;
-      padding-top: 30px;
-      border-top: none;
+      padding-top: 20px;
+      border-top: solid 1px theme-palette(grey, light);
       padding-left: 0;
       padding-right: 0;
 
       &:last-child {
-        padding-bottom: 50px;
+        padding-bottom: 0;
       }
     }
   }

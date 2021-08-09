@@ -9,37 +9,33 @@ import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dia
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeService } from 'app/services/dispute.service';
-import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-ticket-payment',
-  templateUrl: './ticket-payment.component.html',
-  styleUrls: ['./ticket-payment.component.scss'],
+  selector: 'app-dispute-submit-success',
+  templateUrl: './dispute-submit-success.component.html',
+  styleUrls: ['./dispute-submit-success.component.scss'],
 })
-export class TicketPaymentComponent implements OnInit, AfterViewInit {
-  public busy: Subscription;
+export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   public ticket: TicketDispute;
 
   constructor(
+    private router: Router,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
-    private router: Router,
     private toastService: ToastService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
-    // const ticket = this.disputeService.ticket;
-    // if (ticket) {
-    //   this.ticket = ticket;
-    // } else {
-    //   this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-    // }
+    // const formParams = { ticketNumber: 'EZ02000460', time: '09:54' };
+    // this.disputeResource.getTicket(formParams).subscribe((response) => {
+    //   this.disputeService.ticket$.next(response);
+    // });
 
     this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;
-      this.logger.info('TicketPaymentComponent current ticket', ticket);
+      this.logger.info('DisputeSubmitComponent', ticket);
 
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -48,7 +44,26 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
+    this.utilsService.goToTop();
+  }
+
+  public onViewYourTicket(): void {
+    const ticket = this.disputeService.ticket;
+    const params = {
+      ticketNumber: ticket.violationTicketNumber,
+      time: ticket.violationTime,
+    };
+
+    this.disputeService.ticket$.next(null);
+
+    this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+      queryParams: params,
+    });
+  }
+
+  public onExitTicket(): void {
+    this.disputeService.ticket$.next(null);
+    this.router.navigate(['/']);
   }
 
   public onPayTicket(): void {
@@ -73,5 +88,28 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
           ]);
         }
       });
+  }
+
+  public get countsToPay(): string {
+    let countsToPay = '';
+    let count = 0;
+
+    this.ticket?.offences
+      ?.filter((offence) => offence.offenceAgreementStatus === 'PAY')
+      .forEach((offence) => {
+        if (count > 0) {
+          countsToPay += ', ';
+        }
+        countsToPay += offence.offenceNumber;
+        count++;
+      });
+
+    if (count > 1) {
+      countsToPay = 'Counts ' + countsToPay;
+    } else {
+      countsToPay = 'Count ' + countsToPay;
+    }
+
+    return countsToPay;
   }
 }

@@ -1,9 +1,7 @@
-import { OffenceDisputeDetail } from '@shared/models/offenceDisputeDetail.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import * as faker from 'faker';
-
 import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
@@ -63,7 +61,7 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
-      informationCertified: false,
+      // informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,
@@ -76,11 +74,17 @@ export class MockDisputeService {
       amountDue: 87.56,
       violationDateTime: faker.date.soon().toString(),
       offenceDescription: 'Load Or Projection Over 1.2M In Rear', //  Without Required Lamp During Time Specified In Mr Section 4.01
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
+      status: null,
+      offenceAgreementStatus: '',
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
     ticket.offences.push(offence);
@@ -99,11 +103,17 @@ export class MockDisputeService {
       amountDue: 142,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       discountDueDate: soonDate,
+      status: null,
+      offenceAgreementStatus: '',
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
     ticket.offences.push(offence);
@@ -136,7 +146,6 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: null,
-      informationCertified: false,
       disputant: null,
       offences: [],
       additional: null,
@@ -145,10 +154,11 @@ export class MockDisputeService {
     ticket.disputant = this.createDisputant();
 
     ticket.additional = {
-      lawyerPresent: false,
+      lawyerPresent: true,
       interpreterRequired: true,
       interpreterLanguage: 'SPA',
-      witnessPresent: false,
+      witnessPresent: true,
+      numberOfWitnesses: 3,
     };
 
     const offenceDate = faker.date.soon().toString();
@@ -161,20 +171,20 @@ export class MockDisputeService {
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
+      status: 1,
+      offenceAgreementStatus: null,
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
-    const offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
-      offence.offenceNumber
-    );
-    offenceDispute.status = 1;
-    offenceDispute.informationCertified = true;
-
-    offence.offenceDisputeDetail = offenceDispute;
+    offence = Object.assign(offence, this.createOffencePay());
 
     ticket.offences.push(offence);
 
@@ -185,12 +195,20 @@ export class MockDisputeService {
       amountDue: 126,
       violationDateTime: offenceDate,
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
+      status: 1,
+      offenceAgreementStatus: null,
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
+
+    offence = Object.assign(offence, this.createOffenceReduction());
 
     ticket.offences.push(offence);
 
@@ -209,12 +227,20 @@ export class MockDisputeService {
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       discountDueDate: soonDate,
+      status: 1,
+      offenceAgreementStatus: null,
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
+
+    offence = Object.assign(offence, this.createOffenceDispute());
 
     ticket.offences.push(offence);
 
@@ -272,24 +298,72 @@ export class MockDisputeService {
       city: faker.address.city(),
       province: faker.address.state(),
       postal: 'V8R3E3',
-      birthdate: faker.date.past().toDateString(),
+      birthdate: null, // faker.date.past().toDateString(),
       emailAddress: faker.internet.email(),
-      license: '234234',
+      license: '2342342',
       provLicense: 'BC',
-      phoneNumber: faker.phone.phoneNumber(),
+      phoneNumber: '2506653434', // faker.phone.phoneNumberFormat(10),
     };
   }
 
-  private createOffenceDispute(offenceNumber: number): OffenceDisputeDetail {
+  private createOffenceDispute(): any {
     return {
       status: 0,
-      offenceNumber,
       offenceAgreementStatus: 'DISPUTE',
+      reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
       moreTimeReason: null,
-      informationCertified: false,
+    };
+  }
+
+  private createOffenceNothing(): any {
+    return {
+      status: 0,
+      offenceAgreementStatus: 'NOTHING',
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: null,
+      moreTimeReason: null,
+    };
+  }
+
+  private createOffencePay(): any {
+    return {
+      status: 0,
+      offenceAgreementStatus: 'PAY',
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: null,
+      moreTimeReason: null,
+    };
+  }
+
+  private createOffenceReduction(): any {
+    return {
+      status: 0,
+      offenceAgreementStatus: 'REDUCTION',
+      reductionAppearInCourt: true,
+      requestReduction: true,
+      requestMoreTime: false,
+      reductionReason: 'I have been unable to work for the past 6 months.',
+      moreTimeReason: null,
+    };
+  }
+
+  private createOffenceMoreTime(): any {
+    return {
+      status: 0,
+      offenceAgreementStatus: 'REDUCTION',
+      reductionAppearInCourt: true,
+      requestReduction: true,
+      requestMoreTime: true,
+      reductionReason:
+        'I have been unable to work for the past 6 months and cannot pay my rent.',
+      moreTimeReason: 'I have a new job starting next week.',
     };
   }
 }

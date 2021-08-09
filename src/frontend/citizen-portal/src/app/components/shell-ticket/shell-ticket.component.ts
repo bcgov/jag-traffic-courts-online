@@ -20,7 +20,12 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ShellTicket } from '@shared/models/shellTicket.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { AppConfigService } from 'app/services/app-config.service';
+import { DisputeResourceService } from 'app/services/dispute-resource.service';
+import { DisputeService } from 'app/services/dispute.service';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -55,14 +60,24 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
+    private disputeService: DisputeService,
+    private disputeResource: DisputeResourceService,
     private configService: ConfigService,
     private utilsService: UtilsService,
     private currencyPipe: CurrencyPipe,
+    private appConfigService: AppConfigService,
     private dialog: MatDialog,
     private router: Router,
-    private toastService: ToastService,
     private logger: LoggerService
   ) {
+    this.statutes = this.configService.statutes;
+    this.courtLocations = this.configService.courtLocations;
+    this.policeLocations = this.configService.policeLocations;
+
+    this.maxDateOfBirth = new Date();
+    this.maxDateOfBirth.setFullYear(this.todayDate.getFullYear() - 16); // TODO 16 or 18?
+    this.isMobile = this.utilsService.isMobile();
+
     this.form = this.formBuilder.group({
       violationTicketNumber: [null, [Validators.required]],
       violationDate: [null, [Validators.required]],
@@ -71,40 +86,58 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
       gender: [null, [Validators.required]],
-      count1: [null, [Validators.required, autocompleteObjectValidator()]],
+      count1Charge: [
+        null,
+        [Validators.required, autocompleteObjectValidator()],
+      ],
       count1FineAmount: [
         null,
         [Validators.required, FormControlValidators.currency],
       ],
-      count2: [null, [Validators.required, autocompleteObjectValidator()]],
+      count2Charge: [
+        null,
+        [Validators.required, autocompleteObjectValidator()],
+      ],
       count2FineAmount: [
         null,
         [Validators.required, FormControlValidators.currency],
       ],
-      count3: [null, [Validators.required, autocompleteObjectValidator()]],
+      count3Charge: [
+        null,
+        [Validators.required, autocompleteObjectValidator()],
+      ],
       count3FineAmount: [
         null,
         [Validators.required, FormControlValidators.currency],
       ],
       courtHearingLocation: [null, [Validators.required]],
-      orgDetachmentLocation: [null, [Validators.required]],
-      driverLicense: [null, [Validators.required]],
+      detachmentLocation: [null, [Validators.required]],
+      driverLicenseNumber: [null, [Validators.required]],
       chargeCount: [1],
       amountOwing: [null],
     });
 
-    this.statutes = this.configService.statutes;
-    this.courtLocations = this.configService.courtLocations;
-    this.policeLocations = this.configService.policeLocations;
-
-    this.maxDateOfBirth = new Date();
-    this.maxDateOfBirth.setFullYear(this.todayDate.getFullYear() - 16); // TODO 16 or 18?
-    this.isMobile = this.utilsService.isMobile();
+    if (this.appConfigService.useMockServices) {
+      // Default values during testing
+      this.form.get('violationTicketNumber').setValue('EZ02000455');
+      this.form.get('violationDate').setValue('2008-07-03T07:00:00.000Z');
+      this.form.get('violationTime').setValue('09:54');
+      this.form.get('lastName').setValue('test');
+      this.form.get('givenNames').setValue('test');
+      this.form.get('birthdate').setValue('1988-03-03T08:00:00.000Z');
+      this.form.get('gender').setValue('M');
+      this.form.get('count1Charge').setValue(19023);
+      this.form.get('count1FineAmount').setValue(234);
+      this.form.get('courtHearingLocation').setValue('82.0001');
+      this.form.get('detachmentLocation').setValue('9393.0001');
+      this.form.get('driverLicenseNumber').setValue(2342343);
+      this.form.get('chargeCount').setValue(1);
+    }
   }
 
   public ngOnInit(): void {
     // Listen for typeahead changes in the statute fields
-    this.filteredStatutes1 = this.count1.valueChanges.pipe(
+    this.filteredStatutes1 = this.count1Charge.valueChanges.pipe(
       startWith(''),
       map((value) =>
         value ? (typeof value === 'string' ? value : value.name) : null
@@ -112,7 +145,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
-    this.filteredStatutes2 = this.count2.valueChanges.pipe(
+    this.filteredStatutes2 = this.count2Charge.valueChanges.pipe(
       startWith(''),
       map((value) =>
         value ? (typeof value === 'string' ? value : value.name) : null
@@ -120,7 +153,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
-    this.filteredStatutes3 = this.count3.valueChanges.pipe(
+    this.filteredStatutes3 = this.count3Charge.valueChanges.pipe(
       startWith(''),
       map((value) =>
         value ? (typeof value === 'string' ? value : value.name) : null
@@ -151,18 +184,18 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     this.logger.info('chargeCount.valueChanges', selectedValue);
 
     if (selectedValue < 3) {
-      this.count3.disable();
+      this.count3Charge.disable();
       this.count3FineAmount.disable();
     } else {
-      this.count3.enable();
+      this.count3Charge.enable();
       this.count3FineAmount.enable();
     }
 
     if (selectedValue < 2) {
-      this.count2.disable();
+      this.count2Charge.disable();
       this.count2FineAmount.disable();
     } else {
-      this.count2.enable();
+      this.count2Charge.enable();
       this.count2FineAmount.enable();
     }
   }
@@ -206,12 +239,20 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          this.toastService.openSuccessToast(
-            'The ticket has successfully been created'
-          );
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-            queryParams: { violationTicketNumber: 'EZ02000460', time: '09:54' },
-          });
+          const payload: ShellTicket = this.form.getRawValue();
+
+          this.busy = this.disputeResource
+            .createShellTicket(payload)
+            .subscribe((newShellTicket: TicketDispute) => {
+              this.disputeService.ticket$.next(newShellTicket);
+
+              this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+                queryParams: {
+                  ticketNumber: payload.violationTicketNumber,
+                  time: payload.violationTime,
+                },
+              });
+            });
         }
       });
   }
@@ -235,8 +276,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     );
   }
 
-  public onDisplayWithStatute(statute?: Config<number>): string | undefined {
-    return statute ? statute.name : undefined;
+  public onDisplayWithStatute(code?: number): string | undefined {
+    return code
+      ? this.statutes.find((statute) => statute.code === code)?.name
+      : undefined;
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
@@ -259,24 +302,24 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     return this.form.get('chargeCount') as FormControl;
   }
 
-  public get count1(): FormControl {
-    return this.form.get('count1') as FormControl;
+  public get count1Charge(): FormControl {
+    return this.form.get('count1Charge') as FormControl;
   }
 
   public get count1FineAmount(): FormControl {
     return this.form.get('count1FineAmount') as FormControl;
   }
 
-  public get count2(): FormControl {
-    return this.form.get('count2') as FormControl;
+  public get count2Charge(): FormControl {
+    return this.form.get('count2Charge') as FormControl;
   }
 
   public get count2FineAmount(): FormControl {
     return this.form.get('count2FineAmount') as FormControl;
   }
 
-  public get count3(): FormControl {
-    return this.form.get('count3') as FormControl;
+  public get count3Charge(): FormControl {
+    return this.form.get('count3Charge') as FormControl;
   }
 
   public get count3FineAmount(): FormControl {

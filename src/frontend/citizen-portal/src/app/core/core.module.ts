@@ -1,14 +1,9 @@
-import {
-  APP_INITIALIZER,
-  ErrorHandler,
-  Injector,
-  NgModule,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ErrorHandlerService } from './services/error-handler.service';
-import { ErrorHandlerInterceptor } from './interceptors/error-handler.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { ConfigService } from '@config/config.service';
+import { ErrorHandlerInterceptor } from './interceptors/error-handler.interceptor';
+import { ErrorHandlerService } from './services/error-handler.service';
 
 export function initConfig(config: ConfigService) {
   return async () => await config.load().toPromise();

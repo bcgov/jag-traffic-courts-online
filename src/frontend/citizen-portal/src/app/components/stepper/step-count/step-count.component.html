@@ -50,8 +50,10 @@
             </mat-radio-button>
             <mat-radio-button value="PAY" class="w-100">
               <span class="wrap-mat-radio-label">
-                I would like to pay for this count.
+                I agree I committed this offence and I would like to pay for
+                this count.
               </span>
+              <!--
               <span
                 matTooltip="Information about radio button 1."
                 (mouseenter)="$event.stopImmediatePropagation()"
@@ -66,12 +68,14 @@
               >
                 <mat-icon>info</mat-icon>
               </span>
+              -->
             </mat-radio-button>
             <mat-radio-button value="REDUCTION" class="w-100">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to request a
                 fine reduction and/or more time to pay for this count.
               </span>
+              <!--
               <span
                 matTooltip="Information about radio button 2."
                 (mouseenter)="$event.stopImmediatePropagation()"
@@ -86,12 +90,14 @@
               >
                 <mat-icon>info</mat-icon>
               </span>
+              -->
             </mat-radio-button>
             <mat-radio-button value="DISPUTE" class="w-100">
               <span class="wrap-mat-radio-label">
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
               </span>
+              <!--
               <span
                 matTooltip="Information about radio button 3."
                 (mouseenter)="$event.stopImmediatePropagation()"
@@ -106,6 +112,7 @@
               >
                 <mat-icon>info</mat-icon>
               </span>
+              -->
             </mat-radio-button>
             <mat-error
               *ngIf="
@@ -126,17 +133,16 @@
             >Please make your selection(s) below and enter additional
             information as required.</label
           >
-
           <mat-radio-group
             formControlName="reductionAppearInCourt"
             class="w-100"
           >
-            <mat-radio-button value="NO" class="w-50">
+            <mat-radio-button [value]="false" class="w-50">
               <span class="wrap-mat-radio-label">
                 I do not wish to appear in court.
               </span>
             </mat-radio-button>
-            <mat-radio-button value="YES" class="w-50">
+            <mat-radio-button [value]="true" class="w-50">
               <span class="wrap-mat-radio-label">
                 I would like to appear in court to discuss in person.
               </span>

@@ -7,20 +7,9 @@
     </ng-container>
   </app-tco-page-header>
 
-  <div class="col mb-4 p-0">
-    <app-alert type="success" icon="info">
-      <ng-container #alertContent class="alert-content">
-        <strong>You are within 30 days of your violation date.</strong><br />
-        If you pay your ticket by <strong>Aug 15, 2021</strong>, you will save
-        $25 per ticket count.
-      </ng-container>
-    </app-alert>
+  <div *ngIf="ticket">
+    <app-count-summary [ticket]="ticket" [payView]="true"></app-count-summary>
   </div>
-
-  <p>TODO</p>
-  <p>TODO</p>
-  <p>TODO</p>
-  <p>TODO</p>
 
   <div class="row mt-4">
     <div class="col-md-4">
@@ -36,7 +25,14 @@
       </button>
     </div>
     <div class="offset-md-4 col-md-4">
-      <button mat-flat-button color="accent" class="large">Pay ticket</button>
+      <button
+        mat-flat-button
+        color="accent"
+        class="large"
+        (click)="onPayTicket()"
+      >
+        Make payment
+      </button>
     </div>
   </div>
 

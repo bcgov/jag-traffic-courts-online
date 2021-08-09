@@ -86,7 +86,11 @@ export class DisputeStepperComponent
         this.overviewForm,
       ] = formsList as FormGroup[];
 
-      if (this.disputeService.ticket) {
+      const currentTicket = this.disputeService.ticket;
+      if (currentTicket) {
+        this.disputantForm.patchValue(currentTicket.disputant);
+        this.additionalForm.patchValue(currentTicket.additional);
+
         this.disputeService.ticket.offences.forEach((offence) => {
           if (offence.offenceNumber === 1) {
             this.offence1Exists = true;
@@ -166,6 +170,8 @@ export class DisputeStepperComponent
           payload.violationTicketNumber = this.ticket.violationTicketNumber;
           payload.violationTime = this.ticket.violationTime;
 
+          this.logger.info('DisputeStepperComponent::submitDispute', payload);
+
           this.busy = this.disputeResource
             .createTicketDispute(payload)
             .subscribe(() => {
@@ -174,7 +180,9 @@ export class DisputeStepperComponent
               this.toastService.openSuccessToast(
                 this.configService.dispute_submitted
               );
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.SUCCESS)]);
+              this.router.navigate([
+                AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS),
+              ]);
             });
         }
       });

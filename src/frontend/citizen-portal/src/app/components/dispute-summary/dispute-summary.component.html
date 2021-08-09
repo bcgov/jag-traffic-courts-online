@@ -7,184 +7,46 @@
   </app-page-header>
 
   <div *ngIf="ticket">
-    <section class="mb-2">
-      <h2>
-        <small class="mr-2">Ticket #:</small>
-        <strong>{{ ticket.violationTicketNumber }}</strong>
-        <span class="ml-4">
-          <small class="mr-2">Offence time:</small>
-          <strong>{{ ticket.violationTime }}</strong>
-        </span>
-      </h2>
-    </section>
+    <app-count-summary [ticket]="ticket"></app-count-summary>
+
     <!--
-    <div
-      class="row mb-2"
-      *ngIf="ticket.outstandingBalance <= 0; else ticketNotResolved"
-    >
-      <div class="col p-0">
-        <app-alert type="success" icon="check">
-          <ng-container #alertContent class="alert-content">
-            <strong>Your Ticket has been Resolved</strong><br />
-            No further actions are required.
-          </ng-container>
-        </app-alert>
+      *ngIf="ticket.outstandingBalance > 0"
+    -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <button
+          id="secondaryButton"
+          mat-stroked-button
+          type="button"
+          color="primary"
+          class="large"
+          routerLink="/ticket/find"
+        >
+          Cancel and search again
+        </button>
+      </div>
+      <div class="offset-md-2 col-md-3">
+        <button
+          mat-flat-button
+          color="accent"
+          class="large"
+          (click)="onPayTicket()"
+        >
+          Pay ticket
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button
+          mat-flat-button
+          color="primary"
+          class="large"
+          (click)="onDisputeTicket()"
+        >
+          Initiate dispute
+        </button>
       </div>
     </div>
 
-    <ng-template #ticketNotResolved>
-      <div class="col mb-2 p-0">
-        <app-alert type="success" icon="info">
-          <ng-container #alertContent class="alert-content">
-            <strong>You are within 30 days of your violation date.</strong
-            ><br />
-            If you pay your ticket by <strong>Aug 15, 2021</strong>, you will
-            save $25 per ticket count.
-          </ng-container>
-        </app-alert>
-      </div>
-    </ng-template>
--->
-    <div class="col mb-4 p-0">
-      <app-alert type="success" icon="info">
-        <ng-container #alertContent class="alert-content">
-          <strong>You are within 30 days of your violation date.</strong><br />
-          If you pay your ticket by <strong>Aug 15, 2021</strong>, you will save
-          $25 per ticket count.
-        </ng-container>
-      </app-alert>
-    </div>
-
-    <div class="mb-2">
-      <section
-        class="px-4 py-2 mb-3 card-section"
-        *ngFor="let row of ticket.offences; let i = index"
-      >
-        <div class="row mt-2">
-          <div class="col-md-2">
-            <mat-chip-list>
-              <mat-chip selected class="p-3"
-                >Count {{ row.offenceNumber }}</mat-chip
-              >
-            </mat-chip-list>
-          </div>
-          <div class="col-md-8">
-            <small class="d-block"> Description of offence </small>
-            <strong>{{ row.offenceDescription | titlecase }}</strong>
-          </div>
-          <div class="col-md-2">
-            <small class="d-block">Amount due</small>
-            <strong>{{
-              row?.amountDue
-                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-            }}</strong>
-          </div>
-        </div>
-        <hr />
-
-        <div class="row">
-          <div class="offset-md-2 col-md-4">
-            <small class="d-block">Status</small>
-            <ng-container [ngSwitch]="row.offenceStatus">
-              <span *ngSwitchCase="0">{{
-                "summary.status_0" | translate
-              }}</span>
-              <span *ngSwitchCase="1">{{
-                "summary.status_1" | translate
-              }}</span>
-              <span *ngSwitchCase="2">{{
-                "summary.status_2" | translate
-              }}</span>
-              <span *ngSwitchCase="3">{{
-                "summary.status_3" | translate
-              }}</span>
-              <span *ngSwitchCase="4">{{
-                "summary.status_3" | translate
-              }}</span>
-              <span *ngSwitchCase="-2">{{
-                "summary.status_paid" | translate
-              }}</span>
-              <span *ngSwitchCase="-1">{{
-                "summary.status_unpaid" | translate
-              }}</span>
-              <span *ngSwitchDefault>Unknown</span>
-            </ng-container>
-          </div>
-          <div class="col-md-4">
-            <small class="d-block">Offence date</small>
-            {{ row?.violationDateTime | formatDate }}
-          </div>
-          <div class="col-md-2">
-            <small class="d-block">Offence amount</small>
-            {{
-              row?.ticketedAmount
-                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-            }}
-          </div>
-        </div>
-      </section>
-
-      <section class="px-4 py-2 mb-3 card-section">
-        <div class="row mt-2">
-          <div class="offset-md-5 col-md-5 text-success">Balance due today</div>
-          <div class="col-md-2 text-success">
-            <strong>{{
-              225 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-            }}</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="px-4 py-2 mb-3 card-section">
-        <div class="row mt-2">
-          <div class="offset-md-5 col-md-5">
-            Balance due if paid after Aug 15, 2021
-          </div>
-          <div class="col-md-2">
-            <strong>{{
-              200 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-            }}</strong>
-          </div>
-        </div>
-      </section>
-
-      <div class="row mt-4" *ngIf="ticket.outstandingBalance > 0">
-        <div class="col-md-4">
-          <button
-            id="secondaryButton"
-            mat-stroked-button
-            type="button"
-            color="primary"
-            class="large"
-            routerLink="/ticket/find"
-          >
-            Cancel and search again
-          </button>
-        </div>
-        <div class="offset-md-2 col-md-3">
-          <button
-            mat-flat-button
-            color="accent"
-            class="large"
-            (click)="onPayTicket()"
-          >
-            Pay ticket
-          </button>
-        </div>
-        <div class="col-md-3">
-          <!-- *ngIf="!ticket.disputesExist"-->
-          <button
-            mat-flat-button
-            color="primary"
-            class="large"
-            (click)="onDisputeTicket()"
-          >
-            Initiate dispute
-          </button>
-        </div>
-      </div>
-
-      <app-dispute-footer></app-dispute-footer>
-    </div>
+    <app-dispute-footer></app-dispute-footer>
   </div>
 </app-page>

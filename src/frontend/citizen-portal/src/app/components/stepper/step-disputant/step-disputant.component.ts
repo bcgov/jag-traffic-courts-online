@@ -24,7 +24,7 @@ export class StepDisputantComponent
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
   public isMobile: boolean;
-  public previousButtonIcon = 'close';
+  public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.cancel';
   public saveButtonKey = 'stepper.next';
 

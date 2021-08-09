@@ -14,6 +14,7 @@ import { Additional } from '@shared/models/additional.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { ConfigService } from '@config/config.service';
 import { TranslateService } from '@ngx-translate/core';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Component({
   selector: 'app-step-overview',
@@ -26,6 +27,8 @@ export class StepOverviewComponent
 {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
+
+  public ticket: TicketDispute;
 
   public defaultLanguage: string;
   public previousButtonIcon = 'keyboard_arrow_left';
@@ -66,6 +69,8 @@ export class StepOverviewComponent
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.disputeFormStateService.stepOverviewForm;
     this.patchForm();
+
+    this.ticket = this.disputeFormStateService.jsonTicketDispute;
   }
 
   public onBack() {
@@ -90,17 +95,17 @@ export class StepOverviewComponent
     return this.disputeFormStateService.offences;
   }
 
-  public get disputantInfo(): Disputant {
-    return this.disputeFormStateService.disputant;
-  }
+  // public get disputantInfo(): Disputant {
+  //   return this.disputeFormStateService.disputant;
+  // }
 
   public get additionalInfo(): Additional {
     return this.disputeFormStateService.additional;
   }
 
-  public get informationCertified(): FormControl {
-    return this.form.get('informationCertified') as FormControl;
-  }
+  // public get informationCertified(): FormControl {
+  //   return this.form.get('informationCertified') as FormControl;
+  // }
 
   public get offenceAgreementStatus(): FormControl {
     return this.offence1Form.get('offenceAgreementStatus') as FormControl;
@@ -136,5 +141,9 @@ export class StepOverviewComponent
 
   public get witnessPresent(): FormControl {
     return this.additionalForm.get('witnessPresent') as FormControl;
+  }
+
+  public get numberOfWitnesses(): FormControl {
+    return this.additionalForm.get('numberOfWitnesses') as FormControl;
   }
 }
