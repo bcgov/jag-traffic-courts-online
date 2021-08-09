@@ -1,10 +1,13 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
-import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 
 @Component({
@@ -17,9 +20,10 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
 
   constructor(
     private router: Router,
-    private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
+    private toastService: ToastService,
+    private dialog: MatDialog,
     private logger: LoggerService
   ) {}
 
@@ -60,5 +64,29 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   public onExitTicket(): void {
     this.disputeService.ticket$.next(null);
     this.router.navigate(['/']);
+  }
+
+  public onPayTicket(): void {
+    this.logger.info('onPayTicket', this.ticket);
+
+    // const data: DialogOptions = {
+    //   titleKey: 'submit_confirmation.heading',
+    //   messageKey: 'submit_confirmation.message',
+    //   actionTextKey: 'submit_confirmation.confirm',
+    //   cancelTextKey: 'submit_confirmation.cancel',
+    // };
+
+    // this.dialog
+    //   .open(TicketPaymentDialogComponent, { data })
+    //   .afterClosed()
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       this.toastService.openSuccessToast('Ticket payment is successful');
+
+    //       this.router.navigate([
+    //         AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS),
+    //       ]);
+    //     }
+    //   });
   }
 }

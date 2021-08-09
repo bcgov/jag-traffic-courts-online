@@ -30,12 +30,20 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   ) {}
 
   public ngOnInit(): void {
-    const ticket = this.disputeService.ticket;
-    if (ticket) {
+    // const ticket = this.disputeService.ticket;
+    // if (ticket) {
+    //   this.ticket = ticket;
+    // } else {
+    //   this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+    // }
+
+    this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;
-    } else {
-      this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-    }
+
+      if (!ticket) {
+        this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+      }
+    });
   }
 
   public ngAfterViewInit(): void {
@@ -56,19 +64,18 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
       .open(TicketPaymentDialogComponent, { data })
       .afterClosed()
       .subscribe((response: boolean) => {
-        console.log('response', response);
         if (response) {
           this.toastService.openSuccessToast('Ticket payment is successful');
-          const params = {
-            ticketNumber: this.ticket.violationTicketNumber,
-            time: this.ticket.violationTime,
-          };
+          // const params = {
+          //   ticketNumber: this.ticket.violationTicketNumber,
+          //   time: this.ticket.violationTime,
+          // };
 
           this.router.navigate(
-            [AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS)],
-            {
-              queryParams: params,
-            }
+            [AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS)]
+            // {
+            //   queryParams: params,
+            // }
           );
         }
       });

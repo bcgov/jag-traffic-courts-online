@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -29,9 +34,16 @@ export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
     //   this.disputeService.ticket$.next(response);
     // });
 
+    // const ticket = this.disputeService.ticket;
+    // if (ticket) {
+    //   this.ticket = ticket;
+    // } else {
+    //   this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+    // }
+
     this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;
-      this.logger.info('DisputeSubmitComponent', ticket);
+      this.logger.info('TicketPaymentSuccessComponent', ticket);
 
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -40,6 +52,7 @@ export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
+    console.log('ngAfterViewInit');
     this.utilsService.scrollTop();
   }
 }

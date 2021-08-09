@@ -23,5 +23,7 @@
 
   <hr />
 
-  <app-count-summary [ticket]="ticket"></app-count-summary>
+  <div *ngIf="ticket">
+    <app-count-summary [ticket]="ticket"></app-count-summary>
+  </div>
 </app-page>
