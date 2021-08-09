@@ -8,7 +8,7 @@ import { TicketDispute } from '@shared/models/ticketDispute.model';
 })
 export class CountSummaryComponent implements OnInit {
   @Input() public ticket: TicketDispute;
-  @Input() public payView: boolean = false;
+  @Input() public payView = false;
 
   public defaultLanguage: string;
 

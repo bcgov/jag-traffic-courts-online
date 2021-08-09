@@ -107,8 +107,8 @@ export class DisputeResourceService {
           );
           this.logger.info('NEW_SHELL_TICKET', newShellTicket);
         }),
-        map((ticket) => {
-          return ticket;
+        map((shellTicket) => {
+          return shellTicket;
         }),
         catchError((error: any) => {
           this.toastService.openErrorToast('Ticket could not be created');
@@ -125,7 +125,7 @@ export class DisputeResourceService {
     // const disputeStatus = row.offenceDisputeDetail
     //   ? row.offenceDisputeDetail.status
     //   : null;
-    //TODO
+    // TODO
     const status = 0; // disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
     return status;
   }

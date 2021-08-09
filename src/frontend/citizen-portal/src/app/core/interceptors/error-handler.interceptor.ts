@@ -1,15 +1,13 @@
-import { Injectable } from '@angular/core';
 import {
+  HttpErrorResponse,
+  HttpEvent,
   HttpHandler,
   HttpRequest,
-  HttpEvent,
-  HttpErrorResponse,
 } from '@angular/common/http';
-
+import { Injectable } from '@angular/core';
+import { LoggerService } from '@core/services/logger.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import { LoggerService } from '@core/services/logger.service';
 
 @Injectable({
   providedIn: 'root',

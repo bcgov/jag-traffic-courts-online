@@ -243,8 +243,8 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
           this.busy = this.disputeResource
             .createShellTicket(payload)
-            .subscribe((response: TicketDispute) => {
-              this.disputeService.ticket$.next(response);
+            .subscribe((newShellTicket: TicketDispute) => {
+              this.disputeService.ticket$.next(newShellTicket);
 
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
                 queryParams: {

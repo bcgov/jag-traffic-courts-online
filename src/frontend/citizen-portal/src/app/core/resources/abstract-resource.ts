@@ -3,13 +3,11 @@ import {
   HttpParams,
   HttpResponse,
 } from '@angular/common/http';
-
-import { Observable, throwError, pipe, of, ObservableInput } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-
-import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiHttpErrorResponse } from '@core/models/api-http-error-response.model';
+import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { LoggerService } from '@core/services/logger.service';
+import { Observable, of, pipe, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 // Type for NoContent responses from the API
 export type NoContent = Observable<void>;
@@ -51,11 +49,9 @@ export abstract class AbstractResource {
   protected handleResponse<T>() {
     return pipe(
       map(this.handleSuccess<T>()),
-      catchError(
-        (error: any): Observable<any> => {
-          return this.handleError(error);
-        }
-      )
+      catchError((error: any): Observable<any> => {
+        return this.handleError(error);
+      })
     );
   }
 
