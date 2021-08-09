@@ -1,7 +1,3 @@
-///<reference types="Cypress"/>
-
-//These tests for the basic test coverage
-
 before(() => {
     // runs once before all tests in the block
     cy.visit("/");
