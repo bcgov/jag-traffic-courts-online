@@ -95,15 +95,12 @@ export class DisputeStepperComponent
           if (offence.offenceNumber === 1) {
             this.offence1Exists = true;
             this.offence1Form.patchValue(offence);
-            this.offence1Form.patchValue(offence.offenceDisputeDetail);
           } else if (offence.offenceNumber === 2) {
             this.offence2Exists = true;
             this.offence2Form.patchValue(offence);
-            this.offence2Form.patchValue(offence.offenceDisputeDetail);
           } else if (offence.offenceNumber === 3) {
             this.offence3Exists = true;
             this.offence3Form.patchValue(offence);
-            this.offence3Form.patchValue(offence.offenceDisputeDetail);
           }
         });
       }

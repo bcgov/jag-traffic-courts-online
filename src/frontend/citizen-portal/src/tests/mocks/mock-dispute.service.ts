@@ -1,9 +1,7 @@
-import { OffenceDisputeDetail } from '@shared/models/offenceDisputeDetail.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import * as faker from 'faker';
-
 import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
@@ -76,11 +74,17 @@ export class MockDisputeService {
       amountDue: 87.56,
       violationDateTime: faker.date.soon().toString(),
       offenceDescription: 'Load Or Projection Over 1.2M In Rear', //  Without Required Lamp During Time Specified In Mr Section 4.01
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
+      status: null,
+      offenceAgreementStatus: '',
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
     ticket.offences.push(offence);
@@ -99,11 +103,17 @@ export class MockDisputeService {
       amountDue: 142,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       discountDueDate: soonDate,
+      status: null,
+      offenceAgreementStatus: '',
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
     ticket.offences.push(offence);
@@ -161,20 +171,20 @@ export class MockDisputeService {
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
+      status: 1,
+      offenceAgreementStatus: null,
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
-    let offenceDispute: OffenceDisputeDetail = this.createOffenceDispute(
-      offence.offenceNumber
-    );
-    offenceDispute.status = 1;
-    // offenceDispute.informationCertified = true;
-
-    offence.offenceDisputeDetail = offenceDispute;
+    offence = Object.assign(offence, this.createOffencePay());
 
     ticket.offences.push(offence);
 
@@ -185,18 +195,20 @@ export class MockDisputeService {
       amountDue: 126,
       violationDateTime: offenceDate,
       offenceDescription: 'Operate Vehicle Without Seatbelts',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
+      status: 1,
+      offenceAgreementStatus: null,
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
-    offenceDispute = this.createOffenceMoreTime(offence.offenceNumber);
-    offenceDispute.status = 1;
-    // offenceDispute.informationCertified = true;
-
-    offence.offenceDisputeDetail = offenceDispute;
+    offence = Object.assign(offence, this.createOffenceReduction());
 
     ticket.offences.push(offence);
 
@@ -215,18 +227,20 @@ export class MockDisputeService {
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       discountDueDate: soonDate,
+      status: 1,
+      offenceAgreementStatus: null,
+      reductionAppearInCourt: false,
+      requestReduction: false,
+      requestMoreTime: false,
+      reductionReason: '',
+      moreTimeReason: '',
     };
 
-    offenceDispute = this.createOffencePay(offence.offenceNumber);
-    offenceDispute.status = 1;
-    // offenceDispute.informationCertified = true;
-
-    offence.offenceDisputeDetail = offenceDispute;
+    offence = Object.assign(offence, this.createOffenceDispute());
 
     ticket.offences.push(offence);
 
@@ -288,14 +302,13 @@ export class MockDisputeService {
       emailAddress: faker.internet.email(),
       license: '2342342',
       provLicense: 'BC',
-      phoneNumber: faker.phone.phoneNumber(),
+      phoneNumber: '2506653434', //faker.phone.phoneNumberFormat(10),
     };
   }
 
-  private createOffenceDispute(offenceNumber: number): OffenceDisputeDetail {
+  private createOffenceDispute(): any {
     return {
       status: 0,
-      offenceNumber,
       offenceAgreementStatus: 'DISPUTE',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -305,10 +318,9 @@ export class MockDisputeService {
     };
   }
 
-  private createOffenceNothing(offenceNumber: number): OffenceDisputeDetail {
+  private createOffenceNothing(): any {
     return {
       status: 0,
-      offenceNumber,
       offenceAgreementStatus: 'NOTHING',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -318,10 +330,9 @@ export class MockDisputeService {
     };
   }
 
-  private createOffencePay(offenceNumber: number): OffenceDisputeDetail {
+  private createOffencePay(): any {
     return {
       status: 0,
-      offenceNumber,
       offenceAgreementStatus: 'PAY',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -331,10 +342,9 @@ export class MockDisputeService {
     };
   }
 
-  private createOffenceReduction(offenceNumber: number): OffenceDisputeDetail {
+  private createOffenceReduction(): any {
     return {
       status: 0,
-      offenceNumber,
       offenceAgreementStatus: 'REDUCTION',
       reductionAppearInCourt: true,
       requestReduction: true,
@@ -344,10 +354,9 @@ export class MockDisputeService {
     };
   }
 
-  private createOffenceMoreTime(offenceNumber: number): OffenceDisputeDetail {
+  private createOffenceMoreTime(): any {
     return {
       status: 0,
-      offenceNumber,
       offenceAgreementStatus: 'REDUCTION',
       reductionAppearInCourt: true,
       requestReduction: true,

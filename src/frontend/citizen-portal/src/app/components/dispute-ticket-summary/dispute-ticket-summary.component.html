@@ -29,35 +29,17 @@
         <div class="col-lg-7">
           <small class="d-block">For this count I would like to</small>
           <strong>
-            <div
-              *ngIf="
-                row.offenceDisputeDetail?.offenceAgreementStatus === 'NOTHING'
-              "
-            >
+            <div *ngIf="row.offenceAgreementStatus === 'NOTHING'">
               No action at this time
             </div>
-            <div
-              *ngIf="row.offenceDisputeDetail?.offenceAgreementStatus === 'PAY'"
-            >
+            <div *ngIf="row.offenceAgreementStatus === 'PAY'">
               Pay for this count
             </div>
-            <div
-              *ngIf="
-                row.offenceDisputeDetail?.offenceAgreementStatus === 'REDUCTION'
-              "
-            >
-              <div *ngIf="row.offenceDisputeDetail?.requestReduction">
-                Request a fine reduction
-              </div>
-              <div *ngIf="row.offenceDisputeDetail?.requestMoreTime">
-                Request more time to pay
-              </div>
+            <div *ngIf="row.offenceAgreementStatus === 'REDUCTION'">
+              <div *ngIf="row.requestReduction">Request a fine reduction</div>
+              <div *ngIf="row.requestMoreTime">Request more time to pay</div>
             </div>
-            <div
-              *ngIf="
-                row.offenceDisputeDetail?.offenceAgreementStatus === 'DISPUTE'
-              "
-            >
+            <div *ngIf="row.offenceAgreementStatus === 'DISPUTE'">
               Dispute the charge
             </div>
           </strong>
@@ -65,23 +47,23 @@
         <div class="col-lg-3">
           <small class="d-block">I will appear in court</small>
           <strong>
-            {{ row.offenceDisputeDetail?.reductionAppearInCourt | yesNo }}
+            {{ row.reductionAppearInCourt | yesNo }}
           </strong>
         </div>
       </div>
 
-      <div class="row" *ngIf="row.offenceDisputeDetail?.reductionReason">
+      <div class="row" *ngIf="row.reductionReason">
         <div class="offset-lg-2 col-lg-7">
           <small class="d-block">Request reduction reasons</small>
-          <strong>{{ row.offenceDisputeDetail?.reductionReason }}</strong>
+          <strong>{{ row.reductionReason }}</strong>
         </div>
         <div class="col-lg-3"></div>
       </div>
 
-      <div class="row" *ngIf="row.offenceDisputeDetail?.moreTimeReason">
+      <div class="row" *ngIf="row.moreTimeReason">
         <div class="offset-lg-2 col-lg-7">
           <small class="d-block">Request more time reasons</small>
-          <strong>{{ row.offenceDisputeDetail?.moreTimeReason }}</strong>
+          <strong>{{ row.moreTimeReason }}</strong>
         </div>
         <div class="col-lg-3"></div>
       </div>
@@ -90,12 +72,12 @@
       <div class="row">
         <div class="offset-lg-2 col-lg-7">
           <small class="d-block">Description of offence</small>
-          {{ row.offenceDisputeDetail?.offenceDescription | titlecase }}
+          {{ row.offenceDescription | titlecase }}
         </div>
         <div class="col-lg-3">
           <small class="d-block">Amount due</small>
           {{
-            row.offenceDisputeDetail?.amountDue
+            row.amountDue
               | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
           }}
         </div>

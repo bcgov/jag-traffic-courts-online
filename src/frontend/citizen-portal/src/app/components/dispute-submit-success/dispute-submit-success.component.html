@@ -21,9 +21,10 @@
     <strong>{{ ticket?.disputant?.emailAddress }}</strong>
   </div>
 
-  <div class="mt-4">
-    You have selected '<strong>Pay count</strong>' for <strong>Count </strong>,
-    please use the button below to proceed to payment.<br />
+  <div class="mt-4" *ngIf="countsToPay">
+    You have selected '<strong>Pay for this count</strong>' for
+    <strong>{{ countsToPay }}</strong
+    >, please use the button below to proceed to payment.<br />
     <button
       type="button"
       mat-flat-button
@@ -42,36 +43,5 @@
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
 
-  <!--
-  <section class="mb-4 mt-4">
-    <div class="row">
-      <div class="col-md-4 col-xs-12">
-        <button
-          mat-flat-button
-          color="primary"
-          class="large light"
-          (click)="onViewYourTicket()"
-        >
-          <mat-icon inline="true">text_snippet</mat-icon>
-
-          {{ "submit.view_your_ticket" | translate }}
-        </button>
-      </div>
-
-      <div class="offset-md-4 col-md-4 col-xs-12 text-right">
-        <button
-          mat-stroked-button
-          type="button"
-          color="primary"
-          class="large light"
-          (click)="onExitTicket()"
-        >
-          <mat-icon inline="true">home</mat-icon>
-
-          {{ "submit.exit" | translate }}
-        </button>
-      </div>
-    </div>
-  </section>
--->
+  <app-dispute-footer></app-dispute-footer>
 </app-page>

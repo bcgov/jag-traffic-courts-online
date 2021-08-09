@@ -71,10 +71,13 @@ export class DisputeResourceService {
       .post<TicketDispute>('disputes/ticketDispute', ticketDispute)
       .pipe(
         map((response: ApiHttpResponse<TicketDispute>) => null),
-        catchError((error: any) => {
-          this.toastService.openErrorToast(
-            this.configService.dispute_create_error
+        tap(() => {
+          this.toastService.openSuccessToast(
+            'The request has been successfully submitted'
           );
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast('The request could not be created');
           this.logger.error(
             'DisputeResourceService::createTicketDispute error has occurred: ',
             error
@@ -87,7 +90,7 @@ export class DisputeResourceService {
   /**
    * Create the shell ticket
    *
-   * @param dispute The dispute to be created
+   * @param ticket The ticket to be created
    */
   public createShellTicket(ticket: ShellTicket): Observable<TicketDispute> {
     this.logger.info('createShellTicket', ticket);
@@ -100,7 +103,7 @@ export class DisputeResourceService {
         ),
         tap((newShellTicket: TicketDispute) => {
           this.toastService.openSuccessToast(
-            'The ticket has successfully been created'
+            'The ticket has been successfully created'
           );
           this.logger.info('NEW_SHELL_TICKET', newShellTicket);
         }),
@@ -119,10 +122,11 @@ export class DisputeResourceService {
   }
 
   private getOffenceInfo(row: Offence): number {
-    const disputeStatus = row.offenceDisputeDetail
-      ? row.offenceDisputeDetail.status
-      : null;
-    const status = disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
+    // const disputeStatus = row.offenceDisputeDetail
+    //   ? row.offenceDisputeDetail.status
+    //   : null;
+    //TODO
+    const status = 0; // disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
     return status;
   }
 

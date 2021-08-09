@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
-  FormBuilder,
-  Validators,
-  FormGroup,
   AbstractControl,
-  FormControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
-import { AbstractFormStateService } from 'app/components/classes/abstract-form-state-service.class';
 import { Additional } from '@shared/models/additional.model';
-import { OffenceDispute } from '@shared/models/offenceDispute.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { AbstractFormStateService } from 'app/components/classes/abstract-form-state-service.class';
 
 @Injectable({
   providedIn: 'root',
@@ -89,65 +87,19 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     dispute.offences = [];
 
     if (stepOffence1.offenceNumber) {
-      // && stepOffence1.includeOffenceInDispute) {
-
-      let offence1: Offence = { ...stepOffence1 };
-      offence1.offenceDisputeDetail = { ...stepOffence1 };
-
-      // const offence1: Offence = {
-      //   offenceNumber: stepOffence1.offenceNumber,
-      //   offenceDisputeDetail: stepOffence1,
-      // };
+      const offence1: Offence = { ...stepOffence1 };
       dispute.offences.push(offence1);
     }
     if (stepOffence2.offenceNumber) {
-      // && stepOffence2.includeOffenceInDispute) {
-
-      let offence2: Offence = { ...stepOffence2 };
-      offence2.offenceDisputeDetail = { ...stepOffence2 };
-
+      const offence2: Offence = { ...stepOffence2 };
       dispute.offences.push(offence2);
     }
     if (stepOffence3.offenceNumber) {
-      // && stepOffence3.includeOffenceInDispute) {
-
-      let offence3: Offence = { ...stepOffence3 };
-      offence3.offenceDisputeDetail = { ...stepOffence3 };
-
+      const offence3: Offence = { ...stepOffence3 };
       dispute.offences.push(offence3);
     }
 
     dispute.additional = stepAdditional;
-    return dispute;
-  }
-
-  public get jsonCountDispute(): OffenceDispute {
-    const stepOffence1 = this.stepOffence1Form.getRawValue();
-    const stepOffence2 = this.stepOffence2Form.getRawValue();
-    const stepOffence3 = this.stepOffence3Form.getRawValue();
-    const stepAdditional = this.stepAdditionalForm.getRawValue();
-    const stepOverview = this.stepOverviewForm.getRawValue();
-
-    const dispute: OffenceDispute = {
-      ...stepOverview,
-    };
-    if (stepOffence1.offenceNumber) {
-      dispute.offenceNumber = stepOffence1.offenceNumber;
-      dispute.offenceDisputeDetail = stepOffence1;
-    }
-    if (stepOffence2.offenceNumber) {
-      dispute.offenceNumber = stepOffence2.offenceNumber;
-      dispute.offenceDisputeDetail = stepOffence2;
-    }
-    if (stepOffence3.offenceNumber) {
-      dispute.offenceNumber = stepOffence3.offenceNumber;
-      dispute.offenceDisputeDetail = stepOffence3;
-    }
-    dispute.additional = stepAdditional;
-    // console.log('jsonCountDispute1', stepOffence1);
-    // console.log('jsonCountDispute2', stepOffence2);
-    // console.log('jsonCountDispute3', stepOffence3);
-    // console.log('jsonCountDispute', dispute);
     return dispute;
   }
 
@@ -294,25 +246,25 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepDisputantForm(): FormGroup {
     return this.formBuilder.group({
-      lastName: [null], // , [Validators.required]],
-      givenNames: [null],
-      mailingAddress: [null],
+      lastName: [null, [Validators.required]],
+      givenNames: [null, [Validators.required]],
+      mailingAddress: [null, [Validators.required]],
       postal: [null],
       city: [null],
       province: [null],
       license: [null],
       provLicense: [null],
-      emailAddress: [null], // , [Validators.required, Validators.email]
-      phoneNumber: [null], // , [FormControlValidators.phone]],
-      workPhone: [null], // , [FormControlValidators.phone]],
-      birthdate: [null], // , []],
+      emailAddress: [null, [Validators.required, Validators.email]],
+      phoneNumber: [null, [FormControlValidators.phone]],
+      workPhone: [null, [FormControlValidators.phone]],
+      birthdate: [null, []],
     });
   }
 
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
       offenceNumber: [null],
-      offenceAgreementStatus: [null], // , [Validators.required]],
+      offenceAgreementStatus: [null, [Validators.required]],
       reductionAppearInCourt: [false],
       requestReduction: [false],
       requestMoreTime: [false],
@@ -344,7 +296,10 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepOverviewForm(): FormGroup {
     return this.formBuilder.group({
-      // informationCertified: [false], // , [FormControlValidators.requiredTruthful]],
+      // Here for display purposes
+      violationTicketNumber: [null],
+      violationTime: [null],
+      violationDate: [null],
     });
   }
 }

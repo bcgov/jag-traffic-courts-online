@@ -39,6 +39,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
 
     this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;
+      this.logger.info('TicketPaymentComponent current ticket', ticket);
 
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -66,17 +67,10 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
       .subscribe((response: boolean) => {
         if (response) {
           this.toastService.openSuccessToast('Ticket payment is successful');
-          // const params = {
-          //   ticketNumber: this.ticket.violationTicketNumber,
-          //   time: this.ticket.violationTime,
-          // };
 
-          this.router.navigate(
-            [AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS)]
-            // {
-            //   queryParams: params,
-            // }
-          );
+          this.router.navigate([
+            AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS),
+          ]);
         }
       });
   }

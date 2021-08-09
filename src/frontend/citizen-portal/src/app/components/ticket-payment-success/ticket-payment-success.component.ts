@@ -1,16 +1,11 @@
-import {
-  AfterViewChecked,
-  AfterViewInit,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
-import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-payment-success',
@@ -18,11 +13,11 @@ import { DisputeService } from 'app/services/dispute.service';
   styleUrls: ['./ticket-payment-success.component.scss'],
 })
 export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
+  public busy: Subscription;
   public ticket: TicketDispute;
 
   constructor(
     private router: Router,
-    private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private logger: LoggerService
@@ -34,16 +29,9 @@ export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
     //   this.disputeService.ticket$.next(response);
     // });
 
-    // const ticket = this.disputeService.ticket;
-    // if (ticket) {
-    //   this.ticket = ticket;
-    // } else {
-    //   this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-    // }
-
     this.disputeService.ticket$.subscribe((ticket) => {
       this.ticket = ticket;
-      this.logger.info('TicketPaymentSuccessComponent', ticket);
+      this.logger.info('TicketPaymentSuccessComponent current ticket', ticket);
 
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -52,7 +40,6 @@ export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
-    this.utilsService.scrollTop();
+    this.utilsService.goToTop();
   }
 }

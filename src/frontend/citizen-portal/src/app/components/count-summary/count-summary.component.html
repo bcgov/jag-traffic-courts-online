@@ -22,7 +22,8 @@
 
   <div *ngIf="payView">
     <mat-checkbox class="mr-4 mb-2" color="primary">
-      I would like to pay all counts for this ticket.
+      I agree I committed this offence and I would like to pay all counts for
+      this ticket.
     </mat-checkbox>
   </div>
 
@@ -101,7 +102,7 @@
 
     <section class="px-4 py-2 mb-3 card-section">
       <div class="row mt-2">
-        <div class="offset-lg-5 col-lg-5">Balance due if paid after TODO</div>
+        <div class="offset-lg-5 col-lg-5">Balance due if paid after 'date'</div>
         <div class="col-lg-2">
           <strong>{{
             0 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage

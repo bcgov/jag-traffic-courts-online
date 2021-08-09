@@ -1,4 +1,4 @@
-<app-page>
+<app-page [busy]="busy">
   <app-page-header>
     <ng-container header>Payment confirmation</ng-container>
   </app-page-header>
@@ -26,4 +26,6 @@
   <div *ngIf="ticket">
     <app-count-summary [ticket]="ticket"></app-count-summary>
   </div>
+
+  <app-dispute-footer></app-dispute-footer>
 </app-page>

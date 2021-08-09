@@ -44,7 +44,7 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
+    this.utilsService.goToTop();
   }
 
   public onViewYourTicket(): void {
@@ -88,5 +88,28 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
           ]);
         }
       });
+  }
+
+  public get countsToPay(): string {
+    let countsToPay = '';
+    let count = 0;
+
+    this.ticket?.offences
+      ?.filter((offence) => offence.offenceAgreementStatus === 'PAY')
+      .forEach((offence) => {
+        if (count > 0) {
+          countsToPay += ', ';
+        }
+        countsToPay += offence.offenceNumber;
+        count++;
+      });
+
+    if (count > 1) {
+      countsToPay = 'Counts ' + countsToPay;
+    } else {
+      countsToPay = 'Count ' + countsToPay;
+    }
+
+    return countsToPay;
   }
 }
