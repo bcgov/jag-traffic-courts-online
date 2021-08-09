@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { TicketPaymentSuccessComponent } from './ticket-payment-success.component';
 
@@ -8,9 +11,13 @@ describe('TicketPaymentSuccessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TicketPaymentSuccessComponent ]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientTestingModule,
+        RouterModule.forRoot([]),
+        RouterTestingModule,
+      ],
+      declarations: [TicketPaymentSuccessComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

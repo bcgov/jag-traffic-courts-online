@@ -11,6 +11,8 @@ import { StepAdditionalComponent } from './step-additional.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfigService } from '@config/config.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('StepAdditionalComponent', () => {
   let component: StepAdditionalComponent;
@@ -19,10 +21,12 @@ describe('StepAdditionalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         RouterModule.forRoot([]),
+        RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpClientTestingModule,
+        BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
