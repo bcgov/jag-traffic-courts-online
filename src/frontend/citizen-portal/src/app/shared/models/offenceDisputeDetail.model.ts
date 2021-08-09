@@ -10,6 +10,14 @@ export interface OffenceDisputeDetail {
   moreTimeReason?: string;
 
   /*
+
+  status:
+    0 - New,
+    1 - Submitted,
+    2 - InProgress, // ticket already verified
+    3 - Complete,
+    4 - Rejected
+
   offenceAgreementStatus:
     NOTHING
                     I do not wish to take any action on this count at this time.

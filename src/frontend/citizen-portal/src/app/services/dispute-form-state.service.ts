@@ -90,26 +90,30 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
     if (stepOffence1.offenceNumber) {
       // && stepOffence1.includeOffenceInDispute) {
-      const offence1: Offence = {
-        offenceNumber: stepOffence1.offenceNumber,
-        offenceDisputeDetail: stepOffence1,
-      };
+
+      let offence1: Offence = { ...stepOffence1 };
+      offence1.offenceDisputeDetail = { ...stepOffence1 };
+
+      // const offence1: Offence = {
+      //   offenceNumber: stepOffence1.offenceNumber,
+      //   offenceDisputeDetail: stepOffence1,
+      // };
       dispute.offences.push(offence1);
     }
     if (stepOffence2.offenceNumber) {
       // && stepOffence2.includeOffenceInDispute) {
-      const offence2: Offence = {
-        offenceNumber: stepOffence2.offenceNumber,
-        offenceDisputeDetail: stepOffence2,
-      };
+
+      let offence2: Offence = { ...stepOffence2 };
+      offence2.offenceDisputeDetail = { ...stepOffence2 };
+
       dispute.offences.push(offence2);
     }
     if (stepOffence3.offenceNumber) {
       // && stepOffence3.includeOffenceInDispute) {
-      const offence3: Offence = {
-        offenceNumber: stepOffence3.offenceNumber,
-        offenceDisputeDetail: stepOffence3,
-      };
+
+      let offence3: Offence = { ...stepOffence3 };
+      offence3.offenceDisputeDetail = { ...stepOffence3 };
+
       dispute.offences.push(offence3);
     }
 

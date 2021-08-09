@@ -53,8 +53,10 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
         ticket.violationTicketNumber === ticketNumber &&
         ticket.violationTime === ticketTime
       ) {
+        this.logger.info('DisputeSummaryComponent:: Use existing ticket');
         this.ticket = ticket;
       } else {
+        this.logger.info('DisputeSummaryComponent:: Search for ticket');
         this.performSearch(params);
       }
     });

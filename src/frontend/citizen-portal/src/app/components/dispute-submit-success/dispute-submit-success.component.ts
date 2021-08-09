@@ -69,24 +69,24 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   public onPayTicket(): void {
     this.logger.info('onPayTicket', this.ticket);
 
-    // const data: DialogOptions = {
-    //   titleKey: 'submit_confirmation.heading',
-    //   messageKey: 'submit_confirmation.message',
-    //   actionTextKey: 'submit_confirmation.confirm',
-    //   cancelTextKey: 'submit_confirmation.cancel',
-    // };
+    const data: DialogOptions = {
+      titleKey: 'submit_confirmation.heading',
+      messageKey: 'submit_confirmation.message',
+      actionTextKey: 'submit_confirmation.confirm',
+      cancelTextKey: 'submit_confirmation.cancel',
+    };
 
-    // this.dialog
-    //   .open(TicketPaymentDialogComponent, { data })
-    //   .afterClosed()
-    //   .subscribe((response: boolean) => {
-    //     if (response) {
-    //       this.toastService.openSuccessToast('Ticket payment is successful');
+    this.dialog
+      .open(TicketPaymentDialogComponent, { data })
+      .afterClosed()
+      .subscribe((response: boolean) => {
+        if (response) {
+          this.toastService.openSuccessToast('Ticket payment is successful');
 
-    //       this.router.navigate([
-    //         AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS),
-    //       ]);
-    //     }
-    //   });
+          this.router.navigate([
+            AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS),
+          ]);
+        }
+      });
   }
 }

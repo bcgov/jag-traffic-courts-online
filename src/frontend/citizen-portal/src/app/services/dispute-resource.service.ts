@@ -104,6 +104,9 @@ export class DisputeResourceService {
           );
           this.logger.info('NEW_SHELL_TICKET', newShellTicket);
         }),
+        map((ticket) => {
+          return ticket;
+        }),
         catchError((error: any) => {
           this.toastService.openErrorToast('Ticket could not be created');
           this.logger.error(

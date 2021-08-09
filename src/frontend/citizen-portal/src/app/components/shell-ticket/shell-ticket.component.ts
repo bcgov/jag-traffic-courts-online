@@ -21,8 +21,11 @@ import { FormControlValidators } from '@core/validators/form-control.validators'
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicket } from '@shared/models/shellTicket.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
+import { DisputeService } from 'app/services/dispute.service';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -57,13 +60,14 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
+    private disputeService: DisputeService,
     private disputeResource: DisputeResourceService,
     private configService: ConfigService,
     private utilsService: UtilsService,
     private currencyPipe: CurrencyPipe,
+    private appConfigService: AppConfigService,
     private dialog: MatDialog,
     private router: Router,
-    private toastService: ToastService,
     private logger: LoggerService
   ) {
     this.statutes = this.configService.statutes;
@@ -112,6 +116,23 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       chargeCount: [1],
       amountOwing: [null],
     });
+
+    if (this.appConfigService.useMockServices) {
+      // Default values during testing
+      this.form.get('violationTicketNumber').setValue('EZ02000455');
+      this.form.get('violationDate').setValue('2008-07-03T07:00:00.000Z');
+      this.form.get('violationTime').setValue('09:54');
+      this.form.get('lastName').setValue('test');
+      this.form.get('givenNames').setValue('test');
+      this.form.get('birthdate').setValue('1988-03-03T08:00:00.000Z');
+      this.form.get('gender').setValue('M');
+      this.form.get('count1Charge').setValue(19023);
+      this.form.get('count1FineAmount').setValue(234);
+      this.form.get('courtHearingLocation').setValue('82.0001');
+      this.form.get('detachmentLocation').setValue('9393.0001');
+      this.form.get('driverLicenseNumber').setValue(2342343);
+      this.form.get('chargeCount').setValue(1);
+    }
   }
 
   public ngOnInit(): void {
@@ -222,10 +243,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
           this.busy = this.disputeResource
             .createShellTicket(payload)
-            .subscribe(() => {
-              //   this.disputeService.ticket$.next(payload);
+            .subscribe((response: TicketDispute) => {
+              console.log('xxxxx response', response);
+              this.disputeService.ticket$.next(response);
 
-              // TODO: CAROL FIX
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
                 queryParams: {
                   ticketNumber: payload.violationTicketNumber,

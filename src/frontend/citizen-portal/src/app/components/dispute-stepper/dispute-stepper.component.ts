@@ -176,6 +176,8 @@ export class DisputeStepperComponent
           payload.violationTicketNumber = this.ticket.violationTicketNumber;
           payload.violationTime = this.ticket.violationTime;
 
+          this.logger.info('DisputeStepperComponent::submitDispute', payload);
+
           this.busy = this.disputeResource
             .createTicketDispute(payload)
             .subscribe(() => {
