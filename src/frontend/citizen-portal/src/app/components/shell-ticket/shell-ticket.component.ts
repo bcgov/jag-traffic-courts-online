@@ -9,12 +9,18 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { AppRoutes } from 'app/app.routes';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -52,12 +58,15 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     private configService: ConfigService,
     private utilsService: UtilsService,
     private currencyPipe: CurrencyPipe,
+    private dialog: MatDialog,
+    private router: Router,
+    private toastService: ToastService,
     private logger: LoggerService
   ) {
     this.form = this.formBuilder.group({
-      ticketNumber: [null, [Validators.required]],
-      offenceDate: [null, [Validators.required]],
-      offenceTime: [null, [Validators.required]],
+      violationTicketNumber: [null, [Validators.required]],
+      violationDate: [null, [Validators.required]],
+      violationTime: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
@@ -97,17 +106,25 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     // Listen for typeahead changes in the statute fields
     this.filteredStatutes1 = this.count1.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
+
     this.filteredStatutes2 = this.count2.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
+
     this.filteredStatutes3 = this.count3.valueChanges.pipe(
       startWith(''),
-      map((value) => (typeof value === 'string' ? value : value.name)),
+      map((value) =>
+        value ? (typeof value === 'string' ? value : value.name) : null
+      ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
 
@@ -162,6 +179,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     this.utilsService.scrollTop();
   }
 
+  public onClearBirthdate(): void {
+    this.birthdate.setValue(null);
+  }
+
   public onSubmit(): void {
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
@@ -173,6 +194,26 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     if (!validity) {
       return;
     }
+
+    const data: DialogOptions = {
+      titleKey: 'shell_ticket_confirmation.heading',
+      messageKey: 'shell_ticket_confirmation.message',
+      actionTextKey: 'shell_ticket_confirmation.confirm',
+      cancelTextKey: 'shell_ticket_confirmation.cancel',
+    };
+    this.dialog
+      .open(ConfirmDialogComponent, { data })
+      .afterClosed()
+      .subscribe((response: boolean) => {
+        if (response) {
+          this.toastService.openSuccessToast(
+            'The ticket has successfully been created'
+          );
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+            queryParams: { violationTicketNumber: 'EZ02000460', time: '09:54' },
+          });
+        }
+      });
   }
 
   private filterStatutes(value: string): Config<number>[] {
@@ -202,12 +243,12 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     console.log('onStatuteSelected', event$.option.value);
   }
 
-  public get ticketNumber(): FormControl {
-    return this.form.get('ticketNumber') as FormControl;
+  public get violationTicketNumber(): FormControl {
+    return this.form.get('violationTicketNumber') as FormControl;
   }
 
-  public get offenceDate(): FormControl {
-    return this.form.get('offenceDate') as FormControl;
+  public get violationDate(): FormControl {
+    return this.form.get('violationDate') as FormControl;
   }
 
   public get birthdate(): FormControl {

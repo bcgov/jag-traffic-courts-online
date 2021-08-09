@@ -1,18 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PhotoComponent } from '@components/photo/photo.component';
+import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketImageComponent } from '@components/ticket-image/ticket-image.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
+import { TicketPaymentComponent } from '@components/ticket-payment/ticket-payment.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
-import { DisputeAllStepperComponent } from './components/dispute-all-stepper/dispute-all-stepper.component';
-import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
 import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { LandingComponent } from './components/landing/landing.component';
-import { StepperComponent } from './components/stepper/stepper.component';
 
 const routes: Routes = [
   {
@@ -38,22 +36,18 @@ const routes: Routes = [
         component: DisputeSummaryComponent,
       },
       {
-        path: AppRoutes.PHOTO,
-        component: PhotoComponent,
-      },
-      {
         path: AppRoutes.STEPPER,
-        component: StepperComponent,
+        component: DisputeStepperComponent,
       },
       {
-        path: AppRoutes.ALL_STEPPER,
-        component: DisputeAllStepperComponent,
+        path: AppRoutes.PAYMENT,
+        component: TicketPaymentComponent,
       },
     ],
   },
   {
     path: AppRoutes.TICKET,
-    component: DisputePageComponent,
+    component: TicketPageComponent,
     canActivate: [FeatureFlagGuard],
     data: { featureFlag: 'dispute' },
     children: [

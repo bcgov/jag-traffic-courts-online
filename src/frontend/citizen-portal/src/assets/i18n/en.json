@@ -50,7 +50,7 @@
     "status_2": "In Progress",
     "status_3": "Resolved",
     "status_4": "Rejected",
-    "status_unpaid": "Outstanding Balance",
+    "status_unpaid": "Balance outstanding",
     "status_paid": "Paid"
   },
   "stepper": {
@@ -91,9 +91,9 @@
       "offence_agreement_3": "Dispute the charge",
       "requests": "Which requests would you like to make?",
       "requestReduction": "I request a reduction of the ticketed amount",
-      "requestReductionReasonLabel": "What are your reasons for a reduction in the ticketed amount?",
+      "requestReductionReasonLabel": "Please enter your reasons for why you are requesting a fine reduction.",
       "requestMoreTime": "I request time to pay the ticketed amount",
-      "requestMoreTimeReasonLabel": "What are your reasons for requiring more time to pay the ticketed amount?"
+      "requestMoreTimeReasonLabel": "Please enter your reasons for why you are requesting more time to pay."
     },
     "additional": {
       "heading": "Additional Information",
@@ -172,5 +172,11 @@
   "error": {
     "required": "Required",
     "email_address": "Must be a valid email address"
+  },
+  "shell_ticket_confirmation": {
+    "heading": "Create your traffic ticket",
+    "message": "Are you sure the information is correct and you want to create this ticket?",
+    "confirm": "Yes, create ticket",
+    "cancel": "No, do not create ticket"
   }
 }

@@ -14,7 +14,7 @@
           <mat-form-field class="w-100 mb-2">
             <mat-label>Violation ticket number</mat-label>
             <input
-              formControlName="ticketNumber"
+              formControlName="violationTicketNumber"
               matInput
               type="text"
               oninput="this.value = this.value.toUpperCase()"
@@ -24,10 +24,10 @@
             <mat-hint>
               <strong>A ticket number is 2 letters and 8 numbers</strong>
             </mat-hint>
-            <mat-error *ngIf="ticketNumber.hasError('required')">
+            <mat-error *ngIf="violationTicketNumber.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="ticketNumber.hasError('mask')">
+            <mat-error *ngIf="violationTicketNumber.hasError('mask')">
               This ticket number is not valid. It must be 2 letters and 8
               numbers.
             </mat-error>
@@ -40,7 +40,7 @@
             <input
               matInput
               [matDatepicker]="picker"
-              formControlName="offenceDate"
+              formControlName="violationDate"
               [max]="todayDate"
               readonly
               (click)="picker.open()"
@@ -52,7 +52,7 @@
               [touchUi]="isMobile"
               startView="multi-year"
             ></mat-datepicker>
-            <mat-error *ngIf="offenceDate.hasError('required')">
+            <mat-error *ngIf="violationDate.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
           </mat-form-field>
@@ -61,14 +61,14 @@
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Violation time</mat-label>
-            <input matInput type="time" formControlName="offenceTime" />
+            <input matInput type="time" formControlName="violationTime" />
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Surname</mat-label>
             <input matInput formControlName="lastName" />
@@ -76,7 +76,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Given names</mat-label>
             <input matInput formControlName="givenNames" />
@@ -84,7 +84,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Driver's license #</mat-label>
             <input
@@ -97,8 +97,10 @@
             <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
+      </div>
 
-        <div class="col-md-2">
+      <div class="row">
+        <div class="offset-md-4 col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Birthdate</mat-label>
             <input
@@ -113,6 +115,9 @@
               matSuffix
               [for]="picker2"
             ></mat-datepicker-toggle>
+            <mat-datepicker-toggle matSuffix (click)="onClearBirthdate()">
+              <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+            </mat-datepicker-toggle>
 
             <mat-datepicker
               #picker2
@@ -125,7 +130,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
           <mat-form-field class="w-100">
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender">
@@ -184,7 +189,12 @@
             <mat-error *ngIf="count1.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="count1.hasError('invalidAutocompleteObject')">
+            <mat-error
+              *ngIf="
+                count1.hasError('invalidAutocompleteObject') &&
+                !count1.hasError('required')
+              "
+            >
               Statute is not recognized. Select one from the list of options.
             </mat-error>
           </mat-form-field>
@@ -238,7 +248,12 @@
             <mat-error *ngIf="count2.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="count2.hasError('invalidAutocompleteObject')">
+            <mat-error
+              *ngIf="
+                count2.hasError('invalidAutocompleteObject') &&
+                !count2.hasError('required')
+              "
+            >
               Statute is not recognized. Select one from the list of options.
             </mat-error>
           </mat-form-field>
@@ -292,7 +307,12 @@
             <mat-error *ngIf="count3.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
-            <mat-error *ngIf="count3.hasError('invalidAutocompleteObject')">
+            <mat-error
+              *ngIf="
+                count3.hasError('invalidAutocompleteObject') &&
+                !count3.hasError('required')
+              "
+            >
               Statute is not recognized. Select one from the list of options.
             </mat-error>
           </mat-form-field>

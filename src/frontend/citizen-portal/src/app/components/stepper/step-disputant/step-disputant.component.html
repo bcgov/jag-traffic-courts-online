@@ -1,0 +1,188 @@
+<app-stepper-page>
+  <app-page-header>
+    <ng-container subHeader>
+      Please fill in all required fields below.
+    </ng-container>
+  </app-page-header>
+
+  <div *ngIf="ticket; else noTicket">
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+      <section class="mb-2">
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Surname</mat-label>
+              <input matInput formControlName="lastName" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Given names</mat-label>
+              <input matInput formControlName="givenNames" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Mailing address</mat-label>
+              <input matInput formControlName="mailingAddress" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>City</mat-label>
+              <input matInput formControlName="city" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Province</mat-label>
+              <input matInput formControlName="province" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Postal code</mat-label>
+              <input
+                matInput
+                mask="S0S 0S0"
+                oninput="this.value = this.value.toUpperCase()"
+                formControlName="postal"
+                [showMaskTyped]="true"
+              />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Phone number</mat-label>
+              <input
+                matInput
+                formControlName="phoneNumber"
+                mask="(000) 000-0000"
+                [showMaskTyped]="true"
+              />
+              <mat-error *ngIf="phoneNumber.hasError('required')">{{
+                "error.required" | translate
+              }}</mat-error>
+              <mat-error *ngIf="phoneNumber.hasError('phone')"
+                >Must be a valid phone number</mat-error
+              >
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field class="w-100">
+              <mat-label>Birthdate</mat-label>
+              <input
+                matInput
+                [max]="maxDateOfBirth"
+                [matDatepicker]="picker"
+                formControlName="birthdate"
+                readonly
+                (click)="picker.open()"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker
+                #picker
+                [touchUi]="isMobile"
+                startView="multi-year"
+              ></mat-datepicker>
+              <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
+                "error.required" | translate
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field class="w-100">
+              <mat-label>Driver's license number</mat-label>
+              <input
+                matInput
+                formControlName="license"
+                mask="0000000"
+                [showMaskTyped]="false"
+              />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field class="w-100">
+              <mat-label>Province or state of driver's license</mat-label>
+              <input matInput formControlName="provLicense" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field class="w-100">
+              <mat-label>Email address</mat-label>
+              <input
+                matInput
+                formControlName="emailAddress"
+                autocomplete="off"
+              />
+              <mat-error *ngIf="emailAddress.hasError('required')">{{
+                "error.required" | translate
+              }}</mat-error>
+              <mat-error *ngIf="emailAddress.hasError('email')">{{
+                "error.email_address" | translate
+              }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <app-alert type="info" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            A notice of hearing will be mailed to the address above. You
+            <strong>MUST</strong> notify the Violation Ticket Centre of any
+            change of address in writing.
+
+            <a
+              href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/documents-forms-records/court-forms/provincial-vt-forms"
+              target="_blank"
+              rel="noopener"
+              >Click here for change of address form.</a
+            >
+          </ng-container>
+        </app-alert>
+      </section>
+    </form>
+  </div>
+
+  <ng-template #noTicket>
+    <h2>No current ticket</h2>
+  </ng-template>
+
+  <!-- [secondaryActionButtonLabel]="prevBtnLabel"-->
+  <app-page-footer
+    (save)="onSubmit()"
+    (back)="onBack()"
+    [secondaryActionButtonIcon]="previousButtonIcon"
+    [secondaryActionButtonKey]="previousButtonKey"
+    [saveButtonKey]="saveButtonKey"
+    [hasSecondaryAction]="true"
+  ></app-page-footer>
+</app-stepper-page>

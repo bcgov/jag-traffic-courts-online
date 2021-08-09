@@ -4,26 +4,26 @@ services:
   # #############################################################################################
   # ###                                 TrafficCourt BACKEND                                  ###
   # #############################################################################################
-  dispute-api:
-    container_name: dispute-api
+  citizen-api:
+    container_name: citizen-api
     build:
       context: ./src/backend/TrafficCourtsApi
-      # args:
-      #   PROJECT_NAME: DisputeApi.Web
     environment:
       DB_CONNECTION_STRING: "host=postgres;port=5432;database=postgres;username=postgres;password=postgres"
       ASPNETCORE_ENVIRONMENT: Development
-      SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
-      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
-      OAUTH__OAUTHURL: ${OAUTH__OAUTHURL}
-      OAUTH__RESOURCEURL: ${OAUTH__RESOURCEURL}
-      OAUTH__CLIENTID: ${OAUTH__CLIENTID}
-      OAUTH__SECRET: ${OAUTH__SECRET}
-      RSI__BASEADDRESS: ${RSI__BASEADDRESS}
+      SPLUNK__URL: http://splunk:8088/
+      SPLUNK__TOKEN: 176FCEBF-4CF5-4EDF-91BC-703796522D20
+      TICKETSEARCHAPI__BASEURL: http://ticket-search:8080/
+      RABBITMQ__HOST: rabbitmq
+      RABBITMQ__PORT: 5672
+      RABBITMQ__USERNAME: guest
+      RABBITMQ__PASSWORD: guest
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [splunk, postgres, rabbitmq, redis]
+    depends_on: [splunk, rabbitmq, ticket-search]
+    networks:
+      - traffic-court-net
 
   ticket-search:
     container_name: ticket-search
@@ -31,17 +31,20 @@ services:
       context: ./src/ticket-search
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      SPLUNK_COLLECTOR_URL: ${SPLUNK_COLLECTOR_URL}
-      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN}
+      SPLUNK_COLLECTOR_URL: http://splunk:8088/
+      SPLUNK_TOKEN: 176FCEBF-4CF5-4EDF-91BC-703796522D20
       OAUTH__OAUTHURL: ${OAUTH__OAUTHURL}
       OAUTH__RESOURCEURL: ${OAUTH__RESOURCEURL}
       OAUTH__CLIENTID: ${OAUTH__CLIENTID}
       OAUTH__SECRET: ${OAUTH__SECRET}
       RSI__BASEADDRESS: ${RSI__BASEADDRESS}
+      RSI__OPERATIONMODE: FAKE
     ports:
       - "5100:8080"
     restart: always
     depends_on: [splunk]
+    networks:
+      - traffic-court-net
 
   # #############################################################################################
   # ###                                 TrafficCourt FRONTEND                                 ###
@@ -50,21 +53,12 @@ services:
     container_name: citizen-portal
     build:
       context: ./src/frontend/citizen-portal
-      args:
-        USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
-        USE_KEYCLOAK: ${USE_KEYCLOAK}
-        API_URL: ${API_URL}
-        KEYCLOAK_URL: ${KEYCLOAK_URL}
-        KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-        KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
-    environment:
-      USE_MOCK_SERVICES: ${USE_MOCK_SERVICES}
-      USE_KEYCLOAK: ${USE_KEYCLOAK}
-    # command: "nginx -g 'daemon off;'"
     restart: always
     ports:
       - "8080:8080"
-    depends_on: [dispute-api,keycloak]
+    depends_on: [citizen-api]
+    networks:
+      - traffic-court-net
 
   #############################################################################################
   ###                                  KEYCLOAK                                             ###
@@ -77,11 +71,11 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
       KEYCLOAK_IMPORT: /tmp/realm-export.json
-      KEYCLOAK_FRONTEND_URL: http://localhost:8081/auth
+      KEYCLOAK_FRONTEND_URL: http://localhost:5002/auth
     volumes:
       - ./infrastructure/keycloak/realm-export.json:/tmp/realm-export.json
     ports:
-      - 8081:8080
+      - 5002:8080
 
   # #############################################################################################
   # ###                                  KEYCLOAK CONFIG                                      ###
@@ -102,8 +96,8 @@ services:
     container_name: splunk
     environment:
       SPLUNK_START_ARGS: --accept-license
-      SPLUNK_HEC_TOKEN: ${SPLUNK_HEC_TOKEN}
-      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD}
+      SPLUNK_HEC_TOKEN: 176FCEBF-4CF5-4EDF-91BC-703796522D20
+      SPLUNK_PASSWORD: splunkpassword
     ports:
       - 8000:8000
       - 8088:8088
@@ -133,27 +127,32 @@ services:
     container_name: rabbitmq
     hostname: rabbitmq
     ports:
-      - 5671:5672
-      - 15671:15672
+      - 5672:5672
+      - 15672:15672
     volumes:
       - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     restart: always
-      
+    networks:
+      - traffic-court-net
+
   #############################################################################################
   ###                           REDIS & REDIS COMMANDER                                     ###
   #############################################################################################
   redis:
     container_name: redis
     image: redis
-    hostname: ${REDIS__HOST}
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS__PASSWORD}"]
+    hostname: local:redis:6379
+    command:
+      ["redis-server", "--appendonly", "yes", "--requirepass", "redispassword"]
     ports:
       - "6379:6379"
-    environment: 
-      - REDIS_PASSWORD="${REDIS__PASSWORD}"
+    environment:
+      - REDIS_PASSWORD="redispassword"
     volumes:
       - data-redis:/data
     restart: always
+    networks:
+      - traffic-court-net
 
   redis-commander:
     container_name: redis-commander
@@ -162,15 +161,16 @@ services:
     restart: always
     depends_on: [redis]
     ports:
-      - "8082:8081"
+      - "8081:8081"
     environment:
-      - REDIS_HOST=${REDIS__HOST}
-      - REDIS_PASSWORD="${REDIS__PASSWORD}"
-  
+      - REDIS_HOST=local:redis:6379
+      - REDIS_PASSWORD=redispassword
+    networks:
+      - traffic-court-net
+
 networks:
-  default:
+  traffic-court-net:
     driver: "bridge"
-    name: traffic-court-net
 
 volumes:
   data-rabbit:

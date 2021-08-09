@@ -1,9 +1,11 @@
+@import "palette";
+
 .site-footer {
   background-color: #003366;
   width: 100%;
   min-height: 60px;
   padding: 20px 0;
-  border-top: 2px solid #fcba19;
+  border-top: 2px solid theme-palette(yellow);
 }
 
 .site-footer-links {
@@ -23,12 +25,7 @@
 .site-footer-links a {
   font-size: 1em;
   color: #fff !important;
-  text-decoration: none;
   font-weight: 200;
-}
-
-.site-footer-links a:hover {
-  text-decoration: underline;
 }
 
 // .site-footer .container {

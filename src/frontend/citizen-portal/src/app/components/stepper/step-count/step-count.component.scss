@@ -1,0 +1,27 @@
+@import "palette";
+
+label {
+  font-size: 1.2em;
+  font-weight: 400;
+  margin: 1.2em 0 1.2em;
+}
+
+.wrap-mat-radio-label {
+  white-space: normal;
+}
+
+.text-right,
+.text-left {
+  font-weight: bold;
+}
+
+.my-chip .mat-chip-selected {
+  background-color: rgb(112, 11, 11) !important;
+  color: #fff;
+}
+
+mat-icon {
+  cursor: pointer;
+  color: theme-palette(blue, link);
+  vertical-align: middle;
+}

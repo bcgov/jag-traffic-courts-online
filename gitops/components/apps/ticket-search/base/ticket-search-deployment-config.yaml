@@ -1,0 +1,88 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: ticket-search
+  labels:
+    app: ticket-search
+    app.kubernetes.io/name: ticket-search
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/instance: ticket-search
+    app.kubernetes.io/part-of: traffic-court
+    app.openshift.io/runtime: dotnet
+spec:
+  completionDeadlineSeconds: 1200
+  replicas: 1
+  selector:
+    name: ticket-search
+  strategy:
+    type: Rolling
+    maxSurge: 50%
+    maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        dev-app: traffic-court
+        name: ticket-search
+    spec:
+      containers:
+        - image: >-
+            image-registry.openshift-image-registry.svc:5000/0198bb-tools/ticket-search:dev
+          name: ticket-search
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: Serilog__MinimumLevel
+              value: Debug
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+          envFrom:
+            - secretRef:
+                name: ticket-search-rsi-config
+          resources:
+            limits:
+              cpu: 150m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            livenessProbe:
+              httpGet:
+                path: "/health"
+                port: 8080
+                scheme: HTTP
+              initialDelaySeconds: 30
+              timeoutSeconds: 60
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: "/health"
+                port: 8080
+                scheme: HTTP
+              initialDelaySeconds: 10
+              timeoutSeconds: 60
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+          #volumeMounts:
+          #- name: configuration-volume
+          #mountPath: /usr/share/nginx/html/assets/app.config.json
+          #subPath: app.config.json
+      #volumes:
+      #- name: configuration-volume
+      #configMap:
+      #name: citizen-web-configuration
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - ticket-search
+        from:
+          kind: ImageStreamTag
+          namespace: "0198bb-tools"
+          name: "ticket-search:dev"
+status: {}

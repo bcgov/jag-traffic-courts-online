@@ -11,8 +11,8 @@ export class MockDisputeService {
   private _tickets: BehaviorSubject<TicketDispute[]>;
 
   constructor() {
-    const ticket = this.createTicketWithoutDisputes();
-    // const ticket = this.createTicketWithDispute();
+    // const ticket = this.createTicketWithoutDisputes();
+    const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDispute>(ticket);
     // this._tickets = new BehaviorSubject<TicketDispute[]>([ticketA, ticketB]);
@@ -71,12 +71,11 @@ export class MockDisputeService {
 
     // --------------------------
     let offence: Offence = {
-      offenceNumber: 2,
+      offenceNumber: 1,
       ticketedAmount: 126,
       amountDue: 87.56,
       violationDateTime: faker.date.soon().toString(),
-      offenceDescription:
-        'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
+      offenceDescription: 'Load Or Projection Over 1.2M In Rear', //  Without Required Lamp During Time Specified In Mr Section 4.01
       offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
@@ -95,7 +94,7 @@ export class MockDisputeService {
       faker.date.soon().getDate();
 
     offence = {
-      offenceNumber: 3,
+      offenceNumber: 2,
       ticketedAmount: 167,
       amountDue: 142,
       violationDateTime: faker.date.recent().toString(),
@@ -152,12 +151,14 @@ export class MockDisputeService {
       witnessPresent: false,
     };
 
+    const offenceDate = faker.date.soon().toString();
+
     // --------------------------
     let offence: Offence = {
       offenceNumber: 1,
       ticketedAmount: 126,
       amountDue: 126,
-      violationDateTime: faker.date.soon().toString(),
+      violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
       offenceDisputeDetail: null,
@@ -182,7 +183,7 @@ export class MockDisputeService {
       offenceNumber: 2,
       ticketedAmount: 126,
       amountDue: 126,
-      violationDateTime: faker.date.recent().toString(),
+      violationDateTime: offenceDate,
       offenceDescription: 'Operate Vehicle Without Seatbelts',
       offenceDisputeDetail: null,
       invoiceType: 'Traffic Violation Ticket',
@@ -205,7 +206,7 @@ export class MockDisputeService {
       offenceNumber: 3,
       ticketedAmount: 167,
       amountDue: 142,
-      violationDateTime: faker.date.recent().toString(),
+      violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
       offenceDisputeDetail: null,
@@ -275,8 +276,7 @@ export class MockDisputeService {
       emailAddress: faker.internet.email(),
       license: '234234',
       provLicense: 'BC',
-      homePhone: faker.phone.phoneNumber(),
-      workPhone: faker.phone.phoneNumber(),
+      phoneNumber: faker.phone.phoneNumber(),
     };
   }
 
@@ -284,7 +284,7 @@ export class MockDisputeService {
     return {
       status: 0,
       offenceNumber,
-      offenceAgreementStatus: '3',
+      offenceAgreementStatus: 'DISPUTE',
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,

@@ -24,7 +24,7 @@
   <div class="mb-4">
     <button type="button" mat-button (click)="fileInput.click()">
       <mat-icon>upload_file</mat-icon>
-      Upload Image
+      Upload image
     </button>
 
     <input
@@ -32,6 +32,7 @@
       (change)="onFileChange($event)"
       #fileInput
       type="file"
+      accept="image/*"
       id="file"
     />
 
@@ -62,6 +63,7 @@
         class="large"
         routerLink="/ticket/shell"
       >
+        <mat-icon inline="true">keyboard_arrow_right</mat-icon>
         Continue to ticket details
       </button>
     </div>

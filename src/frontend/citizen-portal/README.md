@@ -22,6 +22,11 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 
 [Download](https://nodejs.org/en/) and install **Node v14.x**
 
+#### Angular cli
+
+Install Angular cli using command:
+npm install -g @angular/cli
+
 #### VS Code
 
 [Download](https://code.visualstudio.com/) and install VSCode and accept the prompt to install the recommended extensions when the PRIME repository is initially opened in VSCode.
@@ -37,7 +42,7 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 To build, run, and open the Angular application in the default browser at http://localhost:4200 for development go to the Citizen Portal project repository in the terminal and type:
 
 ```bash
-ng serve -o
+npm run start
 ```
 
 To test the production build locally before pushing features to the repository for deployment type:

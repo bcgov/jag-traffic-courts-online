@@ -1,15 +1,25 @@
 <app-page [busy]="busy">
   <app-page-header>
-    <ng-container header>Summary of your BC traffic ticket</ng-container>
+    <ng-container header>Violation ticket lookup</ng-container>
     <ng-container subHeader>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit et dolore magna
-      aliqua.
+      <strong>Ticket found.</strong> Please confirm ticket details below.
     </ng-container>
   </app-page-header>
 
   <div *ngIf="ticket">
+    <section class="mb-2">
+      <h2>
+        <small class="mr-2">Ticket #:</small>
+        <strong>{{ ticket.violationTicketNumber }}</strong>
+        <span class="ml-4">
+          <small class="mr-2">Offence time:</small>
+          <strong>{{ ticket.violationTime }}</strong>
+        </span>
+      </h2>
+    </section>
+    <!--
     <div
-      class="row"
+      class="row mb-2"
       *ngIf="ticket.outstandingBalance <= 0; else ticketNotResolved"
     >
       <div class="col p-0">
@@ -23,257 +33,158 @@
     </div>
 
     <ng-template #ticketNotResolved>
-      <div class="col p-0">
-        <app-alert type="warning" icon="info">
+      <div class="col mb-2 p-0">
+        <app-alert type="success" icon="info">
           <ng-container #alertContent class="alert-content">
-            <strong translate>summary.ticket_outstanding</strong><br />
-            {{ "summary.ticket_outstanding_detail" | translate }}
+            <strong>You are within 30 days of your violation date.</strong
+            ><br />
+            If you pay your ticket by <strong>Aug 15, 2021</strong>, you will
+            save $25 per ticket count.
           </ng-container>
         </app-alert>
       </div>
     </ng-template>
-    <div class="mb-2">
-      <section class="mb-2">
-        <h2 class="mb-2">
-          {{ "summary.ticket_number" | translate
-          }}{{ ticket.violationTicketNumber }}
-          <span class="ml-4">
-            {{ ticket.violationTime }}
-          </span>
-        </h2>
-      </section>
+-->
+    <div class="col mb-4 p-0">
+      <app-alert type="success" icon="info">
+        <ng-container #alertContent class="alert-content">
+          <strong>You are within 30 days of your violation date.</strong><br />
+          If you pay your ticket by <strong>Aug 15, 2021</strong>, you will save
+          $25 per ticket count.
+        </ng-container>
+      </app-alert>
+    </div>
 
+    <div class="mb-2">
       <section
-        class="px-4 py-2 mb-4 offence-section"
+        class="px-4 py-2 mb-3 card-section"
         *ngFor="let row of ticket.offences; let i = index"
       >
-        <h3>
-          <div class="row">
-            <div class="col-md-3 mb-2">
-              <small class="d-block">{{ row.invoiceType }}</small>
-              <mat-chip-list>
-                <mat-chip selected class="p-3"
-                  >{{ "label.count_number" | translate
-                  }}{{ row.offenceNumber }}</mat-chip
-                >
-              </mat-chip-list>
-            </div>
-            <div class="col-md-9">
-              <small class="d-block">
-                {{ "label.desc_of_offence" | translate }}
-                <!--
-                <span *ngIf="row.vehicleDescription"
-                  >{{ "label.for_vehicle" | translate }}
-                  {{ row.vehicleDescription }}</span
-                >
-                -->
-              </small>
-              {{ row.offenceDescription | titlecase }}
-            </div>
+        <div class="row mt-2">
+          <div class="col-md-2">
+            <mat-chip-list>
+              <mat-chip selected class="p-3"
+                >Count {{ row.offenceNumber }}</mat-chip
+              >
+            </mat-chip-list>
           </div>
-        </h3>
-
-        <div class="row">
-          <div class="col-3 mb-2">
-            <small class="d-block" translate>label.offence_amount</small>
-            <strong>{{
-              row?.ticketedAmount
-                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-            }}</strong>
+          <div class="col-md-8">
+            <small class="d-block"> Description of offence </small>
+            <strong>{{ row.offenceDescription | titlecase }}</strong>
           </div>
-          <div class="col-3">
-            <small class="d-block" translate>label.amount_due</small>
+          <div class="col-md-2">
+            <small class="d-block">Amount due</small>
             <strong>{{
               row?.amountDue
                 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
             }}</strong>
           </div>
-          <div class="col-3 mb-2">
-            <small class="d-block" translate>label.status</small>
-            <small
-              [ngClass]="{
-                'text-danger':
-                  row.offenceStatus === 2 || row.offenceStatus === 4,
-                'text-primary': row.offenceStatus === -1,
-                'text-success':
-                  row.offenceStatus === 3 || row.offenceStatus === -2,
-                'text-info': row.offenceStatus === 1
-              }"
-              ><strong>
-                <ng-container [ngSwitch]="row.offenceStatus">
-                  <span *ngSwitchCase="0">{{
-                    "summary.status_0" | translate
-                  }}</span>
-                  <span *ngSwitchCase="1">{{
-                    "summary.status_1" | translate
-                  }}</span>
-                  <span *ngSwitchCase="2">{{
-                    "summary.status_2" | translate
-                  }}</span>
-                  <span *ngSwitchCase="3">{{
-                    "summary.status_3" | translate
-                  }}</span>
-                  <span *ngSwitchCase="4">{{
-                    "summary.status_3" | translate
-                  }}</span>
-                  <span *ngSwitchCase="-2">{{
-                    "summary.status_paid" | translate
-                  }}</span>
-                  <span *ngSwitchCase="-1">{{
-                    "summary.status_unpaid" | translate
-                  }}</span>
-                  <span *ngSwitchDefault>Unknown</span>
-                </ng-container>
-              </strong>
-            </small>
-          </div>
-          <div class="col-md-3">
-            <app-alert
-              type="success"
-              icon="check"
-              *ngIf="row.offenceStatus === -2 || row.offenceStatus === 3"
-            >
-              <ng-container #alertContent class="alert-content">
-                <strong> RESOLVED </strong>
-              </ng-container>
-            </app-alert>
-
-            <button
-              mat-flat-button
-              color="accent"
-              *ngIf="
-                (row.offenceStatus === -1 ||
-                  row.offenceStatus === 1 ||
-                  row.offenceStatus === 2) &&
-                ticket.disputesExist
-              "
-            >
-              <a href="https://pay.gov.bc.ca" target="_blank" rel="noopener">
-                <mat-icon inline="true">money</mat-icon>
-                {{ "label.pay_count" | translate }}
-              </a>
-            </button>
-            <button
-              *ngIf="row.offenceStatus === -1 && ticket.disputesExist"
-              mat-flat-button
-              color="primary"
-              (click)="onDisputeOffence(row)"
-            >
-              <mat-icon inline="true">read_more</mat-icon>
-              {{ "summary.dispute_count" | translate }}
-            </button>
-          </div>
         </div>
+        <hr />
 
-        <div class="row mt-1" *ngIf="row.offenceStatus === 1">
-          <div class="col-md-9">
-            <app-alert type="info" icon="info">
-              <ng-container #alertContent class="alert-content">
-                <strong translate>summary.dispute_status_1</strong>
-              </ng-container>
-            </app-alert>
+        <div class="row">
+          <div class="offset-md-2 col-md-4">
+            <small class="d-block">Status</small>
+            <ng-container [ngSwitch]="row.offenceStatus">
+              <span *ngSwitchCase="0">{{
+                "summary.status_0" | translate
+              }}</span>
+              <span *ngSwitchCase="1">{{
+                "summary.status_1" | translate
+              }}</span>
+              <span *ngSwitchCase="2">{{
+                "summary.status_2" | translate
+              }}</span>
+              <span *ngSwitchCase="3">{{
+                "summary.status_3" | translate
+              }}</span>
+              <span *ngSwitchCase="4">{{
+                "summary.status_3" | translate
+              }}</span>
+              <span *ngSwitchCase="-2">{{
+                "summary.status_paid" | translate
+              }}</span>
+              <span *ngSwitchCase="-1">{{
+                "summary.status_unpaid" | translate
+              }}</span>
+              <span *ngSwitchDefault>Unknown</span>
+            </ng-container>
           </div>
-        </div>
-
-        <div class="row mt-1" *ngIf="row.offenceStatus === 2">
-          <div class="col-md-9">
-            <app-alert type="info" icon="info">
-              <ng-container #alertContent class="alert-content">
-                <strong translate>summary.dispute_status_2</strong>
-              </ng-container>
-            </app-alert>
+          <div class="col-md-4">
+            <small class="d-block">Offence date</small>
+            {{ row?.violationDateTime | formatDate }}
           </div>
-        </div>
-
-        <div class="row mt-1" *ngIf="row?.discountAmount > 0">
-          <div class="col-md-9">
-            <app-alert type="warning" icon="lightbulb">
-              <ng-container #alertContent class="alert-content">
-                <strong>
-                  {{ "summary.paid_early_1" | translate }}
-                  {{
-                    row?.discountDueDate
-                      | date: "MMM dd YYYY":"+0200":defaultLanguage
-                  }},
-                  {{ "summary.paid_early_2" | translate }}
-                  {{
-                    row?.discountAmount
-                      | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-                  }}
-                  {{ "summary.paid_early_3" | translate }}
-                </strong>
-              </ng-container>
-            </app-alert>
+          <div class="col-md-2">
+            <small class="d-block">Offence amount</small>
+            {{
+              row?.ticketedAmount
+                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}
           </div>
         </div>
       </section>
-      <div class="row" *ngIf="ticket.outstandingBalance > 0">
+
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-md-5 col-md-5 text-success">Balance due today</div>
+          <div class="col-md-2 text-success">
+            <strong>{{
+              225 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-md-5 col-md-5">
+            Balance due if paid after Aug 15, 2021
+          </div>
+          <div class="col-md-2">
+            <strong>{{
+              200 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <div class="row mt-4" *ngIf="ticket.outstandingBalance > 0">
         <div class="col-md-4">
-          <button mat-flat-button color="accent" class="large">
-            <a href="https://pay.gov.bc.ca" target="_blank" rel="noopener">
-              <mat-icon inline="true">money</mat-icon>
-              Pay Ticket Balance
-              <!--
-              {{ "label.pay_balance" | translate }}
-              {{
-                ticket.outstandingBalance
-                  | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-              }}-->
-            </a>
+          <button
+            id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            class="large"
+            routerLink="/ticket/find"
+          >
+            Cancel and search again
           </button>
         </div>
-        <div class="offset-md-4 col-md-4">
+        <div class="offset-md-2 col-md-3">
           <button
-            *ngIf="!ticket.disputesExist"
+            mat-flat-button
+            color="accent"
+            class="large"
+            (click)="onPayTicket()"
+          >
+            Pay ticket
+          </button>
+        </div>
+        <div class="col-md-3">
+          <!-- *ngIf="!ticket.disputesExist"-->
+          <button
             mat-flat-button
             color="primary"
             class="large"
             (click)="onDisputeTicket()"
           >
-            <mat-icon inline="true">read_more</mat-icon>
-            {{ "summary.dispute_ticket" | translate }}
+            Initiate dispute
           </button>
         </div>
       </div>
+
+      <app-dispute-footer></app-dispute-footer>
     </div>
-
-    <section class="mt-4 mb-2">
-      <h3 translate>summary.questions</h3>
-      <p>
-        {{ "summary.questions_detail_1" | translate }}<br />
-        {{ "summary.questions_detail_2" | translate }}:
-        <a href="tel:+18776618026">1-877-661-8026</a>
-      </p>
-    </section>
-
-    <section class="mb-4 mt-4">
-      <div class="row">
-        <div class="col-md-4">
-          <button
-            id="secondaryButton"
-            mat-stroked-button
-            type="button"
-            color="primary"
-            routerLink="/ticket/find"
-          >
-            <mat-icon inline="true">keyboard_arrow_left</mat-icon>
-            {{ "label.find_another_ticket" | translate }}
-          </button>
-        </div>
-        <!--
-        <div class="offset-md-4 col-md-4">
-          <button
-            id="secondaryButton"
-            mat-stroked-button
-            type="button"
-            color="primary"
-            routerLink="/ticket/photo"
-          >
-            <mat-icon inline="true">photo</mat-icon>
-            Attach Photo of Ticket
-          </button>
-        </div>
-      --></div>
-    </section>
   </div>
 </app-page>

@@ -1,0 +1,44 @@
+<app-page [busy]="busy">
+  <app-tco-page-header>
+    <ng-container header>Pay ticket</ng-container>
+    <ng-container subHeader>
+      Please select each count you would like to pay for, then follow the
+      instructions provided.
+    </ng-container>
+  </app-tco-page-header>
+
+  <div class="col mb-4 p-0">
+    <app-alert type="success" icon="info">
+      <ng-container #alertContent class="alert-content">
+        <strong>You are within 30 days of your violation date.</strong><br />
+        If you pay your ticket by <strong>Aug 15, 2021</strong>, you will save
+        $25 per ticket count.
+      </ng-container>
+    </app-alert>
+  </div>
+
+  <p>TODO</p>
+  <p>TODO</p>
+  <p>TODO</p>
+  <p>TODO</p>
+
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <button
+        id="secondaryButton"
+        mat-stroked-button
+        type="button"
+        color="primary"
+        class="large"
+        routerLink="/ticket/find"
+      >
+        Cancel and search again
+      </button>
+    </div>
+    <div class="offset-md-4 col-md-4">
+      <button mat-flat-button color="accent" class="large">Pay ticket</button>
+    </div>
+  </div>
+
+  <app-dispute-footer></app-dispute-footer>
+</app-page>

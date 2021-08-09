@@ -29,8 +29,8 @@
         "OAUTH__RESOURCEURL": "https://wsgw.test.jag.gov.bc.ca:8443/paybc",
         "RSI__BASEADDRESS": "https://wsgw.test.jag.gov.bc.ca:8443",
         "RSI__OPERATIONMODE": "",
-        "SPLUNK_COLLECTOR_URL": "https://hec.monitoring.ag.gov.bc.ca:8088",
-        "SPLUNK_TOKEN": ""
+        "SPLUNK__URL": "https://hec.monitoring.ag.gov.bc.ca:8088",
+        "SPLUNK__TOKEN": "token"
       }
     }
   }

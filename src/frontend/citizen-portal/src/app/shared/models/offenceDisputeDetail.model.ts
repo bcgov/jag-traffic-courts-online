@@ -3,6 +3,7 @@ export interface OffenceDisputeDetail {
   offenceNumber: number;
   status: number;
   offenceAgreementStatus?: string;
+  reductionAppearInCourt?: string;
   requestReduction: boolean;
   requestMoreTime: boolean;
 
@@ -13,18 +14,5 @@ export interface OffenceDisputeDetail {
   /*
   requestMethod: string;
   offenceAgreementStatus
-
-    1 Nothing, I will pay the fine for this count
-    2 Request a modification
-        requestReduction: boolean;
-        requestMoreTime: boolean;
-        requestMethod
-          1. Provide written reasons online
-              reductionReason?: string;
-              moreTimeReason?: string;
-          2. Appear before a judge
-    3 Dispute the charge
-
-
   */
 }
