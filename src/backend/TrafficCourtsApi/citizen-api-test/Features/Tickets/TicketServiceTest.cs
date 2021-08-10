@@ -59,10 +59,10 @@ namespace Gov.CitizenApi.Test.Features.Tickets
         }
 
         [Theory]
-        [AutoData]
+        [AllowCirculationAutoData]
         public async Task CreateTicket(Ticket ticket)
-
         {
+            _lookupsMock.Setup(m => m.GetCountStatute(It.IsAny<string>())).Returns(new Statute {name="test", code=123 });
             var result = await _service.CreateTicketAsync(ticket);
             Assert.IsAssignableFrom<Ticket>(result);
         }

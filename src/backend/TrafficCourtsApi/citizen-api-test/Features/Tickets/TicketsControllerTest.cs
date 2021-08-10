@@ -47,8 +47,9 @@ namespace Gov.CitizenApi.Test.Features.Tickets
         {
             TicketsController sut = new TicketsController(_loggerMock.Object, _ticketsServiceMock.Object, _mediatorMock.Object);
             _mediatorMock.Setup(m => m.Send(It.IsAny<CreateShellTicketCommand>(), CancellationToken.None)).Returns(Task.FromResult(response));
-            var result = (OkObjectResult)await sut.ShellTicket(ticket);
-            Assert.Equal(200, result.StatusCode);
+            ActionResult result = (ActionResult)await sut.ShellTicket(ticket);
+            Assert.True(result is RedirectToActionResult);
+            Assert.True(((RedirectToActionResult)result).ActionName == "Ticket");
 
         }
 
