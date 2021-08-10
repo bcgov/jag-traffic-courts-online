@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using TrafficCourts.Common;
+using TrafficCourts.Common.Contract;
 
 namespace Gov.CitizenApi.Models
 {
@@ -12,9 +13,15 @@ namespace Gov.CitizenApi.Models
         public string ViolationDateTime { get; set; }
         public string OffenceDescription { get; set; }
         public string VehicleDescription { get; set; }
-        public OffenceDisputeDetail OffenceDisputeDetail { get; set; }
         public decimal DiscountAmount { get; set; }//discount
         public string DiscountDueDate { get; set; }
         public string InvoiceType { get; set; }
+        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public bool RequestReduction { get; set; }
+        public bool RequestMoreTime { get; set; }
+        public bool? ReductionAppearInCourt { get; set; }
+        public string ReductionReason { get; set; }
+        public string MoreTimeReason { get; set; }
+        public DisputeStatus Status { get; set; }
     }
 }

@@ -32,13 +32,14 @@ namespace Gov.CitizenApi.Features.Disputes.Mapping
                 .ForMember(dest => dest.OffenceDisputeDetails, opt => opt.MapFrom<OffenceDisputeDetailsResolver>())
                 ;
 
-            CreateMap<OffenceDisputeDetail, DBModel.OffenceDisputeDetail>()
+            CreateMap<Offence, DBModel.OffenceDisputeDetail>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => 0))
                 .ForMember(dest => dest.MoreTimeReason, opt => opt.MapFrom(src => src.MoreTimeReason))
                 .ForMember(dest => dest.OffenceAgreementStatus, opt => opt.MapFrom(src => src.OffenceAgreementStatus))
                 .ForMember(dest => dest.ReductionReason, opt => opt.MapFrom(src => src.ReductionReason))
                 .ForMember(dest => dest.RequestMoreTime, opt => opt.MapFrom(src => src.RequestMoreTime))
                 .ForMember(dest => dest.RequestReduction, opt => opt.MapFrom(src => src.RequestReduction))
+                .ForMember(dest => dest.ReductionAppearInCourt, opt => opt.MapFrom(src => src.ReductionAppearInCourt))
                 .ReverseMap()
                 ;
 

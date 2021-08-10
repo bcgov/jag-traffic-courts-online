@@ -17,13 +17,10 @@ namespace Gov.CitizenApi.Features.Disputes.Mapping
             var offenceDisputeDetails = new Collection<DBModel.OffenceDisputeDetail>();
             foreach (Offence offence in source.Offences)
             {
-                if (offence.OffenceDisputeDetail != null)
-                {
-                    var detail = context.Mapper.Map<DBModel.OffenceDisputeDetail>(offence.OffenceDisputeDetail);
-                    detail.OffenceNumber = offence.OffenceNumber;
-                    detail.Status = TrafficCourts.Common.Contract.DisputeStatus.Submitted;
-                    offenceDisputeDetails.Add(detail);
-                }
+                var detail = context.Mapper.Map<DBModel.OffenceDisputeDetail>(offence);
+                detail.OffenceNumber = offence.OffenceNumber;
+                detail.Status = TrafficCourts.Common.Contract.DisputeStatus.Submitted;
+                offenceDisputeDetails.Add(detail);
             }
 
             return offenceDisputeDetails.Count > 0 ? offenceDisputeDetails : null;
