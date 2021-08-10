@@ -15,7 +15,11 @@
           <small class="mr-2">Ticket #:</small>
           <strong>{{ ticket.violationTicketNumber }}</strong>
           <span class="ml-4">
-            <small class="mr-2">Offence time:</small>
+            <small class="mr-2">Violation date:</small>
+            <strong>{{ ticket.violationDate | formatDate }}</strong>
+          </span>
+          <span class="ml-4">
+            <small class="mr-2">Violation time:</small>
             <strong>{{ ticket.violationTime }}</strong>
           </span>
         </h2>
@@ -85,6 +89,7 @@
             <app-step-overview
               id="stepOverview"
               [stepper]="disputeStepper"
+              [overviewTicket]="overviewTicket"
               (busy)="(busy)"
               (stepSave)="onStepSave($event)"
             ></app-step-overview>

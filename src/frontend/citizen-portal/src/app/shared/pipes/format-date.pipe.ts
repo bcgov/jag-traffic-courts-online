@@ -30,9 +30,9 @@ export class FormatDatePipe implements PipeTransform {
         return date;
       }
 
-      date = `${newDate.getDate()} ${newDate.toLocaleString('default', {
+      date = `${newDate.toLocaleString('default', {
         month: 'short',
-      })} ${newDate.getFullYear()}`;
+      })} ${newDate.getDate()} ${newDate.getFullYear()}`;
     }
 
     return date;

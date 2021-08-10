@@ -4,7 +4,11 @@
       <small class="mr-2">Ticket #:</small>
       <strong>{{ ticket.violationTicketNumber }}</strong>
       <span class="ml-4">
-        <small class="mr-2">Offence time:</small>
+        <small class="mr-2">Violation date:</small>
+        <strong>{{ ticket.violationDate | formatDate }}</strong>
+      </span>
+      <span class="ml-4">
+        <small class="mr-2">Violation time:</small>
         <strong>{{ ticket.violationTime }}</strong>
       </span>
     </h2>
@@ -36,8 +40,15 @@
               Pay for this count
             </div>
             <div *ngIf="row.offenceAgreementStatus === 'REDUCTION'">
-              <div *ngIf="row.requestReduction">Request a fine reduction</div>
-              <div *ngIf="row.requestMoreTime">Request more time to pay</div>
+              <div *ngIf="row.requestReduction && row.requestMoreTime">
+                Request a fine reduction and more time to pay
+              </div>
+              <div *ngIf="row.requestReduction && !row.requestMoreTime">
+                Request a fine reduction
+              </div>
+              <div *ngIf="!row.requestReduction && row.requestMoreTime">
+                Request more time to pay
+              </div>
             </div>
             <div *ngIf="row.offenceAgreementStatus === 'DISPUTE'">
               Dispute the charge
@@ -95,7 +106,7 @@
       </div>
 
       <div class="row" *ngIf="ticket.additional.lawyerPresent">
-        <div class="col-lg-8">
+        <div class="col-lg-9">
           <small class="d-block">Action</small>
           <strong>
             {{ "stepper.additional.lawyer" | translate }}
@@ -104,12 +115,12 @@
       </div>
 
       <div class="row" *ngIf="ticket.additional.interpreterRequired">
-        <div class="col-lg-8">
+        <div class="col-lg-9">
           <small class="d-block">Action</small>
           <strong> I require an interpreter </strong>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-3">
           <small class="d-block">Language</small>
           <strong>
             {{
@@ -122,12 +133,12 @@
       </div>
 
       <div class="row" *ngIf="ticket.additional.witnessPresent">
-        <div class="col-lg-8">
+        <div class="col-lg-9">
           <small class="d-block">Action</small>
           <strong> I intend to call witness(es) </strong>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-3">
           <small class="d-block"># of witness(es)</small>
           <strong>{{ ticket.additional.numberOfWitnesses }}</strong>
         </div>

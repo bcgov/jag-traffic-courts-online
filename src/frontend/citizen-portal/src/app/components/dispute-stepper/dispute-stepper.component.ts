@@ -3,12 +3,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
@@ -29,6 +28,8 @@ export class DisputeStepperComponent
   @ViewChild(MatStepper)
   private stepper: MatStepper;
 
+  public overviewTicket: TicketDispute;
+
   public disputantForm: FormGroup;
   public offence1Form: FormGroup;
   public offence2Form: FormGroup;
@@ -48,10 +49,8 @@ export class DisputeStepperComponent
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
     private utilsService: UtilsService,
-    private toastService: ToastService,
     private dialog: MatDialog,
-    private logger: LoggerService,
-    private configService: ConfigService
+    private logger: LoggerService
   ) {
     super(
       route,
@@ -177,9 +176,6 @@ export class DisputeStepperComponent
             .subscribe(() => {
               this.disputeService.ticket$.next(payload);
 
-              this.toastService.openSuccessToast(
-                this.configService.dispute_submitted
-              );
               this.router.navigate([
                 AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS),
               ]);
@@ -189,6 +185,8 @@ export class DisputeStepperComponent
   }
 
   public onSelectionChange(event): void {
+    this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
+
     const stepIndex = event.selectedIndex;
     const stepId = this.stepper._getStepLabelId(stepIndex);
     const stepElement = document.getElementById(stepId);

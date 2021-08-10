@@ -102,6 +102,10 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newShellTicket: TicketDispute) => {
+          if (ticket) {
+            this.setOffenceInfo(newShellTicket);
+          }
+
           this.toastService.openSuccessToast(
             'The ticket has been successfully created'
           );
@@ -121,33 +125,110 @@ export class DisputeResourceService {
       );
   }
 
-  private getOffenceInfo(row: Offence): number {
-    // const disputeStatus = row.offenceDisputeDetail
-    //   ? row.offenceDisputeDetail.status
-    //   : null;
-    // TODO
-    const status = 0; // disputeStatus ? disputeStatus : row.amountDue > 0 ? -1 : -2;
-    return status;
+  private getOffenceStatusDesc(
+    status: number,
+    offenceAgreementStatus: string,
+    amountDue: number
+  ): string {
+    let desc = '';
+
+    if (
+      offenceAgreementStatus &&
+      (offenceAgreementStatus === 'DISPUTE' ||
+        offenceAgreementStatus === 'REDUCTION')
+    ) {
+      switch (status) {
+        case 0:
+          desc = 'Dispute created';
+          break;
+        case 1:
+          desc = 'Dispute submitted';
+          break;
+        case 2:
+          desc = 'In progress';
+          break;
+        case 3:
+          desc = 'Resolved';
+          break;
+        case 4:
+          desc = 'Rejected';
+          break;
+        default:
+          desc = 'Unknown dispute status';
+          break;
+      }
+    } else {
+      if (amountDue > 0) {
+        desc = 'Balance outstanding';
+      } else {
+        desc = 'Paid';
+      }
+    }
+
+    return desc;
   }
+
+  // private getAgreementStatusDesc(
+  //   status: string,
+  //   requestReduction: boolean,
+  //   requestMoreTime: boolean
+  // ): string {
+  //   let desc = 'Unknown status: ' + status;
+
+  //   switch (status) {
+  //     case 'NOTHING':
+  //       desc = 'No action at this time';
+  //       break;
+  //     case 'PAY':
+  //       desc = 'Pay for this count';
+  //       break;
+  //     case 'REDUCTION':
+  //       if (requestReduction && requestMoreTime) {
+  //         desc = 'Request a fine reduction and more time to pay';
+  //       } else if (requestReduction) {
+  //         desc = 'Request a fine reduction';
+  //       } else {
+  //         desc = 'Request more time to pay';
+  //       }
+  //       break;
+  //     case 'DISPUTE':
+  //       desc = 'Dispute the charge';
+  //       break;
+  //   }
+  //   return desc;
+  // }
 
   /**
    * populate the offence object with the calculated information
    */
   private setOffenceInfo(ticket: TicketDispute): void {
     let balance = 0;
-    // let disputesExist = false;
-    ticket.offences.forEach((offence) => {
-      offence.offenceStatus = this.getOffenceInfo(offence);
+    let total = 0;
+    let requestSubmitted = false;
 
-      // if (offence.offenceDisputeDetail) {
-      //   disputesExist = true;
-      // }
+    ticket.offences.forEach((offence) => {
+      offence.offenceStatusDesc = this.getOffenceStatusDesc(
+        offence.status,
+        offence.offenceAgreementStatus,
+        offence.amountDue
+      );
+      // offence.offenceAgreementStatusDesc = this.getAgreementStatusDesc(
+      //   offence.offenceAgreementStatus,
+      //   offence.requestReduction,
+      //   offence.requestMoreTime
+      // );
+
+      if (offence.offenceAgreementStatus) {
+        requestSubmitted = true;
+      }
 
       balance += offence.amountDue;
+      total += offence.ticketedAmount;
     });
 
     // ------------------------------------
-    ticket.outstandingBalance = balance;
-    // ticket.disputesExist = disputesExist;
+    ticket.outstandingBalanceDue = balance;
+    ticket.totalBalanceDue = total;
+    ticket.requestSubmitted = requestSubmitted;
   }
 }

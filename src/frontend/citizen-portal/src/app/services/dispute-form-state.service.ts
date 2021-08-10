@@ -273,6 +273,8 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
       // Here for display purposes
       offenceDescription: [null],
+      status: [null],
+      offenceStatusDesc: [null],
       ticketedAmount: [null],
       amountDue: [null],
       discountAmount: [null],
@@ -300,6 +302,9 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       violationTicketNumber: [null],
       violationTime: [null],
       violationDate: [null],
+      outstandingBalanceDue: [null],
+      totalBalanceDue: [null],
+      requestSubmitted: [null],
     });
   }
 }
