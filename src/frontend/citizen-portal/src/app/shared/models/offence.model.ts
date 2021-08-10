@@ -20,7 +20,7 @@ export interface Offence {
   moreTimeReason?: string;
 
   /*
-  status:
+  status (for disputes):
     0 - New,
     1 - Submitted,
     2 - InProgress, // ticket already verified
@@ -45,7 +45,6 @@ export interface Offence {
   */
 
   // derived later on
-  // includeOffenceInDispute?: boolean;
-  offenceStatus?: number;
   offenceStatusDesc?: string;
+  // offenceAgreementStatusDesc?: string;
 }

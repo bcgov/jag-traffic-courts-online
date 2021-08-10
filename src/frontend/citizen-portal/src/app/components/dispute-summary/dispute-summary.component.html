@@ -9,11 +9,8 @@
   <div *ngIf="ticket">
     <app-count-summary [ticket]="ticket"></app-count-summary>
 
-    <!--
-      *ngIf="ticket.outstandingBalance > 0"
-    -->
     <div class="row mt-4">
-      <div class="col-md-4">
+      <div class="col-md-5">
         <button
           id="secondaryButton"
           mat-stroked-button
@@ -25,7 +22,8 @@
           Cancel and search again
         </button>
       </div>
-      <div class="offset-md-2 col-md-3">
+      <!-- *ngIf="ticket.outstandingBalanceDue > 0 && ticket?.requestSubmitted" -->
+      <div class="offset-md-1 col-md-3">
         <button
           mat-flat-button
           color="accent"

@@ -16,5 +16,7 @@ export interface TicketDispute {
   additional: Additional;
 
   // derived later on
-  outstandingBalance?: number;
+  outstandingBalanceDue?: number;
+  totalBalanceDue?: number;
+  requestSubmitted?: boolean;
 }

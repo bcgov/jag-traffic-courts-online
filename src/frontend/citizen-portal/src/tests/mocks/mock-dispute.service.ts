@@ -13,7 +13,6 @@ export class MockDisputeService {
     const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDispute>(ticket);
-    // this._tickets = new BehaviorSubject<TicketDispute[]>([ticketA, ticketB]);
   }
 
   public get ticket$(): BehaviorSubject<TicketDispute> {
@@ -23,18 +22,6 @@ export class MockDisputeService {
   public get ticket(): TicketDispute {
     return this._ticket.value;
   }
-
-  // public get tickets$(): BehaviorSubject<TicketDispute[]> {
-  //   return this._tickets;
-  // }
-
-  // public get tickets(): TicketDispute[] {
-  //   return this._tickets.value;
-  // }
-
-  // public get httpTicket(): ApiHttpResponse<TicketDispute> {
-  //   return new ApiHttpResponse(200, null, this._ticket.value);
-  // }
 
   private createTicketWithoutDisputes(): TicketDispute {
     const ticket: TicketDispute = {
@@ -60,7 +47,7 @@ export class MockDisputeService {
             max: 59,
           })
           .toString(),
-      violationDate: null,
+      violationDate: '2021-09-18',
       // informationCertified: false,
       disputant: null,
       offences: [],
@@ -78,7 +65,8 @@ export class MockDisputeService {
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
-      status: null,
+      status: 0,
+      offenceStatusDesc: 'Balance outstanding',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -107,7 +95,8 @@ export class MockDisputeService {
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       discountDueDate: soonDate,
-      status: null,
+      status: 0,
+      offenceStatusDesc: 'Balance outstanding',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -145,7 +134,7 @@ export class MockDisputeService {
             max: 59,
           })
           .toString(),
-      violationDate: null,
+      violationDate: '2021-09-18',
       disputant: null,
       offences: [],
       additional: null,
@@ -175,7 +164,7 @@ export class MockDisputeService {
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       discountDueDate: null,
-      status: 1,
+      status: 0,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -208,7 +197,7 @@ export class MockDisputeService {
       moreTimeReason: '',
     };
 
-    offence = Object.assign(offence, this.createOffenceReduction());
+    offence = Object.assign(offence, this.createOffenceMoreTime());
 
     ticket.offences.push(offence);
 
@@ -231,7 +220,7 @@ export class MockDisputeService {
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       discountDueDate: soonDate,
-      status: 1,
+      status: 0,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -243,49 +232,6 @@ export class MockDisputeService {
     offence = Object.assign(offence, this.createOffenceDispute());
 
     ticket.offences.push(offence);
-
-    // --------------------------
-    /*
-    offence = {
-      offenceNumber: 3,
-      ticketedAmount: 126,
-      amountDue: 0,
-      violationDateTime: faker.date.recent().toString(),
-      offenceDescription:
-        'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
-      offenceDispute: null,
-      invoiceType: 'Traffic Violation Ticket',
-      vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
-      discountDueDate: null,
-    };
-
-    ticket.offences.push(offence);
-*/
-    /*
-    // --------------------------
-    offence = {
-      offenceNumber: 4,
-      ticketedAmount: 126,
-      amountDue: 126,
-      violationDateTime: faker.date.recent().toString(),
-      offenceDescription: 'Using Electronic Device While Driving',
-      offenceDispute: null,
-      invoiceType: 'Traffic Violation Ticket',
-      vehicleDescription: 'Ford Focus',
-      discountAmount: 25,
-      discountDueDate: faker.date.soon().toString(),
-    };
-
-    dispute = this.createDispute(
-      ticket.violationTicketNumber,
-      offence.offenceNumber
-    );
-    dispute.status = 2;
-    dispute.informationCertified = true;
-    offence.dispute = dispute;
-
-    ticket.offences.push(offence);*/
 
     return ticket;
   }
@@ -308,7 +254,6 @@ export class MockDisputeService {
 
   private createOffenceDispute(): any {
     return {
-      status: 0,
       offenceAgreementStatus: 'DISPUTE',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -320,7 +265,6 @@ export class MockDisputeService {
 
   private createOffenceNothing(): any {
     return {
-      status: 0,
       offenceAgreementStatus: 'NOTHING',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -332,7 +276,6 @@ export class MockDisputeService {
 
   private createOffencePay(): any {
     return {
-      status: 0,
       offenceAgreementStatus: 'PAY',
       reductionAppearInCourt: false,
       requestReduction: false,
@@ -344,7 +287,6 @@ export class MockDisputeService {
 
   private createOffenceReduction(): any {
     return {
-      status: 0,
       offenceAgreementStatus: 'REDUCTION',
       reductionAppearInCourt: true,
       requestReduction: true,
@@ -356,7 +298,6 @@ export class MockDisputeService {
 
   private createOffenceMoreTime(): any {
     return {
-      status: 0,
       offenceAgreementStatus: 'REDUCTION',
       reductionAppearInCourt: true,
       requestReduction: true,
