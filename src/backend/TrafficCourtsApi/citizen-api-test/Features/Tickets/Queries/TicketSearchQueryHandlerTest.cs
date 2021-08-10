@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gov.CitizenApi.Features.Disputes;
 using Gov.CitizenApi.Features.Disputes.DBModel;
+using Gov.CitizenApi.Features.Tickets;
 using Gov.CitizenApi.Features.Tickets.Queries;
 using Gov.CitizenApi.Models;
 using Gov.CitizenApi.Test.Utils;
@@ -22,6 +23,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
         private Mock<IDisputeService> _disputeServiceMock;
         private Mock<ITicketSearchClient> _ticketSearchClientMock;
         private Mock<IMapper> _mapperMock;
+        private Mock<ITicketsService> _ticketsServiceMock;
         private TicketSearchQueryHandler _sut;
 
         public TicketSearchQueryHandlerTest()
@@ -30,14 +32,15 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
             _disputeServiceMock = new Mock<IDisputeService>();
             _mapperMock = new Mock<IMapper>();
             _ticketSearchClientMock = new Mock<ITicketSearchClient>();
+            _ticketsServiceMock = new Mock<ITicketsService>();
 
-            _sut = new TicketSearchQueryHandler(_ticketSearchClientMock.Object, _disputeServiceMock.Object, _mapperMock.Object,_loggerMock.Object);
+            _sut = new TicketSearchQueryHandler(_ticketSearchClientMock.Object, _disputeServiceMock.Object, _mapperMock.Object, _loggerMock.Object, _ticketsServiceMock.Object);
         }
 
         [Theory]
         [AllowCirculationAutoData]
         public async Task Handle_return_ticketDispute_correctly_when_ticketSearchClient_return_data(
-            TicketSearchQuery query, 
+            TicketSearchQuery query,
             TicketSearchResponse clientResponse,
             Dispute dispute,
             TicketDispute ticketDispute,
@@ -52,7 +55,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
             _ticketSearchClientMock.Verify(x => x.TicketsAsync(query.TicketNumber, query.Time, CancellationToken.None), Times.Once);
             _disputeServiceMock.Verify(x => x.FindTicketDisputeAsync(clientResponse.ViolationTicketNumber), Times.Once);
             Assert.Equal(ticketDispute.ViolationTicketNumber, result.ViolationTicketNumber);
-            Assert.Equal(disputant.DriverLicense, result.Disputant.DriverLicense);
+            Assert.Equal(disputant.DriverLicenseNumber, result.Disputant.DriverLicenseNumber);
         }
 
         [Theory]
@@ -64,7 +67,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
                 .Returns(Task.FromResult<TicketSearchResponse>(null));
             var result = await _sut.Handle(query, CancellationToken.None);
             _ticketSearchClientMock.Verify(x => x.TicketsAsync(query.TicketNumber, query.Time, CancellationToken.None), Times.Once);
-            Assert.True(result==null);
+            Assert.True(result == null);
         }
 
 
@@ -84,7 +87,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
             _ticketSearchClientMock.Verify(x => x.TicketsAsync(query.TicketNumber, query.Time, CancellationToken.None), Times.Once);
             _disputeServiceMock.Verify(x => x.FindTicketDisputeAsync(clientResponse.ViolationTicketNumber), Times.Once);
             Assert.Equal(ticketDispute.ViolationTicketNumber, result.ViolationTicketNumber);
-            Assert.Equal(ticketDispute.Disputant.DriverLicense, result.Disputant.DriverLicense);
+            Assert.Equal(ticketDispute.Disputant.DriverLicenseNumber, result.Disputant.DriverLicenseNumber);
         }
     }
 }

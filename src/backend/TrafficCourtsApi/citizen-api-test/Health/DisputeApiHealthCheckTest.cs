@@ -10,14 +10,14 @@ using Xunit;
 namespace Gov.CitizenApi.Test.Health
 {
     [ExcludeFromCodeCoverage]
-    public class DisputeApiHealthCheckTest
+    public class CitizenApiHealthCheckTest
     {
-        private DisputeApiHealthCheck _sut;
-        private readonly Mock<ILogger<DisputeApiHealthCheck>> _apiServiceLogger = new Mock<ILogger<DisputeApiHealthCheck>>();
+        private CitizenApiHealthCheck _sut;
+        private readonly Mock<ILogger<CitizenApiHealthCheck>> _apiServiceLogger = new Mock<ILogger<CitizenApiHealthCheck>>();
 
-        public DisputeApiHealthCheckTest()
+        public CitizenApiHealthCheckTest()
         {
-            _sut = new DisputeApiHealthCheck(_apiServiceLogger.Object);
+            _sut = new CitizenApiHealthCheck(_apiServiceLogger.Object);
         }
 
         [Fact]

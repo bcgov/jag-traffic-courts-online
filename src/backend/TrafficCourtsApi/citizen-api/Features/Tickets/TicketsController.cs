@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Gov.CitizenApi.Features.Tickets.Commands;
 using Gov.CitizenApi.Features.Tickets.Queries;
 using Gov.CitizenApi.Models;
 using Gov.TicketSearch;
@@ -11,9 +12,9 @@ using NSwag.Annotations;
 
 namespace Gov.CitizenApi.Features.Tickets
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    [OpenApiTag("Citizen API")]
+    [OpenApiTag("Ticket API")]
     public class TicketsController : ControllerBase
     {
         private readonly ILogger _logger;
@@ -27,32 +28,13 @@ namespace Gov.CitizenApi.Features.Tickets
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        //[HttpPost]
-        //[Route("saveticket")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(Ticket), StatusCodes.Status200OK)]
-        //public async Task<IActionResult> SaveTicket([FromBody] Ticket ticket)
-        //{
-        //    return Ok(await _ticketsService.SaveTicket(ticket));
-        //}
-
-        //[HttpGet]
-        //[Route("getTickets")]
-        //[Produces("application/json")]
-        //[ProducesResponseType(typeof(IQueryable<Ticket>), StatusCodes.Status200OK)]
-        //public async Task<IActionResult> GetTickets()
-        //{
-        //    return Ok(await _ticketsService.GetTickets());
-        //}
-
-
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetTicket([FromQuery]TicketSearchQuery query)
+        public async Task<IActionResult> Ticket([FromQuery]TicketSearchQuery query)
         {
             try
             {
@@ -67,6 +49,31 @@ namespace Gov.CitizenApi.Features.Tickets
             catch(Exception e)
             {
                 _logger.LogError(e, "GetTicket failed");
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ShellTicket([FromBody]CreateShellTicketCommand createShellTicket)
+        {
+            try
+            {
+                _logger.LogInformation("get create shell ticket request.");
+                var response = await _mediator.Send(createShellTicket);
+                if(response.Id == 0)
+                {
+                    ModelState.AddModelError("TicketNumber", "the ticket shell already exists .");
+                    return BadRequest(ApiResponse.BadRequest(ModelState));
+                }
+                return RedirectToAction("Ticket", new { ticketNumber = createShellTicket.ViolationTicketNumber, time = createShellTicket.ViolationTime });
+                //return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "create shell ticket failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
             }
         }
