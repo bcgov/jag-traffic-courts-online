@@ -30,7 +30,7 @@ namespace Gov.CitizenApi.Features.Lookups
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public IActionResult CountCodes()
         {
-            _logger.LogDebug("Get count codes info");
+            _logger.LogDebug("Get count codes info now.");
             return Ok(_lookupsService.GetStatutes());
         }
     }
