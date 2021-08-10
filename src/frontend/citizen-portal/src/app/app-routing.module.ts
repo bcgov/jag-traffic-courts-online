@@ -4,10 +4,11 @@ import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-ste
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketImageComponent } from '@components/ticket-image/ticket-image.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
+import { TicketPaymentSuccessComponent } from '@components/ticket-payment-success/ticket-payment-success.component';
 import { TicketPaymentComponent } from '@components/ticket-payment/ticket-payment.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
-import { DisputeSubmitComponent } from './components/dispute-submit/dispute-submit.component';
+import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { LandingComponent } from './components/landing/landing.component';
@@ -28,8 +29,12 @@ const routes: Routes = [
         component: TicketImageComponent,
       },
       {
-        path: AppRoutes.SUCCESS,
-        component: DisputeSubmitComponent,
+        path: AppRoutes.SUBMIT_SUCCESS,
+        component: DisputeSubmitSuccessComponent,
+      },
+      {
+        path: AppRoutes.PAYMENT_SUCCESS,
+        component: TicketPaymentSuccessComponent,
       },
       {
         path: AppRoutes.SUMMARY,

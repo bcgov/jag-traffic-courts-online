@@ -1,0 +1,31 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>Payment confirmation</ng-container>
+  </app-page-header>
+
+  <section class="mb-2 mt-4">
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="success" icon="check">
+          <ng-container #alertContent class="alert-content">
+            <strong>Ticket payment successfully</strong><br />
+            Payment confirmation #: <strong>00001</strong>
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
+
+  <div>
+    A confirmation email of the request information has been sent to: <br />
+    <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+  </div>
+
+  <hr />
+
+  <div *ngIf="ticket">
+    <app-count-summary [ticket]="ticket"></app-count-summary>
+  </div>
+
+  <app-dispute-footer></app-dispute-footer>
+</app-page>

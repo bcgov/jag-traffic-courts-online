@@ -89,7 +89,7 @@
             <mat-label>Driver's license #</mat-label>
             <input
               matInput
-              formControlName="driverLicense"
+              formControlName="driverLicenseNumber"
               mask="0000000"
               autocomplete="off"
               [showMaskTyped]="false"
@@ -169,30 +169,30 @@
             <input
               type="text"
               matInput
-              formControlName="count1"
+              formControlName="count1Charge"
               [matAutocomplete]="auto1"
               (click)="$event.target.select()"
             />
             <mat-autocomplete
               autoActiveFirstOption
               #auto1="matAutocomplete"
-              [displayWith]="onDisplayWithStatute"
+              [displayWith]="onDisplayWithStatute.bind(this)"
               (optionSelected)="onStatuteSelected($event)"
             >
               <mat-option
                 *ngFor="let option of filteredStatutes1 | async"
-                [value]="option"
+                [value]="option.code"
               >
                 {{ option.name }}
               </mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="count1.hasError('required')">
+            <mat-error *ngIf="count1Charge.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
             <mat-error
               *ngIf="
-                count1.hasError('invalidAutocompleteObject') &&
-                !count1.hasError('required')
+                count1Charge.hasError('invalidAutocompleteObject') &&
+                !count1Charge.hasError('required')
               "
             >
               Statute is not recognized. Select one from the list of options.
@@ -228,30 +228,30 @@
             <input
               type="text"
               matInput
-              formControlName="count2"
+              formControlName="count2Charge"
               [matAutocomplete]="auto2"
               (click)="$event.target.select()"
             />
             <mat-autocomplete
               autoActiveFirstOption
               #auto2="matAutocomplete"
-              [displayWith]="onDisplayWithStatute"
+              [displayWith]="onDisplayWithStatute.bind(this)"
               (optionSelected)="onStatuteSelected($event)"
             >
               <mat-option
                 *ngFor="let option of filteredStatutes2 | async"
-                [value]="option"
+                [value]="option.code"
               >
                 {{ option.name }}
               </mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="count2.hasError('required')">
+            <mat-error *ngIf="count2Charge.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
             <mat-error
               *ngIf="
-                count2.hasError('invalidAutocompleteObject') &&
-                !count2.hasError('required')
+                count2Charge.hasError('invalidAutocompleteObject') &&
+                !count2Charge.hasError('required')
               "
             >
               Statute is not recognized. Select one from the list of options.
@@ -287,30 +287,30 @@
             <input
               type="text"
               matInput
-              formControlName="count3"
+              formControlName="count3Charge"
               [matAutocomplete]="auto3"
               (click)="$event.target.select()"
             />
             <mat-autocomplete
               autoActiveFirstOption
               #auto3="matAutocomplete"
-              [displayWith]="onDisplayWithStatute"
+              [displayWith]="onDisplayWithStatute.bind(this)"
               (optionSelected)="onStatuteSelected($event)"
             >
               <mat-option
                 *ngFor="let option of filteredStatutes3 | async"
-                [value]="option"
+                [value]="option.code"
               >
                 {{ option.name }}
               </mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="count3.hasError('required')">
+            <mat-error *ngIf="count3Charge.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
             <mat-error
               *ngIf="
-                count3.hasError('invalidAutocompleteObject') &&
-                !count3.hasError('required')
+                count3Charge.hasError('invalidAutocompleteObject') &&
+                !count3Charge.hasError('required')
               "
             >
               Statute is not recognized. Select one from the list of options.
@@ -372,7 +372,7 @@
         <div class="col-md-6">
           <mat-form-field class="w-100">
             <mat-label>Organization / detachment / location</mat-label>
-            <mat-select formControlName="orgDetachmentLocation">
+            <mat-select formControlName="detachmentLocation">
               <mat-option
                 *ngFor="let locn of policeLocations"
                 [value]="locn.code"

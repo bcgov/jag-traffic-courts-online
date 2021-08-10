@@ -4,4 +4,5 @@ export interface Additional {
   interpreterRequired: boolean;
   interpreterLanguage?: string;
   witnessPresent: boolean;
+  numberOfWitnesses: number;
 }

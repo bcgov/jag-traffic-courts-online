@@ -1,16 +1,13 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
-import { DisputeSubmitComponent } from './dispute-submit.component';
+import { TicketPaymentSuccessComponent } from './ticket-payment-success.component';
 
-describe('DisputeSubmitComponent', () => {
-  let component: DisputeSubmitComponent;
-  let fixture: ComponentFixture<DisputeSubmitComponent>;
+describe('TicketPaymentSuccessComponent', () => {
+  let component: TicketPaymentSuccessComponent;
+  let fixture: ComponentFixture<TicketPaymentSuccessComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,16 +15,13 @@ describe('DisputeSubmitComponent', () => {
         HttpClientTestingModule,
         RouterModule.forRoot([]),
         RouterTestingModule,
-        BrowserAnimationsModule,
-        NgxMaterialModule,
-        TranslateModule.forRoot(),
       ],
-      declarations: [DisputeSubmitComponent],
+      declarations: [TicketPaymentSuccessComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisputeSubmitComponent);
+    fixture = TestBed.createComponent(TicketPaymentSuccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
