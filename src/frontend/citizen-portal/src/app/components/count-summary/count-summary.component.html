@@ -1,14 +1,14 @@
 <div *ngIf="ticket">
   <section class="mb-2">
     <h2>
-      <small class="mr-2">Ticket #:</small>
+      <small class="me-2">Ticket #:</small>
       <strong>{{ ticket.violationTicketNumber }}</strong>
-      <span class="ml-4">
-        <small class="mr-2">Violation date:</small>
+      <span class="ms-4">
+        <small class="me-2">Violation date:</small>
         <strong>{{ ticket.violationDate | formatDate }}</strong>
       </span>
-      <span class="ml-4">
-        <small class="mr-2">Violation time:</small>
+      <span class="ms-4">
+        <small class="me-2">Violation time:</small>
         <strong>{{ ticket.violationTime }}</strong>
       </span>
     </h2>
@@ -20,13 +20,18 @@
         <strong>You are within 30 days of your violation date.</strong><br />
         If you pay your ticket by
         <strong>{{ ticket.discountDueDate | formatDate }}</strong
-        >, you will save $25 per ticket count.
+        >, you will save {{ ticket.discountAmount | currency }} per ticket
+        count.
       </ng-container>
     </app-alert>
   </div>
 
   <div *ngIf="payView">
-    <mat-checkbox class="mr-4 mb-2" color="primary">
+    <mat-checkbox
+      (change)="onSelectAllChange($event)"
+      class="me-4 mb-2"
+      color="primary"
+    >
       I agree I committed this offence and I would like to pay all counts for
       this ticket.
     </mat-checkbox>
@@ -38,9 +43,13 @@
       *ngFor="let row of ticket.offences; let i = index"
     >
       <div class="row mt-2">
-        <div class="col-lg-2 pr-0">
+        <div class="col-lg-2 pe-0">
           <div style="display: flex">
-            <mat-checkbox *ngIf="payView" class="mr-4 mb-2"></mat-checkbox>
+            <mat-checkbox
+              *ngIf="payView && row?.amountDue > 0"
+              color="primary"
+              class="me-4 mb-2"
+            ></mat-checkbox>
             <mat-chip-list>
               <mat-chip selected class="p-3"
                 >Count {{ row.offenceNumber }}</mat-chip
@@ -65,7 +74,7 @@
       <div class="row">
         <div class="offset-lg-2 col-lg-8">
           <small class="d-block">Status</small>
-          {{ row?.offenceStatusDesc }}
+          {{ row?._offenceStatusDesc }}
         </div>
         <!--
         <div class="col-lg-4">
@@ -88,7 +97,7 @@
         <div class="offset-lg-5 col-lg-5 text-success">Balance due today</div>
         <div class="col-lg-2 text-success">
           <strong>{{
-            ticket.outstandingBalanceDue
+            ticket._outstandingBalanceDue
               | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
           }}</strong>
         </div>
@@ -102,7 +111,7 @@
         </div>
         <div class="col-lg-2">
           <strong>{{
-            ticket.totalBalanceDue
+            ticket._totalBalanceDue
               | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
           }}</strong>
         </div>

@@ -223,13 +223,13 @@ export class DisputeResourceService {
     let requestSubmitted = false;
 
     ticket.offences.forEach((offence) => {
-      offence.offenceStatusDesc = this.getOffenceStatusDesc(
+      offence._offenceStatusDesc = this.getOffenceStatusDesc(
         offence.status,
         offence.offenceAgreementStatus,
         offence.amountDue
       );
 
-      // offence.offenceAgreementStatusDesc = this.getAgreementStatusDesc(
+      // offence._offenceAgreementStatusDesc = this.getAgreementStatusDesc(
       //   offence.offenceAgreementStatus,
       //   offence.requestReduction,
       //   offence.requestMoreTime
@@ -244,8 +244,8 @@ export class DisputeResourceService {
     });
 
     // ------------------------------------
-    ticket.outstandingBalanceDue = balance;
-    ticket.totalBalanceDue = total;
-    ticket.requestSubmitted = requestSubmitted;
+    ticket._outstandingBalanceDue = balance;
+    ticket._totalBalanceDue = total;
+    ticket._requestSubmitted = requestSubmitted;
   }
 }

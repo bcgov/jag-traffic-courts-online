@@ -56,6 +56,7 @@ export class MockDisputeService {
           .toString(),
       violationDate: '2021-09-18',
       discountDueDate: soonDate,
+      discountAmount: 25,
       disputant: null,
       offences: [],
       additional: null,
@@ -72,13 +73,13 @@ export class MockDisputeService {
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
       status: 0,
-      offenceStatusDesc: 'Balance outstanding',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _offenceStatusDesc: 'Balance outstanding',
     };
 
     ticket.offences.push(offence);
@@ -94,13 +95,13 @@ export class MockDisputeService {
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
       status: 0,
-      offenceStatusDesc: 'Balance outstanding',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _offenceStatusDesc: 'Balance outstanding',
     };
 
     ticket.offences.push(offence);
@@ -141,6 +142,7 @@ export class MockDisputeService {
           .toString(),
       violationDate: '2021-09-18',
       discountDueDate: soonDate,
+      discountAmount: 25,
       disputant: null,
       offences: [],
       additional: null,

@@ -123,6 +123,30 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
    * @description
    * Helper for getting a list of dispute forms.
    */
+  public get applicableForms(): AbstractControl[] {
+    let forms = [this.stepDisputantForm];
+    forms.push(this.stepOffence1Form);
+
+    const stepOffence2 = this.stepOffence2Form.getRawValue();
+    if (stepOffence2.offenceNumber) {
+      forms.push(this.stepOffence2Form);
+    }
+
+    const stepOffence3 = this.stepOffence3Form.getRawValue();
+    if (stepOffence3.offenceNumber) {
+      forms.push(this.stepOffence3Form);
+    }
+
+    forms.push(this.stepAdditionalForm);
+    forms.push(this.stepOverviewForm);
+
+    return forms;
+  }
+
+  /**
+   * @description
+   * Helper for getting a list of dispute forms.
+   */
   public get forms(): AbstractControl[] {
     return [
       this.stepDisputantForm,
@@ -276,6 +300,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       offenceStatusDesc: [null],
       ticketedAmount: [null],
       amountDue: [null],
+      discountDueDate: [null],
       discountAmount: [null],
     });
   }
@@ -300,10 +325,11 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       violationTicketNumber: [null],
       violationTime: [null],
       violationDate: [null],
-      outstandingBalanceDue: [null],
-      totalBalanceDue: [null],
-      requestSubmitted: [null],
       discountDueDate: [null],
+      discountAmount: [null],
+      _outstandingBalanceDue: [null],
+      _totalBalanceDue: [null],
+      _requestSubmitted: [null],
     });
   }
 }

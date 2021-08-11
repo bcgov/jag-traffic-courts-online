@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Component({
@@ -31,5 +32,9 @@ export class CountSummaryComponent implements OnInit {
     }
 
     return isWithin;
+  }
+
+  public onSelectAllChange(event: MatCheckboxChange): void {
+    console.log('checked: ' + event.checked);
   }
 }

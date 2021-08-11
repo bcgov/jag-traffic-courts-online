@@ -1,14 +1,14 @@
 <ng-container *ngIf="ticket">
   <section class="mb-2">
     <h2>
-      <small class="mr-2">Ticket #:</small>
+      <small class="me-2">Ticket #:</small>
       <strong>{{ ticket.violationTicketNumber }}</strong>
-      <span class="ml-4">
-        <small class="mr-2">Violation date:</small>
+      <span class="ms-4">
+        <small class="me-2">Violation date:</small>
         <strong>{{ ticket.violationDate | formatDate }}</strong>
       </span>
-      <span class="ml-4">
-        <small class="mr-2">Violation time:</small>
+      <span class="ms-4">
+        <small class="me-2">Violation time:</small>
         <strong>{{ ticket.violationTime }}</strong>
       </span>
     </h2>
@@ -55,7 +55,10 @@
             </div>
           </strong>
         </div>
-        <div class="col-lg-3">
+        <div
+          class="col-lg-3"
+          *ngIf="row.offenceAgreementStatus === 'REDUCTION'"
+        >
           <small class="d-block">I will appear in court</small>
           <strong>
             {{ row.reductionAppearInCourt | yesNo }}
