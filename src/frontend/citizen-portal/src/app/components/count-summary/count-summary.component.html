@@ -14,7 +14,7 @@
     </h2>
   </section>
 
-  <div class="col mb-4 p-0" *ngIf="within30Days">
+  <div class="col mb-4 p-0" *ngIf="ticket._within30days">
     <app-alert type="success" icon="info">
       <ng-container #alertContent class="alert-content">
         <strong>You are within 30 days of your violation date.</strong><br />
@@ -46,7 +46,7 @@
         <div class="col-lg-2 pe-0">
           <div style="display: flex">
             <mat-checkbox
-              *ngIf="payView && row?.amountDue > 0"
+              *ngIf="payView && row?._amountDue > 0"
               color="primary"
               class="me-4 mb-2"
             ></mat-checkbox>
@@ -64,7 +64,7 @@
         <div class="col-lg-2">
           <small class="d-block">Amount due</small>
           <strong>{{
-            row?.amountDue
+            row?._amountDue
               | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
           }}</strong>
         </div>

@@ -214,6 +214,23 @@ export class DisputeResourceService {
   //   return desc;
   // }
 
+  private isWithin30Days(discountDueDate: string): boolean {
+    let isWithin = false;
+
+    if (discountDueDate) {
+      const today = new Date();
+
+      const diff = Math.floor(
+        (Date.parse(discountDueDate) - Date.parse(today.toDateString())) /
+          86400000
+      );
+
+      isWithin = diff >= 0 && diff <= 30;
+    }
+
+    return isWithin;
+  }
+
   /**
    * populate the offence object with the calculated information
    */
@@ -223,10 +240,20 @@ export class DisputeResourceService {
     let requestSubmitted = false;
 
     ticket.offences.forEach((offence) => {
+      offence._within30days = this.isWithin30Days(ticket.discountDueDate);
+      offence._amountDue = offence.amountDue;
+
+      if (offence._within30days) {
+        offence._amountDue =
+          offence.amountDue >= offence.discountAmount
+            ? offence.amountDue - offence.discountAmount
+            : 0;
+      }
+
       offence._offenceStatusDesc = this.getOffenceStatusDesc(
         offence.status,
         offence.offenceAgreementStatus,
-        offence.amountDue
+        offence._amountDue
       );
 
       // offence._offenceAgreementStatusDesc = this.getAgreementStatusDesc(
@@ -239,11 +266,12 @@ export class DisputeResourceService {
         requestSubmitted = true;
       }
 
-      balance += offence.amountDue;
+      balance += offence._amountDue;
       total += offence.ticketedAmount;
     });
 
     // ------------------------------------
+    ticket._within30days = this.isWithin30Days(ticket.discountDueDate);
     ticket._outstandingBalanceDue = balance;
     ticket._totalBalanceDue = total;
     ticket._requestSubmitted = requestSubmitted;

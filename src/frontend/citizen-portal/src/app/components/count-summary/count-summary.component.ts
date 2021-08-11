@@ -17,23 +17,6 @@ export class CountSummaryComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public get within30Days(): boolean {
-    let isWithin = false;
-
-    if (this.ticket?.discountDueDate) {
-      const today = new Date();
-      const discountDate = this.ticket?.discountDueDate;
-
-      const diff = Math.floor(
-        (Date.parse(discountDate) - Date.parse(today.toDateString())) / 86400000
-      );
-
-      isWithin = diff >= 0 && diff <= 30;
-    }
-
-    return isWithin;
-  }
-
   public onSelectAllChange(event: MatCheckboxChange): void {
     console.log('checked: ' + event.checked);
   }

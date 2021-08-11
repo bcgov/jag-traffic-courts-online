@@ -60,6 +60,7 @@ export class MockDisputeService {
       disputant: null,
       offences: [],
       additional: null,
+      _within30days: true,
     };
 
     // --------------------------
@@ -80,6 +81,8 @@ export class MockDisputeService {
       reductionReason: '',
       moreTimeReason: '',
       _offenceStatusDesc: 'Balance outstanding',
+      _within30days: true,
+      _amountDue: 126 - 25,
     };
 
     ticket.offences.push(offence);
@@ -102,6 +105,8 @@ export class MockDisputeService {
       reductionReason: '',
       moreTimeReason: '',
       _offenceStatusDesc: 'Balance outstanding',
+      _within30days: false,
+      _amountDue: 167 - 25,
     };
 
     ticket.offences.push(offence);
@@ -146,6 +151,7 @@ export class MockDisputeService {
       disputant: null,
       offences: [],
       additional: null,
+      _within30days: true,
     };
 
     ticket.disputant = this.createDisputant();
@@ -178,6 +184,8 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _within30days: false,
+      _amountDue: 126,
     };
 
     offence = Object.assign(offence, this.createOffencePay());
@@ -201,6 +209,8 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _within30days: false,
+      _amountDue: 126,
     };
 
     offence = Object.assign(offence, this.createOffenceMoreTime());
@@ -225,6 +235,8 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _within30days: false,
+      _amountDue: 142,
     };
 
     offence = Object.assign(offence, this.createOffenceDispute());
