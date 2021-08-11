@@ -6,17 +6,20 @@ export interface TicketDispute {
   violationTime: string;
   violationDate: string;
 
-  // Part A
+  discountDueDate?: string;
+  discountAmount: number;
+
   disputant: Disputant;
 
-  // Offences and Part B
+  // Offences
   offences: Offence[];
 
-  // Part C
+  // Court information
   additional: Additional;
 
   // derived later on
-  outstandingBalanceDue?: number;
-  totalBalanceDue?: number;
-  requestSubmitted?: boolean;
+  _within30days?: boolean;
+  _outstandingBalanceDue?: number;
+  _totalBalanceDue?: number;
+  _requestSubmitted?: boolean;
 }

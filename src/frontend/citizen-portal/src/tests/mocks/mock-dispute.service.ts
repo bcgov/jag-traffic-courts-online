@@ -24,6 +24,13 @@ export class MockDisputeService {
   }
 
   private createTicketWithoutDisputes(): TicketDispute {
+    const soonDate =
+      faker.date.soon().getFullYear() +
+      '-' +
+      (faker.date.soon().getMonth() + 1) +
+      '-' +
+      faker.date.soon().getDate();
+
     const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
@@ -48,10 +55,12 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: '2021-09-18',
-      // informationCertified: false,
+      discountDueDate: soonDate,
+      discountAmount: 25,
       disputant: null,
       offences: [],
       additional: null,
+      _within30days: true,
     };
 
     // --------------------------
@@ -64,45 +73,40 @@ export class MockDisputeService {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
-      discountDueDate: null,
       status: 0,
-      offenceStatusDesc: 'Balance outstanding',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _offenceStatusDesc: 'Balance outstanding',
+      _within30days: true,
+      _amountDue: 126 - 25,
     };
 
     ticket.offences.push(offence);
 
     // --------------------------
-    const soonDate =
-      faker.date.soon().getFullYear() +
-      '-' +
-      (faker.date.soon().getMonth() + 1) +
-      '-' +
-      faker.date.soon().getDate();
-
     offence = {
       offenceNumber: 2,
       ticketedAmount: 167,
-      amountDue: 142,
+      amountDue: 167,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      discountDueDate: soonDate,
       status: 0,
-      offenceStatusDesc: 'Balance outstanding',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _offenceStatusDesc: 'Balance outstanding',
+      _within30days: false,
+      _amountDue: 167 - 25,
     };
 
     ticket.offences.push(offence);
@@ -111,6 +115,13 @@ export class MockDisputeService {
   }
 
   private createTicketWithDispute(): TicketDispute {
+    const soonDate =
+      faker.date.soon().getFullYear() +
+      '-' +
+      (faker.date.soon().getMonth() + 1) +
+      '-' +
+      faker.date.soon().getDate();
+
     const ticket: TicketDispute = {
       violationTicketNumber:
         'EA' +
@@ -135,9 +146,12 @@ export class MockDisputeService {
           })
           .toString(),
       violationDate: '2021-09-18',
+      discountDueDate: soonDate,
+      discountAmount: 25,
       disputant: null,
       offences: [],
       additional: null,
+      _within30days: true,
     };
 
     ticket.disputant = this.createDisputant();
@@ -162,8 +176,7 @@ export class MockDisputeService {
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
-      discountDueDate: null,
+      discountAmount: 25,
       status: 0,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
@@ -171,6 +184,8 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _within30days: false,
+      _amountDue: 126,
     };
 
     offence = Object.assign(offence, this.createOffencePay());
@@ -186,8 +201,7 @@ export class MockDisputeService {
       offenceDescription: 'Operate Vehicle Without Seatbelts',
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
-      discountDueDate: null,
+      discountAmount: 25,
       status: 1,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
@@ -195,6 +209,8 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _within30days: false,
+      _amountDue: 126,
     };
 
     offence = Object.assign(offence, this.createOffenceMoreTime());
@@ -202,24 +218,16 @@ export class MockDisputeService {
     ticket.offences.push(offence);
 
     // --------------------------
-    const soonDate =
-      faker.date.soon().getFullYear() +
-      '-' +
-      (faker.date.soon().getMonth() + 1) +
-      '-' +
-      faker.date.soon().getDate();
-
     offence = {
       offenceNumber: 3,
       ticketedAmount: 167,
-      amountDue: 142,
+      amountDue: 0,
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      discountDueDate: soonDate,
       status: 0,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
@@ -227,6 +235,8 @@ export class MockDisputeService {
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
+      _within30days: false,
+      _amountDue: 0,
     };
 
     offence = Object.assign(offence, this.createOffenceDispute());

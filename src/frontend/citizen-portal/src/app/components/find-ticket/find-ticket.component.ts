@@ -64,6 +64,8 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
   }
 
   public onSearch(): void {
+    this.logger.log('FindTicketComponent::onSearch');
+
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 

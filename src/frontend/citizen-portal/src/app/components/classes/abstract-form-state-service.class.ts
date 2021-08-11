@@ -46,13 +46,14 @@ export abstract class AbstractFormStateService<T> {
    * drive internal form helper methods.
    */
   public abstract get forms(): AbstractControl[];
+  public abstract get applicableForms(): AbstractControl[];
 
   /**
    * @description
    * Check that all constituent forms are valid.
    */
   public get isValid(): boolean {
-    return this.forms.reduce(
+    return this.applicableForms.reduce(
       (valid: boolean, form: AbstractControl) => valid && form.valid,
       true
     );
@@ -63,7 +64,7 @@ export abstract class AbstractFormStateService<T> {
    * Check that at least one constituent form is dirty.
    */
   public get isDirty(): boolean {
-    return this.forms.reduce(
+    return this.applicableForms.reduce(
       (dirty: boolean, form: AbstractControl) => dirty || form.dirty,
       false
     );
@@ -74,7 +75,9 @@ export abstract class AbstractFormStateService<T> {
    * Mark all constituent forms as pristine.
    */
   public markAsPristine(): void {
-    this.forms.forEach((form: AbstractControl) => form.markAsPristine());
+    this.applicableForms.forEach((form: AbstractControl) =>
+      form.markAsPristine()
+    );
   }
 
   /**

@@ -147,12 +147,15 @@
                 I would like to appear in court to discuss in person.
               </span>
             </mat-radio-button>
+            <mat-error *ngIf="reductionAppearInCourt.hasError('required')">
+              {{ "error.required" | translate }}
+            </mat-error>
           </mat-radio-group>
 
           <mat-checkbox
             formControlName="requestReduction"
             color="primary"
-            class="w-100"
+            class="w-100 mt-4"
             >I would like to request a fine reduction on this
             count.</mat-checkbox
           >

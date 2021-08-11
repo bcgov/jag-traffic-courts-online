@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col">
           <mat-checkbox
-            class="mr-4 mb-2"
+            class="me-4 mb-2"
             color="primary"
             formControlName="lawyerPresent"
           >
@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col">
           <mat-checkbox
-            class="mr-4 mb-2"
+            class="me-4 mb-2"
             color="primary"
             formControlName="interpreterRequired"
           >
@@ -59,7 +59,7 @@
       <div class="row">
         <div class="col">
           <mat-checkbox
-            class="mr-4 mb-2"
+            class="me-4 mb-2"
             color="primary"
             formControlName="witnessPresent"
           >
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="witnessPresent.value">
         <div class="col">
           <mat-form-field>
             <mat-label>Number of witnesses</mat-label>

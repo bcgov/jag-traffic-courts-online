@@ -12,14 +12,14 @@
         </app-tco-page-header>
 
         <h2 class="mb-2" *ngIf="ticket">
-          <small class="mr-2">Ticket #:</small>
+          <small class="me-2">Ticket #:</small>
           <strong>{{ ticket.violationTicketNumber }}</strong>
-          <span class="ml-4">
-            <small class="mr-2">Violation date:</small>
+          <span class="ms-4">
+            <small class="me-2">Violation date:</small>
             <strong>{{ ticket.violationDate | formatDate }}</strong>
           </span>
-          <span class="ml-4">
-            <small class="mr-2">Violation time:</small>
+          <span class="ms-4">
+            <small class="me-2">Violation time:</small>
             <strong>{{ ticket.violationTime }}</strong>
           </span>
         </h2>

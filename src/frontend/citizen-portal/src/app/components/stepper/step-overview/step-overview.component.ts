@@ -73,8 +73,18 @@ export class StepOverviewComponent
   }
 
   public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.form)) {
-      if (this.disputeFormStateService.isValid) {
+    const validForm = this.formUtilsService.checkValidity(this.form);
+    const errors = this.formUtilsService.getFormErrors(this.form);
+
+    this.logger.log('validity', validForm);
+    this.logger.log('errors', errors);
+    this.logger.log('form.value', this.form.value);
+
+    const validForms = this.disputeFormStateService.isValid;
+    this.logger.log('disputeFormStateService.isValid', validForms);
+
+    if (validForm) {
+      if (validForms) {
         this.stepSave.emit(this.stepper);
         return;
       } else {

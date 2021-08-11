@@ -64,16 +64,30 @@ export class DisputeResourceService {
    *
    * @param dispute The dispute to be created
    */
-  public createTicketDispute(ticketDispute: TicketDispute): Observable<null> {
-    this.logger.info('createTicketDispute', ticketDispute);
+  public createTicketDispute(
+    ticketDispute: TicketDispute
+  ): Observable<TicketDispute> {
+    this.logger.info(
+      'DisputeResourceService::createTicketDispute',
+      ticketDispute
+    );
 
     return this.apiResource
       .post<TicketDispute>('disputes/ticketDispute', ticketDispute)
       .pipe(
-        map((response: ApiHttpResponse<TicketDispute>) => null),
-        tap(() => {
+        map((response: ApiHttpResponse<TicketDispute>) =>
+          response ? response.result : null
+        ),
+        tap((newDisputeTicket: TicketDispute) => {
+          this.setOffenceInfo(newDisputeTicket);
+
           this.toastService.openSuccessToast(
             'The request has been successfully submitted'
+          );
+
+          this.logger.info(
+            'DisputeResourceService::NEW_DISPUTE_TICKET',
+            newDisputeTicket
           );
         }),
         catchError((error: any) => {
@@ -93,7 +107,7 @@ export class DisputeResourceService {
    * @param ticket The ticket to be created
    */
   public createShellTicket(ticket: ShellTicket): Observable<TicketDispute> {
-    this.logger.info('createShellTicket', ticket);
+    this.logger.info('DisputeResourceService::createShellTicket', ticket);
 
     return this.apiResource
       .post<TicketDispute>('tickets/shellTicket', ticket)
@@ -102,14 +116,16 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newShellTicket: TicketDispute) => {
-          if (ticket) {
-            this.setOffenceInfo(newShellTicket);
-          }
+          this.setOffenceInfo(newShellTicket);
 
           this.toastService.openSuccessToast(
             'The ticket has been successfully created'
           );
-          this.logger.info('NEW_SHELL_TICKET', newShellTicket);
+
+          this.logger.info(
+            'DisputeResourceService:: NEW_SHELL_TICKET',
+            newShellTicket
+          );
         }),
         map((shellTicket) => {
           return shellTicket;
@@ -198,6 +214,23 @@ export class DisputeResourceService {
   //   return desc;
   // }
 
+  private isWithin30Days(discountDueDate: string): boolean {
+    let isWithin = false;
+
+    if (discountDueDate) {
+      const today = new Date();
+
+      const diff = Math.floor(
+        (Date.parse(discountDueDate) - Date.parse(today.toDateString())) /
+          86400000
+      );
+
+      isWithin = diff >= 0 && diff <= 30;
+    }
+
+    return isWithin;
+  }
+
   /**
    * populate the offence object with the calculated information
    */
@@ -207,12 +240,23 @@ export class DisputeResourceService {
     let requestSubmitted = false;
 
     ticket.offences.forEach((offence) => {
-      offence.offenceStatusDesc = this.getOffenceStatusDesc(
+      offence._within30days = this.isWithin30Days(ticket.discountDueDate);
+      offence._amountDue = offence.amountDue;
+
+      if (offence._within30days) {
+        offence._amountDue =
+          offence.amountDue >= offence.discountAmount
+            ? offence.amountDue - offence.discountAmount
+            : 0;
+      }
+
+      offence._offenceStatusDesc = this.getOffenceStatusDesc(
         offence.status,
         offence.offenceAgreementStatus,
-        offence.amountDue
+        offence._amountDue
       );
-      // offence.offenceAgreementStatusDesc = this.getAgreementStatusDesc(
+
+      // offence._offenceAgreementStatusDesc = this.getAgreementStatusDesc(
       //   offence.offenceAgreementStatus,
       //   offence.requestReduction,
       //   offence.requestMoreTime
@@ -222,13 +266,14 @@ export class DisputeResourceService {
         requestSubmitted = true;
       }
 
-      balance += offence.amountDue;
+      balance += offence._amountDue;
       total += offence.ticketedAmount;
     });
 
     // ------------------------------------
-    ticket.outstandingBalanceDue = balance;
-    ticket.totalBalanceDue = total;
-    ticket.requestSubmitted = requestSubmitted;
+    ticket._within30days = this.isWithin30Days(ticket.discountDueDate);
+    ticket._outstandingBalanceDue = balance;
+    ticket._totalBalanceDue = total;
+    ticket._requestSubmitted = requestSubmitted;
   }
 }

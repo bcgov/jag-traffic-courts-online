@@ -67,6 +67,8 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
   }
 
   private performSearch(params): void {
+    this.logger.log('DisputeSummaryComponent::performSearch');
+
     this.busy = this.disputeResource.getTicket(params).subscribe((response) => {
       this.logger.info(
         'DisputeSummaryComponent::performSearch response',

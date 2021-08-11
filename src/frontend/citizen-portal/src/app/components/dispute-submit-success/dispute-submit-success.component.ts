@@ -28,18 +28,12 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   ) {}
 
   public ngOnInit(): void {
-    // const formParams = { ticketNumber: 'EZ02000460', time: '09:54' };
-    // this.disputeResource.getTicket(formParams).subscribe((response) => {
-    //   this.disputeService.ticket$.next(response);
-    // });
-
     this.disputeService.ticket$.subscribe((ticket) => {
-      this.ticket = ticket;
-      this.logger.info('DisputeSubmitComponent', ticket);
-
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
       }
+
+      this.ticket = ticket;
     });
   }
 
@@ -105,11 +99,11 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
       });
 
     if (count > 1) {
-      countsToPay = 'Counts ' + countsToPay;
-    } else {
-      countsToPay = 'Count ' + countsToPay;
+      return 'Counts ' + countsToPay;
+    } else if (count === 1) {
+      return 'Count ' + countsToPay;
     }
 
-    return countsToPay;
+    return null;
   }
 }

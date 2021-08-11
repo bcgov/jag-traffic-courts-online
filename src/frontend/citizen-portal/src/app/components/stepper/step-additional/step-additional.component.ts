@@ -19,7 +19,8 @@ import { Config } from '@config/config.model';
 })
 export class StepAdditionalComponent
   extends BaseDisputeFormPage
-  implements OnInit {
+  implements OnInit
+{
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
@@ -79,5 +80,9 @@ export class StepAdditionalComponent
 
   public get interpreterRequired(): FormControl {
     return this.form.get('interpreterRequired') as FormControl;
+  }
+
+  public get witnessPresent(): FormControl {
+    return this.form.get('witnessPresent') as FormControl;
   }
 }
