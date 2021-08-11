@@ -14,12 +14,13 @@
     </h2>
   </section>
 
-  <div class="col mb-4 p-0">
+  <div class="col mb-4 p-0" *ngIf="within30Days">
     <app-alert type="success" icon="info">
       <ng-container #alertContent class="alert-content">
         <strong>You are within 30 days of your violation date.</strong><br />
-        If you pay your ticket by <strong>Aug 15 2021</strong>, you will save
-        $25 per ticket count.
+        If you pay your ticket by
+        <strong>{{ ticket.discountDueDate | formatDate }}</strong
+        >, you will save $25 per ticket count.
       </ng-container>
     </app-alert>
   </div>
@@ -96,7 +97,9 @@
 
     <section class="px-4 py-2 mb-3 card-section">
       <div class="row mt-2">
-        <div class="offset-lg-5 col-lg-5">Balance due if paid after 'DATE'</div>
+        <div class="offset-lg-5 col-lg-5">
+          Balance due if paid after {{ ticket.discountDueDate | formatDate }}
+        </div>
         <div class="col-lg-2">
           <strong>{{
             ticket.totalBalanceDue

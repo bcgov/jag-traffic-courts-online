@@ -34,12 +34,11 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
     // });
 
     this.disputeService.ticket$.subscribe((ticket) => {
-      this.ticket = ticket;
-      this.logger.info('DisputeSubmitComponent', ticket);
-
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
       }
+
+      this.ticket = ticket;
     });
   }
 

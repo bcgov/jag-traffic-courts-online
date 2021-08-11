@@ -64,16 +64,30 @@ export class DisputeResourceService {
    *
    * @param dispute The dispute to be created
    */
-  public createTicketDispute(ticketDispute: TicketDispute): Observable<null> {
-    this.logger.info('createTicketDispute', ticketDispute);
+  public createTicketDispute(
+    ticketDispute: TicketDispute
+  ): Observable<TicketDispute> {
+    this.logger.info(
+      'DisputeResourceService::createTicketDispute',
+      ticketDispute
+    );
 
     return this.apiResource
       .post<TicketDispute>('disputes/ticketDispute', ticketDispute)
       .pipe(
-        map((response: ApiHttpResponse<TicketDispute>) => null),
-        tap(() => {
+        map((response: ApiHttpResponse<TicketDispute>) =>
+          response ? response.result : null
+        ),
+        tap((newDisputeTicket: TicketDispute) => {
+          this.setOffenceInfo(newDisputeTicket);
+
           this.toastService.openSuccessToast(
             'The request has been successfully submitted'
+          );
+
+          this.logger.info(
+            'DisputeResourceService::NEW_DISPUTE_TICKET',
+            newDisputeTicket
           );
         }),
         catchError((error: any) => {
@@ -93,7 +107,7 @@ export class DisputeResourceService {
    * @param ticket The ticket to be created
    */
   public createShellTicket(ticket: ShellTicket): Observable<TicketDispute> {
-    this.logger.info('createShellTicket', ticket);
+    this.logger.info('DisputeResourceService::createShellTicket', ticket);
 
     return this.apiResource
       .post<TicketDispute>('tickets/shellTicket', ticket)
@@ -102,14 +116,16 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newShellTicket: TicketDispute) => {
-          if (ticket) {
-            this.setOffenceInfo(newShellTicket);
-          }
+          this.setOffenceInfo(newShellTicket);
 
           this.toastService.openSuccessToast(
             'The ticket has been successfully created'
           );
-          this.logger.info('NEW_SHELL_TICKET', newShellTicket);
+
+          this.logger.info(
+            'DisputeResourceService:: NEW_SHELL_TICKET',
+            newShellTicket
+          );
         }),
         map((shellTicket) => {
           return shellTicket;
@@ -212,6 +228,7 @@ export class DisputeResourceService {
         offence.offenceAgreementStatus,
         offence.amountDue
       );
+
       // offence.offenceAgreementStatusDesc = this.getAgreementStatusDesc(
       //   offence.offenceAgreementStatus,
       //   offence.requestReduction,

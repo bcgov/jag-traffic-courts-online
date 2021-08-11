@@ -256,7 +256,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       provLicense: [null],
       emailAddress: [null, [Validators.required, Validators.email]],
       phoneNumber: [null, [FormControlValidators.phone]],
-      workPhone: [null, [FormControlValidators.phone]],
       birthdate: [null, []],
     });
   }
@@ -278,7 +277,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       ticketedAmount: [null],
       amountDue: [null],
       discountAmount: [null],
-      discountDueDate: [null],
     });
   }
 
@@ -305,6 +303,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       outstandingBalanceDue: [null],
       totalBalanceDue: [null],
       requestSubmitted: [null],
+      discountDueDate: [null],
     });
   }
 }

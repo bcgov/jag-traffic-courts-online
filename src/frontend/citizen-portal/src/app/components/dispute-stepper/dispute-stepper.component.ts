@@ -173,8 +173,8 @@ export class DisputeStepperComponent
 
           this.busy = this.disputeResource
             .createTicketDispute(payload)
-            .subscribe(() => {
-              this.disputeService.ticket$.next(payload);
+            .subscribe((newDisputeTicket: TicketDispute) => {
+              this.disputeService.ticket$.next(newDisputeTicket);
 
               this.router.navigate([
                 AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS),

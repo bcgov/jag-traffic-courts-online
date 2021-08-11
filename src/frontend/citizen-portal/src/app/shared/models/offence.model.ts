@@ -9,7 +9,6 @@ export interface Offence {
   ticketedAmount?: number;
   amountDue?: number;
   discountAmount?: number;
-  discountDueDate?: string;
 
   status: number;
   offenceAgreementStatus?: string;

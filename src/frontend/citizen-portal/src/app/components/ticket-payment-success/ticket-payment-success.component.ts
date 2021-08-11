@@ -30,12 +30,12 @@ export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
     // });
 
     this.disputeService.ticket$.subscribe((ticket) => {
-      this.ticket = ticket;
-      this.logger.info('TicketPaymentSuccessComponent current ticket', ticket);
-
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
       }
+
+      this.logger.info('TicketPaymentSuccessComponent current ticket', ticket);
+      this.ticket = ticket;
     });
   }
 

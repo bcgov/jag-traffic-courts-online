@@ -6,13 +6,14 @@ export interface TicketDispute {
   violationTime: string;
   violationDate: string;
 
-  // Part A
+  discountDueDate?: string;
+
   disputant: Disputant;
 
-  // Offences and Part B
+  // Offences
   offences: Offence[];
 
-  // Part C
+  // Court information
   additional: Additional;
 
   // derived later on
