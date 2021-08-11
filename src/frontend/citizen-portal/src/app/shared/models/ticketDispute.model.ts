@@ -7,7 +7,7 @@ export interface TicketDispute {
   violationDate: string;
 
   discountDueDate?: string;
-  discountAmount?: number;
+  discountAmount: number;
 
   disputant: Disputant;
 
@@ -18,7 +18,7 @@ export interface TicketDispute {
   additional: Additional;
 
   // derived later on
-  _within30days: boolean;
+  _within30days?: boolean;
   _outstandingBalanceDue?: number;
   _totalBalanceDue?: number;
   _requestSubmitted?: boolean;

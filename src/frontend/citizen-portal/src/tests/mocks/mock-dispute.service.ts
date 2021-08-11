@@ -91,7 +91,7 @@ export class MockDisputeService {
     offence = {
       offenceNumber: 2,
       ticketedAmount: 167,
-      amountDue: 142,
+      amountDue: 167,
       violationDateTime: faker.date.recent().toString(),
       offenceDescription: 'Operate Vehicle Without Seatbelts',
       invoiceType: 'Traffic Violation Ticket',
@@ -176,7 +176,7 @@ export class MockDisputeService {
         'Load Or Projection Over 1.2M In Rear Without Required Lamp During Time Specified In Mr Section 4.01',
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
+      discountAmount: 25,
       status: 0,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
@@ -201,7 +201,7 @@ export class MockDisputeService {
       offenceDescription: 'Operate Vehicle Without Seatbelts',
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
-      discountAmount: 0,
+      discountAmount: 25,
       status: 1,
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
@@ -221,7 +221,7 @@ export class MockDisputeService {
     offence = {
       offenceNumber: 3,
       ticketedAmount: 167,
-      amountDue: 142,
+      amountDue: 0,
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
@@ -236,7 +236,7 @@ export class MockDisputeService {
       reductionReason: '',
       moreTimeReason: '',
       _within30days: false,
-      _amountDue: 142,
+      _amountDue: 0,
     };
 
     offence = Object.assign(offence, this.createOffenceDispute());

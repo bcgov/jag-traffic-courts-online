@@ -6,10 +6,10 @@ export interface Offence {
   violationDateTime?: string;
   vehicleDescription?: string;
 
-  ticketedAmount?: number;
-  amountDue?: number;
+  ticketedAmount: number;
+  amountDue: number;
   discountDueDate?: string;
-  discountAmount?: number;
+  discountAmount: number;
 
   status: number;
   offenceAgreementStatus?: string;
@@ -46,7 +46,7 @@ export interface Offence {
 
   // derived later on
   _offenceStatusDesc?: string;
-  _within30days: boolean;
-  _amountDue: number;
+  _within30days?: boolean;
+  _amountDue?: number;
   // _offenceAgreementStatusDesc?: string;
 }
