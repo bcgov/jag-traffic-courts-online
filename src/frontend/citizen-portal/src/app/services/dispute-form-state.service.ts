@@ -124,7 +124,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
    * Helper for getting a list of dispute forms.
    */
   public get applicableForms(): AbstractControl[] {
-    let forms = [this.stepDisputantForm];
+    const forms = [this.stepDisputantForm];
     forms.push(this.stepOffence1Form);
 
     const stepOffence2 = this.stepOffence2Form.getRawValue();
