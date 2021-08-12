@@ -35,8 +35,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       return next.handle(request);
 
       // TODO: remove later
-      // for now, lookups always use mock
-    } else if (currentRoutePath === 'lookups') {
+      // for now, lookup always use mock
+    } else if (currentRoutePath === 'lookup') {
       return this.handleLookupsRequests(request.method);
     }
 
@@ -44,7 +44,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       if (
         !currentRoutePath.includes('ticket') &&
         !currentRoutePath.includes('dispute') &&
-        currentRoutePath !== 'lookups'
+        currentRoutePath !== 'lookup'
       ) {
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
@@ -60,8 +60,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       } else if (currentRoutePath.includes('dispute')) {
         return this.handleDisputesRequests(request.method);
 
-        // Handle 'lookups' requests
-      } else if (currentRoutePath === 'lookups') {
+        // Handle 'lookup' requests
+      } else if (currentRoutePath === 'lookup') {
         return this.handleLookupsRequests(request.method);
       }
     }

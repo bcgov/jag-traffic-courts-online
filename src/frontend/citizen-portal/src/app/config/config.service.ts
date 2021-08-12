@@ -114,7 +114,7 @@ export class ConfigService implements IConfigService {
    */
   private getConfiguration(): Observable<Configuration> {
     return this.apiResource
-      .get<Configuration>('lookups')
+      .get<Configuration>('lookup')
       .pipe(map((response: ApiHttpResponse<Configuration>) => response.result));
   }
 
