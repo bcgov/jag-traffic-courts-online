@@ -283,7 +283,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
-    console.log('onStatuteSelected', event$.option.value);
+    this.logger.log('onStatuteSelected', event$.option.value);
   }
 
   public get violationTicketNumber(): FormControl {

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
@@ -60,18 +61,18 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/']);
   }
 
-  public onPayTicket(): void {
-    this.logger.info('onPayTicket', this.ticket);
+  public onMakePayment(): void {
+    this.logger.info('onMakePayment', this.ticket);
 
     const data: DialogOptions = {
-      titleKey: 'submit_confirmation.heading',
-      messageKey: 'submit_confirmation.message',
-      actionTextKey: 'submit_confirmation.confirm',
-      cancelTextKey: 'submit_confirmation.cancel',
+      titleKey: 'Ticket payment',
+      messageKey: 'Enter your credit card information...',
+      actionTextKey: 'Proceed with payment',
+      cancelTextKey: 'Cancel',
     };
 
     this.dialog
-      .open(TicketPaymentDialogComponent, { data })
+      .open(ConfirmDialogComponent, { data })
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {

@@ -21,7 +21,7 @@
     (click)="onConfirm()"
     class="my-2 me-1"
   >
-    {{ options.actionTextKey | translate }}
+    {{ options.actionTextKey }}
   </button>
   <button
     *ngIf="!options.cancelHide"
@@ -30,7 +30,7 @@
     cdkFocusInitial
     class="my-2 me-2"
   >
-    {{ options.cancelTextKey | translate }}
+    {{ options.cancelTextKey }}
   </button>
 
   <span class="flex-grow-1"></span>
