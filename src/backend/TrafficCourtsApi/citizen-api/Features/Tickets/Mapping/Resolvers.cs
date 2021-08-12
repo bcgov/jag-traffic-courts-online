@@ -16,7 +16,7 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
         private ILookupsService _lookupsService;
         public TicketOffencesResolver(ILookupsService lookupsService)
         {
-            _lookupsService = lookupsService;
+            _lookupsService = lookupsService ?? throw new ArgumentNullException(nameof(lookupsService));
         }
 
         public ICollection<DBModel.Offence> Resolve(CreateShellTicketCommand source,
