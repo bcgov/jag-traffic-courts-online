@@ -10,6 +10,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
 
@@ -24,6 +25,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   public ticket: TicketDispute;
 
   constructor(
+    private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private router: Router,
@@ -48,11 +50,14 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   }
 
   public onMakePayment(): void {
-    this.logger.info('onMakePayment', this.ticket);
-
+    let countsToPay = '';
     let numberSelected = 0;
     this.countSummary.countComponents.forEach((child) => {
       if (child.isSelected.selected) {
+        if (numberSelected > 0) {
+          countsToPay += ',';
+        }
+        countsToPay += child.isSelected.offenceNumber;
         numberSelected++;
       }
     });
@@ -70,6 +75,26 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const formParams = {
+      ticketNumber: this.ticket.violationTicketNumber,
+      time: this.ticket.violationTime,
+      counts: countsToPay,
+    };
+
+    this.logger.info('onMakePayment', formParams);
+
+    this.busy = this.disputeResource
+      .makeTicketPayment(formParams)
+      .subscribe((response) => {
+        this.logger.info(
+          'DisputeSubmitSuccessComponent::makeTicketPayment response',
+          response
+        );
+        this.router.navigate([
+          AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
+        ]);
+      });
+
     // const data: DialogOptions = {
     //   titleKey: 'Ticket payment',
     //   messageKey: 'Enter your credit card information...',
@@ -77,17 +102,17 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
     //   cancelTextKey: 'Cancel',
     // };
 
-    this.dialog
-      .open(TicketPaymentDialogComponent)
-      .afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          this.toastService.openSuccessToast('Ticket payment is successful');
+    // this.dialog
+    //   .open(TicketPaymentDialogComponent)
+    //   .afterClosed()
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       this.toastService.openSuccessToast('Ticket payment is successful');
 
-          this.router.navigate([
-            AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
-          ]);
-        }
-      });
+    //       this.router.navigate([
+    //         AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
+    //       ]);
+    //     }
+    //   });
   }
 }

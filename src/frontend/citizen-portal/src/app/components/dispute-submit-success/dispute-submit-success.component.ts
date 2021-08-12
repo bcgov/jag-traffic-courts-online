@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
-import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dispute-submit-success',
@@ -15,10 +16,12 @@ import { DisputeService } from 'app/services/dispute.service';
   styleUrls: ['./dispute-submit-success.component.scss'],
 })
 export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
+  public busy: Subscription;
   public ticket: TicketDispute;
 
   constructor(
     private router: Router,
+    private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private toastService: ToastService,
@@ -60,7 +63,25 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   }
 
   public onMakePayment(): void {
-    this.logger.info('onMakePayment', this.ticket);
+    const formParams = {
+      ticketNumber: this.ticket.violationTicketNumber,
+      time: this.ticket.violationTime,
+      counts: this.getListOfCountsToPay(),
+    };
+
+    this.logger.info('onMakePayment', formParams);
+
+    this.busy = this.disputeResource
+      .makeTicketPayment(formParams)
+      .subscribe((response) => {
+        this.logger.info(
+          'DisputeSubmitSuccessComponent::makeTicketPayment response',
+          response
+        );
+        this.router.navigate([
+          AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
+        ]);
+      });
 
     // const data: DialogOptions = {
     //   titleKey: 'Ticket payment',
@@ -69,21 +90,21 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
     //   cancelTextKey: 'Cancel',
     // };
 
-    this.dialog
-      .open(TicketPaymentDialogComponent)
-      .afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          this.toastService.openSuccessToast('Ticket payment is successful');
+    // this.dialog
+    //   .open(TicketPaymentDialogComponent)
+    //   .afterClosed()
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       this.toastService.openSuccessToast('Ticket payment is successful');
 
-          this.router.navigate([
-            AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
-          ]);
-        }
-      });
+    //       this.router.navigate([
+    //         AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
+    //       ]);
+    //     }
+    //   });
   }
 
-  public get countsToPay(): string {
+  private getListOfCountsToPay(): string {
     let countsToPay = '';
     let count = 0;
 
@@ -91,16 +112,24 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
       ?.filter((offence) => offence.offenceAgreementStatus === 'PAY')
       .forEach((offence) => {
         if (count > 0) {
-          countsToPay += ', ';
+          countsToPay += ',';
         }
         countsToPay += offence.offenceNumber;
         count++;
       });
 
-    if (count > 1) {
-      return 'Counts ' + countsToPay;
-    } else if (count === 1) {
-      return 'Count ' + countsToPay;
+    return countsToPay;
+  }
+
+  public get countsToPay(): string {
+    let countsToPay = this.getListOfCountsToPay();
+
+    if (countsToPay) {
+      if (countsToPay.indexOf(',') > -1) {
+        return 'Counts ' + countsToPay;
+      } else {
+        return 'Count ' + countsToPay;
+      }
     }
 
     return null;

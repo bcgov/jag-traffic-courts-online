@@ -60,6 +60,39 @@ export class DisputeResourceService {
   }
 
   /**
+   * Make a ticket payment.
+   *
+   * @param params containing the ticketNumber, time and counts
+   */
+  public makeTicketPayment(params: {
+    ticketNumber: string;
+    time: string;
+    counts: string;
+  }): Observable<any> {
+    const httpParams = new HttpParams({ fromObject: params });
+
+    return this.apiResource.get<any>('tickets/pay', httpParams).pipe(
+      map((response: ApiHttpResponse<any>) =>
+        response ? response.result : null
+      ),
+      tap((result: any) =>
+        this.logger.info('DisputeResourceService::makeTicketPayment', result)
+      ),
+      map((result) => {
+        return result;
+      }),
+      catchError((error: any) => {
+        this.toastService.openErrorToast('Payment could not be made');
+        this.logger.error(
+          'DisputeResourceService::makeTicketPayment error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  /**
    * Create the ticket dispute
    *
    * @param dispute The dispute to be created

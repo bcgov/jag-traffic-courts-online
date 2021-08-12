@@ -21,42 +21,53 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="mt-0 w-100"
-            >What action would you like to take?
-
-            <span (click)="onActionHelp()">
-              <mat-icon>info</mat-icon>
-            </span>
-          </label>
-          <mat-radio-group
-            formControlName="offenceAgreementStatus"
-            class="w-100"
-          >
-            <mat-radio-button value="NOTHING" class="w-100">
+          <label class="mt-0 w-100">What action would you like to take? </label>
+          <mat-radio-group formControlName="offenceAgreementStatus">
+            <mat-radio-button value="NOTHING">
               <span class="wrap-mat-radio-label">
                 I do not wish to take any action on this count at this time.
               </span>
+              <span
+                matTooltip="Information about radio button 1."
+                #tooltip1="matTooltip"
+              >
+                <mat-icon>info</mat-icon>
+              </span>
             </mat-radio-button>
-            <mat-radio-button value="PAY" class="w-100">
+            <mat-radio-button value="PAY">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to pay for
                 this count.
               </span>
+              <span
+                matTooltip="Information about radio button 2."
+                #tooltip2="matTooltip"
+              >
+                <mat-icon>info</mat-icon>
+              </span>
             </mat-radio-button>
-            <mat-radio-button value="REDUCTION" class="w-100">
+            <mat-radio-button value="REDUCTION">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to request a
                 fine reduction and/or more time to pay for this count.
               </span>
+              <span
+                matTooltip="Information about radio button 3."
+                #tooltip3="matTooltip"
+              >
+                <mat-icon>info</mat-icon>
+              </span>
             </mat-radio-button>
-            <mat-radio-button
-              value="DISPUTE"
-              class="w-100"
-              [disabled]="!within30days.value"
-            >
+            <mat-radio-button value="DISPUTE" [disabled]="!within30days.value">
               <span class="wrap-mat-radio-label">
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
+              </span>
+              <span
+                matTooltip="Information about radio button 4."
+                #tooltip4="matTooltip"
+              >
+                <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
             <mat-error

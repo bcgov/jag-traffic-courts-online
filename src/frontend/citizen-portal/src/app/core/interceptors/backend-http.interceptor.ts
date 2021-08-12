@@ -44,6 +44,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       if (
         !currentRoutePath.includes('ticket') &&
         !currentRoutePath.includes('dispute') &&
+        !currentRoutePath.includes('pay') &&
         currentRoutePath !== 'lookup'
       ) {
         throw new HttpErrorResponse({
@@ -55,6 +56,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       // Handle 'ticket' requests
       if (currentRoutePath.includes('ticket')) {
         return this.handleTicketsRequests(request.method);
+      } else if (currentRoutePath.includes('pay')) {
+        return this.handlePayRequests(request.method);
 
         // Handle 'dispute' requests
       } else if (currentRoutePath.includes('dispute')) {
@@ -78,6 +81,28 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       case 'PUT':
       case 'POST':
         return of(new HttpResponse({ status: 200, body: { result: ticket } }));
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handlePayRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    switch (requestMethod) {
+      case 'GET':
+      case 'PUT':
+      case 'POST':
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: { result: 'Payment complete' },
+          })
+        );
         break;
       default:
         throw new HttpErrorResponse({
