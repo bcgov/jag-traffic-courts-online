@@ -86,7 +86,13 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                     dispute.OffenceDisputeDetails?.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
                 if (detail != null)
                 {
-                    offence.OffenceDisputeDetail = _mapper.Map<Models.OffenceDisputeDetail>(detail);
+                    offence.OffenceAgreementStatus=detail.OffenceAgreementStatus;
+                    offence.RequestReduction = detail.RequestReduction;
+                    offence.RequestMoreTime = detail.RequestMoreTime;
+                    offence.ReductionAppearInCourt = detail.ReductionAppearInCourt;
+                    offence.ReductionReason = detail.ReductionReason;
+                    offence.MoreTimeReason = detail.MoreTimeReason;
+                    offence.Status = detail.Status;
                 }
             }
             return ticketDispute;

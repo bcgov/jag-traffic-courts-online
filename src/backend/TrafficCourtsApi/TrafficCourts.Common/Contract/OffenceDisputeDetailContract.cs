@@ -2,7 +2,7 @@
 {
     public class OffenceDisputeDetailContract
     {
-        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public string OffenceAgreementStatus { get; set; }
         public bool RequestReduction { get; set; }
         public bool RequestMoreTime { get; set; }
         public string ReductionReason { get; set; }

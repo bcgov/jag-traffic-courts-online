@@ -150,14 +150,14 @@ namespace Gov.CitizenApi
                 config.PostProcess = document =>
                 {
                     document.Info.Version = "V0.1";
-                    document.Info.Description = "Dispute API";
-                    document.Info.Title = "Dispute API";
+                    document.Info.Description = "Citizen API, for Citizen Portal frontend";
+                    document.Info.Title = "Citizen API";
                     document.Tags = new List<OpenApiTag>
                     {
                         new OpenApiTag
                         {
-                            Name = "Dispute API",
-                            Description = "Dispute API"
+                            Name = "Citizen API",
+                            Description = "Citizen API"
                         }
                     };
                 };
