@@ -8,11 +8,11 @@ import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-ticket-payment-success',
-  templateUrl: './ticket-payment-success.component.html',
-  styleUrls: ['./ticket-payment-success.component.scss'],
+  selector: 'app-ticket-payment-complete',
+  templateUrl: './ticket-payment-complete.component.html',
+  styleUrls: ['./ticket-payment-complete.component.scss'],
 })
-export class TicketPaymentSuccessComponent implements OnInit, AfterViewInit {
+export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
   public busy: Subscription;
   public ticket: TicketDispute;
 

@@ -21,24 +21,13 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="mt-0 w-100">What action would you like to take?</label>
-          <!--
-          <app-chips-multi-select
-            [options]="offenceAgreementStatusOptions"
-            [formControl]="offenceAgreementStatus"
-          ></app-chips-multi-select>
-          <mat-error
-            *ngIf="
-              (offenceAgreementStatus.dirty ||
-                offenceAgreementStatus.touched) &&
-              offenceAgreementStatus.invalid &&
-              offenceAgreementStatus.errors.required
-            "
-          >
-            {{ "error.required" | translate }}
-          </mat-error>
+          <label class="mt-0 w-100"
+            >What action would you like to take?
 
-          -->
+            <span (click)="onActionHelp()">
+              <mat-icon>info</mat-icon>
+            </span>
+          </label>
           <mat-radio-group
             formControlName="offenceAgreementStatus"
             class="w-100"
@@ -53,66 +42,22 @@
                 I agree I committed this offence and I would like to pay for
                 this count.
               </span>
-              <!--
-              <span
-                matTooltip="Information about radio button 1."
-                (mouseenter)="$event.stopImmediatePropagation()"
-                (mouseleave)="$event.stopImmediatePropagation()"
-                #tooltip1="matTooltip"
-                (click)="
-                  $event.preventDefault();
-                  tooltip2.hide();
-                  tooltip3.hide();
-                  tooltip1.toggle()
-                "
-              >
-                <mat-icon>info</mat-icon>
-              </span>
-              -->
             </mat-radio-button>
             <mat-radio-button value="REDUCTION" class="w-100">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to request a
                 fine reduction and/or more time to pay for this count.
               </span>
-              <!--
-              <span
-                matTooltip="Information about radio button 2."
-                (mouseenter)="$event.stopImmediatePropagation()"
-                (mouseleave)="$event.stopImmediatePropagation()"
-                #tooltip2="matTooltip"
-                (click)="
-                  $event.preventDefault();
-                  tooltip1.hide();
-                  tooltip3.hide();
-                  tooltip2.toggle()
-                "
-              >
-                <mat-icon>info</mat-icon>
-              </span>
-              -->
             </mat-radio-button>
-            <mat-radio-button value="DISPUTE" class="w-100">
+            <mat-radio-button
+              value="DISPUTE"
+              class="w-100"
+              [disabled]="!within30days.value"
+            >
               <span class="wrap-mat-radio-label">
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
               </span>
-              <!--
-              <span
-                matTooltip="Information about radio button 3."
-                (mouseenter)="$event.stopImmediatePropagation()"
-                (mouseleave)="$event.stopImmediatePropagation()"
-                #tooltip3="matTooltip"
-                (click)="
-                  $event.preventDefault();
-                  tooltip1.hide();
-                  tooltip2.hide();
-                  tooltip3.toggle()
-                "
-              >
-                <mat-icon>info</mat-icon>
-              </span>
-              -->
             </mat-radio-button>
             <mat-error
               *ngIf="

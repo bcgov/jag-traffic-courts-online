@@ -46,7 +46,7 @@ import { TicketImageComponent } from './components/ticket-image/ticket-image.com
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
-import { TicketPaymentSuccessComponent } from './components/ticket-payment-success/ticket-payment-success.component';
+import { TicketPaymentCompleteComponent } from './components/ticket-payment-complete/ticket-payment-complete.component';
 import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 
@@ -82,7 +82,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketImageComponent,
     TicketPaymentComponent,
     CountSummaryComponent,
-    TicketPaymentSuccessComponent,
+    TicketPaymentCompleteComponent,
     CountItemSummaryComponent,
     CountItemDisputeSummaryComponent,
   ],

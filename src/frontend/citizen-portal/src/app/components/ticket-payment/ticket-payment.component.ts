@@ -70,22 +70,22 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const data: DialogOptions = {
-      titleKey: 'Ticket payment',
-      messageKey: 'Enter your credit card information...',
-      actionTextKey: 'Proceed with payment',
-      cancelTextKey: 'Cancel',
-    };
+    // const data: DialogOptions = {
+    //   titleKey: 'Ticket payment',
+    //   messageKey: 'Enter your credit card information...',
+    //   actionTextKey: 'Proceed with payment',
+    //   cancelTextKey: 'Cancel',
+    // };
 
     this.dialog
-      .open(ConfirmDialogComponent, { data })
+      .open(TicketPaymentDialogComponent)
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
           this.toastService.openSuccessToast('Ticket payment is successful');
 
           this.router.navigate([
-            AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS),
+            AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
           ]);
         }
       });

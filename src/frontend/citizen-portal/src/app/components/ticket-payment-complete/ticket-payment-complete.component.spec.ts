@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { TicketPaymentSuccessComponent } from './ticket-payment-success.component';
+import { TicketPaymentCompleteComponent } from './ticket-payment-complete.component';
 
-describe('TicketPaymentSuccessComponent', () => {
-  let component: TicketPaymentSuccessComponent;
-  let fixture: ComponentFixture<TicketPaymentSuccessComponent>;
+describe('TicketPaymentCompleteComponent', () => {
+  let component: TicketPaymentCompleteComponent;
+  let fixture: ComponentFixture<TicketPaymentCompleteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,12 +16,12 @@ describe('TicketPaymentSuccessComponent', () => {
         RouterModule.forRoot([]),
         RouterTestingModule,
       ],
-      declarations: [TicketPaymentSuccessComponent],
+      declarations: [TicketPaymentCompleteComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TicketPaymentSuccessComponent);
+    fixture = TestBed.createComponent(TicketPaymentCompleteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
