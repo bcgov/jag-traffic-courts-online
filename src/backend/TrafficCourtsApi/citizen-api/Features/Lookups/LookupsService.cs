@@ -13,6 +13,7 @@ namespace Gov.CitizenApi.Features.Lookups
     {
         IEnumerable<Statute> GetStatutes();
         Statute GetCountStatute(string code);
+        Lookups GetAllLookUps();
     }
 
     public class LookupsService : ILookupsService
@@ -47,6 +48,11 @@ namespace Gov.CitizenApi.Features.Lookups
         {
             if (_lookups == null) return null;
             return _lookups.statutes.FirstOrDefault(m=>m.code==Int32.Parse(countCode));
+        }
+
+        public Lookups GetAllLookUps()
+        {
+            return _lookups;
         }
     }
 }

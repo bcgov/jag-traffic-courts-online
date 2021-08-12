@@ -10,14 +10,14 @@ using System.Text.Json;
 
 namespace Gov.CitizenApi.Features.Lookups
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     [OpenApiTag("Lookup API")]
     public class LookupController : Controller
     {
         private ILogger<LookupController> _logger;
-        private LookupsService _lookupsService;
-        public LookupController(ILogger<LookupController> logger, LookupsService lookupsService)
+        private ILookupsService _lookupsService;
+        public LookupController(ILogger<LookupController> logger, ILookupsService lookupsService)
         {
             _logger = logger;
             _lookupsService = lookupsService;
@@ -26,12 +26,12 @@ namespace Gov.CitizenApi.Features.Lookups
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<IEnumerable<Status>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResultResponse<Lookups>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public IActionResult CountCodes()
+        public IActionResult Get()
         {
-            _logger.LogDebug("Get count codes info now.");
-            return Ok(_lookupsService.GetStatutes());
+            _logger.LogDebug("Get all Look Up Tables now.");
+            return Ok(_lookupsService.GetAllLookUps());
         }
     }
 }
