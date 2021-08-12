@@ -24,3 +24,9 @@ h3 {
   color: $h3-colour;
   font-weight: $h3-font-weight;
 }
+
+@media (max-width: 575px) {
+  .d-xs-none {
+    display: none !important;
+  }
+}

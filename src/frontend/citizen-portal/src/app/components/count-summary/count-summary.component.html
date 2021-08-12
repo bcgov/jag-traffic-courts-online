@@ -26,15 +26,17 @@
     </app-alert>
   </div>
 
-  <div *ngIf="payView">
-    <mat-checkbox
-      (change)="onSelectAllChange($event)"
-      class="me-4 mb-2"
-      color="primary"
-    >
-      I agree I committed this offence and I would like to pay all counts for
-      this ticket.
-    </mat-checkbox>
+  <div class="row mt-4" *ngIf="selectView">
+    <div class="col-md-8">
+      <mat-checkbox
+        (change)="onSelectAllChange($event)"
+        class="me-4 mb-2"
+        color="primary"
+      >
+        I agree I committed this offence and I would like to pay all counts for
+        this ticket.
+      </mat-checkbox>
+    </div>
   </div>
 
   <div class="mb-2">
@@ -42,54 +44,11 @@
       class="px-4 py-2 mb-3 card-section"
       *ngFor="let row of ticket.offences; let i = index"
     >
-      <div class="row mt-2">
-        <div class="col-lg-2 pe-0">
-          <div style="display: flex">
-            <mat-checkbox
-              *ngIf="payView && row?._amountDue > 0"
-              color="primary"
-              class="me-4 mb-2"
-            ></mat-checkbox>
-            <mat-chip-list>
-              <mat-chip selected class="p-3"
-                >Count {{ row.offenceNumber }}</mat-chip
-              >
-            </mat-chip-list>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <small class="d-block"> Description of offence </small>
-          <strong>{{ row.offenceDescription | titlecase }}</strong>
-        </div>
-        <div class="col-lg-2">
-          <small class="d-block">Amount due</small>
-          <strong>{{
-            row?._amountDue
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}</strong>
-        </div>
-      </div>
-      <hr />
-
-      <div class="row">
-        <div class="offset-lg-2 col-lg-8">
-          <small class="d-block">Status</small>
-          {{ row?._offenceStatusDesc }}
-        </div>
-        <!--
-        <div class="col-lg-4">
-          <small class="d-block">Offence date</small>
-          {{ row?.violationDateTime | formatDate }}
-        </div>
-        -->
-        <div class="col-lg-2">
-          <small class="d-block">Offence amount</small>
-          {{
-            row?.ticketedAmount
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}
-        </div>
-      </div>
+      <app-count-item-summary
+        #countitem
+        [count]="row"
+        [selectView]="selectView"
+      ></app-count-item-summary>
     </section>
 
     <section class="px-4 py-2 mb-3 card-section">

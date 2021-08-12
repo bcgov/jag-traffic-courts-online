@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { CountSummaryComponent } from '@components/count-summary/count-summary.component';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -17,6 +18,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./ticket-payment.component.scss'],
 })
 export class TicketPaymentComponent implements OnInit, AfterViewInit {
+  @ViewChild(CountSummaryComponent, { static: false }) countSummary;
   public busy: Subscription;
   public ticket: TicketDispute;
 
@@ -30,13 +32,6 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   ) {}
 
   public ngOnInit(): void {
-    // const ticket = this.disputeService.ticket;
-    // if (ticket) {
-    //   this.ticket = ticket;
-    // } else {
-    //   this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-    // }
-
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -54,6 +49,11 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   public onPayTicket(): void {
     this.logger.info('onPayTicket', this.ticket);
 
+    this.countSummary.countComponents.forEach((child) => {
+      console.log('isSelected', child.isSelected);
+    });
+
+    /*
     const data: DialogOptions = {
       titleKey: 'submit_confirmation.heading',
       messageKey: 'submit_confirmation.message',
@@ -73,5 +73,6 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
           ]);
         }
       });
+      */
   }
 }

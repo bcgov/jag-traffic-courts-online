@@ -8,7 +8,10 @@
   </app-tco-page-header>
 
   <div *ngIf="ticket">
-    <app-count-summary [ticket]="ticket" [payView]="true"></app-count-summary>
+    <app-count-summary
+      [ticket]="ticket"
+      [selectView]="true"
+    ></app-count-summary>
   </div>
 
   <div class="row mt-4">

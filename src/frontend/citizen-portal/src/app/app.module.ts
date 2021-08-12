@@ -47,6 +47,8 @@ import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-ste
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
 import { TicketPaymentSuccessComponent } from './components/ticket-payment-success/ticket-payment-success.component';
+import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
+import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -81,6 +83,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPaymentComponent,
     CountSummaryComponent,
     TicketPaymentSuccessComponent,
+    CountItemSummaryComponent,
+    CountItemDisputeSummaryComponent,
   ],
   imports: [
     CommonModule,
