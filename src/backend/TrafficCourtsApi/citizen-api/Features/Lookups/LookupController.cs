@@ -31,7 +31,7 @@ namespace Gov.CitizenApi.Features.Lookups
         public IActionResult Get()
         {
             _logger.LogDebug("Get all Look Up Tables now.");
-            return Ok(_lookupsService.GetAllLookUps());
+            return Ok(new { result = _lookupsService.GetAllLookUps() }); ;
         }
     }
 }
