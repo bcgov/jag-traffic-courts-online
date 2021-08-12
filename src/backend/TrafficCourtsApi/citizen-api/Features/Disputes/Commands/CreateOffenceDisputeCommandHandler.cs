@@ -54,7 +54,7 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
             {
                 details.OffenceNumber = createOffenceDispute.OffenceNumber;
                 details.MoreTimeReason = createOffenceDispute.OffenceDisputeDetail?.MoreTimeReason;
-                details.OffenceAgreementStatus = createOffenceDispute.OffenceDisputeDetail?.OffenceAgreementStatus??OffenceAgreementStatus.NOTHING;
+                details.OffenceAgreementStatus = createOffenceDispute.OffenceDisputeDetail?.OffenceAgreementStatus;
                 details.ReductionReason = createOffenceDispute.OffenceDisputeDetail?.ReductionReason;
                 details.RequestMoreTime = createOffenceDispute.OffenceDisputeDetail?.RequestMoreTime ?? false;
                 details.RequestReduction = createOffenceDispute.OffenceDisputeDetail?.RequestReduction ?? false;

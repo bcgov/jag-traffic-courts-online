@@ -34,11 +34,4 @@ namespace TrafficCourts.Common.Contract
         Rejected,
     }
 
-    public enum OffenceAgreementStatus
-    {
-        NOTHING,
-        PAY,
-        REDUCTION,
-        DISPUTE
-    }
 }

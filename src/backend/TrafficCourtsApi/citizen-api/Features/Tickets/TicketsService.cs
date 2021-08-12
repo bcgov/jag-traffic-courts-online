@@ -36,14 +36,6 @@ namespace Gov.CitizenApi.Features.Tickets
 
         public async Task<Ticket> CreateTicketAsync(Ticket ticket)
         {
-            //add offence descritpion 
-            if(ticket?.Offences!=null)
-            {
-                foreach(DBModel.Offence offence in ticket.Offences)
-                {
-                    offence.OffenceDescription = _lookupsService.GetCountStatute(offence.OffenceCode)?.name;
-                }
-            }
             var existedTicket = await FindTicketAsync(ticket.ViolationTicketNumber);
             if (existedTicket == null)
             {

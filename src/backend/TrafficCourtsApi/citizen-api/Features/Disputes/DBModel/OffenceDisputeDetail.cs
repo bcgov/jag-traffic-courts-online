@@ -15,7 +15,7 @@ namespace Gov.CitizenApi.Features.Disputes.DBModel
         public string ReductionReason { get; set; }
         public string MoreTimeReason { get; set; }
         public DisputeStatus Status { get; set; }
-        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public string OffenceAgreementStatus { get; set; }
 
         [ForeignKey("Dispute")]
         public int DisputeId { get; set; }

@@ -38,7 +38,7 @@ namespace Gov.CitizenApi.Features.Disputes
                 ModelState.AddModelError("TicketNumber", "the dispute already exists for this ticket.");
                 return BadRequest(ApiResponse.BadRequest(ModelState));
             }
-            return Ok();
+            return RedirectToAction("Ticket","Tickets", new { ticketNumber = createDisputeCommand.ViolationTicketNumber, time = createDisputeCommand.ViolationTime });
         }
 
         [HttpPost]

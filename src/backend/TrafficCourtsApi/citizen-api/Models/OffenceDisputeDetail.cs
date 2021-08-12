@@ -7,7 +7,7 @@ namespace Gov.CitizenApi.Models
     [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class OffenceDisputeDetail
     {
-        public OffenceAgreementStatus OffenceAgreementStatus { get; set; }
+        public string OffenceAgreementStatus { get; set; }
         public bool RequestReduction { get; set; }
         public bool RequestMoreTime { get; set; }
         public bool? ReductionAppearInCourt { get; set; }

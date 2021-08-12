@@ -1,13 +1,19 @@
 ﻿using AutoMapper;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
-using TrafficCourts.Common;
 using Gov.CitizenApi.Features.Tickets.Mapping;
 using AutoFixture;
 using Gov.TicketSearch;
 using Gov.CitizenApi.Models;
 using DisputeOffence = Gov.CitizenApi.Models.Offence;
 using TicketSearchOffence = Gov.TicketSearch.Offence;
+using Gov.CitizenApi.Features.Tickets.Commands;
+using Gov.CitizenApi.Features.Tickets.DBModel;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Gov.CitizenApi.Features.Lookups;
+using Moq;
+using System;
 
 namespace Gov.CitizenApi.Test.Features.Tickets.Mapping
 {
@@ -44,6 +50,29 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Mapping
             Assert.Equal(searchOffence.OffenceNumber, disputeOffence.OffenceNumber);
             Assert.Equal(searchOffence.OffenceDescription, disputeOffence.OffenceDescription);
             Assert.Equal(searchOffence.VehicleDescription, disputeOffence.VehicleDescription);
+        }
+
+        [Fact]
+        public void CreateShellTicketCommand_should_map_to_Ticket_correctly()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            Mock<ILookupsService> lookupsMock = new Mock<ILookupsService>();
+            lookupsMock.Setup(m => m.GetCountStatute(It.IsAny<string>())).Returns(new Statute { code=111, name="codeDesc"});
+            serviceCollection.AddTransient<ILookupsService>(m => lookupsMock.Object);
+            serviceCollection.AddAutoMapper(typeof(MappingProfile));
+
+            IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+            IMapper mapperStub = serviceProvider.GetService<IMapper>();
+            CreateShellTicketCommand command = _fixture.Create<CreateShellTicketCommand>();
+            command.Count1Charge = "11817";
+            command.Count2Charge = "11817";
+            command.Count3Charge = "11817";
+            Ticket ticket = mapperStub.Map<Ticket>(command);
+            Assert.Equal(ticket.DriverLicenseNumber, command.DriverLicenseNumber);
+            Assert.Equal(ticket.ViolationTicketNumber, command.ViolationTicketNumber);
+            Assert.Equal(command.Count1FineAmount, ticket.Offences.First().AmountDue);
+            Assert.Equal(command.Count1Charge, ticket.Offences.First().OffenceCode);
+            Assert.Equal("codeDesc", ticket.Offences.First().OffenceDescription);
         }
     }
 }

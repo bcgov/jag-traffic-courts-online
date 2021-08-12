@@ -13,6 +13,8 @@ namespace Gov.CitizenApi.Models
         public Disputant Disputant { get; set; }
         public Additional Additional { get; set; }
         public List<Offence> Offences { get; set; }
+        public string DiscountDueDate { get; set; }//null or has valid or invalid value
+        public decimal DiscountAmount { get; set; }//25 always
     }
 
     [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]

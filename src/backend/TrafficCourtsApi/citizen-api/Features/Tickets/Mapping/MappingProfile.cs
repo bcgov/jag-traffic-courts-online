@@ -12,9 +12,15 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<TicketSearchResponse, TicketDispute>();
+            CreateMap<TicketSearchResponse, TicketDispute>()
+                //.ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom<TicketDisputeDiscountAmountResolver>())
+                .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => Keys.TicketDiscountValue))
+                .ForMember(dest => dest.DiscountDueDate, opt => opt.MapFrom<TicketDisputeDiscountDueDateResolver>())
+                ;
 
-            CreateMap<TicketSearchOffence, DisputeOffence>();
+            CreateMap<TicketSearchOffence, DisputeOffence>()
+                .ForMember(dest => dest.DiscountAmount, opt => opt.MapFrom(src => Keys.TicketDiscountValue))
+                ;
 
             CreateMap<CreateShellTicketCommand, Ticket>()
                 .ForMember(dest => dest.Offences, opt => opt.MapFrom<TicketOffencesResolver>())
