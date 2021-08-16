@@ -1,13 +1,14 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { CountSummaryComponent } from '@components/count-summary/count-summary.component';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
 
@@ -17,26 +18,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./ticket-payment.component.scss'],
 })
 export class TicketPaymentComponent implements OnInit, AfterViewInit {
+  @ViewChild(CountSummaryComponent, { static: false }) countSummary;
   public busy: Subscription;
   public ticket: TicketDispute;
 
   constructor(
+    private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private router: Router,
-    private toastService: ToastService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
-    // const ticket = this.disputeService.ticket;
-    // if (ticket) {
-    //   this.ticket = ticket;
-    // } else {
-    //   this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-    // }
-
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -51,26 +46,46 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
     this.utilsService.scrollTop();
   }
 
-  public onPayTicket(): void {
-    this.logger.info('onPayTicket', this.ticket);
+  public onMakePayment(): void {
+    let countsToPay = '';
+    let numberSelected = 0;
+    this.countSummary.countComponents.forEach((child) => {
+      if (child.isSelected.selected) {
+        if (numberSelected > 0) {
+          countsToPay += ',';
+        }
+        countsToPay += child.isSelected.offenceNumber;
+        numberSelected++;
+      }
+    });
 
-    const data: DialogOptions = {
-      titleKey: 'submit_confirmation.heading',
-      messageKey: 'submit_confirmation.message',
-      actionTextKey: 'submit_confirmation.confirm',
-      cancelTextKey: 'submit_confirmation.cancel',
+    if (numberSelected === 0) {
+      const data: DialogOptions = {
+        titleKey: 'Make payment',
+        actionType: 'warn',
+        messageKey: 'You must select at least one Count to pay',
+        actionTextKey: 'Ok',
+        cancelHide: true,
+      };
+
+      this.dialog.open(ConfirmDialogComponent, { data });
+      return;
+    }
+
+    const formParams = {
+      ticketNumber: this.ticket.violationTicketNumber,
+      time: this.ticket.violationTime,
+      counts: countsToPay,
     };
 
-    this.dialog
-      .open(TicketPaymentDialogComponent, { data })
-      .afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          this.toastService.openSuccessToast('Ticket payment is successful');
+    this.logger.info('onMakePayment', formParams);
 
-          this.router.navigate([
-            AppRoutes.disputePath(AppRoutes.PAYMENT_SUCCESS),
-          ]);
+    this.busy = this.disputeResource
+      .initiateTicketPayment(formParams)
+      .subscribe((response) => {
+        // todo: update later
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
         }
       });
   }

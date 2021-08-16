@@ -5,7 +5,6 @@ import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Offence } from '@shared/models/offence.model';
 import { ShellTicket } from '@shared/models/shellTicket.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { Observable } from 'rxjs';
@@ -57,6 +56,80 @@ export class DisputeResourceService {
           throw error;
         })
       );
+  }
+
+  /**
+   * Initiate  a ticket payment.
+   *
+   * @param params containing the ticketNumber, time and counts
+   */
+  public initiateTicketPayment(params: {
+    ticketNumber: string;
+    time: string;
+    counts: string;
+  }): Observable<any> {
+    const httpParams = new HttpParams({ fromObject: params });
+
+    return this.apiResource.get<any>('tickets/pay', httpParams).pipe(
+      map((response: ApiHttpResponse<any>) =>
+        response ? response.result : null
+      ),
+      tap((result: any) =>
+        this.logger.info(
+          'DisputeResourceService::initiateTicketPayment',
+          result
+        )
+      ),
+      map((result) => {
+        return result;
+      }),
+      catchError((error: any) => {
+        this.toastService.openErrorToast('Payment could not be made');
+        this.logger.error(
+          'DisputeResourceService::initiateTicketPayment error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * After a return from the initiating of a payment, notify the backend of the results
+   *
+   * @param params containing the id, amount, status, confNo, and transId
+   */
+  public makeTicketPayment(params: {
+    id: string;
+    amount?: string;
+    status: string;
+    confNo?: string;
+    transId?: string;
+  }): Observable<TicketDispute> {
+    const httpParams = new HttpParams({ fromObject: params });
+
+    return this.apiResource.put<any>('tickets/pay', httpParams).pipe(
+      map((response: ApiHttpResponse<any>) =>
+        response ? response.result : null
+      ),
+      tap((result: TicketDispute) => {
+        if (status === 'paid') {
+          this.toastService.openSuccessToast('Payment was successful');
+        }
+        this.logger.info('DisputeResourceService::makeTicketPayment', result);
+      }),
+      map((result) => {
+        return result;
+      }),
+      catchError((error: any) => {
+        this.toastService.openErrorToast('Payment could not be made');
+        this.logger.error(
+          'DisputeResourceService::makeTicketPayment error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
   }
 
   /**

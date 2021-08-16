@@ -15,7 +15,6 @@ import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -229,11 +228,13 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     }
 
     const data: DialogOptions = {
-      titleKey: 'shell_ticket_confirmation.heading',
-      messageKey: 'shell_ticket_confirmation.message',
-      actionTextKey: 'shell_ticket_confirmation.confirm',
-      cancelTextKey: 'shell_ticket_confirmation.cancel',
+      titleKey: 'Create your traffic ticket',
+      messageKey:
+        'Are you sure the information is correct and you want to create this ticket?',
+      actionTextKey: 'Yes, create ticket',
+      cancelTextKey: 'No, do not create ticket',
     };
+
     this.dialog
       .open(ConfirmDialogComponent, { data })
       .afterClosed()
@@ -283,7 +284,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
-    console.log('onStatuteSelected', event$.option.value);
+    this.logger.log('onStatuteSelected', event$.option.value);
   }
 
   public get violationTicketNumber(): FormControl {

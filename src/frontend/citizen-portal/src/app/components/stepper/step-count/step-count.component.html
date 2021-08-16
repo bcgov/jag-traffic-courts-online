@@ -21,98 +21,54 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="mt-0 w-100">What action would you like to take?</label>
-          <!--
-          <app-chips-multi-select
-            [options]="offenceAgreementStatusOptions"
-            [formControl]="offenceAgreementStatus"
-          ></app-chips-multi-select>
-          <mat-error
-            *ngIf="
-              (offenceAgreementStatus.dirty ||
-                offenceAgreementStatus.touched) &&
-              offenceAgreementStatus.invalid &&
-              offenceAgreementStatus.errors.required
-            "
-          >
-            {{ "error.required" | translate }}
-          </mat-error>
-
-          -->
-          <mat-radio-group
-            formControlName="offenceAgreementStatus"
-            class="w-100"
-          >
-            <mat-radio-button value="NOTHING" class="w-100">
+          <label class="mt-0 w-100">What action would you like to take? </label>
+          <mat-radio-group formControlName="offenceAgreementStatus">
+            <mat-radio-button value="NOTHING">
               <span class="wrap-mat-radio-label">
                 I do not wish to take any action on this count at this time.
               </span>
+              <span
+                matTooltip="Information about radio button 1."
+                #tooltip1="matTooltip"
+              >
+                <mat-icon>info</mat-icon>
+              </span>
             </mat-radio-button>
-            <mat-radio-button value="PAY" class="w-100">
+            <mat-radio-button value="PAY">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to pay for
                 this count.
               </span>
-              <!--
               <span
-                matTooltip="Information about radio button 1."
-                (mouseenter)="$event.stopImmediatePropagation()"
-                (mouseleave)="$event.stopImmediatePropagation()"
-                #tooltip1="matTooltip"
-                (click)="
-                  $event.preventDefault();
-                  tooltip2.hide();
-                  tooltip3.hide();
-                  tooltip1.toggle()
-                "
+                matTooltip="Information about radio button 2."
+                #tooltip2="matTooltip"
               >
                 <mat-icon>info</mat-icon>
               </span>
-              -->
             </mat-radio-button>
-            <mat-radio-button value="REDUCTION" class="w-100">
+            <mat-radio-button value="REDUCTION">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to request a
                 fine reduction and/or more time to pay for this count.
               </span>
-              <!--
               <span
-                matTooltip="Information about radio button 2."
-                (mouseenter)="$event.stopImmediatePropagation()"
-                (mouseleave)="$event.stopImmediatePropagation()"
-                #tooltip2="matTooltip"
-                (click)="
-                  $event.preventDefault();
-                  tooltip1.hide();
-                  tooltip3.hide();
-                  tooltip2.toggle()
-                "
+                matTooltip="Information about radio button 3."
+                #tooltip3="matTooltip"
               >
                 <mat-icon>info</mat-icon>
               </span>
-              -->
             </mat-radio-button>
-            <mat-radio-button value="DISPUTE" class="w-100">
+            <mat-radio-button value="DISPUTE" [disabled]="!within30days.value">
               <span class="wrap-mat-radio-label">
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
               </span>
-              <!--
               <span
-                matTooltip="Information about radio button 3."
-                (mouseenter)="$event.stopImmediatePropagation()"
-                (mouseleave)="$event.stopImmediatePropagation()"
-                #tooltip3="matTooltip"
-                (click)="
-                  $event.preventDefault();
-                  tooltip1.hide();
-                  tooltip2.hide();
-                  tooltip3.toggle()
-                "
+                matTooltip="Information about radio button 4."
+                #tooltip4="matTooltip"
               >
                 <mat-icon>info</mat-icon>
               </span>
-              -->
             </mat-radio-button>
             <mat-error
               *ngIf="

@@ -1,0 +1,54 @@
+<app-page [busy]="busy">
+  <app-page-header>
+    <ng-container header>Payment confirmation</ng-container>
+  </app-page-header>
+
+  <section class="mb-2 mt-4" *ngIf="isPaymentSuccess; else paymentCancelled">
+    <div class="row">
+      <div class="col-lg-12">
+        <app-alert type="success" icon="check">
+          <ng-container #alertContent class="alert-content">
+            <strong>Ticket payment successful</strong><br />
+            Payment confirmation #: <strong>{{ paymentConfNo }}</strong>
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+
+    <div>
+      A confirmation email of the request information has been sent to: <br />
+      <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+    </div>
+  </section>
+
+  <ng-template #paymentCancelled>
+    <section class="mb-2 mt-4">
+      <div class="row">
+        <div class="col-lg-12">
+          <app-alert type="danger" icon="error">
+            <ng-container #alertContent class="alert-content">
+              <div *ngIf="isPaymentCancelled; else paymentFailed">
+                <strong>Ticket payment cancelled</strong><br />
+                The ticket payment was cancelled. No payment has been made.
+              </div>
+
+              <ng-template #paymentFailed>
+                <strong>Ticket payment did not complete successfully</strong
+                ><br />
+                Please call the Violation Ticket Centre toll free number.
+              </ng-template>
+            </ng-container>
+          </app-alert>
+        </div>
+      </div>
+    </section>
+  </ng-template>
+
+  <hr />
+
+  <div *ngIf="ticket">
+    <app-count-summary [ticket]="ticket"></app-count-summary>
+  </div>
+
+  <app-dispute-footer></app-dispute-footer>
+</app-page>

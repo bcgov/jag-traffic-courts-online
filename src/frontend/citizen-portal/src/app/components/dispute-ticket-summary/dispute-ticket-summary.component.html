@@ -19,83 +19,9 @@
       class="px-4 py-2 mb-3 card-section"
       *ngFor="let row of ticket.offences; let i = index"
     >
-      <div class="row mt-2">
-        <div class="col-lg-2">
-          <div style="display: flex">
-            <mat-chip-list>
-              <mat-chip selected class="p-3"
-                >Count {{ row.offenceNumber }}</mat-chip
-              >
-            </mat-chip-list>
-          </div>
-        </div>
-
-        <div class="col-lg-7">
-          <small class="d-block">For this count I would like to</small>
-          <strong>
-            <div *ngIf="row.offenceAgreementStatus === 'NOTHING'">
-              No action at this time
-            </div>
-            <div *ngIf="row.offenceAgreementStatus === 'PAY'">
-              Pay for this count
-            </div>
-            <div *ngIf="row.offenceAgreementStatus === 'REDUCTION'">
-              <div *ngIf="row.requestReduction && row.requestMoreTime">
-                Request a fine reduction and more time to pay
-              </div>
-              <div *ngIf="row.requestReduction && !row.requestMoreTime">
-                Request a fine reduction
-              </div>
-              <div *ngIf="!row.requestReduction && row.requestMoreTime">
-                Request more time to pay
-              </div>
-            </div>
-            <div *ngIf="row.offenceAgreementStatus === 'DISPUTE'">
-              Dispute the charge
-            </div>
-          </strong>
-        </div>
-        <div
-          class="col-lg-3"
-          *ngIf="row.offenceAgreementStatus === 'REDUCTION'"
-        >
-          <small class="d-block">I will appear in court</small>
-          <strong>
-            {{ row.reductionAppearInCourt | yesNo }}
-          </strong>
-        </div>
-      </div>
-
-      <div class="row" *ngIf="row.reductionReason">
-        <div class="offset-lg-2 col-lg-7">
-          <small class="d-block">Request reduction reasons</small>
-          <strong>{{ row.reductionReason }}</strong>
-        </div>
-        <div class="col-lg-3"></div>
-      </div>
-
-      <div class="row" *ngIf="row.moreTimeReason">
-        <div class="offset-lg-2 col-lg-7">
-          <small class="d-block">Request more time reasons</small>
-          <strong>{{ row.moreTimeReason }}</strong>
-        </div>
-        <div class="col-lg-3"></div>
-      </div>
-      <hr />
-
-      <div class="row">
-        <div class="offset-lg-2 col-lg-7">
-          <small class="d-block">Description of offence</small>
-          {{ row.offenceDescription | titlecase }}
-        </div>
-        <div class="col-lg-3">
-          <small class="d-block">Amount due</small>
-          {{
-            row._amountDue
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}
-        </div>
-      </div>
+      <app-count-item-dispute-summary
+        [count]="row"
+      ></app-count-item-dispute-summary>
     </section>
 
     <section class="px-4 py-2 mb-4 card-section" *ngIf="ticket.additional">

@@ -154,10 +154,11 @@ export class DisputeStepperComponent
    */
   private submitDispute(): void {
     const data: DialogOptions = {
-      titleKey: 'submit_confirmation.heading',
-      messageKey: 'submit_confirmation.message',
-      actionTextKey: 'submit_confirmation.confirm',
-      cancelTextKey: 'submit_confirmation.cancel',
+      titleKey: 'Submit request',
+      messageKey:
+        'When your request is submitted for adjudication, it can no longer be updated. Are you ready to submit your request?',
+      actionTextKey: 'Submit request',
+      cancelTextKey: 'Cancel',
     };
 
     this.dialog
