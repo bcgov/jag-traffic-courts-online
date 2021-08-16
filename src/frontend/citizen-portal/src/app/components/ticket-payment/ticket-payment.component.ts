@@ -3,11 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CountSummaryComponent } from '@components/count-summary/count-summary.component';
 import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { TicketPaymentDialogComponent } from '@shared/dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -29,7 +27,6 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private router: Router,
-    private toastService: ToastService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {}
@@ -84,35 +81,12 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
     this.logger.info('onMakePayment', formParams);
 
     this.busy = this.disputeResource
-      .makeTicketPayment(formParams)
+      .initiateTicketPayment(formParams)
       .subscribe((response) => {
-        this.logger.info(
-          'DisputeSubmitSuccessComponent::makeTicketPayment response',
-          response
-        );
-        this.router.navigate([
-          AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
-        ]);
+        // todo: update later
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       });
-
-    // const data: DialogOptions = {
-    //   titleKey: 'Ticket payment',
-    //   messageKey: 'Enter your credit card information...',
-    //   actionTextKey: 'Proceed with payment',
-    //   cancelTextKey: 'Cancel',
-    // };
-
-    // this.dialog
-    //   .open(TicketPaymentDialogComponent)
-    //   .afterClosed()
-    //   .subscribe((response: boolean) => {
-    //     if (response) {
-    //       this.toastService.openSuccessToast('Ticket payment is successful');
-
-    //       this.router.navigate([
-    //         AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE),
-    //       ]);
-    //     }
-    //   });
   }
 }

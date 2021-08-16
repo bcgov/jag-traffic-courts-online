@@ -100,7 +100,16 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return of(
           new HttpResponse({
             status: 200,
-            body: { result: 'Payment complete' },
+            body: {
+              result: {
+                violationTicketNumber: 'EZ02000460',
+                violationTime: '09:54',
+                counts: '1,2,3',
+                callbackUrl:
+                  'http://localhost:5000/id=7af161b6-bd97-4ee9-b271-3d14b9d198bf',
+                redirectUrl: null,
+              },
+            },
           })
         );
         break;
