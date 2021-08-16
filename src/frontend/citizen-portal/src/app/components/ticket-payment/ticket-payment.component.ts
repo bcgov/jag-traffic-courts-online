@@ -48,6 +48,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
 
   public onMakePayment(): void {
     let countsToPay = '';
+    let countsToPayAmount = 0;
     let numberSelected = 0;
     this.countSummary.countComponents.forEach((child) => {
       if (child.isSelected.selected) {
@@ -55,6 +56,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
           countsToPay += ',';
         }
         countsToPay += child.isSelected.offenceNumber;
+        countsToPayAmount += child.isSelected.amount;
         numberSelected++;
       }
     });
@@ -76,6 +78,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
       ticketNumber: this.ticket.violationTicketNumber,
       time: this.ticket.violationTime,
       counts: countsToPay,
+      amount: countsToPayAmount,
     };
 
     this.logger.info('onMakePayment', formParams);
