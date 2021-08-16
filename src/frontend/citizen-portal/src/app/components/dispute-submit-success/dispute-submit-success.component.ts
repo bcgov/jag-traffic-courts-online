@@ -95,7 +95,7 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   }
 
   public get countsToPay(): string {
-    let countsToPay = this.getListOfCountsToPay();
+    const countsToPay = this.getListOfCountsToPay();
 
     if (countsToPay) {
       if (countsToPay.indexOf(',') > -1) {

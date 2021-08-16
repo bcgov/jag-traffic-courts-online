@@ -29,12 +29,20 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      const id = params['id'];
-      const amount = params['amount'];
-      const transactionId = params['transactionId'];
+      const idParam = 'id';
+      const id = params[idParam];
 
-      this.paymentStatus = params['status'];
-      this.paymentConfNo = params['confirmationNumber'];
+      const amountParam = 'amount';
+      const amount = params[amountParam];
+
+      const transIdParam = 'transactionId';
+      const transactionId = params[transIdParam];
+
+      const statusParam = 'status';
+      this.paymentStatus = params[statusParam];
+
+      const confNoParam = 'confirmationNumber';
+      this.paymentConfNo = params[confNoParam];
 
       this.logger.info(
         'TicketPaymentCompleteComponent',
@@ -65,7 +73,7 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
         },
         (err) => {
           this.paymentStatus = 'error';
-          console.log('xxxxxxxxxxxxxxHTTP Error', err);
+          console.log('HTTP Error', err);
         }
       );
 

@@ -33,7 +33,7 @@ export class CountItemSummaryComponent implements OnInit {
 
     return {
       offenceNumber: this.count.offenceNumber,
-      selected: selected,
+      selected,
     };
   }
 
