@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
-import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
@@ -35,35 +34,37 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
       const amountParam = 'amount';
       const amount = params[amountParam];
 
-      const transIdParam = 'transactionId';
-      const transactionId = params[transIdParam];
+      const transIdParam = 'transId';
+      const transId = params[transIdParam];
 
       const statusParam = 'status';
-      this.paymentStatus = params[statusParam];
+      const status = params[statusParam];
+      this.paymentStatus = status;
 
-      const confNoParam = 'confirmationNumber';
-      this.paymentConfNo = params[confNoParam];
+      const confNoParam = 'confNo';
+      const confNo = params[confNoParam];
+      this.paymentConfNo = confNo;
 
       this.logger.info(
         'TicketPaymentCompleteComponent',
-        'id',
+        idParam,
         id,
-        'status',
-        this.paymentStatus,
-        'amount',
+        statusParam,
+        status,
+        amountParam,
         amount,
-        'confirmationNumber',
-        this.paymentConfNo,
-        'transactionId',
-        transactionId
+        confNoParam,
+        confNo,
+        transIdParam,
+        transId
       );
 
       const paramsApi = {
         id,
-        status: this.paymentStatus,
+        status,
         amount,
-        confNo: this.paymentConfNo,
-        transId: transactionId,
+        confNo,
+        transId,
       };
 
       this.busy = this.disputeResource.makeTicketPayment(paramsApi).subscribe(
