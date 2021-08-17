@@ -8,7 +8,27 @@
   font-size: 1rem;
 }
 
-.examples {
+.find-xlarge {
+  width: 100%;
+  margin-bottom: 1em !important;
+
+  height: 62px;
+  font-size: 1rem;
+}
+
+.icon-large {
+  font-size: 40px !important;
+  height: 40px !important;
+  width: 40px !important;
+}
+
+.icon-xlarge {
+  font-size: 50px !important;
+  height: 50px !important;
+  width: 50px !important;
+}
+
+.find-link {
   display: inline-flex;
   height: 46px;
 }

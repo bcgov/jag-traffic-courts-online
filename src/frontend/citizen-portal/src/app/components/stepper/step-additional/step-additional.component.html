@@ -77,18 +77,35 @@
           </mat-form-field>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col">
-          <app-alert type="warning" icon="warning">
-            <ng-container #alertContent class="alert-content">
-              {{ "stepper.additional.note" | translate }}
-            </ng-container>
-          </app-alert>
-        </div>
-      </div>
     </section>
   </form>
+
+  <div class="col">
+    <app-alert type="warning" icon="warning">
+      <ng-container #alertContent class="alert-content">
+        <strong
+          >If you are calling a witness please keep the following information in
+          mind:</strong
+        ><br />
+        If the disputant or the disputant’s agent does not attend the court
+        hearing, the court will treat the violation ticket as not disputed, the
+        conviction(s) to the allegation(s) will be recorded against the record
+        of the disputant.
+      </ng-container>
+    </app-alert>
+  </div>
+
+  <div class="col mt-4">
+    <app-alert type="warning" icon="warning">
+      <ng-container #alertContent class="alert-content">
+        If the disputant or the disputant’s agent does not attend the court
+        hearing, the court will treat the violation ticket as not disputed, the
+        conviction(s) to the allegation(s) will be recorded against the record
+        of the disputant, and the prescribed ticketed amount(s) will become
+        immediately due and payable.
+      </ng-container>
+    </app-alert>
+  </div>
 
   <app-page-footer
     (save)="onSubmit()"
