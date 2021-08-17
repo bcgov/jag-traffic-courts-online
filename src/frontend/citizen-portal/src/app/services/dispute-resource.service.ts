@@ -108,7 +108,7 @@ export class DisputeResourceService {
   }): Observable<TicketDispute> {
     const httpParams = new HttpParams({ fromObject: params });
 
-    return this.apiResource.put<any>('tickets/pay', {}, httpParams).pipe(
+    return this.apiResource.post<any>('tickets/pay', {}, httpParams).pipe(
       map((response: ApiHttpResponse<any>) =>
         response ? response.result : null
       ),
