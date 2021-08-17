@@ -1,7 +1,6 @@
 import { formatCurrency } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import {
   AzureKeyCredential,
@@ -11,7 +10,7 @@ import {
 import { ShellTicket } from '@shared/models/shellTicket.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeService } from 'app/services/dispute.service';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-image',
@@ -217,6 +216,7 @@ export class TicketImageComponent implements OnInit {
           );
         }
 
+        console.log('111');
         this.formInfo = [
           {
             label: 'Ticket Number',
@@ -240,7 +240,9 @@ export class TicketImageComponent implements OnInit {
           },
           {
             label: 'Count 1 Section',
-            data: count1SectionField.valueData?.text?.replace(/\s/g, ''),
+            data: count1SectionField.valueData?.text
+              ? count1SectionField.valueData?.text?.replace(/\s/g, '')
+              : '',
             confidence: count1SectionField.confidence,
           },
           {
@@ -261,7 +263,9 @@ export class TicketImageComponent implements OnInit {
           },
           {
             label: 'Count 2 Section',
-            data: count2SectionField.valueData?.text?.replace(/\s/g, ''),
+            data: count2SectionField.valueData?.text
+              ? count2SectionField.valueData?.text?.replace(/\s/g, '')
+              : '',
             confidence: count2SectionField.confidence,
           },
           {
@@ -282,7 +286,9 @@ export class TicketImageComponent implements OnInit {
           },
           {
             label: 'Count 3 Section',
-            data: count3SectionField.valueData?.text?.replace(/\s/g, ''),
+            data: count3SectionField.valueData?.text
+              ? count3SectionField.valueData?.text?.replace(/\s/g, '')
+              : '',
             confidence: count3SectionField.confidence,
           },
           {
@@ -297,17 +303,40 @@ export class TicketImageComponent implements OnInit {
             confidence: count3TicketAmountField.confidence,
           },
         ];
+        console.log('222');
 
         let chargeCount = 0;
-        if (count1DescField.valueData?.text || count1TicketAmountField.value) {
+        if (
+          count1DescField.valueData?.text ||
+          count1SectionField.valueData?.text ||
+          count1TicketAmountField.value
+        ) {
+          console.log('aaa', count1DescField.valueData?.text);
+          console.log('aaa', count1SectionField.valueData?.text);
+          console.log('aaa', count1TicketAmountField.value);
           chargeCount++;
         }
-        if (count2DescField.valueData?.text || count2TicketAmountField.value) {
+        if (
+          count2DescField.valueData?.text ||
+          count2SectionField.valueData?.text ||
+          count2TicketAmountField.value
+        ) {
+          console.log('bbb', count2DescField.valueData?.text);
+          console.log('bbb', count2SectionField.valueData?.text);
+          console.log('bbb', count2TicketAmountField.value);
           chargeCount++;
         }
-        if (count3DescField.valueData?.text || count3TicketAmountField.value) {
+        if (
+          count3DescField.valueData?.text ||
+          count3SectionField.valueData?.text ||
+          count3TicketAmountField.value
+        ) {
+          console.log('ccc', count3DescField.valueData?.text);
+          console.log('ccc', count3SectionField.valueData?.text);
+          console.log('ccc', count3TicketAmountField.value);
           chargeCount++;
         }
+        console.log('333', 'chargeCount', chargeCount);
 
         const shellTicket: ShellTicket = {
           violationTicketNumber: String(invoiceIdField.value),
@@ -327,7 +356,9 @@ export class TicketImageComponent implements OnInit {
           detachmentLocation: '',
 
           count1Charge: null,
-          _count1ChargeDesc: count1DescField.valueData?.text,
+          _count1ChargeDesc: count1DescField.valueData?.text
+            ? count1DescField.valueData?.text
+            : '',
           _count1ChargeSection: count1SectionField.valueData?.text
             ? count1SectionField.valueData?.text.replace(/\s/g, '')
             : '',
@@ -335,15 +366,19 @@ export class TicketImageComponent implements OnInit {
             ? String(count1TicketAmountField.value)
             : '',
           count2Charge: null,
-          _count2ChargeDesc: count2DescField.valueData?.text,
+          _count2ChargeDesc: count2DescField.valueData?.text
+            ? count2DescField.valueData?.text
+            : '',
           _count2ChargeSection: count2SectionField.valueData?.text
-            ? count3SectionField.valueData?.text.replace(/\s/g, '')
+            ? count2SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count2FineAmount: count2TicketAmountField.value
             ? String(count2TicketAmountField.value)
             : '',
           count3Charge: null,
-          _count3ChargeDesc: count3DescField.valueData?.text,
+          _count3ChargeDesc: count3DescField.valueData?.text
+            ? count3DescField.valueData?.text
+            : '',
           _count3ChargeSection: count3SectionField.valueData?.text
             ? count3SectionField.valueData?.text.replace(/\s/g, '')
             : '',
@@ -354,8 +389,9 @@ export class TicketImageComponent implements OnInit {
           chargeCount: chargeCount,
           amountOwing: 0,
         };
+        console.log('444');
 
-        console.log('before', shellTicket);
+        console.log('before', { ...shellTicket });
         this.disputeService.shellTicket$.next(shellTicket);
       });
     };

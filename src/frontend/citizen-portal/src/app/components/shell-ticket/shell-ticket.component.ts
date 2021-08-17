@@ -139,11 +139,65 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     //   _count2Charge: 'Refusing to produce licence',
     //   _count3Charge: 'Not carrying a licence',
     // };
+
+    // const tmp: ShellTicket = {
+    //   amountOwing: 0,
+    //   birthdate: '',
+    //   chargeCount: 3,
+    //   count1Charge: null,
+    //   count1FineAmount: '250',
+    //   count2Charge: null,
+    //   count2FineAmount: '8750',
+    //   count3Charge: null,
+    //   count3FineAmount: '',
+    //   courtHearingLocation: '',
+    //   detachmentLocation: '',
+    //   driverLicenseNumber: '',
+    //   gender: '',
+    //   givenNames: 'Harsh',
+    //   lastName: 'Jain',
+    //   violationDate: '',
+    //   violationTicketNumber: 'AJ20103222',
+    //   violationTime: '',
+    //   _count1ChargeDesc: 'UnSafe Overtake',
+    //   _count1ChargeSection: '175(a)',
+    //   _count2ChargeDesc: 'Driving Under Influence',
+    //   _count2ChargeSection: '192(b)',
+    //   _count3ChargeDesc: 'Crashing on Divider',
+    //   _count3ChargeSection: '',
+    // };
+
+    // const tmp: ShellTicket = {
+    //   amountOwing: 0,
+    //   birthdate: '',
+    //   chargeCount: 2,
+    //   count1Charge: null,
+    //   count1FineAmount: '812900',
+    //   count2Charge: null,
+    //   count2FineAmount: '',
+    //   count3Charge: null,
+    //   count3FineAmount: '',
+    //   courtHearingLocation: '',
+    //   detachmentLocation: '',
+    //   driverLicenseNumber: '',
+    //   gender: '',
+    //   givenNames: 'JIMINEX',
+    //   lastName: 'CRICKET',
+    //   violationDate: '',
+    //   violationTicketNumber: 'AJ20103222',
+    //   violationTime: '',
+    //   _count1ChargeDesc: 'use device while diving',
+    //   _count1ChargeSection: '145(1)',
+    //   _count2ChargeDesc: 'fol to sigp for pote',
+    //   _count2ChargeSection: '73(1)|815000',
+    //   _count3ChargeDesc: '',
+    //   _count3ChargeSection: '',
+    // };
     // this.disputeService.shellTicket$.next(tmp);
 
     const azureShellTicket = this.disputeService.shellTicket;
     if (azureShellTicket) {
-      console.log('azureShellTicket', azureShellTicket);
+      console.log('azureShellTicket', { ...azureShellTicket });
 
       azureShellTicket.count1Charge = this.findMatchingCharge(
         azureShellTicket._count1ChargeDesc,
@@ -158,7 +212,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
         azureShellTicket._count3ChargeSection
       );
 
-      console.log('after', azureShellTicket);
+      console.log('after', { ...azureShellTicket });
 
       delete azureShellTicket._count1ChargeDesc;
       delete azureShellTicket._count2ChargeDesc;
@@ -199,7 +253,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
           .toUpperCase()
           .includes(chargeDesc.trim().toUpperCase())
       )?.code;
-      console.log('chargeId', chargeId);
 
       if (!chargeId) {
         chargeId = this.statutes.find((statute) =>
@@ -208,11 +261,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
             .toUpperCase()
             .includes(chargeStatute.trim().toUpperCase())
         )?.code;
-        console.log('chargeId', chargeId);
       }
     }
 
-    return chargeId;
+    return chargeId ? chargeId : null;
   }
 
   public ngOnInit(): void {
@@ -282,10 +334,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
   private onCalculateAmountOwing(): void {
     let total = 0;
-    console.log('count1FineAmount', this.count1FineAmount.value);
-    console.log('count2FineAmount', this.count2FineAmount.value);
-    console.log('count3FineAmount', this.count3FineAmount.value);
-    console.log('total', this.currencyPipe.transform(total));
+    // console.log('count1FineAmount', this.count1FineAmount.value);
+    // console.log('count2FineAmount', this.count2FineAmount.value);
+    // console.log('count3FineAmount', this.count3FineAmount.value);
+    // console.log('total', this.currencyPipe.transform(total));
 
     total += Number(this.count1FineAmount.value);
     total += Number(this.count2FineAmount.value);

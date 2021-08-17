@@ -52,13 +52,12 @@
       <h2>Ticket information</h2>
       <ng-container *ngFor="let info of formInfo; let i = index">
         <div class="row mt-4">
-          <div class="col-md-4">{{ info.label }}:</div>
-          <div class="col-md-5">
+          <div class="col-md-6">{{ info.label }}:</div>
+          <div class="col-md-6">
             <strong>{{ info.data }}</strong>
           </div>
+          <!--
           <div class="col-md-3">
-            <strong>{{ info.confidence | percent }}</strong>
-            <!--
             <button mat-icon-button class="mat-icon-form-data">
               <mat-icon inline="true"> check_circle</mat-icon>
             </button>
@@ -66,9 +65,8 @@
             <button mat-icon-button class="ml-3 mat-icon-form-data">
               <mat-icon inline="true"> edit</mat-icon>
             </button>
-            -->
           </div>
-        </div>
+        --></div>
       </ng-container>
     </div>
   </div>
