@@ -116,7 +116,59 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       amountOwing: [null],
     });
 
-    if (this.appConfigService.useMockServices) {
+    // const tmp: ShellTicket = {
+    //   amountOwing: 0,
+    //   birthdate: '',
+    //   chargeCount: 3,
+    //   count1Charge: null,
+    //   count1FineAmount: '196',
+    //   count2Charge: null,
+    //   count2FineAmount: '368',
+    //   count3Charge: null,
+    //   count3FineAmount: '2300',
+    //   courtHearingLocation: '',
+    //   detachmentLocation: '',
+    //   driverLicenseNumber: '',
+    //   gender: '',
+    //   givenNames: 'Julius Montgomery',
+    //   lastName: 'MacGibbens',
+    //   violationDate: '',
+    //   violationTicketNumber: 'AJ20109254',
+    //   violationTime: '',
+    //   _count1Charge: 'Speed against highway sign',
+    //   _count2Charge: 'Refusing to produce licence',
+    //   _count3Charge: 'Not carrying a licence',
+    // };
+    // this.disputeService.shellTicket$.next(tmp);
+
+    const azureShellTicket = this.disputeService.shellTicket;
+    if (azureShellTicket) {
+      console.log('azureShellTicket', azureShellTicket);
+
+      azureShellTicket.count1Charge = this.findMatchingCharge(
+        azureShellTicket._count1ChargeDesc,
+        azureShellTicket._count1ChargeSection
+      );
+      azureShellTicket.count2Charge = this.findMatchingCharge(
+        azureShellTicket._count2ChargeDesc,
+        azureShellTicket._count2ChargeSection
+      );
+      azureShellTicket.count3Charge = this.findMatchingCharge(
+        azureShellTicket._count3ChargeDesc,
+        azureShellTicket._count3ChargeSection
+      );
+
+      console.log('after', azureShellTicket);
+
+      delete azureShellTicket._count1ChargeDesc;
+      delete azureShellTicket._count2ChargeDesc;
+      delete azureShellTicket._count3ChargeDesc;
+      delete azureShellTicket._count1ChargeSection;
+      delete azureShellTicket._count2ChargeSection;
+      delete azureShellTicket._count3ChargeSection;
+
+      this.form.setValue(azureShellTicket);
+    } else if (this.appConfigService.useMockServices) {
       // Default values during testing
       this.form.get('violationTicketNumber').setValue('EZ02000455');
       this.form.get('violationDate').setValue('2008-07-03T07:00:00.000Z');
@@ -132,6 +184,35 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       this.form.get('driverLicenseNumber').setValue(2342343);
       this.form.get('chargeCount').setValue(1);
     }
+  }
+
+  private findMatchingCharge(
+    chargeDesc: string,
+    chargeStatute: string
+  ): number {
+    let chargeId = null;
+
+    if (chargeDesc) {
+      chargeId = this.statutes.find((statute) =>
+        statute.name
+          .trim()
+          .toUpperCase()
+          .includes(chargeDesc.trim().toUpperCase())
+      )?.code;
+      console.log('chargeId', chargeId);
+
+      if (!chargeId) {
+        chargeId = this.statutes.find((statute) =>
+          statute.name
+            .trim()
+            .toUpperCase()
+            .includes(chargeStatute.trim().toUpperCase())
+        )?.code;
+        console.log('chargeId', chargeId);
+      }
+    }
+
+    return chargeId;
   }
 
   public ngOnInit(): void {
@@ -201,9 +282,14 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
   private onCalculateAmountOwing(): void {
     let total = 0;
-    total += this.count1FineAmount.value;
-    total += this.count2FineAmount.value;
-    total += this.count3FineAmount.value;
+    console.log('count1FineAmount', this.count1FineAmount.value);
+    console.log('count2FineAmount', this.count2FineAmount.value);
+    console.log('count3FineAmount', this.count3FineAmount.value);
+    console.log('total', this.currencyPipe.transform(total));
+
+    total += Number(this.count1FineAmount.value);
+    total += Number(this.count2FineAmount.value);
+    total += Number(this.count3FineAmount.value);
     this.amountOwing.setValue(this.currencyPipe.transform(total));
   }
 

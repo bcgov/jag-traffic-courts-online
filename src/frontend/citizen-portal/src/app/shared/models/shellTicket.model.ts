@@ -11,12 +11,21 @@ export interface ShellTicket {
   courtHearingLocation: string;
   detachmentLocation: string;
 
-  count1Charge: string;
+  chargeCount: number;
+  amountOwing: number;
+  count1Charge: number;
   count1FineAmount: string;
-  count2Charge: string;
+  count2Charge: number;
   count2FineAmount: string;
-  count3Charge: string;
+  count3Charge: number;
   count3FineAmount: string;
 
-  photo: string;
+  photo?: string;
+
+  _count1ChargeDesc: string;
+  _count2ChargeDesc: string;
+  _count3ChargeDesc: string;
+  _count1ChargeSection: string;
+  _count2ChargeSection: string;
+  _count3ChargeSection: string;
 }

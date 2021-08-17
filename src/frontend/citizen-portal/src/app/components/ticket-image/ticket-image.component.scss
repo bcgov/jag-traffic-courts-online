@@ -8,3 +8,16 @@
     font-size: 1rem;
   }
 }
+
+@media screen and (max-width: 960px) {
+  img {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+.mat-icon-form-data {
+  font-size: 30px;
+  height: 30px;
+  width: 30px;
+}
