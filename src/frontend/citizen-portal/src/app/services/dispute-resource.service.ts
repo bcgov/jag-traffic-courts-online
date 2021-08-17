@@ -113,6 +113,8 @@ export class DisputeResourceService {
         response ? response.result : null
       ),
       tap((result: TicketDispute) => {
+        this.setOffenceInfo(result);
+
         if (status === 'paid') {
           this.toastService.openSuccessToast('Payment was successful');
         }
