@@ -59,10 +59,12 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
   }
 
   public onMakePayment(): void {
+    const { countsToPay, countsToPayAmount } = this.getListOfCountsToPay();
     const formParams = {
       ticketNumber: this.ticket.violationTicketNumber,
       time: this.ticket.violationTime,
-      counts: this.getListOfCountsToPay(),
+      counts: countsToPay,
+      amount: countsToPayAmount,
     };
 
     this.logger.info('onMakePayment', formParams);
@@ -70,15 +72,18 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
     this.busy = this.disputeResource
       .initiateTicketPayment(formParams)
       .subscribe((response) => {
-        // todo: update later
         if (response.redirectUrl) {
           window.location.href = response.redirectUrl;
         }
       });
   }
 
-  private getListOfCountsToPay(): string {
+  private getListOfCountsToPay(): {
+    countsToPay: string;
+    countsToPayAmount: number;
+  } {
     let countsToPay = '';
+    let countsToPayAmount = 0;
     let count = 0;
 
     this.ticket?.offences
@@ -88,14 +93,15 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
           countsToPay += ',';
         }
         countsToPay += offence.offenceNumber;
+        countsToPayAmount += offence._amountDue;
         count++;
       });
 
-    return countsToPay;
+    return { countsToPay, countsToPayAmount };
   }
 
   public get countsToPay(): string {
-    const countsToPay = this.getListOfCountsToPay();
+    const { countsToPay, countsToPayAmount } = this.getListOfCountsToPay();
 
     if (countsToPay) {
       if (countsToPay.indexOf(',') > -1) {
