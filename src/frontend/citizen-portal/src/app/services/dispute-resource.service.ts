@@ -106,6 +106,14 @@ export class DisputeResourceService {
     confNo?: string;
     transId?: string;
   }): Observable<TicketDispute> {
+    const isPaid = status === 'paid';
+
+    if (!isPaid) {
+      params.amount = '0';
+      delete params.confNo;
+      delete params.transId;
+    }
+
     const httpParams = new HttpParams({ fromObject: params });
 
     return this.apiResource.post<any>('tickets/pay', {}, httpParams).pipe(
@@ -115,7 +123,7 @@ export class DisputeResourceService {
       tap((result: TicketDispute) => {
         this.setOffenceInfo(result);
 
-        if (status === 'paid') {
+        if (isPaid) {
           this.toastService.openSuccessToast('Payment was successful');
         }
         this.logger.info('DisputeResourceService::makeTicketPayment', result);
