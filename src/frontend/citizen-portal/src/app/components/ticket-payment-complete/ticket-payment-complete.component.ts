@@ -39,11 +39,9 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
 
       const statusParam = 'status';
       const status = params[statusParam];
-      this.paymentStatus = status;
 
       const confNoParam = 'confNo';
       const confNo = params[confNoParam];
-      this.paymentConfNo = confNo;
 
       this.logger.info(
         'TicketPaymentCompleteComponent',
@@ -69,6 +67,9 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
 
       this.busy = this.disputeResource.makeTicketPayment(paramsApi).subscribe(
         (res) => {
+          this.paymentStatus = status;
+          this.paymentConfNo = confNo;
+
           this.disputeService.ticket$.next(res);
           this.ticket = res;
         },
