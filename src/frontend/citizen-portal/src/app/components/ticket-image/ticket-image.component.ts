@@ -121,7 +121,8 @@ export class TicketImageComponent implements OnInit {
         this.logger.info('First invoice:', invoice);
         // this.formInfo = invoice;
 
-        const invoiceIdField = invoice.fields['violation ticket number'];
+        const invoiceIdFieldIndex = 'violation ticket number';
+        const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
         if (invoiceIdField.valueType === 'string') {
           this.logger.info(
             `  violation ticket number: '${
@@ -129,7 +130,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${invoiceIdField.confidence}`
           );
         }
-        const surnameField = invoice.fields['surname'];
+        const surnameFieldIndex = 'surname';
+        const surnameField = invoice.fields[surnameFieldIndex];
         if (surnameField.valueType === 'string') {
           this.logger.info(
             `  surname: '${
@@ -137,7 +139,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${surnameField.confidence}`
           );
         }
-        const givenNameField = invoice.fields['given name'];
+        const givenNameFieldIndex = 'given name';
+        const givenNameField = invoice.fields[givenNameFieldIndex];
         if (givenNameField.valueType === 'string') {
           this.logger.info(
             `  given name: '${
@@ -145,7 +148,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${givenNameField.confidence}`
           );
         }
-        const count1DescField = invoice.fields['count 1 description'];
+        const count1DescFieldIndex = 'count 1 description';
+        const count1DescField = invoice.fields[count1DescFieldIndex];
         if (count1DescField.valueType === 'string') {
           this.logger.info(
             `  count 1 description: '${
@@ -153,7 +157,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count1DescField.confidence}`
           );
         }
-        const count1SectionField = invoice.fields['count 1 section'];
+        const count1SectionFieldIndex = 'count 1 section';
+        const count1SectionField = invoice.fields[count1SectionFieldIndex];
         if (count1SectionField.valueType === 'string') {
           this.logger.info(
             `  count 1 section: '${
@@ -161,7 +166,9 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count1SectionField.confidence}`
           );
         }
-        const count1TicketAmountField = invoice.fields['count 1 ticket amount'];
+        const count1TicketAmountFieldIndex = 'count 1 ticket amount';
+        const count1TicketAmountField =
+          invoice.fields[count1TicketAmountFieldIndex];
         if (count1TicketAmountField.valueType === 'number') {
           this.logger.info(
             `  count 1 ticket amount: '${
@@ -169,7 +176,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count1TicketAmountField.confidence}`
           );
         }
-        const count2DescField = invoice.fields['count 2 description'];
+        const count2DescFieldIndex = 'count 2 description';
+        const count2DescField = invoice.fields[count2DescFieldIndex];
         if (count2DescField.valueType === 'string') {
           this.logger.info(
             `  count 2 description: '${
@@ -177,7 +185,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count2DescField.confidence}`
           );
         }
-        const count2SectionField = invoice.fields['count 2 section'];
+        const count2SectionFieldIndex = 'count 2 section';
+        const count2SectionField = invoice.fields[count2SectionFieldIndex];
         if (count2SectionField.valueType === 'string') {
           this.logger.info(
             `  count 2 section: '${
@@ -185,7 +194,9 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count2SectionField.confidence}`
           );
         }
-        const count2TicketAmountField = invoice.fields['count 2 ticket amount'];
+        const count2TicketAmountFieldIndex = 'count 2 ticket amount';
+        const count2TicketAmountField =
+          invoice.fields[count2TicketAmountFieldIndex];
         if (count2TicketAmountField.valueType === 'number') {
           this.logger.info(
             `  count 2 ticket amount: '${
@@ -193,7 +204,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count2TicketAmountField.confidence}`
           );
         }
-        const count3DescField = invoice.fields['count 3 description'];
+        const count3DescFieldIndex = 'count 3 description';
+        const count3DescField = invoice.fields[count3DescFieldIndex];
         if (count3DescField.valueType === 'string') {
           this.logger.info(
             `  count 3 description: '${
@@ -201,7 +213,8 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count3DescField.confidence}`
           );
         }
-        const count3SectionField = invoice.fields['count 3 section'];
+        const count3SectionFieldIndex = 'count 3 section';
+        const count3SectionField = invoice.fields[count3SectionFieldIndex];
         if (count3SectionField.valueType === 'string') {
           this.logger.info(
             `  count 3 section: '${
@@ -209,7 +222,9 @@ export class TicketImageComponent implements OnInit {
             }', with confidence of ${count3SectionField.confidence}`
           );
         }
-        const count3TicketAmountField = invoice.fields['count 3 ticket amount'];
+        const count3TicketAmountFieldIndex = 'count 3 ticket amount';
+        const count3TicketAmountField =
+          invoice.fields[count3TicketAmountFieldIndex];
         if (count3TicketAmountField.valueType === 'number') {
           this.logger.info(
             `  count 3 ticket amount: '${
@@ -386,7 +401,7 @@ export class TicketImageComponent implements OnInit {
             ? String(count3TicketAmountField.value)
             : '',
 
-          chargeCount: chargeCount,
+          chargeCount,
           amountOwing: 0,
         };
 
