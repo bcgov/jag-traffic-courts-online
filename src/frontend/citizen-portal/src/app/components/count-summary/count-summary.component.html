@@ -63,7 +63,7 @@
       </div>
     </section>
 
-    <section class="px-4 py-2 mb-3 card-section">
+    <section class="px-4 py-2 mb-3 card-section" *ngIf="ticket._within30days">
       <div class="row mt-2">
         <div class="offset-lg-5 col-lg-5">
           Balance due if paid after {{ ticket.discountDueDate | formatDate }}
