@@ -225,7 +225,7 @@ export class DisputeResourceService {
   }
 
   private getOffenceStatusDesc(
-    status: number,
+    status: string,
     offenceAgreementStatus: string,
     amountDue: number
   ): string {
@@ -237,19 +237,19 @@ export class DisputeResourceService {
         offenceAgreementStatus === 'REDUCTION')
     ) {
       switch (status) {
-        case 0:
+        case 'New':
           desc = 'Dispute created';
           break;
-        case 1:
+        case 'Submitted':
           desc = 'Dispute submitted';
           break;
-        case 2:
+        case 'InProgress':
           desc = 'In progress';
           break;
-        case 3:
+        case 'Complete':
           desc = 'Resolved';
           break;
-        case 4:
+        case 'Rejected':
           desc = 'Rejected';
           break;
         default:

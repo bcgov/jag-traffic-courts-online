@@ -39,7 +39,37 @@
     <p class="mt-4" *ngIf="fileName">Filename: {{ fileName }}</p>
   </div>
 
-  <img [src]="imageSrc" *ngIf="imageSrc" style="max-width: 600px" />
+  <div class="row">
+    <div class="col-md-6">
+      <img
+        [src]="imageSrc"
+        *ngIf="imageSrc"
+        style="max-height: 900px; max-width: 700px"
+        class="mb-4"
+      />
+    </div>
+    <div class="col-md-6 p-0" *ngIf="formInfo">
+      <h2>Ticket information</h2>
+      <ng-container *ngFor="let info of formInfo; let i = index">
+        <div class="row mt-4">
+          <div class="col-md-6">{{ info.label }}:</div>
+          <div class="col-md-6">
+            <strong>{{ info.data }}</strong>
+          </div>
+          <!--
+          <div class="col-md-3">
+            <button mat-icon-button class="mat-icon-form-data">
+              <mat-icon inline="true"> check_circle</mat-icon>
+            </button>
+
+            <button mat-icon-button class="ml-3 mat-icon-form-data">
+              <mat-icon inline="true"> edit</mat-icon>
+            </button>
+          </div>
+        --></div>
+      </ng-container>
+    </div>
+  </div>
 
   <div class="row mt-4 mb-4">
     <div class="col-md-4">

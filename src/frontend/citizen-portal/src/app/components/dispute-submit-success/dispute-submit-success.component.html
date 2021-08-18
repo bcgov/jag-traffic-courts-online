@@ -16,9 +16,17 @@
     </div>
   </section>
 
-  <div>
-    A confirmation email of the request information has been sent to: <br />
-    <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+  <div class="row">
+    <div class="col-lg-8">
+      A confirmation email of the request information has been sent to: <br />
+      <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+    </div>
+    <div class="col-lg-4">
+      <a class="print-link">
+        <mat-icon class="icon-xlarge me-2">print</mat-icon>
+        Print confirmation page for your records
+      </a>
+    </div>
   </div>
 
   <div class="mt-4" *ngIf="countsToPay">
