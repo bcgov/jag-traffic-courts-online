@@ -98,6 +98,6 @@ export abstract class AbstractResource {
       );
     }
 
-    return throwError(new ApiHttpErrorResponse(status, error));
+    return throwError(() => new ApiHttpErrorResponse(status, error));
   }
 }

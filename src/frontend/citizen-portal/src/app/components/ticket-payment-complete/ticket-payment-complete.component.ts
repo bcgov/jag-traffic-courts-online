@@ -65,34 +65,19 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
         transId,
       };
 
-      this.busy = this.disputeResource.makeTicketPayment(paramsApi).subscribe(
-        (res) => {
+      this.busy = this.disputeResource.makeTicketPayment(paramsApi).subscribe({
+        next: (res) => {
           this.paymentStatus = status;
           this.paymentConfNo = confNo;
 
           this.disputeService.ticket$.next(res);
           this.ticket = res;
         },
-        (err) => {
+        error: (err) => {
           this.paymentStatus = 'error';
           console.log('HTTP Error', err);
-        }
-      );
-
-      // const paramsApi = {
-      //   ticketNumber: 'EZ02000460',
-      //   time: '09:54',
-      // };
-      // this.busy = this.disputeResource
-      //   .getTicket(paramsApi)
-      //   .subscribe((response) => {
-      //     this.logger.info(
-      //       'TicketPaymentCompleteComponent::makeTicketPayment response',
-      //       response
-      //     );
-      //     this.disputeService.ticket$.next(response);
-      //     this.ticket = response;
-      //   });
+        },
+      });
     });
   }
 

@@ -6,7 +6,9 @@ import { ErrorHandlerInterceptor } from './interceptors/error-handler.intercepto
 import { ErrorHandlerService } from './services/error-handler.service';
 
 export function initConfig(config: ConfigService) {
-  return async () => await config.load().toPromise();
+  return () => {
+    return config.load();
+  };
 }
 
 @NgModule({
