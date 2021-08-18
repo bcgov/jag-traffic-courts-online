@@ -13,16 +13,16 @@ namespace Gov.CitizenApi.Features.Lookups
     {
         IEnumerable<Statute> GetStatutes();
         Statute GetCountStatute(string code);
-        Lookups GetAllLookUps();
+        Task<LookupsAll> GetAllLookUps();
     }
 
     public class LookupsService : ILookupsService
     {
         private ILogger<LookupsService> _logger;
-        private static Lookups _lookups;
+        private static LookupsAll _lookups;
         public LookupsService(ILogger<LookupsService> logger)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             if (_lookups == null)
             {
                 var provider = new ManifestEmbeddedFileProvider(GetType().Assembly);
@@ -34,8 +34,13 @@ namespace Gov.CitizenApi.Features.Lookups
 
                 Stream fileStream = fileInfo.CreateReadStream();
                 using StreamReader reader = new StreamReader(fileStream);
-                _lookups = JsonSerializer.Deserialize<Lookups>(reader.ReadToEnd());
+                _lookups = JsonSerializer.Deserialize<LookupsAll>(reader.ReadToEnd());
             }
+        }
+
+        public LookupsService()
+        {
+            
         }
 
         public IEnumerable<Statute> GetStatutes()
@@ -50,9 +55,9 @@ namespace Gov.CitizenApi.Features.Lookups
             return _lookups.statutes.FirstOrDefault(m=>m.code==Int32.Parse(countCode));
         }
 
-        public Lookups GetAllLookUps()
+        public Task<LookupsAll>  GetAllLookUps()
         {
-            return _lookups;
+            return Task.FromResult<LookupsAll>(_lookups);
         }
     }
 }

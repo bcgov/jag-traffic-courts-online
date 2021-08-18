@@ -46,7 +46,7 @@ namespace Gov.CitizenApi.Features.Lookups
         public string name { get; set; }
     }
 
-    public class Lookups
+    public class LookupsAll
     {
         public List<CourtLocation> courtLocations { get; set; }
         public List<Language> languages { get; set; }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Gov.CitizenApi.Features.Lookups
 {
@@ -19,19 +20,19 @@ namespace Gov.CitizenApi.Features.Lookups
         private ILookupsService _lookupsService;
         public LookupController(ILogger<LookupController> logger, ILookupsService lookupsService)
         {
-            _logger = logger;
-            _lookupsService = lookupsService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _lookupsService = lookupsService ?? throw new ArgumentNullException(nameof(lookupsService));
         }
 
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<Lookups>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResultResponse<LookupsAll>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             _logger.LogDebug("Get all Look Up Tables now.");
-            return Ok(new { result = _lookupsService.GetAllLookUps() }); ;
+            return Ok(new { result = await _lookupsService.GetAllLookUps() }); ;
         }
     }
 }
