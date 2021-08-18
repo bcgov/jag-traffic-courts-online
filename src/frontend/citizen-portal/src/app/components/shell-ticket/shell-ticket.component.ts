@@ -197,7 +197,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
     const azureShellTicket = this.disputeService.shellTicket;
     if (azureShellTicket) {
-      console.log('azureShellTicket', { ...azureShellTicket });
+      this.logger.info('azureShellTicket', { ...azureShellTicket });
 
       azureShellTicket.count1Charge = this.findMatchingCharge(
         azureShellTicket._count1ChargeDesc,
@@ -334,11 +334,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
   private onCalculateAmountOwing(): void {
     let total = 0;
-    // console.log('count1FineAmount', this.count1FineAmount.value);
-    // console.log('count2FineAmount', this.count2FineAmount.value);
-    // console.log('count3FineAmount', this.count3FineAmount.value);
-    // console.log('total', this.currencyPipe.transform(total));
-
     total += Number(this.count1FineAmount.value);
     total += Number(this.count2FineAmount.value);
     total += Number(this.count3FineAmount.value);

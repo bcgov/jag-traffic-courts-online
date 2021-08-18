@@ -11,7 +11,7 @@ export interface Offence {
   discountDueDate?: string;
   discountAmount: number;
 
-  status: number;
+  status: string;
   offenceAgreementStatus?: string;
   reductionAppearInCourt: boolean;
   requestReduction: boolean;
@@ -21,11 +21,13 @@ export interface Offence {
 
   /*
   status (for disputes):
-    0 - New,
-    1 - Submitted,
-    2 - InProgress, // ticket already verified
-    3 - Complete,
-    4 - Rejected
+  {
+    New,
+    Submitted,
+    InProgress,//ticket already verified
+    Complete,
+    Rejected,
+  }
 
   offenceAgreementStatus:
     NOTHING

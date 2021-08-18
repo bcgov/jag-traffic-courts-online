@@ -7,6 +7,7 @@ import {
   FormPollerLike,
   FormRecognizerClient,
 } from '@azure/ai-form-recognizer';
+import { LoggerService } from '@core/services/logger.service';
 import { ShellTicket } from '@shared/models/shellTicket.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeService } from 'app/services/dispute.service';
@@ -38,30 +39,31 @@ export class TicketImageComponent implements OnInit {
 
   constructor(
     private disputeService: DisputeService,
-    protected router: Router
+    private router: Router,
+    private logger: LoggerService
   ) {}
 
   ngOnInit(): void {}
 
   public onFileChange(event: any) {
     if (!event.target.files[0] || event.target.files[0].length === 0) {
-      console.log('You must select an image');
+      this.logger.info('You must select an image');
       return;
     }
 
     const mimeType = event.target.files[0].type;
 
     if (mimeType.match(/image\/*/) == null) {
-      console.log('Only images are supported');
+      this.logger.info('Only images are supported');
       return;
     }
 
     const reader = new FileReader();
     const file: File = event.target.files[0];
-    console.log('file target', event.target.files[0]);
+    this.logger.info('file target', event.target.files[0]);
     this.fileName = file.name;
     reader.readAsDataURL(file);
-    console.log('file', file.name, file.lastModified);
+    this.logger.info('file', file.name, file.lastModified);
 
     reader.onload = () => {
       this.imageSrc = reader.result as string;
@@ -89,14 +91,14 @@ export class TicketImageComponent implements OnInit {
       imageSource,
       {
         onProgress: (state) => {
-          console.log(`analyzing status: ${state.status}`);
+          this.logger.info(`analyzing status: ${state.status}`);
         },
       }
     );
 
     // const poller = client.beginRecognizeInvoices(imageSource, {
     //   onProgress: (state) => {
-    //     console.log(`analyzing status: ${state.status}`);
+    //     this.logger.info(`analyzing status: ${state.status}`);
     //   },
     // });
 
@@ -108,7 +110,7 @@ export class TicketImageComponent implements OnInit {
   private onFulfilled(): (poller: FormPollerLike) => void {
     return (poller: FormPollerLike) => {
       this.busy = poller.pollUntilDone().then(() => {
-        // console.log('result', poller.getResult());
+        // this.logger.info('result', poller.getResult());
         const invoices = poller.getResult();
 
         if (!invoices || invoices.length <= 0) {
@@ -116,12 +118,12 @@ export class TicketImageComponent implements OnInit {
         }
 
         const invoice = invoices[0];
-        console.log('First invoice:', invoice);
+        this.logger.info('First invoice:', invoice);
         // this.formInfo = invoice;
 
         const invoiceIdField = invoice.fields['violation ticket number'];
         if (invoiceIdField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  violation ticket number: '${
               invoiceIdField.value || '<missing>'
             }', with confidence of ${invoiceIdField.confidence}`
@@ -129,7 +131,7 @@ export class TicketImageComponent implements OnInit {
         }
         const surnameField = invoice.fields['surname'];
         if (surnameField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  surname: '${
               surnameField.valueData?.text || '<missing>'
             }', with confidence of ${surnameField.confidence}`
@@ -137,7 +139,7 @@ export class TicketImageComponent implements OnInit {
         }
         const givenNameField = invoice.fields['given name'];
         if (givenNameField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  given name: '${
               givenNameField.valueData?.text || '<missing>'
             }', with confidence of ${givenNameField.confidence}`
@@ -145,7 +147,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count1DescField = invoice.fields['count 1 description'];
         if (count1DescField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  count 1 description: '${
               count1DescField.valueData?.text || '<missing>'
             }', with confidence of ${count1DescField.confidence}`
@@ -153,7 +155,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count1SectionField = invoice.fields['count 1 section'];
         if (count1SectionField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  count 1 section: '${
               count1SectionField.valueData?.text || '<missing>'
             }', with confidence of ${count1SectionField.confidence}`
@@ -161,7 +163,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count1TicketAmountField = invoice.fields['count 1 ticket amount'];
         if (count1TicketAmountField.valueType === 'number') {
-          console.log(
+          this.logger.info(
             `  count 1 ticket amount: '${
               count1TicketAmountField.value || '<missing>'
             }', with confidence of ${count1TicketAmountField.confidence}`
@@ -169,7 +171,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count2DescField = invoice.fields['count 2 description'];
         if (count2DescField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  count 2 description: '${
               count2DescField.valueData?.text || '<missing>'
             }', with confidence of ${count2DescField.confidence}`
@@ -177,7 +179,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count2SectionField = invoice.fields['count 2 section'];
         if (count2SectionField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  count 2 section: '${
               count2SectionField.valueData?.text || '<missing>'
             }', with confidence of ${count2SectionField.confidence}`
@@ -185,7 +187,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count2TicketAmountField = invoice.fields['count 2 ticket amount'];
         if (count2TicketAmountField.valueType === 'number') {
-          console.log(
+          this.logger.info(
             `  count 2 ticket amount: '${
               count2TicketAmountField.value || '<missing>'
             }', with confidence of ${count2TicketAmountField.confidence}`
@@ -193,7 +195,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count3DescField = invoice.fields['count 3 description'];
         if (count3DescField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  count 3 description: '${
               count3DescField.valueData?.text || '<missing>'
             }', with confidence of ${count3DescField.confidence}`
@@ -201,7 +203,7 @@ export class TicketImageComponent implements OnInit {
         }
         const count3SectionField = invoice.fields['count 3 section'];
         if (count3SectionField.valueType === 'string') {
-          console.log(
+          this.logger.info(
             `  count 3 section: '${
               count3SectionField.valueData?.text || '<missing>'
             }', with confidence of ${count3SectionField.confidence}`
@@ -209,14 +211,13 @@ export class TicketImageComponent implements OnInit {
         }
         const count3TicketAmountField = invoice.fields['count 3 ticket amount'];
         if (count3TicketAmountField.valueType === 'number') {
-          console.log(
+          this.logger.info(
             `  count 3 ticket amount: '${
               count3TicketAmountField.value || '<missing>'
             }', with confidence of ${count3TicketAmountField.confidence}`
           );
         }
 
-        console.log('111');
         this.formInfo = [
           {
             label: 'Ticket Number',
@@ -303,7 +304,6 @@ export class TicketImageComponent implements OnInit {
             confidence: count3TicketAmountField.confidence,
           },
         ];
-        console.log('222');
 
         let chargeCount = 0;
         if (
@@ -311,9 +311,9 @@ export class TicketImageComponent implements OnInit {
           count1SectionField.valueData?.text ||
           count1TicketAmountField.value
         ) {
-          console.log('aaa', count1DescField.valueData?.text);
-          console.log('aaa', count1SectionField.valueData?.text);
-          console.log('aaa', count1TicketAmountField.value);
+          // this.logger.info('1', count1DescField.valueData?.text);
+          // this.logger.info('1', count1SectionField.valueData?.text);
+          // this.logger.info('1', count1TicketAmountField.value);
           chargeCount++;
         }
         if (
@@ -321,9 +321,9 @@ export class TicketImageComponent implements OnInit {
           count2SectionField.valueData?.text ||
           count2TicketAmountField.value
         ) {
-          console.log('bbb', count2DescField.valueData?.text);
-          console.log('bbb', count2SectionField.valueData?.text);
-          console.log('bbb', count2TicketAmountField.value);
+          // this.logger.info('2', count2DescField.valueData?.text);
+          // this.logger.info('2', count2SectionField.valueData?.text);
+          // this.logger.info('2', count2TicketAmountField.value);
           chargeCount++;
         }
         if (
@@ -331,12 +331,12 @@ export class TicketImageComponent implements OnInit {
           count3SectionField.valueData?.text ||
           count3TicketAmountField.value
         ) {
-          console.log('ccc', count3DescField.valueData?.text);
-          console.log('ccc', count3SectionField.valueData?.text);
-          console.log('ccc', count3TicketAmountField.value);
+          // this.logger.info('3', count3DescField.valueData?.text);
+          // this.logger.info('3', count3SectionField.valueData?.text);
+          // this.logger.info('3', count3TicketAmountField.value);
           chargeCount++;
         }
-        console.log('333', 'chargeCount', chargeCount);
+        this.logger.info('chargeCount', chargeCount);
 
         const shellTicket: ShellTicket = {
           violationTicketNumber: String(invoiceIdField.value),
@@ -389,16 +389,15 @@ export class TicketImageComponent implements OnInit {
           chargeCount: chargeCount,
           amountOwing: 0,
         };
-        console.log('444');
 
-        console.log('before', { ...shellTicket });
+        this.logger.info('before', { ...shellTicket });
         this.disputeService.shellTicket$.next(shellTicket);
       });
     };
   }
 
   private onRejected(info) {
-    console.log('onRejected', info);
+    this.logger.info('onRejected', info);
   }
 
   public onCancel(): void {
