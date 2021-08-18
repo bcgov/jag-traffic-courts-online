@@ -56,7 +56,7 @@ export class ErrorHandlerInterceptor {
               break;
           }
 
-          return throwError(error);
+          return throwError(() => error);
         }
       })
     );

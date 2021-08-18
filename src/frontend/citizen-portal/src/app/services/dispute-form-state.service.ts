@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
+import { FormGroupValidators } from '@core/validators/form-group.validators';
 import { Additional } from '@shared/models/additional.model';
 import { Disputant } from '@shared/models/disputant.model';
 import { Offence } from '@shared/models/offence.model';
@@ -284,27 +285,60 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     });
   }
 
-  public buildStepOffenceForm(): FormGroup {
-    return this.formBuilder.group({
-      offenceNumber: [null],
-      offenceAgreementStatus: [null, [Validators.required]],
-      reductionAppearInCourt: [false],
-      requestReduction: [false],
-      requestMoreTime: [false],
-      reductionReason: [null],
-      moreTimeReason: [null],
+  // public requiredIfCheckedValidator(formGroup: FormGroup) {
+  //   console.log(
+  //     'formGroup.value.requestMoreTime',
+  //     formGroup.value.requestMoreTime
+  //   );
+  //   console.log(
+  //     'formGroup.get(moreTimeReason',
+  //     formGroup.get('moreTimeReason')
+  //   );
+  //   if (formGroup.value.requestMoreTime) {
+  //     return Validators.required(formGroup.get('moreTimeReason'))
+  //       ? {
+  //           requiredIfChecked: true,
+  //         }
+  //       : null;
+  //   }
+  //   return null;
+  // }
 
-      // Here for display purposes
-      offenceDescription: [null],
-      status: [null],
-      ticketedAmount: [null],
-      amountDue: [null],
-      discountDueDate: [null],
-      discountAmount: [null],
-      _offenceStatusDesc: [null],
-      _within30days: [null],
-      _amountDue: [null],
-    });
+  public buildStepOffenceForm(): FormGroup {
+    return this.formBuilder.group(
+      {
+        offenceNumber: [null],
+        offenceAgreementStatus: [null, [Validators.required]],
+        reductionAppearInCourt: [false],
+        requestReduction: [false],
+        requestMoreTime: [false],
+        reductionReason: [null],
+        moreTimeReason: [null],
+
+        // Here for display purposes
+        offenceDescription: [null],
+        status: [null],
+        ticketedAmount: [null],
+        amountDue: [null],
+        discountDueDate: [null],
+        discountAmount: [null],
+        _offenceStatusDesc: [null],
+        _within30days: [null],
+        _amountDue: [null],
+      }
+      // {
+      //   validators: [
+      //     FormGroupValidators.requiredIfTrue(
+      //       'requestReduction',
+      //       'reductionReason'
+      //     ),
+      //     FormGroupValidators.requiredIfTrue(
+      //       'requestMoreTime',
+      //       'moreTimeReason'
+      //     ),
+      //   ],
+      // }
+    );
   }
 
   public buildStepAdditionalForm(): FormGroup {
