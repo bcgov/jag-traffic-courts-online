@@ -253,11 +253,11 @@ export class MockDisputeService {
       mailingAddress: faker.address.streetAddress(),
       city: faker.address.city(),
       province: faker.address.state(),
-      postal: 'V8R3E3',
+      postalCode: 'V8R3E3',
       birthdate: null, // faker.date.past().toDateString(),
       emailAddress: faker.internet.email(),
-      license: '2342342',
-      provLicense: 'BC',
+      driverLicenseNumber: '2342342',
+      driverLicenseProvince: 'BC',
       phoneNumber: '2506653434', // faker.phone.phoneNumberFormat(10),
     };
   }

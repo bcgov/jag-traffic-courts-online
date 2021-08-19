@@ -76,6 +76,12 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
         'DisputeSummaryComponent::performSearch response',
         response
       );
+
+      if (!response) {
+        this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
+      }
+
       this.disputeService.ticket$.next(response);
       this.ticket = response;
     });

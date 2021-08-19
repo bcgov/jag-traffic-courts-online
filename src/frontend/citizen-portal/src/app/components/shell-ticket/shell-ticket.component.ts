@@ -1,4 +1,4 @@
-import { CurrencyPipe, formatCurrency } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -25,6 +25,7 @@ import { FormControlValidators } from '@core/validators/form-control.validators'
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicket } from '@shared/models/shellTicket.model';
+import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
@@ -71,9 +72,9 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     private configService: ConfigService,
     private utilsService: UtilsService,
     private currencyPipe: CurrencyPipe,
-    private appConfigService: AppConfigService,
     private dialog: MatDialog,
     private router: Router,
+    private appConfigService: AppConfigService,
     private logger: LoggerService
   ) {
     this.statutes = this.configService.statutes;
@@ -92,6 +93,13 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
       gender: [null, [Validators.required]],
+      address: [null, [Validators.required]],
+      city: [null, [Validators.required]],
+      province: [null, [Validators.required]],
+      postalCode: [null, [Validators.required]],
+      driverLicenseNumber: [null, [Validators.required]],
+      driverLicenseProvince: [null, [Validators.required]],
+
       count1Charge: [
         null,
         [Validators.required, autocompleteObjectValidator()],
@@ -118,14 +126,11 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       ],
       courtHearingLocation: [null, [Validators.required]],
       detachmentLocation: [null, [Validators.required]],
-      driverLicenseNumber: [null, [Validators.required]],
       chargeCount: [1],
       amountOwing: [null],
     });
 
     this.disputeService.shellTicketData$.subscribe((shellTicketData) => {
-      console.log('shellTicketData', shellTicketData);
-
       if (!shellTicketData) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
         return;
@@ -133,35 +138,10 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
       this.ticketImageSrc = shellTicketData.ticketImage;
       this.ticketFilename = shellTicketData.filename;
-      this.recognizeContent(shellTicketData.ticketFile);
-    });
-  }
-
-  private findMatchingCharge(
-    chargeDesc: string,
-    chargeStatute: string
-  ): number {
-    let chargeId = null;
-
-    if (chargeDesc) {
-      chargeId = this.statutes.find((statute) =>
-        statute.name
-          .trim()
-          .toUpperCase()
-          .includes(chargeDesc.trim().toUpperCase())
-      )?.code;
-
-      if (!chargeId) {
-        chargeId = this.statutes.find((statute) =>
-          statute.name
-            .trim()
-            .toUpperCase()
-            .includes(chargeStatute.trim().toUpperCase())
-        )?.code;
+      if (!this.appConfigService.useMockServices) {
+        this.recognizeContent(shellTicketData.ticketFile);
       }
-    }
-
-    return chargeId ? chargeId : null;
+    });
   }
 
   public ngOnInit(): void {
@@ -191,50 +171,22 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     );
 
     // Calculate the amount owing
-    this.count1FineAmount.valueChanges.subscribe(() => {
-      this.onCalculateAmountOwing();
-    });
-    this.count2FineAmount.valueChanges.subscribe(() => {
-      this.onCalculateAmountOwing();
-    });
-    this.count3FineAmount.valueChanges.subscribe(() => {
-      this.onCalculateAmountOwing();
-    });
-    this.onCalculateAmountOwing();
+    // this.count1FineAmount.valueChanges.subscribe(() => {
+    //   this.onCalculateAmountOwing();
+    // });
+    // this.count2FineAmount.valueChanges.subscribe(() => {
+    //   this.onCalculateAmountOwing();
+    // });
+    // this.count3FineAmount.valueChanges.subscribe(() => {
+    //   this.onCalculateAmountOwing();
+    // });
+    // this.onCalculateAmountOwing();
 
     // Set the enabled/disabled of the count fields depending upon visibility
     this.chargeCount.valueChanges.subscribe((selectedValue) => {
       this.onChargeCountChange(selectedValue);
     });
     this.onChargeCountChange(this.chargeCount.value);
-  }
-
-  private onChargeCountChange(selectedValue): void {
-    this.logger.info('chargeCount.valueChanges', selectedValue);
-
-    if (selectedValue < 3) {
-      this.count3Charge.disable();
-      this.count3FineAmount.disable();
-    } else {
-      this.count3Charge.enable();
-      this.count3FineAmount.enable();
-    }
-
-    if (selectedValue < 2) {
-      this.count2Charge.disable();
-      this.count2FineAmount.disable();
-    } else {
-      this.count2Charge.enable();
-      this.count2FineAmount.enable();
-    }
-  }
-
-  private onCalculateAmountOwing(): void {
-    let total = 0;
-    total += Number(this.count1FineAmount.value);
-    total += Number(this.count2FineAmount.value);
-    total += Number(this.count3FineAmount.value);
-    this.amountOwing.setValue(this.currencyPipe.transform(total));
   }
 
   public ngAfterViewInit(): void {
@@ -254,15 +206,17 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     this.logger.log('form.value', this.form.value);
 
     if (!validity) {
+      this.utilsService.scrollToErrorSection();
       return;
     }
 
     const data: DialogOptions = {
-      titleKey: 'Create your traffic ticket',
-      messageKey:
-        'Are you sure the information is correct and you want to create this ticket?',
-      actionTextKey: 'Yes, create ticket',
-      cancelTextKey: 'No, do not create ticket',
+      titleKey: 'Are you sure all ticket information is correct?',
+      messageKey: `Please ensure that all entered fields match the paper ticket copy exactly.
+          If you do not ensure correctness it could cause issues during reconcilliation.
+          If you are not sure, please go back and update any fields as needed before submitting ticket information.`,
+      actionTextKey: 'Yes I am sure, continue to resolution options',
+      cancelTextKey: 'Go back and edit',
     };
 
     this.dialog
@@ -288,6 +242,107 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       });
   }
 
+  public onDisplayWithStatute(code?: number): string | undefined {
+    return code
+      ? this.statutes.find((statute) => statute.code === code)?.name
+      : undefined;
+  }
+
+  public onFileChange(event: any) {
+    let filename: string;
+    let ticketImage: string;
+
+    this.ticketImageSrc = null;
+    this.ticketFilename = null;
+    this.form.reset();
+
+    if (!event.target.files[0] || event.target.files[0].length === 0) {
+      this.logger.info('You must select an image');
+      return;
+    }
+
+    const mimeType = event.target.files[0].type;
+
+    if (mimeType.match(/image\/*/) == null) {
+      this.logger.info('Only images are supported');
+      return;
+    }
+
+    const reader = new FileReader();
+    const ticketFile: File = event.target.files[0];
+    this.logger.info('file target', event.target.files[0]);
+
+    filename = ticketFile.name;
+    reader.readAsDataURL(ticketFile);
+    this.logger.info('file', ticketFile.name, ticketFile.lastModified);
+
+    reader.onload = () => {
+      ticketImage = reader.result as string;
+
+      const shellTicketData: ShellTicketData = {
+        filename,
+        ticketImage,
+        ticketFile,
+      };
+      this.disputeService.shellTicketData$.next(shellTicketData);
+    };
+  }
+
+  private findMatchingCharge(
+    chargeDesc: string,
+    chargeStatute: string
+  ): number {
+    let chargeId = null;
+
+    if (chargeDesc) {
+      chargeId = this.statutes.find((statute) =>
+        statute.name
+          .trim()
+          .toUpperCase()
+          .includes(chargeDesc.trim().toUpperCase())
+      )?.code;
+
+      if (!chargeId) {
+        chargeId = this.statutes.find((statute) =>
+          statute.name
+            .trim()
+            .toUpperCase()
+            .includes(chargeStatute.trim().toUpperCase())
+        )?.code;
+      }
+    }
+
+    return chargeId ? chargeId : null;
+  }
+
+  private onChargeCountChange(selectedValue): void {
+    this.logger.info('chargeCount.valueChanges', selectedValue);
+
+    if (selectedValue < 3) {
+      this.count3Charge.disable();
+      this.count3FineAmount.disable();
+    } else {
+      this.count3Charge.enable();
+      this.count3FineAmount.enable();
+    }
+
+    if (selectedValue < 2) {
+      this.count2Charge.disable();
+      this.count2FineAmount.disable();
+    } else {
+      this.count2Charge.enable();
+      this.count2FineAmount.enable();
+    }
+  }
+
+  // private onCalculateAmountOwing(): void {
+  //   let total = 0;
+  //   total += Number(this.count1FineAmount.value);
+  //   total += Number(this.count2FineAmount.value);
+  //   total += Number(this.count3FineAmount.value);
+  //   this.amountOwing.setValue(this.currencyPipe.transform(total));
+  // }
+
   private filterStatutes(value: string): Config<number>[] {
     const trimValue = value.toLowerCase().replace(/\s+/g, ''); // Get rid of whitespace
     const noBracketValue = trimValue.replace(/[\(\)']+/g, ''); // Get rid of brackets
@@ -305,12 +360,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     return this.statutes.filter((option) =>
       option.name.toLowerCase().replace(/\s+/g, '').includes(trimValue)
     );
-  }
-
-  public onDisplayWithStatute(code?: number): string | undefined {
-    return code
-      ? this.statutes.find((statute) => statute.code === code)?.name
-      : undefined;
   }
 
   private recognizeContent(imageSource: File): void {
@@ -355,7 +404,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
         const invoice = invoices[0];
         this.logger.info('First invoice:', invoice);
-        // this.formInfo = invoice;
 
         const invoiceIdFieldIndex = 'violation ticket number';
         const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
@@ -513,9 +561,14 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
           givenNames: givenNameField.valueData?.text
             ? givenNameField.valueData?.text
             : '',
-          driverLicenseNumber: '',
           birthdate: '',
           gender: '',
+          address: '',
+          city: '',
+          province: '',
+          postalCode: '',
+          driverLicenseNumber: '',
+          driverLicenseProvince: '',
           courtHearingLocation: '',
           detachmentLocation: '',
 
@@ -549,7 +602,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
           count3FineAmount: count3TicketAmountField.value
             ? String(count3TicketAmountField.value)
             : '',
-
           chargeCount,
           amountOwing: 0,
         };
@@ -569,7 +621,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
           shellTicket._count3ChargeSection
         );
 
-        console.log('after', { ...shellTicket });
+        // console.log('after', { ...shellTicket });
 
         delete shellTicket._count1ChargeDesc;
         delete shellTicket._count2ChargeDesc;
@@ -630,9 +682,5 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
 
   public get count3FineAmount(): FormControl {
     return this.form.get('count3FineAmount') as FormControl;
-  }
-
-  public get amountOwing(): FormControl {
-    return this.form.get('amountOwing') as FormControl;
   }
 }

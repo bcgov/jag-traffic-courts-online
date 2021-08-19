@@ -130,9 +130,8 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
     reader.onload = () => {
       ticketImage = reader.result as string;
 
-      console.log('filename', filename, 'ticketImage', ticketImage.length);
+      // console.log('filename', filename, 'ticketImage', ticketImage.length);
       const shellTicketData: ShellTicketData = {
-        shellTicket: null,
         filename,
         ticketImage,
         ticketFile,

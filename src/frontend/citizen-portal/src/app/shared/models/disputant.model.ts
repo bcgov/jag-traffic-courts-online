@@ -5,10 +5,10 @@ export interface Disputant {
   mailingAddress: string;
   city: string;
   province: string;
-  postal: string;
+  postalCode: string;
   birthdate: string;
   emailAddress: string;
-  license: string;
-  provLicense: string;
+  driverLicenseNumber: string;
+  driverLicenseProvince: string;
   phoneNumber: string;
 }

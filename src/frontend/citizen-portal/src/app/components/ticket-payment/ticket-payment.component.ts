@@ -1,7 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CountSummaryComponent } from '@components/count-summary/count-summary.component';
+import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
@@ -21,15 +28,22 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   @ViewChild(CountSummaryComponent, { static: false }) countSummary;
   public busy: Subscription;
   public ticket: TicketDispute;
+  public form: FormGroup;
 
   constructor(
+    private formBuilder: FormBuilder,
+    private formUtilsService: FormUtilsService,
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
     private router: Router,
     private dialog: MatDialog,
     private logger: LoggerService
-  ) {}
+  ) {
+    this.form = this.formBuilder.group({
+      emailAddress: [null, [Validators.required, Validators.email]],
+    });
+  }
 
   public ngOnInit(): void {
     this.disputeService.ticket$.subscribe((ticket) => {
@@ -48,6 +62,18 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   }
 
   public onMakePayment(): void {
+    const validity = this.formUtilsService.checkValidity(this.form);
+    const errors = this.formUtilsService.getFormErrors(this.form);
+
+    this.logger.log('validity', validity);
+    this.logger.log('errors', errors);
+    this.logger.log('form.value', this.form.value);
+
+    if (!validity) {
+      this.utilsService.scrollToErrorSection();
+      return;
+    }
+
     let countsToPay = '';
     let countsToPayAmount = 0;
     let numberSelected = 0;
@@ -92,5 +118,9 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
           window.location.href = response.redirectUrl;
         }
       });
+  }
+
+  public get emailAddress(): FormControl {
+    return this.form.get('emailAddress') as FormControl;
   }
 }
