@@ -1,7 +1,6 @@
 kind: StatefulSet
 apiVersion: apps/v1
 metadata:
-  annotations:
   name: rabbitmq
   labels:
     app: rabbitmq
@@ -26,16 +25,16 @@ spec:
             requests:
               cpu: 200m
               memory: 256Mi
-          readinessProbe:
-            exec:
-              command:
-                - rabbitmqctl
-                - status
-            initialDelaySeconds: 10
-            timeoutSeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #       - rabbitmqctl
+          #       - status
+          #   initialDelaySeconds: 10
+          #   timeoutSeconds: 10
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   failureThreshold: 3
           terminationMessagePath: /dev/termination-log
           lifecycle:
             preStop:
@@ -46,16 +45,21 @@ spec:
           name: rabbitmq
           command:
             - sh
-          livenessProbe:
-            exec:
-              command:
-                - rabbitmqctl
-                - status
-            initialDelaySeconds: 30
-            timeoutSeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
+          args:
+            - "-c"
+            - >-
+              cp -v /etc/rabbitmq/rabbitmq.conf ${RABBITMQ_CONFIG_FILE}.conf;
+              exec docker-entrypoint.sh rabbitmq-server
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - rabbitmqctl
+          #       - status
+          #   initialDelaySeconds: 30
+          #   timeoutSeconds: 10
+          #   periodSeconds: 10
+          #   successThreshold: 1
+          #   failureThreshold: 3
           env:
             - name: RABBITMQ_DEFAULT_USER
               valueFrom:
@@ -110,13 +114,10 @@ spec:
             - name: rabbitmq-storage
               mountPath: /var/lib/rabbitmq
           terminationMessagePolicy: File
-          image: "rabbitmq:3.8-management"
-          args:
-            - "-c"
-            - >-
-              cp -v /etc/rabbitmq/rabbitmq.conf ${RABBITMQ_CONFIG_FILE}.conf;
-              exec docker-entrypoint.sh rabbitmq-server
+          image: rabbitmq:3.8-management
       serviceAccount: rabbitmq
+      imagePullSecrets:
+        - name: docker-creds
       volumes:
         - name: config-volume
           configMap:
@@ -150,4 +151,3 @@ spec:
     rollingUpdate:
       partition: 0
   revisionHistoryLimit: 10
-status:
