@@ -1,6 +1,10 @@
 @import "palette";
 @import "bootstrap/bootstrap-imports";
 
+.is-active {
+  text-decoration: underline;
+}
+
 .flex-wrapper {
   display: flex;
   min-height: 100vh;

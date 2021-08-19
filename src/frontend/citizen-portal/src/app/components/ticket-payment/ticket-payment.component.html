@@ -2,10 +2,31 @@
   <app-tco-page-header>
     <ng-container header>Pay ticket</ng-container>
     <ng-container subHeader>
-      Please select each count you would like to pay for, then follow the
-      instructions provided.
+      Please enter a contact email for receipt and confirmation, then select
+      each count you would like to pay for and follow the instructions provided.
     </ng-container>
   </app-tco-page-header>
+
+  <section>
+    <div class="row">
+      <div class="col-md-6">
+        <form [formGroup]="form" novalidate>
+          <mat-form-field class="w-100">
+            <mat-label>Contact email</mat-label>
+            <input matInput formControlName="emailAddress" autocomplete="off" />
+            <mat-error *ngIf="emailAddress.hasError('required')">{{
+              "error.required" | translate
+            }}</mat-error>
+            <mat-error *ngIf="emailAddress.hasError('email')">{{
+              "error.email_address" | translate
+            }}</mat-error>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <hr class="mt-0" />
 
   <div *ngIf="ticket">
     <app-count-summary

@@ -37,6 +37,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
       if (Object.keys(params).length === 0) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
       }
 
       const ticketNumber = params.ticketNumber;
@@ -44,6 +45,7 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
 
       if (!ticketNumber || !ticketTime) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
       }
 
       const ticket = this.disputeService.ticket;
@@ -74,6 +76,12 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
         'DisputeSummaryComponent::performSearch response',
         response
       );
+
+      if (!response) {
+        this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
+      }
+
       this.disputeService.ticket$.next(response);
       this.ticket = response;
     });

@@ -5,9 +5,15 @@ export interface ShellTicket {
 
   lastName: string;
   givenNames: string;
-  driverLicenseNumber: string;
   birthdate: string;
   gender: string;
+  address: string;
+  city: string;
+  province: string;
+  postalCode: string;
+  driverLicenseNumber: string;
+  driverLicenseProvince: string;
+
   courtHearingLocation: string;
   detachmentLocation: string;
 
