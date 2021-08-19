@@ -29,6 +29,7 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
       }
 
       this.ticket = ticket;

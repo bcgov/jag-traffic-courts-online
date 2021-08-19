@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, formatCurrency } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -11,6 +11,11 @@ import {
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import {
+  AzureKeyCredential,
+  FormPollerLike,
+  FormRecognizerClient,
+} from '@azure/ai-form-recognizer';
 import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -43,7 +48,9 @@ export function autocompleteObjectValidator(): ValidatorFn {
   styleUrls: ['./shell-ticket.component.scss'],
 })
 export class ShellTicketComponent implements OnInit, AfterViewInit {
-  public busy: Subscription;
+  public busy: Subscription | Promise<any>;
+  public ticketImageSrc: string;
+  public ticketFilename: string;
   public form: FormGroup;
   public todayDate: Date = new Date();
   public maxDateOfBirth: Date;
@@ -116,128 +123,18 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       amountOwing: [null],
     });
 
-    // const tmp: ShellTicket = {
-    //   amountOwing: 0,
-    //   birthdate: '',
-    //   chargeCount: 3,
-    //   count1Charge: null,
-    //   count1FineAmount: '196',
-    //   count2Charge: null,
-    //   count2FineAmount: '368',
-    //   count3Charge: null,
-    //   count3FineAmount: '2300',
-    //   courtHearingLocation: '',
-    //   detachmentLocation: '',
-    //   driverLicenseNumber: '',
-    //   gender: '',
-    //   givenNames: 'Julius Montgomery',
-    //   lastName: 'MacGibbens',
-    //   violationDate: '',
-    //   violationTicketNumber: 'AJ20109254',
-    //   violationTime: '',
-    //   _count1Charge: 'Speed against highway sign',
-    //   _count2Charge: 'Refusing to produce licence',
-    //   _count3Charge: 'Not carrying a licence',
-    // };
+    this.disputeService.shellTicketData$.subscribe((shellTicketData) => {
+      console.log('shellTicketData', shellTicketData);
 
-    // const tmp: ShellTicket = {
-    //   amountOwing: 0,
-    //   birthdate: '',
-    //   chargeCount: 3,
-    //   count1Charge: null,
-    //   count1FineAmount: '250',
-    //   count2Charge: null,
-    //   count2FineAmount: '8750',
-    //   count3Charge: null,
-    //   count3FineAmount: '',
-    //   courtHearingLocation: '',
-    //   detachmentLocation: '',
-    //   driverLicenseNumber: '',
-    //   gender: '',
-    //   givenNames: 'Harsh',
-    //   lastName: 'Jain',
-    //   violationDate: '',
-    //   violationTicketNumber: 'AJ20103222',
-    //   violationTime: '',
-    //   _count1ChargeDesc: 'UnSafe Overtake',
-    //   _count1ChargeSection: '175(a)',
-    //   _count2ChargeDesc: 'Driving Under Influence',
-    //   _count2ChargeSection: '192(b)',
-    //   _count3ChargeDesc: 'Crashing on Divider',
-    //   _count3ChargeSection: '',
-    // };
+      if (!shellTicketData) {
+        this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
+      }
 
-    // const tmp: ShellTicket = {
-    //   amountOwing: 0,
-    //   birthdate: '',
-    //   chargeCount: 2,
-    //   count1Charge: null,
-    //   count1FineAmount: '812900',
-    //   count2Charge: null,
-    //   count2FineAmount: '',
-    //   count3Charge: null,
-    //   count3FineAmount: '',
-    //   courtHearingLocation: '',
-    //   detachmentLocation: '',
-    //   driverLicenseNumber: '',
-    //   gender: '',
-    //   givenNames: 'JIMINEX',
-    //   lastName: 'CRICKET',
-    //   violationDate: '',
-    //   violationTicketNumber: 'AJ20103222',
-    //   violationTime: '',
-    //   _count1ChargeDesc: 'use device while diving',
-    //   _count1ChargeSection: '145(1)',
-    //   _count2ChargeDesc: 'fol to sigp for pote',
-    //   _count2ChargeSection: '73(1)|815000',
-    //   _count3ChargeDesc: '',
-    //   _count3ChargeSection: '',
-    // };
-    // this.disputeService.shellTicket$.next(tmp);
-
-    const azureShellTicket = this.disputeService.shellTicket;
-    if (azureShellTicket) {
-      this.logger.info('azureShellTicket', { ...azureShellTicket });
-
-      azureShellTicket.count1Charge = this.findMatchingCharge(
-        azureShellTicket._count1ChargeDesc,
-        azureShellTicket._count1ChargeSection
-      );
-      azureShellTicket.count2Charge = this.findMatchingCharge(
-        azureShellTicket._count2ChargeDesc,
-        azureShellTicket._count2ChargeSection
-      );
-      azureShellTicket.count3Charge = this.findMatchingCharge(
-        azureShellTicket._count3ChargeDesc,
-        azureShellTicket._count3ChargeSection
-      );
-
-      console.log('after', { ...azureShellTicket });
-
-      delete azureShellTicket._count1ChargeDesc;
-      delete azureShellTicket._count2ChargeDesc;
-      delete azureShellTicket._count3ChargeDesc;
-      delete azureShellTicket._count1ChargeSection;
-      delete azureShellTicket._count2ChargeSection;
-      delete azureShellTicket._count3ChargeSection;
-
-      this.form.setValue(azureShellTicket);
-    } else if (this.appConfigService.useMockServices) {
-      // Default values during testing
-      this.form.get('violationTicketNumber').setValue('EZ02000455');
-      this.form.get('violationDate').setValue('2008-07-03T07:00:00.000Z');
-      this.form.get('violationTime').setValue('09:54');
-      this.form.get('lastName').setValue('test');
-      this.form.get('givenNames').setValue('test');
-      this.form.get('birthdate').setValue('1988-03-03T08:00:00.000Z');
-      this.form.get('gender').setValue('M');
-      this.form.get('count1Charge').setValue(19023);
-      this.form.get('count1FineAmount').setValue(234);
-      this.form.get('courtHearingLocation').setValue('82.0001');
-      this.form.get('detachmentLocation').setValue('9393.0001');
-      this.form.get('driverLicenseNumber').setValue(2342343);
-      this.form.get('chargeCount').setValue(1);
-    }
+      this.ticketImageSrc = shellTicketData.ticketImage;
+      this.ticketFilename = shellTicketData.filename;
+      this.recognizeContent(shellTicketData.ticketFile);
+    });
   }
 
   private findMatchingCharge(
@@ -414,6 +311,281 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     return code
       ? this.statutes.find((statute) => statute.code === code)?.name
       : undefined;
+  }
+
+  private recognizeContent(imageSource: File): void {
+    const endpoint = 'https://canadacentral.api.cognitive.microsoft.com';
+    const apiKey = '65440468b684497988679b8857f33a36';
+
+    const client = new FormRecognizerClient(
+      endpoint,
+      new AzureKeyCredential(apiKey)
+    );
+
+    const poller = client.beginRecognizeCustomForms(
+      '8b16e3eb-b797-4e1c-a2f6-5891105222dc',
+      imageSource,
+      {
+        onProgress: (state) => {
+          this.logger.info(`analyzing status: ${state.status}`);
+        },
+      }
+    );
+
+    // const poller = client.beginRecognizeInvoices(imageSource, {
+    //   onProgress: (state) => {
+    //     this.logger.info(`analyzing status: ${state.status}`);
+    //   },
+    // });
+
+    this.busy = poller;
+
+    poller.then(this.onFulfilled(), this.onRejected);
+  }
+
+  private onFulfilled(): (poller: FormPollerLike) => void {
+    return (poller: FormPollerLike) => {
+      this.busy = poller.pollUntilDone().then(() => {
+        // this.logger.info('result', poller.getResult());
+        const invoices = poller.getResult();
+
+        if (!invoices || invoices.length <= 0) {
+          throw new Error('Expecting at least one invoice in analysis result');
+        }
+
+        const invoice = invoices[0];
+        this.logger.info('First invoice:', invoice);
+        // this.formInfo = invoice;
+
+        const invoiceIdFieldIndex = 'violation ticket number';
+        const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
+        if (invoiceIdField.valueType === 'string') {
+          this.logger.info(
+            `  violation ticket number: '${
+              invoiceIdField.value || '<missing>'
+            }', with confidence of ${invoiceIdField.confidence}`
+          );
+        }
+        const surnameFieldIndex = 'surname';
+        const surnameField = invoice.fields[surnameFieldIndex];
+        if (surnameField.valueType === 'string') {
+          this.logger.info(
+            `  surname: '${
+              surnameField.valueData?.text || '<missing>'
+            }', with confidence of ${surnameField.confidence}`
+          );
+        }
+        const givenNameFieldIndex = 'given name';
+        const givenNameField = invoice.fields[givenNameFieldIndex];
+        if (givenNameField.valueType === 'string') {
+          this.logger.info(
+            `  given name: '${
+              givenNameField.valueData?.text || '<missing>'
+            }', with confidence of ${givenNameField.confidence}`
+          );
+        }
+        const count1DescFieldIndex = 'count 1 description';
+        const count1DescField = invoice.fields[count1DescFieldIndex];
+        if (count1DescField.valueType === 'string') {
+          this.logger.info(
+            `  count 1 description: '${
+              count1DescField.valueData?.text || '<missing>'
+            }', with confidence of ${count1DescField.confidence}`
+          );
+        }
+        const count1SectionFieldIndex = 'count 1 section';
+        const count1SectionField = invoice.fields[count1SectionFieldIndex];
+        if (count1SectionField.valueType === 'string') {
+          this.logger.info(
+            `  count 1 section: '${
+              count1SectionField.valueData?.text || '<missing>'
+            }', with confidence of ${count1SectionField.confidence}`
+          );
+        }
+        const count1TicketAmountFieldIndex = 'count 1 ticket amount';
+        const count1TicketAmountField =
+          invoice.fields[count1TicketAmountFieldIndex];
+        if (count1TicketAmountField.valueType === 'number') {
+          this.logger.info(
+            `  count 1 ticket amount: '${
+              count1TicketAmountField.value || '<missing>'
+            }', with confidence of ${count1TicketAmountField.confidence}`
+          );
+        }
+        const count2DescFieldIndex = 'count 2 description';
+        const count2DescField = invoice.fields[count2DescFieldIndex];
+        if (count2DescField.valueType === 'string') {
+          this.logger.info(
+            `  count 2 description: '${
+              count2DescField.valueData?.text || '<missing>'
+            }', with confidence of ${count2DescField.confidence}`
+          );
+        }
+        const count2SectionFieldIndex = 'count 2 section';
+        const count2SectionField = invoice.fields[count2SectionFieldIndex];
+        if (count2SectionField.valueType === 'string') {
+          this.logger.info(
+            `  count 2 section: '${
+              count2SectionField.valueData?.text || '<missing>'
+            }', with confidence of ${count2SectionField.confidence}`
+          );
+        }
+        const count2TicketAmountFieldIndex = 'count 2 ticket amount';
+        const count2TicketAmountField =
+          invoice.fields[count2TicketAmountFieldIndex];
+        if (count2TicketAmountField.valueType === 'number') {
+          this.logger.info(
+            `  count 2 ticket amount: '${
+              count2TicketAmountField.value || '<missing>'
+            }', with confidence of ${count2TicketAmountField.confidence}`
+          );
+        }
+        const count3DescFieldIndex = 'count 3 description';
+        const count3DescField = invoice.fields[count3DescFieldIndex];
+        if (count3DescField.valueType === 'string') {
+          this.logger.info(
+            `  count 3 description: '${
+              count3DescField.valueData?.text || '<missing>'
+            }', with confidence of ${count3DescField.confidence}`
+          );
+        }
+        const count3SectionFieldIndex = 'count 3 section';
+        const count3SectionField = invoice.fields[count3SectionFieldIndex];
+        if (count3SectionField.valueType === 'string') {
+          this.logger.info(
+            `  count 3 section: '${
+              count3SectionField.valueData?.text || '<missing>'
+            }', with confidence of ${count3SectionField.confidence}`
+          );
+        }
+        const count3TicketAmountFieldIndex = 'count 3 ticket amount';
+        const count3TicketAmountField =
+          invoice.fields[count3TicketAmountFieldIndex];
+        if (count3TicketAmountField.valueType === 'number') {
+          this.logger.info(
+            `  count 3 ticket amount: '${
+              count3TicketAmountField.value || '<missing>'
+            }', with confidence of ${count3TicketAmountField.confidence}`
+          );
+        }
+
+        let chargeCount = 0;
+        if (
+          count1DescField.valueData?.text ||
+          count1SectionField.valueData?.text ||
+          count1TicketAmountField.value
+        ) {
+          // this.logger.info('1', count1DescField.valueData?.text);
+          // this.logger.info('1', count1SectionField.valueData?.text);
+          // this.logger.info('1', count1TicketAmountField.value);
+          chargeCount++;
+        }
+        if (
+          count2DescField.valueData?.text ||
+          count2SectionField.valueData?.text ||
+          count2TicketAmountField.value
+        ) {
+          // this.logger.info('2', count2DescField.valueData?.text);
+          // this.logger.info('2', count2SectionField.valueData?.text);
+          // this.logger.info('2', count2TicketAmountField.value);
+          chargeCount++;
+        }
+        if (
+          count3DescField.valueData?.text ||
+          count3SectionField.valueData?.text ||
+          count3TicketAmountField.value
+        ) {
+          // this.logger.info('3', count3DescField.valueData?.text);
+          // this.logger.info('3', count3SectionField.valueData?.text);
+          // this.logger.info('3', count3TicketAmountField.value);
+          chargeCount++;
+        }
+        this.logger.info('chargeCount', chargeCount);
+
+        const shellTicket: ShellTicket = {
+          violationTicketNumber: String(invoiceIdField.value),
+          violationTime: '',
+          violationDate: '',
+
+          lastName: surnameField.valueData?.text
+            ? surnameField.valueData?.text
+            : '',
+          givenNames: givenNameField.valueData?.text
+            ? givenNameField.valueData?.text
+            : '',
+          driverLicenseNumber: '',
+          birthdate: '',
+          gender: '',
+          courtHearingLocation: '',
+          detachmentLocation: '',
+
+          count1Charge: null,
+          _count1ChargeDesc: count1DescField.valueData?.text
+            ? count1DescField.valueData?.text
+            : '',
+          _count1ChargeSection: count1SectionField.valueData?.text
+            ? count1SectionField.valueData?.text.replace(/\s/g, '')
+            : '',
+          count1FineAmount: count1TicketAmountField.value
+            ? String(count1TicketAmountField.value)
+            : '',
+          count2Charge: null,
+          _count2ChargeDesc: count2DescField.valueData?.text
+            ? count2DescField.valueData?.text
+            : '',
+          _count2ChargeSection: count2SectionField.valueData?.text
+            ? count2SectionField.valueData?.text.replace(/\s/g, '')
+            : '',
+          count2FineAmount: count2TicketAmountField.value
+            ? String(count2TicketAmountField.value)
+            : '',
+          count3Charge: null,
+          _count3ChargeDesc: count3DescField.valueData?.text
+            ? count3DescField.valueData?.text
+            : '',
+          _count3ChargeSection: count3SectionField.valueData?.text
+            ? count3SectionField.valueData?.text.replace(/\s/g, '')
+            : '',
+          count3FineAmount: count3TicketAmountField.value
+            ? String(count3TicketAmountField.value)
+            : '',
+
+          chargeCount,
+          amountOwing: 0,
+        };
+
+        this.logger.info('before', { ...shellTicket });
+
+        shellTicket.count1Charge = this.findMatchingCharge(
+          shellTicket._count1ChargeDesc,
+          shellTicket._count1ChargeSection
+        );
+        shellTicket.count2Charge = this.findMatchingCharge(
+          shellTicket._count2ChargeDesc,
+          shellTicket._count2ChargeSection
+        );
+        shellTicket.count3Charge = this.findMatchingCharge(
+          shellTicket._count3ChargeDesc,
+          shellTicket._count3ChargeSection
+        );
+
+        console.log('after', { ...shellTicket });
+
+        delete shellTicket._count1ChargeDesc;
+        delete shellTicket._count2ChargeDesc;
+        delete shellTicket._count3ChargeDesc;
+        delete shellTicket._count1ChargeSection;
+        delete shellTicket._count2ChargeSection;
+        delete shellTicket._count3ChargeSection;
+
+        this.form.setValue(shellTicket);
+        // this.disputeService.shellTicket$.next(shellTicket);
+      });
+    };
+  }
+
+  private onRejected(info) {
+    this.logger.info('onRejected', info);
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {

@@ -406,7 +406,7 @@ export class TicketImageComponent implements OnInit {
         };
 
         this.logger.info('before', { ...shellTicket });
-        this.disputeService.shellTicket$.next(shellTicket);
+        // this.disputeService.shellTicket$.next(shellTicket);
       });
     };
   }

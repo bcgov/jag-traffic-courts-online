@@ -35,6 +35,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
       }
 
       this.logger.info('TicketPaymentComponent current ticket', ticket);
