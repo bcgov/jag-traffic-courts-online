@@ -73,7 +73,7 @@ spec:
                   name: rabbitmq-secret
                   key: cookie
             - name: K8S_SERVICE_NAME
-              value: rabbitmq-cluster
+              value: rabbitmq
             - name: POD_IP
               valueFrom:
                 fieldRef:
@@ -93,7 +93,7 @@ spec:
               value: "true"
             - name: RABBITMQ_NODENAME
               value: >-
-                rabbit@$(POD_NAME).rabbitmq-cluster.$(POD_NAMESPACE).svc.cluster.local
+                rabbit@$(POD_NAME).rabbitmq.$(POD_NAMESPACE).svc.cluster.local
             - name: RABBITMQ_CONFIG_FILE
               value: /var/lib/rabbitmq/rabbitmq
           ports:
@@ -120,7 +120,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: rabbitmq-cluster-config
+            name: rabbitmq-config
             items:
               - key: rabbitmq.conf
                 path: rabbitmq.conf
