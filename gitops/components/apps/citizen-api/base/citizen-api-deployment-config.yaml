@@ -38,6 +38,10 @@ spec:
               value: "http://ticket-search"
             - name: Serilog__MinimumLevel
               value: Debug
+            - name: PaybcApi__BaseUrl
+              value: "http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/"
+            - name: PaybcApi__CallbackBaseUrl
+              value: "https://dev.violationtickets.gov.bc.ca/paymentComplete?"
           resources:
             limits:
               cpu: 100m

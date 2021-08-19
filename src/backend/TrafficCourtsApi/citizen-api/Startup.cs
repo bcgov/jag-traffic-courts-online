@@ -121,9 +121,7 @@ namespace Gov.CitizenApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseOpenApi();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health", new HealthCheckOptions

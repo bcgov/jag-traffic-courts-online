@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Gov.CitizenApi.Features.Disputes;
 using Gov.CitizenApi.Features.Disputes.DBModel;
 using Gov.CitizenApi.Models;
@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Offence = Gov.CitizenApi.Models.Offence;
 using DBModelTicket = Gov.CitizenApi.Features.Tickets.DBModel.Ticket;
+using Gov.CitizenApi.Features.Tickets.DBModel;
+using System.Collections.Generic;
 
 namespace Gov.CitizenApi.Features.Tickets.Queries
 {
@@ -49,8 +51,10 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
             {
                 _logger.LogInformation("find the dispute for the ticket");
                 Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticketSearchResponse.ViolationTicketNumber);
+
+                List<Payment> payments = await _ticketService.FindTicketPaymentsAsync(query.TicketNumber, query.Time);
                 _logger.LogInformation("return ticketDispute.");
-                return BuildTicketDispute(ticketSearchResponse, dispute);
+                return BuildTicketDispute(ticketSearchResponse, dispute, payments);
             }
             _logger.LogInformation("no ticket found from Rsi");
 
@@ -69,21 +73,26 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                 Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticket.ViolationTicketNumber);
                 _logger.LogInformation("return ticketDispute.");
                 TicketSearchResponse response = _mapper.Map<TicketSearchResponse>(ticket);
-                return BuildTicketDispute(response, dispute);
+                List<Payment> payments = await _ticketService.FindTicketPaymentsAsync(ticketNumber, ticketTime);
+                TicketDispute ticketDispute = BuildTicketDispute(response, dispute, payments);
+                ticketDispute.Disputant = _mapper.Map<Disputant>(ticket);
+                return ticketDispute;
             }
             return null;
         }
 
-        private TicketDispute BuildTicketDispute(TicketSearchResponse ticketSearchResponse, Dispute dispute)
+        private TicketDispute BuildTicketDispute(TicketSearchResponse ticketSearchResponse, Dispute dispute, List<Payment> payments)
         {
             TicketDispute ticketDispute = _mapper.Map<TicketDispute>(ticketSearchResponse);
-            if (dispute == null) return ticketDispute;
-            ticketDispute.Disputant = _mapper.Map<Disputant>(dispute);
-            ticketDispute.Additional = _mapper.Map<Additional>(dispute);
+            if (dispute != null)
+            {
+                ticketDispute.Disputant = _mapper.Map<Disputant>(dispute);
+                ticketDispute.Additional = _mapper.Map<Additional>(dispute);
+            }
             foreach (Offence offence in ticketDispute.Offences)
             {
                 var detail =
-                    dispute.OffenceDisputeDetails?.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
+                    dispute?.OffenceDisputeDetails?.FirstOrDefault(m => m.OffenceNumber == offence.OffenceNumber);
                 if (detail != null)
                 {
                     offence.OffenceAgreementStatus=detail.OffenceAgreementStatus;
@@ -94,6 +103,9 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                     offence.MoreTimeReason = detail.MoreTimeReason;
                     offence.Status = detail.Status;
                 }
+
+                offence.AmountDue = (payments ==null || payments.Any(m => m.PaymentStatus==PaymentStatus.Success && m.RequestedCounts.Contains(offence.OffenceNumber.ToString()))) ? 0 : offence.AmountDue;
+
             }
             return ticketDispute;
         }

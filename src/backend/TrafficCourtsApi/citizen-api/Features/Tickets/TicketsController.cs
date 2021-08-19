@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Gov.CitizenApi.Features.Tickets.Commands;
 using Gov.CitizenApi.Features.Tickets.Queries;
 using Gov.CitizenApi.Models;
 using Gov.TicketSearch;
 using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -74,6 +75,46 @@ namespace Gov.CitizenApi.Features.Tickets
             catch (Exception e)
             {
                 _logger.LogError(e, "create shell ticket failed");
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Pay([FromQuery] TicketPaymentCommand ticketPayment)
+        {
+            try
+            {
+                _logger.LogInformation("get create ticket payment request.");
+                var response = await _mediator.Send(ticketPayment);
+                return Ok(ApiResponse.Result(response));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Create ticket payment request failed");
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Pay([FromQuery] TicketPaymentConfirmCommand ticketPayConfirm)
+        {
+            try
+            {
+                _logger.LogInformation("get ticket payment confirmation.");
+                var response = await _mediator.Send(ticketPayConfirm);
+                return RedirectToAction("Ticket", new { ticketNumber = response.TicketNumber, time = response.Time });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Update ticket payment failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
             }
         }

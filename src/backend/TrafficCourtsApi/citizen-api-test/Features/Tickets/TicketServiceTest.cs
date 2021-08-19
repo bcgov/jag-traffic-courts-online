@@ -36,7 +36,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets
         {
             _loggerMock = LoggerServiceMock.LoggerMock<TicketsService>();
             _lookupsMock = new Mock<ILookupsService>();
-            _service = new TicketsService(_loggerMock.Object, CreateContext(),_lookupsMock.Object);
+            _service = new TicketsService(_loggerMock.Object, CreateContext());
         }
 
         [Fact]
@@ -44,8 +44,8 @@ namespace Gov.CitizenApi.Test.Features.Tickets
         public void throw_ArgumentNullException_if_passed_null()
 #pragma warning restore IDE1006 // Naming Styles
         {
-            Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext(),_lookupsMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null, _lookupsMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new TicketsService(null, CreateContext()));
+            Assert.Throws<ArgumentNullException>(() => new TicketsService(_loggerMock.Object, null));
         }
 
         [Fact]
