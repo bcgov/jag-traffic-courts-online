@@ -20,8 +20,8 @@ describe('ShellTicketComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        ReactiveFormsModule,
         RouterModule.forRoot([]),
+        ReactiveFormsModule,
         RouterTestingModule,
         BrowserAnimationsModule,
         NgxMaterialModule,
