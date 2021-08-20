@@ -40,7 +40,7 @@ oc create -f secrets.yaml --save-config
 oc create secret docker-registry docker-creds ^
 --docker-server=docker.io ^
 --docker-username=bcgovfams3 ^
---docker-password="@&W9H0e#eLlHv5&Z@pR1t" ^
+--docker-password="password" ^
 --docker-email=unused
 ```
 
