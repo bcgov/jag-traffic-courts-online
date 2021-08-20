@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: rabbitmq-cluster-balancer
   labels:
-    app: rabbitmq-cluster
+    app: rabbitmq
     type: LoadBalancer
 spec:
   type: ClusterIP
@@ -17,4 +17,4 @@ spec:
       port: 5672
       targetPort: 5672
   selector:
-    app: rabbitmq-cluster
+    app: rabbitmq

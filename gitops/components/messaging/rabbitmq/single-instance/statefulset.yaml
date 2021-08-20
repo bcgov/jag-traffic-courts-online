@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: rabbitmq-cluster
+  name: rabbitmq
   labels:
-    app: rabbitmq-cluster
+    app: rabbitmq
+    app.kubernetes.io/part-of: traffic-court
+    app.openshift.io/runtime: rabbitmq
 spec:
-  serviceName: rabbitmq-cluster
+  serviceName: rabbitmq
   replicas: 1
   selector:
     matchLabels:
-      app: rabbitmq-cluster
+      app: rabbitmq
   template:
     metadata:
       labels:
-        app: rabbitmq-cluster
+        app: rabbitmq
     spec:
       terminationGracePeriodSeconds: 30
       containers:
@@ -89,7 +91,7 @@ spec:
             - name: RABBITMQ_USE_LONGNAME
               value: "true"
             - name: RABBITMQ_NODENAME
-              value: "rabbit@$(POD_NAME).rabbitmq-cluster.$(POD_NAMESPACE).svc.cluster.local"
+              value: "rabbit@$(POD_NAME).rabbitmq.$(POD_NAMESPACE).svc.cluster.local"
             - name: RABBITMQ_CONFIG_FILE
               value: /var/lib/rabbitmq/rabbitmq.conf
       volumes:

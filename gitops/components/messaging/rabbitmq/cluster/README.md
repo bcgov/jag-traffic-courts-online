@@ -1,3 +1,3 @@
 ## Cluster RabbitMQ deployment on openshift
 
-As we cannot create role and role binding now, we cannot do RabbitMQ clustering.
+As I do not have right to create role and role binding now, I cannot do RabbitMQ clustering.

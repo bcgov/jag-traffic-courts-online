@@ -4,6 +4,7 @@
 
 1. Have openshift credentials and have read/write permission
 2. Run the following commands under \gitops\components\messaging\rabbitmq folder.
+3. Have correct docker hub account: bcgovtco
 
 ### Steps
 
@@ -38,14 +39,14 @@ oc create -f secrets.yaml --save-config
 
 ```
 oc create secret docker-registry docker-creds ^
---docker-server=docker.io ^
---docker-username=bcgovfams3 ^
---docker-password="password" ^
---docker-email=unused
+  docker-server=docker.io ^
+  docker-username=bcgovtco ^
+  docker-password="password" ^
+  docker-email=unused
 ```
 
 > Why we need this?
-> When openshift try to pull rabbitmq image from dockerhub, it quite often get "hitting the docker rate-limit issue".
+> When openshift try to pull rabbitmq image from dockerhub, it quite often gets "hitting the docker rate-limit issue".
 > The solution is found [here](https://github.com/BCDevOps/OpenShift4-Migration/issues/51).
 
 We will Sign up docker account for otc team.\*
