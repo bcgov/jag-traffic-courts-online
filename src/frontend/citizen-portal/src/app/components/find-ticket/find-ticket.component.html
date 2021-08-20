@@ -12,12 +12,13 @@
       <app-alert type="danger" icon="error">
         <ng-container #alertContent class="alert-content">
           <strong>Ticket not found.</strong>
-          <p>Please take photo or upload images.</p>
+          <p>Please take photo or upload image.</p>
         </ng-container>
       </app-alert>
     </div>
   </div>
 
+  <!-- MOBILE VIEW -->
   <div class="row d-sm-block d-md-none">
     <div class="col-md-12">
       <button
@@ -25,10 +26,10 @@
         mat-stroked-button
         color="primary"
         class="find-large"
-        routerLink="/ticket/image"
+        (click)="fileInput.click()"
       >
         <mat-icon class="me-2">photo_camera</mat-icon>
-        Capture / Upload photo of ticket
+        Upload photo of ticket
       </button>
     </div>
   </div>
@@ -102,7 +103,7 @@
           <app-alert type="danger" icon="error">
             <ng-container #alertContent class="alert-content">
               <strong>Ticket not found.</strong>
-              <p>Please take photo or upload images.</p>
+              <p>Please take photo or upload image.</p>
             </ng-container>
           </app-alert>
         </div>
@@ -114,23 +115,20 @@
             mat-stroked-button
             color="primary"
             class="find-xlarge"
-            routerLink="/ticket/image"
+            (click)="fileInput.click()"
           >
-            <mat-icon class="icon-large me-2">photo_camera</mat-icon>
-            Capture / Upload photo of ticket
+            <mat-icon class="icon-large me-2">upload_file</mat-icon>
+            Upload photo of ticket
           </button>
-          <!--
-          <button
-            type="button"
-            mat-stroked-button
-            color="primary"
-            class="find-large"
-            routerLink="/ticket/image"
-          >
-            <mat-icon class="me-2">upload_file</mat-icon>
-            Upload ticket image
-          </button>
-          -->
+
+          <input
+            hidden
+            (change)="onFileChange($event)"
+            #fileInput
+            type="file"
+            accept="image/*"
+            id="file"
+          />
         </div>
       </div>
     </div>

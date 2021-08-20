@@ -3,7 +3,6 @@ export class AppRoutes {
   public static PAYMENT_COMPLETE = 'paymentComplete';
   public static SUBMIT_SUCCESS = 'submitSuccess';
   public static SHELL = 'shell';
-  public static IMAGE = 'image';
   public static SUMMARY = 'summary';
   public static TICKET = 'ticket';
   public static PAYMENT = 'payment';

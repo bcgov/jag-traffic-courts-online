@@ -42,7 +42,6 @@ import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
-import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
@@ -79,7 +78,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
-    TicketImageComponent,
     TicketPaymentComponent,
     CountSummaryComponent,
     TicketPaymentCompleteComponent,

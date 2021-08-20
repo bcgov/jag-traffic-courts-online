@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { lastValueFrom, map } from 'rxjs';
 
 export interface IAppConfig {
   production: boolean;
@@ -64,12 +65,11 @@ export class AppConfigService {
   constructor(private http: HttpClient) {}
 
   public loadAppConfig() {
-    return this.http
-      .get('/assets/app.config.json')
-      .toPromise()
-      .then((data: AppConfig) => {
-        this.appConfig = data;
-      });
+    return this.http.get('/assets/app.config.json').pipe(
+      map((response: AppConfig) => {
+        this.appConfig = response;
+      })
+    );
   }
 
   get production(): boolean {

@@ -70,6 +70,7 @@ export class DisputeStepperComponent
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+        return;
       }
 
       this.disputeFormStateService.reset();
