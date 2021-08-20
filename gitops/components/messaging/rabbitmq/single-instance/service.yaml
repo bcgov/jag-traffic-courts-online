@@ -1,0 +1,20 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: rabbitmq-cluster-balancer
+  labels:
+    app: rabbitmq-cluster
+    type: LoadBalancer
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 15672
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+  selector:
+    app: rabbitmq-cluster
