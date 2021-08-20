@@ -22,7 +22,7 @@ spec:
             - sh
           args:
             - -c
-            - cp -v /etc/rabbitmq/rabbitmq.conf rabbitmq.conf; exec docker-entrypoint.sh rabbitmq-server
+            - cp -v /etc/rabbitmq/rabbitmq.conf /var/lib/rabbitmq/rabbitmq.conf; exec docker-entrypoint.sh rabbitmq-server
           image: rabbitmq:3.7-management
           imagePullPolicy: IfNotPresent
           volumeMounts:
@@ -57,7 +57,7 @@ spec:
               memory: 2Gi
             requests:
               cpu: "1"
-              memory: 2Gi
+              memory: 1Gi
           env:
             - name: RABBITMQ_DEFAULT_USER
               valueFrom:
@@ -69,13 +69,11 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-secret
                   key: password
-            - name: RABBITMQ_ERLANG_COOKIE
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: cookie
-            - name: K8S_SERVICE_NAME
-              value: rabbitmq-cluster
+            # - name: RABBITMQ_ERLANG_COOKIE
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: rabbitmq-secret
+            #       key: cookie
             - name: POD_IP
               valueFrom:
                 fieldRef:
@@ -93,7 +91,7 @@ spec:
             - name: RABBITMQ_NODENAME
               value: "rabbit@$(POD_NAME).rabbitmq-cluster.$(POD_NAMESPACE).svc.cluster.local"
             - name: RABBITMQ_CONFIG_FILE
-              value: /var/lib/rabbitmq/rabbitmq
+              value: /var/lib/rabbitmq/rabbitmq.conf
       volumes:
         - name: config-volume
           configMap:

@@ -2,7 +2,8 @@
 
 ### Prerequisite
 
-1. have openshift credentials and have read/write permission
+1. Have openshift credentials and have read/write permission
+2. Run the following commands under \gitops\components\messaging\rabbitmq folder.
 
 ### Steps
 
@@ -60,19 +61,19 @@ oc secrets link default docker-creds --for=pull
 7. create load balance service
 
 ```
-oc create -f gitops\components\messaging\rabbitmq\service.yaml
+oc create -f service.yaml --save-config
 ```
 
 8. create headless service
 
 ```
-oc create -f gitops\components\messaging\rabbitmq\service2.yaml
+oc create -f service2.yaml --save-config
 ```
 
 9. Create StatefulSet
 
 ```
-oc create -f gitops\components\messaging\rabbitmq\statefulset.yaml
+oc create -f statefulset.yaml --save-config
 ```
 
 > Note: in statefulset.yaml, we add
@@ -83,3 +84,17 @@ oc create -f gitops\components\messaging\rabbitmq\statefulset.yaml
 > ```
 >
 > because step 6 failed. If step 6 succeeds, we do not need to add imagePullSecrets
+
+10. expose the rabbitmq management web console
+
+```
+oc expose service rabbitmq-cluster-balancer
+```
+
+> reference command:
+
+```
+oc delete configmap rabbitmq-config
+oc delete secrets rabbitmq-secret
+oc delete service rabbitmq-cluster
+```

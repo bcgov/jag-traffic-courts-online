@@ -6,3 +6,4 @@ data:
   enabled_plugins: |
     [rabbitmq_management,rabbitmq_shovel,rabbitmq_shovel_management].
   rabbitmq.conf: |
+    loopback_users.guest = false
