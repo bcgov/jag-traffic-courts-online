@@ -33,10 +33,6 @@ namespace Gov.CitizenApi.Test.Features.Lookups
             return new LookupsService(_loggerMock.Object);
         }
 
-        public LookupsServiceTest()
-        {
-        }
-
         [Fact]
 #pragma warning disable IDE1006 // Naming Styles
         public void throw_ArgumentNullException_if_passed_null()
@@ -47,12 +43,12 @@ namespace Gov.CitizenApi.Test.Features.Lookups
 
         [Fact]
 #pragma warning disable IDE1006 // Naming Styles
-        public async Task get_lookupsAsync()
+        public async Task GetlookupsAsync_IsAssignablefromLookupsAll()
 #pragma warning restore IDE1006 // Naming Styles
         {
             LookupsService service = CreateSubjectUnderTest();
 
-            var result =await service.GetAllLookUps();
+            var result =await service.GetAllLookUpsAsync();
             Assert.IsAssignableFrom<LookupsAll>(result);
         }
 

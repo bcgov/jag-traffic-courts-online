@@ -31,8 +31,11 @@ namespace Gov.CitizenApi.Features.Lookups
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get()
         {
-            _logger.LogDebug("Get all Look Up Tables now.");
-            return Ok(new { result = await _lookupsService.GetAllLookUps() }); ;
+            _logger.LogDebug("Getting lookup tables");
+            LookupsAll lookUpsAll = await _lookupsService.GetAllLookUpsAsync();
+            if (lookUpsAll == null)
+                return NoContent();
+            return Ok(new ApiResultResponse<LookupsAll>(lookUpsAll)); ;
         }
     }
 }

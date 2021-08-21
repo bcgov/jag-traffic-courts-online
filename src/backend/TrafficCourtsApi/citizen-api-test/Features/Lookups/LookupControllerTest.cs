@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
+using AutoFixture;
 
 namespace Gov.CitizenApi.Test.Features.Lookups
 {
@@ -42,20 +43,25 @@ namespace Gov.CitizenApi.Test.Features.Lookups
 
         [Fact]
 #pragma warning disable IDE1006 // Naming Styles
-        public async Task get_lookups()
+        public async Task GetLookups_ReturnsNotNull_ActualResponseEqualsExpected_with_OK()
 #pragma warning restore IDE1006 // Naming Styles
         {
-            LookupsAll expected = new LookupsAll { };
+            Fixture fixture = new Fixture();
 
-            _serviceMock.Setup(x => x.GetAllLookUps())
-                .Returns(Task.FromResult(expected));
+            var result = new ApiResultResponse<LookupsAll>(fixture.Create<LookupsAll>());
+
+            _serviceMock.Setup(x => x.GetAllLookUpsAsync())
+                .Returns(Task.FromResult(result.Result));
 
             var sut = new LookupController(_loggerMock.Object, _serviceMock.Object);
 
-            var result = await sut.Get();
-            Assert.NotNull(result);
-            Assert.IsAssignableFrom<OkObjectResult>(result);
-            Assert.Equal(200, ((result as OkObjectResult).StatusCode));
+            var actual = await sut.Get();
+            Assert.NotNull(actual);
+            Assert.IsAssignableFrom<OkObjectResult>(actual);
+            var actualObjectResult = (ObjectResult)actual;
+            Assert.Equal(200, (actualObjectResult.StatusCode));
+            Assert.IsType<ApiResultResponse<LookupsAll>>(actualObjectResult.Value);
+            Assert.Equal<LookupsAll>(result.Result, ((ApiResultResponse<LookupsAll>)actualObjectResult.Value).Result);
         }
     }
 }

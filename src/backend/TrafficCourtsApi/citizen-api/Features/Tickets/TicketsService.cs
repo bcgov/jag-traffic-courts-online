@@ -41,7 +41,7 @@ namespace Gov.CitizenApi.Features.Tickets
             {
                 foreach(DBModel.Offence offence in ticket.Offences)
                 {
-                    offence.OffenceDescription = _lookupsService.GetCountStatute(offence.OffenceCode)?.name;
+                    offence.OffenceDescription = _lookupsService.GetCountStatute(offence.OffenceCode)?.Name;
                 }
             }
             var existedTicket = await FindTicketAsync(ticket.ViolationTicketNumber);
