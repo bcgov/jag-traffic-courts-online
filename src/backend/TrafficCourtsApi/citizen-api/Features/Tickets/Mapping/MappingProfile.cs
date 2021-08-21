@@ -35,6 +35,7 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
 
             CreateMap<Ticket, Disputant>()
                 .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.Birthdate))
+                .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.Address))
                 ;
 
             CreateMap<DBModel.Offence, TicketSearchOffence>();

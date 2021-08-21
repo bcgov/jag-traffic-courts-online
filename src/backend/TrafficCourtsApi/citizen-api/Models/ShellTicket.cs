@@ -24,6 +24,10 @@ namespace Gov.CitizenApi.Models
         public string Count3Charge { get; set; }// charge code: 19023
         public decimal? Count3FineAmount { get; set; } //140.90
         public string Photo { get; set; } //base64 encoded image data.
-
+        public string Address { get; set; } 
+        public string City { get; set; } 
+        public string Province { get; set; }
+        public string PostalCode { get; set; }
+        public string DriverLicenseProvince { get; set; }
     }
 }
