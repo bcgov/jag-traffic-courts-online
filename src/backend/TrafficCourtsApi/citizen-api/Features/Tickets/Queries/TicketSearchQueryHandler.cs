@@ -75,7 +75,12 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                 TicketSearchResponse response = _mapper.Map<TicketSearchResponse>(ticket);
                 List<Payment> payments = _ticketService.FindTicketPayments(ticketNumber, ticketTime);
                 TicketDispute ticketDispute = BuildTicketDispute(response, dispute, payments);
-                ticketDispute.Disputant = _mapper.Map<Disputant>(ticket);
+                //no dispute has been made, but frontend needs shell ticket person info as default disputant info
+                //it is better to do it in front end.
+                if (dispute == null)
+                {
+                    ticketDispute.Disputant = _mapper.Map<Disputant>(ticket);
+                }
                 return ticketDispute;
             }
             return null;
