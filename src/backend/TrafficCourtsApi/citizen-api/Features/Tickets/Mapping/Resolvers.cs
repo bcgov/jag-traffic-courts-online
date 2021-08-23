@@ -55,7 +55,7 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
                 TicketedAmount = fineAmount,
                 AmountDue = fineAmount,
                 OffenceCode = offenceCode,
-                OffenceDescription = _lookupsService.GetCountStatute(offenceCode).name,
+                OffenceDescription = _lookupsService.GetCountStatute(offenceCode).Name,
                 DiscountAmount = Keys.TicketDiscountValue,
                 ViolationDateTime = offenceDateTime == DateTime.MinValue ? null : offenceDateTime.ToString(Keys.DateTimeFormat)
             };
