@@ -57,7 +57,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Mapping
         {
             IServiceCollection serviceCollection = new ServiceCollection();
             Mock<ILookupsService> lookupsMock = new Mock<ILookupsService>();
-            lookupsMock.Setup(m => m.GetCountStatute(It.IsAny<string>())).Returns(new Statute { code=111, name="codeDesc"});
+            lookupsMock.Setup(m => m.GetCountStatute(It.IsAny<string>())).Returns(new Statute { Code=111, Name="codeDesc"});
             serviceCollection.AddTransient<ILookupsService>(m => lookupsMock.Object);
             serviceCollection.AddAutoMapper(typeof(MappingProfile));
 
