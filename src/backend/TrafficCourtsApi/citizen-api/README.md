@@ -49,3 +49,6 @@ Example that can be placed in appsettings.Development.json to use debug level lo
   }
 }
 ```
+
+connected components:
+ticket-search

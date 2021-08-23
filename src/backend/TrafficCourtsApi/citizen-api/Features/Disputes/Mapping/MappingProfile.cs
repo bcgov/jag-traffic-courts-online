@@ -12,7 +12,7 @@ namespace Gov.CitizenApi.Features.Disputes.Mapping
         {
             CreateMap<CreateDisputeCommand, DBModel.Dispute>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => 0))
-                .ForMember(dest => dest.DisputantBirthDate, opt => opt.MapFrom(src => src.Disputant==null? null : src.Disputant.BirthDate))
+                .ForMember(dest => dest.DisputantBirthDate, opt => opt.MapFrom(src => src.Disputant==null? null : src.Disputant.Birthdate))
                 .ForMember(dest => dest.DisputantEmailAddress, opt => opt.MapFrom(src => src.Disputant == null ? null : src.Disputant.EmailAddress))
                 .ForMember(dest => dest.DisputantFirstName, opt => opt.MapFrom(src => src.Disputant == null ? null : src.Disputant.GivenNames))
                 .ForMember(dest => dest.DisputantLastName, opt => opt.MapFrom(src => src.Disputant == null ? null : src.Disputant.LastName))
@@ -50,7 +50,7 @@ namespace Gov.CitizenApi.Features.Disputes.Mapping
                 .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.DisputantMailingAddress))
                 .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.DisputantMailingPostalCode))
                 .ForMember(dest => dest.Province, opt => opt.MapFrom(src => src.DisputantMailingProvince))
-                .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.DisputantBirthDate))
+                .ForMember(dest => dest.Birthdate, opt => opt.MapFrom(src => src.DisputantBirthDate))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.DisputantMailingCity))
                 .ForMember(dest => dest.DriverLicenseNumber, opt => opt.MapFrom(src => src.DriverLicense))
                 .ForMember(dest => dest.DriverLicenseProvince, opt => opt.MapFrom(src => src.DriverLicenseProvince))

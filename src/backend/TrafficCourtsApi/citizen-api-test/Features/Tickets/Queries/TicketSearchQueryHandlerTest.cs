@@ -2,12 +2,14 @@
 using Gov.CitizenApi.Features.Disputes;
 using Gov.CitizenApi.Features.Disputes.DBModel;
 using Gov.CitizenApi.Features.Tickets;
+using Gov.CitizenApi.Features.Tickets.DBModel;
 using Gov.CitizenApi.Features.Tickets.Queries;
 using Gov.CitizenApi.Models;
 using Gov.CitizenApi.Test.Utils;
 using Gov.TicketSearch;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,6 +53,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
             _disputeServiceMock.Setup(m => m.FindTicketDisputeAsync(It.IsAny<string>())).Returns(Task.FromResult(dispute));
             _mapperMock.Setup(m => m.Map<TicketDispute>(It.IsAny<TicketSearchResponse>())).Returns(ticketDispute);
             _mapperMock.Setup(m => m.Map<Disputant>(It.IsAny<Dispute>())).Returns(disputant);
+            _ticketsServiceMock.Setup(m=>m.FindTicketPayments(It.IsAny<string>(),It.IsAny<string>())).Returns((List<Payment>)null);
             var result = await _sut.Handle(query, CancellationToken.None);
             _ticketSearchClientMock.Verify(x => x.TicketsAsync(query.TicketNumber, query.Time, CancellationToken.None), Times.Once);
             _disputeServiceMock.Verify(x => x.FindTicketDisputeAsync(clientResponse.ViolationTicketNumber), Times.Once);
@@ -83,6 +86,7 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Queries
                 .Returns(Task.FromResult(clientResponse));
             _disputeServiceMock.Setup(m => m.FindTicketDisputeAsync(It.IsAny<string>())).Returns(Task.FromResult<Dispute>(null));
             _mapperMock.Setup(m => m.Map<TicketDispute>(It.IsAny<TicketSearchResponse>())).Returns(ticketDispute);
+            _ticketsServiceMock.Setup(m => m.FindTicketPayments(It.IsAny<string>(), It.IsAny<string>())).Returns((List<Payment>)null);
             var result = await _sut.Handle(query, CancellationToken.None);
             _ticketSearchClientMock.Verify(x => x.TicketsAsync(query.TicketNumber, query.Time, CancellationToken.None), Times.Once);
             _disputeServiceMock.Verify(x => x.FindTicketDisputeAsync(clientResponse.ViolationTicketNumber), Times.Once);

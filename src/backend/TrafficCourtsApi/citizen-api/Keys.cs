@@ -17,5 +17,7 @@ namespace Gov.CitizenApi
               ? 25
               : Convert.ToInt32(Environment.GetEnvironmentVariable("TICKET_DISCOUNT_VALUE"));
         public static string DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fff'Z'";
+        public static string PaybcApi_BaseUrl =Environment.GetEnvironmentVariable("PaybcApi__BaseUrl");
+        public static string PaybcApi_CallbackBaseUrl = Environment.GetEnvironmentVariable("PaybcApi__CallbackBaseUrl");
     }
 }

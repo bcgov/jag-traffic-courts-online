@@ -18,6 +18,8 @@ services:
       RABBITMQ__PORT: 5672
       RABBITMQ__USERNAME: guest
       RABBITMQ__PASSWORD: guest
+      PaybcApi__BaseUrl: http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/,
+      PaybcApi__CallbackBaseUrl: https://dev.violationtickets.gov.bc.ca/paymentComplete?
     ports:
       - "5000:8080"
     restart: always
@@ -38,7 +40,7 @@ services:
       OAUTH__CLIENTID: ${OAUTH__CLIENTID}
       OAUTH__SECRET: ${OAUTH__SECRET}
       RSI__BASEADDRESS: ${RSI__BASEADDRESS}
-      RSI__OPERATIONMODE: FAKE
+      RSI__OPERATIONMODE:
     ports:
       - "5100:8080"
     restart: always
