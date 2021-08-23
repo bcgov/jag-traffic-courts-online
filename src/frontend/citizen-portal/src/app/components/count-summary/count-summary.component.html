@@ -1,17 +1,6 @@
 <div *ngIf="ticket">
   <section class="mb-2">
-    <h2>
-      <small class="me-2">Ticket #:</small>
-      <strong>{{ ticket.violationTicketNumber }}</strong>
-      <span class="ms-4">
-        <small class="me-2">Violation date:</small>
-        <strong>{{ ticket.violationDate | formatDate }}</strong>
-      </span>
-      <span class="ms-4">
-        <small class="me-2">Violation time:</small>
-        <strong>{{ ticket.violationTime }}</strong>
-      </span>
-    </h2>
+    <app-resolution-header [ticket]="ticket"></app-resolution-header>
   </section>
 
   <div class="col mb-4 p-0" *ngIf="ticket._within30days">

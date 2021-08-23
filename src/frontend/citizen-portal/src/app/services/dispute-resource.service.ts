@@ -350,7 +350,7 @@ export class DisputeResourceService {
       }
 
       balance += offence._amountDue;
-      total += offence.ticketedAmount;
+      total += offence.amountDue;
     });
 
     // ------------------------------------
