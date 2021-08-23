@@ -51,11 +51,8 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
                 ;
 
             CreateMap<TicketPaymentConfirmCommand, Payment>()
-                .ForMember(dest => dest.Guid, opt => opt.MapFrom(src => src.Guid))
                 .ForMember(dest => dest.CompletedDateTime, opt => opt.MapFrom(src => DateTime.UtcNow))
-                .ForMember(dest => dest.ConfirmationNumber, opt => opt.MapFrom(src => src.ConfirmationNumber))
                 .ForMember(dest => dest.PaidAmount, opt => opt.MapFrom(src => src.Amount))
-                .ForMember(dest => dest.TransactionId, opt => opt.MapFrom(src => src.TransactionId))
                 .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => string.Equals("cancelled", src.Status, StringComparison.InvariantCultureIgnoreCase)? PaymentStatus.Cancelled: PaymentStatus.Success))
                 ;
         }
