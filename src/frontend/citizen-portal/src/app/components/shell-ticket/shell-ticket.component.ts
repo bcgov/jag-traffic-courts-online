@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -71,7 +70,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     private disputeResource: DisputeResourceService,
     private configService: ConfigService,
     private utilsService: UtilsService,
-    private currencyPipe: CurrencyPipe,
     private dialog: MatDialog,
     private router: Router,
     private appConfigService: AppConfigService,
@@ -140,6 +138,39 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       this.ticketFilename = shellTicketData.filename;
       if (!this.appConfigService.useMockServices) {
         this.recognizeContent(shellTicketData.ticketFile);
+        // } else {
+        //   const tmp: ShellTicket = {
+        //     birthdate: '',
+        //     chargeCount: 1,
+        //     count1Charge: null,
+        //     count1FineAmount: '812900',
+        //     count2Charge: null,
+        //     count2FineAmount: '',
+        //     count3Charge: null,
+        //     count3FineAmount: '',
+        //     courtHearingLocation: '',
+        //     detachmentLocation: '',
+        //     driverLicenseNumber: '',
+        //     address: '',
+        //     city: '',
+        //     province: '',
+        //     postalCode: '',
+        //     gender: '',
+        //     driverLicenseProvince: '',
+        //     amountOwing: null,
+        //     givenNames: 'JIMINEX',
+        //     lastName: 'CRICKET',
+        //     violationDate: '',
+        //     violationTicketNumber: 'AJ20103222',
+        //     violationTime: '',
+        //     _count1ChargeDesc: 'use device while diving',
+        //     _count1ChargeSection: '145(1)',
+        //     _count2ChargeDesc: '',
+        //     _count2ChargeSection: '',
+        //     _count3ChargeDesc: '',
+        //     _count3ChargeSection: '',
+        //   };
+        //   this.form.setValue(tmp);
       }
     });
   }
@@ -169,18 +200,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       ),
       map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
     );
-
-    // Calculate the amount owing
-    // this.count1FineAmount.valueChanges.subscribe(() => {
-    //   this.onCalculateAmountOwing();
-    // });
-    // this.count2FineAmount.valueChanges.subscribe(() => {
-    //   this.onCalculateAmountOwing();
-    // });
-    // this.count3FineAmount.valueChanges.subscribe(() => {
-    //   this.onCalculateAmountOwing();
-    // });
-    // this.onCalculateAmountOwing();
 
     // Set the enabled/disabled of the count fields depending upon visibility
     this.chargeCount.valueChanges.subscribe((selectedValue) => {
@@ -334,14 +353,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       this.count2FineAmount.enable();
     }
   }
-
-  // private onCalculateAmountOwing(): void {
-  //   let total = 0;
-  //   total += Number(this.count1FineAmount.value);
-  //   total += Number(this.count2FineAmount.value);
-  //   total += Number(this.count3FineAmount.value);
-  //   this.amountOwing.setValue(this.currencyPipe.transform(total));
-  // }
 
   private filterStatutes(value: string): Config<number>[] {
     const trimValue = value.toLowerCase().replace(/\s+/g, ''); // Get rid of whitespace

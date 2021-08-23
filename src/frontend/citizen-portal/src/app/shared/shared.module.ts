@@ -29,7 +29,8 @@ import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
 import { TicketPaymentDialogComponent } from './dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
-import { DisputeFooterComponent } from './components/dispute-footer/dispute-footer.component';
+import { ResolutionFooterComponent } from './components/resolution-footer/resolution-footer.component';
+import { ResolutionHeaderComponent } from './components/resolution-header/resolution-header.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { DisputeFooterComponent } from './components/dispute-footer/dispute-foot
     TicketExampleDialogComponent,
     StepperPageComponent,
     TicketPaymentDialogComponent,
-    DisputeFooterComponent,
+    ResolutionFooterComponent,
+    ResolutionHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -94,7 +96,8 @@ import { DisputeFooterComponent } from './components/dispute-footer/dispute-foot
     ConfigModule,
     HeaderComponent,
     FooterComponent,
-    DisputeFooterComponent,
+    ResolutionFooterComponent,
+    ResolutionHeaderComponent,
     FeatureFlagDirective,
     StepperPageComponent,
   ],
