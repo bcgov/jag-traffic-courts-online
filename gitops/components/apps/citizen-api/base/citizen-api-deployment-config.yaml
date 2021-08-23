@@ -3,7 +3,7 @@ kind: DeploymentConfig
 metadata:
   name: citizen-api
   annotations:
-    app.openshift.io/connects-to: ticket-search
+    app.openshift.io/connects-to: ticket-search, rabbitmq
   labels:
     app: citizen-api
     app.kubernetes.io/name: citizen-api
@@ -84,4 +84,3 @@ spec:
           kind: ImageStreamTag
           namespace: "0198bb-tools"
           name: "citizen-api:dev"
-status: {}

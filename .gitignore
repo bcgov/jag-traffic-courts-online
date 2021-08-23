@@ -48,3 +48,6 @@ artifacts/
 
 # dependencies
 /node_modules
+
+# paybc mock
+/src/mock_paybc/
