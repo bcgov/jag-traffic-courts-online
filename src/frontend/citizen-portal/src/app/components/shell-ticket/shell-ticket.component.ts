@@ -63,6 +63,8 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
   public filteredStatutes2: Observable<Config<number>[]>;
   public filteredStatutes3: Observable<Config<number>[]>;
 
+  private MINIMUM_AGE = 18;
+
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
@@ -80,7 +82,9 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
     this.policeLocations = this.configService.policeLocations;
 
     this.maxDateOfBirth = new Date();
-    this.maxDateOfBirth.setFullYear(this.todayDate.getFullYear() - 16); // TODO 16 or 18?
+    this.maxDateOfBirth.setFullYear(
+      this.todayDate.getFullYear() - this.MINIMUM_AGE
+    );
     this.isMobile = this.utilsService.isMobile();
 
     this.form = this.formBuilder.group({

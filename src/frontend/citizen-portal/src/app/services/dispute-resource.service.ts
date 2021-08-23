@@ -354,7 +354,9 @@ export class DisputeResourceService {
     });
 
     // ------------------------------------
-    ticket._within30days = this.isWithin30Days(ticket.discountDueDate);
+    // if the total due is 0, do not show the 'within 30 days' information
+    ticket._within30days =
+      total > 0 ? this.isWithin30Days(ticket.discountDueDate) : false;
     ticket._outstandingBalanceDue = balance;
     ticket._totalBalanceDue = total;
     ticket._requestSubmitted = requestSubmitted;
