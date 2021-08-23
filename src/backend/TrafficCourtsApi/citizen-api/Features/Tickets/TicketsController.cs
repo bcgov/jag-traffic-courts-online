@@ -108,7 +108,7 @@ namespace Gov.CitizenApi.Features.Tickets
         {
             try
             {
-                _logger.LogInformation("get ticket payment confirmation.");
+                _logger.LogInformation("get ticket payment confirmation");
                 var response = await _mediator.Send(ticketPayConfirm);
                 return RedirectToAction("Ticket", new { ticketNumber = response.TicketNumber, time = response.Time });
             }

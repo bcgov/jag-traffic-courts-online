@@ -20,7 +20,7 @@ namespace Gov.CitizenApi.Features.Tickets
         Task<Payment> CreatePaymentAsync(Payment ticket);
         Task<Payment> FindPaymentAsync(Guid guid);
         Task<Payment> UpdatePaymentAsync(Payment ticket);
-        Task<List<Payment>> FindTicketPaymentsAsync(string ticketNumber, string ticketTime = null);
+        List<Payment> FindTicketPayments(string ticketNumber, string ticketTime = null);
     }
 
     public class TicketsService : ITicketsService
@@ -101,9 +101,9 @@ namespace Gov.CitizenApi.Features.Tickets
             return updatedPayment.Entity;
         }
 
-        public Task<List<Payment>> FindTicketPaymentsAsync(string ticketNumber, string ticketTime = null)
+        public List<Payment> FindTicketPayments(string ticketNumber, string ticketTime = null)
         {
-            return Task.FromResult(_context.Payments.Where(m=>m.ViolationTicketNumber==ticketNumber).ToList());
+            return _context.Payments.Where(m=>m.ViolationTicketNumber==ticketNumber).ToList();
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                 _logger.LogInformation("find the dispute for the ticket");
                 Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticketSearchResponse.ViolationTicketNumber);
 
-                List<Payment> payments = await _ticketService.FindTicketPaymentsAsync(query.TicketNumber, query.Time);
+                List<Payment> payments = _ticketService.FindTicketPayments(query.TicketNumber, query.Time);
                 _logger.LogInformation("return ticketDispute.");
                 return BuildTicketDispute(ticketSearchResponse, dispute, payments);
             }
@@ -73,7 +73,7 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
                 Dispute dispute = await _disputeService.FindTicketDisputeAsync(ticket.ViolationTicketNumber);
                 _logger.LogInformation("return ticketDispute.");
                 TicketSearchResponse response = _mapper.Map<TicketSearchResponse>(ticket);
-                List<Payment> payments = await _ticketService.FindTicketPaymentsAsync(ticketNumber, ticketTime);
+                List<Payment> payments = _ticketService.FindTicketPayments(ticketNumber, ticketTime);
                 TicketDispute ticketDispute = BuildTicketDispute(response, dispute, payments);
                 ticketDispute.Disputant = _mapper.Map<Disputant>(ticket);
                 return ticketDispute;
