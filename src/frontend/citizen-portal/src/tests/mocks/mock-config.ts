@@ -3,7 +3,7 @@ import { Configuration } from '@config/config.model';
 export class MockConfig {
   public static get(): Configuration {
     // tslint:disable
-    // Export of /lookups response:
+    // Export of /lookup response:
     return {
       courtLocations: [
         {

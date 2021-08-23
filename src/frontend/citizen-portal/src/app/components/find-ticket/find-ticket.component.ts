@@ -16,6 +16,7 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
@@ -34,7 +35,7 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
   public notFound = false;
 
   constructor(
-    private route: Router,
+    private router: Router,
     private formBuilder: FormBuilder,
     private disputeResource: DisputeResourceService,
     private formUtilsService: FormUtilsService,
@@ -86,7 +87,7 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
         this.disputeService.ticket$.next(response);
 
         if (response) {
-          this.route.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
             queryParams: formParams,
           });
         } else {
@@ -97,5 +98,47 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
 
   public get ticketNumber(): FormControl {
     return this.form.get('ticketNumber') as FormControl;
+  }
+
+  public onFileChange(event: any) {
+    let filename: string;
+    let ticketImage: string;
+
+    // reset
+    this.disputeService.shellTicketData$.next(null);
+
+    if (!event.target.files[0] || event.target.files[0].length === 0) {
+      this.logger.info('You must select an image');
+      return;
+    }
+
+    const mimeType = event.target.files[0].type;
+
+    if (mimeType.match(/image\/*/) == null) {
+      this.logger.info('Only images are supported');
+      return;
+    }
+
+    const reader = new FileReader();
+    const ticketFile: File = event.target.files[0];
+    this.logger.info('file target', event.target.files[0]);
+
+    filename = ticketFile.name;
+    reader.readAsDataURL(ticketFile);
+    this.logger.info('file', ticketFile.name, ticketFile.lastModified);
+
+    reader.onload = () => {
+      ticketImage = reader.result as string;
+
+      // console.log('filename', filename, 'ticketImage', ticketImage.length);
+      const shellTicketData: ShellTicketData = {
+        filename,
+        ticketImage,
+        ticketFile,
+      };
+      this.disputeService.shellTicketData$.next(shellTicketData);
+
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
+    };
   }
 }

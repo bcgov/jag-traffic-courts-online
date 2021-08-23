@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DisputeFooterComponent } from './dispute-footer.component';
+import { ResolutionHeaderComponent } from './resolution-header.component';
 
-describe('DisputeFooterComponent', () => {
-  let component: DisputeFooterComponent;
-  let fixture: ComponentFixture<DisputeFooterComponent>;
+describe('ResolutionHeaderComponent', () => {
+  let component: ResolutionHeaderComponent;
+  let fixture: ComponentFixture<ResolutionHeaderComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DisputeFooterComponent ]
+      declarations: [ ResolutionHeaderComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisputeFooterComponent);
+    fixture = TestBed.createComponent(ResolutionHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

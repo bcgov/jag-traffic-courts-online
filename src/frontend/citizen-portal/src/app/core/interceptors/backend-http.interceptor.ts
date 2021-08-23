@@ -35,8 +35,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       return next.handle(request);
 
       // TODO: remove later
-      // for now, lookups always use mock
-    } else if (currentRoutePath === 'lookups') {
+      // for now, lookup always use mock
+    } else if (currentRoutePath === 'lookup') {
       return this.handleLookupsRequests(request.method);
     }
 
@@ -44,7 +44,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       if (
         !currentRoutePath.includes('ticket') &&
         !currentRoutePath.includes('dispute') &&
-        currentRoutePath !== 'lookups'
+        !currentRoutePath.includes('pay') &&
+        currentRoutePath !== 'lookup'
       ) {
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
@@ -55,13 +56,15 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       // Handle 'ticket' requests
       if (currentRoutePath.includes('ticket')) {
         return this.handleTicketsRequests(request.method);
+      } else if (currentRoutePath.includes('pay')) {
+        return this.handlePayRequests(request.method);
 
         // Handle 'dispute' requests
       } else if (currentRoutePath.includes('dispute')) {
         return this.handleDisputesRequests(request.method);
 
-        // Handle 'lookups' requests
-      } else if (currentRoutePath === 'lookups') {
+        // Handle 'lookup' requests
+      } else if (currentRoutePath === 'lookup') {
         return this.handleLookupsRequests(request.method);
       }
     }
@@ -78,6 +81,37 @@ export class BackendHttpInterceptor implements HttpInterceptor {
       case 'PUT':
       case 'POST':
         return of(new HttpResponse({ status: 200, body: { result: ticket } }));
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handlePayRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    switch (requestMethod) {
+      case 'GET':
+      case 'PUT':
+      case 'POST':
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: {
+              result: {
+                violationTicketNumber: 'EZ02000460',
+                violationTime: '09:54',
+                counts: '1,2,3',
+                callbackUrl:
+                  'http://localhost:5000/id=7af161b6-bd97-4ee9-b271-3d14b9d198bf',
+                redirectUrl: null,
+              },
+            },
+          })
+        );
         break;
       default:
         throw new HttpErrorResponse({

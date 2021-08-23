@@ -113,8 +113,9 @@ namespace Gov.CitizenApi.Test.Features.Disputes
             var sut = new DisputesController(_loggerMock.Object, _mediatorMock.Object);
 
             var result = await sut.TicketDispute(dispute);
-            Assert.NotNull(result);
-            Assert.IsAssignableFrom<OkResult>(result);
+            Assert.True(result is RedirectToActionResult);
+            Assert.True(((RedirectToActionResult)result).ActionName == "Ticket");
+            Assert.True(((RedirectToActionResult)result).ControllerName == "Tickets");
             _mediatorMock.Verify(x => x.Send(It.IsAny<CreateDisputeCommand>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }

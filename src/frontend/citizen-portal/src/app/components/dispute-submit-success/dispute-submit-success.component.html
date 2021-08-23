@@ -1,4 +1,4 @@
-<app-page>
+<app-page [busy]="busy">
   <app-page-header>
     <ng-container header>Submission confirmation</ng-container>
   </app-page-header>
@@ -16,9 +16,17 @@
     </div>
   </section>
 
-  <div>
-    A confirmation email of the request information has been sent to: <br />
-    <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+  <div class="row">
+    <div class="col-lg-8">
+      A confirmation email of the request information has been sent to: <br />
+      <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+    </div>
+    <div class="col-lg-4">
+      <a class="print-link">
+        <mat-icon class="icon-xlarge me-2">print</mat-icon>
+        Print confirmation page for your records
+      </a>
+    </div>
   </div>
 
   <div class="mt-4" *ngIf="countsToPay">
@@ -31,7 +39,7 @@
       color="accent"
       class="large mt-3"
       style="width: unset"
-      (click)="onPayTicket()"
+      (click)="onMakePayment()"
     >
       Make payment
     </button>
@@ -43,5 +51,5 @@
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
 
-  <app-dispute-footer></app-dispute-footer>
+  <app-resolution-footer></app-resolution-footer>
 </app-page>

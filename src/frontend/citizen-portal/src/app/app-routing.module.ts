@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
-import { TicketImageComponent } from '@components/ticket-image/ticket-image.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
-import { TicketPaymentSuccessComponent } from '@components/ticket-payment-success/ticket-payment-success.component';
+import { TicketPaymentCompleteComponent } from '@components/ticket-payment-complete/ticket-payment-complete.component';
 import { TicketPaymentComponent } from '@components/ticket-payment/ticket-payment.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
@@ -21,20 +20,20 @@ const routes: Routes = [
     data: { featureFlag: 'dispute' },
     children: [
       {
-        path: AppRoutes.SHELL,
-        component: ShellTicketComponent,
+        path: AppRoutes.FIND,
+        component: FindTicketComponent,
       },
       {
-        path: AppRoutes.IMAGE,
-        component: TicketImageComponent,
+        path: AppRoutes.SHELL,
+        component: ShellTicketComponent,
       },
       {
         path: AppRoutes.SUBMIT_SUCCESS,
         component: DisputeSubmitSuccessComponent,
       },
       {
-        path: AppRoutes.PAYMENT_SUCCESS,
-        component: TicketPaymentSuccessComponent,
+        path: AppRoutes.PAYMENT_COMPLETE,
+        component: TicketPaymentCompleteComponent,
       },
       {
         path: AppRoutes.SUMMARY,
@@ -48,17 +47,10 @@ const routes: Routes = [
         path: AppRoutes.PAYMENT,
         component: TicketPaymentComponent,
       },
-    ],
-  },
-  {
-    path: AppRoutes.TICKET,
-    component: TicketPageComponent,
-    canActivate: [FeatureFlagGuard],
-    data: { featureFlag: 'dispute' },
-    children: [
       {
-        path: AppRoutes.FIND,
-        component: FindTicketComponent,
+        path: '',
+        redirectTo: AppRoutes.FIND,
+        pathMatch: 'full',
       },
     ],
   },

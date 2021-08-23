@@ -13,6 +13,7 @@ namespace Gov.CitizenApi.Infrastructure
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Offence> Offences { get; set; }
         public DbSet<Dispute> Disputes { get; set; }
+        public DbSet<Payment> Payments { get; set; }
         public DbSet<OffenceDisputeDetail> OffenceDisputeDetails { get; set; }
     }
 }

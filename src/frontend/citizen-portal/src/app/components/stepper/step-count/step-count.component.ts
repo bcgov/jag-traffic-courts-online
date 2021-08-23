@@ -7,13 +7,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatChip, MatChipList } from '@angular/material/chips';
+import { MatChipList } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -48,7 +51,8 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private dialog: MatDialog
   ) {
     super(
       route,
@@ -60,35 +64,22 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     );
   }
 
-  public offenceAgreementStatusOptions = [
-    {
-      value: 'NOTHING',
-      desc: 'I do not wish to take any action on this count at this time.',
-    },
-    {
-      value: 'PAY',
-      desc: 'I agree I committed this offence and I would like to pay for this count.',
-    },
-    {
-      value: 'REDUCTION',
-      desc: 'I agree I committed this offence and I would like to request a fine reduction and/or more time to pay for this count.',
-    },
-    {
-      value: 'DISPUTE',
-      desc: 'I do not agree that I committed this offence and I would like to dispute this count.',
-    },
-  ];
-
-  public toggleSelection(chip: MatChip) {
-    // chip.toggleSelected();
-    chip.select();
-    this.logger.log('chip', chip);
-  }
-
   public ngOnInit() {
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.stepControl;
     this.patchForm();
+  }
+
+  public onActionHelp() {
+    const data: DialogOptions = {
+      titleKey: 'Action information',
+      actionType: 'primary',
+      messageKey: 'Todo',
+      actionTextKey: 'Ok',
+      cancelHide: true,
+    };
+
+    this.dialog.open(ConfirmDialogComponent, { data });
   }
 
   public onSubmit(): void {
@@ -149,5 +140,9 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public get discountDueDate(): FormControl {
     return this.form.get('discountDueDate') as FormControl;
+  }
+
+  public get within30days(): FormControl {
+    return this.form.get('_within30days') as FormControl;
   }
 }

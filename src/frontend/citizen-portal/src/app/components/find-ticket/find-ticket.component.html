@@ -7,6 +7,33 @@
     </ng-container>
   </app-tco-page-header>
 
+  <div class="row d-sm-block d-md-none" *ngIf="notFound">
+    <div class="col-md-12">
+      <app-alert type="danger" icon="error">
+        <ng-container #alertContent class="alert-content">
+          <strong>Ticket not found.</strong>
+          <p>Please take photo or upload image.</p>
+        </ng-container>
+      </app-alert>
+    </div>
+  </div>
+
+  <!-- MOBILE VIEW -->
+  <div class="row d-sm-block d-md-none">
+    <div class="col-md-12">
+      <button
+        type="button"
+        mat-stroked-button
+        color="primary"
+        class="find-large"
+        (click)="fileInput.click()"
+      >
+        <mat-icon class="me-2">photo_camera</mat-icon>
+        Upload photo of ticket
+      </button>
+    </div>
+  </div>
+
   <div class="flex flex-last">
     <div class="flex-2-col info">
       <div class="flex-last-info-content">
@@ -50,8 +77,8 @@
 
           <div class="row">
             <div class="col-md-4">
-              <a class="examples" (click)="onViewTicketExample()">
-                <mat-icon class="me-2">article</mat-icon>
+              <a class="find-link" (click)="onViewTicketExample()">
+                <mat-icon class="icon-xlarge me-2">article</mat-icon>
                 View ticket examples
               </a>
             </div>
@@ -70,13 +97,13 @@
         </form>
       </div>
     </div>
-    <div class="flex-2-col info">
+    <div class="flex-2-col info d-xs-none d-sm-none d-md-block">
       <div class="row" *ngIf="notFound">
         <div class="col-md-12">
           <app-alert type="danger" icon="error">
             <ng-container #alertContent class="alert-content">
               <strong>Ticket not found.</strong>
-              <p>Please take photo or upload images.</p>
+              <p>Please take photo or upload image.</p>
             </ng-container>
           </app-alert>
         </div>
@@ -87,28 +114,25 @@
             type="button"
             mat-stroked-button
             color="primary"
-            class="find-large"
-            routerLink="/ticket/image"
+            class="find-xlarge"
+            (click)="fileInput.click()"
           >
-            <mat-icon class="me-2">photo_camera</mat-icon>
-            Capture / Upload photo of ticket
+            <mat-icon class="icon-large me-2">upload_file</mat-icon>
+            Upload photo of ticket
           </button>
-          <!--
-          <button
-            type="button"
-            mat-stroked-button
-            color="primary"
-            class="find-large"
-            routerLink="/ticket/image"
-          >
-            <mat-icon class="me-2">upload_file</mat-icon>
-            Upload ticket image
-          </button>
-          -->
+
+          <input
+            hidden
+            (change)="onFileChange($event)"
+            #fileInput
+            type="file"
+            accept="image/*"
+            id="file"
+          />
         </div>
       </div>
     </div>
   </div>
 
-  <app-dispute-footer></app-dispute-footer>
+  <app-resolution-footer></app-resolution-footer>
 </app-page>

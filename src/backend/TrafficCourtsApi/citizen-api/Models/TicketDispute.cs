@@ -13,6 +13,8 @@ namespace Gov.CitizenApi.Models
         public Disputant Disputant { get; set; }
         public Additional Additional { get; set; }
         public List<Offence> Offences { get; set; }
+        public string DiscountDueDate { get; set; }//null or has valid or invalid value
+        public decimal DiscountAmount { get; set; }//25 always
     }
 
     [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
@@ -34,7 +36,7 @@ namespace Gov.CitizenApi.Models
         public string City { get; set; }
         public string Province { get; set; }
         public string PostalCode { get; set; }
-        public string BirthDate { get; set; }
+        public string Birthdate { get; set; }
         public string EmailAddress { get; set; }
         public string DriverLicenseNumber { get; set; }
         public string DriverLicenseProvince { get; set; }

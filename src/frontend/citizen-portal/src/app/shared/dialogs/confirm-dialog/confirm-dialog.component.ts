@@ -40,9 +40,10 @@ export class ConfirmDialogComponent {
   private getOptions(dialogOptions: DialogOptions): DialogOptions {
     const options: DialogOptions = {
       actionType: 'primary',
-      actionTextKey: 'submit_confirmation.confirm',
-      cancelTextKey: 'submit_confirmation.cancel',
+      actionTextKey: 'Confirm',
+      cancelTextKey: 'Cancel',
       cancelHide: false,
+      actionHide: false,
       ...dialogOptions,
     };
 

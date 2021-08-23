@@ -1,17 +1,6 @@
 <div *ngIf="ticket">
   <section class="mb-2">
-    <h2>
-      <small class="me-2">Ticket #:</small>
-      <strong>{{ ticket.violationTicketNumber }}</strong>
-      <span class="ms-4">
-        <small class="me-2">Violation date:</small>
-        <strong>{{ ticket.violationDate | formatDate }}</strong>
-      </span>
-      <span class="ms-4">
-        <small class="me-2">Violation time:</small>
-        <strong>{{ ticket.violationTime }}</strong>
-      </span>
-    </h2>
+    <app-resolution-header [ticket]="ticket"></app-resolution-header>
   </section>
 
   <div class="col mb-4 p-0" *ngIf="ticket._within30days">
@@ -20,21 +9,33 @@
         <strong>You are within 30 days of your violation date.</strong><br />
         If you pay your ticket by
         <strong>{{ ticket.discountDueDate | formatDate }}</strong
-        >, you will save {{ ticket.discountAmount | currency }} per ticket
-        count.
+        >, you will pay
+        <strong>{{
+          ticket._outstandingBalanceDue
+            | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+        }}</strong
+        >, if paid after this date the amount due will be
+        <strong>
+          {{
+            ticket._totalBalanceDue
+              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+          }}</strong
+        >.
       </ng-container>
     </app-alert>
   </div>
 
-  <div *ngIf="payView">
-    <mat-checkbox
-      (change)="onSelectAllChange($event)"
-      class="me-4 mb-2"
-      color="primary"
-    >
-      I agree I committed this offence and I would like to pay all counts for
-      this ticket.
-    </mat-checkbox>
+  <div class="row mt-4 mb-4" *ngIf="selectView">
+    <div class="col-md-8">
+      <mat-checkbox
+        (change)="onSelectAllChange($event)"
+        class="me-4 mb-2"
+        color="primary"
+      >
+        I agree I committed this offence and I would like to pay all counts for
+        this ticket.
+      </mat-checkbox>
+    </div>
   </div>
 
   <div class="mb-2">
@@ -42,80 +43,57 @@
       class="px-4 py-2 mb-3 card-section"
       *ngFor="let row of ticket.offences; let i = index"
     >
-      <div class="row mt-2">
-        <div class="col-lg-2 pe-0">
-          <div style="display: flex">
-            <mat-checkbox
-              *ngIf="payView && row?._amountDue > 0"
-              color="primary"
-              class="me-4 mb-2"
-            ></mat-checkbox>
-            <mat-chip-list>
-              <mat-chip selected class="p-3"
-                >Count {{ row.offenceNumber }}</mat-chip
-              >
-            </mat-chip-list>
+      <app-count-item-summary
+        #countitem
+        [count]="row"
+        [selectView]="selectView"
+      ></app-count-item-summary>
+    </section>
+
+    <ng-container *ngIf="ticket._within30days; else notWithin30days">
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-lg-5 col-lg-5 text-success">
+            Balance due if paid <strong>on or before</strong>
+            {{ ticket.discountDueDate | formatDate }}
+          </div>
+          <div class="col-lg-2 text-success">
+            <strong>{{
+              ticket._outstandingBalanceDue
+                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
           </div>
         </div>
-        <div class="col-lg-8">
-          <small class="d-block"> Description of offence </small>
-          <strong>{{ row.offenceDescription | titlecase }}</strong>
-        </div>
-        <div class="col-lg-2">
-          <small class="d-block">Amount due</small>
-          <strong>{{
-            row?._amountDue
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}</strong>
-        </div>
-      </div>
-      <hr />
+      </section>
 
-      <div class="row">
-        <div class="offset-lg-2 col-lg-8">
-          <small class="d-block">Status</small>
-          {{ row?._offenceStatusDesc }}
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-lg-5 col-lg-5">
+            Balance due if paid <strong>after</strong>
+            {{ ticket.discountDueDate | formatDate }}
+          </div>
+          <div class="col-lg-2">
+            <strong>{{
+              ticket._totalBalanceDue
+                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
+          </div>
         </div>
-        <!--
-        <div class="col-lg-4">
-          <small class="d-block">Offence date</small>
-          {{ row?.violationDateTime | formatDate }}
-        </div>
-        -->
-        <div class="col-lg-2">
-          <small class="d-block">Offence amount</small>
-          {{
-            row?.ticketedAmount
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}
-        </div>
-      </div>
-    </section>
+      </section>
+    </ng-container>
 
-    <section class="px-4 py-2 mb-3 card-section">
-      <div class="row mt-2">
-        <div class="offset-lg-5 col-lg-5 text-success">Balance due today</div>
-        <div class="col-lg-2 text-success">
-          <strong>{{
-            ticket._outstandingBalanceDue
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}</strong>
+    <ng-template #notWithin30days>
+      <section class="px-4 py-2 mb-3 card-section">
+        <div class="row mt-2">
+          <div class="offset-lg-6 col-lg-4 text-success">Balance due</div>
+          <div class="col-lg-2 text-success">
+            <strong>{{
+              ticket._outstandingBalanceDue
+                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
+            }}</strong>
+          </div>
         </div>
-      </div>
-    </section>
-
-    <section class="px-4 py-2 mb-3 card-section">
-      <div class="row mt-2">
-        <div class="offset-lg-5 col-lg-5">
-          Balance due if paid after {{ ticket.discountDueDate | formatDate }}
-        </div>
-        <div class="col-lg-2">
-          <strong>{{
-            ticket._totalBalanceDue
-              | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}</strong>
-        </div>
-      </div>
-    </section>
+      </section>
+    </ng-template>
   </div>
 </div>

@@ -1,5 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { CountItemSummaryComponent } from '@components/count-item-summary/count-item-summary.component';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 
 @Component({
@@ -8,8 +15,10 @@ import { TicketDispute } from '@shared/models/ticketDispute.model';
   styleUrls: ['./count-summary.component.scss'],
 })
 export class CountSummaryComponent implements OnInit {
+  @ViewChildren('countitem')
+  countComponents: QueryList<CountItemSummaryComponent>;
   @Input() public ticket: TicketDispute;
-  @Input() public payView = false;
+  @Input() public selectView = false;
 
   public defaultLanguage: string;
 
@@ -18,6 +27,8 @@ export class CountSummaryComponent implements OnInit {
   ngOnInit(): void {}
 
   public onSelectAllChange(event: MatCheckboxChange): void {
-    console.log('checked: ' + event.checked);
+    this.countComponents.forEach((child) => {
+      child.selectBox(event.checked);
+    });
   }
 }

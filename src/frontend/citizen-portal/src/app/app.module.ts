@@ -42,11 +42,12 @@ import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
-import { TicketImageComponent } from './components/ticket-image/ticket-image.component';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
-import { TicketPaymentSuccessComponent } from './components/ticket-payment-success/ticket-payment-success.component';
+import { TicketPaymentCompleteComponent } from './components/ticket-payment-complete/ticket-payment-complete.component';
+import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
+import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -77,10 +78,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
-    TicketImageComponent,
     TicketPaymentComponent,
     CountSummaryComponent,
-    TicketPaymentSuccessComponent,
+    TicketPaymentCompleteComponent,
+    CountItemSummaryComponent,
+    CountItemDisputeSummaryComponent,
   ],
   imports: [
     CommonModule,

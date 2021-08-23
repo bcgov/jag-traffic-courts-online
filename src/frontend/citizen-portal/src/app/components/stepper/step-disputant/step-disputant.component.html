@@ -60,7 +60,7 @@
                 matInput
                 mask="S0S 0S0"
                 oninput="this.value = this.value.toUpperCase()"
-                formControlName="postal"
+                formControlName="postalCode"
                 [showMaskTyped]="true"
               />
               <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -120,7 +120,7 @@
               <mat-label>Driver's license number</mat-label>
               <input
                 matInput
-                formControlName="license"
+                formControlName="driverLicenseNumber"
                 mask="0000000"
                 [showMaskTyped]="false"
               />
@@ -131,7 +131,7 @@
           <div class="col-md-4">
             <mat-form-field class="w-100">
               <mat-label>Province or state of driver's license</mat-label>
-              <input matInput formControlName="provLicense" />
+              <input matInput formControlName="driverLicenseProvince" />
               <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
