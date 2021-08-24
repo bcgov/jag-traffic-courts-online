@@ -30,3 +30,14 @@ h3 {
     display: none !important;
   }
 }
+
+a {
+  cursor: pointer;
+  color: #009cde;
+  text-decoration: none;
+
+  &:hover {
+    color: #009cde;
+    text-decoration: underline;
+  }
+}

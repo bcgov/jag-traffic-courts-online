@@ -13,7 +13,7 @@
 }
 
 mat-label {
-  color: theme-palette(blue);
+  color: #333333;
 }
 
 //
@@ -48,7 +48,19 @@ mat-label {
   color: #fff !important;
 }
 
-.mat-step-text-label {
+.mat-step-label-selected {
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.mat-form-field .mat-form-field-label-wrapper label {
+  line-height: 21px;
+}
+
+.mat-form-field .mat-form-field-infix input {
+  line-height: 21px;
+}
+
+.mat-vertical-content {
+  padding: 0 24px 0px 24px !important;
 }

@@ -52,11 +52,11 @@ import { CountItemDisputeSummaryComponent } from './components/count-item-disput
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
 
-export function appInit(appConfigService: AppConfigService) {
-  return () => {
-    return appConfigService.loadAppConfig();
-  };
-}
+// export function appInit(appConfigService: AppConfigService) {
+//   return () => {
+//     return appConfigService.loadAppConfig();
+//   };
+// }
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -114,12 +114,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       useClass: BackendHttpInterceptor,
       multi: true,
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInit,
-      multi: true,
-      deps: [AppConfigService], // , KeycloakService],
-    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: appInit,
+    //   multi: true,
+    //   deps: [AppConfigService], // , KeycloakService],
+    // },
     WindowRefService,
   ],
   bootstrap: [AppComponent],

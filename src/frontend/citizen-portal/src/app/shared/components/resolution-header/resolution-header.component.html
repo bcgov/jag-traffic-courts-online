@@ -5,14 +5,14 @@
       <strong class="text-nowrap">{{ ticket.violationTicketNumber }}</strong>
     </div>
     <div class="col-md-4 col-lg-3">
+      <small class="me-2 text-nowrap">Violation time:</small>
+      <strong class="text-nowrap">{{ ticket.violationTime }}</strong>
+    </div>
+    <div class="col-md-4 col-lg-6 violation-time">
       <small class="me-2 text-nowrap">Violation date:</small>
       <strong class="text-nowrap">{{
         ticket.violationDate | formatDate
       }}</strong>
-    </div>
-    <div class="col-md-4 col-lg-6 violation-time">
-      <small class="me-2 text-nowrap">Violation time:</small>
-      <strong class="text-nowrap">{{ ticket.violationTime }}</strong>
     </div>
   </div>
 </h2>

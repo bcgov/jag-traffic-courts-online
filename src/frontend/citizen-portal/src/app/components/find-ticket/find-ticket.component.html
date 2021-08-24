@@ -23,7 +23,7 @@
     <div class="col-md-12">
       <button
         type="button"
-        mat-stroked-button
+        mat-flat-button
         color="primary"
         class="find-large"
         (click)="fileInput.click()"
@@ -44,6 +44,7 @@
                 <mat-label>Ticket number</mat-label>
                 <input
                   formControlName="ticketNumber"
+                  placeholder="A Ticket number is 2 letters and 8 numbers"
                   matInput
                   type="text"
                   oninput="this.value =
@@ -60,9 +61,6 @@
                 >
                   <mat-icon>close</mat-icon>
                 </button>
-                <mat-hint>
-                  <small> A Ticket number is 2 letters and 8 numbers </small>
-                </mat-hint>
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
@@ -77,8 +75,8 @@
 
           <div class="row">
             <div class="col-md-4">
-              <a class="find-link" (click)="onViewTicketExample()">
-                <mat-icon class="icon-xlarge me-2">article</mat-icon>
+              <a class="view-link" (click)="onViewTicketExample()">
+                <mat-icon class="icon-xlarge me-2">receipt_long</mat-icon>
                 View ticket examples
               </a>
             </div>
@@ -112,7 +110,7 @@
         <div class="col-md-12">
           <button
             type="button"
-            mat-stroked-button
+            mat-flat-button
             color="primary"
             class="find-xlarge"
             (click)="fileInput.click()"

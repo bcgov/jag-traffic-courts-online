@@ -1,12 +1,13 @@
-import { Injectable, Inject } from '@angular/core';
-
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { Configuration, Config, ProvinceConfig } from '@config/config.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Config, Configuration, ProvinceConfig } from '@config/config.model';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
-import { UtilsService, SortWeight } from '@core/services/utils.service';
+import { SortWeight, UtilsService } from '@core/services/utils.service';
+import { AppConfigService } from 'app/services/app-config.service';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+
 export interface IConfigService extends Configuration {
   load(): Observable<Configuration>;
 }
@@ -29,7 +30,9 @@ export class ConfigService implements IConfigService {
 
   constructor(
     protected apiResource: ApiResource,
-    protected utilsService: UtilsService
+    protected utilsService: UtilsService,
+    private http: HttpClient,
+    private appConfigService: AppConfigService
   ) {}
 
   public get dispute_submitted$(): BehaviorSubject<string> {
@@ -100,8 +103,12 @@ export class ConfigService implements IConfigService {
    */
   public load(): Observable<Configuration> {
     if (!this.configuration) {
-      return this.getConfiguration().pipe(
-        map((config: Configuration) => (this.configuration = config))
+      return this.appConfigService.loadAppConfig().pipe(
+        switchMap(() => {
+          return this.getConfiguration().pipe(
+            map((config: Configuration) => (this.configuration = config))
+          );
+        })
       );
     }
 

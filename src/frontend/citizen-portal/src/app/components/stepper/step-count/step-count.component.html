@@ -21,7 +21,9 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="mt-0 w-100">What action would you like to take? </label>
+          <label class="mt-0 w-100 fw-bold"
+            >What action would you like to take?
+          </label>
           <mat-radio-group formControlName="offenceAgreementStatus">
             <mat-radio-button value="NOTHING">
               <span class="wrap-mat-radio-label">
@@ -85,7 +87,7 @@
       </div>
       <div class="row" *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
         <div class="col-12">
-          <label
+          <label class="fw-bold"
             >Please make your selection(s) below and enter additional
             information as required.</label
           >
@@ -115,6 +117,34 @@
             >I would like to request a fine reduction on this
             count.</mat-checkbox
           >
+
+          <div
+            class="row"
+            *ngIf="
+              offenceAgreementStatus.value == 'REDUCTION' &&
+              requestReduction.value
+            "
+          >
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label
+                  >Please enter your reasons for why you are requesting a fine
+                  reduction.</mat-label
+                >
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"
+                  formControlName="reductionReason"
+                ></textarea>
+                <mat-error *ngIf="reductionReason.hasError('required')">
+                  {{ "error.required" | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
           <strong>and/or</strong>
           <mat-checkbox
             formControlName="requestMoreTime"
@@ -123,66 +153,46 @@
             >I would like to request more time to pay on this
             count.</mat-checkbox
           >
-        </div>
-      </div>
 
-      <div
-        class="row mt-4"
-        *ngIf="
-          offenceAgreementStatus.value == 'REDUCTION' && requestReduction.value
-        "
-      >
-        <div class="col">
-          <mat-form-field class="w-100">
-            <mat-label
-              >Please enter your reasons for why you are requesting a fine
-              reduction.</mat-label
-            >
-            <textarea
-              matInput
-              cdkTextareaAutosize
-              #autosize="cdkTextareaAutosize"
-              cdkAutosizeMinRows="1"
-              cdkAutosizeMaxRows="5"
-              formControlName="reductionReason"
-            ></textarea>
-            <mat-error *ngIf="reductionReason.hasError('required')">
-              {{ "error.required" | translate }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div
-        class="row"
-        *ngIf="
-          offenceAgreementStatus.value == 'REDUCTION' && requestMoreTime.value
-        "
-      >
-        <div class="col">
-          <mat-form-field class="w-100">
-            <mat-label
-              >Please enter your reasons for why you are requesting more time to
-              pay.</mat-label
-            >
-            <textarea
-              matInput
-              cdkTextareaAutosize
-              #autosize="cdkTextareaAutosize"
-              cdkAutosizeMinRows="1"
-              cdkAutosizeMaxRows="5"
-              formControlName="moreTimeReason"
-            ></textarea>
-            <mat-error *ngIf="moreTimeReason.hasError('required')">
-              {{ "error.required" | translate }}
-            </mat-error>
-          </mat-form-field>
+          <div
+            class="row"
+            *ngIf="
+              offenceAgreementStatus.value == 'REDUCTION' &&
+              requestMoreTime.value
+            "
+          >
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label
+                  >Please enter your reasons for why you are requesting more
+                  time to pay.</mat-label
+                >
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"
+                  formControlName="moreTimeReason"
+                ></textarea>
+                <mat-error *ngIf="moreTimeReason.hasError('required')">
+                  {{ "error.required" | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   </form>
 
-  <div class="col mt-4" *ngIf="reductionAppearInCourt.value">
+  <div
+    class="col"
+    *ngIf="
+      offenceAgreementStatus.value == 'REDUCTION' &&
+      reductionAppearInCourt.value
+    "
+  >
     <app-alert type="warning" icon="warning">
       <ng-container #alertContent class="alert-content">
         <strong
@@ -195,9 +205,12 @@
   </div>
 
   <div
-    class="col mt-4"
+    class="col"
+    [ngClass]="{ 'mt-4': offenceAgreementStatus.value === 'DISPUTE' }"
     *ngIf="
-      reductionAppearInCourt.value || offenceAgreementStatus.value === 'DISPUTE'
+      (offenceAgreementStatus.value == 'REDUCTION' &&
+        reductionAppearInCourt.value) ||
+      offenceAgreementStatus.value === 'DISPUTE'
     "
   >
     <app-alert type="warning" icon="warning">

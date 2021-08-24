@@ -7,6 +7,30 @@
 .mat-stroked-button {
   &.mat-button-base.mat-primary {
     border-color: theme-palette(blue);
+
+    &:hover {
+      background-color: theme-palette(blue);
+      color: white;
+    }
+  }
+}
+
+.mat-flat-button {
+  &.mat-button-base.mat-accent {
+    color: theme-palette(blue);
+
+    &:hover {
+      background-color: theme-palette(blue);
+      color: white;
+    }
+  }
+
+  &.mat-button-base.mat-primary {
+    &:hover {
+      border: 1px solid theme-palette(blue);
+      color: theme-palette(blue);
+      background-color: white;
+    }
   }
 }
 

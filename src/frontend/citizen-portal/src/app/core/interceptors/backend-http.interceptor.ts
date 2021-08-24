@@ -33,11 +33,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     // handle translations
     if (currentRoutePath.includes('json')) {
       return next.handle(request);
-
-      // TODO: remove later
-      // for now, lookup always use mock
-    } else if (currentRoutePath === 'lookup') {
-      return this.handleLookupsRequests(request.method);
     }
 
     if (this.appConfigService.useMockServices) {
@@ -45,7 +40,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         !currentRoutePath.includes('ticket') &&
         !currentRoutePath.includes('dispute') &&
         !currentRoutePath.includes('pay') &&
-        currentRoutePath !== 'lookup'
+        !currentRoutePath.includes('lookup')
       ) {
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
