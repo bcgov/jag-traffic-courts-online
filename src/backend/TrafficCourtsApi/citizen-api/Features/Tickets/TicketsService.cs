@@ -14,12 +14,54 @@ namespace Gov.CitizenApi.Features.Tickets
 
     public interface ITicketsService
     {
+        /// <summary>
+        /// Create a shell ticket
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns></returns>
         Task<Ticket> CreateTicketAsync(Ticket ticket);
+
+        /// <summary>
+        /// Get all shell tickets
+        /// </summary>
+        /// <returns></returns>
         Task<IEnumerable<Ticket>> GetTickets();
+
+        /// <summary>
+        /// Find shell ticket according to ticket
+        /// </summary>
+        /// <param name="ticketNumber"></param>
+        /// <param name="ticketTime">default is null</param>
+        /// <returns></returns>
         Task<Ticket> FindTicketAsync(string ticketNumber, string ticketTime=null);
-        Task<Payment> CreatePaymentAsync(Payment ticket);
+
+        /// <summary>
+        /// Create a payment record
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns>Paymment entity</returns>
+        Task<Payment> CreatePaymentAsync(Payment payment);
+
+        /// <summary>
+        /// Find payment entity by guid
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns>Paymment entity</returns>
         Task<Payment> FindPaymentAsync(Guid guid);
-        Task<Payment> UpdatePaymentAsync(Payment ticket);
+
+        /// <summary>
+        /// Update payment
+        /// </summary>
+        /// <param name="ticket"></param>
+        /// <returns>updated payment</returns>
+        Task<Payment> UpdatePaymentAsync(Payment payment);
+
+        /// <summary>
+        /// Find the payment for the ticket.
+        /// </summary>
+        /// <param name="ticketNumber"></param>
+        /// <param name="ticketTime"></param>
+        /// <returns>a list of payments for the ticket</returns>
         List<Payment> FindTicketPayments(string ticketNumber, string ticketTime = null);
     }
 
@@ -62,13 +104,9 @@ namespace Gov.CitizenApi.Features.Tickets
         {
             _logger.LogDebug("Find ticket for ticketNumber {ticketNumber}", ticketNumber);
 
-            var ticket = await _context.Tickets.FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber && (ticketTime==null || _.ViolationTime==ticketTime));
-            if (ticket != null)
-            {
-                ticket.Offences = new Collection<DBModel.Offence>(
-                    _context.Offences.Where(m => m.TicketId == ticket.Id).ToList()
-                    );
-            }
+            var ticket = await _context.Tickets
+                .Include(t=>t.Offences)
+                .FirstOrDefaultAsync(_ => _.ViolationTicketNumber == ticketNumber && (ticketTime==null || _.ViolationTime==ticketTime));
             return ticket;
         }
 

@@ -29,7 +29,7 @@ namespace Gov.CitizenApi.Features.Disputes
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> TicketDispute([FromBody]CreateDisputeCommand createDisputeCommand)
         {
             var response = await _mediator.Send(createDisputeCommand);
@@ -43,7 +43,7 @@ namespace Gov.CitizenApi.Features.Disputes
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> OffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
         {
 

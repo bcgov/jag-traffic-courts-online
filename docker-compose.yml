@@ -18,8 +18,8 @@ services:
       RABBITMQ__PORT: 5672
       RABBITMQ__USERNAME: guest
       RABBITMQ__PASSWORD: guest
-      PaybcApi__BaseUrl: http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/,
-      PaybcApi__CallbackBaseUrl: https://dev.violationtickets.gov.bc.ca/paymentComplete?
+      PaybcApi__BaseUrl: http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/ticket,
+      PaybcApi__CallbackBaseUrl: https://dev.violationtickets.gov.bc.ca/paymentComplete
     ports:
       - "5000:8080"
     restart: always
