@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { UtilsService } from '@core/services/utils.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -13,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './ticket-payment-complete.component.html',
   styleUrls: ['./ticket-payment-complete.component.scss'],
 })
-export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
+export class TicketPaymentCompleteComponent implements OnInit {
   public busy: Subscription;
   public ticket: TicketDispute;
   public paymentStatus: string;
@@ -24,7 +23,6 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
     private disputeService: DisputeService,
     private disputeResource: DisputeResourceService,
     private appConfigService: AppConfigService,
-    private utilsService: UtilsService,
     private logger: LoggerService
   ) {}
 
@@ -88,10 +86,6 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
         },
       });
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.goToTop();
   }
 
   public get isPaymentSuccess(): boolean {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -47,7 +47,7 @@ export function autocompleteObjectValidator(): ValidatorFn {
   templateUrl: './shell-ticket.component.html',
   styleUrls: ['./shell-ticket.component.scss'],
 })
-export class ShellTicketComponent implements OnInit, AfterViewInit {
+export class ShellTicketComponent implements OnInit {
   public busy: Subscription | Promise<any>;
   public ticketImageSrc: string;
   public ticketFilename: string;
@@ -210,10 +210,6 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       this.onChargeCountChange(selectedValue);
     });
     this.onChargeCountChange(this.chargeCount.value);
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
   }
 
   public onClearBirthdate(): void {

@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { UtilsService } from '@core/services/utils.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -13,7 +12,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './dispute-submit-success.component.html',
   styleUrls: ['./dispute-submit-success.component.scss'],
 })
-export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
+export class DisputeSubmitSuccessComponent implements OnInit {
   public busy: Subscription;
   public ticket: TicketDispute;
 
@@ -21,7 +20,6 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
     private router: Router,
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
-    private utilsService: UtilsService,
     private logger: LoggerService
   ) {}
 
@@ -34,10 +32,6 @@ export class DisputeSubmitSuccessComponent implements OnInit, AfterViewInit {
 
       this.ticket = ticket;
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.goToTop();
   }
 
   public onViewYourTicket(): void {

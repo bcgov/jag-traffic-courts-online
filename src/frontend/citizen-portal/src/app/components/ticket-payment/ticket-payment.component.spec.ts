@@ -8,6 +8,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 import { TicketPaymentComponent } from './ticket-payment.component';
+import { Component } from '@angular/core';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'app-test-blank', template: `` })
+class BlankComponent {}
 
 describe('TicketPaymentComponent', () => {
   let component: TicketPaymentComponent;
@@ -19,12 +24,15 @@ describe('TicketPaymentComponent', () => {
         HttpClientTestingModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),
-        RouterTestingModule,
+
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [TicketPaymentComponent],
+      declarations: [TicketPaymentComponent, BlankComponent],
     }).compileComponents();
   });
 

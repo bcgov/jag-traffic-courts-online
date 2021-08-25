@@ -13,6 +13,11 @@ import { ConfigService } from '@config/config.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Component } from '@angular/core';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'app-test-blank', template: `` })
+class BlankComponent {}
 
 describe('StepAdditionalComponent', () => {
   let component: StepAdditionalComponent;
@@ -23,14 +28,17 @@ describe('StepAdditionalComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterModule.forRoot([]),
-        RouterTestingModule,
+
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [StepAdditionalComponent],
+      declarations: [StepAdditionalComponent, BlankComponent],
       providers: [
         MockDisputeService,
         DisputeFormStateService,

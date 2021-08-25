@@ -1,38 +1,40 @@
 <mat-dialog-content>
   <h2>Ticket example</h2>
-  <mat-expansion-panel class="pt-0">
-    <mat-expansion-panel-header>
-      <mat-panel-title>Motor Vehicle Act Violation ticket</mat-panel-title>
-    </mat-expansion-panel-header>
-    <img
-      class="img-fluid"
-      src="/assets/violation-ticket-sample.jpg"
-      alt="Ticket"
-    />
-  </mat-expansion-panel>
+  <ng-container *ngIf="visiblePanel">
+    <mat-expansion-panel class="pt-0">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Motor Vehicle Act Violation ticket</mat-panel-title>
+      </mat-expansion-panel-header>
+      <img
+        class="img-fluid"
+        src="/assets/violation-ticket-sample.jpg"
+        alt="Ticket"
+      />
+    </mat-expansion-panel>
 
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title
-        >Electronic Motor Vehicle Act Violation ticket</mat-panel-title
-      >
-    </mat-expansion-panel-header>
-    <img class="img-fluid" src="/assets/e-ticket-sample.jpg" alt="Ticket" />
-  </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          >Electronic Motor Vehicle Act Violation ticket</mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <img class="img-fluid" src="/assets/e-ticket-sample.jpg" alt="Ticket" />
+    </mat-expansion-panel>
 
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title
-        >Motor Vehicle Act - Intersection Safety Violation Ticket (Intersection
-        and red light tickets)</mat-panel-title
-      >
-    </mat-expansion-panel-header>
-    <img
-      class="img-fluid"
-      src="/assets/intersection-safety-ticket-sample.jpg"
-      alt="Ticket"
-    />
-  </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          >Motor Vehicle Act - Intersection Safety Violation Ticket
+          (Intersection and red light tickets)</mat-panel-title
+        >
+      </mat-expansion-panel-header>
+      <img
+        class="img-fluid"
+        src="/assets/intersection-safety-ticket-sample.jpg"
+        alt="Ticket"
+      />
+    </mat-expansion-panel>
+  </ng-container>
 </mat-dialog-content>
 <mat-dialog-actions>
   <span class="flex-grow-1"></span>

@@ -7,6 +7,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { DisputeStepperComponent } from './dispute-stepper.component';
+import { Component } from '@angular/core';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'app-test-blank', template: `` })
+class BlankComponent {}
 
 describe('DisputeStepperComponent', () => {
   let component: DisputeStepperComponent;
@@ -18,12 +23,15 @@ describe('DisputeStepperComponent', () => {
         HttpClientTestingModule,
         RouterModule.forRoot([]),
         ReactiveFormsModule,
-        RouterTestingModule,
+
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [DisputeStepperComponent],
+      declarations: [DisputeStepperComponent, BlankComponent],
     }).compileComponents();
   });
 
