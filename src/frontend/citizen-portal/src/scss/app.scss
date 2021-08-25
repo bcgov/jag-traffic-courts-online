@@ -29,12 +29,12 @@
 // Vendors is used to include customized vendor styles into the application.
 @import "./vendors/vendors";
 
-a {
-  cursor: pointer;
-  color: theme-palette(blue, light);
-  text-decoration: none;
+.mat-tooltip {
+  font-size: 1em;
+}
 
-  &:hover {
-    text-decoration: underline;
-  }
+input[type="time"]::-webkit-calendar-picker-indicator {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
 }

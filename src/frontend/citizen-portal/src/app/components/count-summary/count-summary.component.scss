@@ -54,17 +54,6 @@ small {
   color: theme-palette(blue);
 }
 
-.mat-flat-button,
-.mat-stroked-button {
-  width: 100%;
-  margin-bottom: 1em;
-
-  &.large {
-    height: 46px;
-    font-size: 1rem;
-  }
-}
-
 .card-section {
   background-color: #ededed !important;
   border-left: 3px solid theme-palette(blue);

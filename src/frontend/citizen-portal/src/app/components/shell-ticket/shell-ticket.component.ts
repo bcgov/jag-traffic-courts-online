@@ -238,7 +238,7 @@ export class ShellTicketComponent implements OnInit, AfterViewInit {
       messageKey: `Please ensure that all entered fields match the paper ticket copy exactly.
           If you do not ensure correctness it could cause issues during reconcilliation.
           If you are not sure, please go back and update any fields as needed before submitting ticket information.`,
-      actionTextKey: 'Yes I am sure, continue to resolution options',
+      actionTextKey: 'Yes, continue to resolution options',
       cancelTextKey: 'Go back and edit',
     };
 

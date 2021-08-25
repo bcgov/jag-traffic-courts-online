@@ -7,27 +7,25 @@
     </ng-container>
   </app-page-header>
 
-  <div class="row">
-    <div class="col-lg-6">
-      Filename: <strong>{{ ticketFilename }}</strong>
-    </div>
-    <div class="col-lg-6">
-      <a class="upload-link" (click)="fileInput.click()">
-        <mat-icon class="me-2">highlight_off</mat-icon>
-        Remove and upload new image
-      </a>
-
-      <input
-        hidden
-        (change)="onFileChange($event)"
-        #fileInput
-        type="file"
-        accept="image/*"
-        id="file"
-      />
-    </div>
-    <hr />
+  <div class="flex p-0" style="align-items: flex-start">
+    <span>
+      Filename: <strong>{{ ticketFilename }}</strong></span
+    >
+    <span class="flex-grow-1"></span>
+    <a class="upload-link" (click)="fileInput.click()">
+      <mat-icon class="new-image-icon me-2">highlight_off</mat-icon>
+      Remove and upload new image
+    </a>
+    <input
+      hidden
+      (change)="onFileChange($event)"
+      #fileInput
+      type="file"
+      accept="image/*"
+      id="file"
+    />
   </div>
+  <hr />
 
   <div class="row">
     <div class="col-lg-6 col-md-12">
@@ -469,7 +467,6 @@
         class="large"
         routerLink="/ticket/find"
       >
-        <mat-icon inline="true">close</mat-icon>
         Cancel and search again
       </button>
     </div>
@@ -481,9 +478,10 @@
         class="large"
         (click)="onSubmit()"
       >
-        <mat-icon inline="true">save</mat-icon>
         Save and continue to resolution options
       </button>
     </div>
   </div>
+
+  <app-resolution-footer></app-resolution-footer>
 </app-page>

@@ -188,11 +188,6 @@ div.container {
   margin-top: 1em;
   color: theme-palette(blue);
 
-  &:hover {
-    background-color: theme-palette(blue);
-    color: #fff;
-  }
-
   @include media-breakpoint-down(md) {
     // width: 100%;
     max-width: 300px;

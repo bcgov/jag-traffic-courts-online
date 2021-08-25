@@ -33,6 +33,10 @@ small {
   user-select: none;
 }
 
+small {
+  color: theme-palette(grey, dark);
+}
+
 label {
   cursor: pointer;
 

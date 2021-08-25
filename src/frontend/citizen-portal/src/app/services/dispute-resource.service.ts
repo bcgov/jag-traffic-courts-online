@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigService } from '@config/config.service';
+import { ApiHttpErrorResponse } from '@core/models/api-http-error-response.model';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -213,8 +214,13 @@ export class DisputeResourceService {
         map((shellTicket) => {
           return shellTicket;
         }),
-        catchError((error: any) => {
-          this.toastService.openErrorToast('Ticket could not be created');
+        catchError((error: ApiHttpErrorResponse) => {
+          if (Array.isArray(error.errors) && error.errors.length > 0) {
+            const msg = error.errors.join(' ');
+            this.toastService.openErrorToast(msg);
+          } else {
+            this.toastService.openErrorToast('Ticket could not be created');
+          }
           this.logger.error(
             'DisputeResourceService::createShellTicket error has occurred: ',
             error

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, map } from 'rxjs';
+import { lastValueFrom, map, Observable } from 'rxjs';
 
 export interface IAppConfig {
   production: boolean;
@@ -64,10 +64,10 @@ export class AppConfigService {
 
   constructor(private http: HttpClient) {}
 
-  public loadAppConfig() {
+  public loadAppConfig(): Observable<any> {
     return this.http.get('/assets/app.config.json').pipe(
-      map((response: AppConfig) => {
-        this.appConfig = response;
+      map((config: AppConfig) => {
+        this.appConfig = config;
       })
     );
   }

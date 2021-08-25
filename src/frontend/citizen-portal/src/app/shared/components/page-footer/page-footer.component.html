@@ -1,10 +1,11 @@
-<div class="row mt-2">
+<div class="row mt-4">
   <div *ngIf="hasSecondaryAction" class="col-md-4">
     <button
       id="secondaryButton"
       mat-stroked-button
       type="button"
       color="primary"
+      class="large"
       (click)="onSecondaryAction()"
     >
       <mat-icon inline="true">{{ secondaryActionButtonIcon }}</mat-icon>
@@ -17,6 +18,7 @@
       mat-flat-button
       type="button"
       color="primary"
+      class="large"
       [disabled]="disableSave"
       (click)="onSave()"
     >

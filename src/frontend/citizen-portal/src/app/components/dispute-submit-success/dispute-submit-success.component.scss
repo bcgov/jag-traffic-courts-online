@@ -6,7 +6,6 @@ h3 {
 .mat-flat-button,
 .mat-stroked-button {
   width: 100%;
-  margin-bottom: 1em;
 
   &.large {
     height: 46px;
@@ -17,6 +16,7 @@ h3 {
 .print-link {
   display: inline-flex;
   height: 46px;
+  line-height: 25px;
 }
 
 .icon-xlarge {

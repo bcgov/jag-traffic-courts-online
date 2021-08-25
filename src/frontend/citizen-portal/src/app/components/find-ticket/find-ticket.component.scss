@@ -2,10 +2,14 @@
 
 .find-large {
   width: 100%;
-  margin-bottom: 1em !important;
 
   height: 46px;
   font-size: 1rem;
+}
+
+.icon-size {
+  width: 60px;
+  margin-right: 10px;
 }
 
 .find-xlarge {
@@ -28,9 +32,10 @@
   width: 50px !important;
 }
 
-.find-link {
+.view-link {
   display: inline-flex;
   height: 46px;
+  line-height: 25px;
 }
 
 .flex {
@@ -41,7 +46,7 @@
   padding-top: 0.5em;
 
   &.flex-last {
-    padding-bottom: 1em;
+    padding-bottom: 0;
   }
 
   &-2-col {
@@ -73,6 +78,7 @@
     &.flex-first {
       padding-bottom: 1em;
       padding-top: 0;
+      padding-right: 0;
     }
 
     &.flex-last {
@@ -81,11 +87,11 @@
 
     &-2-col {
       width: 100%;
-      padding-left: 10px !important;
-      padding-right: 10px !important;
+      padding-left: 0; // 10px !important;
+      padding-right: 0; //10px !important;
 
       &:first-child {
-        padding-right: 10px;
+        padding-right: 0; //10px;
       }
 
       .flex-last-info-content {

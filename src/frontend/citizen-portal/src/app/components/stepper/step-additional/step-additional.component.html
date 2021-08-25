@@ -8,7 +8,9 @@
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section>
-      <h3>Please indicate which (if any) of the following apply to you:</h3>
+      <h3 class="fw-bold">
+        Please indicate which (if any) of the following apply to you:
+      </h3>
       <div class="row">
         <div class="col">
           <mat-checkbox
@@ -39,7 +41,7 @@
 
       <div class="row" *ngIf="interpreterRequired.value">
         <div class="col">
-          <mat-form-field class="w-100">
+          <mat-form-field>
             <mat-label>{{
               "stepper.additional.interpreter_language" | translate
             }}</mat-label>
@@ -73,7 +75,14 @@
         <div class="col">
           <mat-form-field>
             <mat-label>Number of witnesses</mat-label>
-            <input matInput type="number" formControlName="numberOfWitnesses" />
+            <mat-select formControlName="numberOfWitnesses">
+              <mat-option value="1">1</mat-option>
+              <mat-option value="2">2</mat-option>
+              <mat-option value="3">3</mat-option>
+              <mat-option value="4">4</mat-option>
+              <mat-option value="5">5</mat-option>
+            </mat-select>
+            <mat-error>{{ "error.required" | translate }}</mat-error>
           </mat-form-field>
         </div>
       </div>

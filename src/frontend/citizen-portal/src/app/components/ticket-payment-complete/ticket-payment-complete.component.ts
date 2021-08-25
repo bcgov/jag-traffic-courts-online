@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
@@ -22,11 +23,19 @@ export class TicketPaymentCompleteComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private disputeService: DisputeService,
     private disputeResource: DisputeResourceService,
+    private appConfigService: AppConfigService,
     private utilsService: UtilsService,
     private logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
+    if (this.appConfigService.useMockServices) {
+      this.paymentStatus = 'paid';
+      this.paymentConfNo = '123-mock';
+      this.ticket = this.disputeService.ticket;
+      return;
+    }
+
     this.activatedRoute.queryParams.subscribe((params) => {
       const idParam = 'id';
       const id = params[idParam];

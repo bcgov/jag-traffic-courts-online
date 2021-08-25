@@ -1,5 +1,4 @@
-
-@import 'palette';
+@import "palette";
 
 h2 {
   color: theme-palette(blue);
@@ -21,11 +20,10 @@ h2 {
 }
 
 p {
-  color: theme-palette(blue);
+  color: theme-palette(grey, dark);
 }
 
 a {
   color: theme-palette(blue, light);
   text-decoration: underline;
 }
-

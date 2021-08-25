@@ -5,9 +5,9 @@
     >{{ options.icon }}</mat-icon
   >
   <img *ngIf="options.imageSrc" [attr.src]="options.imageSrc" alt="" />
-  <span class="flex-grow-1" *ngIf="options.titleKey">
+  <strong class="flex-grow-1" *ngIf="options.titleKey">
     {{ options.titleKey | translate }}
-  </span>
+  </strong>
 </h2>
 <mat-dialog-content>
   <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
@@ -15,17 +15,9 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button
-    *ngIf="!options.actionHide"
-    mat-flat-button
-    [color]="options.actionType"
-    (click)="onConfirm()"
-    class="my-2 me-1"
-  >
-    {{ options.actionTextKey }}
-  </button>
-  <button
     *ngIf="!options.cancelHide"
     mat-stroked-button
+    color="primary"
     [mat-dialog-close]="false"
     cdkFocusInitial
     class="my-2 me-2"
@@ -35,6 +27,15 @@
 
   <span class="flex-grow-1"></span>
 
+  <button
+    *ngIf="!options.actionHide"
+    mat-flat-button
+    [color]="options.actionType"
+    (click)="onConfirm()"
+    class="my-2 me-1"
+  >
+    {{ options.actionTextKey }}
+  </button>
   <a
     *ngIf="options.actionLink"
     [attr.href]="options.actionLink.href"

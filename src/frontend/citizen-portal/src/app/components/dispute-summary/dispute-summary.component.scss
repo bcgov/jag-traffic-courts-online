@@ -1,10 +1,16 @@
 .mat-flat-button,
 .mat-stroked-button {
   width: 100%;
-  margin-bottom: 1em;
 
   &.large {
     height: 46px;
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .mat-flat-button,
+  .mat-stroked-button {
+    margin-bottom: 1em;
   }
 }

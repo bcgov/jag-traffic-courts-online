@@ -3,9 +3,9 @@ export class ApiHttpErrorResponse {
   readonly errors: any;
   readonly message?: string;
 
-  constructor(status: number, errors: any, message?: string) {
+  constructor(status: number, error: any, message?: string) {
     this.status = status;
-    this.errors = errors;
+    this.errors = error.errors ? error.errors : error;
     this.message = message;
   }
 }
