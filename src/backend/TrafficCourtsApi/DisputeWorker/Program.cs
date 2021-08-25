@@ -48,7 +48,7 @@ namespace DisputeWorker
                         hostConfig.Password(rabbitMqSettings.Password);
                     });
 
-                    cfg.ReceiveEndpoint( Constants.DisputeRequestedQueueName, endpoint =>
+                    cfg.ReceiveEndpoint( (typeof(DisputeContract)).GetQueueName(), endpoint =>
                     {
                         endpoint.Consumer<DisputeRequestedConsumer>(ctx);
                     });

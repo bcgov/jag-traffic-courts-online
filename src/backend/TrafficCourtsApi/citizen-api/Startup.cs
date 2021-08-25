@@ -24,6 +24,7 @@ using Gov.CitizenApi.Messaging.Configuration;
 using MassTransit;
 using Gov.TicketSearch;
 using Gov.CitizenApi.Features.Lookups.Configuration;
+using TrafficCourts.Common.Contract;
 
 namespace Gov.CitizenApi
 {
@@ -192,6 +193,7 @@ namespace Gov.CitizenApi
                 });
             });
             services.AddMassTransitHostedService();
+            EndpointConvention.Map<DisputeContract>(new Uri($"{rabbitBaseUri}/{(typeof(DisputeContract)).GetQueueName()}"));
         }
 
         public void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
