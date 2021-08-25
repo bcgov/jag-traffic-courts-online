@@ -32,3 +32,9 @@
 .mat-tooltip {
   font-size: 1em;
 }
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+}
