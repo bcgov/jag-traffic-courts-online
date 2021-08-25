@@ -4,10 +4,13 @@ import {
   TestBed,
   waitForAsync,
 } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
 import { PageFooterComponent } from './page-footer.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
+@Component({ selector: 'test-blank', template: `` })
+class BlankComponent {}
 
 describe('PageFooterComponent', () => {
   let component: PageFooterComponent;
@@ -16,8 +19,13 @@ describe('PageFooterComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [RouterTestingModule, TranslateModule.forRoot()],
-        declarations: [PageFooterComponent],
+        imports: [
+          RouterTestingModule.withRoutes([
+            { path: 'ticket/find', component: BlankComponent },
+          ]),
+          TranslateModule.forRoot(),
+        ],
+        declarations: [PageFooterComponent, BlankComponent],
       }).compileComponents();
     })
   );

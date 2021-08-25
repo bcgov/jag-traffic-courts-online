@@ -11,6 +11,11 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 
 import { ShellTicketComponent } from './shell-ticket.component';
+import { Component } from '@angular/core';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'test-blank', template: `` })
+class BlankComponent {}
 
 describe('ShellTicketComponent', () => {
   let component: ShellTicketComponent;
@@ -19,7 +24,9 @@ describe('ShellTicketComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         BrowserAnimationsModule,
         HttpClientTestingModule,
         FormsModule,
@@ -27,7 +34,7 @@ describe('ShellTicketComponent', () => {
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [ShellTicketComponent],
+      declarations: [ShellTicketComponent, BlankComponent],
       providers: [
         CurrencyPipe,
         {

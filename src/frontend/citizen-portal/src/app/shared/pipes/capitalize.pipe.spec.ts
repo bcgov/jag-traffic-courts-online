@@ -1,12 +1,20 @@
+import { Component } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CapitalizePipe } from './capitalize.pipe';
 
+@Component({ selector: 'test-blank', template: `` })
+class BlankComponent {}
+
 describe('CapitalizePipe', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [CapitalizePipe],
+      imports: [
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
+      ],
+      declarations: [CapitalizePipe, BlankComponent],
     }).compileComponents();
   });
 

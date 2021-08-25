@@ -7,6 +7,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 import { DisputeSubmitSuccessComponent } from './dispute-submit-success.component';
+import { Component } from '@angular/core';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'test-blank', template: `` })
+class BlankComponent {}
 
 describe('DisputeSubmitSuccessComponent', () => {
   let component: DisputeSubmitSuccessComponent;
@@ -17,12 +22,15 @@ describe('DisputeSubmitSuccessComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterModule.forRoot([]),
-        RouterTestingModule,
+
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [DisputeSubmitSuccessComponent],
+      declarations: [DisputeSubmitSuccessComponent, BlankComponent],
     }).compileComponents();
   });
 

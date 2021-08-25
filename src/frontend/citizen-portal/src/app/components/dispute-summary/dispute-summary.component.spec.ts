@@ -8,8 +8,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { of } from 'rxjs';
+import { Component } from '@angular/core';
 
 import { DisputeSummaryComponent } from './dispute-summary.component';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'test-blank', template: `` })
+class BlankComponent {}
 
 describe('DisputeSummaryComponent', () => {
   let component: DisputeSummaryComponent;
@@ -20,12 +25,15 @@ describe('DisputeSummaryComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterModule.forRoot([]),
-        RouterTestingModule,
+
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [DisputeSummaryComponent],
+      declarations: [DisputeSummaryComponent, BlankComponent],
       providers: [
         FormatDatePipe,
         CurrencyPipe,

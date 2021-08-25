@@ -5,6 +5,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 import { TicketPaymentCompleteComponent } from './ticket-payment-complete.component';
+import { Component } from '@angular/core';
+
+// Added the declaration of BlankComponent to be used for routing
+@Component({ selector: 'test-blank', template: `` })
+class BlankComponent {}
 
 describe('TicketPaymentCompleteComponent', () => {
   let component: TicketPaymentCompleteComponent;
@@ -15,10 +20,13 @@ describe('TicketPaymentCompleteComponent', () => {
       imports: [
         HttpClientTestingModule,
         RouterModule.forRoot([]),
-        RouterTestingModule,
+
+        RouterTestingModule.withRoutes([
+          { path: 'ticket/find', component: BlankComponent },
+        ]),
         NgxMaterialModule,
       ],
-      declarations: [TicketPaymentCompleteComponent],
+      declarations: [TicketPaymentCompleteComponent, BlankComponent],
     }).compileComponents();
   });
 

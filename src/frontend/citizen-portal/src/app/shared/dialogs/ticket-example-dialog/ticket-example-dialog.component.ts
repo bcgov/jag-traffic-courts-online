@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  OnInit,
+} from '@angular/core';
 
 @Component({
   selector: 'app-ticket-example-dialog',
@@ -7,7 +12,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 })
 export class TicketExampleDialogComponent implements OnInit, AfterViewInit {
   // to hide bug: mat-expansion-panel animates expanded to closed when nested in a mat-dialog
-  public visible = false;
+  public visiblePanel = false;
 
   constructor() {
     //
@@ -18,6 +23,7 @@ export class TicketExampleDialogComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.visible = true;
+    // timeout required to avoid the dreaded 'ExpressionChangedAfterItHasBeenCheckedError'
+    setTimeout(() => (this.visiblePanel = true));
   }
 }
