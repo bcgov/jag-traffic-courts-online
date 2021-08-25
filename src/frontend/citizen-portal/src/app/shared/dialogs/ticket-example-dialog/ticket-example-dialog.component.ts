@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-ticket-example-dialog',
   templateUrl: './ticket-example-dialog.component.html',
   styleUrls: ['./ticket-example-dialog.component.scss'],
 })
-export class TicketExampleDialogComponent implements OnInit {
+export class TicketExampleDialogComponent implements OnInit, AfterViewInit {
+  // to hide bug: mat-expansion-panel animates expanded to closed when nested in a mat-dialog
+  public visible = false;
+
   constructor() {
     //
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     //
+  }
+
+  public ngAfterViewInit(): void {
+    this.visible = true;
   }
 }
