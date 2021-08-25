@@ -33,7 +33,7 @@ namespace Gov.CitizenApi.Features.Tickets
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Ticket([FromQuery]TicketSearchQuery query)
         {
@@ -56,7 +56,7 @@ namespace Gov.CitizenApi.Features.Tickets
 
         [HttpPost]
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ShellTicket([FromBody]CreateShellTicketCommand createShellTicket)
         {
@@ -82,7 +82,7 @@ namespace Gov.CitizenApi.Features.Tickets
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Pay([FromQuery] TicketPaymentCommand ticketPayment)
         {
@@ -102,7 +102,7 @@ namespace Gov.CitizenApi.Features.Tickets
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiBadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType( StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Pay([FromQuery] TicketPaymentConfirmCommand ticketPayConfirm)
         {

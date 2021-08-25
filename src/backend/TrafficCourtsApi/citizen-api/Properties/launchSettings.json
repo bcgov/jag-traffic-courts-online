@@ -11,7 +11,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "TicketSearchApi__BaseUrl": "http://localhost:5100/",
-        "PaybcApi__BaseUrl": "http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/",
+        "PaybcApi__BaseUrl": "http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/ticket",
         "PaybcApi__CallbackBaseUrl": "http://localhost:4200/ticket/paymentComplete?",
         "RABBITMQ__HOST": "localhost",
         "RABBITMQ__PORT": "5672",
