@@ -8,15 +8,12 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatChipList } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -51,8 +48,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService,
-    private translateService: TranslateService,
-    private dialog: MatDialog
+    private translateService: TranslateService
   ) {
     super(
       route,
@@ -68,18 +64,6 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.stepControl;
     this.patchForm();
-  }
-
-  public onActionHelp() {
-    const data: DialogOptions = {
-      titleKey: 'Action information',
-      actionType: 'primary',
-      messageKey: 'Todo',
-      actionTextKey: 'Ok',
-      cancelHide: true,
-    };
-
-    this.dialog.open(ConfirmDialogComponent, { data });
   }
 
   public onSubmit(): void {

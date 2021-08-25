@@ -28,7 +28,6 @@ import { FooterComponent } from './components/footer/footer.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
-import { TicketPaymentDialogComponent } from './dialogs/ticket-payment-dialog/ticket-payment-dialog.component';
 import { ResolutionFooterComponent } from './components/resolution-footer/resolution-footer.component';
 import { ResolutionHeaderComponent } from './components/resolution-header/resolution-header.component';
 
@@ -55,7 +54,6 @@ import { ResolutionHeaderComponent } from './components/resolution-header/resolu
     FeatureFlagDirective,
     TicketExampleDialogComponent,
     StepperPageComponent,
-    TicketPaymentDialogComponent,
     ResolutionFooterComponent,
     ResolutionHeaderComponent,
   ],

@@ -15,6 +15,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
@@ -36,6 +37,7 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private utilsService: UtilsService,
+    private appConfigService: AppConfigService,
     private router: Router,
     private dialog: MatDialog,
     private logger: LoggerService
@@ -62,6 +64,11 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
   }
 
   public onMakePayment(): void {
+    if (this.appConfigService.useMockServices) {
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE)]);
+      return;
+    }
+
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 

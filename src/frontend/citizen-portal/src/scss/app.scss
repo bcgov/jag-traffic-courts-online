@@ -28,3 +28,7 @@
 
 // Vendors is used to include customized vendor styles into the application.
 @import "./vendors/vendors";
+
+.mat-tooltip {
+  font-size: 1em;
+}

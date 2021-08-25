@@ -1,3 +1,5 @@
+@import "palette.scss";
+
 @media (min-width: 768px) {
   .violation-time {
     text-align: right;
@@ -5,5 +7,5 @@
 }
 
 small {
-  color: #333333;
+  color: theme-palette(grey, dark);
 }

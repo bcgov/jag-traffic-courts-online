@@ -1,3 +1,5 @@
+@import "palette";
+
 small {
-  color: #333333;
+  color: theme-palette(grey, dark);
 }

@@ -6,4 +6,9 @@ button.mat-flat-button .mat-icon {
 .mat-flat-button,
 .mat-stroked-button {
   width: 100%;
+
+  &.large {
+    height: 46px;
+    font-size: 1rem;
+  }
 }

@@ -160,6 +160,7 @@ export class DisputeStepperComponent
         'When your request is submitted for adjudication, it can no longer be updated. Are you ready to submit your request?',
       actionTextKey: 'Submit request',
       cancelTextKey: 'Cancel',
+      icon: null,
     };
 
     this.dialog
