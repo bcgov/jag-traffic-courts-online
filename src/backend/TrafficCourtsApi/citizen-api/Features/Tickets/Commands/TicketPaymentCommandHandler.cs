@@ -47,7 +47,7 @@ namespace Gov.CitizenApi.Features.Tickets.Commands
                 {"ticketNumber", payment.ViolationTicketNumber },
                 {"time", payment.ViolationTime },
                 {"counts", payment.RequestedCounts },
-                {"amount", String.Format("{0:0.00}",payment.RequestedAmount) },
+                {"amount", $"{payment.RequestedAmount:0.00}" },
                 {"callback", callbackUrl }
             };
             UriBuilder uriBuilder = new UriBuilder(Keys.PaybcApi_BaseUrl);
