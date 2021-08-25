@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Config, Configuration, ProvinceConfig } from '@config/config.model';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
@@ -31,8 +30,7 @@ export class ConfigService implements IConfigService {
   constructor(
     protected apiResource: ApiResource,
     protected utilsService: UtilsService,
-    private http: HttpClient,
-    private appConfigService: AppConfigService
+    protected appConfigService: AppConfigService
   ) {}
 
   public get dispute_submitted$(): BehaviorSubject<string> {
