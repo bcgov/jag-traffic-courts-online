@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Gov.CitizenApi.Features.Disputes;
 using Gov.CitizenApi.Features.Disputes.Commands;
-using Gov.CitizenApi.Messaging.Configuration;
 using Gov.CitizenApi.Test.Utils;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -14,6 +13,7 @@ using TrafficCourts.Common.Contract;
 using Microsoft.Extensions.Options;
 using System;
 using Xunit;
+using TrafficCourts.Common.Configuration;
 
 namespace Gov.CitizenApi.Test.Features.Disputes.Commands
 {
@@ -50,8 +50,7 @@ namespace Gov.CitizenApi.Test.Features.Disputes.Commands
             _sendEndpointMock
                 .Setup(x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(_sendEndpointMock));
-            _sut = new CreateOffenceDisputeCommandHandler(_loggerMock.Object, _disputeServiceMock.Object,
-                _sendEndPointProviderMock.Object, _rabbitConfigMock.Object, _mapperMock.Object);
+            _sut = new CreateOffenceDisputeCommandHandler(_loggerMock.Object, _disputeServiceMock.Object, _mapperMock.Object);
         }
 
         [Theory]

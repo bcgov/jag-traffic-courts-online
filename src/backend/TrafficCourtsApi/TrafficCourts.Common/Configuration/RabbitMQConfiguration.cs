@@ -1,4 +1,4 @@
-﻿namespace Gov.CitizenApi.Messaging.Configuration
+﻿namespace TrafficCourts.Common.Configuration
 {
     public class RabbitMQConfiguration
     {

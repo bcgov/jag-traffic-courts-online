@@ -2,6 +2,8 @@
 
 namespace TrafficCourts.Common.Contract
 {
+
+    [QueueName("DisputeRequested_queue")]
     public class DisputeContract
     {
         public string ViolationTicketNumber { get; set; }

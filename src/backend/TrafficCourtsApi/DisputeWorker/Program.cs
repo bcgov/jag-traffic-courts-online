@@ -1,3 +1,5 @@
+using Gov.TicketWorker.Features.Disputes;
+using Gov.TicketWorker.Features.Notifications;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +9,7 @@ using System;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Contract;
 
-namespace DisputeWorker
+namespace Gov.TicketWorker
 {
     public class Program
     {
@@ -39,6 +41,7 @@ namespace DisputeWorker
             {
                 config.AddConsumer<DisputeRequestedConsumer>();
                 config.AddConsumer<DisputeUpdatedConsumer>();
+                config.AddConsumer<NotificationRequestedConsumer>();
 
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -48,7 +51,7 @@ namespace DisputeWorker
                         hostConfig.Password(rabbitMqSettings.Password);
                     });
 
-                    cfg.ReceiveEndpoint( Constants.DisputeRequestedQueueName, endpoint =>
+                    cfg.ReceiveEndpoint( (typeof(DisputeContract)).GetQueueName(), endpoint =>
                     {
                         endpoint.Consumer<DisputeRequestedConsumer>(ctx);
                     });
@@ -56,6 +59,11 @@ namespace DisputeWorker
                     cfg.ReceiveEndpoint(Constants.DisputeUpdatedQueueName, endpoint =>
                     {
                         endpoint.Consumer<DisputeUpdatedConsumer>(ctx);
+                    });
+
+                    cfg.ReceiveEndpoint((typeof(NotificationContract)).GetQueueName(), endpoint =>
+                    {
+                        endpoint.Consumer<NotificationRequestedConsumer>(ctx);
                     });
                 });
             });

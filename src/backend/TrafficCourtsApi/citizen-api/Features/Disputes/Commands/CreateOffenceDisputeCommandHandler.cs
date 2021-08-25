@@ -4,11 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Gov.CitizenApi.Features.Disputes.DBModel;
-using Gov.CitizenApi.Messaging.Configuration;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using TrafficCourts.Common.Contract;
 
 namespace Gov.CitizenApi.Features.Disputes.Commands
@@ -18,22 +15,15 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
     {
         private readonly ILogger _logger;
         private readonly IDisputeService _disputeService;
-        private readonly ISendEndpointProvider _sendEndpointProvider;
-        private readonly RabbitMQConfiguration _rabbitMqConfig;
         private readonly IMapper _mapper;
 
         public CreateOffenceDisputeCommandHandler(
             ILogger<CreateOffenceDisputeCommandHandler> logger,
             IDisputeService disputeService, 
-            ISendEndpointProvider sendEndpointProvider,
-            IOptions<RabbitMQConfiguration> rabbitMqOptions, 
             IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
-            _sendEndpointProvider =
-                sendEndpointProvider ?? throw new ArgumentNullException(nameof(sendEndpointProvider));
-            _rabbitMqConfig = rabbitMqOptions.Value ?? throw new ArgumentNullException(nameof(rabbitMqOptions));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -76,12 +66,5 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
             return new CreateOffenceDisputeResponse {Id = result.Id};
         }
 
-        private async Task SendToQueue(DisputeContract dispute)
-        {
-            var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri(
-                $"rabbitmq://{_rabbitMqConfig.Host}:{_rabbitMqConfig.Port}/{Constants.DisputeUpdatedQueueName}"));
-
-            await sendEndpoint.Send(dispute);
-        }
     }
 }
