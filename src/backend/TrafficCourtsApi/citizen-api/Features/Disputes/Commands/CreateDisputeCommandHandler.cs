@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using Gov.CitizenApi.Messaging.Configuration;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +36,7 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
             {
                 _logger.LogInformation("Dispute created. ");
                 await _bus.Send(_mapper.Map<DisputeContract>(result));
+                await _bus.Send(new NotificationContract { NotificationType = NotificationType.Email, ViolationTicketNumber = result.ViolationTicketNumber });
                 return new CreateDisputeResponse { Id = result.Id };
             }
         }

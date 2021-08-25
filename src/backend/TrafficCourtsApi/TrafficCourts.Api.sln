@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Common.Test",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5EAF86AA-766E-424F-932F-E3D25A1BC688}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisputeWorker", "DisputeWorker\DisputeWorker.csproj", "{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ticket-worker", "DisputeWorker\ticket-worker.csproj", "{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

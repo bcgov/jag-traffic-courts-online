@@ -20,11 +20,11 @@ using System.Configuration;
 using System.Collections.Generic;
 using Gov.CitizenApi.Features.Tickets.Configuration;
 using MediatR;
-using Gov.CitizenApi.Messaging.Configuration;
 using MassTransit;
 using Gov.TicketSearch;
 using Gov.CitizenApi.Features.Lookups.Configuration;
 using TrafficCourts.Common.Contract;
+using TrafficCourts.Common.Configuration;
 
 namespace Gov.CitizenApi
 {
@@ -194,6 +194,7 @@ namespace Gov.CitizenApi
             });
             services.AddMassTransitHostedService();
             EndpointConvention.Map<DisputeContract>(new Uri($"{rabbitBaseUri}/{(typeof(DisputeContract)).GetQueueName()}"));
+            EndpointConvention.Map<NotificationContract>(new Uri($"{rabbitBaseUri}/{(typeof(NotificationContract)).GetQueueName()}"));
         }
 
         public void ConfigureJwtBearerAuthentication(JwtBearerOptions o)
