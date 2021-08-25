@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
 import { DisputeSummaryComponent } from './dispute-summary.component';
 
 // Added the declaration of BlankComponent to be used for routing
-@Component({ selector: 'test-blank', template: `` })
+@Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
 describe('DisputeSummaryComponent', () => {

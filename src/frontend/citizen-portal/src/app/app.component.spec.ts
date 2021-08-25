@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
 
 // Added the declaration of BlankComponent to be used for routing
-@Component({ selector: 'test-blank', template: `` })
+@Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
 describe('AppComponent', () => {

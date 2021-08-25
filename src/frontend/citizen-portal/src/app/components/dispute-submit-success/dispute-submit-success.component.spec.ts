@@ -10,7 +10,7 @@ import { DisputeSubmitSuccessComponent } from './dispute-submit-success.componen
 import { Component } from '@angular/core';
 
 // Added the declaration of BlankComponent to be used for routing
-@Component({ selector: 'test-blank', template: `` })
+@Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
 describe('DisputeSubmitSuccessComponent', () => {

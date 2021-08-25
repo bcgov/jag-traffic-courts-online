@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Component } from '@angular/core';
 
 import { TcoPageHeaderComponent } from './tco-page-header.component';
-@Component({ selector: 'test-blank', template: `` })
+@Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
 describe('TcoPageHeaderComponent', () => {

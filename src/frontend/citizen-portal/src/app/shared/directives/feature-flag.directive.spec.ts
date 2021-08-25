@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FeatureFlagDirective } from './feature-flag.directive';
 import { Component } from '@angular/core';
-@Component({ selector: 'test-blank', template: `` })
+@Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
 describe('FeatureFlagDirective', () => {

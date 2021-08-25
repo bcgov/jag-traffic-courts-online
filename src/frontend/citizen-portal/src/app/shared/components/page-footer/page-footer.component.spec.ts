@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 import { PageFooterComponent } from './page-footer.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-@Component({ selector: 'test-blank', template: `` })
+@Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
 describe('PageFooterComponent', () => {
