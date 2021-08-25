@@ -186,7 +186,6 @@ div.container {
 .mat-flat-button {
   min-width: 250px;
   margin-top: 1em;
-  color: theme-palette(blue);
 
   @include media-breakpoint-down(md) {
     // width: 100%;

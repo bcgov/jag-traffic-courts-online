@@ -1,6 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { SnowplowService } from '@core/services/snowplow.service';
-import { UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class LandingComponent implements AfterViewInit {
   public courthouseServicesOfBCVisitUsLink: string;
 
   constructor(
-    private utilsService: UtilsService,
     private appConfigService: AppConfigService,
     private snowplow: SnowplowService
   ) {
@@ -39,6 +37,5 @@ export class LandingComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     // refresh link urls now that we set the links
     this.snowplow.refreshLinkClickTracking();
-    this.utilsService.scrollTop();
   }
 }

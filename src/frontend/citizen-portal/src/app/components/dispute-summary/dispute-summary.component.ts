@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { UtilsService } from '@core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
@@ -14,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './dispute-summary.component.html',
   styleUrls: ['./dispute-summary.component.scss'],
 })
-export class DisputeSummaryComponent implements OnInit, AfterViewInit {
+export class DisputeSummaryComponent implements OnInit {
   public busy: Subscription;
   public ticket: TicketDispute;
   public defaultLanguage: string;
@@ -24,7 +23,6 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
     protected router: Router,
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
-    private utilsService: UtilsService,
     private logger: LoggerService,
     private translateService: TranslateService
   ) {}
@@ -62,10 +60,6 @@ export class DisputeSummaryComponent implements OnInit, AfterViewInit {
         this.performSearch(params);
       }
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
   }
 
   private performSearch(params): void {

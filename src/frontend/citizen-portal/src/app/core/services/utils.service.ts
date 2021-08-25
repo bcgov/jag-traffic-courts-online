@@ -29,14 +29,6 @@ export class UtilsService {
 
   /**
    * @description
-   * Scroll to the top of the mat-sidenav container.
-   */
-  public goToTop() {
-    window.scroll(0, 0);
-  }
-
-  /**
-   * @description
    * Scroll to have the element in view.
    */
   public scrollTo(el: Element): void {

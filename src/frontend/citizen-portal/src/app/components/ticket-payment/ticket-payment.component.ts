@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -25,7 +25,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './ticket-payment.component.html',
   styleUrls: ['./ticket-payment.component.scss'],
 })
-export class TicketPaymentComponent implements OnInit, AfterViewInit {
+export class TicketPaymentComponent implements OnInit {
   @ViewChild(CountSummaryComponent, { static: false }) countSummary;
   public busy: Subscription;
   public ticket: TicketDispute;
@@ -57,10 +57,6 @@ export class TicketPaymentComponent implements OnInit, AfterViewInit {
       this.logger.info('TicketPaymentComponent current ticket', ticket);
       this.ticket = ticket;
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
   }
 
   public onMakePayment(): void {

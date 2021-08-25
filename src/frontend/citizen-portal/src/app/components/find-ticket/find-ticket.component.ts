@@ -1,9 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -14,7 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
-import { UtilsService } from '@core/services/utils.service';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
@@ -28,7 +22,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./find-ticket.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class FindTicketComponent implements OnInit, AfterViewInit {
+export class FindTicketComponent implements OnInit {
   public busy: Subscription;
   public form: FormGroup;
 
@@ -40,7 +34,6 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
     private disputeResource: DisputeResourceService,
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
-    private utilsService: UtilsService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {
@@ -52,10 +45,6 @@ export class FindTicketComponent implements OnInit, AfterViewInit {
       ticketNumber: ['EZ02000460', [Validators.required]],
       time: ['09:54', [Validators.required]],
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
   }
 
   public onViewTicketExample(): void {

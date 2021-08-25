@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { UtilsService } from '@core/services/utils.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
@@ -22,7 +21,7 @@ import { Subscription } from 'rxjs';
 })
 export class DisputeStepperComponent
   extends BaseDisputeFormPage
-  implements OnInit, AfterViewInit
+  implements OnInit
 {
   public busy: Subscription;
   @ViewChild(MatStepper)
@@ -48,7 +47,6 @@ export class DisputeStepperComponent
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
-    private utilsService: UtilsService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {
@@ -105,10 +103,6 @@ export class DisputeStepperComponent
         });
       }
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.utilsService.scrollTop();
   }
 
   public onStepCancel(): void {
