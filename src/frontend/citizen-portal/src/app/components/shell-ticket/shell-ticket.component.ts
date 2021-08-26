@@ -76,7 +76,7 @@ export class ShellTicketComponent implements OnInit {
     private utilsService: UtilsService,
     private dialog: MatDialog,
     private router: Router,
-    public ngProgress: NgProgress,
+    private ngProgress: NgProgress,
     private appConfigService: AppConfigService,
     private logger: LoggerService
   ) {

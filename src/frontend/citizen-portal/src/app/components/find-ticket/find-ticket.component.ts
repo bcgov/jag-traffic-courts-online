@@ -36,7 +36,7 @@ export class FindTicketComponent implements OnInit {
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
     private dialog: MatDialog,
-    public ngProgress: NgProgress,
+    private ngProgress: NgProgress,
     private logger: LoggerService
   ) {
     //
@@ -87,16 +87,9 @@ export class FindTicketComponent implements OnInit {
       });
   }
 
-  public get ticketNumber(): FormControl {
-    return this.form.get('ticketNumber') as FormControl;
-  }
-
   public onFileChange(event: any) {
     let filename: string;
     let ticketImage: string;
-
-    const progressRef: NgProgressRef = this.ngProgress.ref();
-    progressRef.start();
 
     // reset
     this.disputeService.shellTicketData$.next(null);
@@ -112,6 +105,9 @@ export class FindTicketComponent implements OnInit {
       this.logger.info('Only images are supported');
       return;
     }
+
+    const progressRef: NgProgressRef = this.ngProgress.ref();
+    progressRef.start();
 
     const reader = new FileReader();
     const ticketFile: File = event.target.files[0];
@@ -134,5 +130,9 @@ export class FindTicketComponent implements OnInit {
 
       this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
     };
+  }
+
+  public get ticketNumber(): FormControl {
+    return this.form.get('ticketNumber') as FormControl;
   }
 }
