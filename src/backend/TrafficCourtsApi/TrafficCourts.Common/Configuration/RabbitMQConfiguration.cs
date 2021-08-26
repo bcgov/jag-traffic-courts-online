@@ -1,5 +1,8 @@
-﻿namespace TrafficCourts.Common.Configuration
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TrafficCourts.Common.Configuration
 {
+    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
     public class RabbitMQConfiguration
     {
         public RabbitMQConfiguration()

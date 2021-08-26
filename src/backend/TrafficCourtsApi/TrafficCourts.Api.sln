@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ticket-worker", "DisputeWorker\ticket-worker.csproj", "{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ticket-worker-test", "ticket-worker-test\ticket-worker-test.csproj", "{B18D94F2-AD25-4D50-AF51-91142DCA5731}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8852CC10-B285-4B7E-9FBF-B62126981112} = {35C4080B-D1D9-4868-B1BB-99E332236B2F}
 		{E02BECBF-C0C6-4DD9-BB4F-182739EF2909} = {35C4080B-D1D9-4868-B1BB-99E332236B2F}
+		{B18D94F2-AD25-4D50-AF51-91142DCA5731} = {35C4080B-D1D9-4868-B1BB-99E332236B2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53D32623-D127-4084-8A3A-07319469C7C4}
