@@ -35,14 +35,13 @@
         'text-danger':
           count._offenceStatus === 'Owe' ||
           count._offenceStatus === 'InProgress',
-        'text-primary': count._offenceStatus === 'Unknown',
-        'text-success':
-          count._offenceStatus === 'Paid' ||
-          count._offenceStatus === 'Complete',
-        'text-info':
+        'text-primary':
           count._offenceStatus === 'New' ||
           count._offenceStatus === 'Submitted' ||
-          count._offenceStatus === 'Rejected'
+          count._offenceStatus === 'Rejected' ||
+          count._offenceStatus === 'Unknown',
+        'text-success':
+          count._offenceStatus === 'Paid' || count._offenceStatus === 'Complete'
       }"
     >
       <strong>{{ count._offenceStatusDesc }}</strong>
