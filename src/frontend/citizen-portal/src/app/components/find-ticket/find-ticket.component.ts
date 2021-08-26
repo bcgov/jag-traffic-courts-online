@@ -14,6 +14,7 @@ import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -35,6 +36,7 @@ export class FindTicketComponent implements OnInit {
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
     private dialog: MatDialog,
+    private ngProgress: NgProgress,
     private logger: LoggerService
   ) {
     //
@@ -85,10 +87,6 @@ export class FindTicketComponent implements OnInit {
       });
   }
 
-  public get ticketNumber(): FormControl {
-    return this.form.get('ticketNumber') as FormControl;
-  }
-
   public onFileChange(event: any) {
     let filename: string;
     let ticketImage: string;
@@ -107,6 +105,9 @@ export class FindTicketComponent implements OnInit {
       this.logger.info('Only images are supported');
       return;
     }
+
+    const progressRef: NgProgressRef = this.ngProgress.ref();
+    progressRef.start();
 
     const reader = new FileReader();
     const ticketFile: File = event.target.files[0];
@@ -129,5 +130,9 @@ export class FindTicketComponent implements OnInit {
 
       this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
     };
+  }
+
+  public get ticketNumber(): FormControl {
+    return this.form.get('ticketNumber') as FormControl;
   }
 }

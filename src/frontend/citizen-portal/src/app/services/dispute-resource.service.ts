@@ -234,43 +234,48 @@ export class DisputeResourceService {
     status: string,
     offenceAgreementStatus: string,
     amountDue: number
-  ): string {
-    let desc = '';
+  ): { offenceStatus: string; offenceStatusDesc: string } {
+    let offenceStatus = '';
+    let offenceStatusDesc = '';
 
     if (
       offenceAgreementStatus &&
       (offenceAgreementStatus === 'DISPUTE' ||
         offenceAgreementStatus === 'REDUCTION')
     ) {
+      offenceStatus = status;
       switch (status) {
         case 'New':
-          desc = 'Dispute created';
+          offenceStatusDesc = 'Dispute created';
           break;
         case 'Submitted':
-          desc = 'Dispute submitted';
+          offenceStatusDesc = 'Dispute submitted';
           break;
         case 'InProgress':
-          desc = 'In progress';
+          offenceStatusDesc = 'In progress';
           break;
         case 'Complete':
-          desc = 'Resolved';
+          offenceStatusDesc = 'Resolved';
           break;
         case 'Rejected':
-          desc = 'Rejected';
+          offenceStatusDesc = 'Rejected';
           break;
         default:
-          desc = 'Unknown dispute status';
+          offenceStatus = 'Unknown';
+          offenceStatusDesc = 'Unknown dispute status';
           break;
       }
     } else {
       if (amountDue > 0) {
-        desc = 'Balance outstanding';
+        offenceStatus = 'Owe';
+        offenceStatusDesc = 'Balance outstanding';
       } else {
-        desc = 'Paid';
+        offenceStatus = 'Paid';
+        offenceStatusDesc = 'Paid';
       }
     }
 
-    return desc;
+    return { offenceStatus, offenceStatusDesc };
   }
 
   // private getAgreementStatusDesc(
@@ -339,11 +344,14 @@ export class DisputeResourceService {
             : 0;
       }
 
-      offence._offenceStatusDesc = this.getOffenceStatusDesc(
+      const { offenceStatus, offenceStatusDesc } = this.getOffenceStatusDesc(
         offence.status,
         offence.offenceAgreementStatus,
         offence._amountDue
       );
+
+      offence._offenceStatus = offenceStatus;
+      offence._offenceStatusDesc = offenceStatusDesc;
 
       // offence._offenceAgreementStatusDesc = this.getAgreementStatusDesc(
       //   offence.offenceAgreementStatus,

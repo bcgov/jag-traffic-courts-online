@@ -30,6 +30,7 @@ import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -63,6 +64,7 @@ export class ShellTicketComponent implements OnInit {
   public filteredStatutes2: Observable<Config<number>[]>;
   public filteredStatutes3: Observable<Config<number>[]>;
 
+  private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
 
   constructor(
@@ -74,9 +76,11 @@ export class ShellTicketComponent implements OnInit {
     private utilsService: UtilsService,
     private dialog: MatDialog,
     private router: Router,
+    private ngProgress: NgProgress,
     private appConfigService: AppConfigService,
     private logger: LoggerService
   ) {
+    this.progressRef = this.ngProgress.ref();
     this.statutes = this.configService.statutes;
     this.courtLocations = this.configService.courtLocations;
     this.policeLocations = this.configService.policeLocations;
@@ -140,7 +144,9 @@ export class ShellTicketComponent implements OnInit {
 
       this.ticketImageSrc = shellTicketData.ticketImage;
       this.ticketFilename = shellTicketData.filename;
-      if (!this.appConfigService.useMockServices) {
+      if (this.appConfigService.useMockServices) {
+        this.progressRef.complete();
+      } else {
         this.recognizeContent(shellTicketData.ticketFile);
         // } else {
         //   const tmp: ShellTicket = {
@@ -534,9 +540,6 @@ export class ShellTicketComponent implements OnInit {
           count1SectionField.valueData?.text ||
           count1TicketAmountField.value
         ) {
-          // this.logger.info('1', count1DescField.valueData?.text);
-          // this.logger.info('1', count1SectionField.valueData?.text);
-          // this.logger.info('1', count1TicketAmountField.value);
           chargeCount++;
         }
         if (
@@ -544,9 +547,6 @@ export class ShellTicketComponent implements OnInit {
           count2SectionField.valueData?.text ||
           count2TicketAmountField.value
         ) {
-          // this.logger.info('2', count2DescField.valueData?.text);
-          // this.logger.info('2', count2SectionField.valueData?.text);
-          // this.logger.info('2', count2TicketAmountField.value);
           chargeCount++;
         }
         if (
@@ -554,9 +554,6 @@ export class ShellTicketComponent implements OnInit {
           count3SectionField.valueData?.text ||
           count3TicketAmountField.value
         ) {
-          // this.logger.info('3', count3DescField.valueData?.text);
-          // this.logger.info('3', count3SectionField.valueData?.text);
-          // this.logger.info('3', count3TicketAmountField.value);
           chargeCount++;
         }
         this.logger.info('chargeCount', chargeCount);
@@ -643,12 +640,15 @@ export class ShellTicketComponent implements OnInit {
 
         this.form.setValue(shellTicket);
         // this.disputeService.shellTicket$.next(shellTicket);
+
+        this.progressRef.complete();
       });
     };
   }
 
   private onRejected(info) {
     this.logger.info('onRejected', info);
+    this.progressRef.complete();
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {
