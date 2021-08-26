@@ -30,7 +30,23 @@
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-4">
     <small class="d-block">Status</small>
-    {{ count._offenceStatusDesc }}
+    <span
+      [ngClass]="{
+        'text-danger':
+          count._offenceStatus === 'Owe' ||
+          count._offenceStatus === 'InProgress',
+        'text-primary': count._offenceStatus === 'Unknown',
+        'text-success':
+          count._offenceStatus === 'Paid' ||
+          count._offenceStatus === 'Complete',
+        'text-info':
+          count._offenceStatus === 'New' ||
+          count._offenceStatus === 'Submitted' ||
+          count._offenceStatus === 'Rejected'
+      }"
+    >
+      <strong>{{ count._offenceStatusDesc }}</strong>
+    </span>
   </div>
   <div class="col-lg-4">
     <small class="d-block">Offence amount</small>

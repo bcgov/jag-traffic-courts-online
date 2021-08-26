@@ -47,6 +47,7 @@ export interface Offence {
   */
 
   // derived later on
+  _offenceStatus?: string;
   _offenceStatusDesc?: string;
   _within30days?: boolean;
   _amountDue?: number;

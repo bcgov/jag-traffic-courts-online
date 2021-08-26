@@ -14,6 +14,7 @@ import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -35,6 +36,7 @@ export class FindTicketComponent implements OnInit {
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
     private dialog: MatDialog,
+    public ngProgress: NgProgress,
     private logger: LoggerService
   ) {
     //
@@ -92,6 +94,9 @@ export class FindTicketComponent implements OnInit {
   public onFileChange(event: any) {
     let filename: string;
     let ticketImage: string;
+
+    const progressRef: NgProgressRef = this.ngProgress.ref();
+    progressRef.start();
 
     // reset
     this.disputeService.shellTicketData$.next(null);
