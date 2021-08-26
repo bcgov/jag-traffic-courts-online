@@ -40,6 +40,10 @@
       {{ count.reductionAppearInCourt | yesNo }}
     </strong>
   </div>
+  <div class="col-lg-3" *ngIf="count.offenceAgreementStatus === 'DISPUTE'">
+    <small class="d-block">I will appear in court</small>
+    <strong> Yes </strong>
+  </div>
 </div>
 
 <div class="row" *ngIf="count.reductionReason">

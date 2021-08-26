@@ -18,6 +18,282 @@ export class MockConfig {
           code: '84.0001',
           name: 'Kimberley Provincial Court',
         },
+        {
+          code: '118.0001',
+          name: 'Kitimat Law Courts',
+        },
+        {
+          code: '19307.0734',
+          name: 'Klemtu Provincial Court',
+        },
+        {
+          code: '10254.0001',
+          name: 'Langley Provincial Court',
+        },
+        {
+          code: '10912.0026',
+          name: 'Leech Town Court House',
+        },
+        {
+          code: '10264.0001',
+          name: 'Leech Town Court Registry',
+        },
+        {
+          code: '85.0001',
+          name: 'Lillooet Law Courts',
+        },
+        {
+          code: '119.0001',
+          name: 'Lower Post Provincial Court',
+        },
+        {
+          code: '16164.0026',
+          name: 'Lytton Provincial Court',
+        },
+        {
+          code: '120.0001',
+          name: 'MacKenzie Provincial Court',
+        },
+        {
+          code: '8837.0001',
+          name: 'Maple Ridge Provincial Court',
+        },
+        {
+          code: '121.0001',
+          name: 'Masset Provincial Court',
+        },
+        {
+          code: '122.0001',
+          name: 'McBride Provincial Court',
+        },
+        {
+          code: '87.0001',
+          name: 'Merritt Law Court',
+        },
+        {
+          code: '10255.0001',
+          name: 'Mission Provincial Court',
+        },
+        {
+          code: '88.0001',
+          name: 'Nakusp Provincial Court',
+        },
+        {
+          code: '8805.0001',
+          name: 'Nanaimo Law Courts',
+        },
+        {
+          code: '89.0001',
+          name: 'Nelson Law Courts',
+        },
+        {
+          code: '123.0001',
+          name: 'New Aiyansh Provincial Court',
+        },
+        {
+          code: '124.0001',
+          name: 'New Hazelton Provincial Court',
+        },
+        {
+          code: '8839.0001',
+          name: 'New Westminster Law Courts',
+        },
+        {
+          code: '9064.0001',
+          name: 'North Vancouver Court',
+        },
+        {
+          code: '90.0001',
+          name: 'Oliver Law Courts',
+        },
+        {
+          code: '10234.0001',
+          name: 'Parksville Provincial Court',
+        },
+        {
+          code: '10246.0001',
+          name: 'Pemberton Provincial Court',
+        },
+        {
+          code: '91.0001',
+          name: 'Penticton Law Courts',
+        },
+        {
+          code: '10235.0001',
+          name: 'Port Alberni Law Courts',
+        },
+        {
+          code: '8834.0001',
+          name: 'Port Coquitlam Court',
+        },
+        {
+          code: '10236.0001',
+          name: 'Port Hardy Law Courts',
+        },
+        {
+          code: '10237.0001',
+          name: 'Powell River Law Courts',
+        },
+        {
+          code: '8844.0001',
+          name: 'Prince George Law Courts',
+        },
+        {
+          code: '10265.0001',
+          name: 'Prince George Supreme Court',
+        },
+        {
+          code: '9075.0001',
+          name: 'Prince Rupert Law Courts',
+        },
+        {
+          code: '92.0001',
+          name: 'Princeton Law Courts',
+        },
+        {
+          code: '10266.0001',
+          name: 'Queen Charlotte City Provincial Crt',
+        },
+        {
+          code: '9074.0001',
+          name: 'Quesnel Law Courts',
+        },
+        {
+          code: '93.0001',
+          name: 'Revelstoke Law Courts',
+        },
+        {
+          code: '10247.0001',
+          name: 'Richmond Court Small Claims and Family Court',
+        },
+        {
+          code: '9062.0001',
+          name: 'Richmond Provincial Court',
+        },
+        {
+          code: '10250.0001',
+          name: 'Robson Square Provincial Court',
+        },
+        {
+          code: '94.0001',
+          name: 'Rossland Law Courts',
+        },
+        {
+          code: '95.0001',
+          name: 'Salmon Arm Law Courts',
+        },
+        {
+          code: '10248.0001',
+          name: 'Sechelt Provincial Court',
+        },
+        {
+          code: '19614.0734',
+          name: 'Shared Resource',
+        },
+        {
+          code: '18886.0045',
+          name: 'Sherbrooke Courthouse',
+        },
+        {
+          code: '10238.0001',
+          name: 'Sidney Provincial Court',
+        },
+        {
+          code: '9073.0001',
+          name: 'Smithers Law Courts',
+        },
+        {
+          code: '10256.0001',
+          name: 'Sparwood Provincial Court',
+        },
+        {
+          code: '10249.0001',
+          name: 'Squamish Provincial Court',
+        },
+        {
+          code: '10267.0001',
+          name: 'Stewart Provincial Court',
+        },
+        {
+          code: '8842.0001',
+          name: 'Surrey Family Court',
+        },
+        {
+          code: '8841.0001',
+          name: 'Surrey Provincial Court',
+        },
+        {
+          code: '10239.0001',
+          name: 'Tahsis Provincial Court',
+        },
+        {
+          code: '9072.0001',
+          name: 'Terrace Law Courts',
+        },
+        {
+          code: '10240.0001',
+          name: 'Tofino Provincial Court',
+        },
+        {
+          code: '10258.0001',
+          name: 'Tsay Keh Dene Court',
+        },
+        {
+          code: '10268.0001',
+          name: 'Tumbler Ridge Provincial Court',
+        },
+        {
+          code: '10241.0001',
+          name: 'Ucluelet Provincial Court',
+        },
+        {
+          code: '9144.0001',
+          name: 'Valemount Provincial Court',
+        },
+        {
+          code: '19228.0734',
+          name: 'Vancouver Law Courts',
+        },
+        {
+          code: '8813.0001',
+          name: 'Vancouver Provincial Court',
+        },
+        {
+          code: '10251.0001',
+          name: 'Vancouver Traffic Court',
+        },
+        {
+          code: '9071.0001',
+          name: 'Vanderhoof Law Courts',
+        },
+        {
+          code: '96.0001',
+          name: 'Vernon Law Courts',
+        },
+        {
+          code: '10242.0001',
+          name: 'Victoria Family and Youth Court',
+        },
+        {
+          code: '8807.0001',
+          name: 'Victoria Law Courts',
+        },
+        {
+          code: '19635.0734',
+          name: 'Violation Ticket Centre',
+        },
+        {
+          code: '10252.0001',
+          name: 'West Vancouver Provincial Court',
+        },
+        {
+          code: '10243.0001',
+          name: 'Western Communities Provincial Court',
+        },
+        {
+          code: '9070.0001',
+          name: 'Williams Lake Law Courts',
+        },
       ],
       languages: [
         { code: 'CAN', name: 'Cantonese' },
