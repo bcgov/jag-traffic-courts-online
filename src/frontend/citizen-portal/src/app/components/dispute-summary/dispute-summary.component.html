@@ -22,26 +22,35 @@
           Cancel and search again
         </button>
       </div>
-      <!-- *ngIf="ticket._outstandingBalanceDue > 0 && ticket?._requestSubmitted" -->
-      <div class="offset-md-2 col-md-3">
-        <button
-          mat-flat-button
-          color="accent"
-          class="large"
-          (click)="onPayTicket()"
-        >
-          Pay ticket
-        </button>
-      </div>
-      <div class="col-md-3">
-        <button
-          mat-flat-button
-          color="primary"
-          class="large"
-          (click)="onDisputeTicket()"
-        >
-          Initiate dispute
-        </button>
+      <div
+        class="offset-md-2 col-md-6"
+        *ngIf="ticket._outstandingBalanceDue > 0"
+      >
+        <div class="row">
+          <div
+            [ngClass]="{ 'offset-md-6': ticket?._requestSubmitted }"
+            class="col-md-6"
+          >
+            <button
+              mat-flat-button
+              color="accent"
+              class="large"
+              (click)="onPayTicket()"
+            >
+              Pay ticket
+            </button>
+          </div>
+          <div class="col-md-6" *ngIf="!ticket?._requestSubmitted">
+            <button
+              mat-flat-button
+              color="primary"
+              class="large"
+              (click)="onDisputeTicket()"
+            >
+              Initiate dispute
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 

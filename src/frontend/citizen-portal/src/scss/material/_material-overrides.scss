@@ -42,6 +42,10 @@ mat-label {
   color: $body-color;
 }
 
+.mat-vertical-content {
+  padding: 0 !important;
+}
+
 .mat-step-header .mat-step-icon-state-done,
 .mat-step-header .mat-step-icon-state-edit {
   background-color: #155724 !important;
@@ -51,6 +55,10 @@ mat-label {
 .mat-step-label-selected {
   font-weight: bold;
   font-size: 1.2em;
+}
+
+.mat-step-text-label {
+  white-space: normal;
 }
 
 .mat-form-field .mat-form-field-label-wrapper label {
@@ -63,4 +71,31 @@ mat-label {
 
 .mat-vertical-content {
   padding: 0 24px 0px 24px !important;
+}
+
+@media (max-width: 768px) {
+  .mat-vertical-content {
+    padding: 0 0 0px 14px !important;
+  }
+
+  .mat-vertical-content-container {
+    margin-left: 0 !important;
+  }
+
+  .mat-stepper-label-position-bottom .mat-horizontal-stepper-header,
+  .mat-vertical-stepper-header {
+    padding: 14px 0;
+  }
+
+  mat-radio-button .mat-radio-label-content {
+    white-space: normal;
+  }
+
+  mat-radio-button .mat-radio-label {
+    align-items: normal;
+  }
+
+  .mat-radio-container {
+    top: 5px;
+  }
 }

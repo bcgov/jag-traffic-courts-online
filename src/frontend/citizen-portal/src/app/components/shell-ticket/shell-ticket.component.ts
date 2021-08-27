@@ -293,6 +293,8 @@ export class ShellTicketComponent implements OnInit {
       return;
     }
 
+    this.progressRef.start();
+
     const reader = new FileReader();
     const ticketFile: File = event.target.files[0];
     this.logger.info('file target', event.target.files[0]);

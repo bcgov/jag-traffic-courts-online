@@ -7,11 +7,6 @@
   font-size: 1rem;
 }
 
-.icon-size {
-  width: 60px;
-  margin-right: 10px;
-}
-
 .find-xlarge {
   width: 100%;
   margin-bottom: 1em !important;
@@ -36,6 +31,16 @@
   display: inline-flex;
   height: 46px;
   line-height: 25px;
+}
+
+@media (max-width: 767px) {
+  .view-link {
+    margin-bottom: 1em;
+
+    .view-link-text {
+      padding-top: 10px;
+    }
+  }
 }
 
 .flex {
