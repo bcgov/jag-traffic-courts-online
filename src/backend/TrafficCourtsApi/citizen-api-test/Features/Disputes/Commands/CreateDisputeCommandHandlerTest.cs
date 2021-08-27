@@ -24,6 +24,7 @@ namespace Gov.CitizenApi.Test.Features.Disputes.Commands
         private Mock<IDisputeService> _disputeServiceMock;
         private Mock<IMapper> _mapperMock;
         private Mock<IBus> _busMock;
+        private Mock<ISendEndpoint> _sendEndpointMock;
         private CreateDisputeCommandHandler _sut;
         private Fixture _fixture;
 
@@ -34,6 +35,7 @@ namespace Gov.CitizenApi.Test.Features.Disputes.Commands
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _loggerMock = LoggerServiceMock.LoggerMock<CreateDisputeCommandHandler>();
             _disputeServiceMock = new Mock<IDisputeService>();
+            _sendEndpointMock = new Mock<ISendEndpoint>();
             _mapperMock = new Mock<IMapper>();
             _busMock = new Mock<IBus>();
             _sut = new CreateDisputeCommandHandler(_loggerMock.Object, _disputeServiceMock.Object, _mapperMock.Object, _busMock.Object);
@@ -44,28 +46,31 @@ namespace Gov.CitizenApi.Test.Features.Disputes.Commands
         public async Task CreateDisputeCommandHandler_handle_will_call_service_and_send_to_queue(
             CreateDisputeCommand createDisputeCommand, DisputeContract contractDispute)
         {
-            try
-            {
-                var createdDispute = _fixture.Create<Dispute>();
-                _mapperMock.Setup(m => m.Map<Dispute>(It.IsAny<CreateDisputeCommand>())).Returns(createdDispute);
-                _mapperMock.Setup(m => m.Map<DisputeContract>(It.IsAny<Dispute>())).Returns(contractDispute);
-                _disputeServiceMock.Setup(m => m.CreateAsync(It.IsAny<Dispute>()))
-                    .Returns(Task.FromResult<Dispute>(createdDispute));
-                _busMock.Setup(m => m.Send(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            var createdDispute = _fixture.Create<Dispute>();
+            _mapperMock.Setup(m => m.Map<Dispute>(It.IsAny<CreateDisputeCommand>())).Returns(createdDispute);
+            _mapperMock.Setup(m => m.Map<DisputeContract>(It.IsAny<Dispute>())).Returns(contractDispute);
+            _disputeServiceMock.Setup(m => m.CreateAsync(It.IsAny<Dispute>()))
+                .Returns(Task.FromResult<Dispute>(createdDispute));
+            _busMock.Setup(x => x.GetSendEndpoint(It.IsAny<Uri>())).Returns(Task.FromResult(_sendEndpointMock.Object));
+            _sendEndpointMock
+                .Setup(x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(_sendEndpointMock));
+            EndpointConvention.Map<DisputeContract>(new Uri($"amqp://localhost:5672/{(typeof(DisputeContract)).GetQueueName()}"));
+            EndpointConvention.Map<NotificationContract>(new Uri($"amqp://localhost:5672/{(typeof(NotificationContract)).GetQueueName()}"));
 
+            var result = await _sut.Handle(createDisputeCommand, CancellationToken.None);
+            _disputeServiceMock.Verify(x => x.CreateAsync(createdDispute), Times.Once);
 
-                var result = await _sut.Handle(createDisputeCommand, CancellationToken.None);
-                _disputeServiceMock.Verify(x => x.CreateAsync(createdDispute), Times.Once);
+            _sendEndpointMock.Verify(
+                x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()),
+                () => { return Times.Once(); });
 
-                _busMock.Verify(
-                    x => x.Send<DisputeContract>(It.IsAny<DisputeContract>(), It.IsAny<CancellationToken>()),
-                    () => { return Times.Once(); });
+            _sendEndpointMock.Verify(
+                x => x.Send<NotificationContract>(It.IsAny<NotificationContract>(), It.IsAny<CancellationToken>()),
+                () => { return Times.Once(); });
 
-                Assert.Equal(createdDispute.Id, result.Id);
-            }catch(Exception ex)
-            {
-                var x = ex.Message;
-            }
+            Assert.Equal(createdDispute.Id, result.Id);
+
         }
     }
 }

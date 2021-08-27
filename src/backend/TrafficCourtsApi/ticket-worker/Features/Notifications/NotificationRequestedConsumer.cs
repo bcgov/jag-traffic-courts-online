@@ -14,11 +14,16 @@ namespace Gov.TicketWorker.Features.Notifications
         {
             _logger = logger;
         }
+
         public Task Consume(ConsumeContext<NotificationContract> context)
         {
             try
             {
                 NotificationContract n = context.Message;
+                if (string.IsNullOrWhiteSpace(n.ViolationTicketNumber))
+                {
+                    _logger.LogError("notification ticket number is empty");
+                }
                 _logger.LogInformation("receive requested notification {n}", JsonSerializer.Serialize(n));
             }
             catch (Exception ex)
