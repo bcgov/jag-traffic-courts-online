@@ -24,3 +24,9 @@ h3 {
   height: 50px !important;
   width: 50px !important;
 }
+
+@media (max-width: 767px) {
+  .conf-email {
+    margin-bottom: 1em;
+  }
+}
