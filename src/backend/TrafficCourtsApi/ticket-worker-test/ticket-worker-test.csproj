@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DisputeWorker\ticket-worker.csproj" />
+    <ProjectReference Include="..\ticket-worker\ticket-worker.csproj" />
   </ItemGroup>
 
 </Project>

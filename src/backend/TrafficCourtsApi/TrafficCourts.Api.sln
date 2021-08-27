@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Common.Test",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5EAF86AA-766E-424F-932F-E3D25A1BC688}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ticket-worker", "DisputeWorker\ticket-worker.csproj", "{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ticket-worker-test", "ticket-worker-test\ticket-worker-test.csproj", "{B18D94F2-AD25-4D50-AF51-91142DCA5731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ticket-worker-test", "ticket-worker-test\ticket-worker-test.csproj", "{B18D94F2-AD25-4D50-AF51-91142DCA5731}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ticket-worker", "ticket-worker\ticket-worker.csproj", "{EEDA200D-21D8-413E-85E5-5282A7FB0D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,14 +41,14 @@ Global
 		{E02BECBF-C0C6-4DD9-BB4F-182739EF2909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E02BECBF-C0C6-4DD9-BB4F-182739EF2909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E02BECBF-C0C6-4DD9-BB4F-182739EF2909}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BD7E160-DBB1-4B60-92D8-C0E4CB382116}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B18D94F2-AD25-4D50-AF51-91142DCA5731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEDA200D-21D8-413E-85E5-5282A7FB0D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEDA200D-21D8-413E-85E5-5282A7FB0D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEDA200D-21D8-413E-85E5-5282A7FB0D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEDA200D-21D8-413E-85E5-5282A7FB0D4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
