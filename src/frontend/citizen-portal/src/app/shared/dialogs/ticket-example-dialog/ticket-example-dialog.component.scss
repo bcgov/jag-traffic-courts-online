@@ -25,13 +25,13 @@ mat-expansion-panel-header {
   height: 64px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   img {
     max-width: 100%;
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   img {
     max-width: 560px;
   }

@@ -71,7 +71,7 @@ h4 {
   }
 }
 
-@media (min-width: 601px) and (max-width: 768px) {
+@media (min-width: 601px) and (max-width: 767px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-768x420.jpg") no-repeat !important;
     -webkit-background-size: cover;
@@ -81,7 +81,7 @@ h4 {
   }
 }
 
-@media (min-width: 769px) and (max-width: 992px) {
+@media (min-width: 768px) and (max-width: 992px) {
   div.landing-summary {
     background: url("/assets/landing-page-background-992x420.jpg") no-repeat;
     -webkit-background-size: cover;
@@ -271,7 +271,7 @@ img {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   h1 {
     font-size: 2em;
   }
@@ -281,7 +281,7 @@ img {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .landing-card {
     display: block;
     width: 100%;
