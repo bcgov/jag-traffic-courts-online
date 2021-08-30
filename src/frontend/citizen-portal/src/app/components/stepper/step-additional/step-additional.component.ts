@@ -19,8 +19,7 @@ import { DisputeService } from 'app/services/dispute.service';
 })
 export class StepAdditionalComponent
   extends BaseDisputeFormPage
-  implements OnInit
-{
+  implements OnInit {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
@@ -84,5 +83,9 @@ export class StepAdditionalComponent
 
   public get isCourtRequired(): FormControl {
     return this.form.get('isCourtRequired') as FormControl;
+  }
+
+  public get numberOfWitnesses(): FormControl {
+    return this.form.get('numberOfWitnesses') as FormControl;
   }
 }

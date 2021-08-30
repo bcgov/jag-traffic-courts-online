@@ -60,12 +60,22 @@ export class FormGroupValidators {
     return (group: FormGroup): ValidationErrors | null => {
       const start = group.controls[startKey].value;
       const end = group.controls[endKey].value;
+
       if (!start) {
+        group.controls[endKey].setErrors(null);
         return null;
       }
 
-      const valid = !!(start && end);
-      return valid ? null : { requiredIfTrue: true };
+      const valid = !!(end);
+      if (valid) {
+        group.controls[endKey].setErrors(null);
+        return null;
+
+      } else {
+        group.controls[endKey].setErrors({ requiredIfTrue: true });
+        return { requiredIfTrue: true };
+
+      }
     };
   }
 

@@ -1,8 +1,6 @@
 import {
-  AbstractControl,
-  ValidatorFn,
-  Validators,
-  ValidationErrors,
+  AbstractControl, ValidationErrors, ValidatorFn,
+  Validators
 } from '@angular/forms';
 
 export class FormControlValidators {
@@ -186,4 +184,5 @@ export class FormControlValidators {
       return valid ? null : { length: true };
     };
   }
+
 }
