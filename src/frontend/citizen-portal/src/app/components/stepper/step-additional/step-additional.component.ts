@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Config } from '@config/config.model';
+import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -9,8 +11,6 @@ import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage'
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { ConfigService } from '@config/config.service';
-import { Config } from '@config/config.model';
 
 @Component({
   selector: 'app-step-additional',
@@ -70,10 +70,6 @@ export class StepAdditionalComponent
     this.stepper.previous();
   }
 
-  // public isRequired(addressLine: AddressLine): boolean {
-  //   return this.formUtilsService.isRequired(this.form, addressLine);
-  // }
-
   public get interpreterLanguage(): FormControl {
     return this.form.get('interpreterLanguage') as FormControl;
   }
@@ -84,5 +80,9 @@ export class StepAdditionalComponent
 
   public get witnessPresent(): FormControl {
     return this.form.get('witnessPresent') as FormControl;
+  }
+
+  public get isCourtRequired(): FormControl {
+    return this.form.get('isCourtRequired') as FormControl;
   }
 }

@@ -4,6 +4,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { AppRoutes } from 'app/app.routes';
+import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
@@ -17,6 +18,7 @@ export class DisputeSummaryComponent implements OnInit {
   public busy: Subscription;
   public ticket: TicketDispute;
   public defaultLanguage: string;
+  public useMockServices: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -24,11 +26,13 @@ export class DisputeSummaryComponent implements OnInit {
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private logger: LoggerService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private appConfigService: AppConfigService
   ) {}
 
   public ngOnInit(): void {
     this.defaultLanguage = this.translateService.getDefaultLang();
+    this.useMockServices = this.appConfigService.useMockServices;
 
     this.route.queryParams.subscribe((params) => {
       this.logger.info('DisputeSummaryComponent::params', params);

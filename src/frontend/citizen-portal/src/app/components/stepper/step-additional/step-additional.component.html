@@ -6,18 +6,18 @@
     </ng-container>
   </app-page-header>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+  <form (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+        novalidate>
     <section>
       <h3 class="fw-bold">
         Please indicate which (if any) of the following apply to you:
       </h3>
       <div class="row">
         <div class="col">
-          <mat-checkbox
-            class="me-4 mb-2"
-            color="primary"
-            formControlName="lawyerPresent"
-          >
+          <mat-checkbox class="me-4 mb-2"
+                        color="primary"
+                        formControlName="lawyerPresent">
             I intend to be represented by a lawyer in court.
           </mat-checkbox>
         </div>
@@ -25,11 +25,9 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox
-            class="me-4 mb-2"
-            color="primary"
-            formControlName="interpreterRequired"
-          >
+          <mat-checkbox class="me-4 mb-2"
+                        color="primary"
+                        formControlName="interpreterRequired">
             I require a language interpreter at the hearing.
           </mat-checkbox>
           <!--
@@ -39,17 +37,16 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="interpreterRequired.value">
+      <div class="row"
+           *ngIf="interpreterRequired.value">
         <div class="col">
           <mat-form-field>
             <mat-label>{{
               "stepper.additional.interpreter_language" | translate
-            }}</mat-label>
+              }}</mat-label>
             <mat-select formControlName="interpreterLanguage">
-              <mat-option
-                *ngFor="let language of languages"
-                [value]="language.code"
-              >
+              <mat-option *ngFor="let language of languages"
+                          [value]="language.code">
                 {{ language.name }}
               </mat-option>
             </mat-select>
@@ -60,18 +57,17 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox
-            class="me-4 mb-2"
-            color="primary"
-            formControlName="witnessPresent"
-          >
+          <mat-checkbox class="me-4 mb-2"
+                        color="primary"
+                        formControlName="witnessPresent">
             I intend to call a witness(es). You may have a maximum of 5
             witnesses.
           </mat-checkbox>
         </div>
       </div>
 
-      <div class="row" *ngIf="witnessPresent.value">
+      <div class="row"
+           *ngIf="witnessPresent.value">
         <div class="col">
           <mat-form-field>
             <mat-label>Number of witnesses</mat-label>
@@ -90,12 +86,13 @@
   </form>
 
   <div class="col">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
+    <app-alert type="warning"
+               icon="warning">
+      <ng-container #alertContent
+                    class="alert-content">
         <strong
           >If you are calling a witness please keep the following information in
-          mind:</strong
-        ><br />
+          mind:</strong><br />
         If the disputant or the disputant’s agent does not attend the court
         hearing, the court will treat the violation ticket as not disputed, the
         conviction(s) to the allegation(s) will be recorded against the record
@@ -105,8 +102,10 @@
   </div>
 
   <div class="col mt-4">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
+    <app-alert type="warning"
+               icon="warning">
+      <ng-container #alertContent
+                    class="alert-content">
         If the disputant or the disputant’s agent does not attend the court
         hearing, the court will treat the violation ticket as not disputed, the
         conviction(s) to the allegation(s) will be recorded against the record
@@ -116,12 +115,10 @@
     </app-alert>
   </div>
 
-  <app-page-footer
-    (save)="onSubmit()"
-    (back)="onBack()"
-    [secondaryActionButtonIcon]="previousButtonIcon"
-    [secondaryActionButtonKey]="previousButtonKey"
-    [saveButtonKey]="saveButtonKey"
-    [hasSecondaryAction]="true"
-  ></app-page-footer>
+  <app-page-footer (save)="onSubmit()"
+                   (back)="onBack()"
+                   [secondaryActionButtonIcon]="previousButtonIcon"
+                   [secondaryActionButtonKey]="previousButtonKey"
+                   [saveButtonKey]="saveButtonKey"
+                   [hasSecondaryAction]="true"></app-page-footer>
 </app-stepper-page>
