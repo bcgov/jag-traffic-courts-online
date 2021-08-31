@@ -17,7 +17,9 @@
     </ng-container>
   </app-page-header>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+  <form (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+        novalidate>
     <section>
       <div class="row">
         <div class="col">
@@ -50,7 +52,7 @@
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
-            <mat-radio-button value="DISPUTE" [disabled]="!within30days.value">
+            <mat-radio-button value="DISPUTE">
               <span class="wrap-mat-radio-label">
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
@@ -70,17 +72,21 @@
           </mat-radio-group>
         </div>
       </div>
-      <div class="row" *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
+      <div class="row"
+           *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
         <div class="col-12">
           <label class="fw-bold">Please make your selection(s) below and enter additional
             information as required.</label>
-          <mat-radio-group formControlName="reductionAppearInCourt" class="w-100">
-            <mat-radio-button [value]="false" class="w-50">
+          <mat-radio-group formControlName="reductionAppearInCourt"
+                           class="w-100">
+            <mat-radio-button [value]="false"
+                              class="w-50">
               <span class="wrap-mat-radio-label">
                 I do not wish to appear in court.
               </span>
             </mat-radio-button>
-            <mat-radio-button [value]="true" class="w-50">
+            <mat-radio-button [value]="true"
+                              class="w-50">
               <span class="wrap-mat-radio-label">
                 I would like to appear in court to discuss in person.
               </span>
@@ -90,11 +96,14 @@
             </mat-error>
           </mat-radio-group>
 
-          <mat-checkbox formControlName="requestReduction" color="primary" class="w-100 mt-4">I would like to request a
+          <mat-checkbox formControlName="requestReduction"
+                        color="primary"
+                        class="w-100 mt-4">I would like to request a
             fine reduction on this
             count.</mat-checkbox>
 
-          <div class="row" *ngIf="
+          <div class="row"
+               *ngIf="
               offenceAgreementStatus.value == 'REDUCTION' &&
               requestReduction.value
             ">
@@ -102,8 +111,12 @@
               <mat-form-field class="w-100">
                 <mat-label>Please enter your reasons for why you are requesting a fine
                   reduction.</mat-label>
-                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5" formControlName="reductionReason"></textarea>
+                <textarea matInput
+                          cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"
+                          formControlName="reductionReason"></textarea>
                 <mat-error *ngIf="reductionReason.hasError('requiredIfTrue')">
                   {{ "error.required" | translate }}
                 </mat-error>
@@ -111,11 +124,14 @@
             </div>
           </div>
           <strong>and/or</strong>
-          <mat-checkbox formControlName="requestMoreTime" color="primary" class="w-100">I would like to request more
+          <mat-checkbox formControlName="requestMoreTime"
+                        color="primary"
+                        class="w-100">I would like to request more
             time to pay on this
             count.</mat-checkbox>
 
-          <div class="row" *ngIf="
+          <div class="row"
+               *ngIf="
               offenceAgreementStatus.value == 'REDUCTION' &&
               requestMoreTime.value
             ">
@@ -123,8 +139,12 @@
               <mat-form-field class="w-100">
                 <mat-label>Please enter your reasons for why you are requesting more
                   time to pay.</mat-label>
-                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5" formControlName="moreTimeReason"></textarea>
+                <textarea matInput
+                          cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"
+                          formControlName="moreTimeReason"></textarea>
                 <mat-error *ngIf="moreTimeReason.hasError('requiredIfTrue')">
                   {{ "error.required" | translate }}
                 </mat-error>
@@ -136,12 +156,15 @@
     </section>
   </form>
 
-  <div class="col" *ngIf="
+  <div class="col"
+       *ngIf="
       offenceAgreementStatus.value == 'REDUCTION' &&
       reductionAppearInCourt.value
     ">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
+    <app-alert type="warning"
+               icon="warning">
+      <ng-container #alertContent
+                    class="alert-content">
         <strong>If you choose to not appear in court, you must submit written reasons
           for each request to ask for more time or a fine reduction for each
           count.</strong>
@@ -149,13 +172,17 @@
     </app-alert>
   </div>
 
-  <div class="col" [ngClass]="{ 'mt-4': offenceAgreementStatus.value === 'DISPUTE' }" *ngIf="
+  <div class="col"
+       [ngClass]="{ 'mt-4': offenceAgreementStatus.value === 'DISPUTE' }"
+       *ngIf="
       (offenceAgreementStatus.value == 'REDUCTION' &&
         reductionAppearInCourt.value) ||
       offenceAgreementStatus.value === 'DISPUTE'
     ">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
+    <app-alert type="warning"
+               icon="warning">
+      <ng-container #alertContent
+                    class="alert-content">
         If the disputant or the disputant’s agent does not attend the court
         hearing, the court will treat the violation ticket as not disputed, the
         conviction(s) to the allegation(s) will be recorded against the record
@@ -165,7 +192,11 @@
     </app-alert>
   </div>
 
-  <app-page-footer (save)="onSubmit()" (back)="onBack()" [secondaryActionButtonIcon]="previousButtonIcon"
-    [secondaryActionButtonKey]="previousButtonKey" [saveButtonKey]="saveButtonKey" [hasSecondaryAction]="true">
+  <app-page-footer (save)="onSubmit()"
+                   (back)="onBack()"
+                   [secondaryActionButtonIcon]="previousButtonIcon"
+                   [secondaryActionButtonKey]="previousButtonKey"
+                   [saveButtonKey]="saveButtonKey"
+                   [hasSecondaryAction]="true">
   </app-page-footer>
 </app-stepper-page>

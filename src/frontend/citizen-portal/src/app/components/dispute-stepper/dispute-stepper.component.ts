@@ -209,18 +209,18 @@ export class DisputeStepperComponent
         const offenceNumber = form.get('offenceNumber') as FormControl;
         if (offenceNumber) {
           const status = form.get('offenceAgreementStatus') as FormControl;
-          const red = form.get('reductionAppearInCourt') as FormControl;
+          const reduction = form.get('reductionAppearInCourt') as FormControl;
 
           console.log(
             'onSelectionChange',
             offenceNumber.value,
             status.value,
-            red.value
+            reduction.value
           );
 
           if (status.value === 'DISPUTE') {
             courtRequired = true;
-          } else if (status.value === 'REDUCTION' && red.value) {
+          } else if (status.value === 'REDUCTION' && reduction.value) {
             courtRequired = true;
           }
         }

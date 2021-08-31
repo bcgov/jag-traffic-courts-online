@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, map, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export interface IAppConfig {
   production: boolean;
@@ -49,7 +50,7 @@ export class AppConfigService {
   private PAYMENT_OPTIONS_DEFAULT =
     // tslint:disable-next-line:max-line-length
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket' as const;
-  private RESOLUTION_OPTIONS_DEFAULTS =
+  private RESOLUTION_OPTIONS_DEFAULT =
     // tslint:disable-next-line:max-line-length
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket' as const;
 
@@ -62,7 +63,7 @@ export class AppConfigService {
   private CTH_SERV_VISIT_US_DEFAULT =
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments' as const;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   public loadAppConfig(): Observable<any> {
     return this.http.get('/assets/app.config.json').pipe(
@@ -104,7 +105,7 @@ export class AppConfigService {
 
   get resolutionOptionsLink(): string {
     const link = this.appConfig?.resolutionOptionsLink;
-    return link ? link : this.RESOLUTION_OPTIONS_DEFAULTS;
+    return link ? link : this.RESOLUTION_OPTIONS_DEFAULT;
   }
 
   get roadSafetyBCVisitUsLink(): string {
