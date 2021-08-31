@@ -73,22 +73,31 @@ mat-label {
   padding: 0 24px 0px 24px !important;
 }
 
+.mat-form-field-appearance-fill .mat-form-field-underline::before {
+  background-color: theme-palette(blue);
+}
+
+.mat-form-field-ripple {
+  background-color:  theme-palette(blue);
+}
+
 @media (max-width: 767px) {
   .mat-vertical-content {
     padding: 0 0 0px 14px !important;
   }
 
   .mat-vertical-content-container {
-    margin-left: 0 !important;
+    margin-left: 10px !important;
   }
 
   .mat-stepper-label-position-bottom .mat-horizontal-stepper-header,
   .mat-vertical-stepper-header {
-    padding: 14px 0;
+    padding: 24px 0;
   }
 
   mat-radio-button .mat-radio-label-content {
     white-space: normal;
+    line-height: 1.3em;
   }
 
   mat-radio-button .mat-radio-label {
