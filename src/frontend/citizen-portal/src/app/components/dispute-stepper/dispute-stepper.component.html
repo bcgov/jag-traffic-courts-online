@@ -1,94 +1,62 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <app-page [busy]="busy">
-        <app-tco-page-header>
-          <ng-container header> Initiate dispute form </ng-container>
-          <ng-container subHeader>
-            Please enter your contact information below, and then choose the
-            action you would like to take for each ticket count and follow the
-            instructions provided.
-          </ng-container>
-        </app-tco-page-header>
+<div class="row">
+  <div class="col-lg-12">
+    <app-page [busy]="busy">
+      <app-tco-page-header>
+        <ng-container header> Initiate dispute form </ng-container>
+        <ng-container subHeader>
+          Please enter your contact information below, and then choose the
+          action you would like to take for each ticket count and follow the
+          instructions provided.
+        </ng-container>
+      </app-tco-page-header>
 
-        <section class="mb-2">
-          <app-resolution-header [ticket]="ticket"></app-resolution-header>
-        </section>
+      <section class="mb-2">
+        <app-resolution-header [ticket]="ticket"></app-resolution-header>
+      </section>
 
-        <mat-vertical-stepper
-          #disputeStepper
-          linear
-          (selectionChange)="onSelectionChange($event)"
-        >
-          <ng-template matStepperIcon="edit">
-            <mat-icon>done</mat-icon>
-          </ng-template>
+      <mat-vertical-stepper #disputeStepper linear (selectionChange)="onSelectionChange($event)">
+        <ng-template matStepperIcon="edit">
+          <mat-icon>done</mat-icon>
+        </ng-template>
 
-          <mat-step [stepControl]="disputantForm">
-            <ng-template matStepLabel
-              >Disputant contact information</ng-template
-            >
-            <app-step-disputant
-              id="stepDisputant"
-              [stepper]="disputeStepper"
-              (stepCancel)="onStepCancel()"
-              (stepSave)="onStepSave($event)"
-            ></app-step-disputant>
-          </mat-step>
+        <mat-step [stepControl]="disputantForm">
+          <ng-template matStepLabel>Disputant contact information</ng-template>
+          <app-step-disputant id="stepDisputant" [stepper]="disputeStepper" (stepCancel)="onStepCancel()"
+            (stepSave)="onStepSave($event)"></app-step-disputant>
+        </mat-step>
 
-          <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
-            <ng-template matStepLabel>Count 1: Review and action</ng-template>
-            <app-step-count
-              id="stepCount"
-              [stepControl]="offence1Form"
-              [stepper]="disputeStepper"
-              (stepSave)="onStepSave($event)"
-            ></app-step-count>
-          </mat-step>
+        <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
+          <ng-template matStepLabel>Count 1: Review and action</ng-template>
+          <app-step-count id="stepCount" [stepControl]="offence1Form" [stepper]="disputeStepper"
+            (stepSave)="onStepSave($event)"></app-step-count>
+        </mat-step>
 
-          <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
-            <ng-template matStepLabel>Count 2: Review and action</ng-template>
-            <app-step-count
-              id="stepCount"
-              [stepControl]="offence2Form"
-              [stepper]="disputeStepper"
-              (stepSave)="onStepSave($event)"
-            ></app-step-count>
-          </mat-step>
+        <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
+          <ng-template matStepLabel>Count 2: Review and action</ng-template>
+          <app-step-count id="stepCount" [stepControl]="offence2Form" [stepper]="disputeStepper"
+            (stepSave)="onStepSave($event)"></app-step-count>
+        </mat-step>
 
-          <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
-            <ng-template matStepLabel>Count 3: Review and action</ng-template>
-            <app-step-count
-              id="stepCount"
-              [stepControl]="offence3Form"
-              [stepper]="disputeStepper"
-              (stepSave)="onStepSave($event)"
-            ></app-step-count>
-          </mat-step>
+        <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
+          <ng-template matStepLabel>Count 3: Review and action</ng-template>
+          <app-step-count id="stepCount" [stepControl]="offence3Form" [stepper]="disputeStepper"
+            (stepSave)="onStepSave($event)"></app-step-count>
+        </mat-step>
 
-          <mat-step [stepControl]="additionalForm" *ngIf="isCourtRequired">
-            <ng-template matStepLabel>Additional information</ng-template>
-            <app-step-additional
-              id="stepCourt"
-              [stepper]="disputeStepper"
-              (stepSave)="onStepSave($event)"
-            ></app-step-additional>
-          </mat-step>
+        <mat-step [stepControl]="additionalForm">
+          <ng-template matStepLabel>Additional information</ng-template>
+          <app-step-additional id="stepCourt" [stepper]="disputeStepper" (stepSave)="onStepSave($event)">
+          </app-step-additional>
+        </mat-step>
 
-          <mat-step [stepControl]="overviewForm">
-            <ng-template matStepLabel>Dispute overview</ng-template>
-            <app-step-overview
-              id="stepOverview"
-              [stepper]="disputeStepper"
-              [overviewTicket]="overviewTicket"
-              (busy)="(busy)"
-              (stepSave)="onStepSave($event)"
-            ></app-step-overview>
-          </mat-step>
-        </mat-vertical-stepper>
+        <mat-step [stepControl]="overviewForm">
+          <ng-template matStepLabel>Dispute overview</ng-template>
+          <app-step-overview id="stepOverview" [stepper]="disputeStepper" [overviewTicket]="overviewTicket"
+            (busy)="(busy)" (stepSave)="onStepSave($event)"></app-step-overview>
+        </mat-step>
+      </mat-vertical-stepper>
 
-        <app-resolution-footer></app-resolution-footer>
-      </app-page>
-    </div>
+      <app-resolution-footer></app-resolution-footer>
+    </app-page>
   </div>
 </div>

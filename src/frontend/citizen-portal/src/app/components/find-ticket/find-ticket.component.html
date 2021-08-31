@@ -1,16 +1,19 @@
 <app-page [busy]="busy">
   <app-tco-page-header>
-    <ng-container header>British Columbia Ticket Resolution</ng-container>
+    <ng-container header>British Columbia ticket resolution</ng-container>
     <ng-container subHeader>
       Use this service to pay ticket fines, ask for fine reductions or more time
       to pay, or initiate a dispute.
     </ng-container>
   </app-tco-page-header>
 
-  <div class="row d-sm-block d-md-none" *ngIf="notFound">
+  <div class="row d-sm-block d-md-none"
+       *ngIf="notFound">
     <div class="col-md-12">
-      <app-alert type="danger" icon="error">
-        <ng-container #alertContent class="alert-content">
+      <app-alert type="danger"
+                 icon="error">
+        <ng-container #alertContent
+                      class="alert-content">
           <strong>Ticket not found.</strong>
           <p>Please take photo or upload image.</p>
         </ng-container>
@@ -20,14 +23,12 @@
 
   <!-- MOBILE VIEW -->
   <div class="row d-sm-block d-md-none">
-    <div class="col-md-12">
-      <button
-        type="button"
-        mat-flat-button
-        color="primary"
-        class="find-large"
-        (click)="fileInput.click()"
-      >
+    <div class="col-md-12 my-2">
+      <button type="button"
+              mat-flat-button
+              color="primary"
+              class="find-large"
+              (click)="fileInput.click()">
         <mat-icon class="me-2">photo_camera</mat-icon>
         Upload photo of ticket
       </button>
@@ -37,28 +38,26 @@
   <div class="flex flex-last">
     <div class="flex-2-col info">
       <div class="flex-last-info-content">
-        <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
+        <form [formGroup]="form"
+              (ngSubmit)="onSearch()"
+              novalidate>
           <div class="row">
             <div class="col-md-12">
               <mat-form-field class="w-100">
                 <mat-label>Ticket number</mat-label>
-                <input
-                  formControlName="ticketNumber"
-                  placeholder="A Ticket number is 2 letters and 8 numbers"
-                  matInput
-                  type="text"
-                  oninput="this.value =
+                <input formControlName="ticketNumber"
+                       placeholder="A Ticket number is 2 letters and 8 numbers"
+                       matInput
+                       type="text"
+                       oninput="this.value =
                     this.value.toUpperCase()"
-                  mask="SS00000000"
-                  autocomplete="off"
-                />
-                <button
-                  mat-button
-                  matSuffix
-                  mat-icon-button
-                  aria-label="Clear"
-                  (click)="ticketNumber.setValue('')"
-                >
+                       mask="SS00000000"
+                       autocomplete="off" />
+                <button mat-button
+                        matSuffix
+                        mat-icon-button
+                        aria-label="Clear"
+                        (click)="ticketNumber.setValue('')">
                   <mat-icon>close</mat-icon>
                 </button>
                 <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -67,7 +66,9 @@
             <div class="col-md-12">
               <mat-form-field class="w-100">
                 <mat-label>Ticket time</mat-label>
-                <input matInput type="time" formControlName="time" />
+                <input matInput
+                       type="time"
+                       formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
@@ -81,12 +82,10 @@
               </a>
             </div>
             <div class="offset-md-2 col-md-6">
-              <button
-                type="submit"
-                mat-flat-button
-                color="primary"
-                class="find-large"
-              >
+              <button type="submit"
+                      mat-flat-button
+                      color="primary"
+                      class="find-large">
                 <mat-icon class="me-2">search</mat-icon>
                 Find ticket
               </button>
@@ -96,10 +95,13 @@
       </div>
     </div>
     <div class="flex-2-col info d-xs-none d-sm-none d-md-block">
-      <div class="row" *ngIf="notFound">
+      <div class="row"
+           *ngIf="notFound">
         <div class="col-md-12">
-          <app-alert type="danger" icon="error">
-            <ng-container #alertContent class="alert-content">
+          <app-alert type="danger"
+                     icon="error">
+            <ng-container #alertContent
+                          class="alert-content">
               <strong>Ticket not found.</strong>
               <p>Please take photo or upload image.</p>
             </ng-container>
@@ -108,25 +110,21 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <button
-            type="button"
-            mat-flat-button
-            color="primary"
-            class="find-xlarge"
-            (click)="fileInput.click()"
-          >
+          <button type="button"
+                  mat-flat-button
+                  color="primary"
+                  class="find-xlarge"
+                  (click)="fileInput.click()">
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
             Upload photo of ticket
           </button>
 
-          <input
-            hidden
-            (change)="onFileChange($event)"
-            #fileInput
-            type="file"
-            accept="image/*"
-            id="file"
-          />
+          <input hidden
+                 (change)="onFileChange($event)"
+                 #fileInput
+                 type="file"
+                 accept="image/*"
+                 id="file" />
         </div>
       </div>
     </div>

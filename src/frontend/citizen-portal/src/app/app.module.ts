@@ -25,7 +25,6 @@ import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
-import { DisputePageComponent } from './components/dispute-page/dispute-page.component';
 import { StepCountComponent } from './components/stepper/step-count/step-count.component';
 import { StepOverviewComponent } from './components/stepper/step-overview/step-overview.component';
 import { StepAdditionalComponent } from './components/stepper/step-additional/step-additional.component';
@@ -67,7 +66,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AppComponent,
     LandingComponent,
     FindTicketComponent,
-    DisputePageComponent,
     StepCountComponent,
     StepOverviewComponent,
     StepAdditionalComponent,

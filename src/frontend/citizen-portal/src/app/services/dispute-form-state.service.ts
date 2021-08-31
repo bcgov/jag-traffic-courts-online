@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
+  FormBuilder, FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
 } from '@angular/forms';
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
@@ -192,38 +193,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   /**
    * @description
-   * Check if any offence forms require court.
-   */
-  public get isCourtRequired(): boolean {
-    // console.log('this.offenceForms', this.offenceForms.length);
-
-    // this.offenceForms.forEach((form: AbstractControl) => {
-    //   const offenceNumber = form.get('offenceNumber') as FormControl;
-    //   const status = form.get('offenceAgreementStatus') as FormControl;
-    //   const include = form.get('includeOffenceInDispute') as FormControl;
-
-    //   console.log(
-    //     'XXXXXXXXXX',
-    //     offenceNumber.value,
-    //     include.value,
-    //     status.value
-    //   );
-    // });
-
-    // const courtRequiredForm = this.offenceForms.find(
-    //   (form: AbstractControl) =>
-    //     (form.get('offenceNumber') as FormControl).value &&
-    //     (form.get('includeOffenceInDispute') as FormControl).value &&
-    //     (form.get('offenceAgreementStatus') as FormControl).value &&
-    //     (form.get('offenceAgreementStatus') as FormControl).value != '1'
-    // );
-
-    // return courtRequiredForm ? true : false;
-    return true;
-  }
-
-  /**
-   * @description
    * Mark all constituent forms as pristine.
    */
   public markAsPristine(): void {
@@ -285,25 +254,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     });
   }
 
-  // public requiredIfCheckedValidator(formGroup: FormGroup) {
-  //   console.log(
-  //     'formGroup.value.requestMoreTime',
-  //     formGroup.value.requestMoreTime
-  //   );
-  //   console.log(
-  //     'formGroup.get(moreTimeReason',
-  //     formGroup.get('moreTimeReason')
-  //   );
-  //   if (formGroup.value.requestMoreTime) {
-  //     return Validators.required(formGroup.get('moreTimeReason'))
-  //       ? {
-  //           requiredIfChecked: true,
-  //         }
-  //       : null;
-  //   }
-  //   return null;
-  // }
-
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group(
       {
@@ -322,33 +272,47 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
         amountDue: [null],
         discountDueDate: [null],
         discountAmount: [null],
+
         _offenceStatusDesc: [null],
         _within30days: [null],
         _amountDue: [null],
+      },
+      {
+        validators: [
+          FormGroupValidators.requiredIfTrue(
+            'requestReduction',
+            'reductionReason'
+          ),
+          FormGroupValidators.requiredIfTrue(
+            'requestMoreTime',
+            'moreTimeReason'
+          ),
+        ],
       }
-      // {
-      //   validators: [
-      //     FormGroupValidators.requiredIfTrue(
-      //       'requestReduction',
-      //       'reductionReason'
-      //     ),
-      //     FormGroupValidators.requiredIfTrue(
-      //       'requestMoreTime',
-      //       'moreTimeReason'
-      //     ),
-      //   ],
-      // }
     );
   }
 
   public buildStepAdditionalForm(): FormGroup {
     return this.formBuilder.group({
+      isCourtRequired: [false],
       lawyerPresent: [false],
       interpreterRequired: [false],
       interpreterLanguage: [null],
       witnessPresent: [false],
       numberOfWitnesses: [null],
-    });
+    },
+      {
+        validators: [
+          FormGroupValidators.requiredIfTrue(
+            'interpreterRequired',
+            'interpreterLanguage'
+          ),
+          FormGroupValidators.requiredIfTrue(
+            'witnessPresent',
+            'numberOfWitnesses'
+          )
+        ],
+      });
   }
 
   public resetStepAdditionalForm(): void {

@@ -1,5 +1,6 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,8 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class DisputeStepperComponent
   extends BaseDisputeFormPage
-  implements OnInit
-{
+  implements OnInit {
   public busy: Subscription;
   @ViewChild(MatStepper)
   private stepper: MatStepper;
@@ -181,7 +181,7 @@ export class DisputeStepperComponent
       });
   }
 
-  public onSelectionChange(event): void {
+  public onSelectionChange(event: StepperSelectionEvent): void {
     this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
 
     const stepIndex = event.selectedIndex;
@@ -196,9 +196,43 @@ export class DisputeStepperComponent
         });
       }, 250);
     }
-  }
 
-  public get isCourtRequired(): boolean {
-    return this.disputeFormStateService.isCourtRequired;
+    const numberOfSteps = this.stepper.steps.length;
+    const currentStep = event.selectedIndex + 1;
+
+    // Determine if court related 'Additional Information' is required
+    if ((numberOfSteps - 1) === currentStep) {
+      const offenceForms = this.disputeFormStateService.offenceForms;
+      let courtRequired = false;
+
+      offenceForms.forEach((form: AbstractControl) => {
+        const offenceNumber = form.get('offenceNumber') as FormControl;
+        if (offenceNumber) {
+          const status = form.get('offenceAgreementStatus') as FormControl;
+          const reduction = form.get('reductionAppearInCourt') as FormControl;
+
+          console.log(
+            'onSelectionChange',
+            offenceNumber.value,
+            status.value,
+            reduction.value
+          );
+
+          if (status.value === 'DISPUTE') {
+            courtRequired = true;
+          } else if (status.value === 'REDUCTION' && reduction.value) {
+            courtRequired = true;
+          }
+        }
+      });
+
+      console.log('courtRequired', courtRequired);
+
+      const additionalForm = this.disputeFormStateService.stepAdditionalForm;
+      const isCourtRequired = additionalForm.get('isCourtRequired') as FormControl;
+      isCourtRequired.setValue(courtRequired);
+
+      console.log('additional', this.disputeFormStateService.additional);
+    }
   }
 }

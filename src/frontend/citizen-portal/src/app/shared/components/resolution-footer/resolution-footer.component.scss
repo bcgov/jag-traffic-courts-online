@@ -90,17 +90,29 @@ hr {
   display: table;
 
   .icon-size1 {
-    width: 60px;
-    margin-right: 25px;
+    width: 50px;
+    margin-right: 20px;
   }
 
   .icon-size2 {
     width: 50px;
-    margin-right: 10px;
+    margin-right: 20px;
   }
 
   .text-col {
     display: table-cell;
     vertical-align: top;
+  }
+}
+
+@media (max-width: 767px) {
+  .icon-size1 {
+    margin-top: 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  .icon-size1 {
+    margin-left: 15px;
   }
 }

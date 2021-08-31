@@ -3,35 +3,34 @@
     <app-resolution-header [ticket]="ticket"></app-resolution-header>
   </section>
 
-  <div class="col mb-4 p-0" *ngIf="ticket._within30days">
-    <app-alert type="success" icon="info">
-      <ng-container #alertContent class="alert-content">
+  <div class="col mb-2 p-0"
+       *ngIf="ticket._within30days">
+    <app-alert type="success"
+               icon="info">
+      <ng-container #alertContent
+                    class="alert-content">
         <strong>You are within 30 days of your violation date.</strong><br />
         If you pay your ticket by
-        <strong>{{ ticket.discountDueDate | formatDate }}</strong
-        >, you will pay
+        <strong>{{ ticket.discountDueDate | formatDate }}</strong>, you will pay
         <strong>{{
           ticket._outstandingBalanceDue
             | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-        }}</strong
-        >, if paid after this date the amount due will be
+        }}</strong>, if paid after this date the amount due will be
         <strong>
           {{
             ticket._totalBalanceDue
               | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-          }}</strong
-        >.
+          }}</strong>.
       </ng-container>
     </app-alert>
   </div>
 
-  <div class="row mt-4 mb-4" *ngIf="selectView">
+  <div class="row mt-2 mb-2"
+       *ngIf="selectView">
     <div class="col-md-8">
-      <mat-checkbox
-        (change)="onSelectAllChange($event)"
-        class="me-4 mb-2"
-        color="primary"
-      >
+      <mat-checkbox (change)="onSelectAllChange($event)"
+                    class="me-4 mb-2"
+                    color="primary">
         I agree I committed this offence and I would like to pay all counts for
         this ticket.
       </mat-checkbox>
@@ -39,15 +38,11 @@
   </div>
 
   <div class="mb-2">
-    <section
-      class="px-4 py-2 mb-3 card-section"
-      *ngFor="let row of ticket.offences; let i = index"
-    >
-      <app-count-item-summary
-        #countitem
-        [count]="row"
-        [selectView]="selectView"
-      ></app-count-item-summary>
+    <section class="px-4 py-2 mb-3 card-section"
+             *ngFor="let row of ticket.offences; let i = index">
+      <app-count-item-summary #countitem
+                              [count]="row"
+                              [selectView]="selectView"></app-count-item-summary>
     </section>
 
     <ng-container *ngIf="ticket._within30days; else notWithin30days">

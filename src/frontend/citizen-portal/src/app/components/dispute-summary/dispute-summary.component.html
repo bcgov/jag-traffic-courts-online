@@ -24,11 +24,11 @@
       </div>
       <div
         class="offset-md-2 col-md-6"
-        *ngIf="ticket._outstandingBalanceDue > 0"
+        *ngIf="ticket._outstandingBalanceDue > 0 || useMockServices"
       >
         <div class="row">
           <div
-            [ngClass]="{ 'offset-md-6': ticket?._requestSubmitted }"
+            [ngClass]="{ 'offset-md-6': ticket._requestSubmitted && !useMockServices }"
             class="col-md-6"
           >
             <button
@@ -40,7 +40,7 @@
               Pay ticket
             </button>
           </div>
-          <div class="col-md-6" *ngIf="!ticket?._requestSubmitted">
+          <div class="col-md-6" *ngIf="!ticket._requestSubmitted || useMockServices">
             <button
               mat-flat-button
               color="primary"
