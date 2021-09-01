@@ -168,6 +168,8 @@ export class MockDisputeService {
       interpreterLanguage: 'SPA',
       witnessPresent: true,
       numberOfWitnesses: 3,
+      _isCourtRequired: false,
+      _isReductionRequired: false
     };
 
     const offenceDate = faker.date.soon().toString();

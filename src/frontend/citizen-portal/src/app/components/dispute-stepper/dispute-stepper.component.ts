@@ -215,26 +215,37 @@ export class DisputeStepperComponent
   private setCourtRequired(): void {
     const offenceForms = this.disputeFormStateService.offenceForms;
     let courtRequired = false;
+    let reductionRequired = false;
 
     offenceForms.forEach((form: AbstractControl) => {
       const offenceNumber = form.get('offenceNumber') as FormControl;
       if (offenceNumber.value) {
-        const status = form.get('offenceAgreementStatus') as FormControl;
-        const reduction = form.get('reductionAppearInCourt') as FormControl;
+        const offenceAgreementStatus = form.get('offenceAgreementStatus') as FormControl;
+        const reductionAppearInCourt = form.get('reductionAppearInCourt') as FormControl;
 
-        if (status.value === 'DISPUTE') {
+        if (offenceAgreementStatus.value === 'DISPUTE') {
           courtRequired = true;
-        } else if (status.value === 'REDUCTION' && reduction.value) {
-          courtRequired = true;
+        } else if (offenceAgreementStatus.value === 'REDUCTION') {
+          reductionRequired = true;
+          if (reductionAppearInCourt.value) {
+            courtRequired = true;
+          }
         }
       }
     });
 
     this.logger.log('onSelectionChange courtRequired', courtRequired);
+    this.logger.log('onSelectionChange reductionRequired', reductionRequired);
 
     const additionalForm = this.disputeFormStateService.stepAdditionalForm;
-    const isCourtRequired = additionalForm.get('isCourtRequired') as FormControl;
-    isCourtRequired.setValue(courtRequired);
+
+    const isCourtRequiredControl = additionalForm.get('_isCourtRequired') as FormControl;
+    isCourtRequiredControl.setValue(courtRequired);
+
+    const isReductionRequiredControl = additionalForm.get('_isReductionRequired') as FormControl;
+    isReductionRequiredControl.setValue(reductionRequired);
+
+    console.log('additionalForm', additionalForm.value);
   }
 
   /**

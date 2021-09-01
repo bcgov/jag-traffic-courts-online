@@ -297,12 +297,13 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   public buildStepAdditionalForm(): FormGroup {
     return this.formBuilder.group({
-      isCourtRequired: [false],
       lawyerPresent: [false],
       interpreterRequired: [false],
       interpreterLanguage: [null],
       witnessPresent: [false],
       numberOfWitnesses: [null],
+      _isCourtRequired: [false],
+      _isReductionRequired: [false],
     },
       {
         validators: [

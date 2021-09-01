@@ -73,7 +73,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.stepper.previous();
   }
 
-  public get _firstOffence(): FormControl {
+  public get firstOffence(): FormControl {
     return this.form.get('_firstOffence') as FormControl;
   }
 

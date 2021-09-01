@@ -84,7 +84,7 @@
         </label>
 
         <mat-radio-group formControlName="reductionAppearInCourt"
-                         class="w-100 mb-4">
+                         class="w-100">
           <mat-radio-button [value]="false"
                             class="w-50">
             <span class="wrap-mat-radio-label">
@@ -104,10 +104,11 @@
 
         <mat-checkbox formControlName="applyToAllCounts"
                       color="primary"
-                      class="w-100">Apply this selection to all counts on this violation ticket.</mat-checkbox>
+                      *ngIf="firstOffence.value"
+                      class="w-100 mt-4">Apply this selection to all counts on this violation ticket.</mat-checkbox>
       </div>
       <div class="row"
-           *ngIf="offenceAgreementStatus.value == 'DISPUTE'">
+           *ngIf="offenceAgreementStatus.value == 'DISPUTE' && firstOffence.value">
         <hr class="mt-4" />
 
         <mat-checkbox formControlName="applyToAllCounts"

@@ -5,4 +5,7 @@ export interface Additional {
   interpreterLanguage?: string;
   witnessPresent: boolean;
   numberOfWitnesses: number;
+
+  _isCourtRequired: boolean;
+  _isReductionRequired: boolean;
 }
