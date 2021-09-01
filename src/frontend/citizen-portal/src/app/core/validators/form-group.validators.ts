@@ -81,6 +81,32 @@ export class FormGroupValidators {
 
   /**
    * @description
+   *
+   */
+  public static atLeastOneCheckedIf(ifKey: string, check1Key: string, check2Key: string): ValidatorFn {
+    return (group: FormGroup): ValidationErrors | null => {
+      const ifKeyVal = group.controls[ifKey].value;
+      const check1Val = group.controls[check1Key].value;
+      const check2Val = group.controls[check2Key].value;
+
+      if (!ifKeyVal) {
+        group.controls[check2Key].setErrors(null);
+        return null;
+      }
+
+      const valid = !!(check1Val) || !!(check2Val);
+      if (valid) {
+        group.controls[check2Key].setErrors(null);
+        return null;
+      } else {
+        group.controls[check2Key].setErrors({ atLeastOneCheckedIf: true });
+        return { atLeastOneCheckedIf: true };
+      }
+    };
+  }
+
+  /**
+   * @description
    * Compares date range start and end.
    */
   public static dateRange(

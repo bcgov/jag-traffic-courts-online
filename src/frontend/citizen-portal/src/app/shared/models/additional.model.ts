@@ -6,6 +6,11 @@ export interface Additional {
   witnessPresent: boolean;
   numberOfWitnesses: number;
 
+  requestReduction: boolean;
+  requestMoreTime: boolean;
+  reductionReason?: string;
+  moreTimeReason?: string;
+
   _isCourtRequired: boolean;
   _isReductionRequired: boolean;
 }

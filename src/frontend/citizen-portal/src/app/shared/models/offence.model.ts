@@ -15,10 +15,6 @@ export interface Offence {
   status: string;
   offenceAgreementStatus?: string;
   reductionAppearInCourt: boolean;
-  requestReduction: boolean;
-  requestMoreTime: boolean;
-  reductionReason?: string;
-  moreTimeReason?: string;
 
   // derived later on
   _firstOffence: boolean;

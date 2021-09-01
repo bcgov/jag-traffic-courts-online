@@ -2,6 +2,11 @@
 
 small {
   color: theme-palette(grey, dark);
+  line-height: 1.3em;
   padding-top: 10px;
-  line-height: .9em;
+}
+
+.text {
+  font-weight: 700;
+  line-height: 1.5em;
 }

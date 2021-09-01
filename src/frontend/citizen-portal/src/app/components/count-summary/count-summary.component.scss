@@ -14,25 +14,6 @@ a {
   }
 }
 
-tr {
-  background-color: rgba(theme-palette(blue), 0.05) !important;
-  border-left: 3px solid theme-palette(blue);
-
-  &:hover {
-    background-color: rgba(theme-palette(blue), 0.125) !important;
-  }
-
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: rgba(0, 0, 0, 0.12);
-}
-
-td,
-label,
-small {
-  user-select: none;
-}
-
 label {
   cursor: pointer;
 
@@ -51,7 +32,9 @@ button.mat-flat-button .mat-icon {
 }
 
 small {
-  color: theme-palette(blue);
+  color: theme-palette(grey, dark);
+  line-height: 1.3em;
+  padding-top: 10px;
 }
 
 .card-section {

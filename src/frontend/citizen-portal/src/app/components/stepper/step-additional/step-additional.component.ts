@@ -56,7 +56,6 @@ export class StepAdditionalComponent
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepAdditionalForm;
     this.patchForm();
-    console.log('additionalForm on init', this.form.value);
   }
 
   public onSubmit(): void {
@@ -93,5 +92,21 @@ export class StepAdditionalComponent
 
   public get numberOfWitnesses(): FormControl {
     return this.form.get('numberOfWitnesses') as FormControl;
+  }
+
+  public get requestReduction(): FormControl {
+    return this.form.get('requestReduction') as FormControl;
+  }
+
+  public get requestMoreTime(): FormControl {
+    return this.form.get('requestMoreTime') as FormControl;
+  }
+
+  public get reductionReason(): FormControl {
+    return this.form.get('reductionReason') as FormControl;
+  }
+
+  public get moreTimeReason(): FormControl {
+    return this.form.get('moreTimeReason') as FormControl;
   }
 }

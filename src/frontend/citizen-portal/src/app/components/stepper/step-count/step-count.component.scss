@@ -1,9 +1,14 @@
 @import "palette";
 
 label {
+  line-height: 1.3em;
   font-size: 1.2em;
-  font-weight: 400;
-  margin: 1.2em 0 1.2em;
+  font-weight: 700;
+  margin: 0 0 .5em;
+
+  &.inactive {
+    color: theme-palette(grey);
+  }
 }
 
 .wrap-mat-radio-label {
@@ -29,6 +34,8 @@ mat-icon {
 
 small {
   color: theme-palette(grey, dark);
+  line-height: 1.3em;
+  padding-top: 10px;
 }
 
 .mat-radio-button {

@@ -260,10 +260,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
         offenceNumber: [null],
         offenceAgreementStatus: [null, [Validators.required]],
         reductionAppearInCourt: [false],
-        requestReduction: [false],
-        requestMoreTime: [false],
-        reductionReason: [null],
-        moreTimeReason: [null],
 
         // Here for display purposes
         offenceDescription: [null],
@@ -279,18 +275,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
         _offenceStatusDesc: [null],
         _within30days: [null],
         _amountDue: [null],
-      },
-      {
-        validators: [
-          FormGroupValidators.requiredIfTrue(
-            'requestReduction',
-            'reductionReason'
-          ),
-          FormGroupValidators.requiredIfTrue(
-            'requestMoreTime',
-            'moreTimeReason'
-          ),
-        ],
       }
     );
   }
@@ -302,6 +286,10 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       interpreterLanguage: [null],
       witnessPresent: [false],
       numberOfWitnesses: [null],
+      requestReduction: [false],
+      requestMoreTime: [false],
+      reductionReason: [null],
+      moreTimeReason: [null],
       _isCourtRequired: [false],
       _isReductionRequired: [false],
     },
@@ -314,7 +302,20 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
           FormGroupValidators.requiredIfTrue(
             'witnessPresent',
             'numberOfWitnesses'
-          )
+          ),
+          FormGroupValidators.requiredIfTrue(
+            'requestReduction',
+            'reductionReason'
+          ),
+          FormGroupValidators.requiredIfTrue(
+            'requestMoreTime',
+            'moreTimeReason'
+          ),
+          FormGroupValidators.atLeastOneCheckedIf(
+            '_isReductionRequired',
+            'requestReduction',
+            'requestMoreTime'
+          ),
         ],
       });
   }

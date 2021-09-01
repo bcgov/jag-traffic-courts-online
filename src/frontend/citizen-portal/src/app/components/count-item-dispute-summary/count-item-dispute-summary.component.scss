@@ -1,0 +1,11 @@
+@import "palette.scss";
+
+small {
+  color: theme-palette(grey, dark);
+  line-height: 1.3em;
+  padding-top: 10px;
+}
+
+.text {
+  line-height: 1.4em;
+}
