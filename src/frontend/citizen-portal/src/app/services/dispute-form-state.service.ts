@@ -272,7 +272,10 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
         amountDue: [null],
         discountDueDate: [null],
         discountAmount: [null],
+        applyToAllCounts: [false],
 
+        _firstOffence: [false],
+        _offenceStatus: [null],
         _offenceStatusDesc: [null],
         _within30days: [null],
         _amountDue: [null],

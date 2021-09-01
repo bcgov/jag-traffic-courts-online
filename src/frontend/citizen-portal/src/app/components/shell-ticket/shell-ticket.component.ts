@@ -132,8 +132,8 @@ export class ShellTicketComponent implements OnInit {
       ],
       courtHearingLocation: [null, [Validators.required]],
       detachmentLocation: [null, [Validators.required]],
-      chargeCount: [1],
-      amountOwing: [null],
+      _chargeCount: [1],
+      _amountOwing: [null],
     });
 
     this.disputeService.shellTicketData$.subscribe((shellTicketData) => {
@@ -148,39 +148,6 @@ export class ShellTicketComponent implements OnInit {
         this.progressRef.complete();
       } else {
         this.recognizeContent(shellTicketData.ticketFile);
-        // } else {
-        //   const tmp: ShellTicket = {
-        //     birthdate: '',
-        //     chargeCount: 1,
-        //     count1Charge: null,
-        //     count1FineAmount: '812900',
-        //     count2Charge: null,
-        //     count2FineAmount: '',
-        //     count3Charge: null,
-        //     count3FineAmount: '',
-        //     courtHearingLocation: '',
-        //     detachmentLocation: '',
-        //     driverLicenseNumber: '',
-        //     address: '',
-        //     city: '',
-        //     province: '',
-        //     postalCode: '',
-        //     gender: '',
-        //     driverLicenseProvince: '',
-        //     amountOwing: null,
-        //     givenNames: 'JIMINEX',
-        //     lastName: 'CRICKET',
-        //     violationDate: '',
-        //     violationTicketNumber: 'AJ20103222',
-        //     violationTime: '',
-        //     _count1ChargeDesc: 'use device while diving',
-        //     _count1ChargeSection: '145(1)',
-        //     _count2ChargeDesc: '',
-        //     _count2ChargeSection: '',
-        //     _count3ChargeDesc: '',
-        //     _count3ChargeSection: '',
-        //   };
-        //   this.form.setValue(tmp);
       }
     });
   }
@@ -212,10 +179,10 @@ export class ShellTicketComponent implements OnInit {
     );
 
     // Set the enabled/disabled of the count fields depending upon visibility
-    this.chargeCount.valueChanges.subscribe((selectedValue) => {
+    this._chargeCount.valueChanges.subscribe((selectedValue) => {
       this.onChargeCountChange(selectedValue);
     });
-    this.onChargeCountChange(this.chargeCount.value);
+    this.onChargeCountChange(this._chargeCount.value);
   }
 
   public onClearBirthdate(): void {
@@ -428,8 +395,7 @@ export class ShellTicketComponent implements OnInit {
         const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
         if (invoiceIdField.valueType === 'string') {
           this.logger.info(
-            `  violation ticket number: '${
-              invoiceIdField.value || '<missing>'
+            `  violation ticket number: '${invoiceIdField.value || '<missing>'
             }', with confidence of ${invoiceIdField.confidence}`
           );
         }
@@ -437,8 +403,7 @@ export class ShellTicketComponent implements OnInit {
         const surnameField = invoice.fields[surnameFieldIndex];
         if (surnameField.valueType === 'string') {
           this.logger.info(
-            `  surname: '${
-              surnameField.valueData?.text || '<missing>'
+            `  surname: '${surnameField.valueData?.text || '<missing>'
             }', with confidence of ${surnameField.confidence}`
           );
         }
@@ -446,8 +411,7 @@ export class ShellTicketComponent implements OnInit {
         const givenNameField = invoice.fields[givenNameFieldIndex];
         if (givenNameField.valueType === 'string') {
           this.logger.info(
-            `  given name: '${
-              givenNameField.valueData?.text || '<missing>'
+            `  given name: '${givenNameField.valueData?.text || '<missing>'
             }', with confidence of ${givenNameField.confidence}`
           );
         }
@@ -455,8 +419,7 @@ export class ShellTicketComponent implements OnInit {
         const count1DescField = invoice.fields[count1DescFieldIndex];
         if (count1DescField.valueType === 'string') {
           this.logger.info(
-            `  count 1 description: '${
-              count1DescField.valueData?.text || '<missing>'
+            `  count 1 description: '${count1DescField.valueData?.text || '<missing>'
             }', with confidence of ${count1DescField.confidence}`
           );
         }
@@ -464,8 +427,7 @@ export class ShellTicketComponent implements OnInit {
         const count1SectionField = invoice.fields[count1SectionFieldIndex];
         if (count1SectionField.valueType === 'string') {
           this.logger.info(
-            `  count 1 section: '${
-              count1SectionField.valueData?.text || '<missing>'
+            `  count 1 section: '${count1SectionField.valueData?.text || '<missing>'
             }', with confidence of ${count1SectionField.confidence}`
           );
         }
@@ -474,8 +436,7 @@ export class ShellTicketComponent implements OnInit {
           invoice.fields[count1TicketAmountFieldIndex];
         if (count1TicketAmountField.valueType === 'number') {
           this.logger.info(
-            `  count 1 ticket amount: '${
-              count1TicketAmountField.value || '<missing>'
+            `  count 1 ticket amount: '${count1TicketAmountField.value || '<missing>'
             }', with confidence of ${count1TicketAmountField.confidence}`
           );
         }
@@ -483,8 +444,7 @@ export class ShellTicketComponent implements OnInit {
         const count2DescField = invoice.fields[count2DescFieldIndex];
         if (count2DescField.valueType === 'string') {
           this.logger.info(
-            `  count 2 description: '${
-              count2DescField.valueData?.text || '<missing>'
+            `  count 2 description: '${count2DescField.valueData?.text || '<missing>'
             }', with confidence of ${count2DescField.confidence}`
           );
         }
@@ -492,8 +452,7 @@ export class ShellTicketComponent implements OnInit {
         const count2SectionField = invoice.fields[count2SectionFieldIndex];
         if (count2SectionField.valueType === 'string') {
           this.logger.info(
-            `  count 2 section: '${
-              count2SectionField.valueData?.text || '<missing>'
+            `  count 2 section: '${count2SectionField.valueData?.text || '<missing>'
             }', with confidence of ${count2SectionField.confidence}`
           );
         }
@@ -502,8 +461,7 @@ export class ShellTicketComponent implements OnInit {
           invoice.fields[count2TicketAmountFieldIndex];
         if (count2TicketAmountField.valueType === 'number') {
           this.logger.info(
-            `  count 2 ticket amount: '${
-              count2TicketAmountField.value || '<missing>'
+            `  count 2 ticket amount: '${count2TicketAmountField.value || '<missing>'
             }', with confidence of ${count2TicketAmountField.confidence}`
           );
         }
@@ -511,8 +469,7 @@ export class ShellTicketComponent implements OnInit {
         const count3DescField = invoice.fields[count3DescFieldIndex];
         if (count3DescField.valueType === 'string') {
           this.logger.info(
-            `  count 3 description: '${
-              count3DescField.valueData?.text || '<missing>'
+            `  count 3 description: '${count3DescField.valueData?.text || '<missing>'
             }', with confidence of ${count3DescField.confidence}`
           );
         }
@@ -520,8 +477,7 @@ export class ShellTicketComponent implements OnInit {
         const count3SectionField = invoice.fields[count3SectionFieldIndex];
         if (count3SectionField.valueType === 'string') {
           this.logger.info(
-            `  count 3 section: '${
-              count3SectionField.valueData?.text || '<missing>'
+            `  count 3 section: '${count3SectionField.valueData?.text || '<missing>'
             }', with confidence of ${count3SectionField.confidence}`
           );
         }
@@ -530,8 +486,7 @@ export class ShellTicketComponent implements OnInit {
           invoice.fields[count3TicketAmountFieldIndex];
         if (count3TicketAmountField.valueType === 'number') {
           this.logger.info(
-            `  count 3 ticket amount: '${
-              count3TicketAmountField.value || '<missing>'
+            `  count 3 ticket amount: '${count3TicketAmountField.value || '<missing>'
             }', with confidence of ${count3TicketAmountField.confidence}`
           );
         }
@@ -612,8 +567,8 @@ export class ShellTicketComponent implements OnInit {
           count3FineAmount: count3TicketAmountField.value
             ? String(count3TicketAmountField.value)
             : '',
-          chargeCount,
-          amountOwing: 0,
+          _chargeCount: chargeCount,
+          _amountOwing: 0,
         };
 
         this.logger.info('before', { ...shellTicket });
@@ -669,8 +624,8 @@ export class ShellTicketComponent implements OnInit {
     return this.form.get('birthdate') as FormControl;
   }
 
-  public get chargeCount(): FormControl {
-    return this.form.get('chargeCount') as FormControl;
+  public get _chargeCount(): FormControl {
+    return this.form.get('_chargeCount') as FormControl;
   }
 
   public get count1Charge(): FormControl {

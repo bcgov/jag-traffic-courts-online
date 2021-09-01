@@ -10,6 +10,7 @@ export interface Offence {
   amountDue: number;
   discountDueDate?: string;
   discountAmount: number;
+  applyToAllCounts: boolean;
 
   status: string;
   offenceAgreementStatus?: string;
@@ -19,37 +20,10 @@ export interface Offence {
   reductionReason?: string;
   moreTimeReason?: string;
 
-  /*
-  status (for disputes):
-  {
-    New,
-    Submitted,
-    InProgress,//ticket already verified
-    Complete,
-    Rejected,
-  }
-
-  offenceAgreementStatus:
-    NOTHING
-                    I do not wish to take any action on this count at this time.
-
-    PAY
-                     I agree I committed this offence and I would like to pay for this count.
-
-    REDUCTION
-                    I agree I committed this offence and I would like to request a
-                    fine reduction and/or more time to pay for this count.
-
-    DISPUTE
-                    I do not agree that I committed this offence and I would like to
-                    dispute this count.
-
-  */
-
   // derived later on
+  _firstOffence: boolean;
   _offenceStatus?: string;
   _offenceStatusDesc?: string;
   _within30days?: boolean;
   _amountDue?: number;
-  // _offenceAgreementStatusDesc?: string;
 }

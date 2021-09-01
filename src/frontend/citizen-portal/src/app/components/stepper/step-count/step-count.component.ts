@@ -3,11 +3,9 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output,
-  ViewChild,
+  Output
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatChipList } from '@angular/material/chips';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
@@ -30,13 +28,10 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
-  @ViewChild(MatChipList) chipList!: MatChipList;
-
   public defaultLanguage: string;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.next';
-  public choice = 0;
 
   constructor(
     protected route: ActivatedRoute,
@@ -76,6 +71,14 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
 
   public onBack() {
     this.stepper.previous();
+  }
+
+  public get _firstOffence(): FormControl {
+    return this.form.get('_firstOffence') as FormControl;
+  }
+
+  public get applyToAllCounts(): FormControl {
+    return this.form.get('applyToAllCounts') as FormControl;
   }
 
   public get offenceAgreementStatus(): FormControl {

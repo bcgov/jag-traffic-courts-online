@@ -20,7 +20,7 @@ export class DisputeResourceService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService
-  ) {}
+  ) { }
 
   /**
    * Get the ticket from RSI.
@@ -316,7 +316,7 @@ export class DisputeResourceService {
 
       const diff = Math.floor(
         (Date.parse(discountDueDate) - Date.parse(today.toDateString())) /
-          86400000
+        86400000
       );
 
       isWithin = diff >= 0 && diff <= 30;
@@ -332,8 +332,14 @@ export class DisputeResourceService {
     let balance = 0;
     let total = 0;
     let requestSubmitted = false;
+    let first = true;
 
     ticket.offences.forEach((offence) => {
+      offence._firstOffence = first;
+      if (first) {
+        first = false;
+      }
+
       offence._within30days = this.isWithin30Days(ticket.discountDueDate);
       offence._amountDue = offence.amountDue;
 

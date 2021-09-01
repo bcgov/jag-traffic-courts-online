@@ -30,7 +30,8 @@
               <span class="wrap-mat-radio-label">
                 I do not wish to take any action on this count at this time.
               </span>
-              <span matTooltip="Ignore this count for now. Dispute or pay it later." #tooltip1="matTooltip">
+              <span matTooltip="Ignore this count for now. Dispute or pay it later."
+                    #tooltip1="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -39,7 +40,8 @@
                 I agree I committed this offence and I would like to pay for
                 this count.
               </span>
-              <span matTooltip="Pay for this count at the end of the dispute process." #tooltip2="matTooltip">
+              <span matTooltip="Pay for this count at the end of the dispute process."
+                    #tooltip2="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -48,7 +50,8 @@
                 I agree I committed this offence and I would like to request a
                 fine reduction and/or more time to pay for this count.
               </span>
-              <span matTooltip="Ask for a fine reduction or more time to pay for the count." #tooltip3="matTooltip">
+              <span matTooltip="Ask for a fine reduction or more time to pay for the count."
+                    #tooltip3="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -57,7 +60,8 @@
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
               </span>
-              <span matTooltip="Go to court and dispute this count." #tooltip4="matTooltip">
+              <span matTooltip="Go to court and dispute this count."
+                    #tooltip4="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -74,9 +78,49 @@
       </div>
       <div class="row"
            *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
+        <hr class="mt-4" />
+        <label class="fw-bold m-0">
+          Please make your selection(s) below and enter additional information as required.
+        </label>
+
+        <mat-radio-group formControlName="reductionAppearInCourt"
+                         class="w-100 mb-4">
+          <mat-radio-button [value]="false"
+                            class="w-50">
+            <span class="wrap-mat-radio-label">
+              I do not wish to appear in court.
+            </span>
+          </mat-radio-button>
+          <mat-radio-button [value]="true"
+                            class="w-50">
+            <span class="wrap-mat-radio-label">
+              I would like to appear in court to discuss in person.
+            </span>
+          </mat-radio-button>
+          <mat-error *ngIf="reductionAppearInCourt.hasError('required')">
+            {{ "error.required" | translate }}
+          </mat-error>
+        </mat-radio-group>
+
+        <mat-checkbox formControlName="applyToAllCounts"
+                      color="primary"
+                      class="w-100">Apply this selection to all counts on this violation ticket.</mat-checkbox>
+      </div>
+      <div class="row"
+           *ngIf="offenceAgreementStatus.value == 'DISPUTE'">
+        <hr class="mt-4" />
+
+        <mat-checkbox formControlName="applyToAllCounts"
+                      color="primary"
+                      class="w-100">Apply this selection to all counts on this violation ticket.</mat-checkbox>
+      </div>
+      <!--
+      <div class="row"
+           *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
         <div class="col-12">
-          <label class="fw-bold">Please make your selection(s) below and enter additional
-            information as required.</label>
+          <label class="fw-bold">
+            Please make your selection(s) below and enter additional information as required.
+          </label>
           <mat-radio-group formControlName="reductionAppearInCourt"
                            class="w-100">
             <mat-radio-button [value]="false"
@@ -153,13 +197,14 @@
           </div>
         </div>
       </div>
+    -->
     </section>
   </form>
 
-  <div class="col"
+  <div class="col mt-4"
        *ngIf="
-      offenceAgreementStatus.value == 'REDUCTION' &&
-      reductionAppearInCourt.value
+      offenceAgreementStatus.value === 'REDUCTION' &&
+      reductionAppearInCourt.value === false
     ">
     <app-alert type="warning"
                icon="warning">
@@ -172,10 +217,9 @@
     </app-alert>
   </div>
 
-  <div class="col"
-       [ngClass]="{ 'mt-4': offenceAgreementStatus.value === 'DISPUTE' }"
+  <div class="col mt-4"
        *ngIf="
-      (offenceAgreementStatus.value == 'REDUCTION' &&
+      (offenceAgreementStatus.value === 'REDUCTION' &&
         reductionAppearInCourt.value) ||
       offenceAgreementStatus.value === 'DISPUTE'
     ">
