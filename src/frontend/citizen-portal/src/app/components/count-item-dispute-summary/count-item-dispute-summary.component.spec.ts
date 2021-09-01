@@ -24,10 +24,12 @@ describe('CountItemDisputeSummaryComponent', () => {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
-      applyToAllCounts: false,
       status: 'New',
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
+
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
       _firstOffence: false,
       _within30days: false,
       _amountDue: 0,

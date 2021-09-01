@@ -6,11 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
   private _ticket: BehaviorSubject<TicketDispute>;
-  private _tickets: BehaviorSubject<TicketDispute[]>;
 
   constructor() {
-    // const ticket = this.createTicketWithoutDisputes();
-    const ticket = this.createTicketWithDispute();
+    const ticket = this.createTicketWithoutDisputes();
+    // const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDispute>(ticket);
   }
@@ -63,6 +62,8 @@ export class MockDisputeService {
       _within30days: true,
     };
 
+    ticket.disputant = this.createDisputant();
+
     // --------------------------
     let offence: Offence = {
       offenceNumber: 1,
@@ -73,10 +74,11 @@ export class MockDisputeService {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
-      applyToAllCounts: false,
       status: 'New',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
       _firstOffence: true,
       _offenceStatus: 'Owe',
       _offenceStatusDesc: 'Balance outstanding',
@@ -96,10 +98,11 @@ export class MockDisputeService {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      applyToAllCounts: false,
       status: 'New',
       offenceAgreementStatus: '',
       reductionAppearInCourt: false,
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
       _firstOffence: false,
       _offenceStatus: 'Owe',
       _offenceStatusDesc: 'Balance outstanding',
@@ -165,7 +168,8 @@ export class MockDisputeService {
       reductionReason: '',
       moreTimeReason: '',
       _isCourtRequired: false,
-      _isReductionRequired: false
+      _isReductionRequired: false,
+      _isReductionNotInCourt: false
     };
 
     const offenceDate = faker.date.soon().toString();
@@ -181,10 +185,11 @@ export class MockDisputeService {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      applyToAllCounts: false,
       status: 'New',
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
       _firstOffence: true,
       _within30days: false,
       _amountDue: 126,
@@ -204,10 +209,11 @@ export class MockDisputeService {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      applyToAllCounts: false,
       status: 'Submitted',
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
       _firstOffence: false,
       _within30days: false,
       _amountDue: 126,
@@ -228,10 +234,11 @@ export class MockDisputeService {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 25,
-      applyToAllCounts: false,
       status: 'New',
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
       _firstOffence: false,
       _within30days: false,
       _amountDue: 0,

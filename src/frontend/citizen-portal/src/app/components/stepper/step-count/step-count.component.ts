@@ -77,8 +77,12 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     return this.form.get('_firstOffence') as FormControl;
   }
 
+  public get allowApplyToAllCounts(): FormControl {
+    return this.form.get('_allowApplyToAllCounts') as FormControl;
+  }
+
   public get applyToAllCounts(): FormControl {
-    return this.form.get('applyToAllCounts') as FormControl;
+    return this.form.get('_applyToAllCounts') as FormControl;
   }
 
   public get offenceAgreementStatus(): FormControl {

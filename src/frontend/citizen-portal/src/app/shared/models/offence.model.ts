@@ -10,13 +10,14 @@ export interface Offence {
   amountDue: number;
   discountDueDate?: string;
   discountAmount: number;
-  applyToAllCounts: boolean;
 
   status: string;
   offenceAgreementStatus?: string;
   reductionAppearInCourt: boolean;
 
   // derived later on
+  _applyToAllCounts: boolean;
+  _allowApplyToAllCounts: boolean;
   _firstOffence: boolean;
   _offenceStatus?: string;
   _offenceStatusDesc?: string;

@@ -13,4 +13,5 @@ export interface Additional {
 
   _isCourtRequired: boolean;
   _isReductionRequired: boolean;
+  _isReductionNotInCourt: boolean;
 }

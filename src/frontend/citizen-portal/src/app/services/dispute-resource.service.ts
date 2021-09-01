@@ -278,36 +278,6 @@ export class DisputeResourceService {
     return { offenceStatus, offenceStatusDesc };
   }
 
-  // private getAgreementStatusDesc(
-  //   status: string,
-  //   requestReduction: boolean,
-  //   requestMoreTime: boolean
-  // ): string {
-  //   let desc = 'Unknown status: ' + status;
-
-  //   switch (status) {
-  //     case 'NOTHING':
-  //       desc = 'No action at this time';
-  //       break;
-  //     case 'PAY':
-  //       desc = 'Pay for this count';
-  //       break;
-  //     case 'REDUCTION':
-  //       if (requestReduction && requestMoreTime) {
-  //         desc = 'Request a fine reduction and more time to pay';
-  //       } else if (requestReduction) {
-  //         desc = 'Request a fine reduction';
-  //       } else {
-  //         desc = 'Request more time to pay';
-  //       }
-  //       break;
-  //     case 'DISPUTE':
-  //       desc = 'Dispute the charge';
-  //       break;
-  //   }
-  //   return desc;
-  // }
-
   private isWithin30Days(discountDueDate: string): boolean {
     let isWithin = false;
 
@@ -359,12 +329,6 @@ export class DisputeResourceService {
       offence._offenceStatus = offenceStatus;
       offence._offenceStatusDesc = offenceStatusDesc;
 
-      // offence._offenceAgreementStatusDesc = this.getAgreementStatusDesc(
-      //   offence.offenceAgreementStatus,
-      //   offence.requestReduction,
-      //   offence.requestMoreTime
-      // );
-
       if (offence.offenceAgreementStatus) {
         requestSubmitted = true;
       }
@@ -380,5 +344,10 @@ export class DisputeResourceService {
     ticket._outstandingBalanceDue = balance;
     ticket._totalBalanceDue = total;
     ticket._requestSubmitted = requestSubmitted;
+
+    const allowApplyToAllCounts = ((!requestSubmitted) && (ticket.offences.length > 1));
+    ticket.offences.forEach((offence) => {
+      offence._allowApplyToAllCounts = allowApplyToAllCounts;
+    });
   }
 }

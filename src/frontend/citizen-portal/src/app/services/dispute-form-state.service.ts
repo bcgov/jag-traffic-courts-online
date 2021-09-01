@@ -255,28 +255,36 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
   }
 
   public buildStepOffenceForm(): FormGroup {
-    return this.formBuilder.group(
+    return this.formBuilder.group({
+      offenceNumber: [null],
+      offenceAgreementStatus: [null, [Validators.required]],
+      reductionAppearInCourt: [false],
+
+      // Here for display purposes
+      offenceDescription: [null],
+      status: [null],
+      ticketedAmount: [null],
+      amountDue: [null],
+      discountDueDate: [null],
+      discountAmount: [null],
+
+      _applyToAllCounts: [false],
+      _allowApplyToAllCounts: [false],
+      _firstOffence: [false],
+      _offenceStatus: [null],
+      _offenceStatusDesc: [null],
+      _within30days: [null],
+      _amountDue: [null],
+    },
       {
-        offenceNumber: [null],
-        offenceAgreementStatus: [null, [Validators.required]],
-        reductionAppearInCourt: [false],
-
-        // Here for display purposes
-        offenceDescription: [null],
-        status: [null],
-        ticketedAmount: [null],
-        amountDue: [null],
-        discountDueDate: [null],
-        discountAmount: [null],
-        applyToAllCounts: [false],
-
-        _firstOffence: [false],
-        _offenceStatus: [null],
-        _offenceStatusDesc: [null],
-        _within30days: [null],
-        _amountDue: [null],
-      }
-    );
+        validators: [
+          FormGroupValidators.requiredIfValue(
+            'offenceAgreementStatus',
+            'REDUCTION',
+            'reductionAppearInCourt'
+          )
+        ],
+      });
   }
 
   public buildStepAdditionalForm(): FormGroup {
@@ -292,6 +300,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       moreTimeReason: [null],
       _isCourtRequired: [false],
       _isReductionRequired: [false],
+      _isReductionNotInCourt: [false]
     },
       {
         validators: [
@@ -303,11 +312,13 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
             'witnessPresent',
             'numberOfWitnesses'
           ),
-          FormGroupValidators.requiredIfTrue(
+          FormGroupValidators.requiredIfFlags(
+            '_isReductionNotInCourt',
             'requestReduction',
             'reductionReason'
           ),
-          FormGroupValidators.requiredIfTrue(
+          FormGroupValidators.requiredIfFlags(
+            '_isReductionNotInCourt',
             'requestMoreTime',
             'moreTimeReason'
           ),

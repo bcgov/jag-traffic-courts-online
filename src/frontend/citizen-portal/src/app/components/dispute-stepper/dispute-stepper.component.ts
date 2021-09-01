@@ -216,6 +216,7 @@ export class DisputeStepperComponent
     const offenceForms = this.disputeFormStateService.offenceForms;
     let courtRequired = false;
     let reductionRequired = false;
+    let isReductionNotInCourt = false;
 
     offenceForms.forEach((form: AbstractControl) => {
       const offenceNumber = form.get('offenceNumber') as FormControl;
@@ -229,6 +230,8 @@ export class DisputeStepperComponent
           reductionRequired = true;
           if (reductionAppearInCourt.value) {
             courtRequired = true;
+          } else {
+            isReductionNotInCourt = true;
           }
         }
       }
@@ -245,7 +248,9 @@ export class DisputeStepperComponent
     const isReductionRequiredControl = additionalForm.get('_isReductionRequired') as FormControl;
     isReductionRequiredControl.setValue(reductionRequired);
 
-    console.log('additionalForm', additionalForm.value);
+    const isReductionNotInCourtControl = additionalForm.get('_isReductionNotInCourt') as FormControl;
+    isReductionNotInCourtControl.setValue(isReductionNotInCourt);
+
   }
 
   /**
@@ -257,16 +262,31 @@ export class DisputeStepperComponent
 
     let applyToAllCounts = false;
     let offenceAgreementStatus = 'NOTHING';
+
     offenceForms.forEach((form: AbstractControl) => {
       const offenceNumber = form.get('offenceNumber') as FormControl;
       const firstOffence = form.get('_firstOffence') as FormControl;
 
       if (offenceNumber.value) {
-        const applyToAllCountsControl = form.get('applyToAllCounts') as FormControl;
+        const applyToAllCountsControl = form.get('_applyToAllCounts') as FormControl;
         const offenceAgreementStatusControl = form.get('offenceAgreementStatus') as FormControl;
         const reductionAppearInCourtControl = form.get('reductionAppearInCourt') as FormControl;
+
+        // cleanup bad state
+        if (offenceAgreementStatusControl.value != 'REDUCTION') {
+          reductionAppearInCourtControl.setValue(null);
+        }
+
+        // Get the data from the first offence to copy to the others
         if (firstOffence.value) {
           applyToAllCounts = applyToAllCountsControl.value;
+
+          // cleanup bad state
+          if (offenceAgreementStatusControl.value != 'DISPUTE' && offenceAgreementStatusControl.value != 'REDUCTION') {
+            applyToAllCounts = false;
+            applyToAllCountsControl.setValue(applyToAllCounts);
+          }
+
           offenceAgreementStatus = offenceAgreementStatusControl.value;
 
         } else {

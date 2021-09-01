@@ -79,13 +79,9 @@
       </div>
       <div class="row"
            *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
-        <hr class="mt-4" />
-        <label [ngClass]="{ 'inactive': offenceAgreementStatus.disabled }">
-          Please make your selection(s) below and enter additional information as required.
-        </label>
 
         <mat-radio-group formControlName="reductionAppearInCourt"
-                         class="w-100">
+                         class="w-100 mt-4">
           <mat-radio-button [value]="false"
                             class="w-50">
             <span class="wrap-mat-radio-label">
@@ -98,23 +94,28 @@
               I would like to appear in court to discuss in person.
             </span>
           </mat-radio-button>
-          <mat-error *ngIf="reductionAppearInCourt.hasError('required')">
+          <mat-error *ngIf="
+              (reductionAppearInCourt.dirty ||
+              reductionAppearInCourt.touched) &&
+                reductionAppearInCourt.invalid &&
+              reductionAppearInCourt.errors.requiredIfValue
+            ">
             {{ "error.required" | translate }}
           </mat-error>
         </mat-radio-group>
 
-        <mat-checkbox formControlName="applyToAllCounts"
-                      color="primary"
-                      *ngIf="firstOffence.value"
-                      class="w-100 mt-2">Apply this selection to all counts on this violation ticket.</mat-checkbox>
+        <div *ngIf="allowApplyToAllCounts.value">
+          <mat-checkbox formControlName="_applyToAllCounts"
+                        color="primary"
+                        *ngIf="firstOffence.value"
+                        class="w-100 mt-2">Apply these selections to all counts on this violation ticket.</mat-checkbox>
+        </div>
       </div>
       <div class="row"
-           *ngIf="offenceAgreementStatus.value == 'DISPUTE' && firstOffence.value">
-        <hr class="mt-4" />
-
-        <mat-checkbox formControlName="applyToAllCounts"
+           *ngIf="allowApplyToAllCounts.value && offenceAgreementStatus.value == 'DISPUTE' && firstOffence.value">
+        <mat-checkbox formControlName="_applyToAllCounts"
                       color="primary"
-                      class="w-100">Apply this selection to all counts on this violation ticket.</mat-checkbox>
+                      class="w-100 mt-4">Apply this selection to all counts on this violation ticket.</mat-checkbox>
       </div>
     </section>
   </form>

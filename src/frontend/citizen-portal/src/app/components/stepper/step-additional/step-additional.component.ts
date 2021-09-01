@@ -90,6 +90,10 @@ export class StepAdditionalComponent
     return this.form.get('_isReductionRequired') as FormControl;
   }
 
+  public get isReductionNotInCourt(): FormControl {
+    return this.form.get('_isReductionNotInCourt') as FormControl;
+  }
+
   public get numberOfWitnesses(): FormControl {
     return this.form.get('numberOfWitnesses') as FormControl;
   }

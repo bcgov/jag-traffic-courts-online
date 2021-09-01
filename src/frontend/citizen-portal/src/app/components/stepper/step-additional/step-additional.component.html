@@ -10,7 +10,7 @@
         [formGroup]="form"
         novalidate>
     <section *ngIf="isReductionRequired.value">
-      <h3 class="mb-0">
+      <h3 class="mt-4 mb-2">
         <span class="fw-bold">Request fine reduction and/ or more time to pay. </span>Please make your selection(s)
         below:
       </h3>
@@ -19,11 +19,11 @@
           <mat-checkbox formControlName="requestReduction"
                         color="primary"
                         class="w-100">
-            I would like to request a fine reduction on this count.
+            I would like to request a fine reduction.
           </mat-checkbox>
 
-          <div class="row"
-               *ngIf="requestReduction.value">
+          <div class="row mt-2"
+               *ngIf="isReductionNotInCourt.value && requestReduction.value">
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>
@@ -35,7 +35,7 @@
                           cdkAutosizeMinRows="1"
                           cdkAutosizeMaxRows="5"
                           formControlName="reductionReason"></textarea>
-                <mat-error *ngIf="reductionReason.hasError('requiredIfTrue')">
+                <mat-error *ngIf="reductionReason.hasError('requiredIfFlags')">
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
@@ -45,15 +45,17 @@
           <mat-checkbox formControlName="requestMoreTime"
                         color="primary"
                         class="w-100">
-            I would like to request more time to pay on this count.
-
-            <mat-error *ngIf="requestMoreTime.hasError('atLeastOneCheckedIf')">
+            I would like to request more time to pay.
+            <mat-error *ngIf="(requestMoreTime.dirty ||
+              requestMoreTime.touched) &&
+              requestMoreTime.invalid &&
+              requestMoreTime.hasError('atLeastOneCheckedIf')">
               At least one request must be checked
             </mat-error>
           </mat-checkbox>
 
-          <div class="row"
-               *ngIf="requestMoreTime.value">
+          <div class="row mt-2"
+               *ngIf="isReductionNotInCourt.value && requestMoreTime.value">
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>
@@ -65,7 +67,7 @@
                           cdkAutosizeMinRows="1"
                           cdkAutosizeMaxRows="5"
                           formControlName="moreTimeReason"></textarea>
-                <mat-error *ngIf="moreTimeReason.hasError('requiredIfTrue')">
+                <mat-error *ngIf="moreTimeReason.hasError('requiredIfFlags')">
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
@@ -74,7 +76,7 @@
         </div>
       </div>
 
-      <div class="col mt-2">
+      <div class="col mt-4">
         <app-alert type="warning"
                    icon="warning">
           <ng-container #alertContent
@@ -88,7 +90,7 @@
     </section>
 
     <section *ngIf="isCourtRequired.value">
-      <h3 class="mb-0">
+      <h3 class="mt-4 mb-2">
         <span class="fw-bold">Dispute charge. </span>Please indicate which (if any) of the following apply to you:
       </h3>
       <div class="row">
@@ -179,7 +181,7 @@
         </app-alert>
       </div>
 
-      <div class="col mt-2">
+      <div class="col mt-4">
         <app-alert type="warning"
                    icon="warning">
           <ng-container #alertContent
@@ -193,6 +195,18 @@
         </app-alert>
       </div>
 
+    </section>
+
+    <section *ngIf="!isReductionRequired.value && !isCourtRequired.value">
+      <div class="col">
+        <app-alert type="warning"
+                   icon="warning">
+          <ng-container #alertContent
+                        class="alert-content">
+            Todo: information will be displayed here.
+          </ng-container>
+        </app-alert>
+      </div>
     </section>
   </form>
 
