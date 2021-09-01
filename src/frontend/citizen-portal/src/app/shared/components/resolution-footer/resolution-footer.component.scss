@@ -91,12 +91,12 @@ hr {
 
   .icon-size1 {
     width: 50px;
-    margin-right: 20px;
+    margin-right: 30px;
   }
 
   .icon-size2 {
-    width: 50px;
-    margin-right: 20px;
+    width: 45px;
+    margin-right: 10px;
   }
 
   .text-col {
@@ -107,8 +107,13 @@ hr {
 
 @media (max-width: 767px) {
   .icon-size1 {
-    margin-top: 10px;
+    margin-top: 5px;
   }
+
+  .icon-size2 {
+    margin-right: 34px !important;
+  }
+
 }
 
 @media (min-width: 768px) {

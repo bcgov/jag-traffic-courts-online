@@ -81,7 +81,7 @@ export class FormGroupValidators {
 
   /**
    * @description
-   *
+   * If the property is true, then one of the checkboxes must be selected
    */
   public static atLeastOneCheckedIf(ifKey: string, check1Key: string, check2Key: string): ValidatorFn {
     return (group: FormGroup): ValidationErrors | null => {

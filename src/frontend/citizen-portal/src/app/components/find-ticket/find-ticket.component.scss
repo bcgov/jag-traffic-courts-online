@@ -1,5 +1,19 @@
 @import "palette";
 
+.or-separator {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid theme-palette(grey, light);
+  line-height: 0.1em !important;
+  margin: 20px 0 5px !important;
+
+  span {
+    color: theme-palette(blue);
+     background:#fff;
+     padding:0 10px;
+  }
+}
+
 .find-large {
   width: 100%;
 
