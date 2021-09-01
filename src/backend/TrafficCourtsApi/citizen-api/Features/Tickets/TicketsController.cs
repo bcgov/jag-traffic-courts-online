@@ -1,4 +1,7 @@
 using System;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Gov.CitizenApi.Features.Tickets.Commands;
 using Gov.CitizenApi.Features.Tickets.Queries;
@@ -117,6 +120,27 @@ namespace Gov.CitizenApi.Features.Tickets
                 _logger.LogError(e, "Update ticket payment failed");
                 return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
             }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ImageUpload([FromForm] ShellTicketImageCommand shellTicketImage)
+        {
+            try
+            {
+                _logger.LogInformation("get shell ticket image");
+                var response = await _mediator.Send(shellTicketImage);
+                return Ok();
+                //return RedirectToAction("Ticket", new { ticketNumber = response.TicketNumber, time = response.Time });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "save shell ticket image failed");
+                return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
+            }
+            
         }
     }
 }

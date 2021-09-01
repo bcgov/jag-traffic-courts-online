@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Gov.CitizenApi.Features.Tickets.DBModel;
+using Gov.CitizenApi.Models;
 using Gov.TicketSearch;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,11 +15,37 @@ using System.Web;
 
 namespace Gov.CitizenApi.Features.Tickets.Commands
 {
+    public class TicketPaymentCommand : IRequest<TicketPaymentResponse>
+    {
+        [FromQuery(Name = "ticketNumber")]
+        [Required]
+        [RegularExpression("^[A-Z]{2}[0-9]{6,}$", ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")]
+        public string TicketNumber { get; set; }
+
+        [FromQuery(Name = "time")]
+        [Required]
+        [RegularExpression("^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$", ErrorMessage = "time must be properly formatted 24 hour clock")]
+        public string Time { get; set; }
+
+        [FromQuery(Name = "counts")]
+        [Required]
+        [RegularExpression("^[1-3]+(,[1-3]+)*$", ErrorMessage = "counts must be properly formatted, user , as seperatoer")]
+        public string Counts { get; set; }
+
+        [FromQuery(Name = "amount")]
+        [Required]
+        [RegularExpression(@"^\d*\.?\d*$", ErrorMessage = "amount needs to be a valid decimal")]
+        public string Amount { get; set; }
+    }
+
+    public class TicketPaymentResponse : RedirectPay
+    {
+    }
+
     public class TicketPaymentCommandHandler : IRequestHandler<TicketPaymentCommand, TicketPaymentResponse>
     {
         private readonly ILogger _logger;
         private readonly ITicketsService _ticketsService;
-        private readonly ITicketSearchClient _ticketSearchClient;
 
         private readonly IMapper _mapper;
 
@@ -28,7 +57,6 @@ namespace Gov.CitizenApi.Features.Tickets.Commands
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _ticketsService = ticketService ?? throw new ArgumentNullException(nameof(ticketService));
-            _ticketSearchClient = ticketSearchClient ?? throw new ArgumentNullException(nameof(ticketSearchClient));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 

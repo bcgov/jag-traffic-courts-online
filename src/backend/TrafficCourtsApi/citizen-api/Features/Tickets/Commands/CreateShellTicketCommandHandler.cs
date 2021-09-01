@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Gov.CitizenApi.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace Gov.CitizenApi.Features.Tickets.Commands
 {
+    public class CreateShellTicketCommand : ShellTicket, IRequest<CreateShellTicketResponse>
+    {
+    }
+    public class CreateShellTicketResponse
+    {
+        public int Id { get; set; }
+    }
+
     public class CreateShellTicketCommandHandler : IRequestHandler<CreateShellTicketCommand, CreateShellTicketResponse>
     {
         private readonly ILogger _logger;
