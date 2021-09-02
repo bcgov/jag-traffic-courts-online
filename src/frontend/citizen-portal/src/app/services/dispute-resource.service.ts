@@ -261,7 +261,7 @@ export class DisputeResourceService {
           offenceStatusDesc = 'Rejected';
           break;
         default:
-          offenceStatus = 'Unknown';
+          offenceStatus = 'Unknown-' + status;
           offenceStatusDesc = 'Unknown dispute status';
           break;
       }

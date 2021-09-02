@@ -178,7 +178,7 @@ export class DisputeStepperComponent
   }
 
   public onSelectionChange(event: StepperSelectionEvent): void {
-    // this.logger.info('DisputeStepperComponent::onSelectionChange Dispute Data:', this.disputeFormStateService.json);
+    this.logger.info('DisputeStepperComponent::onSelectionChange Dispute Data:', this.disputeFormStateService.json);
 
     this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
 
@@ -199,7 +199,7 @@ export class DisputeStepperComponent
     const currentStep = event.selectedIndex + 1;
     const previousStep = event.previouslySelectedIndex + 1;
 
-    if ((numberOfSteps - 1) === currentStep) {
+    if (currentStep >= (numberOfSteps - 1)) {
       this.setCourtRequired();
     }
 
@@ -210,7 +210,7 @@ export class DisputeStepperComponent
 
   /**
    * @description
-   * Determine if the current step is 'Additional Information' (2nd last step) If so, update the courtRequired flag
+   * Determine if the current step is 'Additional Information' (2nd last step) or the last step, update the courtRequired flag
    */
   private setCourtRequired(): void {
     const offenceForms = this.disputeFormStateService.offenceForms;
@@ -239,6 +239,7 @@ export class DisputeStepperComponent
 
     this.logger.log('onSelectionChange courtRequired', courtRequired);
     this.logger.log('onSelectionChange reductionRequired', reductionRequired);
+    this.logger.log('onSelectionChange isReductionNotInCourt', isReductionNotInCourt);
 
     const additionalForm = this.disputeFormStateService.stepAdditionalForm;
 
@@ -258,10 +259,12 @@ export class DisputeStepperComponent
    * After leaving the FIRST offence screen, if 'applyToAllCounts' is selected, update the appropriate other values in the other counts.
    */
   private updateOffenceForms(): void {
+    this.logger.info('DisputeStepperComponent::updateOffenceForms');
     const offenceForms = this.disputeFormStateService.offenceForms;
 
     let applyToAllCounts = false;
-    let offenceAgreementStatus = 'NOTHING';
+    let offenceAgreementStatus;
+    let reductionAppearInCourt;
 
     offenceForms.forEach((form: AbstractControl) => {
       const offenceNumber = form.get('offenceNumber') as FormControl;
@@ -288,11 +291,14 @@ export class DisputeStepperComponent
           }
 
           offenceAgreementStatus = offenceAgreementStatusControl.value;
+          reductionAppearInCourt = reductionAppearInCourtControl.value;
 
         } else {
           applyToAllCountsControl.setValue(applyToAllCounts);
           if (applyToAllCounts) {
             offenceAgreementStatusControl.setValue(offenceAgreementStatus);
+            reductionAppearInCourtControl.setValue(reductionAppearInCourt);
+
             offenceAgreementStatusControl.disable();
             reductionAppearInCourtControl.disable();
             applyToAllCountsControl.disable();
