@@ -35,7 +35,10 @@
                           cdkAutosizeMinRows="1"
                           cdkAutosizeMaxRows="5"
                           formControlName="reductionReason"></textarea>
-                <mat-error *ngIf="reductionReason.hasError('requiredIfFlags')">
+                <mat-error *ngIf="(reductionReason.dirty ||
+                  reductionReason.touched) &&
+                  reductionReason.invalid &&
+                  reductionReason.hasError('requiredIfFlags')">
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
@@ -67,7 +70,10 @@
                           cdkAutosizeMinRows="1"
                           cdkAutosizeMaxRows="5"
                           formControlName="moreTimeReason"></textarea>
-                <mat-error *ngIf="moreTimeReason.hasError('requiredIfFlags')">
+                <mat-error *ngIf="(moreTimeReason.dirty ||
+                  moreTimeReason.touched) &&
+                  moreTimeReason.invalid &&
+                  moreTimeReason.hasError('requiredIfFlags')">
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
