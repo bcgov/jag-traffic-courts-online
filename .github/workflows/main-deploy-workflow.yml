@@ -1,0 +1,122 @@
+name: Main-Build .NET API Image and Push to Openshift Registry
+on:
+        
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: 'Release Environment'     
+                required: true
+                default: 'dev'
+            version:
+                description: 'Release Version'
+                required: true
+jobs:
+  build-citizen-api:
+    runs-on: ubuntu-20.04
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Get git commit short sha
+        id: sha
+        run: |
+          shortSha=$(echo $(git rev-parse --short HEAD) | cut -c1-6)
+          echo "::set-output name=sha_short::$shortSha"
+
+      - name: Display short sha
+        run: echo ${{ steps.sha.outputs.sha_short }}
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/backend/TrafficCourtsApi
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-api:${{ github.event.inputs.environment }}
+          VERIMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-api:${{ github.event.inputs.version }}
+          RuntimeEnv: ${{ github.event.inputs.environment }}
+        run: |
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=${RuntimeEnv} \
+            --tag ${IMAGE} \
+            --tag ${VERIMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
+            docker push ${VERIMAGE}
+
+  build-ticket-search:
+    runs-on: ubuntu-20.04
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Get git commit short sha
+        id: sha
+        run: |
+          shortSha=$(echo $(git rev-parse --short HEAD) | cut -c1-6)
+          echo "::set-output name=sha_short::$shortSha"
+
+      - name: Display short sha
+        run: echo ${{ steps.sha.outputs.sha_short }}
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/ticket-search
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-search:${{ github.event.inputs.environment }}
+          VERIMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-search:${{ github.event.inputs.version }}
+          RuntimeEnv: ${{ github.event.inputs.environment }}
+        run: |
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=${RuntimeEnv} \
+            --tag ${IMAGE} \
+            --tag ${VERIMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
+            docker push ${VERIMAGE}
+
+  build-frontend:
+    runs-on: ubuntu-20.04
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/frontend/citizen-portal
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-web:${{ github.event.inputs.environment }}
+          VERIMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-web:${{ github.event.inputs.version }}
+          RuntimeEnv: ${{ github.event.inputs.environment }}
+        run: |
+          docker build \
+            --tag ${IMAGE} \
+            --tag ${VERIMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
+            docker push ${VERIMAGE}
