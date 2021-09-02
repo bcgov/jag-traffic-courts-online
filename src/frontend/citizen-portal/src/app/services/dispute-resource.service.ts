@@ -146,7 +146,7 @@ export class DisputeResourceService {
   /**
    * Create the ticket dispute
    *
-   * @param dispute The dispute to be created
+   * @param ticketDispute The dispute to be created
    */
   public createTicketDispute(
     ticketDispute: TicketDispute
@@ -193,6 +193,22 @@ export class DisputeResourceService {
   public createShellTicket(ticket: ShellTicket): Observable<TicketDispute> {
     this.logger.info('DisputeResourceService::createShellTicket', ticket);
 
+    // cleanup payload data
+    if (ticket._chargeCount < 3) {
+      ticket._count3ChargeDesc = null;
+      ticket._count3ChargeSection = null;
+      ticket.count3Charge = null;
+      ticket.count3FineAmount = null;
+    }
+
+    // cleanup payload data
+    if (ticket._chargeCount < 2) {
+      ticket._count2ChargeDesc = null;
+      ticket._count2ChargeSection = null;
+      ticket.count2Charge = null;
+      ticket.count2FineAmount = null;
+    }
+
     return this.apiResource
       .post<TicketDispute>('tickets/shellTicket', ticket)
       .pipe(
@@ -230,6 +246,10 @@ export class DisputeResourceService {
       );
   }
 
+  /**
+   * @description
+   * return the calculated offence status and description
+   */
   private getOffenceStatusDesc(
     status: string,
     offenceAgreementStatus: string,
@@ -278,6 +298,10 @@ export class DisputeResourceService {
     return { offenceStatus, offenceStatusDesc };
   }
 
+  /**
+   * @description
+   * return true if the date parameter is within 30 days
+   */
   private isWithin30Days(discountDueDate: string): boolean {
     let isWithin = false;
 
@@ -296,6 +320,7 @@ export class DisputeResourceService {
   }
 
   /**
+   * @description
    * populate the offence object with the calculated information
    */
   private setOffenceInfo(ticket: TicketDispute): void {

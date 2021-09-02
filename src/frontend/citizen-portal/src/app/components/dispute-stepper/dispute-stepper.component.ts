@@ -180,8 +180,6 @@ export class DisputeStepperComponent
   public onSelectionChange(event: StepperSelectionEvent): void {
     this.logger.info('DisputeStepperComponent::onSelectionChange Dispute Data:', this.disputeFormStateService.json);
 
-    this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
-
     const stepIndex = event.selectedIndex;
     const stepId = this.stepper._getStepLabelId(stepIndex);
     const stepElement = document.getElementById(stepId);
@@ -198,14 +196,18 @@ export class DisputeStepperComponent
     const numberOfSteps = this.stepper.steps.length;
     const currentStep = event.selectedIndex + 1;
     const previousStep = event.previouslySelectedIndex + 1;
+    this.logger.info('DisputeStepperComponent::onSelectionChange currentStep', currentStep, 'previousStep', previousStep);
+
+    if (previousStep == 2) {
+      this.updateOffenceForms();
+    }
 
     if (currentStep >= (numberOfSteps - 1)) {
       this.setCourtRequired();
     }
 
-    if (previousStep === 2) {
-      this.updateOffenceForms();
-    }
+    this.logger.info('DisputeStepperComponent::onSelectionChange After:', this.disputeFormStateService.json);
+    this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
   }
 
   /**
@@ -251,7 +253,6 @@ export class DisputeStepperComponent
 
     const isReductionNotInCourtControl = additionalForm.get('_isReductionNotInCourt') as FormControl;
     isReductionNotInCourtControl.setValue(isReductionNotInCourt);
-
   }
 
   /**

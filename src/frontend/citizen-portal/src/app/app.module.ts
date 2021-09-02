@@ -47,6 +47,7 @@ import { CountSummaryComponent } from './components/count-summary/count-summary.
 import { TicketPaymentCompleteComponent } from './components/ticket-payment-complete/ticket-payment-complete.component';
 import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -111,6 +112,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: HTTP_INTERCEPTORS,
       useClass: BackendHttpInterceptor,
       multi: true,
+    },
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true }
     },
     // {
     //   provide: APP_INITIALIZER,
