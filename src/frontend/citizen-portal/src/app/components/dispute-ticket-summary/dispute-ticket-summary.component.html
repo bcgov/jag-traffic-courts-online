@@ -4,63 +4,116 @@
   </section>
 
   <div class="mb-2">
-    <section
-      class="px-4 py-2 mb-3 card-section"
-      *ngFor="let row of ticket.offences; let i = index"
-    >
-      <app-count-item-dispute-summary
-        [count]="row"
-      ></app-count-item-dispute-summary>
+    <section class="px-4 py-2 mb-3 card-section"
+             *ngFor="let row of ticket.offences; let i = index">
+      <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
     </section>
 
-    <section class="px-4 py-2 mb-4 card-section" *ngIf="ticket.additional">
+    <section class="px-4 py-2 mb-4 card-section"
+             *ngIf="ticket.additional">
       <div class="page-subheader">
         <strong> Additional information </strong>
         <p>
-          The following options apply to all counts on this ticket that are
-          being disputed.
+          The following additional information is required and will apply to all counts on this ticket made with that
+          selection.
         </p>
         <hr />
       </div>
 
-      <div class="row" *ngIf="ticket.additional.lawyerPresent">
-        <div class="col-lg-9">
-          <small class="d-block">Action</small>
-          <strong>
-            {{ "stepper.additional.lawyer" | translate }}
-          </strong>
-        </div>
-      </div>
+      <section *ngIf="ticket.additional._isReductionRequired">
+        <h3 class="fw-bold mb-0">Request fine reduction and/ or more time to pay.</h3>
 
-      <div class="row" *ngIf="ticket.additional.interpreterRequired">
-        <div class="col-lg-9">
-          <small class="d-block">Action</small>
-          <strong> I require an interpreter </strong>
+        <ng-container *ngIf="ticket.additional.requestReduction">
+          <div class="row"
+               *ngIf="ticket.additional.reductionReason; else noReductionReason">
+            <div class="col-lg-9">
+              <small class="d-block">Written reasons for fine reduction request</small>
+              <strong>{{ ticket.additional.reductionReason }}</strong>
+            </div>
+            <div class="col-lg-3"></div>
+          </div>
+
+          <ng-template #noReductionReason>
+            <div class="row">
+              <div class="col-lg-9">
+                <small class="d-block">Request a fine reduction request</small>
+                <strong>{{ ticket.additional.requestReduction | yesNo }}</strong>
+              </div>
+              <div class="col-lg-3"></div>
+            </div>
+          </ng-template>
+        </ng-container>
+
+
+        <ng-container *ngIf="ticket.additional.requestMoreTime">
+          <div class="row"
+               *ngIf="ticket.additional.moreTimeReason; else noRequestMoreTime">
+            <div class="col-lg-9">
+              <small class="d-block">Written reasons for more time to pay request</small>
+              <strong>{{ ticket.additional.moreTimeReason }}</strong>
+            </div>
+            <div class="col-lg-3"></div>
+          </div>
+
+          <ng-template #noRequestMoreTime>
+            <div class="row">
+              <div class="col-lg-9">
+                <small class="d-block">Request a more time to pay</small>
+                <strong>{{ ticket.additional.requestMoreTime | yesNo }}</strong>
+              </div>
+              <div class="col-lg-3"></div>
+            </div>
+          </ng-template>
+        </ng-container>
+
+        <hr *ngIf="ticket.additional._isCourtRequired" />
+      </section>
+
+      <section *ngIf="ticket.additional._isCourtRequired">
+        <h3 class="fw-bold mb-0">Dispute charge.</h3>
+
+        <div class="row"
+             *ngIf="ticket.additional.lawyerPresent">
+          <div class="col-lg-9">
+            <small class="d-block">Action</small>
+            <strong>
+              {{ "stepper.additional.lawyer" | translate }}
+            </strong>
+          </div>
         </div>
 
-        <div class="col-lg-3">
-          <small class="d-block">Language</small>
-          <strong>
-            {{
+        <div class="row"
+             *ngIf="ticket.additional.interpreterRequired">
+          <div class="col-lg-9">
+            <small class="d-block">Action</small>
+            <strong> I require an interpreter </strong>
+          </div>
+
+          <div class="col-lg-3">
+            <small class="d-block">Language</small>
+            <strong>
+              {{
               ticket.additional.interpreterLanguage
-                | configCode: "languages"
-                | default
-            }}
-          </strong>
-        </div>
-      </div>
-
-      <div class="row" *ngIf="ticket.additional.witnessPresent">
-        <div class="col-lg-9">
-          <small class="d-block">Action</small>
-          <strong> I intend to call witness(es) </strong>
+              | configCode: "languages"
+              | default
+              }}
+            </strong>
+          </div>
         </div>
 
-        <div class="col-lg-3">
-          <small class="d-block"># of witness(es)</small>
-          <strong>{{ ticket.additional.numberOfWitnesses }}</strong>
+        <div class="row"
+             *ngIf="ticket.additional.witnessPresent">
+          <div class="col-lg-9">
+            <small class="d-block">Action</small>
+            <strong> I intend to call witness(es) </strong>
+          </div>
+
+          <div class="col-lg-3">
+            <small class="d-block"># of witness(es)</small>
+            <strong>{{ ticket.additional.numberOfWitnesses }}</strong>
+          </div>
         </div>
-      </div>
+      </section>
     </section>
   </div>
 </ng-container>

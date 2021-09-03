@@ -52,6 +52,12 @@ mat-label {
   color: #fff !important;
 }
 
+.mat-step-icon-state-error .mat-icon {
+  font-size: 28px !important;
+  height: 28px !important;
+  width: 28px !important;
+}
+
 .mat-step-label-selected {
   font-weight: bold;
   font-size: 1.2em;
@@ -59,6 +65,8 @@ mat-label {
 
 .mat-step-text-label {
   white-space: normal;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .mat-form-field .mat-form-field-label-wrapper label {

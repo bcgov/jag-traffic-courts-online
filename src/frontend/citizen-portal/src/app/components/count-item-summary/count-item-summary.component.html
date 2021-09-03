@@ -1,28 +1,25 @@
 <div class="row mt-2">
   <div class="col-lg-2 pe-0">
     <div style="display: flex">
-      <mat-checkbox
-        #selectCountCheckbox
-        *ngIf="showCheckbox"
-        [checked]="selectCount"
-        (change)="onSelectCountChanged(selectCountCheckbox.checked)"
-        color="primary"
-        class="me-4 mb-2"
-      ></mat-checkbox>
+      <mat-checkbox #selectCountCheckbox
+                    *ngIf="showCheckbox"
+                    [checked]="selectCount"
+                    (change)="onSelectCountChanged(selectCountCheckbox.checked)"
+                    color="primary"
+                    class="me-4 mb-2"></mat-checkbox>
       <mat-chip-list>
-        <mat-chip selected class="p-3"
-          >Count {{ count.offenceNumber }}</mat-chip
-        >
+        <mat-chip selected
+                  class="p-3">Count {{ count.offenceNumber }}</mat-chip>
       </mat-chip-list>
     </div>
   </div>
   <div class="col-lg-8">
     <small class="d-block"> Description of offence </small>
-    <strong>{{ count.offenceDescription | titlecase }}</strong>
+    <div class="text">{{ count.offenceDescription | titlecase }}</div>
   </div>
   <div class="col-lg-2">
     <small class="d-block">Amount due</small>
-    <strong>{{ count._amountDue | currency }}</strong>
+    <div class="text">{{ count._amountDue | currency }}</div>
   </div>
 </div>
 <hr />
@@ -30,8 +27,7 @@
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-4">
     <small class="d-block">Status</small>
-    <span
-      [ngClass]="{
+    <span [ngClass]="{
         'text-danger':
           count._offenceStatus === 'Owe' ||
           count._offenceStatus === 'InProgress',
@@ -42,13 +38,12 @@
           count._offenceStatus === 'Unknown',
         'text-success':
           count._offenceStatus === 'Paid' || count._offenceStatus === 'Complete'
-      }"
-    >
-      <strong>{{ count._offenceStatusDesc }}</strong>
+      }">
+      <div class="text">{{ count._offenceStatusDesc }}</div>
     </span>
   </div>
   <div class="col-lg-4">
     <small class="d-block">Offence amount</small>
-    {{ count.ticketedAmount | currency }}
+    <div class="text">{{ count.ticketedAmount | currency }}</div>
   </div>
 </div>

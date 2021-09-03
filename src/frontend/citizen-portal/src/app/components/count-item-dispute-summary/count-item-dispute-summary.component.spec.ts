@@ -27,10 +27,10 @@ describe('CountItemDisputeSummaryComponent', () => {
       status: 'New',
       offenceAgreementStatus: null,
       reductionAppearInCourt: false,
-      requestReduction: false,
-      requestMoreTime: false,
-      reductionReason: '',
-      moreTimeReason: '',
+
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
+      _firstOffence: false,
       _within30days: false,
       _amountDue: 0,
     };

@@ -5,7 +5,7 @@
     <line id="Line_4" data-name="Line 4" y2="4.629" transform="translate(953.925 411.08)" fill="none" stroke="#0a3263" stroke-miterlimit="10" stroke-width="1"/>
     <line id="Line_5" data-name="Line 5" y2="4.629" transform="translate(960.501 411.08)" fill="none" stroke="#0a3263" stroke-miterlimit="10" stroke-width="1"/>
     <line id="Line_6" data-name="Line 6" x2="20.566" transform="translate(946.75 415.163)" fill="none" stroke="#0a3263" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"/>
-    <line id="Line_7" data-name="Line 7" x2="43.765" transform="translate(935.291 403.879)" fill="none" stroke="#0a3263" stroke-miterlimit="10" stroke-width="1"/>
-    <text id="_" data-name="?" transform="translate(954.46 396.624)" fill="#0a3263" font-size="11" font-family="BCSans-Bold, BC Sans" font-weight="700"><tspan x="0" y="0">?</tspan></text>
+    <line id="Line_7" data-name="Line 7" x2="43.765" transform="translate(935.291 404.879)" fill="none" stroke="#0a3263" stroke-miterlimit="10" stroke-width="1.5"/>
+    <text id="_" data-name="?" transform="translate(953.46 398.624)" fill="#0a3263" font-size="14" font-family="BCSans-Bold, BC Sans" font-weight="700"><tspan x="0" y="0">?</tspan></text>
   </g>
 </svg>

@@ -44,8 +44,8 @@ export class FindTicketComponent implements OnInit {
 
   public ngOnInit(): void {
     this.form = this.formBuilder.group({
-      ticketNumber: ['EZ02000460', [Validators.required]],
-      time: ['09:54', [Validators.required]],
+      ticketNumber: [null, [Validators.required]],
+      time: [null, [Validators.required]],
     });
   }
 

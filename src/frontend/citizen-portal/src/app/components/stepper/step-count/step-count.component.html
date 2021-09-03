@@ -23,14 +23,16 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="mt-0 w-100 fw-bold">What action would you like to take?
+          <label class="w-100"
+                 [ngClass]="{ 'inactive': offenceAgreementStatus.disabled }">What action would you like to take?
           </label>
           <mat-radio-group formControlName="offenceAgreementStatus">
             <mat-radio-button value="NOTHING">
               <span class="wrap-mat-radio-label">
                 I do not wish to take any action on this count at this time.
               </span>
-              <span matTooltip="Ignore this count for now. Dispute or pay it later." #tooltip1="matTooltip">
+              <span matTooltip="Ignore this count for now. Dispute or pay it later."
+                    #tooltip1="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -39,7 +41,8 @@
                 I agree I committed this offence and I would like to pay for
                 this count.
               </span>
-              <span matTooltip="Pay for this count at the end of the dispute process." #tooltip2="matTooltip">
+              <span matTooltip="Pay for this count at the end of the dispute process."
+                    #tooltip2="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -48,7 +51,8 @@
                 I agree I committed this offence and I would like to request a
                 fine reduction and/or more time to pay for this count.
               </span>
-              <span matTooltip="Ask for a fine reduction or more time to pay for the count." #tooltip3="matTooltip">
+              <span matTooltip="Ask for a fine reduction or more time to pay for the count."
+                    #tooltip3="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -57,7 +61,8 @@
                 I do not agree that I committed this offence and I would like to
                 dispute this count.
               </span>
-              <span matTooltip="Go to court and dispute this count." #tooltip4="matTooltip">
+              <span matTooltip="Go to court and dispute this count."
+                    #tooltip4="matTooltip">
                 <mat-icon>info</mat-icon>
               </span>
             </mat-radio-button>
@@ -74,92 +79,51 @@
       </div>
       <div class="row"
            *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
-        <div class="col-12">
-          <label class="fw-bold">Please make your selection(s) below and enter additional
-            information as required.</label>
-          <mat-radio-group formControlName="reductionAppearInCourt"
-                           class="w-100">
-            <mat-radio-button [value]="false"
-                              class="w-50">
-              <span class="wrap-mat-radio-label">
-                I do not wish to appear in court.
-              </span>
-            </mat-radio-button>
-            <mat-radio-button [value]="true"
-                              class="w-50">
-              <span class="wrap-mat-radio-label">
-                I would like to appear in court to discuss in person.
-              </span>
-            </mat-radio-button>
-            <mat-error *ngIf="reductionAppearInCourt.hasError('required')">
-              {{ "error.required" | translate }}
-            </mat-error>
-          </mat-radio-group>
 
-          <mat-checkbox formControlName="requestReduction"
-                        color="primary"
-                        class="w-100 mt-4">I would like to request a
-            fine reduction on this
-            count.</mat-checkbox>
-
-          <div class="row"
-               *ngIf="
-              offenceAgreementStatus.value == 'REDUCTION' &&
-              requestReduction.value
+        <mat-radio-group formControlName="reductionAppearInCourt"
+                         class="w-100 mt-4">
+          <mat-radio-button [value]="false"
+                            class="w-50">
+            <span class="wrap-mat-radio-label">
+              I do not wish to appear in court.
+            </span>
+          </mat-radio-button>
+          <mat-radio-button [value]="true"
+                            class="w-50">
+            <span class="wrap-mat-radio-label">
+              I would like to appear in court to discuss in person.
+            </span>
+          </mat-radio-button>
+          <mat-error *ngIf="
+              (reductionAppearInCourt.dirty ||
+              reductionAppearInCourt.touched) &&
+                reductionAppearInCourt.invalid &&
+              reductionAppearInCourt.errors.requiredIfValue
             ">
-            <div class="col">
-              <mat-form-field class="w-100">
-                <mat-label>Please enter your reasons for why you are requesting a fine
-                  reduction.</mat-label>
-                <textarea matInput
-                          cdkTextareaAutosize
-                          #autosize="cdkTextareaAutosize"
-                          cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5"
-                          formControlName="reductionReason"></textarea>
-                <mat-error *ngIf="reductionReason.hasError('requiredIfTrue')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <strong>and/or</strong>
-          <mat-checkbox formControlName="requestMoreTime"
-                        color="primary"
-                        class="w-100">I would like to request more
-            time to pay on this
-            count.</mat-checkbox>
+            {{ "error.required" | translate }}
+          </mat-error>
+        </mat-radio-group>
 
-          <div class="row"
-               *ngIf="
-              offenceAgreementStatus.value == 'REDUCTION' &&
-              requestMoreTime.value
-            ">
-            <div class="col">
-              <mat-form-field class="w-100">
-                <mat-label>Please enter your reasons for why you are requesting more
-                  time to pay.</mat-label>
-                <textarea matInput
-                          cdkTextareaAutosize
-                          #autosize="cdkTextareaAutosize"
-                          cdkAutosizeMinRows="1"
-                          cdkAutosizeMaxRows="5"
-                          formControlName="moreTimeReason"></textarea>
-                <mat-error *ngIf="moreTimeReason.hasError('requiredIfTrue')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
+        <div *ngIf="allowApplyToAllCounts.value">
+          <mat-checkbox formControlName="_applyToAllCounts"
+                        color="primary"
+                        *ngIf="firstOffence.value"
+                        class="w-100 mt-2">Apply these selections to all counts on this violation ticket.</mat-checkbox>
         </div>
+      </div>
+      <div class="row"
+           *ngIf="allowApplyToAllCounts.value && offenceAgreementStatus.value == 'DISPUTE' && firstOffence.value">
+        <mat-checkbox formControlName="_applyToAllCounts"
+                      color="primary"
+                      class="w-100 mt-4">Apply this selection to all counts on this violation ticket.</mat-checkbox>
       </div>
     </section>
   </form>
 
-  <div class="col"
+  <div class="col mt-4"
        *ngIf="
-      offenceAgreementStatus.value == 'REDUCTION' &&
-      reductionAppearInCourt.value
+      offenceAgreementStatus.value === 'REDUCTION' &&
+      reductionAppearInCourt.value === false
     ">
     <app-alert type="warning"
                icon="warning">
@@ -172,10 +136,9 @@
     </app-alert>
   </div>
 
-  <div class="col"
-       [ngClass]="{ 'mt-4': offenceAgreementStatus.value === 'DISPUTE' }"
+  <div class="col mt-4"
        *ngIf="
-      (offenceAgreementStatus.value == 'REDUCTION' &&
+      (offenceAgreementStatus.value === 'REDUCTION' &&
         reductionAppearInCourt.value) ||
       offenceAgreementStatus.value === 'DISPUTE'
     ">

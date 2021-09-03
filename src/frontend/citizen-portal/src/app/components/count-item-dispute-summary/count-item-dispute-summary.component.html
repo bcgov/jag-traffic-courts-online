@@ -2,9 +2,8 @@
   <div class="col-lg-2">
     <div style="display: flex">
       <mat-chip-list>
-        <mat-chip selected class="p-3"
-          >Count {{ count.offenceNumber }}</mat-chip
-        >
+        <mat-chip selected
+                  class="p-3">Count {{ count.offenceNumber }}</mat-chip>
       </mat-chip-list>
     </div>
   </div>
@@ -19,57 +18,35 @@
         Pay for this count
       </div>
       <div *ngIf="count.offenceAgreementStatus === 'REDUCTION'">
-        <div *ngIf="count.requestReduction && count.requestMoreTime">
-          Request a fine reduction and more time to pay
-        </div>
-        <div *ngIf="count.requestReduction && !count.requestMoreTime">
-          Request a fine reduction
-        </div>
-        <div *ngIf="!count.requestReduction && count.requestMoreTime">
-          Request more time to pay
-        </div>
+        Request a fine reduction and/or more time to pay
       </div>
       <div *ngIf="count.offenceAgreementStatus === 'DISPUTE'">
         Dispute the charge
       </div>
     </strong>
   </div>
-  <div class="col-lg-3" *ngIf="count.offenceAgreementStatus === 'REDUCTION'">
+  <div class="col-lg-3"
+       *ngIf="count.offenceAgreementStatus === 'REDUCTION'">
     <small class="d-block">I will appear in court</small>
     <strong>
       {{ count.reductionAppearInCourt | yesNo }}
     </strong>
   </div>
-  <div class="col-lg-3" *ngIf="count.offenceAgreementStatus === 'DISPUTE'">
+  <div class="col-lg-3"
+       *ngIf="count.offenceAgreementStatus === 'DISPUTE'">
     <small class="d-block">I will appear in court</small>
     <strong> Yes </strong>
   </div>
-</div>
-
-<div class="row" *ngIf="count.reductionReason">
-  <div class="offset-lg-2 col-lg-7">
-    <small class="d-block">Request reduction reasons</small>
-    <strong>{{ count.reductionReason }}</strong>
-  </div>
-  <div class="col-lg-3"></div>
-</div>
-
-<div class="row" *ngIf="count.moreTimeReason">
-  <div class="offset-lg-2 col-lg-7">
-    <small class="d-block">Request more time reasons</small>
-    <strong>{{ count.moreTimeReason }}</strong>
-  </div>
-  <div class="col-lg-3"></div>
 </div>
 <hr />
 
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-7">
     <small class="d-block">Description of offence</small>
-    {{ count.offenceDescription | titlecase }}
+    <div class="text">{{ count.offenceDescription | titlecase }}</div>
   </div>
   <div class="col-lg-3">
     <small class="d-block">Amount due</small>
-    {{ count._amountDue | currency }}
+    <div class="text">{{ count._amountDue | currency }}</div>
   </div>
 </div>

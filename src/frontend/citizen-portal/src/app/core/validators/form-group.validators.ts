@@ -54,27 +54,107 @@ export class FormGroupValidators {
 
   /**
    * @description
-   * If the start key is true then the end key is required
+   * If the start key is true then the check key is required
    */
-  public static requiredIfTrue(startKey: string, endKey: string): ValidatorFn {
+  public static requiredIfTrue(firstKey: string, checkKey: string): ValidatorFn {
     return (group: FormGroup): ValidationErrors | null => {
-      const start = group.controls[startKey].value;
-      const end = group.controls[endKey].value;
+      const first = group.controls[firstKey].value;
+      const check = group.controls[checkKey].value;
 
-      if (!start) {
-        group.controls[endKey].setErrors(null);
+      if (!first) {
+        group.controls[checkKey].setErrors(null);
         return null;
       }
 
-      const valid = !!(end);
+      const valid = !!(check);
       if (valid) {
-        group.controls[endKey].setErrors(null);
+        group.controls[checkKey].setErrors(null);
         return null;
 
       } else {
-        group.controls[endKey].setErrors({ requiredIfTrue: true });
+        group.controls[checkKey].setErrors({ requiredIfTrue: true });
         return { requiredIfTrue: true };
 
+      }
+    };
+  }
+
+  /**
+   * @description
+   * If the start key is equal to valueText then the end key is required
+   */
+  public static requiredIfValue(firstKey: string, valueText: string, checkKey: string): ValidatorFn {
+    return (group: FormGroup): ValidationErrors | null => {
+      const first = group.controls[firstKey].value;
+      const check = group.controls[checkKey].value;
+
+      if (!first || valueText !== first) {
+        group.controls[checkKey].setErrors(null);
+        return null;
+      }
+
+      const valid = ((valueText === first) && (check != null));
+
+      if (valid) {
+        group.controls[checkKey].setErrors(null);
+        return null;
+
+      } else {
+        group.controls[checkKey].setErrors({ requiredIfValue: true });
+        return { requiredIfValue: true };
+      }
+    };
+  }
+
+  /**
+   * @description
+   * If the start key is equal to valueText then the end key is required
+   */
+  public static requiredIfFlags(firstKey: string, secondKey: string, checkKey: string): ValidatorFn {
+    return (group: FormGroup): ValidationErrors | null => {
+      const first = group.controls[firstKey].value;
+      const second = group.controls[secondKey].value;
+      const check = group.controls[checkKey].value;
+
+      if (!first || !second) {
+        group.controls[checkKey].setErrors(null);
+        return null;
+      }
+
+      const valid = (first && second && (check != null));
+      if (valid) {
+        group.controls[checkKey].setErrors(null);
+        return null;
+
+      } else {
+        group.controls[checkKey].setErrors({ requiredIfFlags: true });
+        return { requiredIfFlags: true };
+      }
+    };
+  }
+
+  /**
+   * @description
+   * If the property is true, then one of the checkboxes must be selected
+   */
+  public static atLeastOneCheckedIf(ifKey: string, check1Key: string, check2Key: string): ValidatorFn {
+    return (group: FormGroup): ValidationErrors | null => {
+      const ifKeyVal = group.controls[ifKey].value;
+      const check1Val = group.controls[check1Key].value;
+      const check2Val = group.controls[check2Key].value;
+
+      if (!ifKeyVal) {
+        group.controls[check2Key].setErrors(null);
+        return null;
+      }
+
+      const valid = !!(check1Val) || !!(check2Val);
+      if (valid) {
+        group.controls[check2Key].setErrors(null);
+        return null;
+      } else {
+        group.controls[check2Key].setErrors({ atLeastOneCheckedIf: true });
+        return { atLeastOneCheckedIf: true };
       }
     };
   }

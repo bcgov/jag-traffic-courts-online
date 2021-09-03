@@ -11,42 +11,33 @@
 
     <div class="row mt-4">
       <div class="col-md-4">
-        <button
-          id="secondaryButton"
-          mat-stroked-button
-          type="button"
-          color="primary"
-          class="large"
-          routerLink="/ticket/find"
-        >
+        <button id="secondaryButton"
+                mat-stroked-button
+                type="button"
+                color="primary"
+                class="large"
+                routerLink="/ticket/find">
           Cancel and search again
         </button>
       </div>
-      <div
-        class="offset-md-2 col-md-6"
-        *ngIf="ticket._outstandingBalanceDue > 0 || useMockServices"
-      >
+      <div class="offset-md-2 col-md-6"
+           *ngIf="ticket._outstandingBalanceDue > 0 || useMockServices">
         <div class="row">
-          <div
-            [ngClass]="{ 'offset-md-6': ticket._requestSubmitted && !useMockServices }"
-            class="col-md-6"
-          >
-            <button
-              mat-flat-button
-              color="accent"
-              class="large"
-              (click)="onPayTicket()"
-            >
+          <!--  [ngClass]="{ 'offset-md-6': ticket._requestSubmitted && !useMockServices }" -->
+          <div class="col-md-6">
+            <button mat-flat-button
+                    color="accent"
+                    class="large"
+                    (click)="onPayTicket()">
               Pay ticket
             </button>
           </div>
-          <div class="col-md-6" *ngIf="!ticket._requestSubmitted || useMockServices">
-            <button
-              mat-flat-button
-              color="primary"
-              class="large"
-              (click)="onDisputeTicket()"
-            >
+          <!--  *ngIf="!ticket._requestSubmitted || useMockServices" -->
+          <div class="col-md-6">
+            <button mat-flat-button
+                    color="primary"
+                    class="large"
+                    (click)="onDisputeTicket()">
               Initiate dispute
             </button>
           </div>

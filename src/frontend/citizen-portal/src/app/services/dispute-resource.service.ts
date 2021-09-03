@@ -20,7 +20,7 @@ export class DisputeResourceService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService
-  ) {}
+  ) { }
 
   /**
    * Get the ticket from RSI.
@@ -44,7 +44,7 @@ export class DisputeResourceService {
         ),
         map((ticket) => {
           if (ticket) {
-            this.setOffenceInfo(ticket);
+            this.updateTicketViewModel(ticket);
           }
           return ticket;
         }),
@@ -121,16 +121,17 @@ export class DisputeResourceService {
       map((response: ApiHttpResponse<any>) =>
         response ? response.result : null
       ),
-      tap((result: TicketDispute) => {
-        this.setOffenceInfo(result);
-
+      tap((ticket: TicketDispute) => {
         if (isPaid) {
           this.toastService.openSuccessToast('Payment was successful');
         }
-        this.logger.info('DisputeResourceService::makeTicketPayment', result);
+        this.logger.info('DisputeResourceService::makeTicketPayment', ticket);
       }),
-      map((result) => {
-        return result;
+      map((ticket) => {
+        if (ticket) {
+          this.updateTicketViewModel(ticket);
+        }
+        return ticket;
       }),
       catchError((error: any) => {
         this.toastService.openErrorToast('Payment could not be made');
@@ -146,7 +147,7 @@ export class DisputeResourceService {
   /**
    * Create the ticket dispute
    *
-   * @param dispute The dispute to be created
+   * @param ticketDispute The dispute to be created
    */
   public createTicketDispute(
     ticketDispute: TicketDispute
@@ -163,8 +164,6 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newDisputeTicket: TicketDispute) => {
-          this.setOffenceInfo(newDisputeTicket);
-
           this.toastService.openSuccessToast(
             'The request has been successfully submitted'
           );
@@ -173,6 +172,12 @@ export class DisputeResourceService {
             'DisputeResourceService::NEW_DISPUTE_TICKET',
             newDisputeTicket
           );
+        }),
+        map((newDisputeTicket) => {
+          if (newDisputeTicket) {
+            this.updateTicketViewModel(newDisputeTicket);
+          }
+          return newDisputeTicket;
         }),
         catchError((error: any) => {
           this.toastService.openErrorToast('The request could not be created');
@@ -193,6 +198,22 @@ export class DisputeResourceService {
   public createShellTicket(ticket: ShellTicket): Observable<TicketDispute> {
     this.logger.info('DisputeResourceService::createShellTicket', ticket);
 
+    // cleanup payload data
+    if (ticket._chargeCount < 3) {
+      ticket._count3ChargeDesc = null;
+      ticket._count3ChargeSection = null;
+      ticket.count3Charge = null;
+      ticket.count3FineAmount = null;
+    }
+
+    // cleanup payload data
+    if (ticket._chargeCount < 2) {
+      ticket._count2ChargeDesc = null;
+      ticket._count2ChargeSection = null;
+      ticket.count2Charge = null;
+      ticket.count2FineAmount = null;
+    }
+
     return this.apiResource
       .post<TicketDispute>('tickets/shellTicket', ticket)
       .pipe(
@@ -200,8 +221,6 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newShellTicket: TicketDispute) => {
-          this.setOffenceInfo(newShellTicket);
-
           this.toastService.openSuccessToast(
             'The ticket has been successfully created'
           );
@@ -211,8 +230,11 @@ export class DisputeResourceService {
             newShellTicket
           );
         }),
-        map((shellTicket) => {
-          return shellTicket;
+        map((newShellTicket) => {
+          if (newShellTicket) {
+            this.updateTicketViewModel(newShellTicket);
+          }
+          return newShellTicket;
         }),
         catchError((error: ApiHttpErrorResponse) => {
           if (Array.isArray(error.errors) && error.errors.length > 0) {
@@ -230,6 +252,10 @@ export class DisputeResourceService {
       );
   }
 
+  /**
+   * @description
+   * return the calculated offence status and description
+   */
   private getOffenceStatusDesc(
     status: string,
     offenceAgreementStatus: string,
@@ -261,7 +287,7 @@ export class DisputeResourceService {
           offenceStatusDesc = 'Rejected';
           break;
         default:
-          offenceStatus = 'Unknown';
+          offenceStatus = 'Unknown-' + status;
           offenceStatusDesc = 'Unknown dispute status';
           break;
       }
@@ -278,36 +304,10 @@ export class DisputeResourceService {
     return { offenceStatus, offenceStatusDesc };
   }
 
-  // private getAgreementStatusDesc(
-  //   status: string,
-  //   requestReduction: boolean,
-  //   requestMoreTime: boolean
-  // ): string {
-  //   let desc = 'Unknown status: ' + status;
-
-  //   switch (status) {
-  //     case 'NOTHING':
-  //       desc = 'No action at this time';
-  //       break;
-  //     case 'PAY':
-  //       desc = 'Pay for this count';
-  //       break;
-  //     case 'REDUCTION':
-  //       if (requestReduction && requestMoreTime) {
-  //         desc = 'Request a fine reduction and more time to pay';
-  //       } else if (requestReduction) {
-  //         desc = 'Request a fine reduction';
-  //       } else {
-  //         desc = 'Request more time to pay';
-  //       }
-  //       break;
-  //     case 'DISPUTE':
-  //       desc = 'Dispute the charge';
-  //       break;
-  //   }
-  //   return desc;
-  // }
-
+  /**
+   * @description
+   * return true if the date parameter is within 30 days
+   */
   private isWithin30Days(discountDueDate: string): boolean {
     let isWithin = false;
 
@@ -316,7 +316,7 @@ export class DisputeResourceService {
 
       const diff = Math.floor(
         (Date.parse(discountDueDate) - Date.parse(today.toDateString())) /
-          86400000
+        86400000
       );
 
       isWithin = diff >= 0 && diff <= 30;
@@ -326,14 +326,25 @@ export class DisputeResourceService {
   }
 
   /**
+   * @description
    * populate the offence object with the calculated information
    */
-  private setOffenceInfo(ticket: TicketDispute): void {
+  private updateTicketViewModel(ticket: TicketDispute): void {
+    this.logger.info('DisputeResourceService::updateTicketViewModel', ticket);
     let balance = 0;
     let total = 0;
     let requestSubmitted = false;
+    let first = true;
+    let courtRequired = false;
+    let reductionRequired = false;
+    let isReductionNotInCourt = false;
 
     ticket.offences.forEach((offence) => {
+      offence._firstOffence = first;
+      if (first) {
+        first = false;
+      }
+
       offence._within30days = this.isWithin30Days(ticket.discountDueDate);
       offence._amountDue = offence.amountDue;
 
@@ -353,14 +364,19 @@ export class DisputeResourceService {
       offence._offenceStatus = offenceStatus;
       offence._offenceStatusDesc = offenceStatusDesc;
 
-      // offence._offenceAgreementStatusDesc = this.getAgreementStatusDesc(
-      //   offence.offenceAgreementStatus,
-      //   offence.requestReduction,
-      //   offence.requestMoreTime
-      // );
-
       if (offence.offenceAgreementStatus) {
         requestSubmitted = true;
+
+        if (offence.offenceAgreementStatus === 'DISPUTE') {
+          courtRequired = true;
+        } else if (offence.offenceAgreementStatus === 'REDUCTION') {
+          reductionRequired = true;
+          if (offence.reductionAppearInCourt) {
+            courtRequired = true;
+          } else {
+            isReductionNotInCourt = true;
+          }
+        }
       }
 
       balance += offence._amountDue;
@@ -374,5 +390,17 @@ export class DisputeResourceService {
     ticket._outstandingBalanceDue = balance;
     ticket._totalBalanceDue = total;
     ticket._requestSubmitted = requestSubmitted;
+
+    if (ticket.additional) {
+      ticket.additional._isCourtRequired = courtRequired;
+      ticket.additional._isReductionRequired = reductionRequired;
+      ticket.additional._isReductionNotInCourt = isReductionNotInCourt;
+    }
+
+    const allowApplyToAllCounts = ((!requestSubmitted) && (ticket.offences.length > 1));
+    ticket.offences.forEach((offence) => {
+      offence._allowApplyToAllCounts = allowApplyToAllCounts;
+    });
+    this.logger.info('DisputeResourceService::updateTicketViewModel after', ticket);
   }
 }

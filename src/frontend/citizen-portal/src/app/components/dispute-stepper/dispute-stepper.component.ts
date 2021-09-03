@@ -118,7 +118,7 @@ export class DisputeStepperComponent
   }
 
   public onStepSave(stepper: MatStepper): void {
-    this.logger.info('Dispute Data:', this.disputeFormStateService.json);
+    this.logger.info('DisputeStepperComponent::onStepSave Dispute Data:', this.disputeFormStateService.json);
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
@@ -136,11 +136,7 @@ export class DisputeStepperComponent
    * Save the data on the current step
    */
   private saveStep(stepper: MatStepper): void {
-    // const source = timer(1000);
-    // this.busy = source.subscribe((val) => {
-    // this.toastService.openSuccessToast('Information has been saved');
     stepper.next();
-    // });
   }
 
   /**
@@ -182,7 +178,7 @@ export class DisputeStepperComponent
   }
 
   public onSelectionChange(event: StepperSelectionEvent): void {
-    this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
+    this.logger.info('DisputeStepperComponent::onSelectionChange Dispute Data:', this.disputeFormStateService.json);
 
     const stepIndex = event.selectedIndex;
     const stepId = this.stepper._getStepLabelId(stepIndex);
@@ -199,40 +195,121 @@ export class DisputeStepperComponent
 
     const numberOfSteps = this.stepper.steps.length;
     const currentStep = event.selectedIndex + 1;
+    const previousStep = event.previouslySelectedIndex + 1;
+    this.logger.info('DisputeStepperComponent::onSelectionChange currentStep', currentStep, 'previousStep', previousStep);
 
-    // Determine if court related 'Additional Information' is required
-    if ((numberOfSteps - 1) === currentStep) {
-      const offenceForms = this.disputeFormStateService.offenceForms;
-      let courtRequired = false;
+    if (previousStep === 2) {
+      this.updateOffenceForms();
+    }
 
-      offenceForms.forEach((form: AbstractControl) => {
-        const offenceNumber = form.get('offenceNumber') as FormControl;
-        if (offenceNumber) {
-          const status = form.get('offenceAgreementStatus') as FormControl;
-          const reduction = form.get('reductionAppearInCourt') as FormControl;
+    if (currentStep >= (numberOfSteps - 1)) {
+      this.setCourtRequired();
+    }
 
-          console.log(
-            'onSelectionChange',
-            offenceNumber.value,
-            status.value,
-            reduction.value
-          );
+    this.logger.info('DisputeStepperComponent::onSelectionChange After:', this.disputeFormStateService.json);
+    this.overviewTicket = this.disputeFormStateService.jsonTicketDispute;
+  }
 
-          if (status.value === 'DISPUTE') {
+  /**
+   * @description
+   * Determine if the current step is 'Additional Information' (2nd last step) or the last step, update the courtRequired flag
+   */
+  private setCourtRequired(): void {
+    const offenceForms = this.disputeFormStateService.offenceForms;
+    let courtRequired = false;
+    let reductionRequired = false;
+    let isReductionNotInCourt = false;
+
+    offenceForms.forEach((form: AbstractControl) => {
+      const offenceNumber = form.get('offenceNumber') as FormControl;
+      if (offenceNumber.value) {
+        const offenceAgreementStatus = form.get('offenceAgreementStatus') as FormControl;
+        const reductionAppearInCourt = form.get('reductionAppearInCourt') as FormControl;
+
+        if (offenceAgreementStatus.value === 'DISPUTE') {
+          courtRequired = true;
+        } else if (offenceAgreementStatus.value === 'REDUCTION') {
+          reductionRequired = true;
+          if (reductionAppearInCourt.value) {
             courtRequired = true;
-          } else if (status.value === 'REDUCTION' && reduction.value) {
-            courtRequired = true;
+          } else {
+            isReductionNotInCourt = true;
           }
         }
-      });
+      }
+    });
 
-      console.log('courtRequired', courtRequired);
+    this.logger.log('onSelectionChange courtRequired', courtRequired);
+    this.logger.log('onSelectionChange reductionRequired', reductionRequired);
+    this.logger.log('onSelectionChange isReductionNotInCourt', isReductionNotInCourt);
 
-      const additionalForm = this.disputeFormStateService.stepAdditionalForm;
-      const isCourtRequired = additionalForm.get('isCourtRequired') as FormControl;
-      isCourtRequired.setValue(courtRequired);
+    const additionalForm = this.disputeFormStateService.stepAdditionalForm;
 
-      console.log('additional', this.disputeFormStateService.additional);
-    }
+    const isCourtRequiredControl = additionalForm.get('_isCourtRequired') as FormControl;
+    isCourtRequiredControl.setValue(courtRequired);
+
+    const isReductionRequiredControl = additionalForm.get('_isReductionRequired') as FormControl;
+    isReductionRequiredControl.setValue(reductionRequired);
+
+    const isReductionNotInCourtControl = additionalForm.get('_isReductionNotInCourt') as FormControl;
+    isReductionNotInCourtControl.setValue(isReductionNotInCourt);
+  }
+
+  /**
+   * @description
+   * After leaving the FIRST offence screen, if 'applyToAllCounts' is selected, update the appropriate other values in the other counts.
+   */
+  private updateOffenceForms(): void {
+    this.logger.info('DisputeStepperComponent::updateOffenceForms');
+    const offenceForms = this.disputeFormStateService.offenceForms;
+
+    let applyToAllCounts = false;
+    let offenceAgreementStatus;
+    let reductionAppearInCourt;
+
+    offenceForms.forEach((form: AbstractControl) => {
+      const offenceNumber = form.get('offenceNumber') as FormControl;
+      const firstOffence = form.get('_firstOffence') as FormControl;
+
+      if (offenceNumber.value) {
+        const applyToAllCountsControl = form.get('_applyToAllCounts') as FormControl;
+        const offenceAgreementStatusControl = form.get('offenceAgreementStatus') as FormControl;
+        const reductionAppearInCourtControl = form.get('reductionAppearInCourt') as FormControl;
+
+        // cleanup bad state
+        if (offenceAgreementStatusControl.value !== 'REDUCTION') {
+          reductionAppearInCourtControl.setValue(null);
+        }
+
+        // Get the data from the first offence to copy to the others
+        if (firstOffence.value) {
+          applyToAllCounts = applyToAllCountsControl.value;
+
+          // cleanup bad state
+          if (offenceAgreementStatusControl.value !== 'DISPUTE' && offenceAgreementStatusControl.value !== 'REDUCTION') {
+            applyToAllCounts = false;
+            applyToAllCountsControl.setValue(applyToAllCounts);
+          }
+
+          offenceAgreementStatus = offenceAgreementStatusControl.value;
+          reductionAppearInCourt = reductionAppearInCourtControl.value;
+
+        } else {
+          applyToAllCountsControl.setValue(applyToAllCounts);
+          if (applyToAllCounts) {
+            offenceAgreementStatusControl.setValue(offenceAgreementStatus);
+            reductionAppearInCourtControl.setValue(reductionAppearInCourt);
+
+            offenceAgreementStatusControl.disable();
+            reductionAppearInCourtControl.disable();
+            applyToAllCountsControl.disable();
+          } else {
+            offenceAgreementStatusControl.enable();
+            reductionAppearInCourtControl.enable();
+            applyToAllCountsControl.enable();
+          }
+        }
+      }
+    });
   }
 }

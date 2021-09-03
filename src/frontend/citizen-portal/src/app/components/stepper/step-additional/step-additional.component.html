@@ -1,19 +1,109 @@
 <app-stepper-page>
   <app-page-header>
     <ng-container subHeader>
-      The following options apply to all counts on this ticket that are being
-      disputed.
+      The following additional information is required and will apply to all counts on this ticket made with that
+      selection.
     </ng-container>
   </app-page-header>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-    <section>
-      <h3 class="fw-bold">
-        Please indicate which (if any) of the following apply to you:
+  <form (ngSubmit)="onSubmit()"
+        [formGroup]="form"
+        novalidate>
+    <section *ngIf="isReductionRequired.value">
+      <h3 class="mt-4 mb-2">
+        <span class="fw-bold">Request fine reduction and/ or more time to pay. </span>Please make your selection(s)
+        below:
+      </h3>
+      <div class="row">
+        <div class="col-12">
+          <mat-checkbox formControlName="requestReduction"
+                        color="primary"
+                        class="w-100">
+            I would like to request a fine reduction.
+          </mat-checkbox>
+
+          <div class="row mt-2"
+               *ngIf="isReductionNotInCourt.value && requestReduction.value">
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>
+                  Please enter your reasons for why you are requesting a fine reduction.
+                </mat-label>
+                <textarea matInput
+                          cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"
+                          formControlName="reductionReason"></textarea>
+                <mat-error *ngIf="(reductionReason.dirty ||
+                  reductionReason.touched) &&
+                  reductionReason.invalid &&
+                  reductionReason.hasError('requiredIfFlags')">
+                  {{ "error.required" | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <strong class="ms-4">and/or</strong>
+          <mat-checkbox formControlName="requestMoreTime"
+                        color="primary"
+                        class="w-100">
+            I would like to request more time to pay.
+            <mat-error *ngIf="(requestMoreTime.dirty ||
+              requestMoreTime.touched) &&
+              requestMoreTime.invalid &&
+              requestMoreTime.hasError('atLeastOneCheckedIf')">
+              At least one request must be selected
+            </mat-error>
+          </mat-checkbox>
+
+          <div class="row mt-2"
+               *ngIf="isReductionNotInCourt.value && requestMoreTime.value">
+            <div class="col">
+              <mat-form-field class="w-100">
+                <mat-label>
+                  Please enter your reasons for why you are requesting more time to pay.
+                </mat-label>
+                <textarea matInput
+                          cdkTextareaAutosize
+                          #autosize="cdkTextareaAutosize"
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="5"
+                          formControlName="moreTimeReason"></textarea>
+                <mat-error *ngIf="(moreTimeReason.dirty ||
+                  moreTimeReason.touched) &&
+                  moreTimeReason.invalid &&
+                  moreTimeReason.hasError('requiredIfFlags')">
+                  {{ "error.required" | translate }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col mt-4">
+        <app-alert type="warning"
+                   icon="warning">
+          <ng-container #alertContent
+                        class="alert-content">
+            If you choose to not appear in court, you must submit written reasons for each request to ask for more time
+            or a fine reduction for each count.
+          </ng-container>
+        </app-alert>
+      </div>
+      <hr *ngIf="isCourtRequired.value" />
+    </section>
+
+    <section *ngIf="isCourtRequired.value">
+      <h3 class="mt-4 mb-2">
+        <span class="fw-bold">Dispute charge. </span>Please indicate which (if any) of the following apply to you:
       </h3>
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="lawyerPresent">
+          <mat-checkbox class="me-4 mb-2"
+                        color="primary"
+                        formControlName="lawyerPresent">
             I intend to be represented by a lawyer in court.
           </mat-checkbox>
         </div>
@@ -21,24 +111,27 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="interpreterRequired">
+          <mat-checkbox class="me-4 mb-2"
+                        color="primary"
+                        formControlName="interpreterRequired">
             I require a language interpreter at the hearing.
           </mat-checkbox>
-          <!--
-          <mat-error *ngIf="formStepCourt.hasError('requiredIfTrue')">
+          <mat-error *ngIf="interpreterRequired.hasError('requiredIfTrue')">
             {{ 'error.required' | translate }}
-          </mat-error>-->
+          </mat-error>
         </div>
       </div>
 
-      <div class="row" *ngIf="interpreterRequired.value">
+      <div class="row"
+           *ngIf="interpreterRequired.value">
         <div class="col">
           <mat-form-field>
             <mat-label>{{
               "stepper.additional.interpreter_language" | translate
               }}</mat-label>
             <mat-select formControlName="interpreterLanguage">
-              <mat-option *ngFor="let language of languages" [value]="language.code">
+              <mat-option *ngFor="let language of languages"
+                          [value]="language.code">
                 {{ language.name }}
               </mat-option>
             </mat-select>
@@ -51,14 +144,17 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="witnessPresent">
+          <mat-checkbox class="me-4 mb-2"
+                        color="primary"
+                        formControlName="witnessPresent">
             I intend to call a witness(es). You may have a maximum of 5
             witnesses.
           </mat-checkbox>
         </div>
       </div>
 
-      <div class="row" *ngIf="witnessPresent.value">
+      <div class="row"
+           *ngIf="witnessPresent.value">
         <div class="col">
           <mat-form-field>
             <mat-label>Number of witnesses</mat-label>
@@ -75,35 +171,56 @@
           </mat-form-field>
         </div>
       </div>
+
+      <div class="col">
+        <app-alert type="warning"
+                   icon="warning">
+          <ng-container #alertContent
+                        class="alert-content">
+            <strong>If you are calling a witness please keep the following information in
+              mind:</strong><br />
+            If the disputant or the disputant’s agent does not attend the court
+            hearing, the court will treat the violation ticket as not disputed, the
+            conviction(s) to the allegation(s) will be recorded against the record
+            of the disputant.
+          </ng-container>
+        </app-alert>
+      </div>
+
+      <div class="col mt-4">
+        <app-alert type="warning"
+                   icon="warning">
+          <ng-container #alertContent
+                        class="alert-content">
+            If the disputant or the disputant’s agent does not attend the court
+            hearing, the court will treat the violation ticket as not disputed, the
+            conviction(s) to the allegation(s) will be recorded against the record
+            of the disputant, and the prescribed ticketed amount(s) will become
+            immediately due and payable.
+          </ng-container>
+        </app-alert>
+      </div>
+
+    </section>
+
+    <section *ngIf="!isReductionRequired.value && !isCourtRequired.value">
+      <div class="col">
+        <app-alert type="warning"
+                   icon="warning">
+          <ng-container #alertContent
+                        class="alert-content">
+            Todo: information will be displayed here.
+          </ng-container>
+        </app-alert>
+      </div>
     </section>
   </form>
 
-  <div class="col">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
-        <strong>If you are calling a witness please keep the following information in
-          mind:</strong><br />
-        If the disputant or the disputant’s agent does not attend the court
-        hearing, the court will treat the violation ticket as not disputed, the
-        conviction(s) to the allegation(s) will be recorded against the record
-        of the disputant.
-      </ng-container>
-    </app-alert>
-  </div>
-
-  <div class="col mt-4">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
-        If the disputant or the disputant’s agent does not attend the court
-        hearing, the court will treat the violation ticket as not disputed, the
-        conviction(s) to the allegation(s) will be recorded against the record
-        of the disputant, and the prescribed ticketed amount(s) will become
-        immediately due and payable.
-      </ng-container>
-    </app-alert>
-  </div>
-
-  <app-page-footer (save)="onSubmit()" (back)="onBack()" [secondaryActionButtonIcon]="previousButtonIcon"
-    [secondaryActionButtonKey]="previousButtonKey" [saveButtonKey]="saveButtonKey" [hasSecondaryAction]="true">
+  <app-page-footer (save)="onSubmit()"
+                   (back)="onBack()"
+                   [secondaryActionButtonIcon]="previousButtonIcon"
+                   [secondaryActionButtonKey]="previousButtonKey"
+                   [saveButtonKey]="saveButtonKey"
+                   [hasSecondaryAction]="true">
   </app-page-footer>
 </app-stepper-page>

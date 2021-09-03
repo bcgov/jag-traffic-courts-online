@@ -32,6 +32,7 @@
         <mat-icon class="me-2">photo_camera</mat-icon>
         Upload photo of ticket
       </button>
+      <div class="or-separator"><span>OR</span></div>
     </div>
   </div>
 
@@ -75,13 +76,15 @@
           </div>
 
           <div class="row">
-            <div class="col-md-4">
-              <a class="view-link" (click)="onViewTicketExample()">
-                <img class="me-2" src="/assets/ticket-example-icon.svg" />
+            <div class="col-md-6 col-xxl-4">
+              <a class="view-link"
+                 (click)="onViewTicketExample()">
+                <img class="me-2"
+                     src="/assets/ticket-example-icon.svg" />
                 <span class="view-link-text">View ticket examples</span>
               </a>
             </div>
-            <div class="offset-md-2 col-md-6">
+            <div class="col-md-6 offset-xxl-2 col-xxl-6">
               <button type="submit"
                       mat-flat-button
                       color="primary"

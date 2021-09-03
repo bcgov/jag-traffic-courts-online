@@ -2,7 +2,7 @@
   "production": false,
   "environment": "dev",
   "version": "1.0.0",
-  "useMockServices": true,
+  "useMockServices": false,
   "apiBaseUrl": "/api",
   "features": {
     "dispute": true
