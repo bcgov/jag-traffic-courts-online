@@ -29,6 +29,11 @@ describe('CountItemSummaryComponent', () => {
       reductionAppearInCourt: false,
       _within30days: false,
       _amountDue: 0,
+      _applyToAllCounts: false,
+      _allowApplyToAllCounts: false,
+      _firstOffence: false,
+      _offenceStatus: null,
+      _offenceStatusDesc: null
     };
     fixture.detectChanges();
   });
