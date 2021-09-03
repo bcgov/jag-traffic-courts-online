@@ -36,7 +36,7 @@ namespace Gov.CitizenApi.Features.Disputes.Commands
             {
                 _logger.LogInformation("Dispute created. ");
                 await _bus.Send(_mapper.Map<DisputeContract>(result));
-                await _bus.Send(new NotificationContract { NotificationType = NotificationType.Email, ViolationTicketNumber = result.ViolationTicketNumber });
+                await _bus.Send(_mapper.Map<NotificationContract>(result));
                 return new CreateDisputeResponse { Id = result.Id };
             }
         }

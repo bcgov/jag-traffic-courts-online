@@ -2,7 +2,6 @@
 using Gov.CitizenApi.Features.Disputes.Commands;
 using Gov.CitizenApi.Features.Disputes.Queries;
 using Gov.CitizenApi.Models;
-using TrafficCourts.Common.Contract;
 
 namespace Gov.CitizenApi.Features.Disputes.Mapping
 {
@@ -64,10 +63,10 @@ namespace Gov.CitizenApi.Features.Disputes.Mapping
             CreateMap<DBModel.Dispute, Additional>()
                  ;
 
-            CreateMap<DBModel.Dispute, DisputeContract>()
+            CreateMap<DBModel.Dispute, TrafficCourts.Common.Contract.DisputeContract>()
                 ;
 
-            CreateMap<DBModel.OffenceDisputeDetail, OffenceDisputeDetailContract>()
+            CreateMap<DBModel.OffenceDisputeDetail, TrafficCourts.Common.Contract.OffenceDisputeDetailContract>()
                 ;
             CreateMap<DBModel.Dispute, GetDisputeResponse>();
 
