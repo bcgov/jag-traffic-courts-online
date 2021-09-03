@@ -8,7 +8,7 @@ namespace TrafficCourts.Common.Contract
     {
         public NotificationMethod NotificationMethod { get; set; }
         public NotificationType NotificationType { get; set; }
-        public DisputeContract Dispute { get; set; }
+        public TicketDisputeContract TicketDisputeContract { get; set; }
     }
 
     public enum NotificationMethod

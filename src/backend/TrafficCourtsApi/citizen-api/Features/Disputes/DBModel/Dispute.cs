@@ -30,6 +30,7 @@ namespace Gov.CitizenApi.Features.Disputes.DBModel
         public bool RequestMoreTime { get; set; }
         public string ReductionReason { get; set; }
         public string MoreTimeReason { get; set; }
+        public string ConfirmationNumber { get; set; }
 
         public ICollection<OffenceDisputeDetail> OffenceDisputeDetails { get; set; }
     }
