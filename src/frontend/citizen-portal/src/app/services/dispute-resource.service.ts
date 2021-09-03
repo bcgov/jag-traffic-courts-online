@@ -44,7 +44,7 @@ export class DisputeResourceService {
         ),
         map((ticket) => {
           if (ticket) {
-            this.setOffenceInfo(ticket);
+            this.updateTicketViewModel(ticket);
           }
           return ticket;
         }),
@@ -122,15 +122,16 @@ export class DisputeResourceService {
         response ? response.result : null
       ),
       tap((result: TicketDispute) => {
-        this.setOffenceInfo(result);
-
         if (isPaid) {
           this.toastService.openSuccessToast('Payment was successful');
         }
         this.logger.info('DisputeResourceService::makeTicketPayment', result);
       }),
-      map((result) => {
-        return result;
+      map((ticket) => {
+        if (ticket) {
+          this.updateTicketViewModel(ticket);
+        }
+        return ticket;
       }),
       catchError((error: any) => {
         this.toastService.openErrorToast('Payment could not be made');
@@ -163,8 +164,6 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newDisputeTicket: TicketDispute) => {
-          this.setOffenceInfo(newDisputeTicket);
-
           this.toastService.openSuccessToast(
             'The request has been successfully submitted'
           );
@@ -173,6 +172,12 @@ export class DisputeResourceService {
             'DisputeResourceService::NEW_DISPUTE_TICKET',
             newDisputeTicket
           );
+        }),
+        map((ticket) => {
+          if (ticket) {
+            this.updateTicketViewModel(ticket);
+          }
+          return ticket;
         }),
         catchError((error: any) => {
           this.toastService.openErrorToast('The request could not be created');
@@ -216,8 +221,6 @@ export class DisputeResourceService {
           response ? response.result : null
         ),
         tap((newShellTicket: TicketDispute) => {
-          this.setOffenceInfo(newShellTicket);
-
           this.toastService.openSuccessToast(
             'The ticket has been successfully created'
           );
@@ -227,8 +230,11 @@ export class DisputeResourceService {
             newShellTicket
           );
         }),
-        map((shellTicket) => {
-          return shellTicket;
+        map((ticket) => {
+          if (ticket) {
+            this.updateTicketViewModel(ticket);
+          }
+          return ticket;
         }),
         catchError((error: ApiHttpErrorResponse) => {
           if (Array.isArray(error.errors) && error.errors.length > 0) {
@@ -323,11 +329,15 @@ export class DisputeResourceService {
    * @description
    * populate the offence object with the calculated information
    */
-  private setOffenceInfo(ticket: TicketDispute): void {
+  private updateTicketViewModel(ticket: TicketDispute): void {
+    this.logger.info('DisputeResourceService::updateTicketViewModel', ticket);
     let balance = 0;
     let total = 0;
     let requestSubmitted = false;
     let first = true;
+    let courtRequired = false;
+    let reductionRequired = false;
+    let isReductionNotInCourt = false;
 
     ticket.offences.forEach((offence) => {
       offence._firstOffence = first;
@@ -356,6 +366,17 @@ export class DisputeResourceService {
 
       if (offence.offenceAgreementStatus) {
         requestSubmitted = true;
+
+        if (offence.offenceAgreementStatus === 'DISPUTE') {
+          courtRequired = true;
+        } else if (offence.offenceAgreementStatus === 'REDUCTION') {
+          reductionRequired = true;
+          if (offence.reductionAppearInCourt) {
+            courtRequired = true;
+          } else {
+            isReductionNotInCourt = true;
+          }
+        }
       }
 
       balance += offence._amountDue;
@@ -370,9 +391,16 @@ export class DisputeResourceService {
     ticket._totalBalanceDue = total;
     ticket._requestSubmitted = requestSubmitted;
 
+    if (ticket.additional) {
+      ticket.additional._isCourtRequired = courtRequired;
+      ticket.additional._isReductionRequired = reductionRequired;
+      ticket.additional._isReductionNotInCourt = isReductionNotInCourt;
+    }
+
     const allowApplyToAllCounts = ((!requestSubmitted) && (ticket.offences.length > 1));
     ticket.offences.forEach((offence) => {
       offence._allowApplyToAllCounts = allowApplyToAllCounts;
     });
+    this.logger.info('DisputeResourceService::updateTicketViewModel after', ticket);
   }
 }
