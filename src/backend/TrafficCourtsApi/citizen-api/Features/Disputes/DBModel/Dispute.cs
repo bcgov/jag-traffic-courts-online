@@ -26,6 +26,11 @@ namespace Gov.CitizenApi.Features.Disputes.DBModel
         public bool WitnessPresent { get; set; }
         public int? NumberOfWitnesses { get; set; }
         public string InterpreterLanguage { get; set; }
+        public bool RequestReduction { get; set; }
+        public bool RequestMoreTime { get; set; }
+        public string ReductionReason { get; set; }
+        public string MoreTimeReason { get; set; }
+
         public ICollection<OffenceDisputeDetail> OffenceDisputeDetails { get; set; }
     }
 

@@ -69,7 +69,7 @@ namespace Gov.CitizenApi.Features.Tickets
                 var response = await _mediator.Send(createShellTicket);
                 if(response.Id == 0)
                 {
-                    ModelState.AddModelError("TicketNumber", "the ticket shell already exists .");
+                    ModelState.AddModelError("TicketNumber", "This ticket already exists.");
                     return BadRequest(ApiResponse.BadRequest(ModelState));
                 }
                 return RedirectToAction("Ticket", new { ticketNumber = createShellTicket.ViolationTicketNumber, time = createShellTicket.ViolationTime });
