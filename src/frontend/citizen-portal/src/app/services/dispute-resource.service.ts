@@ -121,11 +121,11 @@ export class DisputeResourceService {
       map((response: ApiHttpResponse<any>) =>
         response ? response.result : null
       ),
-      tap((result: TicketDispute) => {
+      tap((ticket: TicketDispute) => {
         if (isPaid) {
           this.toastService.openSuccessToast('Payment was successful');
         }
-        this.logger.info('DisputeResourceService::makeTicketPayment', result);
+        this.logger.info('DisputeResourceService::makeTicketPayment', ticket);
       }),
       map((ticket) => {
         if (ticket) {
@@ -173,11 +173,11 @@ export class DisputeResourceService {
             newDisputeTicket
           );
         }),
-        map((ticket) => {
-          if (ticket) {
-            this.updateTicketViewModel(ticket);
+        map((newDisputeTicket) => {
+          if (newDisputeTicket) {
+            this.updateTicketViewModel(newDisputeTicket);
           }
-          return ticket;
+          return newDisputeTicket;
         }),
         catchError((error: any) => {
           this.toastService.openErrorToast('The request could not be created');
@@ -230,11 +230,11 @@ export class DisputeResourceService {
             newShellTicket
           );
         }),
-        map((ticket) => {
-          if (ticket) {
-            this.updateTicketViewModel(ticket);
+        map((newShellTicket) => {
+          if (newShellTicket) {
+            this.updateTicketViewModel(newShellTicket);
           }
-          return ticket;
+          return newShellTicket;
         }),
         catchError((error: ApiHttpErrorResponse) => {
           if (Array.isArray(error.errors) && error.errors.length > 0) {

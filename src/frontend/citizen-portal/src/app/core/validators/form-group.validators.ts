@@ -93,7 +93,7 @@ export class FormGroupValidators {
         return null;
       }
 
-      const valid = ((valueText == first) && (check != null));
+      const valid = ((valueText === first) && (check != null));
 
       if (valid) {
         group.controls[checkKey].setErrors(null);

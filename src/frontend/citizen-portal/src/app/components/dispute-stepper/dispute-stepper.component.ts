@@ -198,7 +198,7 @@ export class DisputeStepperComponent
     const previousStep = event.previouslySelectedIndex + 1;
     this.logger.info('DisputeStepperComponent::onSelectionChange currentStep', currentStep, 'previousStep', previousStep);
 
-    if (previousStep == 2) {
+    if (previousStep === 2) {
       this.updateOffenceForms();
     }
 
@@ -277,7 +277,7 @@ export class DisputeStepperComponent
         const reductionAppearInCourtControl = form.get('reductionAppearInCourt') as FormControl;
 
         // cleanup bad state
-        if (offenceAgreementStatusControl.value != 'REDUCTION') {
+        if (offenceAgreementStatusControl.value !== 'REDUCTION') {
           reductionAppearInCourtControl.setValue(null);
         }
 
@@ -286,7 +286,7 @@ export class DisputeStepperComponent
           applyToAllCounts = applyToAllCountsControl.value;
 
           // cleanup bad state
-          if (offenceAgreementStatusControl.value != 'DISPUTE' && offenceAgreementStatusControl.value != 'REDUCTION') {
+          if (offenceAgreementStatusControl.value !== 'DISPUTE' && offenceAgreementStatusControl.value !== 'REDUCTION') {
             applyToAllCounts = false;
             applyToAllCountsControl.setValue(applyToAllCounts);
           }
