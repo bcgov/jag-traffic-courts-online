@@ -61,7 +61,10 @@ namespace Gov.CitizenApi
             services.AddMediatR(typeof(Startup));
 
             services.AddDbContext<ViolationContext>(opt => opt.UseInMemoryDatabase("DisputeApi"));
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            });
 
             ConfigureOpenApi(services);
             ConfigureTicketSearchApi(services);

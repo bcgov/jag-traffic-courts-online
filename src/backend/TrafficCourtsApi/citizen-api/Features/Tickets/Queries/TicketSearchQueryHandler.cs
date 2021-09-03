@@ -35,7 +35,7 @@ namespace Gov.CitizenApi.Features.Tickets.Queries
 
         public async Task<TicketDispute> Handle(TicketSearchQuery query, CancellationToken cancellationToken)
         {
-            TicketSearchResponse ticketSearchResponse;
+            TicketSearchResponse ticketSearchResponse=null;
             try
             {
                 _logger.LogInformation("search ticket from rsi");

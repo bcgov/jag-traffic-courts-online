@@ -25,6 +25,10 @@ namespace Gov.CitizenApi.Models
         public string InterpreterLanguage { get; set; }
         public bool WitnessPresent { get; set; }
         public int? NumberOfWitnesses { get; set; }
+        public bool RequestReduction { get; set; }
+        public bool RequestMoreTime { get; set; }
+        public string ReductionReason { get; set; }
+        public string MoreTimeReason { get; set; }
     }
 
     [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
