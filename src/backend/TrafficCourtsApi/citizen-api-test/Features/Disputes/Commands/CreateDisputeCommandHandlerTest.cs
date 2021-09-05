@@ -47,8 +47,18 @@ namespace Gov.CitizenApi.Test.Features.Disputes.Commands
             CreateDisputeCommand createDisputeCommand, DisputeContract contractDispute)
         {
             var createdDispute = _fixture.Create<Dispute>();
+            var ticketDisputeContract = _fixture.Create<TicketDisputeContract>();
+            var disputantContract = _fixture.Create<TrafficCourts.Common.Contract.Disputant>();
+            var additionalContract = _fixture.Create<TrafficCourts.Common.Contract.Additional>();
+            var offenceContract = _fixture.Create<TrafficCourts.Common.Contract.Offence>();
             _mapperMock.Setup(m => m.Map<Dispute>(It.IsAny<CreateDisputeCommand>())).Returns(createdDispute);
             _mapperMock.Setup(m => m.Map<DisputeContract>(It.IsAny<Dispute>())).Returns(contractDispute);
+
+            _mapperMock.Setup(m => m.Map<TicketDisputeContract>(It.IsAny<CreateDisputeCommand>())).Returns(ticketDisputeContract);
+            _mapperMock.Setup(m => m.Map<TrafficCourts.Common.Contract.Disputant>(It.IsAny<Disputant>())).Returns(disputantContract);
+            _mapperMock.Setup(m => m.Map<TrafficCourts.Common.Contract.Additional>(It.IsAny<Additional>())).Returns(additionalContract);
+            _mapperMock.Setup(m => m.Map<TrafficCourts.Common.Contract.Offence>(It.IsAny<Offence>())).Returns(offenceContract);
+
             _disputeServiceMock.Setup(m => m.CreateAsync(It.IsAny<Dispute>()))
                 .Returns(Task.FromResult<Dispute>(createdDispute));
             _busMock.Setup(x => x.GetSendEndpoint(It.IsAny<Uri>())).Returns(Task.FromResult(_sendEndpointMock.Object));
