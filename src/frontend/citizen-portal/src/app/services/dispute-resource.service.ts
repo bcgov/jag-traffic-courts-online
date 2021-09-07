@@ -325,7 +325,6 @@ export class DisputeResourceService {
    * populate the offence object with the calculated information
    */
   private updateTicketViewModel(ticket: TicketDisputeView): void {
-    this.logger.info('DisputeResourceService::updateTicketViewModel', ticket);
     let balance = 0;
     let total = 0;
     let requestSubmitted = false;
@@ -396,7 +395,6 @@ export class DisputeResourceService {
     ticket.offences.forEach((offence) => {
       offence._allowApplyToAllCounts = allowApplyToAllCounts;
     });
-    this.logger.info('DisputeResourceService::updateTicketViewModel after', ticket);
   }
 
   /**
