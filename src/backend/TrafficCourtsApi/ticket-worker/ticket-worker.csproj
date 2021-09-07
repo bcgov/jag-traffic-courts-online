@@ -3,9 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-DisputeWorker-E2432967-AC5E-48EF-AA0A-738A11BC7CB5</UserSecretsId>
+	<PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentEmail.Liquid" Version="3.0.0" />
+    <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
     <PackageReference Include="MassTransit" Version="7.1.8" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.1.8" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.1.8" />

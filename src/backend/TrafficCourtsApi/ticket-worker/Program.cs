@@ -1,4 +1,5 @@
 using Gov.TicketWorker.Features.Disputes;
+using Gov.TicketWorker.Features.Emails;
 using Gov.TicketWorker.Features.Notifications;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.Net.Mail;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Contract;
 
@@ -36,6 +38,11 @@ namespace Gov.TicketWorker
 
             var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMQConfiguration>();
             var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+            var sender = configuration.GetSection("SMTPServer")["Sender"];
+            var port = configuration.GetSection("SMTPServer")["Port"];
+            var from = configuration.GetSection("Mail")["From"];
+            var fromEmail = configuration.GetSection("Mail")["FromEmail"];
+
 
             services.AddMassTransit(config =>
             {
@@ -66,8 +73,19 @@ namespace Gov.TicketWorker
                         endpoint.Consumer<NotificationRequestedConsumer>(ctx);
                     });
                 });
+
+                
             });
             services.AddMassTransitHostedService();
+            services.AddFluentEmail(fromEmail, from)
+                   .AddLiquidRenderer()
+                   .AddSmtpSender(new SmtpClient(sender)
+                   {
+                       EnableSsl = false,
+                       Port = int.Parse(port),
+                       DeliveryMethod = SmtpDeliveryMethod.Network
+                   });
+            services.AddScoped<IEmailSender, EmailSender>();
         }
     }
  
