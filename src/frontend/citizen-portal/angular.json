@@ -39,9 +39,14 @@
               "src/scss/app.scss"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/scss"]
+              "includePaths": [
+                "src/scss"
+              ]
             },
-            "allowedCommonJsDependencies": ["keycloak-js", "faker"],
+            "allowedCommonJsDependencies": [
+              "keycloak-js",
+              "faker"
+            ],
             "scripts": [],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -104,13 +109,19 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets", "src/assets/i18n"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/assets/i18n"
+            ],
             "styles": [
               "./node_modules/bootstrap/scss/bootstrap.scss",
               "src/scss/app.scss"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/scss"]
+              "includePaths": [
+                "src/scss"
+              ]
             },
             "scripts": []
           }
@@ -123,7 +134,10 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "**/app/api/**"
+            ]
           }
         },
         "e2e": {
