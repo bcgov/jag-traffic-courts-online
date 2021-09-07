@@ -401,7 +401,7 @@ export class DisputeResourceService {
    * strip the calculated fields from the object
    */
   private cleanTicketDispute(ticket: TicketDisputeView): TicketDispute {
-    let ticketDispute = { ...ticket };
+    const ticketDispute = { ...ticket };
     for (const property in ticket) {
       if (property.charAt(0) === '_') {
         delete ticketDispute[property];
@@ -415,7 +415,7 @@ export class DisputeResourceService {
    * strip the calculated fields from the object
    */
   private cleanShellTicket(ticket: ShellTicketView): ShellTicket {
-    let shellTicket = { ...ticket };
+    const shellTicket = { ...ticket };
 
     // cleanup payload data
     if (shellTicket._chargeCount < 3) {
