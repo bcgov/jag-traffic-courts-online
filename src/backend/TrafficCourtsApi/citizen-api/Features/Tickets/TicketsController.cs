@@ -1,14 +1,10 @@
 using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Gov.CitizenApi.Features.Tickets.Commands;
 using Gov.CitizenApi.Features.Tickets.Queries;
 using Gov.CitizenApi.Models;
 using Gov.TicketSearch;
 using MediatR;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
