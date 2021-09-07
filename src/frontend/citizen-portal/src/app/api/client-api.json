@@ -494,6 +494,18 @@
         "numberOfWitnesses": {
           "type": "integer",
           "format": "int32"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
         }
       }
     },
@@ -659,21 +671,24 @@
           "type": "string"
         },
         "count1Charge": {
-          "type": "string"
+          "type": "number",
+          "format": "decimal"
         },
         "count1FineAmount": {
           "type": "number",
           "format": "decimal"
         },
         "count2Charge": {
-          "type": "string"
+          "type": "number",
+          "format": "decimal"
         },
         "count2FineAmount": {
           "type": "number",
           "format": "decimal"
         },
         "count3Charge": {
-          "type": "string"
+          "type": "number",
+          "format": "decimal"
         },
         "count3FineAmount": {
           "type": "number",
