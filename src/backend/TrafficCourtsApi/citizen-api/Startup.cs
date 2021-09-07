@@ -45,18 +45,6 @@ namespace Gov.CitizenApi
         public void ConfigureServices(IServiceCollection services)
         {
             // TODO - For now, prevent authentication this way
-            if (!_env.IsDevelopment())
-            {
-                services.AddMvc(o =>
-                {
-#if USE_AUTHENTICATION
-                    o.Filters.Add(new AuthorizeFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-#endif
-                }).AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                });
-            }
             services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
             services.AddMediatR(typeof(Startup));
 
