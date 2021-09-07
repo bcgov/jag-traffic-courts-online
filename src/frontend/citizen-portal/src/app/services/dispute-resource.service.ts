@@ -6,10 +6,9 @@ import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { ApiResource } from '@core/resources/api-resource.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { ShellTicket } from '@shared/models/shellTicket.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { ShellTicket, TicketDispute } from 'app/api';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 

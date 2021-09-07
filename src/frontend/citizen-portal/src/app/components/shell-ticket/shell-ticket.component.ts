@@ -545,8 +545,8 @@ export class ShellTicketComponent implements OnInit {
             ? count1SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count1FineAmount: count1TicketAmountField.value
-            ? String(count1TicketAmountField.value)
-            : '',
+            ? Number(count1TicketAmountField.value)
+            : 0,
           count2Charge: null,
           _count2ChargeDesc: count2DescField.valueData?.text
             ? count2DescField.valueData?.text
@@ -555,8 +555,8 @@ export class ShellTicketComponent implements OnInit {
             ? count2SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count2FineAmount: count2TicketAmountField.value
-            ? String(count2TicketAmountField.value)
-            : '',
+            ? Number(count2TicketAmountField.value)
+            : 0,
           count3Charge: null,
           _count3ChargeDesc: count3DescField.valueData?.text
             ? count3DescField.valueData?.text
@@ -565,8 +565,8 @@ export class ShellTicketComponent implements OnInit {
             ? count3SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count3FineAmount: count3TicketAmountField.value
-            ? String(count3TicketAmountField.value)
-            : '',
+            ? Number(count3TicketAmountField.value)
+            : 0,
           _chargeCount: chargeCount,
           _amountOwing: 0,
         };

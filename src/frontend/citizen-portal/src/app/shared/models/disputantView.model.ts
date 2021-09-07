@@ -1,4 +1,4 @@
-import { Disputant } from "./disputant.model";
+import { Disputant } from "app/api";
 
 export interface DisputantView extends Disputant {
 }

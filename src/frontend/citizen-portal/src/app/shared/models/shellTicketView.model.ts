@@ -1,4 +1,4 @@
-import { ShellTicket } from "./shellTicket.model";
+import { ShellTicket } from "app/api";
 
 export interface ShellTicketView extends ShellTicket {
   _chargeCount: number;

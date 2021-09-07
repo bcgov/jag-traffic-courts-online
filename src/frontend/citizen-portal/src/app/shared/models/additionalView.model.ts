@@ -1,4 +1,4 @@
-import { Additional } from "./additional.model";
+import { Additional } from "app/api";
 
 export interface AdditionalView extends Additional {
   _isCourtRequired: boolean;

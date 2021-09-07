@@ -6,9 +6,8 @@ import {
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { FormGroupValidators } from '@core/validators/form-group.validators';
-import { Additional } from '@shared/models/additional.model';
-import { Disputant } from '@shared/models/disputant.model';
-import { Offence } from '@shared/models/offence.model';
+import { AdditionalView } from '@shared/models/additionalView.model';
+import { DisputantView } from '@shared/models/disputantView.model';
 import { OffenceView } from '@shared/models/offenceView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AbstractFormStateService } from 'app/components/classes/abstract-form-state-service.class';
@@ -103,15 +102,15 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     return dispute;
   }
 
-  public get disputant(): Disputant {
+  public get disputant(): DisputantView {
     return this.stepDisputantForm.getRawValue();
   }
 
-  public get additional(): Additional {
+  public get additional(): AdditionalView {
     return this.stepAdditionalForm.getRawValue();
   }
 
-  public get offences(): Offence[] {
+  public get offences(): OffenceView[] {
     const stepOffence1 = this.stepOffence1Form.getRawValue();
     const stepOffence2 = this.stepOffence2Form.getRawValue();
     const stepOffence3 = this.stepOffence3Form.getRawValue();
