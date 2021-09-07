@@ -205,11 +205,11 @@ export class DisputeResourceService {
         map((response: ApiHttpResponse<TicketDisputeView>) =>
           response ? response.result : null
         ),
-        map((ticket: TicketDisputeView) => {
-          if (ticket) {
-            this.updateTicketViewModel(ticket);
+        map((savedTicket: TicketDisputeView) => {
+          if (savedTicket) {
+            this.updateTicketViewModel(savedTicket);
           }
-          return ticket;
+          return savedTicket;
         }),
         tap((updatedTicket) => {
           this.toastService.openSuccessToast(

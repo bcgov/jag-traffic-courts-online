@@ -1,5 +1,4 @@
 import { Disputant } from 'app/api';
 
-export interface DisputantView extends Disputant {
-  // empty
-}
+// tslint:disable-next-line
+export interface DisputantView extends Disputant { }
