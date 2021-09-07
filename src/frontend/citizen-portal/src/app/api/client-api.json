@@ -239,6 +239,65 @@
         }
       }
     },
+    "/api/tickets/imageupload": {
+      "post": {
+        "tags": [
+          "Ticket API"
+        ],
+        "operationId": "Tickets_ImageUpload",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ViolationTicketNumber",
+            "in": "formData",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "ViolationTime",
+            "in": "formData",
+            "x-nullable": true
+          },
+          {
+            "type": "file",
+            "name": "Image",
+            "in": "formData",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfTicketDispute"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      }
+    },
     "/api/lookup": {
       "get": {
         "tags": [
@@ -476,7 +535,9 @@
       "required": [
         "lawyerPresent",
         "interpreterRequired",
-        "witnessPresent"
+        "witnessPresent",
+        "requestReduction",
+        "requestMoreTime"
       ],
       "properties": {
         "lawyerPresent": {
@@ -838,8 +899,8 @@
       ],
       "properties": {
         "code": {
-          "type": "integer",
-          "format": "int32"
+          "type": "number",
+          "format": "decimal"
         },
         "name": {
           "type": "string"
@@ -941,7 +1002,9 @@
         "id",
         "lawyerPresent",
         "interpreterRequired",
-        "witnessPresent"
+        "witnessPresent",
+        "requestReduction",
+        "requestMoreTime"
       ],
       "properties": {
         "id": {
@@ -998,6 +1061,21 @@
           "format": "int32"
         },
         "interpreterLanguage": {
+          "type": "string"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
+        },
+        "confirmationNumber": {
           "type": "string"
         },
         "offenceDisputeDetails": {

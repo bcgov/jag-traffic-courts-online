@@ -31,6 +31,11 @@ export interface Dispute {
     witnessPresent: boolean;
     numberOfWitnesses?: number;
     interpreterLanguage?: string;
+    requestReduction: boolean;
+    requestMoreTime: boolean;
+    reductionReason?: string;
+    moreTimeReason?: string;
+    confirmationNumber?: string;
     offenceDisputeDetails?: Array<OffenceDisputeDetail2>;
 }
 

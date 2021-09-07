@@ -36,7 +36,7 @@ namespace Gov.CitizenApi.Features.Lookups
 
     public class Statute
     {
-        public int Code { get; set; }
+        public decimal Code { get; set; }
         public string Name { get; set; }
     }
 

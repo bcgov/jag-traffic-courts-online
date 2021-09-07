@@ -12,11 +12,5 @@ namespace Gov.CitizenApi.Models
         public string ViolationDate { get; set; }
         public Additional Additional { get; set; }
         public OffenceDisputeDetail OffenceDisputeDetail { get; set; }
-
     }
-
-
- 
-
- 
 }
