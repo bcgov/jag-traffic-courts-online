@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 
 @Component({
   selector: 'app-dispute-ticket-summary',
@@ -7,7 +7,7 @@ import { TicketDispute } from '@shared/models/ticketDispute.model';
   styleUrls: ['./dispute-ticket-summary.component.scss'],
 })
 export class DisputeTicketSummaryComponent implements OnInit {
-  @Input() public ticket: TicketDispute;
+  @Input() public ticket: TicketDisputeView;
   public defaultLanguage: string;
 
   constructor() {

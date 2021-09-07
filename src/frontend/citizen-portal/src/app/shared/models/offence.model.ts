@@ -14,13 +14,4 @@ export interface Offence {
   status: string;
   offenceAgreementStatus?: string;
   reductionAppearInCourt: boolean;
-
-  // derived later on
-  _applyToAllCounts: boolean;
-  _allowApplyToAllCounts: boolean;
-  _firstOffence: boolean;
-  _offenceStatus?: string;
-  _offenceStatusDesc?: string;
-  _within30days?: boolean;
-  _amountDue?: number;
 }
