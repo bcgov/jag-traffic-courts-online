@@ -1,4 +1,4 @@
-import { Additional } from "app/api";
+import { Additional } from 'app/api';
 
 export interface AdditionalView extends Additional {
   _isCourtRequired: boolean;

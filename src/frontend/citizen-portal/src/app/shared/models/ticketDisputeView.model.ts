@@ -3,7 +3,7 @@ import { AdditionalView } from './additionalView.model';
 import { DisputantView } from './disputantView.model';
 import { OffenceView } from './offenceView.model';
 
-export interface TicketDisputeView extends Omit<TicketDispute, "disputant" | "offences" | "additional"> {
+export interface TicketDisputeView extends Omit<TicketDispute, 'disputant' | 'offences' | 'additional'> {
   disputant: DisputantView;
   offences: OffenceView[];
   additional: AdditionalView;

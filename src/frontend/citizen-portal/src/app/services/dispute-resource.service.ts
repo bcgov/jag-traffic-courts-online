@@ -47,8 +47,8 @@ export class DisputeResourceService {
 
           return ticket;
         }),
-        tap((ticket) =>
-          this.logger.info('DisputeResourceService::getTicket', ticket)
+        tap((updatedTicket) =>
+          this.logger.info('DisputeResourceService::getTicket', updatedTicket)
         ),
         catchError((error: any) => {
           this.toastService.openErrorToast(this.configService.ticket_error);
@@ -126,11 +126,11 @@ export class DisputeResourceService {
         }
         return ticket;
       }),
-      tap((ticket) => {
+      tap((updatedTicket) => {
         if (isPaid) {
           this.toastService.openSuccessToast('Payment was successful');
         }
-        this.logger.info('DisputeResourceService::makeTicketPayment', ticket);
+        this.logger.info('DisputeResourceService::makeTicketPayment', updatedTicket);
       }),
       catchError((error: any) => {
         this.toastService.openErrorToast('Payment could not be made');
@@ -169,14 +169,14 @@ export class DisputeResourceService {
           }
           return ticket;
         }),
-        tap((ticket) => {
+        tap((updatedTicket) => {
           this.toastService.openSuccessToast(
             'The request has been successfully submitted'
           );
 
           this.logger.info(
             'DisputeResourceService::NEW_DISPUTE_TICKET',
-            ticket
+            updatedTicket
           );
         }),
         catchError((error: any) => {
@@ -211,14 +211,14 @@ export class DisputeResourceService {
           }
           return ticket;
         }),
-        tap((ticket) => {
+        tap((updatedTicket) => {
           this.toastService.openSuccessToast(
             'The ticket has been successfully created'
           );
 
           this.logger.info(
             'DisputeResourceService:: NEW_SHELL_TICKET',
-            ticket
+            updatedTicket
           );
         }),
         catchError((error: ApiHttpErrorResponse) => {
