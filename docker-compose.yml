@@ -58,6 +58,8 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    volumes:
+      - ./src/frontend/citizen-portal/nginx.conf:/opt/app-root/etc/nginx.default.d/default.conf
     depends_on: [citizen-api]
     networks:
       - traffic-court-net
