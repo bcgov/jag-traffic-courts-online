@@ -29,7 +29,7 @@ namespace Gov.TicketWorker.Models
     public string InterpreterLanguage { get; set; }
     public string CallWitness { get; set; }
 
-    public string LogoPath { get; set; }
+    public string LogoImage { get; set; }
     public int NumberofWitnesses { get; set; } 
     public decimal CountOneAmount { get; set; }
     public decimal CountTwoAmount { get; set; }

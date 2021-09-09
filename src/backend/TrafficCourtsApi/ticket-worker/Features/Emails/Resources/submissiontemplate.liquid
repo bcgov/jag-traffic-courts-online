@@ -26,7 +26,14 @@ body {margin-top: 0px;margin-left: 0px;}
 #page_1 #p1dimg1 {position:absolute;top:0px;left:0px;z-index:-1;width:2560px;height:3125px;}
 #page_1 #p1dimg1 #p1img1 {width:2560px;height:3125px;}
 
+td  { 
+    padding: 0px;
+	}
 
+   table { 
+    border-spacing: 0px;
+    border-collapse: separate;
+    }
 
 
 .dclr {clear:both;float:none;height:1px;margin:0px;padding:0px;overflow:hidden;}
@@ -105,13 +112,13 @@ body {margin-top: 0px;margin-left: 0px;}
 <BODY>
 <DIV id="page_1">
 
-<img src={{ LogoPath }} id="logo">
+<img src="{{ LogoImage }}" alt="BC Government logo" id="logo">
 <hr id="logo_line">
 
 <DIV class="dclr"></DIV>
 <DIV id="id1_1">
 <P class="p0 ft0">Hello,</P>
-<P class="p1 ft2">Please find confirmation that your violation ticket has been received. If you have any questions or see any errors please contact the <SPAN class="ft1">Violation Ticket Centre </SPAN>at <SPAN class="ft1">1-877-661-8026.</SPAN></NOBR></P>
+<P class="p1 ft2">Your submission has been received. If you have any questions or see any errors please contact the <SPAN class="ft1">Violation Ticket Centre </SPAN>at <SPAN class="ft1">1-877-661-8026.</SPAN></P>
 <P class="p2 ft3">Submission confirmation</P>
 <P class="p3 ft4">Ticket request sent successfully</P>
 <P class="p4 ft5">Ticket reference #: <SPAN class="ft3">{{ ConfirmationNumber }}</SPAN></P>
@@ -121,7 +128,7 @@ body {margin-top: 0px;margin-left: 0px;}
 <DIV id="id1_2">
 <DIV id="id1_2_1">
 <P class="p0 ft3">Submission details</P>
-<TABLE cellpadding=0 cellspacing=0 class="t0">
+<TABLE class="t0">
 <TR>
 	<TD class="tr0 td0"><P class="p6 ft0">Ticket #: <SPAN class="ft3">{{ ViolationTicketNumber }}</SPAN></P></TD>
 	<TD class="tr0 td1"><P class="p6 ft0">Violation date:<SPAN class="ft3">{{ ViolationDate }} {{ ViolationTime}}</SPAN></P></TD>
@@ -139,7 +146,7 @@ body {margin-top: 0px;margin-left: 0px;}
 </DIV>
 </DIV>
 <DIV id="id1_3">
-<TABLE cellpadding=0 cellspacing=0 class="t1">
+<TABLE class="t1">
 <TR>
 	<TD class="tr1 td2"><P class="p6 ft7">Description of offence</P></TD>
 	<TD class="tr1 td3"><P class="p16 ft7">Amount due</P></TD>
@@ -160,13 +167,13 @@ body {margin-top: 0px;margin-left: 0px;}
 </DIV>
 </DIV>
 <DIV id="id1_5">
-<TABLE cellpadding=0 cellspacing=0 class="t2">
+<TABLE class="t2">
 <TR>
 	<TD class="tr3 td4"><P class="p6 ft6">{{ CountTwoAction }}</P></TD>
 	<TD class="tr3 td5"><P class="p6 ft9">{{ CountTwoWillAppear }}</P></TD>
 </TR>
 </TABLE>
-<TABLE cellpadding=0 cellspacing=0 class="t3">
+<TABLE class="t3">
 <TR>
 	<TD class="tr1 td2"><P class="p6 ft7">Description of offence</P></TD>
 	<TD class="tr1 td3"><P class="p16 ft7">Amount due</P></TD>
@@ -177,7 +184,7 @@ body {margin-top: 0px;margin-left: 0px;}
 </TR>
 </TABLE>
 <P class="p18 ft3">Count 3</P>
-<TABLE cellpadding=0 cellspacing=0 class="t4">
+<TABLE class="t4">
 <TR>
 	<TD class="tr2 td6"><P class="p6 ft7">For this count I would like to:</P></TD>
 	<TD class="tr2 td7"><P class="p19 ft7">Amount due</P></TD>
@@ -192,7 +199,7 @@ body {margin-top: 0px;margin-left: 0px;}
 <P class="p22 ft6">Additional information</P>
 <P class="p21 ft8">The following options apply to all counts on this ticket that are being disputed.</P>
 <hr id="sec_4">
-<TABLE cellpadding=0 cellspacing=0 class="t5">
+<TABLE class="t5">
 <TR>
 	<TD class="tr2 td8"><P class="p6 ft7">Action</P></TD>
 	<TD class="tr2 td9"><P class="p23 ft7"># of witness(es)</P></TD>
@@ -214,9 +221,9 @@ body {margin-top: 0px;margin-left: 0px;}
 <P class="p25 ft11">If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant.</P>
 <P class="p26 ft12">If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable.</P>
 </DIV>
-<DIV id="id1_6">
-<P class="p0 ft8">Copyright 2021 Government of British Columbia</P>
+	<DIV id="id1_6">
+	<P class="p0 ft8">Copyright 2021 Government of British Columbia</P>
+	</DIV>
 </DIV>
-
 </BODY>
 </HTML>

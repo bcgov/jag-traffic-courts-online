@@ -1,10 +1,12 @@
 ﻿using FluentEmail.Core;
 using Gov.TicketWorker.Models;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Contract;
@@ -15,7 +17,7 @@ namespace Gov.TicketWorker.Features.Emails
     public interface IEmailSender
     {
 
-        Task<bool> SendUsingTemplate(string to, string subject, TicketDisputeContract model);
+        void SendUsingTemplate(string to, string subject, TicketDisputeContract model);
 
     }
     public enum EmailTemplate
@@ -24,7 +26,7 @@ namespace Gov.TicketWorker.Features.Emails
         ChangeEmail
     }
 
-    class EmailSender : IEmailSender
+    public class EmailSender : IEmailSender
     {
 
         private readonly IFluentEmail _email;
@@ -36,24 +38,41 @@ namespace Gov.TicketWorker.Features.Emails
             _logger = logger;
         }
 
-        public async Task<bool> SendUsingTemplate(string to, string subject, TicketDisputeContract model)
+        private string dataURIScheme(string mimeType, string resource)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            Stream stream = assembly.GetManifestResourceStream(resource);
+            byte[] bytes;
+            MemoryStream memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            bytes = memoryStream.ToArray();
+
+            string base64Data = Convert.ToBase64String(bytes);
+            String dataScheme = String.Format("data:image/{0};base64,{1}==",
+                                mimeType,base64Data);
+            return dataScheme;
+            
+        }
+
+        public async void SendUsingTemplate(string to, string subject, TicketDisputeContract model)
         {
             DisputeEmail emailModel = constructDisputeEmailModel(model);
-                var result = await _email.To(to)
-                .Subject(subject)
-                .UsingTemplateFromFile($"{Directory.GetCurrentDirectory()}/EmailResources/_layout.liquid", emailModel)
-                .SendAsync();
+            emailModel.LogoImage = dataURIScheme("png", "ticket-worker.Features.Emails.Resources.bc-gov-logo.png");
+            var result = await _email.To(to)
+            .Subject(subject)
+            .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly)
+            .SendAsync();
 
-                if (!result.Successful)
-                {
-                    _logger.LogError("Failed to send an email");
-                }
-            
-            return result.Successful;
+            if (!result.Successful)
+            {
+                _logger.LogError("Failed to send an email");
+            }
         }
+
         private DisputeEmail constructDisputeEmailModel(TicketDisputeContract model)
         {
             DisputeEmail disputeEmailModel = new DisputeEmail();
+                
             disputeEmailModel.ConfirmationNumber = model.ConfirmationNumber;
             disputeEmailModel.ViolationDate = model.ViolationDate;
             disputeEmailModel.ViolationTicketNumber = model.ViolationTicketNumber;
@@ -61,7 +80,6 @@ namespace Gov.TicketWorker.Features.Emails
             disputeEmailModel.CountOneDescription = model.Offences[0].OffenceDescription;
             disputeEmailModel.CountTwoDescription = model.Offences[1].OffenceDescription;
             disputeEmailModel.CountThreeDescription = model.Offences[2].OffenceDescription;
-            disputeEmailModel.LogoPath = $"{Directory.GetCurrentDirectory()}/EmailResources/bc-gov-logo.png";
             switch (model.Offences[0].OffenceAgreementStatus)
             {
                 case "PAY":
@@ -110,13 +128,14 @@ namespace Gov.TicketWorker.Features.Emails
             disputeEmailModel.CountOneAmount = model.Offences[0].AmountDue;
             disputeEmailModel.CountTwoAmount = model.Offences[1].AmountDue;
             disputeEmailModel.CountThreeAmount = model.Offences[2].AmountDue;
-            disputeEmailModel.CountOneWillAppear = (bool)model.Offences[0].ReductionAppearInCourt ? "Yes" : "No";
-            disputeEmailModel.CountTwoWillAppear = (bool)model.Offences[1].ReductionAppearInCourt ? "Yes" : "No";
-            disputeEmailModel.CountThreeWillAppear = (bool)model.Offences[2].ReductionAppearInCourt ? "Yes" : "No";
+            disputeEmailModel.CountOneWillAppear = model.Offences[0].ReductionAppearInCourt == true? "Yes" : "No";
+            disputeEmailModel.CountTwoWillAppear = model.Offences[1].ReductionAppearInCourt == true ? "Yes" : "No";
+            disputeEmailModel.CountThreeWillAppear = model.Offences[2].ReductionAppearInCourt == true ? "Yes" : "No";
             disputeEmailModel.RequireInterpreter = model.Additional.InterpreterRequired ? "I require an interpreter" : "I do not require an interpreter";
             disputeEmailModel.InterpreterLanguage = model.Additional.InterpreterLanguage;
-            disputeEmailModel.NumberofWitnesses = (int)model.Additional.NumberOfWitnesses;
+            disputeEmailModel.NumberofWitnesses = model.Additional.NumberOfWitnesses == null ? 0 : (int)model.Additional.NumberOfWitnesses;
             disputeEmailModel.CallWitness = model.Additional.WitnessPresent ? "I intend to call witness(es)" : "I do not intend to call witness(es)";
+            
 
             return disputeEmailModel;
         }
