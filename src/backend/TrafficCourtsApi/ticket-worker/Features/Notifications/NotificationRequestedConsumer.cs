@@ -19,6 +19,11 @@ namespace Gov.TicketWorker.Features.Notifications
             _logger = logger;
         }
 
+        public NotificationRequestedConsumer(ILogger<NotificationRequestedConsumer> logger)
+        {
+            _logger = logger;
+        }
+
         public Task Consume(ConsumeContext<NotificationContract> context)
         {
             try
