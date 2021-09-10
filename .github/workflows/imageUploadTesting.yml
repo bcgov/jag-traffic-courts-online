@@ -28,6 +28,6 @@ jobs:
           docker build \
             --build-arg ASPNETCORE_ENVIRONMENT=Development \
             --tag ${IMAGE} \
-            --file ${DOCKER_FILE}
+            -f ${DOCKER_FILE}
             ${CONTEXT}
             docker push ${IMAGE}
