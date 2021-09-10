@@ -22,7 +22,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/backend/TrafficCourtsApi
-          DOCKER_FILE: ./DockerfileTicketWorker
+          DOCKER_FILE: ./src/backend/TrafficCourtsApi/DockerfileTicketWorker
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-worker:${{secrets.OC_APP}}
         run: |
           docker build \
