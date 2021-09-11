@@ -8,7 +8,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -21,9 +21,8 @@ import { DisputeService } from 'app/services/dispute.service';
 })
 export class StepOverviewComponent
   extends BaseDisputeFormPage
-  implements OnInit
-{
-  @Input() public overviewTicket: TicketDispute;
+  implements OnInit {
+  @Input() public overviewTicket: TicketDisputeView;
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 

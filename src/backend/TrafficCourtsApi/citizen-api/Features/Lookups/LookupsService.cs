@@ -12,7 +12,7 @@ namespace Gov.CitizenApi.Features.Lookups
     public interface ILookupsService
     {
         IEnumerable<Statute> GetStatutes();
-        Statute GetCountStatute(string code);
+        Statute GetCountStatute(decimal code);
         Task<LookupsAll> GetAllLookUpsAsync();
     }
 
@@ -20,7 +20,7 @@ namespace Gov.CitizenApi.Features.Lookups
     {
         private ILogger<LookupsService> _logger;
         private static Lazy<LookupsAll> _lazyLookups = new Lazy<LookupsAll>(ReadLookupsAll);
-        private Lazy<Dictionary<int, Statute>> _lazyStatutes = new Lazy<Dictionary<int, Statute>>(ReadStatutes);
+        private Lazy<Dictionary<decimal, Statute>> _lazyStatutes = new Lazy<Dictionary<decimal, Statute>>(ReadStatutes);
 
         public LookupsService(ILogger<LookupsService> logger)
         {
@@ -43,40 +43,31 @@ namespace Gov.CitizenApi.Features.Lookups
             return lookups;
         }
 
-        private static Dictionary<int, Statute> ReadStatutes()
+        private static Dictionary<decimal, Statute> ReadStatutes()
         {
-            Dictionary<int, Statute> statutes = _lazyLookups.Value?.Statutes.ToDictionary(m => m.Code);
-            return statutes;
+            return _lazyLookups.Value?.Statutes.ToDictionary(m => m.Code);
         }
 
         public IEnumerable<Statute> GetStatutes()
         {
-            LookupsAll lookups = _lazyLookups.Value;
             return _lazyLookups.Value?.Statutes;
         }
 
-        public Statute GetCountStatute(string countCode)
+        public Statute GetCountStatute(decimal countCode)
         {
-            Dictionary<int,Statute> statutes = _lazyStatutes.Value;
-            int code;
-
-            if(Int32.TryParse(countCode, out code) && statutes != null) 
-            {
-                Statute statute = statutes[code];
-                return statute;
-            }
-            else
-            {
-                return null;
-            }
+            return _lazyStatutes.Value.TryGetValue(countCode, out Statute value) ? value : null;
         }
 
         public Task<LookupsAll>  GetAllLookUpsAsync()
         {
             if (_lazyLookups.Value != null)
-                return Task.FromResult<LookupsAll>(_lazyLookups.Value);
+            {
+                return Task.FromResult(_lazyLookups.Value);
+            }
             else
+            {
                 return null;
+            }
         }
     }
 }

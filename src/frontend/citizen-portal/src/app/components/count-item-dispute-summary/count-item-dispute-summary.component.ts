@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Offence } from '@shared/models/offence.model';
+import { OffenceView } from '@shared/models/offenceView.model';
 
 @Component({
   selector: 'app-count-item-dispute-summary',
@@ -7,9 +7,9 @@ import { Offence } from '@shared/models/offence.model';
   styleUrls: ['./count-item-dispute-summary.component.scss'],
 })
 export class CountItemDisputeSummaryComponent implements OnInit {
-  @Input() public count: Offence;
+  @Input() public count: OffenceView;
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }

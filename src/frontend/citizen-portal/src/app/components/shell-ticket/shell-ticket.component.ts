@@ -5,7 +5,7 @@ import {
   FormControl,
   FormGroup,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import {
   AzureKeyCredential,
   FormPollerLike,
-  FormRecognizerClient,
+  FormRecognizerClient
 } from '@azure/ai-form-recognizer';
 import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
@@ -23,9 +23,9 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ShellTicket } from '@shared/models/shellTicket.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { ShellTicketView } from '@shared/models/shellTicketView.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -216,11 +216,11 @@ export class ShellTicketComponent implements OnInit {
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          const payload: ShellTicket = this.form.getRawValue();
+          const payload: ShellTicketView = this.form.getRawValue();
 
           this.busy = this.disputeResource
             .createShellTicket(payload)
-            .subscribe((newShellTicket: TicketDispute) => {
+            .subscribe((newShellTicket: TicketDisputeView) => {
               this.disputeService.ticket$.next(newShellTicket);
 
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
@@ -515,7 +515,7 @@ export class ShellTicketComponent implements OnInit {
         }
         this.logger.info('chargeCount', chargeCount);
 
-        const shellTicket: ShellTicket = {
+        const shellTicket: ShellTicketView = {
           violationTicketNumber: String(invoiceIdField.value),
           violationTime: '',
           violationDate: '',
@@ -545,8 +545,8 @@ export class ShellTicketComponent implements OnInit {
             ? count1SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count1FineAmount: count1TicketAmountField.value
-            ? String(count1TicketAmountField.value)
-            : '',
+            ? Number(count1TicketAmountField.value)
+            : 0,
           count2Charge: null,
           _count2ChargeDesc: count2DescField.valueData?.text
             ? count2DescField.valueData?.text
@@ -555,8 +555,8 @@ export class ShellTicketComponent implements OnInit {
             ? count2SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count2FineAmount: count2TicketAmountField.value
-            ? String(count2TicketAmountField.value)
-            : '',
+            ? Number(count2TicketAmountField.value)
+            : 0,
           count3Charge: null,
           _count3ChargeDesc: count3DescField.valueData?.text
             ? count3DescField.valueData?.text
@@ -565,8 +565,8 @@ export class ShellTicketComponent implements OnInit {
             ? count3SectionField.valueData?.text.replace(/\s/g, '')
             : '',
           count3FineAmount: count3TicketAmountField.value
-            ? String(count3TicketAmountField.value)
-            : '',
+            ? Number(count3TicketAmountField.value)
+            : 0,
           _chargeCount: chargeCount,
           _amountOwing: 0,
         };

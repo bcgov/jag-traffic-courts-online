@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppRoutes } from 'app/app.routes';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
@@ -27,7 +27,7 @@ export class DisputeStepperComponent
   @ViewChild(MatStepper)
   private stepper: MatStepper;
 
-  public overviewTicket: TicketDispute;
+  public overviewTicket: TicketDisputeView;
 
   public disputantForm: FormGroup;
   public offence1Form: FormGroup;
@@ -162,11 +162,9 @@ export class DisputeStepperComponent
           payload.violationTicketNumber = this.ticket.violationTicketNumber;
           payload.violationTime = this.ticket.violationTime;
 
-          this.logger.info('DisputeStepperComponent::submitDispute', payload);
-
           this.busy = this.disputeResource
             .createTicketDispute(payload)
-            .subscribe((newDisputeTicket: TicketDispute) => {
+            .subscribe((newDisputeTicket: TicketDisputeView) => {
               this.disputeService.ticket$.next(newDisputeTicket);
 
               this.router.navigate([

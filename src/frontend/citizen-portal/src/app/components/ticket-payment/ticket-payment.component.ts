@@ -13,7 +13,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 export class TicketPaymentComponent implements OnInit {
   @ViewChild(CountSummaryComponent, { static: false }) countSummary;
   public busy: Subscription;
-  public ticket: TicketDispute;
+  public ticket: TicketDisputeView;
   public form: FormGroup;
 
   constructor(

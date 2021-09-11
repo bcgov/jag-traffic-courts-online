@@ -1,0 +1,1145 @@
+{
+  "x-generator": "NSwag v13.10.7.0 (NJsonSchema v10.3.9.0 (Newtonsoft.Json v12.0.0.0))",
+  "swagger": "2.0",
+  "info": {
+    "title": "Citizen API",
+    "description": "Citizen API, for Citizen Portal frontend",
+    "version": "V0.1"
+  },
+  "host": "localhost:6001",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/tickets/ticket": {
+      "get": {
+        "tags": [
+          "Ticket API"
+        ],
+        "operationId": "Tickets_Ticket",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ticketNumber",
+            "in": "query",
+            "pattern": "^[A-Z]{2}[0-9]{6,}$",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "time",
+            "in": "query",
+            "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfTicketDispute"
+            }
+          },
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/tickets/shellticket": {
+      "post": {
+        "tags": [
+          "Ticket API"
+        ],
+        "operationId": "Tickets_ShellTicket",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "createShellTicket",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateShellTicketCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfTicketDispute"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/tickets/pay": {
+      "get": {
+        "tags": [
+          "Ticket API"
+        ],
+        "operationId": "Tickets_Pay",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ticketNumber",
+            "in": "query",
+            "pattern": "^[A-Z]{2}[0-9]{6,}$",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "time",
+            "in": "query",
+            "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "counts",
+            "in": "query",
+            "pattern": "^[1-3]+(,[1-3]+)*$",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "amount",
+            "in": "query",
+            "pattern": "^\\d*\\.?\\d*$",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfTicketDispute"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Ticket API"
+        ],
+        "operationId": "Tickets_Pay2",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "id",
+            "in": "query",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "status",
+            "in": "query",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "amount",
+            "in": "query",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "confNo",
+            "in": "query",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "transId",
+            "in": "query",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfTicketDispute"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/tickets/imageupload": {
+      "post": {
+        "tags": [
+          "Ticket API"
+        ],
+        "operationId": "Tickets_ImageUpload",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "ViolationTicketNumber",
+            "in": "formData",
+            "x-nullable": true
+          },
+          {
+            "type": "string",
+            "name": "ViolationTime",
+            "in": "formData",
+            "x-nullable": true
+          },
+          {
+            "type": "file",
+            "name": "Image",
+            "in": "formData",
+            "x-nullable": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfTicketDispute"
+            }
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/lookup": {
+      "get": {
+        "tags": [
+          "Lookup API"
+        ],
+        "operationId": "Lookup_Get",
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiResultResponseOfLookupsAll"
+            }
+          },
+          "500": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ApiMessageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/disputes/ticketdispute": {
+      "post": {
+        "tags": [
+          "Dispute API"
+        ],
+        "operationId": "Disputes_TicketDispute",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "createDisputeCommand",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateDisputeCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/disputes/offencedispute": {
+      "post": {
+        "tags": [
+          "Dispute API"
+        ],
+        "operationId": "Disputes_OffenceDispute",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "createOffenceDisputeCommand",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateOffenceDisputeCommand"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ProblemDetails"
+            }
+          }
+        }
+      }
+    },
+    "/api/disputes/getdisputes": {
+      "get": {
+        "tags": [
+          "Dispute API"
+        ],
+        "operationId": "Disputes_GetDisputes",
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Dispute"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/disputes/getdispute/{disputeId}": {
+      "get": {
+        "tags": [
+          "Dispute API"
+        ],
+        "operationId": "Disputes_GetDispute",
+        "parameters": [
+          {
+            "type": "integer",
+            "name": "disputeId",
+            "in": "path",
+            "required": true,
+            "format": "int32",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Dispute"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiResultResponseOfTicketDispute": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/TicketDispute"
+        }
+      }
+    },
+    "TicketDispute": {
+      "type": "object",
+      "required": [
+        "discountAmount"
+      ],
+      "properties": {
+        "violationTicketNumber": {
+          "type": "string"
+        },
+        "violationTime": {
+          "type": "string"
+        },
+        "violationDate": {
+          "type": "string"
+        },
+        "disputant": {
+          "$ref": "#/definitions/Disputant"
+        },
+        "additional": {
+          "$ref": "#/definitions/Additional"
+        },
+        "offences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Offence"
+          }
+        },
+        "discountDueDate": {
+          "type": "string"
+        },
+        "discountAmount": {
+          "type": "number",
+          "format": "decimal"
+        }
+      }
+    },
+    "Disputant": {
+      "type": "object",
+      "properties": {
+        "lastName": {
+          "type": "string"
+        },
+        "givenNames": {
+          "type": "string"
+        },
+        "mailingAddress": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string"
+        },
+        "emailAddress": {
+          "type": "string"
+        },
+        "driverLicenseNumber": {
+          "type": "string"
+        },
+        "driverLicenseProvince": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        }
+      }
+    },
+    "Additional": {
+      "type": "object",
+      "required": [
+        "lawyerPresent",
+        "interpreterRequired",
+        "witnessPresent",
+        "requestReduction",
+        "requestMoreTime"
+      ],
+      "properties": {
+        "lawyerPresent": {
+          "type": "boolean"
+        },
+        "interpreterRequired": {
+          "type": "boolean"
+        },
+        "interpreterLanguage": {
+          "type": "string"
+        },
+        "witnessPresent": {
+          "type": "boolean"
+        },
+        "numberOfWitnesses": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
+        }
+      }
+    },
+    "Offence": {
+      "type": "object",
+      "required": [
+        "offenceNumber",
+        "ticketedAmount",
+        "amountDue",
+        "discountAmount",
+        "requestReduction",
+        "requestMoreTime",
+        "status"
+      ],
+      "properties": {
+        "offenceNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ticketedAmount": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "amountDue": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "violationDateTime": {
+          "type": "string"
+        },
+        "offenceDescription": {
+          "type": "string"
+        },
+        "vehicleDescription": {
+          "type": "string"
+        },
+        "discountAmount": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "discountDueDate": {
+          "type": "string"
+        },
+        "invoiceType": {
+          "type": "string"
+        },
+        "offenceAgreementStatus": {
+          "type": "string"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionAppearInCourt": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/DisputeStatus"
+        }
+      }
+    },
+    "DisputeStatus": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "New",
+        "Submitted",
+        "InProgress",
+        "Complete",
+        "Rejected"
+      ],
+      "enum": [
+        "New",
+        "Submitted",
+        "InProgress",
+        "Complete",
+        "Rejected"
+      ]
+    },
+    "ProblemDetails": {
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        },
+        "extensions": {
+          "type": "object",
+          "additionalProperties": {}
+        }
+      }
+    },
+    "ApiMessageResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateShellTicketCommand": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShellTicket"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "ShellTicket": {
+      "type": "object",
+      "properties": {
+        "violationTicketNumber": {
+          "type": "string"
+        },
+        "violationTime": {
+          "type": "string"
+        },
+        "violationDate": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "givenNames": {
+          "type": "string"
+        },
+        "driverLicenseNumber": {
+          "type": "string"
+        },
+        "birthdate": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "courtHearingLocation": {
+          "type": "string"
+        },
+        "detachmentLocation": {
+          "type": "string"
+        },
+        "count1Charge": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "count1FineAmount": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "count2Charge": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "count2FineAmount": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "count3Charge": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "count3FineAmount": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "photo": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "driverLicenseProvince": {
+          "type": "string"
+        }
+      }
+    },
+    "ApiResultResponseOfLookupsAll": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/LookupsAll"
+        }
+      }
+    },
+    "LookupsAll": {
+      "type": "object",
+      "properties": {
+        "courtLocations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CourtLocation"
+          }
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Language"
+          }
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Status"
+          }
+        },
+        "countries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Country"
+          }
+        },
+        "provinces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Province"
+          }
+        },
+        "statutes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Statute"
+          }
+        },
+        "policeLocations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PoliceLocation"
+          }
+        }
+      }
+    },
+    "CourtLocation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Language": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Status": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Country": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Province": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "countryCode": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Statute": {
+      "type": "object",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "PoliceLocation": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateDisputeCommand": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TicketDispute"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "CreateOffenceDisputeCommand": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/OffenceDispute"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "OffenceDispute": {
+      "type": "object",
+      "required": [
+        "offenceNumber"
+      ],
+      "properties": {
+        "violationTicketNumber": {
+          "type": "string"
+        },
+        "offenceNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "violationTime": {
+          "type": "string"
+        },
+        "violationDate": {
+          "type": "string"
+        },
+        "additional": {
+          "$ref": "#/definitions/Additional"
+        },
+        "offenceDisputeDetail": {
+          "$ref": "#/definitions/OffenceDisputeDetail"
+        }
+      }
+    },
+    "OffenceDisputeDetail": {
+      "type": "object",
+      "required": [
+        "requestReduction",
+        "requestMoreTime",
+        "status"
+      ],
+      "properties": {
+        "offenceAgreementStatus": {
+          "type": "string"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionAppearInCourt": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/DisputeStatus"
+        }
+      }
+    },
+    "Dispute": {
+      "type": "object",
+      "required": [
+        "id",
+        "lawyerPresent",
+        "interpreterRequired",
+        "witnessPresent",
+        "requestReduction",
+        "requestMoreTime"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "violationTicketNumber": {
+          "type": "string"
+        },
+        "disputantLastName": {
+          "type": "string"
+        },
+        "disputantFirstName": {
+          "type": "string"
+        },
+        "disputantMailingAddress": {
+          "type": "string"
+        },
+        "disputantMailingCity": {
+          "type": "string"
+        },
+        "disputantMailingProvince": {
+          "type": "string"
+        },
+        "disputantMailingPostalCode": {
+          "type": "string"
+        },
+        "disputantBirthDate": {
+          "type": "string"
+        },
+        "disputantEmailAddress": {
+          "type": "string"
+        },
+        "driverLicense": {
+          "type": "string"
+        },
+        "driverLicenseProvince": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "lawyerPresent": {
+          "type": "boolean"
+        },
+        "interpreterRequired": {
+          "type": "boolean"
+        },
+        "witnessPresent": {
+          "type": "boolean"
+        },
+        "numberOfWitnesses": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "interpreterLanguage": {
+          "type": "string"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
+        },
+        "confirmationNumber": {
+          "type": "string"
+        },
+        "offenceDisputeDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OffenceDisputeDetail2"
+          }
+        }
+      }
+    },
+    "OffenceDisputeDetail2": {
+      "type": "object",
+      "required": [
+        "id",
+        "offenceNumber",
+        "requestReduction",
+        "requestMoreTime",
+        "status",
+        "disputeId"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offenceNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestReduction": {
+          "type": "boolean"
+        },
+        "reductionAppearInCourt": {
+          "type": "boolean"
+        },
+        "requestMoreTime": {
+          "type": "boolean"
+        },
+        "reductionReason": {
+          "type": "string"
+        },
+        "moreTimeReason": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/DisputeStatus"
+        },
+        "offenceAgreementStatus": {
+          "type": "string"
+        },
+        "disputeId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "dispute": {
+          "$ref": "#/definitions/Dispute"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Citizen API",
+      "description": "Citizen API"
+    }
+  ]
+}

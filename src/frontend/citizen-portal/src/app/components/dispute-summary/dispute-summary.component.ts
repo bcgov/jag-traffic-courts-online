@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 })
 export class DisputeSummaryComponent implements OnInit {
   public busy: Subscription;
-  public ticket: TicketDispute;
+  public ticket: TicketDisputeView;
   public defaultLanguage: string;
   public useMockServices: boolean;
 
@@ -28,7 +28,7 @@ export class DisputeSummaryComponent implements OnInit {
     private logger: LoggerService,
     private translateService: TranslateService,
     private appConfigService: AppConfigService
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.defaultLanguage = this.translateService.getDefaultLang();
