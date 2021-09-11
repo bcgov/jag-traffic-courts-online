@@ -8,8 +8,8 @@ export class MockDisputeService {
   private _ticket: BehaviorSubject<TicketDisputeView>;
 
   constructor() {
-    const ticket = this.createTicketWithoutDisputes();
-    // const ticket = this.createTicketWithDispute();
+    // const ticket = this.createTicketWithoutDisputes();
+    const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDisputeView>(ticket);
   }
@@ -167,7 +167,7 @@ export class MockDisputeService {
       interpreterLanguage: 'SPA',
       witnessPresent: true,
       numberOfWitnesses: 3,
-      requestReduction: false,
+      requestReduction: true,
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
@@ -235,7 +235,7 @@ export class MockDisputeService {
     offence = {
       offenceNumber: 3,
       ticketedAmount: 167,
-      amountDue: 0,
+      amountDue: 200,
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
@@ -251,7 +251,7 @@ export class MockDisputeService {
       _allowApplyToAllCounts: false,
       _firstOffence: false,
       _within30days: false,
-      _amountDue: 0,
+      _amountDue: 200,
     };
 
     offence = Object.assign(offence, this.createOffenceDispute());

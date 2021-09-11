@@ -73,6 +73,10 @@ export class DisputeSubmitSuccessComponent implements OnInit {
       });
   }
 
+  public onPrint(): void {
+    window.print();
+  }
+
   private getListOfCountsToPay(): {
     countsToPay: string;
     countsToPayAmount: number;
