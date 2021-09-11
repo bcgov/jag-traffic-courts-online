@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { Address, AddressLine } from '@shared/models/address.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -29,6 +30,10 @@ export class FindTicketComponent implements OnInit {
 
   public notFound = false;
 
+
+  public addressFormControlNames: AddressLine[];
+  public hasMailingAddress: boolean;
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -46,7 +51,25 @@ export class FindTicketComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       time: [null, [Validators.required]],
+      mailingAddress: this.formUtilsService.buildAddressForm({
+        areRequired: ['street', 'city', 'provinceCode', 'countryCode', 'postal'],
+        useDefaults: ['countryCode']
+      }),
     });
+
+    this.addressFormControlNames = [
+      'street',
+      'street2',
+      'city',
+      'provinceCode',
+      'countryCode',
+      'postal'
+    ];
+    this.hasMailingAddress = Address.isNotEmpty(this.mailingAddress.value);
+  }
+
+  public get mailingAddress(): FormGroup {
+    return this.form.get('mailingAddress') as FormGroup;
   }
 
   public onViewTicketExample(): void {

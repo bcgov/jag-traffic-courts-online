@@ -29,7 +29,25 @@ import { PhonePipe } from './pipes/phone.pipe';
 import { PostalPipe } from './pipes/postal.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
-import { YesNoPipe } from './pipes/yes-no.pipe';
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogContentDirective } from './dialogs/dialog-content.directive';
+import { PageComponent } from './components/page/page.component';
+import { PageFooterComponent } from './components/page-footer/page-footer.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { AlertComponent } from './components/alert/alert.component';
+import { ConfigModule } from 'app/config/config.module';
+import { PostalPipe } from './pipes/postal.pipe';
+import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
+import { HeaderComponent } from './components/header/header.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { FooterComponent } from './components/footer/footer.component';
+import { FeatureFlagDirective } from './directives/feature-flag.directive';
+import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
+import { ResolutionFooterComponent } from './components/resolution-footer/resolution-footer.component';
+import { ResolutionHeaderComponent } from './components/resolution-header/resolution-header.component';
+import { AddressAutocompleteComponent } from './components/address-autocomplete/address-autocomplete.component';
+import { AddressFormComponent } from './components/address-form/address-form.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +74,8 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     StepperPageComponent,
     ResolutionFooterComponent,
     ResolutionHeaderComponent,
+    AddressAutocompleteComponent,
+    AddressFormComponent
   ],
   imports: [
     CommonModule,
@@ -98,6 +118,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     ResolutionHeaderComponent,
     FeatureFlagDirective,
     StepperPageComponent,
+    AddressFormComponent
   ],
   entryComponents: [ConfirmDialogComponent],
 })
