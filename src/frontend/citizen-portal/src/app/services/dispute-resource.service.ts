@@ -68,9 +68,10 @@ export class DisputeResourceService {
     ticketNumber: string;
     time: string;
     counts: string;
+    amount: number;
   }): Observable<any> {
 
-    return this.ticketAPIService.ticketsPay(params.ticketNumber, params.time, params.counts).pipe(
+    return this.ticketAPIService.ticketsPay(params.ticketNumber, params.time, params.counts, params.amount.toString()).pipe(
       map((response: ApiHttpResponse<any>) =>
         response ? response.result : null
       ),
