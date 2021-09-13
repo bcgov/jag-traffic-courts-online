@@ -36,6 +36,9 @@ spec:
           env:
             - name: Serilog__MinimumLevel
               value: Debug
+          envFrom:
+            - secretRef:
+                name: rabbitmq-configuration
           resources:
             limits:
               cpu: 100m
@@ -63,14 +66,6 @@ spec:
               periodSeconds: 10
               successThreshold: 1
               failureThreshold: 3
-          #volumeMounts:
-          #- name: configuration-volume
-          #mountPath: /usr/share/nginx/html/assets/app.config.json
-          #subPath: app.config.json
-      #volumes:
-      #- name: configuration-volume
-      #configMap:
-      #name: citizen-web-configuration
   triggers:
     - type: ConfigChange
     - type: ImageChange
