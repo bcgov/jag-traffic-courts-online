@@ -30,4 +30,4 @@ jobs:
             --tag ${IMAGE} \
             --file ${DOCKER_FILE} \
             ${CONTEXT}
-            docker push ${IMAGE}
+          docker push ${IMAGE}
