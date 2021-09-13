@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-page-footer',
-  templateUrl: './page-footer.component.html',
-  styleUrls: ['./page-footer.component.scss'],
+  selector: 'app-stepper-footer',
+  templateUrl: './stepper-footer.component.html',
+  styleUrls: ['./stepper-footer.component.scss'],
 })
-export class PageFooterComponent implements OnInit {
+export class StepperFooterComponent implements OnInit {
   @Input() public hasSecondaryAction: boolean;
   @Input() public disableSave: boolean;
 

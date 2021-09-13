@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 
 @Component({
   selector: 'app-resolution-header',
@@ -7,9 +7,9 @@ import { TicketDispute } from '@shared/models/ticketDispute.model';
   styleUrls: ['./resolution-header.component.scss'],
 })
 export class ResolutionHeaderComponent implements OnInit {
-  @Input() public ticket: TicketDispute;
+  @Input() public ticket: TicketDisputeView;
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }

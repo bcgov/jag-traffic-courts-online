@@ -10,7 +10,7 @@
 
   <div class="row d-sm-block d-md-none"
        *ngIf="notFound">
-    <div class="col-md-12">
+    <div class="col">
       <app-alert type="danger"
                  icon="error">
         <ng-container #alertContent
@@ -24,7 +24,7 @@
 
   <!-- MOBILE VIEW -->
   <div class="row d-sm-block d-md-none">
-    <div class="col-md-12 my-2">
+    <div class="col my-2">
       <button type="button"
               mat-flat-button
               color="primary"
@@ -44,7 +44,7 @@
               (ngSubmit)="onSearch()"
               novalidate>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Ticket number</mat-label>
                 <input formControlName="ticketNumber"
@@ -65,7 +65,10 @@
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>
             </div>
-            <div class="col-md-12">
+          </div>
+
+          <div class="row">
+            <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Ticket time</mat-label>
                 <input matInput
@@ -99,9 +102,12 @@
       </div>
     </div>
     <div class="flex-2-col info d-xs-none d-sm-none d-md-block">
+      <div class="d-md-none d-lg-block vertical-or-separator">
+        OR
+      </div>
       <div class="row"
            *ngIf="notFound">
-        <div class="col-md-12">
+        <div class="col">
           <app-alert type="danger"
                      icon="error">
             <ng-container #alertContent
@@ -113,7 +119,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col">
           <button type="button"
                   mat-flat-button
                   color="primary"

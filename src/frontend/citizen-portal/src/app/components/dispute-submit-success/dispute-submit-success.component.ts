@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
@@ -14,14 +14,14 @@ import { Subscription } from 'rxjs';
 })
 export class DisputeSubmitSuccessComponent implements OnInit {
   public busy: Subscription;
-  public ticket: TicketDispute;
+  public ticket: TicketDisputeView;
 
   constructor(
     private router: Router,
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private logger: LoggerService
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.disputeService.ticket$.subscribe((ticket) => {
@@ -71,6 +71,10 @@ export class DisputeSubmitSuccessComponent implements OnInit {
           window.location.href = response.redirectUrl;
         }
       });
+  }
+
+  public onPrint(): void {
+    window.print();
   }
 
   private getListOfCountsToPay(): {

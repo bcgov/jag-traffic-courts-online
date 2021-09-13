@@ -1,0 +1,26 @@
+<div class="row mt-4">
+  <div *ngIf="hasSecondaryAction"
+       class="col col-lg-4">
+    <button id="secondaryButton"
+            mat-stroked-button
+            type="button"
+            color="primary"
+            class="large"
+            (click)="onSecondaryAction()">
+      <mat-icon inline="true">{{ secondaryActionButtonIcon }}</mat-icon>
+      {{ secondaryActionButtonKey | translate }}
+    </button>
+  </div>
+  <div class="col offset-lg-4 col-lg-4">
+    <button id="primaryButton"
+            mat-flat-button
+            type="button"
+            color="primary"
+            class="large"
+            [disabled]="disableSave"
+            (click)="onSave()">
+      {{ saveButtonKey | translate }}
+      <mat-icon inline="true">keyboard_arrow_right</mat-icon>
+    </button>
+  </div>
+</div>
