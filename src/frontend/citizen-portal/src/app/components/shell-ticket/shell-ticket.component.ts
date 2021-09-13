@@ -23,6 +23,7 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { AddressLine } from '@shared/models/address.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
@@ -64,6 +65,9 @@ export class ShellTicketComponent implements OnInit {
   public filteredStatutes2: Observable<Config<number>[]>;
   public filteredStatutes3: Observable<Config<number>[]>;
 
+  public addressFormControlNames: AddressLine[];
+  // public hasMailingAddress: boolean;
+
   private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
 
@@ -99,12 +103,16 @@ export class ShellTicketComponent implements OnInit {
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
       gender: [null, [Validators.required]],
-      address: [null, [Validators.required]],
-      city: [null, [Validators.required]],
-      province: [null, [Validators.required]],
-      postalCode: [null, [Validators.required]],
+      // address: [null, [Validators.required]],
+      // city: [null, [Validators.required]],
+      // province: [null, [Validators.required]],
+      // postalCode: [null, [Validators.required]],
       driverLicenseNumber: [null, [Validators.required]],
       driverLicenseProvince: [null, [Validators.required]],
+      mailingAddress: this.formUtilsService.buildAddressForm({
+        areRequired: ['street', 'city', 'provinceCode', 'countryCode', 'postalCode'],
+        useDefaults: ['countryCode']
+      }),
 
       count1Charge: [
         null,
@@ -183,6 +191,16 @@ export class ShellTicketComponent implements OnInit {
       this.onChargeCountChange(selectedValue);
     });
     this.onChargeCountChange(this._chargeCount.value);
+
+    this.addressFormControlNames = [
+      'street',
+      'street2',
+      'city',
+      'provinceCode',
+      'countryCode',
+      'postalCode'
+    ];
+    // this.hasMailingAddress = Address.isNotEmpty(this.mailingAddressTest.value);
   }
 
   public onClearBirthdate(): void {
@@ -536,6 +554,7 @@ export class ShellTicketComponent implements OnInit {
           driverLicenseProvince: '',
           courtHearingLocation: '',
           detachmentLocation: '',
+          mailingAddress: null,
 
           count1Charge: null,
           _count1ChargeDesc: count1DescField.valueData?.text
@@ -650,5 +669,9 @@ export class ShellTicketComponent implements OnInit {
 
   public get count3FineAmount(): FormControl {
     return this.form.get('count3FineAmount') as FormControl;
+  }
+
+  public get mailingAddress(): FormGroup {
+    return this.form.get('mailingAddress') as FormGroup;
   }
 }

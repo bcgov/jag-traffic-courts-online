@@ -145,6 +145,16 @@
           </div>
         </section>
 
+        <section class="mb-3">
+          Mailing address
+          <!-- [showAddressFields]="hasMailingAddress" -->
+          <app-address-form [form]="mailingAddress"
+                            [showManualButton]="true"
+                            [formControlNames]="addressFormControlNames"></app-address-form>
+
+        </section>
+
+        <!--
         <section>
           <div class="row">
             <div class="col-lg-6">
@@ -187,6 +197,7 @@
             </div>
           </div>
         </section>
+      -->
 
         <section>
           <div class="row">

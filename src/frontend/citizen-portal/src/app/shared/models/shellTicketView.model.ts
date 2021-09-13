@@ -1,4 +1,5 @@
 import { ShellTicket } from 'app/api';
+import { Address } from './address.model';
 
 export interface ShellTicketView extends ShellTicket {
   _chargeCount: number;
@@ -9,4 +10,6 @@ export interface ShellTicketView extends ShellTicket {
   _count1ChargeSection: string;
   _count2ChargeSection: string;
   _count3ChargeSection: string;
+  // TODO remove once backend has added this to their side
+  mailingAddress: Address;
 }

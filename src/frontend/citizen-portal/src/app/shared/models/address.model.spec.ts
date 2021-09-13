@@ -1,8 +1,6 @@
-import { AddressUtils } from '@lib/utils/address-utils.class';
 import { Address } from '@shared/models/address.model';
 
 describe('ArrayUtils', () => {
-  const util = AddressUtils;
 
   describe('instanceOf', () => {
     let address: Address;
@@ -14,7 +12,7 @@ describe('ArrayUtils', () => {
         street: '65 Pine Street',
         street2: null,
         city: 'Toronto',
-        postal: 'M4E 2B6',
+        postalCode: 'M4E 2B6',
         id: 1
       };
     });
@@ -44,7 +42,7 @@ describe('ArrayUtils', () => {
         street: '65 Pine Street',
         street2: null,
         city: 'Toronto',
-        postal: 'M4E 2B6',
+        postalCode: 'M4E 2B6',
         id: 1
       };
     });
@@ -75,7 +73,7 @@ describe('ArrayUtils', () => {
         street: '65 Pine Street',
         street2: null,
         city: 'Toronto',
-        postal: 'M4E 2B6',
+        postalCode: 'M4E 2B6',
         id: 1
       };
     });

@@ -3,6 +3,7 @@ import {
   AbstractControl,
   FormBuilder, FormGroup, Validators
 } from '@angular/forms';
+import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { FormGroupValidators } from '@core/validators/form-group.validators';
@@ -25,6 +26,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
 
   constructor(
     protected formBuilder: FormBuilder,
+    protected formUtilsService: FormUtilsService,
     protected logger: LoggerService
   ) {
     super(formBuilder, logger);
@@ -239,10 +241,14 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     return this.formBuilder.group({
       lastName: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
-      mailingAddress: [null, [Validators.required]],
-      postalCode: [null],
-      city: [null],
-      province: [null],
+      mailingAddressTest: this.formUtilsService.buildAddressForm({
+        areRequired: ['street', 'city', 'provinceCode', 'countryCode', 'postalCode'],
+        useDefaults: ['countryCode']
+      }),
+      // mailingAddress: [null, [Validators.required]],
+      // postalCode: [null],
+      // city: [null],
+      // province: [null],
       driverLicenseNumber: [null],
       driverLicenseProvince: [null],
       emailAddress: [null, [Validators.required, Validators.email]],

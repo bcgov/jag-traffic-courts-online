@@ -16,7 +16,7 @@ export class Address {
   city: string = null;
   provinceCode: string = null;
   countryCode: string = null;
-  postal: string = null;
+  postalCode: string = null;
 
   constructor(
     countryCode: string = null,
@@ -24,7 +24,7 @@ export class Address {
     street: string = null,
     street2: string = null,
     city: string = null,
-    postal: string = null,
+    postalCode: string = null,
     id: number = 0
   ) {
     this.street = street;
@@ -32,7 +32,7 @@ export class Address {
     this.city = city;
     this.provinceCode = provinceCode;
     this.countryCode = countryCode;
-    this.postal = postal;
+    this.postalCode = postalCode;
   }
 
   /**
@@ -43,8 +43,8 @@ export class Address {
    * creating an empty Address.
    */
   public static instanceOf(address: Address) {
-    const { id = 0, street, street2 = null, city, provinceCode, countryCode, postal } = address;
-    return new Address(countryCode, provinceCode, street, street2, city, postal, id);
+    const { id = 0, street, street2 = null, city, provinceCode, countryCode, postalCode } = address;
+    return new Address(countryCode, provinceCode, street, street2, city, postalCode, id);
   }
 
   /**

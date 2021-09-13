@@ -66,7 +66,7 @@ export class AddressFormComponent implements OnInit {
       'street',
       'street2',
       'city',
-      'postal'
+      'postalCode'
     ];
     this.countries = this.configService.countries;
     this.provinces = this.configService.provinces;
@@ -83,8 +83,8 @@ export class AddressFormComponent implements OnInit {
     return this.form.get('provinceCode') as FormControl;
   }
 
-  public get postal(): FormControl {
-    return this.form.get('postal') as FormControl;
+  public get postalCode(): FormControl {
+    return this.form.get('postalCode') as FormControl;
   }
 
   public showFormControl(formControlName: AddressLine): boolean {
@@ -123,7 +123,7 @@ export class AddressFormComponent implements OnInit {
       .subscribe(([prevCountry, nextCountry]: [string, string]) => {
         if (prevCountry !== nextCountry) {
           this.provinceCode.reset();
-          this.postal.reset();
+          this.postalCode.reset();
         }
         this.setAddress(nextCountry);
       });
@@ -141,19 +141,19 @@ export class AddressFormComponent implements OnInit {
   }
 
   private setAddressLabels(countryCode: string = Country.CANADA): void {
-    const { province, postal } = this.addressConfig(countryCode);
+    const { province, postalCode } = this.addressConfig(countryCode);
     this.provinceLabel = province;
-    this.postalLabel = postal.label;
-    this.postalMask = postal.mask;
+    this.postalLabel = postalCode.label;
+    this.postalMask = postalCode.mask;
   }
 
-  private addressConfig(countryCode: string): { province: string, postal: { label: string, mask: string } } {
+  private addressConfig(countryCode: string): { province: string, postalCode: { label: string, mask: string } } {
     switch (countryCode) {
       case Country.UNITED_STATES:
-        return { province: 'State', postal: { label: 'Zip Code', mask: '00000' } };
+        return { province: 'State', postalCode: { label: 'Zip Code', mask: '00000' } };
       case Country.CANADA:
       default:
-        return { province: 'Province', postal: { label: 'Postal Code', mask: 'S0S 0S0' } };
+        return { province: 'Province', postalCode: { label: 'Postal Code', mask: 'S0S 0S0' } };
     }
   }
 }

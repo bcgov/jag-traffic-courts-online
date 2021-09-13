@@ -1,5 +1,6 @@
 <app-address-form-autocomplete [inBc]="inBc"
                                (autocompleteAddress)="onAutocomplete($event)">
+  <!--
   <button *ngIf="showManualButton"
           mat-button
           type="button"
@@ -9,10 +10,11 @@
     <mat-icon>add</mat-icon>
     Add address manually
   </button>
+  -->
 </app-address-form-autocomplete>
 
-<ng-container *ngIf="showAddressFields"
-              [formGroup]="form">
+<!-- *ngIf="showAddressFields" -->
+<ng-container [formGroup]="form">
 
   <div class="row">
     <div *ngIf="showFormControl('countryCode')"
@@ -54,7 +56,6 @@
       <mat-form-field class="w-100">
         <mat-label>Street address</mat-label>
         <input matInput
-               placeholder="Street Address"
                formControlName="street"
                [required]="isRequired('street')">
         <mat-error>Required</mat-error>
@@ -67,7 +68,6 @@
       <mat-form-field class="w-100">
         <mat-label>Address line 2</mat-label>
         <input matInput
-               placeholder="Street Address 2"
                formControlName="street2"
                [required]="isRequired('street2')">
         <mat-error>Required</mat-error>
@@ -80,22 +80,22 @@
       <mat-form-field class="w-100">
         <mat-label>City</mat-label>
         <input matInput
-               placeholder="City"
                formControlName="city"
                [required]="isRequired('city')">
         <mat-error>Required</mat-error>
       </mat-form-field>
     </div>
-    <div *ngIf="showFormControl('postal')"
+    <div *ngIf="showFormControl('postalCode')"
          class="col-md-6"
-         [class]="getFormControlOrder('postal')">
+         [class]="getFormControlOrder('postalCode')">
 
       <mat-form-field class="w-100">
         <mat-label>{{ postalLabel }}</mat-label>
         <input matInput
                [mask]="postalMask"
-               formControlName="postal"
-               [required]="isRequired('postal')">
+               formControlName="postalCode"
+               [showMaskTyped]="true"
+               [required]="isRequired('postalCode')">
         <mat-error>Required</mat-error>
       </mat-form-field>
     </div>

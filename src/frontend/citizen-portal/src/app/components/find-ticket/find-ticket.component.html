@@ -8,16 +8,6 @@
     </ng-container>
   </app-tco-page-header>
 
-
-  <section class="mb-3">
-    Address
-    <app-address-form [form]="mailingAddress"
-                      [showAddressFields]="hasMailingAddress"
-                      [showManualButton]="true"
-                      [formControlNames]="addressFormControlNames"></app-address-form>
-
-  </section>
-
   <div class="row d-sm-block d-md-none"
        *ngIf="notFound">
     <div class="col">

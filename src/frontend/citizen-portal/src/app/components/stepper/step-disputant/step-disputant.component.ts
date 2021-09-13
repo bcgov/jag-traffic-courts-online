@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
+import { Address, AddressLine } from '@shared/models/address.model';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -17,8 +18,7 @@ import { DisputeService } from 'app/services/dispute.service';
 })
 export class StepDisputantComponent
   extends BaseDisputeFormPage
-  implements OnInit
-{
+  implements OnInit {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
@@ -31,6 +31,9 @@ export class StepDisputantComponent
   public maxDateOfBirth: Date;
 
   private MINIMUM_AGE = 18;
+
+  public addressFormControlNames: AddressLine[];
+  // public hasMailingAddress: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -60,6 +63,16 @@ export class StepDisputantComponent
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepDisputantForm;
     this.patchForm();
+
+    this.addressFormControlNames = [
+      'street',
+      'street2',
+      'city',
+      'provinceCode',
+      'countryCode',
+      'postalCode'
+    ];
+    // this.hasMailingAddress = Address.isNotEmpty(this.mailingAddressTest.value);
   }
 
   public onBack() {
@@ -84,5 +97,9 @@ export class StepDisputantComponent
 
   public get emailAddress(): FormControl {
     return this.form.get('emailAddress') as FormControl;
+  }
+
+  public get mailingAddressTest(): FormGroup {
+    return this.form.get('mailingAddressTest') as FormGroup;
   }
 }

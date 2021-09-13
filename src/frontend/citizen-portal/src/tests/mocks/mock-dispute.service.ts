@@ -1,7 +1,9 @@
 import { AddressAutocompleteFindResponse, AddressAutocompleteRetrieveResponse } from '@shared/models/address-autocomplete.model';
-import { Disputant } from '@shared/models/disputant.model';
-import { Offence } from '@shared/models/offence.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { Address } from '@shared/models/address.model';
+import { DisputantView } from '@shared/models/disputantView.model';
+import { OffenceView } from '@shared/models/offenceView.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { TicketDispute } from 'app/api';
 import * as faker from 'faker';
 import { BehaviorSubject } from 'rxjs';
 
@@ -329,6 +331,7 @@ export class MockDisputeService {
   }
 
   private createDisputant(): DisputantView {
+    const mailingAddress = new Address('CA', 'BC', faker.address.streetAddress(), faker.address.secondaryAddress(), faker.address.city(), 'V8R3E3', 0);
     return {
       lastName: faker.name.lastName(),
       givenNames: faker.name.firstName(),
@@ -341,6 +344,7 @@ export class MockDisputeService {
       driverLicenseNumber: '2342342',
       driverLicenseProvince: 'BC',
       phoneNumber: '2506653434', // faker.phone.phoneNumberFormat(10),
+      mailingAddressTest: mailingAddress
     };
   }
 

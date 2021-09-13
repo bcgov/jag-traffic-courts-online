@@ -30,6 +30,16 @@
           </div>
         </div>
 
+        <section class="mb-3">
+          Mailing address
+          <!-- [showAddressFields]="hasMailingAddress" -->
+          <app-address-form [form]="mailingAddressTest"
+                            [showManualButton]="true"
+                            [formControlNames]="addressFormControlNames"></app-address-form>
+
+        </section>
+
+        <!--
         <div class="row">
           <div class="col-md-6">
             <mat-form-field class="w-100">
@@ -72,6 +82,7 @@
             </mat-form-field>
           </div>
         </div>
+      -->
 
         <div class="row">
           <div class="col-md-6">

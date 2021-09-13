@@ -135,8 +135,6 @@ export class FormUtilsService {
     return hasError ? result : null;
   }
 
-
-
   /**
    * @description
    * Provide an address form group.
@@ -154,34 +152,13 @@ export class FormUtilsService {
     exclude?: AddressLine[];
   } = null): FormGroup {
     const controlsConfig = {
-      id: [
-        0,
-        []
-      ],
-      street: [
-        { value: null, disabled: false },
-        []
-      ],
-      street2: [
-        { value: null, disabled: false },
-        []
-      ],
-      city: [
-        { value: null, disabled: false },
-        []
-      ],
-      provinceCode: [
-        { value: null, disabled: false },
-        []
-      ],
-      countryCode: [
-        { value: null, disabled: false },
-        []
-      ],
-      postal: [
-        { value: null, disabled: false },
-        []
-      ]
+      id: [0, []],
+      street: [{ value: null, disabled: false }, []],
+      street2: [{ value: null, disabled: false }, []],
+      city: [{ value: null, disabled: false }, []],
+      provinceCode: [{ value: null, disabled: false }, []],
+      countryCode: [{ value: null, disabled: false }, []],
+      postalCode: [{ value: null, disabled: false }, []]
     };
 
     Object.keys(controlsConfig)
