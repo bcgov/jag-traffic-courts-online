@@ -1,6 +1,5 @@
 <app-address-form-autocomplete [inBc]="inBc"
                                (autocompleteAddress)="onAutocomplete($event)">
-  <!--
   <button *ngIf="showManualButton"
           mat-button
           type="button"
@@ -10,11 +9,10 @@
     <mat-icon>add</mat-icon>
     Add address manually
   </button>
-  -->
 </app-address-form-autocomplete>
 
-<!-- *ngIf="showAddressFields" -->
-<ng-container [formGroup]="form">
+<ng-container [formGroup]="form"
+              *ngIf="showAddressFields">
 
   <div class="row">
     <div *ngIf="showFormControl('countryCode')"

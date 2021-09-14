@@ -33,7 +33,7 @@ export class StepDisputantComponent
   private MINIMUM_AGE = 18;
 
   public addressFormControlNames: AddressLine[];
-  // public hasMailingAddress: boolean;
+  public hasMailingAddress: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -72,7 +72,7 @@ export class StepDisputantComponent
       'countryCode',
       'postalCode'
     ];
-    // this.hasMailingAddress = Address.isNotEmpty(this.mailingAddressTest.value);
+    this.hasMailingAddress = Address.isNotEmpty(this.mailingAddress.value);
   }
 
   public onBack() {
@@ -99,7 +99,7 @@ export class StepDisputantComponent
     return this.form.get('emailAddress') as FormControl;
   }
 
-  public get mailingAddressTest(): FormGroup {
-    return this.form.get('mailingAddressTest') as FormGroup;
+  public get mailingAddress(): FormGroup {
+    return this.form.get('mailingAddress') as FormGroup;
   }
 }

@@ -147,57 +147,12 @@
 
         <section class="mb-3">
           Mailing address
-          <!-- [showAddressFields]="hasMailingAddress" -->
           <app-address-form [form]="mailingAddress"
                             [showManualButton]="true"
+                            [showAddressFields]="hasMailingAddress"
                             [formControlNames]="addressFormControlNames"></app-address-form>
 
         </section>
-
-        <!--
-        <section>
-          <div class="row">
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Address</mat-label>
-                <input matInput
-                       formControlName="address" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>City</mat-label>
-                <input matInput
-                       formControlName="city" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Province</mat-label>
-                <input matInput
-                       formControlName="province" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Postal code</mat-label>
-                <input matInput
-                       mask="S0S 0S0"
-                       oninput="this.value = this.value.toUpperCase()"
-                       formControlName="postalCode"
-                       [showMaskTyped]="true" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-      -->
 
         <section>
           <div class="row">

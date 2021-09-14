@@ -1,7 +1,4 @@
 export type AddressLine = Exclude<keyof Address, 'id'>;
-export type AddressType = 'verifiedAddress' | 'physicalAddress' | 'mailingAddress';
-
-export const addressTypes: AddressType[] = ['verifiedAddress', 'mailingAddress', 'physicalAddress'];
 
 /**
  * @description
@@ -54,7 +51,6 @@ export class Address {
    * NOTE: Most use cases don't require `street2`, and therefore it has
    * been excluded by default as optional.
    */
-  // TODO move to AddressUtils
   public static isEmpty(address: Address, omitList: (keyof Address)[] = optionalAddressLineItems): boolean {
     if (!address) {
       return true;
@@ -69,9 +65,8 @@ export class Address {
    * @description
    * Checks for a partial address.
    */
-  // TODO move to AddressUtils
   public static isNotEmpty(address: Address, omitList?: (keyof Address)[]): boolean {
-    if (!address) {
+    if (!address || address.id === 0) {
       return false;
     }
 

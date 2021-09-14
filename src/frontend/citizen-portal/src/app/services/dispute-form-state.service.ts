@@ -241,14 +241,10 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
     return this.formBuilder.group({
       lastName: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
-      mailingAddressTest: this.formUtilsService.buildAddressForm({
+      mailingAddress: this.formUtilsService.buildAddressForm({
         areRequired: ['street', 'city', 'provinceCode', 'countryCode', 'postalCode'],
         useDefaults: ['countryCode']
       }),
-      // mailingAddress: [null, [Validators.required]],
-      // postalCode: [null],
-      // city: [null],
-      // province: [null],
       driverLicenseNumber: [null],
       driverLicenseProvince: [null],
       emailAddress: [null, [Validators.required, Validators.email]],

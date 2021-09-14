@@ -3,7 +3,6 @@ import { Address } from '@shared/models/address.model';
 import { DisputantView } from '@shared/models/disputantView.model';
 import { OffenceView } from '@shared/models/offenceView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
-import { TicketDispute } from 'app/api';
 import * as faker from 'faker';
 import { BehaviorSubject } from 'rxjs';
 
@@ -91,7 +90,7 @@ export class MockDisputeService {
     return resp;
   }
 
-  private createTicketWithoutDisputes(): TicketDispute {
+  private createTicketWithoutDisputes(): TicketDisputeView {
     const soonDate =
       faker.date.soon().getFullYear() +
       '-' +
@@ -335,16 +334,15 @@ export class MockDisputeService {
     return {
       lastName: faker.name.lastName(),
       givenNames: faker.name.firstName(),
-      mailingAddress: faker.address.streetAddress(),
       city: faker.address.city(),
       province: faker.address.state(),
       postalCode: 'V8R3E3',
-      birthdate: null, // faker.date.past().toDateString(),
+      birthdate: null,
       emailAddress: faker.internet.email(),
       driverLicenseNumber: '2342342',
       driverLicenseProvince: 'BC',
-      phoneNumber: '2506653434', // faker.phone.phoneNumberFormat(10),
-      mailingAddressTest: mailingAddress
+      phoneNumber: '2506653434',
+      mailingAddress: mailingAddress
     };
   }
 

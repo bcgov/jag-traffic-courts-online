@@ -23,7 +23,7 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { AddressLine } from '@shared/models/address.model';
+import { Address, AddressLine } from '@shared/models/address.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
@@ -66,7 +66,7 @@ export class ShellTicketComponent implements OnInit {
   public filteredStatutes3: Observable<Config<number>[]>;
 
   public addressFormControlNames: AddressLine[];
-  // public hasMailingAddress: boolean;
+  public hasMailingAddress: boolean;
 
   private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
@@ -103,10 +103,6 @@ export class ShellTicketComponent implements OnInit {
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
       gender: [null, [Validators.required]],
-      // address: [null, [Validators.required]],
-      // city: [null, [Validators.required]],
-      // province: [null, [Validators.required]],
-      // postalCode: [null, [Validators.required]],
       driverLicenseNumber: [null, [Validators.required]],
       driverLicenseProvince: [null, [Validators.required]],
       mailingAddress: this.formUtilsService.buildAddressForm({
@@ -200,7 +196,7 @@ export class ShellTicketComponent implements OnInit {
       'countryCode',
       'postalCode'
     ];
-    // this.hasMailingAddress = Address.isNotEmpty(this.mailingAddressTest.value);
+    this.hasMailingAddress = Address.isNotEmpty(this.mailingAddress.value);
   }
 
   public onClearBirthdate(): void {
