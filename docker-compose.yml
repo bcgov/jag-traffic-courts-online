@@ -41,7 +41,7 @@ services:
       OAUTH__CLIENTID: ${OAUTH__CLIENTID}
       OAUTH__SECRET: ${OAUTH__SECRET}
       RSI__BASEADDRESS: ${RSI__BASEADDRESS}
-      RSI__OPERATIONMODE: FAKE
+      RSI__OPERATIONMODE:
     ports:
       - "5100:8080"
     restart: always

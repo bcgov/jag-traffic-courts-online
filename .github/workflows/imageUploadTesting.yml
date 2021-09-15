@@ -1,3 +1,6 @@
+# This is a work flow for testing build and upload image to openshift.
+# the branches name can be changed according to what you want to test.
+# It is not a roution work flow.
 name: Main-Build .NET API Image and Push to Openshift Registry
 on:
   push:
