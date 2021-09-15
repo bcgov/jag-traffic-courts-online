@@ -58,6 +58,10 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    ## following is used for testing nginx.conf locally. No need to build the citizen-portal every
+    ## time we change the nginx.conf
+    #volumes:
+    #  - ./src/frontend/citizen-portal/nginx.conf:/opt/app-root/etc/nginx.default.d/default.conf
     depends_on: [citizen-api]
     networks:
       - traffic-court-net
