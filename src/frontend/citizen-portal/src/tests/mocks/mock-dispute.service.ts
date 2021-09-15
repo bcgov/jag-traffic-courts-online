@@ -10,8 +10,8 @@ export class MockDisputeService {
   private _ticket: BehaviorSubject<TicketDisputeView>;
 
   constructor() {
-    // const ticket = this.createTicketWithoutDisputes();
-    const ticket = this.createTicketWithDispute();
+    const ticket = this.createTicketWithoutDisputes();
+    // const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDisputeView>(ticket);
   }
@@ -130,7 +130,7 @@ export class MockDisputeService {
       _within30days: true,
     };
 
-    ticket.disputant = this.createDisputant();
+    ticket.disputant = this.createEmptyDisputant();
 
     // --------------------------
     let offence: OffenceView = {
@@ -343,6 +343,19 @@ export class MockDisputeService {
       driverLicenseProvince: 'BC',
       phoneNumber: '2506653434',
       mailingAddress: mailingAddress
+    };
+  }
+
+  private createEmptyDisputant(): DisputantView {
+    return {
+      lastName: null,
+      givenNames: null,
+      birthdate: null,
+      emailAddress: null,
+      driverLicenseNumber: null,
+      driverLicenseProvince: null,
+      phoneNumber: null,
+      mailingAddress: null
     };
   }
 

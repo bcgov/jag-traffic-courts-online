@@ -22,7 +22,7 @@ export class Address {
     street2: string = null,
     city: string = null,
     postalCode: string = null,
-    id: number = 0
+    id: number = null
   ) {
     this.street = street;
     this.street2 = street2;
