@@ -4,11 +4,13 @@
   "scripts": {
     "ng": "ng",
     "configure": "ts-node setenv.ts",
-    "start": "npm run configure -- --environment=dev && ng serve --proxy-config proxy.conf.json",
-    "build-dev": "npm run configure -- --environment=dev && ng build --source-map=false",
-    "build-prod": "npm run configure -- --environment=prod && ng build --prod  --source-map=false",
+    "start": "yarn run configure -- --environment=dev && ng serve --proxy-config proxy.conf.json",
+    "build-dev": "yarn run configure -- --environment=dev && ng build --source-map=false",
+    "build-prod": "yarn run configure -- --environment=prod && ng build --configuration production --source-map=false",
     "test": "ng test",
     "lint": "ng lint",
+    "audit": "yarn-audit-fix --dry-run",
+    "audit:fix": "yarn-audit-fix",
     "e2e": "ng e2e",
     "coverage": "ng test --browsers=ChromeHeadless --watch=false --code-coverage",
     "cypress": "./node_modules/.bin/cypress run --project e2e",
@@ -66,6 +68,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~10.1.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "yarn-audit-fix": "^7.0.4"
   }
 }
