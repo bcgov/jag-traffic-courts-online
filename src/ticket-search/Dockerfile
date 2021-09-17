@@ -13,5 +13,4 @@ WORKDIR /opt/app-root/app
 EXPOSE 8080
 COPY --from=build /opt/app-root/app .
 
-ENV DOTNET_ASSEMBLY_NAME=Gov.TicketSearch.dll
-ENTRYPOINT ["sh","-c", "dotnet ${DOTNET_ASSEMBLY_NAME}"]
+ENTRYPOINT ["dotnet", "Gov.TicketSearch.dll"]
