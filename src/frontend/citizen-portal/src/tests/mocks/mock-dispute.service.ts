@@ -342,7 +342,7 @@ export class MockDisputeService {
       driverLicenseNumber: '2342342',
       driverLicenseProvince: 'BC',
       phoneNumber: '2506653434',
-      mailingAddress: mailingAddress
+      mailingAddress
     };
   }
 
