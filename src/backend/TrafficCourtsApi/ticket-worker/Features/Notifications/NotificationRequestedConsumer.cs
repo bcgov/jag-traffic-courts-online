@@ -15,13 +15,8 @@ namespace Gov.TicketWorker.Features.Notifications
 
         public NotificationRequestedConsumer(ILogger<NotificationRequestedConsumer> logger, IEmailSender emailSender)
         {
-            _emailSender = emailSender;
-            _logger = logger;
-        }
-
-        public NotificationRequestedConsumer(ILogger<NotificationRequestedConsumer> logger)
-        {
-            _logger = logger;
+            _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public Task Consume(ConsumeContext<NotificationContract> context)

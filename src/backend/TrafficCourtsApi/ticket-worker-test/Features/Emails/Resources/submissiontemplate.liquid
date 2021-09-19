@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <HTML>
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -113,7 +113,6 @@ td  {
 <BODY>
 <DIV id="page_1">
 
-<img src="{{ LogoImage }}" alt="BC Government logo" id="logo">
 <hr id="logo_line">
 
 <DIV class="dclr"></DIV>
@@ -123,7 +122,6 @@ td  {
 <P class="p2 ft3">Submission confirmation</P>
 <P class="p3 ft4">Ticket request sent successfully</P>
 <P class="p4 ft5">Ticket reference #: <SPAN class="ft3">{{ ConfirmationNumber }}</SPAN></P>
-<P class="p5 ft6"><SPAN class="ft0">Ticket request dated: </SPAN>{{ "now" | date: "%Y-%m-%d %H:%M" }}</P>
 </DIV>
 <hr id = "sec_1">
 <DIV id="id1_2">
@@ -142,12 +140,7 @@ td  {
 </DIV>
 <DIV id="id1_2_2">
 <P class="p13 ft7">I will appear in court:</P>
-<P class="p14 ft6">{% if CountOneWillAppear  %}
-						Yes
-					{% else %}
-						No
-				    {% endif %}
-</P>
+<P class="p14 ft6">{% if CountOneWillAppear  %}Yes{% else %}No{% endif %}</P>
 </DIV>
 </DIV>
 <DIV id="id1_3">
@@ -157,126 +150,29 @@ td  {
 	<TD class="tr1 td3"><P class="p16 ft7">Amount due</P></TD>
 </TR>
 <TR>
-	<TD class="tr2 td2"><P class="p6 ft8">{% if CountOneAction == "PAY" %}
-												Pay for this count
-										  {% elsif CountOneAction == "DISPUTE" %}
-												Dispute the charge
-										  {% elsif CountOneAction == "REDUCTION" %}
-												Request a fine reduction and/or more time to pay
-										  {% else %}
-												Do no action at this time
-										  {% endif %}
-										  
-	 </P></TD>
+<TD class="tr2 td2">
+<P class="p6 ft8">{% if CountOneAction == "PAY" %}Pay it{% elsif CountOneAction == "DISPUTE" %}Dispute it{% endif %}</P></TD>
 	<TD class="tr2 td3"><P class="p16 ft8">${{ CountOneAmount }}</P></TD>
 </TR>
 </TABLE>
-{% if CountTwoDescription %} 
-	<P class="p17 ft3">Count 2</P>
-{% endif %}
-
-</DIV>
-{% if CountTwoDescription %}
-	<DIV id="id1_4">
-	<DIV id="id1_4_1">
-	<P class="p0 ft7">For this count I would like to:</P>
-	</DIV>
-	<DIV id="id1_4_2">
-	<P class="p0 ft7">I will appear in court:</P>
-	</DIV>
-	</DIV>
-	<DIV id="id1_5">
-		<TABLE class="t2">
-		<TR>
-			<TD class="tr3 td4"><P class="p6 ft6">{% if CountTwoAction == "PAY" %}
-														Pay for this count
-												  {% elsif CountTwoAction == "DISPUTE" %}
-														Dispute the charge
-												  {% elsif CountTwoAction == "REDUCTION" %}
-														Request a fine reduction and/or more time to pay
-												  {% else %}
-														Do no action at this time
-												  {% endif %}
-														
-			</P></TD>
-			<TD class="tr3 td5"><P class="p6 ft9">{% if CountTwoWillAppear  %}
-														Yes
-												  {% else %}
-														No
-												  {% endif %}
-			</P></TD>
-		</TR>
-		</TABLE>
-		<TABLE class="t3">
-		<TR>
-			<TD class="tr1 td2"><P class="p6 ft7">Description of offence</P></TD>
-			<TD class="tr1 td3"><P class="p16 ft7">Amount due</P></TD>
-		</TR>
-		<TR>
-			<TD class="tr2 td2"><P class="p6 ft8">{{ CountTwoDescription }}</P></TD>
-			<TD class="tr2 td3"><P class="p16 ft8">${{ CountTwoAmount }}</P></TD>
-		</TR>
-		</TABLE>
-	</DIV>
-{% endif %}
-<DIV id="id1_6">
-	{% if CountThreeDescription %}
-		<P class="p18 ft3">Count 3</P>
-		<TABLE class="t4">
-		<TR>
-			<TD class="tr2 td6"><P class="p6 ft7">For this count I would like to:</P></TD>
-			<TD class="tr2 td7"><P class="p19 ft7">Amount due</P></TD>
-			<TD class="tr2 td7"><P class="p19 ft7">I will appear in court:</P></TD>
-		</TR>
-		<TR>
-			<TD class="tr3 td6"><P class="p6 ft6">{% if CountThreeAction == "PAY" %}
-									Pay for this count
-							{% elsif CountThreeAction == "DISPUTE" %}
-									Dispute the charge
-							{% elsif CountThreeAction == "REDUCTION" %}
-									Request a fine reduction and/or more time to pay
-							{% else %}
-									Do no action at this time
-							{% endif %}
-			</P></TD>
-			<TD class="tr3 td7"><P class="p19 ft6">${{ CountThreeAmount }}</P></TD>
-			<TD class="tr3 td7"><P class="p19 ft6">{% if CountThreeWillAppear  %}
-														Yes
-													{% else %}
-														No
-													{% endif %}
-			                    </P></TD>
-		</TR>
-		</TABLE>
-		<P class="p20 ft7">Description of offence</P>
-		<P class="p21 ft8">{{ CountThreeDescription }}</P>
-	{% endif %}
-	<P class="p22 ft6">Additional information</P>
-	<P class="p21 ft8">The following options apply to all counts on this ticket that are being disputed.</P>
+<P class="p22 ft6">Additional information</P>
+<P class="p21 ft8">The following options apply to all counts on this ticket that are being disputed.</P>
 	<hr id="sec_4">
-	<TABLE class="t5">
-	{% if CallWitness %}
-
-		<TR>
+	<TABLE class="t5">{% if CallWitness %}<TR>
 			<TD class="tr2 td8"><P class="p6 ft7">Action</P></TD>
 			<TD class="tr2 td9"><P class="p23 ft7"># of witness(es)</P></TD>
 		</TR>
 		<TR>
 			<TD class="tr4 td8"><P class="p6 ft6">I intend to call witness(es)</P></TD>
 			<TD class="tr4 td9"><P class="p23 ft6">{{ NumberofWitnesses}}</P></TD>
-		</TR>
-	{% endif %}
-	{% if RequireInterpreter %}
-		<TR>
+		</TR>{% endif %}{% if RequireInterpreter %}<TR>
 			<TD class="tr5 td8"><P class="p6 ft7">Action</P></TD>
 			<TD class="tr5 td9"><P class="p23 ft7">Language</P></TD>
 		</TR>
 		<TR>
 			<TD class="tr6 td8"><P class="p6 ft6">I require an interpreter</P></TD>
 			<TD class="tr6 td9"><P class="p23 ft6">{{ InterpreterLanguage }}</P></TD>
-		</TR>
-	{% endif %}
-	</TABLE>
+		</TR>{% endif %}</TABLE>
 	<P class="p24 ft10">If you are calling a witness please keep the following information in mind:</P>
 	<P class="p25 ft11">If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant.</P>
 	<P class="p26 ft12">If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable.</P>
