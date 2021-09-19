@@ -14,7 +14,7 @@ namespace Gov.CitizenApi.Features.Lookups
     [Route("api/[controller]")]
     [ApiController]
     [OpenApiTag("Lookup API")]
-    public class LookupController : Controller
+    public class LookupController : ControllerBase
     {
         private ILogger<LookupController> _logger;
         private ILookupsService _lookupsService;
