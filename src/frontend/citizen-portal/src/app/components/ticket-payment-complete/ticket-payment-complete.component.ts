@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class TicketPaymentCompleteComponent implements OnInit {
   public busy: Subscription;
-  public ticket: TicketDispute;
+  public ticket: TicketDisputeView;
   public paymentStatus: string;
   public paymentConfNo: string;
 
@@ -24,7 +24,7 @@ export class TicketPaymentCompleteComponent implements OnInit {
     private disputeResource: DisputeResourceService,
     private appConfigService: AppConfigService,
     private logger: LoggerService
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     if (this.appConfigService.useMockServices) {

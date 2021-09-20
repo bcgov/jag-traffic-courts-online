@@ -42,6 +42,9 @@ spec:
               value: "http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/"
             - name: PaybcApi__CallbackBaseUrl
               value: "https://dev.violationtickets.gov.bc.ca/paymentComplete?"
+          envFrom:
+            - secretRef:
+                name: rabbitmq-configuration
           resources:
             limits:
               cpu: 100m

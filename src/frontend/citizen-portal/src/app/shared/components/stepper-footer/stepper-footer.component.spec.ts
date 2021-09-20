@@ -1,20 +1,19 @@
+import { Component } from '@angular/core';
 import {
-  async,
   ComponentFixture,
   TestBed,
-  waitForAsync,
+  waitForAsync
 } from '@angular/core/testing';
-import { Component } from '@angular/core';
-
-import { PageFooterComponent } from './page-footer.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-@Component({ selector: 'app-test-blank', template: `` })
-class BlankComponent {}
+import { StepperFooterComponent } from './stepper-footer.component';
 
-describe('PageFooterComponent', () => {
-  let component: PageFooterComponent;
-  let fixture: ComponentFixture<PageFooterComponent>;
+@Component({ selector: 'app-test-blank', template: `` })
+class BlankComponent { }
+
+describe('StepperFooterComponent', () => {
+  let component: StepperFooterComponent;
+  let fixture: ComponentFixture<StepperFooterComponent>;
 
   beforeEach(
     waitForAsync(() => {
@@ -25,13 +24,13 @@ describe('PageFooterComponent', () => {
           ]),
           TranslateModule.forRoot(),
         ],
-        declarations: [PageFooterComponent, BlankComponent],
+        declarations: [StepperFooterComponent, BlankComponent],
       }).compileComponents();
     })
   );
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageFooterComponent);
+    fixture = TestBed.createComponent(StepperFooterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

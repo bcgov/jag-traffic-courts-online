@@ -3,11 +3,13 @@
     <ng-container header>Submission confirmation</ng-container>
   </app-page-header>
 
-  <section class="mb-2 mt-4">
+  <section class="mb-2 mt-4 d-print-none">
     <div class="row">
-      <div class="col-lg-12">
-        <app-alert type="success" icon="check">
-          <ng-container #alertContent class="alert-content">
+      <div class="col">
+        <app-alert type="success"
+                   icon="check">
+          <ng-container #alertContent
+                        class="alert-content">
             <strong>Ticket request sent successfully</strong><br />
             Ticket reference #: <strong>TR-001-00001</strong>
           </ng-container>
@@ -16,38 +18,42 @@
     </div>
   </section>
 
+  <div class="d-none d-print-block mb-4">
+    Ticket reference #: <strong>TR-001-00001</strong>
+  </div>
+
   <div class="row">
     <div class="col-lg-8 conf-email">
       A confirmation email of the request information has been sent to: <br />
       <strong>{{ ticket?.disputant?.emailAddress }}</strong>
     </div>
-    <div class="col-lg-4">
-      <a class="print-link">
-        <img class="me-2" src="/assets/print-icon.svg" />
+    <div class="col-lg-4 d-print-none">
+      <a class="print-link"
+         (click)="onPrint()">
+        <img class="me-2"
+             src="/assets/print-icon.svg" />
         Print confirmation page for your records
       </a>
     </div>
   </div>
 
-  <div class="mt-4" *ngIf="countsToPay">
+  <div class="mt-4 d-print-none"
+       *ngIf="countsToPay">
     You have selected '<strong>Pay for this count</strong>' for
-    <strong>{{ countsToPay }}</strong
-    >, please use the button below to proceed to payment.<br />
-    <button
-      type="button"
-      mat-flat-button
-      color="accent"
-      class="large mt-3 mb-2"
-      style="width: unset"
-      (click)="onMakePayment()"
-    >
+    <strong>{{ countsToPay }}</strong>, please use the button below to proceed to payment.<br />
+    <button type="button"
+            mat-flat-button
+            color="accent"
+            class="large mt-3 mb-2"
+            style="width: unset"
+            (click)="onMakePayment()">
       Make payment
     </button>
   </div>
 
-  <hr />
+  <hr class="d-print-none" />
 
-  <strong>Submission details</strong>
+  <strong class="d-print-none">Submission details</strong>
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
 

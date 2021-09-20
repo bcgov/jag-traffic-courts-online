@@ -1,28 +1,28 @@
-import { Disputant } from '@shared/models/disputant.model';
-import { Offence } from '@shared/models/offence.model';
-import { TicketDispute } from '@shared/models/ticketDispute.model';
+import { DisputantView } from '@shared/models/disputantView.model';
+import { OffenceView } from '@shared/models/offenceView.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import * as faker from 'faker';
 import { BehaviorSubject } from 'rxjs';
 
 export class MockDisputeService {
-  private _ticket: BehaviorSubject<TicketDispute>;
+  private _ticket: BehaviorSubject<TicketDisputeView>;
 
   constructor() {
-    const ticket = this.createTicketWithoutDisputes();
-    // const ticket = this.createTicketWithDispute();
+    // const ticket = this.createTicketWithoutDisputes();
+    const ticket = this.createTicketWithDispute();
 
-    this._ticket = new BehaviorSubject<TicketDispute>(ticket);
+    this._ticket = new BehaviorSubject<TicketDisputeView>(ticket);
   }
 
-  public get ticket$(): BehaviorSubject<TicketDispute> {
+  public get ticket$(): BehaviorSubject<TicketDisputeView> {
     return this._ticket;
   }
 
-  public get ticket(): TicketDispute {
+  public get ticket(): TicketDisputeView {
     return this._ticket.value;
   }
 
-  private createTicketWithoutDisputes(): TicketDispute {
+  private createTicketWithoutDisputes(): TicketDisputeView {
     const soonDate =
       faker.date.soon().getFullYear() +
       '-' +
@@ -30,7 +30,7 @@ export class MockDisputeService {
       '-' +
       faker.date.soon().getDate();
 
-    const ticket: TicketDispute = {
+    const ticket: TicketDisputeView = {
       violationTicketNumber:
         'EA' +
         faker.datatype
@@ -65,7 +65,7 @@ export class MockDisputeService {
     ticket.disputant = this.createDisputant();
 
     // --------------------------
-    let offence: Offence = {
+    let offence: OffenceView = {
       offenceNumber: 1,
       ticketedAmount: 126,
       amountDue: 87.56,
@@ -76,6 +76,8 @@ export class MockDisputeService {
       discountAmount: 0,
       status: 'New',
       offenceAgreementStatus: '',
+      requestReduction: false,
+      requestMoreTime: false,
       reductionAppearInCourt: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
@@ -100,6 +102,8 @@ export class MockDisputeService {
       discountAmount: 25,
       status: 'New',
       offenceAgreementStatus: '',
+      requestReduction: false,
+      requestMoreTime: false,
       reductionAppearInCourt: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
@@ -115,7 +119,7 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createTicketWithDispute(): TicketDispute {
+  private createTicketWithDispute(): TicketDisputeView {
     const soonDate =
       faker.date.soon().getFullYear() +
       '-' +
@@ -123,7 +127,7 @@ export class MockDisputeService {
       '-' +
       faker.date.soon().getDate();
 
-    const ticket: TicketDispute = {
+    const ticket: TicketDisputeView = {
       violationTicketNumber:
         'EA' +
         faker.datatype
@@ -163,7 +167,7 @@ export class MockDisputeService {
       interpreterLanguage: 'SPA',
       witnessPresent: true,
       numberOfWitnesses: 3,
-      requestReduction: false,
+      requestReduction: true,
       requestMoreTime: false,
       reductionReason: '',
       moreTimeReason: '',
@@ -175,7 +179,7 @@ export class MockDisputeService {
     const offenceDate = faker.date.soon().toString();
 
     // --------------------------
-    let offence: Offence = {
+    let offence: OffenceView = {
       offenceNumber: 1,
       ticketedAmount: 126,
       amountDue: 126,
@@ -187,6 +191,8 @@ export class MockDisputeService {
       discountAmount: 25,
       status: 'New',
       offenceAgreementStatus: null,
+      requestReduction: false,
+      requestMoreTime: false,
       reductionAppearInCourt: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
@@ -211,6 +217,8 @@ export class MockDisputeService {
       discountAmount: 25,
       status: 'Submitted',
       offenceAgreementStatus: null,
+      requestReduction: false,
+      requestMoreTime: false,
       reductionAppearInCourt: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
@@ -227,7 +235,7 @@ export class MockDisputeService {
     offence = {
       offenceNumber: 3,
       ticketedAmount: 167,
-      amountDue: 0,
+      amountDue: 200,
       violationDateTime: offenceDate,
       offenceDescription:
         'Load Or Projection Over 1.2M In Rear Without Required Red Flag Or Cloth',
@@ -236,12 +244,14 @@ export class MockDisputeService {
       discountAmount: 25,
       status: 'New',
       offenceAgreementStatus: null,
+      requestReduction: false,
+      requestMoreTime: false,
       reductionAppearInCourt: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
       _firstOffence: false,
       _within30days: false,
-      _amountDue: 0,
+      _amountDue: 200,
     };
 
     offence = Object.assign(offence, this.createOffenceDispute());
@@ -251,7 +261,7 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createDisputant(): Disputant {
+  private createDisputant(): DisputantView {
     return {
       lastName: faker.name.lastName(),
       givenNames: faker.name.firstName(),

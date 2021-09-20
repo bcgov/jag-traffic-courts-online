@@ -216,11 +216,11 @@
     </section>
   </form>
 
-  <app-page-footer (save)="onSubmit()"
-                   (back)="onBack()"
-                   [secondaryActionButtonIcon]="previousButtonIcon"
-                   [secondaryActionButtonKey]="previousButtonKey"
-                   [saveButtonKey]="saveButtonKey"
-                   [hasSecondaryAction]="true">
-  </app-page-footer>
+  <app-stepper-footer (save)="onSubmit()"
+                      (back)="onBack()"
+                      [secondaryActionButtonIcon]="previousButtonIcon"
+                      [secondaryActionButtonKey]="previousButtonKey"
+                      [saveButtonKey]="saveButtonKey"
+                      [hasSecondaryAction]="true">
+  </app-stepper-footer>
 </app-stepper-page>

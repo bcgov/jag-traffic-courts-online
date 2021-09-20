@@ -1,5 +1,5 @@
 <div class="flex-wrapper">
-  <div class="flex-header">
+  <div class="flex-header d-print-none">
     <app-header></app-header>
 
     <div class="header-summary">
@@ -7,22 +7,18 @@
         <div class="container">
           <ul class="header-summary-links">
             <li>
-              <a
-                [routerLink]="['/']"
-                class="primary-navigation understand-your-ticket"
-                rel="noopener"
-              >
+              <a [routerLink]="['/']"
+                 class="primary-navigation understand-your-ticket"
+                 rel="noopener">
                 Home
               </a>
             </li>
             <span class="divider">|</span>
             <li>
-              <a
-                [routerLink]="['/ticket/']"
-                [routerLinkActive]="['is-active']"
-                class="primary-navigation payment-options"
-                rel="noopener"
-              >
+              <a [routerLink]="['/ticket/']"
+                 [routerLinkActive]="['is-active']"
+                 class="primary-navigation payment-options"
+                 rel="noopener">
                 Ticket Resolution
               </a>
             </li>

@@ -1,20 +1,20 @@
-<div class="header">
+<div class="header d-print-none">
   <div class="container">
     <mat-toolbar color="primary">
       <span>
-        <a
-          href="https://www2.gov.bc.ca/gov/content/home"
-          class="government-of-bc-logo"
-          target="_blank"
-          rel="noopener"
-        >
-          <img src="/assets/gov_bc_logo.jpg" alt="Government of BC Logo" />
+        <a href="https://www2.gov.bc.ca/gov/content/home"
+           class="government-of-bc-logo"
+           target="_blank"
+           rel="noopener">
+          <img src="/assets/gov_bc_logo.jpg"
+               alt="Government of BC Logo" />
         </a>
       </span>
 
       <span class="flex-fill"></span>
 
-      <span class="badge badge-pill badge-light" *ngIf="environment != 'prod'">
+      <span class="badge badge-pill badge-light"
+            *ngIf="environment != 'prod'">
         {{ environment }} v{{ version }}
       </span>
 

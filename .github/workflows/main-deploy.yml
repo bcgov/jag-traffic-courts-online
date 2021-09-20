@@ -33,10 +33,12 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           CONTEXT: ./src/backend/TrafficCourtsApi
+          DOCKER_FILE: ./src/backend/TrafficCourtsApi/Dockerfile.citizen-api
           IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/citizen-api:${{secrets.OC_APP}}
         run: |
           docker build \
             --build-arg ASPNETCORE_ENVIRONMENT=Development \
+            --file ${DOCKER_FILE} \
             --tag ${IMAGE} \
             ${CONTEXT}
             docker push ${IMAGE}
@@ -74,6 +76,35 @@ jobs:
           docker build \
             --build-arg ASPNETCORE_ENVIRONMENT=Development \
             --tag ${IMAGE} \
+            ${CONTEXT}
+            docker push ${IMAGE}
+
+  build-ticket-worker:
+    runs-on: ubuntu-20.04
+    environment: Development
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to OpenShift
+        uses: docker/login-action@v1
+        with:
+          registry: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}
+          username: ${{secrets.OPENSHIFT_SA_USERNAME}}
+          password: ${{secrets.OPENSHIFT_SA_PASSWORD}}
+
+      - name: Build and push
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          CONTEXT: ./src/backend/TrafficCourtsApi
+          DOCKER_FILE: ./src/backend/TrafficCourtsApi/Dockerfile.ticket-worker
+          IMAGE: ${{secrets.OPENSHIFT_EXTERNAL_REPOSITORY}}/${{secrets.OPENSHIFT_TOOLS_NAMESPACE}}/ticket-worker:${{secrets.OC_APP}}
+        run: |
+          docker build \
+            --build-arg ASPNETCORE_ENVIRONMENT=Development \
+            --tag ${IMAGE} \
+            --file ${DOCKER_FILE} \
             ${CONTEXT}
             docker push ${IMAGE}
 

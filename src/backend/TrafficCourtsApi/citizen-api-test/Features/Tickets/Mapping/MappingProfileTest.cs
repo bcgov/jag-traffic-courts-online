@@ -57,16 +57,16 @@ namespace Gov.CitizenApi.Test.Features.Tickets.Mapping
         {
             IServiceCollection serviceCollection = new ServiceCollection();
             Mock<ILookupsService> lookupsMock = new Mock<ILookupsService>();
-            lookupsMock.Setup(m => m.GetCountStatute(It.IsAny<string>())).Returns(new Statute { Code=111, Name="codeDesc"});
+            lookupsMock.Setup(m => m.GetCountStatute(It.IsAny<decimal>())).Returns(new Statute { Code=111m, Name="codeDesc"});
             serviceCollection.AddTransient<ILookupsService>(m => lookupsMock.Object);
             serviceCollection.AddAutoMapper(typeof(MappingProfile));
 
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
             IMapper mapperStub = serviceProvider.GetService<IMapper>();
             CreateShellTicketCommand command = _fixture.Create<CreateShellTicketCommand>();
-            command.Count1Charge = "11817";
-            command.Count2Charge = "11817";
-            command.Count3Charge = "11817";
+            command.Count1Charge = 11817;
+            command.Count2Charge = 11817;
+            command.Count3Charge = 11817;
             Ticket ticket = mapperStub.Map<Ticket>(command);
             Assert.Equal(ticket.DriverLicenseNumber, command.DriverLicenseNumber);
             Assert.Equal(ticket.ViolationTicketNumber, command.ViolationTicketNumber);

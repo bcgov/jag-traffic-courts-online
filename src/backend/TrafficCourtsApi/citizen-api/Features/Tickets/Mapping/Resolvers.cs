@@ -24,22 +24,26 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
             ResolutionContext context)
         {
             var offences = new Collection<DBModel.Offence>();
-            if(source.Count1Charge != null && source.Count1FineAmount!=null)
+            
+            if(source.Count1Charge != null && source.Count1FineAmount != null)
             {               
-                offences.Add(CreateOffence(1, (decimal)source.Count1FineAmount, source.Count1Charge, source.ViolationDate, source.ViolationTime));
+                offences.Add(CreateOffence(1, source.Count1FineAmount.Value, source.Count1Charge.Value, source.ViolationDate, source.ViolationTime));
             }
+
             if (source.Count2Charge != null && source.Count2FineAmount != null)
             {
-                offences.Add(CreateOffence(2, (decimal)source.Count2FineAmount, source.Count2Charge, source.ViolationDate, source.ViolationTime));
+                offences.Add(CreateOffence(2, source.Count2FineAmount.Value, source.Count2Charge.Value, source.ViolationDate, source.ViolationTime));
             }
+            
             if (source.Count3Charge != null && source.Count3FineAmount != null)
             {
-                offences.Add(CreateOffence(3, (decimal)source.Count3FineAmount, source.Count3Charge, source.ViolationDate, source.ViolationTime));
+                offences.Add(CreateOffence(3, source.Count3FineAmount.Value, source.Count3Charge.Value, source.ViolationDate, source.ViolationTime));
             }
+
             return offences.Count > 0 ? offences : null;
         }
 
-        private DBModel.Offence CreateOffence(int offenceNumber, decimal fineAmount, string offenceCode, string ticketViolationDate, string ticketViolationTime)
+        private DBModel.Offence CreateOffence(int offenceNumber, decimal fineAmount, decimal chargeCode, string ticketViolationDate, string ticketViolationTime)
         {
             DateTime datetime;
             DateTime offenceDateTime=DateTime.MinValue;
@@ -54,8 +58,8 @@ namespace Gov.CitizenApi.Features.Tickets.Mapping
                 OffenceNumber = offenceNumber,
                 TicketedAmount = fineAmount,
                 AmountDue = fineAmount,
-                OffenceCode = offenceCode,
-                OffenceDescription = _lookupsService.GetCountStatute(offenceCode).Name,
+                OffenceCode = chargeCode,
+                OffenceDescription = _lookupsService.GetCountStatute(chargeCode).Name,
                 DiscountAmount = Keys.TicketDiscountValue,
                 ViolationDateTime = offenceDateTime == DateTime.MinValue ? null : offenceDateTime.ToString(Keys.DateTimeFormat)
             };

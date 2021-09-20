@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-DisputeWorker-E2432967-AC5E-48EF-AA0A-738A11BC7CB5</UserSecretsId>
-	<PreserveCompilationContext>true</PreserveCompilationContext>
+    <StartupObject>Gov.TicketWorker.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

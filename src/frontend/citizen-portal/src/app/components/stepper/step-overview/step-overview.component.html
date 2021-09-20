@@ -2,35 +2,31 @@
   <app-page-header>
     <ng-container header>{{
       "stepper.overview.heading" | translate
-    }}</ng-container>
+      }}</ng-container>
     <ng-container subHeader>{{
       "stepper.overview.sub_heading" | translate
-    }}</ng-container>
+      }}</ng-container>
   </app-page-header>
 
-  <app-dispute-ticket-summary
-    [ticket]="overviewTicket"
-  ></app-dispute-ticket-summary>
+  <app-dispute-ticket-summary [ticket]="overviewTicket"></app-dispute-ticket-summary>
 
   <div class="col mb-2">
-    <app-alert type="warning" icon="warning">
-      <ng-container #alertContent class="alert-content">
-        <strong
-          >Once request has been submitted you may not make changes. Please
-          review and ensure details are correct before submission.</strong
-        >
+    <app-alert type="warning"
+               icon="warning">
+      <ng-container #alertContent
+                    class="alert-content">
+        <strong>Once request has been submitted you may not make changes. Please
+          review and ensure details are correct before submission.</strong>
       </ng-container>
     </app-alert>
   </div>
 
   <!--
     [saveButtonLabel]="nextBtnLabel" -->
-  <app-page-footer
-    [secondaryActionButtonIcon]="previousButtonIcon"
-    [secondaryActionButtonKey]="previousButtonKey"
-    [saveButtonKey]="saveButtonKey"
-    [hasSecondaryAction]="true"
-    (save)="onSubmit()"
-    (back)="onBack()"
-  ></app-page-footer>
+  <app-stepper-footer [secondaryActionButtonIcon]="previousButtonIcon"
+                      [secondaryActionButtonKey]="previousButtonKey"
+                      [saveButtonKey]="saveButtonKey"
+                      [hasSecondaryAction]="true"
+                      (save)="onSubmit()"
+                      (back)="onBack()"></app-stepper-footer>
 </app-stepper-page>
