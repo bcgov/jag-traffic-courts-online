@@ -13,6 +13,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Contract;
 using Xunit;
@@ -32,13 +33,6 @@ namespace Gov.TicketWorker.Test.Features.Emails
             _fixture = new Fixture();
             _loggerMock = new Mock<ILogger<EmailSender>>();
             _emailMock = new Mock<IFluentEmail>();
-                    //_emailMock.Object.AddLiquidRenderer()
-                    //.AddSmtpSender(new SmtpClient(sender)
-                    //{
-                    //    EnableSsl = false,
-                    //    Port = int.Parse(port),
-                    //    DeliveryMethod = SmtpDeliveryMethod.Network
-                    //});
             _sut = new EmailSender(_emailMock.Object, _loggerMock.Object);
         }
 
@@ -56,7 +50,7 @@ namespace Gov.TicketWorker.Test.Features.Emails
         public async Task Test_SendUsingTemplateSuccessful_EmailTemplateIsValid()
         {
 
-            _emailMock.Setup(x => x.To(It.Is<string>(y => y != ""))).Returns(_emailMock.Object); 
+            _emailMock.Setup(x => x.To(It.Is<string>(y => y != ""))).Returns(_emailMock.Object);
             _emailMock.Setup(x => x.Subject(It.IsAny<string>())).Returns(_emailMock.Object);
             _emailMock.Setup(x => x.UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(),
                 It.IsAny<Assembly>(), true)).Returns(_emailMock.Object);
@@ -98,7 +92,7 @@ namespace Gov.TicketWorker.Test.Features.Emails
             expected = template.Render(Hash.FromAnonymousObject(emailModel));
 
            
-            _sut.SendUsingTemplate("testEmail@test.com", "This is the subject line", disputeContractModel);
+            await _sut.SendUsingTemplate("testEmail@test.com", "This is the subject line", disputeContractModel);
 
             _emailMock.Verify(foo => foo.To("testEmail@test.com"), Times.Once());
             _emailMock.Verify(foo => foo.Subject("This is the subject line"), Times.Once());
@@ -113,6 +107,23 @@ namespace Gov.TicketWorker.Test.Features.Emails
                               .UsingTemplateFromEmbedded("ticket_worker_test.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly);
             Assert.Equal(expected, result.Data.Body);
 
+        }
+
+        [Fact]
+        public async Task Test_SendUsingTemplateSuccessful()
+        {
+            var fixture = new Fixture();
+            var disputeContractModel = fixture.Create<TicketDisputeContract>();
+            _emailMock.Setup(
+                m => m.To(It.IsAny<string>())
+                      .Subject(It.IsAny<string>())
+                      .UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>())
+                      .SendAsync(It.IsAny<CancellationToken>())
+            ).Returns(Task.FromResult<SendResponse>(new SendResponse()));
+
+            await _sut.SendUsingTemplate("to", "subject", disputeContractModel);
+
+            _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
     }
 }

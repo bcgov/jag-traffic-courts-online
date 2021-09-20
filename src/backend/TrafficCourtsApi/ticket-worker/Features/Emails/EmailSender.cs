@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Contract;
 
@@ -86,8 +87,8 @@ namespace Gov.TicketWorker.Features.Emails
                 var result = await _email
                     .To(to)
                     .Subject(subject)
-                    .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly)
-                    .SendAsync();
+                    .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly, true)
+                    .SendAsync(CancellationToken.None);
 
                 
                 if (!result.Successful)
