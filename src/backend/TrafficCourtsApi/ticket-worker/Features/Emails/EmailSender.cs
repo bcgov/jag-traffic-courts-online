@@ -88,7 +88,7 @@ namespace Gov.TicketWorker.Features.Emails
                     .To(to)
                     .Subject(subject)
                     .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly, true)
-                    .SendAsync(CancellationToken.None);
+                    .SendAsync();
 
                 
                 if (!result.Successful)

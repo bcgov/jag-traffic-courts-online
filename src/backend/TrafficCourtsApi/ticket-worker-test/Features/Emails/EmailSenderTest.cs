@@ -49,7 +49,6 @@ namespace Gov.TicketWorker.Test.Features.Emails
         [Fact]
         public async Task Test_SendUsingTemplateSuccessful_EmailTemplateIsValid()
         {
-
             _emailMock.Setup(x => x.To(It.Is<string>(y => y != ""))).Returns(_emailMock.Object);
             _emailMock.Setup(x => x.Subject(It.IsAny<string>())).Returns(_emailMock.Object);
             _emailMock.Setup(x => x.UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(),
@@ -79,9 +78,6 @@ namespace Gov.TicketWorker.Test.Features.Emails
             MemoryStream memoryStream = new MemoryStream();
             logoStream.CopyTo(memoryStream);
             bytes = memoryStream.ToArray();
-
-            Email.DefaultRenderer = new LiquidRenderer(Options.Create(new LiquidRendererOptions { FileProvider = null,
-            ConfigureTemplateContext = null }));
 
             string base64Data = Convert.ToBase64String(bytes);
             string dataScheme = $"data:image/png;base64,{base64Data}==";
@@ -118,12 +114,12 @@ namespace Gov.TicketWorker.Test.Features.Emails
                 m => m.To(It.IsAny<string>())
                       .Subject(It.IsAny<string>())
                       .UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>())
-                      .SendAsync(It.IsAny<CancellationToken>())
+                      .SendAsync(null)
             ).Returns(Task.FromResult<SendResponse>(new SendResponse()));
 
             await _sut.SendUsingTemplate("to", "subject", disputeContractModel);
 
-            _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(It.IsAny<CancellationToken>()), Times.Once());
+            _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(null), Times.Once());
         }
     }
 }
