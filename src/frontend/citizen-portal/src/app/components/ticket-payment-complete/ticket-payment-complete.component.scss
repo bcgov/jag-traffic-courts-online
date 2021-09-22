@@ -1,0 +1,9 @@
+@import "palette.scss";
+
+.text-dark {
+  color: theme-palette(grey, dark);
+
+  & strong {
+    color: var(--bs-body-color)
+  }
+}

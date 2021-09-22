@@ -22,25 +22,25 @@
     Ticket reference #: <strong>TR-001-00001</strong>
   </div>
 
-  <div class="row">
-    <div class="col-lg-8 conf-email">
+  <div class="d-flex justify-content-between">
+    <div class="col-lg-8 conf-email text-dark">
       A confirmation email of the request information has been sent to: <br />
       <strong>{{ ticket?.disputant?.emailAddress }}</strong>
     </div>
-    <div class="col-lg-4 d-print-none">
+    <div class="d-print-none">
       <a class="print-link"
          (click)="onPrint()">
         <img class="me-2"
              src="/assets/print-icon.svg" />
-        Print confirmation page for your records
+        Print confirmation page
       </a>
     </div>
   </div>
 
   <div class="mt-4 d-print-none"
        *ngIf="countsToPay">
-    You have selected '<strong>Pay for this count</strong>' for
-    <strong>{{ countsToPay }}</strong>, please use the button below to proceed to payment.<br />
+    <span class="text-dark">You have selected '<strong>Pay for this count</strong>' for
+    <strong>{{ countsToPay }}</strong>, please use the button below to proceed to payment.</span><br />
     <button type="button"
             mat-flat-button
             color="accent"
