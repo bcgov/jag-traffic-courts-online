@@ -38,3 +38,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   height: 20px;
   margin-right: 6px;
 }
+
+// Prevents scrolling on smaller option dropdowns
+.mat-select-panel.mat-select-panel {
+  max-height: 290px;
+}

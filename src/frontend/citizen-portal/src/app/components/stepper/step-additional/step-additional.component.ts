@@ -60,6 +60,8 @@ export class StepAdditionalComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepAdditionalForm;
+    this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
+    this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
     this.patchForm();
   }
 

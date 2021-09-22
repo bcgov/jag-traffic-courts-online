@@ -173,6 +173,7 @@
   },
   "error": {
     "required": "Required",
+    "positive_number": "Enter positive number",
     "email_address": "Must be a valid email address"
   },
   "shell_ticket_confirmation": {
