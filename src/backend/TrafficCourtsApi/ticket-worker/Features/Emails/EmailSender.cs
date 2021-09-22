@@ -50,6 +50,14 @@ namespace Gov.TicketWorker.Features.Emails
 
         private readonly IFluentEmail _email;
         private readonly ILogger<EmailSender> _logger;
+        private readonly IEmailFilter _emailFilter;
+
+        public EmailSender(IFluentEmail email, ILogger<EmailSender> logger, IEmailFilter emailFilter)
+        {
+            _email = email ?? throw new ArgumentNullException(nameof(email));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _emailFilter = emailFilter ?? throw new ArgumentNullException(nameof(emailFilter));
+        }
 
         public EmailSender(IFluentEmail email, ILogger<EmailSender> logger)
         {
@@ -84,17 +92,20 @@ namespace Gov.TicketWorker.Features.Emails
 
                 emailModel.LogoImage = dataURIScheme("png", "ticket-worker.Features.Emails.Resources.bc-gov-logo.png");
 
-                var result = await _email
+                var email = _email
                     .To(to)
                     .Subject(subject)
-                    .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly, true)
-                    .SendAsync();
+                    .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly, true);
 
-                
-                if (!result.Successful)
+                if ( _emailFilter == null || _emailFilter.IsAllowed(to))
                 {
-                    _logger.LogError("Failed to send an email");
+                    var result = await email.SendAsync();
+                    if (!result.Successful)
+                    {
+                        _logger.LogError("Failed to send an email");
+                    }
                 }
+               
             }
             catch (Exception e)
             {

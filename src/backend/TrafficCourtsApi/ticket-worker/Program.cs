@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Contract;
@@ -29,7 +31,7 @@ namespace Gov.TicketWorker
                     IConfiguration configuration = hostContext.Configuration;
                     ConfigureServiceBus(services, configuration);
                     services.AddHostedService<Worker>();
-
+                    
                 });
 
         internal static void ConfigureServiceBus(IServiceCollection services, IConfiguration configuration)
@@ -42,7 +44,13 @@ namespace Gov.TicketWorker
             var port = configuration.GetSection("SMTPServer")["Port"];
             var from = configuration.GetSection("Mail")["From"];
             var fromEmail = configuration.GetSection("Mail")["FromEmail"];
+            string allowedEmails = configuration.GetSection("ALLOWED_RECIPIENT_EMAILS").Value;
 
+            if(allowedEmails != "*")
+            {
+                var allowedEmailsList = allowedEmails?.Split(";").ToList();
+                services.AddSingleton<IEmailFilter>(new DefaultEmailFilter(allowedEmailsList?? new List<string>()));
+            }
 
             services.AddMassTransit(config =>
             {
@@ -86,6 +94,7 @@ namespace Gov.TicketWorker
                        DeliveryMethod = SmtpDeliveryMethod.Network
                    });
             services.AddScoped<IEmailSender, EmailSender>();
+           
         }
     }
  

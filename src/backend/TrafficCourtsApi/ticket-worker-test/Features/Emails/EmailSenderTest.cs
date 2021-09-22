@@ -27,20 +27,23 @@ namespace Gov.TicketWorker.Test.Features.Emails
         private Fixture _fixture;
         private EmailSender _sut;
         private Mock<IFluentEmail> _emailMock;
+        private Mock<IEmailFilter> _emailFilterMock;
 
         public EmailSenderTest()
         {
             _fixture = new Fixture();
             _loggerMock = new Mock<ILogger<EmailSender>>();
             _emailMock = new Mock<IFluentEmail>();
-            _sut = new EmailSender(_emailMock.Object, _loggerMock.Object);
+            _emailFilterMock = new Mock<IEmailFilter>();
+            _sut = new EmailSender(_emailMock.Object, _loggerMock.Object, _emailFilterMock.Object);
         }
 
         [Fact]
         public void Throw_ArgumentNullException_if_passed_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new EmailSender(null, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new EmailSender(_emailMock.Object, null));
+            Assert.Throws<ArgumentNullException>(() => new EmailSender(null, _loggerMock.Object, _emailFilterMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new EmailSender(_emailMock.Object, null, _emailFilterMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new EmailSender(_emailMock.Object, _loggerMock.Object, null));
             Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplate(null, "This is the subject line", It.IsAny<TicketDisputeContract>()));
             Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplate("", "This is the subject line", It.IsAny<TicketDisputeContract>()));
             Assert.ThrowsAsync<ArgumentNullException>(() => _sut.SendUsingTemplate("testEmail@test.com", "This is the subject line", null));
@@ -99,7 +102,6 @@ namespace Gov.TicketWorker.Test.Features.Emails
             var result = new Email("Sender@send.com")
                               .To("testEmail@test.com")
                               .Subject("This is the subject line")
-                              //.UsingTemplate(templateString, emailModel);
                               .UsingTemplateFromEmbedded("ticket_worker_test.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly);
             Assert.Equal(expected, result.Data.Body);
 
@@ -116,10 +118,29 @@ namespace Gov.TicketWorker.Test.Features.Emails
                       .UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>())
                       .SendAsync(null)
             ).Returns(Task.FromResult<SendResponse>(new SendResponse()));
+            _emailFilterMock.Setup(x => x.IsAllowed(It.IsAny<string>())).Returns(true);
 
             await _sut.SendUsingTemplate("to", "subject", disputeContractModel);
 
             _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(null), Times.Once());
+        }
+
+        [Fact]
+        public async Task Test_SendUsingTemplateUnSuccessful_WhenEmailNotAllowed()
+        {
+            var fixture = new Fixture();
+            var disputeContractModel = fixture.Create<TicketDisputeContract>();
+            _emailMock.Setup(
+                m => m.To(It.IsAny<string>())
+                      .Subject(It.IsAny<string>())
+                      .UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>())
+                      .SendAsync(null)
+            ).Returns(Task.FromResult<SendResponse>(new SendResponse()));
+            _emailFilterMock.Setup(x => x.IsAllowed(It.IsAny<string>())).Returns(false);
+
+            await _sut.SendUsingTemplate("to", "subject", disputeContractModel);
+
+            _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(null), Times.Never());
         }
     }
 }
