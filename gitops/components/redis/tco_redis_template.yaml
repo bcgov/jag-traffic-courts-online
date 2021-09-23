@@ -1,0 +1,183 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ${COMPONENT_NAME}
+  description: Deployment template for the ${COMPONENT_NAME}
+
+labels:
+  app: ${APP_NAME}
+  app.kubernetes.io/name: ${COMPONENT_NAME}
+  app.openshift.io/runtime: ${RUNTIME}
+  
+parameters:
+
+- name: APP_NAME
+  description: The application name that each component is part of
+  required: false
+  value: tco
+
+- name: COMPONENT_NAME
+  description: The application name that each component is part of
+  required: false
+  value: redis-tco
+  
+- name: OC_NAMESPACE
+  description: The OpenShift namespace prefix
+  required: false
+  value: 0198bb
+  
+- name: OC_ENV
+  description: The OpenShift environment, ie dev, test or prod
+  required: true
+
+- name: RUNTIME
+  description: The application runtime/type
+  required: false
+  value: redis
+
+- name: REDIS_PASSWORD
+  description: Redis password
+  required: true
+
+- name: VOLUME_CAPACITY
+  description: Redis volume
+  required: false
+  value: 1Gi
+
+- name: MEMORY_LIMIT
+  description: Redis memory limit
+  required: false
+  value: 512Mi
+  
+objects:
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+  data:
+    database-password: ${REDIS_PASSWORD}
+  type: Opaque
+
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VOLUME_CAPACITY}
+    storageClassName: netapp-file-standard
+    volumeMode: Filesystem
+
+- kind: DeploymentConfig
+  apiVersion: apps.openshift.io/v1
+  metadata:
+    annotations:
+      template.alpha.openshift.io/wait-for-ready: 'true'
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+  spec:
+    strategy:
+      type: Recreate
+      recreateParams:
+        timeoutSeconds: 600
+      resources: {}
+      activeDeadlineSeconds: 21600
+    triggers:
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - ${COMPONENT_NAME}
+          from:
+            kind: ImageStreamTag
+            namespace: ${OC_NAMESPACE}-tools
+            name: 'redis-6:1-21'
+      - type: ConfigChange
+    replicas: 1
+    revisionHistoryLimit: 10
+    test: false
+    selector:
+      name: ${COMPONENT_NAME}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          name: ${COMPONENT_NAME}
+      spec:
+        volumes:
+          - name: ${COMPONENT_NAME}-data
+            persistentVolumeClaim:
+              claimName: ${COMPONENT_NAME}
+        containers:
+          - resources:
+              limits:
+                memory: ${MEMORY_LIMIT}
+            readinessProbe:
+              exec:
+                command:
+                  - /bin/sh
+                  - '-i'
+                  - '-c'
+                  - >-
+                    test "$(redis-cli -h 127.0.0.1 -a $REDIS_PASSWORD ping)" ==
+                    "PONG"
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            terminationMessagePath: /dev/termination-log
+            name: ${COMPONENT_NAME}
+            livenessProbe:
+              tcpSocket:
+                port: 6379
+              initialDelaySeconds: 30
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            env:
+              - name: REDIS_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: ${COMPONENT_NAME}
+                    key: database-password
+            securityContext:
+              capabilities: {}
+              privileged: false
+            ports:
+              - containerPort: 6379
+                protocol: TCP
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - name: ${COMPONENT_NAME}-data
+                mountPath: /var/lib/redis/data
+            terminationMessagePolicy: File
+            image: >-
+              registry.redhat.io/rhel8/redis-6:1-21
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+  spec:
+    ports:
+      - name: 6379-tcp
+        protocol: TCP
+        port: 6379
+        targetPort: 6379
+    selector:
+      name: ${COMPONENT_NAME}
+    type: ClusterIP
+    sessionAffinity: None
