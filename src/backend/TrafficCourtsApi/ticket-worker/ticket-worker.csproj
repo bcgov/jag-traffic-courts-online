@@ -3,9 +3,22 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-DisputeWorker-E2432967-AC5E-48EF-AA0A-738A11BC7CB5</UserSecretsId>
+    <StartupObject>Gov.TicketWorker.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Features\Emails\Resources\bc-gov-logo.png" />
+    <None Remove="Features\Emails\Resources\submissiontemplate.liquid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Features\Emails\Resources\bc-gov-logo.png" />
+    <EmbeddedResource Include="Features\Emails\Resources\submissiontemplate.liquid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentEmail.Liquid" Version="3.0.0" />
+    <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
     <PackageReference Include="MassTransit" Version="7.2.2" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.2" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.2.2" />
