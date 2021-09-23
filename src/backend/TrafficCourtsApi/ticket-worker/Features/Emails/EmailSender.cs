@@ -97,18 +97,32 @@ namespace Gov.TicketWorker.Features.Emails
                     .Subject(subject)
                     .UsingTemplateFromEmbedded("ticket-worker.Features.Emails.Resources.submissiontemplate.liquid", emailModel, this.GetType().GetTypeInfo().Assembly, true);
 
-                if ( _emailFilter == null || _emailFilter.IsAllowed(to))
+                if (_emailFilter.IsAllowed(to))
                 {
+                    _logger.LogInformation("The target email address is allowed to be sent email to");
                     var result = await email.SendAsync();
                     if (!result.Successful)
                     {
-                        _logger.LogError("Failed to send an email");
+                        foreach (string error in result.ErrorMessages)
+                        {
+                            _logger.LogError(error);
+                        }
+                        
                     }
+                    else
+                    {
+                        _logger.LogInformation("Email sent successfully");
+                    }
+                }
+                else
+                {
+                    _logger.LogError("The target email address is not allowed to be sent email to");
                 }
                
             }
             catch (Exception e)
             {
+                _logger.LogError(e.ToString());
                 throw new SendEmailException("Failed to send email", e);
             }
         }

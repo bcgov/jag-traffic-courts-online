@@ -39,15 +39,42 @@ namespace Gov.TicketWorker.Test.Features.Emails
         }
 
         [Fact]
-        public void Throw_ArgumentNullException_if_passed_null()
+        public void Throw_ArgumentNullException_if_FluentEmailObjectpassed_null()
         {
             Assert.Throws<ArgumentNullException>(() => new EmailSender(null, _loggerMock.Object, _emailFilterMock.Object));
+        }
+
+        [Fact]
+        public void Throw_ArgumentNullException_if_LoggerObjectpassed_null()
+        {
             Assert.Throws<ArgumentNullException>(() => new EmailSender(_emailMock.Object, null, _emailFilterMock.Object));
+        }
+
+        [Fact]
+        public void Throw_ArgumentNullException_if_EmailFilterObjectpassed_null()
+        {
             Assert.Throws<ArgumentNullException>(() => new EmailSender(_emailMock.Object, _loggerMock.Object, null));
+        }
+
+        [Fact]
+        public void Throw_ArgumentException_if_ToAddresspassed_null()
+        {
             Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplate(null, "This is the subject line", It.IsAny<TicketDisputeContract>()));
+        }
+
+        [Fact]
+        public void Throw_ArgumentException_if_ToAddresspassed_Empty()
+        {
             Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplate("", "This is the subject line", It.IsAny<TicketDisputeContract>()));
+        }
+
+        [Fact]
+        public void Throw_ArgumentException_if_DisputeEmailModelpassed_null()
+        {
             Assert.ThrowsAsync<ArgumentNullException>(() => _sut.SendUsingTemplate("testEmail@test.com", "This is the subject line", null));
         }
+
+
 
         [Fact]
         public async Task Test_SendUsingTemplateSuccessful_EmailTemplateIsValid()
@@ -126,7 +153,25 @@ namespace Gov.TicketWorker.Test.Features.Emails
         }
 
         [Fact]
-        public async Task Test_SendUsingTemplateUnSuccessful_WhenEmailNotAllowed()
+        public async Task Sending_email_only_adds_a_single_recipient()
+        {
+            var email = new Email("from@example.com");
+
+            var sut = new EmailSender(email, _loggerMock.Object, _emailFilterMock.Object);
+            var subject = _fixture.Create<string>();
+            var model = _fixture.Create<TicketDisputeContract>();
+
+            // act
+            await sut.SendUsingTemplate("to@example.com", subject, model);
+
+            // assert
+            Assert.Single(email.Data.ToAddresses);
+            Assert.True(email.Data.IsHtml);
+
+        }
+
+        [Fact]
+        public async Task Test_SendAsyncNotCalled_WhenEmailNotAllowed()
         {
             var fixture = new Fixture();
             var disputeContractModel = fixture.Create<TicketDisputeContract>();
