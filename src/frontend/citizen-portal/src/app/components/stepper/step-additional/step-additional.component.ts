@@ -28,6 +28,11 @@ export class StepAdditionalComponent
   public saveButtonKey = 'stepper.next';
 
   public languages: Config<string>[];
+  /**
+   * Form field behaviour, customWitnessOption == true shows number input
+   * and allows user to type, otherwise use original select options 1 through 5
+   */
+  public customWitnessOption = false;
 
   constructor(
     protected route: ActivatedRoute,
@@ -55,6 +60,8 @@ export class StepAdditionalComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepAdditionalForm;
+    this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
+    this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
     this.patchForm();
   }
 
