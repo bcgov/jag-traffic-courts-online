@@ -120,7 +120,7 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="witnessPresent">
+          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="witnessPresent" (change)="onChangeCallWitnesses($event)">
             I intend to call a witness(es).
           </mat-checkbox>
         </div>
@@ -138,14 +138,14 @@
               <mat-option [value]=5>5</mat-option>
               <mat-option (click)="customWitnessOption = true" [value]=6>Custom</mat-option>
             </mat-select>
-            <mat-error *ngIf="numberOfWitnesses.hasError('requiredIfTrue')">
+            <mat-error *ngIf="numberOfWitnesses.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
           </mat-form-field>
           <mat-form-field *ngIf="customWitnessOption">
             <mat-label>Number of witnesses</mat-label>
             <input matInput type="number" min="0" step="1" formControlName="numberOfWitnesses" />
-            <mat-error *ngIf="numberOfWitnesses.hasError('requiredIfTrue')">
+            <mat-error *ngIf="numberOfWitnesses.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
             <mat-error *ngIf="numberOfWitnesses.hasError('min')">
