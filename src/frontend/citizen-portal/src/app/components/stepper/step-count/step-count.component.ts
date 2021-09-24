@@ -25,6 +25,7 @@ import { DisputeService } from 'app/services/dispute.service';
 export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
   @Input() public stepControl: FormGroup;
+  @Input() public showDoNothingOption = true;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 

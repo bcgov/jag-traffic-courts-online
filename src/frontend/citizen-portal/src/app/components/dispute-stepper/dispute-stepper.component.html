@@ -27,19 +27,29 @@
 
         <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
           <ng-template matStepLabel>Count 1: Review and action</ng-template>
-          <app-step-count id="stepCount" [stepControl]="offence1Form" [stepper]="disputeStepper"
+          <app-step-count
+            id="stepCount"
+            [showDoNothingOption]="offence2Exists"
+            [stepControl]="offence1Form"
+            [stepper]="disputeStepper"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
         <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
           <ng-template matStepLabel>Count 2: Review and action</ng-template>
-          <app-step-count id="stepCount" [stepControl]="offence2Form" [stepper]="disputeStepper"
+          <app-step-count
+            id="stepCount"
+            [stepControl]="offence2Form"
+            [stepper]="disputeStepper"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
         <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
           <ng-template matStepLabel>Count 3: Review and action</ng-template>
-          <app-step-count id="stepCount" [stepControl]="offence3Form" [stepper]="disputeStepper"
+          <app-step-count
+            id="stepCount"
+            [stepControl]="offence3Form"
+            [stepper]="disputeStepper"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
