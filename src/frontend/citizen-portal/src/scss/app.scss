@@ -29,6 +29,11 @@
 // Vendors is used to include customized vendor styles into the application.
 @import "./vendors/vendors";
 
+.heading-hr {
+  border: 1px solid theme-palette(yellow);
+  opacity: 1;
+}
+
 .mat-tooltip {
   font-size: 1em;
 }
