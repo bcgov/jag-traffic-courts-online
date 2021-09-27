@@ -43,3 +43,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .mat-select-panel.mat-select-panel {
   max-height: 290px;
 }
+
+.mat-step-label-selected .mat-step-text-label {
+  font-weight: bold;
+}
