@@ -25,7 +25,7 @@ namespace Gov.TicketWorker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                //.UseSerilog(SplunkEventCollector.Configure)
+                .UseSerilog(SplunkEventCollector.Configure)
                 .ConfigureServices((hostContext, services) =>
                 {
                     IConfiguration configuration = hostContext.Configuration;
