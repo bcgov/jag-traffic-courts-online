@@ -16,6 +16,10 @@ mat-label {
   color: theme-palette(grey, dark);
 }
 
+mat-error {
+  font-weight: bold;
+}
+
 //
 // Forms
 //
@@ -87,6 +91,30 @@ mat-label {
 
 .mat-form-field-ripple {
   background-color:  theme-palette(blue);
+}
+
+.mat-form-field-wrapper .mat-form-field-flex {
+  border: 2px transparent solid;
+}
+
+.mat-form-field-invalid {
+  & mat-icon {
+    color: theme-palette(red);
+  }
+
+  & .mat-form-field-wrapper .mat-form-field-flex {
+    border: 2px theme-palette(red) solid;
+    border-radius: 0;
+  }
+}
+
+.mat-tooltip {
+  font-size: 1em;
+}
+
+// Prevents scrolling on smaller option dropdowns
+.mat-select-panel.mat-select-panel {
+  max-height: 290px;
 }
 
 @media (max-width: 767px) {

@@ -52,15 +52,15 @@
   display: inline-flex;
   height: 46px;
   line-height: 25px;
+
+  & .view-link-text {
+   margin: auto;
+  }
 }
 
 @media (max-width: 767px) {
   .view-link {
     margin-bottom: 1em;
-
-    .view-link-text {
-      padding-top: 10px;
-    }
   }
 }
 
