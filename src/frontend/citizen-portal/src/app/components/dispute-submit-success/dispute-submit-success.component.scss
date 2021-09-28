@@ -1,3 +1,13 @@
+@import "palette.scss";
+
+.text-dark {
+  color: theme-palette(grey, dark);
+
+  & strong {
+    color: var(--bs-body-color)
+  }
+}
+
 h3 {
   font-weight: bold;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);

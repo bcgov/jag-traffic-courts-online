@@ -1,0 +1,83 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: ticket-worker
+  annotations:
+    app.openshift.io/connects-to: rabbitmq
+  labels:
+    app: ticket-worker
+    app.kubernetes.io/name: ticket-worker
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/instance: ticket-worker
+    app.kubernetes.io/part-of: traffic-court
+    app.openshift.io/runtime: dotnet
+spec:
+  completionDeadlineSeconds: 1200
+  replicas: 1
+  selector:
+    name: ticket-worker
+  strategy:
+    type: Rolling
+    maxSurge: 50%
+    maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        dev-app: traffic-court
+        name: ticket-worker
+    spec:
+      containers:
+        - image: >-
+            image-registry.openshift-image-registry.svc:5000/0198bb-tools/ticket-worker:dev
+          name: ticket-worker
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: Serilog__MinimumLevel
+              value: Debug
+            - name: SOURCE_TYPE
+              value: "ticket-worker"
+          envFrom:
+            - secretRef:
+                name: rabbitmq-configuration
+            - secretRef:
+                name: splunk-config
+          resources:
+            limits:
+              cpu: 250m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            livenessProbe:
+              httpGet:
+                path: "/health"
+                port: 8080
+                scheme: HTTP
+              initialDelaySeconds: 30
+              timeoutSeconds: 60
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: "/health"
+                port: 8080
+                scheme: HTTP
+              initialDelaySeconds: 10
+              timeoutSeconds: 60
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - ticket-worker
+        from:
+          kind: ImageStreamTag
+          namespace: "0198bb-tools"
+          name: "ticket-worker:dev"

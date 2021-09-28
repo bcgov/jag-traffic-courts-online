@@ -16,7 +16,8 @@
         "RABBITMQ__HOST": "localhost",
         "RABBITMQ__PORT": "5672",
         "RABBITMQ__USERNAME": "guest",
-        "RABBITMQ__PASSWORD": "guest"
+        "RABBITMQ__PASSWORD": "guest",
+        "SOURCE_TYPE": "citizen-api"
       },
       "dotnetRunMessages": "true",
       "applicationUrl": "https://localhost:6001;http://localhost:6000"

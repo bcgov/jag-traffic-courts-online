@@ -292,7 +292,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       interpreterRequired: [false],
       interpreterLanguage: [null],
       witnessPresent: [false],
-      numberOfWitnesses: [null],
+      numberOfWitnesses: [null, [Validators.min(0)]],
       requestReduction: [false],
       requestMoreTime: [false],
       reductionReason: [null],
@@ -306,10 +306,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
           FormGroupValidators.requiredIfTrue(
             'interpreterRequired',
             'interpreterLanguage'
-          ),
-          FormGroupValidators.requiredIfTrue(
-            'witnessPresent',
-            'numberOfWitnesses'
           ),
           FormGroupValidators.requiredIfFlags(
             '_isReductionNotInCourt',

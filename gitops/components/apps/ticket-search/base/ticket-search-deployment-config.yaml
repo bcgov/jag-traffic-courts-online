@@ -36,12 +36,16 @@ spec:
               value: Debug
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
+            - name: SOURCE_TYPE
+              value: "ticket-search"
           envFrom:
             - secretRef:
                 name: ticket-search-rsi-config
+            - secretRef:
+                name: splunk-config
           resources:
             limits:
-              cpu: 150m
+              cpu: 250m
               memory: 512Mi
             requests:
               cpu: 100m

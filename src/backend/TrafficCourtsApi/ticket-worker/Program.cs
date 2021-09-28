@@ -1,4 +1,5 @@
 using Gov.TicketWorker.Features.Disputes;
+using Gov.TicketWorker.Features.Emails;
 using Gov.TicketWorker.Features.Notifications;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Contract;
 
@@ -21,14 +25,54 @@ namespace Gov.TicketWorker
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                //.UseSerilog(SplunkEventCollector.Configure)
+                .UseSerilog(SplunkEventCollector.Configure)
                 .ConfigureServices((hostContext, services) =>
                 {
                     IConfiguration configuration = hostContext.Configuration;
                     ConfigureServiceBus(services, configuration);
+                    ConfigureEmailServices(services, configuration);
                     services.AddHostedService<Worker>();
-
+                    
                 });
+
+        internal static void ConfigureEmailServices(IServiceCollection services, IConfiguration configuration)
+        {
+            var sender = configuration.GetSection("SMTPServer")["Sender"];
+            var port = configuration.GetSection("SMTPServer")["Port"];
+            var from = configuration.GetSection("Mail")["From"];
+            var fromEmail = configuration.GetSection("Mail")["FromEmail"];
+            string allowedEmails = configuration.GetSection("ALLOWED_RECIPIENT_EMAILS").Value;
+
+            if (sender == null)
+                Log.Logger.Error("SMTP Sender configuration not found for sending emails");
+            if (fromEmail == null)
+                Log.Logger.Error("FromEmail address configuration not found for sending emails");
+            if (port == null)
+                Log.Logger.Error("SMTP port number configuration not found for sending emails");
+
+            if (sender != null && fromEmail != null && port != null)
+            {
+                if (allowedEmails != "*")
+                {
+                    var allowedEmailsList = allowedEmails?.Split(";").ToList();
+                    services.AddSingleton<IEmailFilter>(new DefaultEmailFilter(allowedEmailsList ?? new List<string>()));
+                }
+                else
+                {
+                    services.AddSingleton<IEmailFilter>(new NotFilteredEmailFilter());
+                }
+
+                services.AddFluentEmail(fromEmail, from)
+                      .AddLiquidRenderer()
+                      .AddSmtpSender(new SmtpClient(sender)
+                      {
+                          EnableSsl = false,
+                          Port = int.Parse(port),
+                          DeliveryMethod = SmtpDeliveryMethod.Network
+                      });
+                services.AddScoped<IEmailSender, EmailSender>();
+            }
+        }
 
         internal static void ConfigureServiceBus(IServiceCollection services, IConfiguration configuration)
         {
@@ -36,6 +80,9 @@ namespace Gov.TicketWorker
 
             var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMQConfiguration>();
             var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+           
+
+            
 
             services.AddMassTransit(config =>
             {
@@ -66,6 +113,8 @@ namespace Gov.TicketWorker
                         endpoint.Consumer<NotificationRequestedConsumer>(ctx);
                     });
                 });
+
+                
             });
             services.AddMassTransitHostedService();
         }

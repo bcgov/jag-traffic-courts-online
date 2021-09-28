@@ -1,0 +1,137 @@
+<dashboard theme="dark">
+  <label>TCO - Operational Support</label>
+  <description>Support Dashboard for Traffic Court Online</description>
+  <fieldset submitButton="false">
+    <input type="time" token="reporttime">
+      <label>Time Range</label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="index">
+      <label>Environment</label>
+      <choice value="prod_traffic_court">Production</choice>
+      <choice value="test_traffic_court">Test</choice>
+      <choice value="dev_traffic_court">Development</choice>
+      <default>dev_traffic_court</default>
+      <initialValue>dev_traffic_court</initialValue>
+    </input>
+    <input type="dropdown" token="sourcetype">
+      <label>Service</label>
+      <choice value="*">All</choice>
+      <choice value="citizen-api">citizen-api</choice>
+      <choice value="ticket-search">ticket-search</choice>
+      <choice value="ticket-worker">ticket-worker</choice>
+      <default>*</default>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+     <panel>
+      <title>Ticket Search Statistics </title>
+      <single>
+        <search>
+          <query>index="$index$" Level="Information" RenderedMessage="get ticket search query*" | stats count(*)</query>
+          <earliest>$reporttime.earliest$</earliest>
+          <latest>$reporttime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xdc4e41","0x53a051"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>  
+    <panel>
+      <title>Shell ticket Created Statistics </title>
+      <single>
+        <search>
+          <query>index="$index$" Level="Information" RenderedMessage="Shell ticket is created.*" | stats count(*)</query>
+          <earliest>$reporttime.earliest$</earliest>
+          <latest>$reporttime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xdc4e41","0x53a051",]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel> 
+    <panel>
+        <title>Ticket Paid Statistics </title>
+        <single>
+          <search>
+            <query>index="$index$" Level="Information" RenderedMessage="update ticket payment" | stats count(*)</query>
+            <earliest>$reporttime.earliest$</earliest>
+            <latest>$reporttime.latest$</latest>
+            <sampleRatio>1</sampleRatio>
+          </search>
+          <option name="colorMode">block</option>
+          <option name="drilldown">none</option>
+          <option name="rangeColors">["0xdc4e41","0x53a051"]</option>
+          <option name="rangeValues">[0]</option>
+          <option name="refresh.display">progressbar</option>
+          <option name="useColors">1</option>
+        </single>
+    </panel>
+    <panel>
+        <title>Ticket Dispute Statistics </title>
+        <single>
+          <search>
+            <query>index="$index$" Level="Information" RenderedMessage="Dispute created.*" | stats count(*)</query>
+            <earliest>$reporttime.earliest$</earliest>
+            <latest>$reporttime.latest$</latest>
+            <sampleRatio>1</sampleRatio>
+          </search>
+          <option name="colorMode">block</option>
+          <option name="drilldown">none</option>
+          <option name="rangeColors">["0xdc4e41","0x53a051"]</option>
+          <option name="rangeValues">[0]</option>
+          <option name="refresh.display">progressbar</option>
+          <option name="useColors">1</option>
+        </single>
+    </panel>  
+  </row>
+  <row>
+    <panel>
+      <title>Error Statistics</title>
+      <single>
+        <search>
+          <query>index="$index$" Level="Error" |  stats count(*)</query>
+          <earliest>$reporttime.earliest$</earliest>
+          <latest>$reporttime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0xdc4e41"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <title>Error Statistics</title>
+      <chart>
+        <search>
+          <query>index="$index$" Level="Error" sourcetype="$sourcetype$" | stats count by sourcetype  | sort -count</query>
+          <earliest>$reporttime.earliest$</earliest>
+          <latest>$reporttime.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.chart">bar</option>
+        <option name="charting.chart.showDataLabels">all</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</dashboard>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Config } from '@config/config.model';
@@ -28,6 +29,11 @@ export class StepAdditionalComponent
   public saveButtonKey = 'stepper.next';
 
   public languages: Config<string>[];
+  /**
+   * Form field behaviour, customWitnessOption == true shows number input
+   * and allows user to type, otherwise use original select options 1 through 5
+   */
+  public customWitnessOption = false;
 
   constructor(
     protected route: ActivatedRoute,
@@ -55,6 +61,8 @@ export class StepAdditionalComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepAdditionalForm;
+    this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
+    this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
     this.patchForm();
   }
 
@@ -68,6 +76,14 @@ export class StepAdditionalComponent
 
   public onBack() {
     this.stepper.previous();
+  }
+
+  public onChangeCallWitnesses(event: MatCheckboxChange) {
+    if (event.checked) {
+      this.form.controls.numberOfWitnesses.setValidators([Validators.min(0), Validators.required]);
+    } else {
+      this.form.controls.numberOfWitnesses.setValidators([]);
+    }
   }
 
   public get interpreterLanguage(): FormControl {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Serilog.Context;
 
 namespace Gov.TicketSearch.Controllers
 {
@@ -33,20 +34,23 @@ namespace Gov.TicketSearch.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> Get([FromQuery]TicketSearchRequest searchRequest)
         {
-            _logger.LogInformation("Get ticket search request");
-            try
+            using (LogContext.PushProperty("TicketNumber", searchRequest.TicketNumber))
             {
-                RawTicketSearchResponse response = await _ticketsService.SearchTicketAsync(searchRequest.TicketNumber, searchRequest.Time, new CancellationToken());
-                _logger.LogInformation("Get Raw ticket search response successfully");
-                var searchResponse = BuildTicketSearchResponse(response);
-                _logger.LogInformation("Build ticket search response successfully");
-                if (searchResponse == null) return NoContent();
-                return Ok(searchResponse);
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "Search Ticket failed.");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { ReasonCode = "error", Message = ex.Message });
+                _logger.LogInformation("Get ticket search request");
+                try
+                {
+                    RawTicketSearchResponse response = await _ticketsService.SearchTicketAsync(searchRequest.TicketNumber, searchRequest.Time, new CancellationToken());
+                    _logger.LogInformation("Get Raw ticket search response successfully");
+                    var searchResponse = BuildTicketSearchResponse(response);
+                    _logger.LogInformation("Build ticket search response successfully");
+                    if (searchResponse == null) return NoContent();
+                    return Ok(searchResponse);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Search Ticket failed.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { ReasonCode = "error", Message = ex.Message });
+                }
             }
         }
 

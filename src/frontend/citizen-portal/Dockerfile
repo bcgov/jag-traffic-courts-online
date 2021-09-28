@@ -1,4 +1,4 @@
-# base image
+# Build image
 FROM node:14.17 as build-deps
 
 # set working directory
@@ -7,15 +7,15 @@ ENV NODE_ROOT /usr/src/app
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package.json package-lock.json yarn.lock ./
+COPY package.json yarn.lock ./
 
-RUN npm install
-RUN npm audit fix
+RUN yarn install
 
 COPY . .
 
-RUN npm run build-prod
+RUN yarn run build-prod
 
+# Runtime image
 FROM registry.access.redhat.com/ubi8/nginx-118
 
 COPY --from=build-deps /usr/src/app/src/favicon.ico /usr/share/nginx/html
