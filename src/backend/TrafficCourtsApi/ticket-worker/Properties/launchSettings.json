@@ -8,9 +8,10 @@
         "RABBITMQ__HOST": "localhost",
         "RABBITMQ__PORT": "5672",
         "RABBITMQ__USERNAME": "guest",
-        "RABBITMQ__PASSWORD": "guest"
-        //"SPLUNK__URL": "http://hec.splunk.com/collector",
-        //"SPLUNK__TOKEN": "tempToken"
+        "RABBITMQ__PASSWORD": "guest",
+        "SOURCE_TYPE": "ticket-worker",
+        "SPLUNK__URL": "http://hec.splunk.com/collector",
+        "SPLUNK__TOKEN": "tempToken"
       }
     }
   }

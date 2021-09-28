@@ -24,7 +24,6 @@ exclude_patterns:
   # Frontend Pattern Excludes
   - "src/frontend/citizen-portal/karma.conf.js"
   - "src/frontend/citizen-portal/package.json"
-  - "src/frontend/citizen-portal/package-lock.json"
   - "src/frontend/citizen-portal/tsconfig.json"
   - "src/frontend/citizen-portal/tslint.json"
   - "src/frontend/citizen-portal/**/*.spec.*"

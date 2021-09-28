@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Config } from '@config/config.model';
@@ -75,6 +76,14 @@ export class StepAdditionalComponent
 
   public onBack() {
     this.stepper.previous();
+  }
+
+  public onChangeCallWitnesses(event: MatCheckboxChange) {
+    if (event.checked) {
+      this.form.controls.numberOfWitnesses.setValidators([Validators.min(0), Validators.required]);
+    } else {
+      this.form.controls.numberOfWitnesses.setValidators([]);
+    }
   }
 
   public get interpreterLanguage(): FormControl {
