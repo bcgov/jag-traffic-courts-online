@@ -339,6 +339,7 @@ export class MockDisputeService {
     return {
       lastName: faker.name.lastName(),
       givenNames: faker.name.firstName(),
+      mailingAddress: faker.address.streetAddress(),
       city: faker.address.city(),
       province: faker.address.state(),
       postalCode: 'V8R3E3',
@@ -347,7 +348,7 @@ export class MockDisputeService {
       driverLicenseNumber: '2342342',
       driverLicenseProvince: 'BC',
       phoneNumber: '2506653434',
-      mailingAddress
+      _mailingAddress: mailingAddress
     };
   }
 
@@ -355,12 +356,16 @@ export class MockDisputeService {
     return {
       lastName: null,
       givenNames: null,
+      mailingAddress: null,
+      postalCode: null,
+      city: null,
+      province: null,
       birthdate: null,
       emailAddress: null,
       driverLicenseNumber: null,
       driverLicenseProvince: null,
       phoneNumber: null,
-      mailingAddress: null
+      _mailingAddress: null
     };
   }
 

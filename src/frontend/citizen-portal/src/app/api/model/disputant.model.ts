@@ -14,7 +14,7 @@
 export interface Disputant {
   lastName?: string;
   givenNames?: string;
-  mailingAddressOld?: string;
+  mailingAddress?: string;
   city?: string;
   province?: string;
   postalCode?: string;

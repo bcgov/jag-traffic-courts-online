@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { Address, AddressLine } from '@shared/models/address.model';
+import { Address } from '@shared/models/address.model';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -32,8 +32,12 @@ export class StepDisputantComponent
 
   private MINIMUM_AGE = 18;
 
-  public addressFormControlNames: AddressLine[];
-  public hasMailingAddress: boolean;
+  /**
+   * @description
+   * Whether to show the address line fields.
+   */
+   public showManualButton: boolean;
+   public showAddressFields: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -58,21 +62,16 @@ export class StepDisputantComponent
     this.maxDateOfBirth = new Date();
     this.maxDateOfBirth.setFullYear(today.getFullYear() - this.MINIMUM_AGE);
     this.isMobile = this.utilsService.isMobile();
+    this.showManualButton = true;
+    this.showAddressFields = false;
   }
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepDisputantForm;
-    this.patchForm();
-
-    this.addressFormControlNames = [
-      'street',
-      'street2',
-      'city',
-      'provinceCode',
-      'countryCode',
-      'postalCode'
-    ];
-    this.hasMailingAddress = Address.isNotEmpty(this.mailingAddress.value);
+    this.patchForm().then(() => {
+      this.showManualButton = !this.mailingAddress.value;
+      this.showAddressFields = !!this.mailingAddress.value;
+    });
   }
 
   public onBack() {
@@ -87,6 +86,23 @@ export class StepDisputantComponent
     }
   }
 
+  /**
+   * Updates form fields with Canada Post Autocomplete Retrieve result
+   */
+  public onAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
+    this.form.patchValue({countryCode});
+    this.form.patchValue({province: provinceCode});
+    this.form.patchValue({postalCode});
+    this.form.patchValue({mailingAddress: address});
+    this.form.patchValue({city});
+    this.showManualButton = !address;
+    this.showAddressFields = !!address;
+  }
+
+  public showManualAddress(): void {
+    this.showAddressFields = true;
+  }
+
   public get phoneNumber(): FormControl {
     return this.form.get('phoneNumber') as FormControl;
   }
@@ -99,7 +115,7 @@ export class StepDisputantComponent
     return this.form.get('emailAddress') as FormControl;
   }
 
-  public get mailingAddress(): FormGroup {
-    return this.form.get('mailingAddress') as FormGroup;
+  public get mailingAddress(): FormControl {
+    return this.form.get('mailingAddress') as FormControl;
   }
 }

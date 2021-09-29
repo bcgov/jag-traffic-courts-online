@@ -8,7 +8,7 @@ export const optionalAddressLineItems: (keyof Address)[] = ['id', 'street2'];
 
 export class Address {
   id?: number = null;
-  street: string = null;
+  address: string = null;
   street2?: string = null;
   city: string = null;
   provinceCode: string = null;
@@ -18,13 +18,13 @@ export class Address {
   constructor(
     countryCode: string = null,
     provinceCode: string = null,
-    street: string = null,
+    address: string = null,
     street2: string = null,
     city: string = null,
     postalCode: string = null,
     id: number = null
   ) {
-    this.street = street;
+    this.address = address;
     this.street2 = street2;
     this.city = city;
     this.provinceCode = provinceCode;
@@ -39,9 +39,9 @@ export class Address {
    * NOTE: Useful for converting object literals into an instance, as well as,
    * creating an empty Address.
    */
-  public static instanceOf(address: Address) {
-    const { id = 0, street, street2 = null, city, provinceCode, countryCode, postalCode } = address;
-    return new Address(countryCode, provinceCode, street, street2, city, postalCode, id);
+  public static instanceOf(addressInfo: Address) {
+    const { id = 0, address, street2 = null, city, provinceCode, countryCode, postalCode } = addressInfo;
+    return new Address(countryCode, provinceCode, address, street2, city, postalCode, id);
   }
 
   /**
@@ -51,25 +51,25 @@ export class Address {
    * NOTE: Most use cases don't require `street2`, and therefore it has
    * been excluded by default as optional.
    */
-  public static isEmpty(address: Address, omitList: (keyof Address)[] = optionalAddressLineItems): boolean {
-    if (!address) {
+  public static isEmpty(addressInfo: Address, omitList: (keyof Address)[] = optionalAddressLineItems): boolean {
+    if (!addressInfo) {
       return true;
     }
 
-    return Object.keys(address)
+    return Object.keys(addressInfo)
       .filter((key: keyof Address) => !omitList.includes(key))
-      .every(k => !address[k]);
+      .every(k => !addressInfo[k]);
   }
 
   /**
    * @description
    * Checks for a partial address.
    */
-  public static isNotEmpty(address: Address, omitList?: (keyof Address)[]): boolean {
-    if (!address || address.id === 0) {
+  public static isNotEmpty(addressInfo: Address, omitList?: (keyof Address)[]): boolean {
+    if (!addressInfo || addressInfo.id === 0) {
       return false;
     }
 
-    return !this.isEmpty(address, omitList);
+    return !this.isEmpty(addressInfo, omitList);
   }
 }

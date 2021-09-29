@@ -20,7 +20,7 @@ export class AddressAutocompleteResource {
   ) { }
 
   public findAddress(searchTerm: string): Observable<AddressAutocompleteFindResponse[]> {
-    return this.apiResource.get<AddressAutocompleteFindResponse[]>(`AddressAutocomplete/findAddress?searchTerm=${searchTerm}`)
+    return this.apiResource.get<AddressAutocompleteFindResponse[]>(`AddressAutocomplete/Find?searchTerm=${searchTerm}`)
       .pipe(
         map((response: ApiHttpResponse<AddressAutocompleteFindResponse[]>) => response.result),
         tap((response: AddressAutocompleteFindResponse[]) => this.logger.info('AUTOCOMPLETE_FIND', response)),
@@ -34,7 +34,7 @@ export class AddressAutocompleteResource {
   }
 
   public retrieveAddress(id: string): Observable<AddressAutocompleteRetrieveResponse[]> {
-    return this.apiResource.get<AddressAutocompleteRetrieveResponse[]>(`AddressAutocomplete/retrieveAddress?id=${id}`)
+    return this.apiResource.get<AddressAutocompleteRetrieveResponse[]>(`AddressAutocomplete/Retrieve?id=${id}`)
       .pipe(
         map((response: ApiHttpResponse<AddressAutocompleteRetrieveResponse[]>) => response.result),
         tap((response: AddressAutocompleteRetrieveResponse[]) => this.logger.info('AUTOCOMPLETE_RETRIEVE', response)),

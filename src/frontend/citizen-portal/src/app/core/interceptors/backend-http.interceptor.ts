@@ -41,8 +41,8 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         !currentRoutePath.includes('dispute') &&
         !currentRoutePath.includes('pay') &&
         !currentRoutePath.includes('lookup') &&
-        !currentRoutePath.includes('findaddress') &&
-        !currentRoutePath.includes('retrieveaddress')
+        !currentRoutePath.includes('find') &&
+        !currentRoutePath.includes('retrieve')
       ) {
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
@@ -61,11 +61,11 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return this.handleDisputesRequests(request.method);
 
         // Handle 'addressAutocomplete' requests
-      } else if (currentRoutePath.includes('findaddress')) {
+      } else if (currentRoutePath.includes('find')) {
         return this.handleAddressAutocompleteFindRequests(request.method);
 
         // Handle 'addressAutocomplete' requests
-      } else if (currentRoutePath.includes('retrieveaddress')) {
+      } else if (currentRoutePath.includes('retrieve')) {
         return this.handleAddressAutocompleteRetrieveRequests(request.method);
 
         // Handle 'lookup' requests
@@ -151,7 +151,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return of(
           new HttpResponse({
             status: 200,
-            body: { result: this.mockDisputeService.addressAutocompleteFindResponse },
+            body: this.mockDisputeService.addressAutocompleteFindResponse,
           })
         );
         break;
@@ -171,7 +171,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         return of(
           new HttpResponse({
             status: 200,
-            body: { result: this.mockDisputeService.addressAutocompleteRetrieveResponse },
+            body: this.mockDisputeService.addressAutocompleteRetrieveResponse,
           })
         );
         break;

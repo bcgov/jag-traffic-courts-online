@@ -153,7 +153,7 @@ export class FormUtilsService {
   } = null): FormGroup {
     const controlsConfig = {
       id: [0, []],
-      street: [{ value: null, disabled: false }, []],
+      address: [{ value: null, disabled: false }, []],
       street2: [{ value: null, disabled: false }, []],
       city: [{ value: null, disabled: false }, []],
       provinceCode: [{ value: null, disabled: false }, []],
