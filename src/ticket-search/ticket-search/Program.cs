@@ -50,13 +50,10 @@ namespace Gov.TicketSearch
 
 					if (!string.IsNullOrEmpty(splunkCollectorUrl) && !string.IsNullOrEmpty(splunkToken))
 					{
-						// enable Splunk logger using Serilog
-						var fields = new Serilog.Sinks.Splunk.CustomFields();
 
 						loggerConfiguration.WriteTo.EventCollector(
 							splunkCollectorUrl,
 							splunkToken,
-							fields,
 							sourceType: "ticket-search",
 							restrictedToMinimumLevel: LogEventLevel.Debug,
 							messageHandler: new HttpClientHandler

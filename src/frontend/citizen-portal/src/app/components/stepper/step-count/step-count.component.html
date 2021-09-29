@@ -27,7 +27,7 @@
                  [ngClass]="{ 'inactive': offenceAgreementStatus.disabled }">What action would you like to take?
           </label>
           <mat-radio-group formControlName="offenceAgreementStatus">
-            <mat-radio-button value="NOTHING">
+            <mat-radio-button value="NOTHING" *ngIf="showDoNothingOption">
               <span class="wrap-mat-radio-label">
                 I do not wish to take any action on this count at this time.
               </span>

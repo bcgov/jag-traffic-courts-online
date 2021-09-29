@@ -305,10 +305,6 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
             'interpreterRequired',
             'interpreterLanguage'
           ),
-          FormGroupValidators.requiredIfTrue(
-            'witnessPresent',
-            'numberOfWitnesses'
-          ),
           FormGroupValidators.requiredIfFlags(
             '_isReductionNotInCourt',
             'requestReduction',

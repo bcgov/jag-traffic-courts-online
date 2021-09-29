@@ -25,7 +25,10 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 #### Angular cli
 
 Install Angular cli using command:
-npm install -g @angular/cli
+
+```bash
+yarn add @angular/cli
+```
 
 #### VS Code
 
@@ -39,10 +42,10 @@ npm install -g @angular/cli
 
 ### Client
 
-To build, run, and open the Angular application in the default browser at http://localhost:4200 for development go to the Citizen Portal project repository in the terminal and type:
+To build, run, and open the Angular application in the default browser at <http://localhost:4200> for development go to the Citizen Portal project repository in the terminal and type:
 
 ```bash
-npm run start
+yarn start
 ```
 
 To test the production build locally before pushing features to the repository for deployment type:
@@ -55,19 +58,19 @@ ng build --prod
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.x. Refer to the Angular CLI documentation for the available commands, but the most used commands during development will be:
 
-1. `npm install` to install any packages that the application depends on.
-1. `ng serve -o` to serve your application locally in memory during development at `http://localhost:4200` through the default browser, which watches for changes, recompiles, and automatically refresh the application in the browser
-1. `ng build` to build the application, which is stored in `/dist` directory. Use the `--prod` flag for a production build, which significantly decreases the size of the application
-1. `ng g <blueprint>` to create code scaffolding for a directive, pipe, service, class, guard, interface, enum, and module
-1. `ng lint` to lint the application code using TSLint.
-1. `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-1. `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+1. `yarn install` to install any packages that the application depends on.
+2. `ng serve -o` to serve your application locally in memory during development at `http://localhost:4200` through the default browser, which watches for changes, recompiles, and automatically refresh the application in the browser
+3. `ng build` to build the application, which is stored in `/dist` directory. Use the `--prod` flag for a production build, which significantly decreases the size of the application
+4. `ng g <blueprint>` to create code scaffolding for a directive, pipe, service, class, guard, interface, enum, and module
+5. `ng lint` to lint the application code using TSLint.
+6. `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+7. `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ##### Getting Help
 
 1. To get more help on the Angular CLI use `ng help`
-1. `ng doc component` to look up documentation for features
-1. `ng serve --help` to look up doc for `ng serve` command
+2. `ng doc component` to look up documentation for features
+3. `ng serve --help` to look up doc for `ng serve` command
 
 ## Coding Styles
 

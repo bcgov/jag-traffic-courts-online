@@ -75,8 +75,6 @@ namespace Gov.TicketWorker.Models
         public decimal CountOneAmount { get; set; }
         public decimal CountTwoAmount { get; set; }
         public decimal CountThreeAmount { get; set; }
-        public string DiscountDueDate { get; set; }//null or has valid or invalid value
-        public decimal DiscountAmount { get; set; }//25 always
         public string ConfirmationNumber { get; set; }
     }
 }

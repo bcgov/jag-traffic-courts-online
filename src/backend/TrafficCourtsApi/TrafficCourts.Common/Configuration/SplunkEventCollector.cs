@@ -30,6 +30,7 @@ namespace TrafficCourts.Common.Configuration
             // otherwise, the event collector could be configured using the configuration system
             var splunkUrl = configuration["Splunk:Url"];
             var splunkToken = configuration["Splunk:Token"];
+            var sourceType = configuration["SOURCE_TYPE"];
 
             if (string.IsNullOrWhiteSpace(splunkToken) || string.IsNullOrWhiteSpace(splunkUrl))
             {
@@ -41,6 +42,7 @@ namespace TrafficCourts.Common.Configuration
                     .WriteTo.EventCollector(
                         splunkHost: splunkUrl,
                         eventCollectorToken: splunkToken,
+                        sourceType: sourceType,
 #pragma warning disable CA2000 // Dispose objects before losing scope
                         messageHandler: new HttpClientHandler
                         {
