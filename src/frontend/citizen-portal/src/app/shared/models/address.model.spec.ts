@@ -9,7 +9,7 @@ describe('ArrayUtils', () => {
       address = {
         countryCode: 'CA',
         provinceCode: 'ON',
-        street: '65 Pine Street',
+        address: '65 Pine Street',
         street2: null,
         city: 'Toronto',
         postalCode: 'M4E 2B6',
@@ -39,7 +39,7 @@ describe('ArrayUtils', () => {
       address = {
         countryCode: 'CA',
         provinceCode: 'ON',
-        street: '65 Pine Street',
+        address: '65 Pine Street',
         street2: null,
         city: 'Toronto',
         postalCode: 'M4E 2B6',
@@ -70,7 +70,7 @@ describe('ArrayUtils', () => {
       address = {
         countryCode: 'CA',
         provinceCode: 'ON',
-        street: '65 Pine Street',
+        address: '65 Pine Street',
         street2: null,
         city: 'Toronto',
         postalCode: 'M4E 2B6',

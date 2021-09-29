@@ -4,8 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AddressAutocompleteComponent } from './address-autocomplete.component';
-import { APP_CONFIG, APP_DI_CONFIG } from 'app/app-config.module';
-import { NgxMaterialModule } from '@lib/modules/ngx-material/ngx-material.module';
+import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
 
 describe('AddressAutocompleteComponent', () => {
   let component: AddressAutocompleteComponent;
@@ -22,12 +21,6 @@ describe('AddressAutocompleteComponent', () => {
       declarations: [
         AddressAutocompleteComponent
       ],
-      providers: [
-        {
-          provide: APP_CONFIG,
-          useValue: APP_DI_CONFIG
-        }
-      ]
     })
       .compileComponents();
   }));
