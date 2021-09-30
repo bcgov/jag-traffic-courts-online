@@ -38,11 +38,11 @@ oc create -f secrets.yaml --save-config
 5. create secrets for docker access (dockerhub credentials for pull in dockerhub images)
 
 ```
-oc create secret docker-registry docker-creds ^
-  docker-server=docker.io ^
-  docker-username=bcgovtco ^
-  docker-password="password" ^
-  docker-email=unused
+oc create secret docker-registry docker-creds `
+  --docker-server=docker.io `
+  --docker-username=bcgovtco `
+  --docker-password="password" `
+  --docker-email=unused
 ```
 
 > Why we need this?
