@@ -1,0 +1,168 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: traffic-courts-citizen-api
+  description: Deployment template for the Traffic Courts Citizen API Component
+  
+labels:
+
+  app: ${BACKEND_POD}
+  app.kubernetes.io/instance: ${BACKEND_POD}
+  app.kubernetes.io/name: ${BACKEND_POD}
+  app.kubernetes.io/part-of: ${APP_NAME}
+  app.kubernetes.io/component: ${COMPONENT_TYPE}
+  app.openshift.io/runtime: ${RUNTIME}
+  
+parameters:
+
+- name: APP_NAME
+  description: The application name that each component is part of
+  required: false
+  value: traffic-court
+  
+- name: OC_NAMESPACE
+  description: The OpenShift namespace prefix
+  required: true
+  value: 0198bb
+  
+- name: OC_ENV
+  description: The OpenShift environment, ie dev, test or prod
+  required: true
+  
+- name: BACKEND_POD
+  description: The name used to create the DC 
+  required: true
+
+- name: COMPONENT_TYPE
+  description: The application name that each component is part of
+  required: false
+  value: backend
+
+- name: IMAGE_NAME
+  description: The application name that each component is part of
+  required: false
+  value: dispute-api
+
+- name: TICKETSEARCHAPI__BASEURL
+  description: The application name that each component is part of
+  required: false
+  value: http://ticket-search
+
+- name: PAYBCAPI__BASEURL
+  description: The application name that each component is part of
+  required: false
+  value: http://paybc-mock-0198bb-dev.apps.silver.devops.gov.bc.ca/
+  
+- name: PAYBCAPI__CALLBACKBASEURL
+  description: The application name that each component is part of
+  required: false
+  value: https://dev.violationtickets.gov.bc.ca/paymentComplete?
+
+- name: RUNTIME
+  description: The application name that each component is part of
+  required: false
+  value: dotnet
+  
+
+objects:
+
+### Citizen API Deployment Configs ###
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${BACKEND_POD}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+    annotations:
+      app.openshift.io/connects-to: ticket-search, rabbitmq
+    labels:
+      app.kubernetes.io/name: ${BACKEND_POD}
+      
+  spec:
+    completionDeadlineSeconds: 1200
+    replicas: 1
+    selector:
+      name: ${BACKEND_POD}
+    strategy:
+      type: Rolling
+      maxSurge: 50%
+      maxUnavailable: 0
+    template:
+      metadata:
+        labels:
+          dev-app: ${APP_NAME}
+          name: ${BACKEND_POD}
+      spec:
+        containers:
+          - image: >-
+              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/${IMAGE_NAME}:${OC_ENV}
+            name: ${BACKEND_POD} 
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 8080
+            env:
+              - name: TicketSearchApi__BaseUrl
+                value: "${TICKETSEARCHAPI__BASEURL}"
+              - name: Serilog__MinimumLevel
+                value: Debug
+              - name: PaybcApi__BaseUrl
+                value: "${PAYBCAPI__BASEURL}"
+              - name: PaybcApi__CallbackBaseUrl
+                value: "${PAYBCAPI__CALLBACKBASEURL}"
+            resources:
+              limits:
+                cpu: 100m
+                memory: 256Mi
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              livenessProbe:
+                httpGet:
+                  path: "/health"
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                timeoutSeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
+              readinessProbe:
+                httpGet:
+                  path: "/health"
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 10
+                timeoutSeconds: 60
+                periodSeconds: 10
+                successThreshold: 1
+                failureThreshold: 3
+    triggers:
+      - type: ImageChange
+      - type: ConfigChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - ${BACKEND_POD}
+          from:
+            kind: ImageStreamTag
+            namespace: "${OC_NAMESPACE}-tools"
+            name: '${BACKEND_POD}:${OC_ENV}'
+  status: {}
+  
+### Citizen API Service ###
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${BACKEND_POD}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+    annotations:
+      description: Exposes and load balances the application pods
+  spec:
+    ports:
+      - name: web
+        protocol: TCP
+        port: 80
+        targetPort: 8080
+    selector:
+      name: ${BACKEND_POD}
+    sessionAffinity: None
+    type: ClusterIP

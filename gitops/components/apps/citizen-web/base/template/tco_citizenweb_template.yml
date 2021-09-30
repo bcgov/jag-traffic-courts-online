@@ -1,0 +1,179 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: traffic-courts-citizen-web
+  description: Deployment template for the Traffic Courts Citizen Web Component
+
+labels:
+  app: ${FRONTEND_POD}
+  app.kubernetes.io/instance: ${FRONTEND_POD}
+  app.kubernetes.io/name: ${FRONTEND_POD}
+  app.kubernetes.io/part-of: ${APP_NAME}
+  app.kubernetes.io/component: ${COMPONENT_TYPE}
+  app.openshift.io/runtime: ${RUNTIME}
+
+parameters:
+  - name: APP_NAME
+    description: The application name that each component is part of
+    required: false
+    value: traffic-court
+
+  - name: OC_NAMESPACE
+    description: The OpenShift namespace prefix
+    required: true
+    value: 0198bb
+
+  - name: OC_ENV
+    description: The OpenShift environment, ie dev, test or prod
+    required: true
+
+  - name: FRONTEND_POD
+    description: The name used to create the DC
+    required: true
+
+  - name: FRONTEND_URL
+    description: The route prefix. Combined with the OC_NAMESPACE, OC_ENV and URL_STUB to build the url
+    required: false
+
+  - name: URL_STUB
+    description: The route suffix. Used to build the route
+    value: ".apps.silver.devops.gov.bc.ca"
+    required: false
+
+  - name: COMPONENT_TYPE
+    description: The application name that each component is part of
+    required: false
+    value: backend
+
+  - name: RUNTIME
+    description: The application name that each component is part of
+    required: false
+    value: angularjs
+
+  - name: CM_ISPROD
+    description: The application name that each component is part of
+    required: false
+    value: "false"
+
+  - name: CM_VERSION
+    description: The application name that each component is part of
+    required: false
+    value: 1.0.0
+
+  - name: CM_UNDERSTANDYOURTICKETLINK
+    description: The application name that each component is part of
+    required: true
+
+  - name: CM_PAYMENTOPTIONSLINK
+    description: The application name that each component is part of
+    required: true
+
+  - name: CM_RESOLUTIONOPTIONSLINK
+    description: The application name that each component is part of
+    required: true
+
+objects:
+  ### Citizen Web Config Map ###
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: citizen-web-configuration
+      namespace: ${OC_NAMESPACE}-${OC_ENV}
+    data:
+      app.config.json: |-
+        {
+          "production": ${CM_ISPROD},
+          "environment": "${OC_ENV}",
+          "version": "${CM_VERSION}",
+          "useMockServices": false,
+          "apiBaseUrl": "/api",
+          "understandYourTicketLink": "${CM_UNDERSTANDYOURTICKETLINK}",
+          "paymentOptionsLink": "${CM_PAYMENTOPTIONSLINK}",
+          "resolutionOptionsLink": "${CM_RESOLUTIONOPTIONSLINK}",
+          "features": {
+            "dispute":true
+          }
+        }
+
+  ### Citizen Web Deployment Configs ###
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      name: ${FRONTEND_POD}
+      namespace: ${OC_NAMESPACE}-${OC_ENV}
+      annotations:
+        app.openshift.io/connects-to: citizen-api
+      labels:
+        app.kubernetes.io/name: ${FRONTEND_POD}
+
+    spec:
+      completionDeadlineSeconds: 1200
+      replicas: 1
+      selector:
+        name: ${FRONTEND_POD}
+      strategy:
+        type: Rolling
+        maxSurge: 50%
+        maxUnavailable: 0
+      template:
+        metadata:
+          labels:
+            dev-app: ${APP_NAME}
+            name: ${FRONTEND_POD}
+        spec:
+          containers:
+            - image: >-
+                image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/${FRONTEND_POD}:${OC_ENV}
+              name: ${FRONTEND_POD}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 8080
+              resources:
+                limits:
+                  cpu: 150m
+                  memory: 512Mi
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+              volumeMounts:
+                - name: configuration-volume
+                  mountPath: /usr/share/nginx/html/assets/app.config.json
+                  subPath: app.config.json
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          volumes:
+            - name: configuration-volume
+              configMap:
+                name: citizen-web-configuration
+                defaultMode: 420
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${FRONTEND_POD}
+            from:
+              kind: ImageStreamTag
+              namespace: "${OC_NAMESPACE}-tools"
+              name: "${FRONTEND_POD}:${OC_ENV}"
+    status: {}
+
+  ### Citizen Web Service ###
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${FRONTEND_POD}
+      namespace: ${OC_NAMESPACE}-${OC_ENV}
+      annotations:
+        description: Exposes and load balances the application pods
+    spec:
+      ports:
+        - name: web
+          protocol: TCP
+          port: 80
+          targetPort: 8080
+      selector:
+        name: ${FRONTEND_POD}
+      sessionAffinity: None
+      type: ClusterIP

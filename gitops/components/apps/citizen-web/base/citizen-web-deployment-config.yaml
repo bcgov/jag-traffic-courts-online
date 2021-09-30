@@ -63,4 +63,4 @@ spec:
           kind: ImageStreamTag
           namespace: "0198bb-tools"
           name: "citizen-web:dev"
-status: {}
+
