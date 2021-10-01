@@ -7,10 +7,9 @@
                     (change)="onSelectCountChanged(selectCountCheckbox.checked)"
                     color="primary"
                     class="me-4 mb-2"></mat-checkbox>
-      <mat-chip-list>
-        <mat-chip selected
-                  class="p-3">Count {{ count.offenceNumber }}</mat-chip>
-      </mat-chip-list>
+        <span class="h2">
+          <strong>Count {{ count.offenceNumber }}</strong>
+        </span>
     </div>
   </div>
   <div class="col-lg-8">
@@ -42,7 +41,7 @@
       <div class="text">{{ count._offenceStatusDesc }}</div>
     </span>
   </div>
-  <div class="col-lg-4">
+  <div class="col-lg-4" *ngIf="count.ticketedAmount !== count.amountDue">
     <small class="d-block">Offence amount</small>
     <div class="text">{{ count.ticketedAmount | currency }}</div>
   </div>

@@ -4,6 +4,9 @@ h3 {
   font-weight: bold;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
+.accent-header {
+  font-size: 24px;
+}
 
 a {
   color: theme-palette(blue, light);
@@ -34,7 +37,6 @@ button.mat-flat-button .mat-icon {
 small {
   color: theme-palette(grey, dark);
   line-height: 1.3em;
-  padding-top: 10px;
 }
 
 .card-section {
