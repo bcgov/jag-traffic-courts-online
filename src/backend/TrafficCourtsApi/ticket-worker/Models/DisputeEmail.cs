@@ -22,17 +22,17 @@ namespace Gov.TicketWorker.Models
             this.ViolationTicketNumber = model.ViolationTicketNumber;
             this.ViolationTime = model.ViolationTime;
 
-            this.CountOneDescription = model.Offences[0].OffenceDescription;
-            this.CountOneAction = model.Offences[0].OffenceAgreementStatus;
-            this.CountOneWillAppear = model.Offences[0].ReductionAppearInCourt.Value;
-            this.CountOneAmount = model.Offences[0].AmountDue;
+            this.CountOneDescription = model.Offences[0]?.OffenceDescription;
+            this.CountOneAction = model.Offences[0]?.OffenceAgreementStatus;
+            this.CountOneWillAppear = model.Offences[0]?.ReductionAppearInCourt??false;
+            this.CountOneAmount = model.Offences[0]==null? 0: model.Offences[0].AmountDue;
 
             if (model.Offences.Count >= 2)
             {
                 this.CountTwoDescription = model.Offences[1].OffenceDescription;
                 this.CountTwoAction = model.Offences[1].OffenceAgreementStatus;
                 this.CountTwoAmount = model.Offences[1].AmountDue;
-                this.CountTwoWillAppear = model.Offences[1].ReductionAppearInCourt.Value;
+                this.CountTwoWillAppear = model.Offences[1].ReductionAppearInCourt??false;
             }
 
             if (model.Offences.Count == 3)
@@ -40,13 +40,13 @@ namespace Gov.TicketWorker.Models
                 this.CountThreeDescription = model.Offences[2].OffenceDescription;
                 this.CountThreeAction = model.Offences[2].OffenceAgreementStatus;
                 this.CountThreeAmount = model.Offences[2].AmountDue;
-                this.CountThreeWillAppear = model.Offences[2].ReductionAppearInCourt.Value;
+                this.CountThreeWillAppear = model.Offences[2].ReductionAppearInCourt??false;
             }
 
-            this.RequireInterpreter = model.Additional.InterpreterRequired;
-            this.InterpreterLanguage = model.Additional.InterpreterLanguage;
-            this.NumberofWitnesses = model.Additional.NumberOfWitnesses ?? 0;
-            this.CallWitness = model.Additional.WitnessPresent;
+            this.RequireInterpreter = model.Additional?.InterpreterRequired??false;
+            this.InterpreterLanguage = model.Additional?.InterpreterLanguage;
+            this.NumberofWitnesses = model.Additional?.NumberOfWitnesses ?? 0;
+            this.CallWitness = model.Additional?.WitnessPresent??false;
         }
 
         public string ViolationTicketNumber { get; set; }

@@ -23,18 +23,17 @@ namespace Gov.TicketWorker.Features.Notifications
         {
             try
             {
+                _logger.LogInformation("get dispute notification");
                 NotificationContract n = context.Message;
-
+                _logger.LogDebug("receive requested notification {n}", JsonSerializer.Serialize(n));
                 TicketDisputeContract disputeContract = n.TicketDisputeContract;
                 _emailSender.SendUsingTemplate(disputeContract.Disputant.EmailAddress, "Ticket request submitted successfully", disputeContract);
-                _logger.LogInformation("receive requested notification {n}", JsonSerializer.Serialize(n));
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                _logger.LogError("ProductChangedConsumerError", ex);
+                _logger.LogError("NotificationRequestedConsumer", ex);
             }
-
             return Task.CompletedTask;
         }
     }
-}
+}   
