@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
@@ -51,6 +52,12 @@ export class FindTicketComponent implements OnInit {
 
   public onViewTicketExample(): void {
     this.dialog.open(TicketExampleDialogComponent, {
+      width: '600px',
+    });
+  }
+
+  public onViewImageRequirements(): void {
+    this.dialog.open(ImageRequirementsDialogComponent, {
       width: '600px',
     });
   }

@@ -2,4 +2,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   width: 20px;
   height: 20px;
   margin-right: 6px;
+  transform: scale(1.2);
+  filter: invert(20%) sepia(23%) saturate(3207%) hue-rotate(170deg) brightness(95%) contrast(100%);
 }

@@ -2,9 +2,39 @@
   <app-tco-page-header>
     <ng-container header>British Columbia ticket resolution</ng-container>
     <ng-container subHeader>
-      Use this service to pay ticket fines, ask for fine reductions or more time
-      to pay, or initiate a dispute.
-      <div class="mt-2">Please enter ticket information or upload image of ticket to begin.</div>
+      <cdk-accordion>
+        <cdk-accordion-item
+          #accordionItem="cdkAccordionItem"
+          role="button"
+          tabindex="0"
+          [attr.id]="'accordion-header'"
+          [attr.aria-expanded]="accordionItem.expanded"
+          [attr.aria-controls]="'accordion-body'">
+          <div class="subheader-desc" (click)="accordionItem.toggle()">
+              Use this service to pay ticket fines, ask for fine reductions or time
+              to pay, or initiate a dispute.
+              <strong> Enter violation ticket information, or upload image of ticket to begin.</strong>
+            <span class="text-primary ms-3">
+              {{ accordionItem.expanded ? ' - Hide information' : ' + See more information' }}
+            </span>
+          </div>
+          <div
+            role="region"
+            [style.display]="accordionItem.expanded ? '' : 'none'"
+            [attr.id]="'accordion-body'"
+            [attr.aria-labelledby]="'accordion-header'">
+            <div class="col my-3">
+              <app-alert type="info"
+                         icon="info">
+                <ng-container #alertContent
+                              class="alert-content">
+                              This online service allows you to pay or action individual, multiple count or whole ticket requests. Use the search fields below, or upload an image of your ticket to begin.
+                </ng-container>
+              </app-alert>
+            </div>
+          </div>
+        </cdk-accordion-item>
+      </cdk-accordion>
     </ng-container>
   </app-tco-page-header>
 
@@ -23,8 +53,8 @@
   </div>
 
   <!-- MOBILE VIEW -->
-  <div class="row d-sm-block d-md-none">
-    <div class="col my-2">
+  <div class="row d-sm-block d-md-block d-lg-none">
+    <div class="col my-3">
       <button type="button"
               mat-flat-button
               color="primary"
@@ -33,8 +63,18 @@
         <mat-icon class="me-2">photo_camera</mat-icon>
         Upload photo of ticket
       </button>
-      <div class="or-separator"><span>OR</span></div>
     </div>
+    <div class="row">
+      <div class="col">
+        <a class="view-link"
+           (click)="onViewImageRequirements()">
+          <img class="me-2"
+               src="/assets/image-requirements-icon.svg" />
+          <span class="view-link-text">View image requirements</span>
+        </a>
+      </div>
+    </div>
+    <div class="or-separator"><hr><span>OR</span><hr></div>
   </div>
 
   <div class="flex flex-last">
@@ -46,9 +86,9 @@
           <div class="row">
             <div class="col">
               <mat-form-field class="w-100">
-                <mat-label>Ticket number</mat-label>
+                <mat-label>Enter violation ticket number</mat-label>
                 <input formControlName="ticketNumber"
-                       placeholder="A Ticket number is 2 letters and 8 numbers"
+                       placeholder="A ticket number is 2 letters and 8 numbers"
                        matInput
                        type="text"
                        oninput="this.value =
@@ -70,7 +110,7 @@
           <div class="row">
             <div class="col">
               <mat-form-field class="w-100">
-                <mat-label>Ticket time</mat-label>
+                <mat-label>Enter violation time</mat-label>
                 <input matInput
                        type="time"
                        formControlName="time" />
@@ -80,7 +120,7 @@
           </div>
 
           <div class="row">
-            <div class="col-md-6 col-xxl-4">
+            <div class="col">
               <a class="view-link"
                  (click)="onViewTicketExample()">
                 <img class="me-2"
@@ -88,7 +128,7 @@
                 <span class="view-link-text">View ticket examples</span>
               </a>
             </div>
-            <div class="col-md-6 offset-xxl-2 col-xxl-6">
+            <div class="col">
               <button type="submit"
                       mat-flat-button
                       color="primary"
@@ -101,7 +141,7 @@
         </form>
       </div>
     </div>
-    <div class="flex-2-col info d-xs-none d-sm-none d-md-block">
+    <div class="flex-2-col info d-xs-none d-sm-none d-md-none d-lg-block">
       <div class="d-md-none d-lg-block vertical-or-separator">
         OR
       </div>
@@ -135,6 +175,16 @@
                  type="file"
                  accept="image/*"
                  id="file" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <a class="view-link"
+            (click)="onViewImageRequirements()">
+            <img class="me-2"
+                src="/assets/image-requirements-icon.svg" />
+            <span class="view-link-text">View image requirements</span>
+          </a>
         </div>
       </div>
     </div>

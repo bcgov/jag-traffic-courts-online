@@ -73,6 +73,10 @@ mat-error {
   font-weight: 400;
 }
 
+.mat-step-label-selected .mat-step-text-label {
+  font-weight: 700;
+}
+
 .mat-form-field .mat-form-field-label-wrapper label {
   line-height: 21px;
 }
