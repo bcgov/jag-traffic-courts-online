@@ -57,14 +57,12 @@ export class TicketPaymentComponent implements OnInit {
       this.logger.info('TicketPaymentComponent current ticket', ticket);
       this.ticket = ticket;
     });
+
+    // Start page with the required label showing on email field
+    this.formUtilsService.checkValidity(this.form);
   }
 
   public onMakePayment(): void {
-    if (this.appConfigService.useMockServices) {
-      this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE)]);
-      return;
-    }
-
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 
@@ -104,6 +102,13 @@ export class TicketPaymentComponent implements OnInit {
       return;
     }
 
+    // If testing application skipping the payment redirects, while testing form errors
+    if (this.appConfigService.useMockServices) {
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT_COMPLETE)]);
+      return;
+    }
+
+    // Else, use actual application flow for payment process
     const formParams = {
       ticketNumber: this.ticket.violationTicketNumber,
       time: this.ticket.violationTime,
