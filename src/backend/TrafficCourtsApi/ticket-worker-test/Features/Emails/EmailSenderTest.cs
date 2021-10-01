@@ -59,19 +59,19 @@ namespace Gov.TicketWorker.Test.Features.Emails
         [Fact]
         public void Throw_ArgumentException_if_ToAddresspassed_null()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplate(null, "This is the subject line", It.IsAny<TicketDisputeContract>()));
+            Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplateAsync(null, "This is the subject line", It.IsAny<TicketDisputeContract>()));
         }
 
         [Fact]
         public void Throw_ArgumentException_if_ToAddresspassed_Empty()
         {
-            Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplate("", "This is the subject line", It.IsAny<TicketDisputeContract>()));
+            Assert.ThrowsAsync<ArgumentException>(() => _sut.SendUsingTemplateAsync("", "This is the subject line", It.IsAny<TicketDisputeContract>()));
         }
 
         [Fact]
         public void Throw_ArgumentException_if_DisputeEmailModelpassed_null()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => _sut.SendUsingTemplate("testEmail@test.com", "This is the subject line", null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => _sut.SendUsingTemplateAsync("testEmail@test.com", "This is the subject line", null));
         }
 
 
@@ -118,7 +118,7 @@ namespace Gov.TicketWorker.Test.Features.Emails
             expected = template.Render(Hash.FromAnonymousObject(emailModel));
 
            
-            await _sut.SendUsingTemplate("testEmail@test.com", "This is the subject line", disputeContractModel);
+            await _sut.SendUsingTemplateAsync("testEmail@test.com", "This is the subject line", disputeContractModel);
 
             _emailMock.Verify(foo => foo.To("testEmail@test.com"), Times.Once());
             _emailMock.Verify(foo => foo.Subject("This is the subject line"), Times.Once());
@@ -147,7 +147,7 @@ namespace Gov.TicketWorker.Test.Features.Emails
             ).Returns(Task.FromResult<SendResponse>(new SendResponse()));
             _emailFilterMock.Setup(x => x.IsAllowed(It.IsAny<string>())).Returns(true);
 
-            await _sut.SendUsingTemplate("to", "subject", disputeContractModel);
+            await _sut.SendUsingTemplateAsync("to", "subject", disputeContractModel);
 
             _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(null), Times.Once());
         }
@@ -162,7 +162,7 @@ namespace Gov.TicketWorker.Test.Features.Emails
             var model = _fixture.Create<TicketDisputeContract>();
 
             // act
-            await sut.SendUsingTemplate("to@example.com", subject, model);
+            await sut.SendUsingTemplateAsync("to@example.com", subject, model);
 
             // assert
             Assert.Single(email.Data.ToAddresses);
@@ -183,7 +183,7 @@ namespace Gov.TicketWorker.Test.Features.Emails
             ).Returns(Task.FromResult<SendResponse>(new SendResponse()));
             _emailFilterMock.Setup(x => x.IsAllowed(It.IsAny<string>())).Returns(false);
 
-            await _sut.SendUsingTemplate("to", "subject", disputeContractModel);
+            await _sut.SendUsingTemplateAsync("to", "subject", disputeContractModel);
 
             _emailMock.Verify(foo => foo.To("to").Subject("subject").UsingTemplateFromEmbedded(It.IsAny<string>(), It.IsAny<DisputeEmail>(), It.IsAny<Assembly>(), It.IsAny<bool>()).SendAsync(null), Times.Never());
         }

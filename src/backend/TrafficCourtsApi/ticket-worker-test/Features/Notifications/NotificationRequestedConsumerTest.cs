@@ -41,7 +41,7 @@ namespace Gov.TicketWorker.Test.Features.Notifications
                 
                 Assert.True(await harness.Consumed.Any<NotificationContract>());
                 Assert.True(await consumerHarness.Consumed.Any<NotificationContract>());
-                _emailSender.Verify(x => x.SendUsingTemplate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TicketDisputeContract>()),
+                _emailSender.Verify(x => x.SendUsingTemplateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<TicketDisputeContract>()),
                  Times.Once);
             }
             finally 

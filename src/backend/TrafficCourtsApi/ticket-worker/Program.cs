@@ -112,9 +112,13 @@ namespace Gov.TicketWorker
                     {
                         endpoint.Consumer<NotificationRequestedConsumer>(ctx);
                     });
+
+                    cfg.ReceiveEndpoint((typeof(InvalidContract<NotificationContract>)).GetQueueName(), endpoint => 
+                    {
+                        endpoint.Bind<InvalidContract<NotificationContract>>();
+                    });
                 });
 
-                
             });
             services.AddMassTransitHostedService();
         }

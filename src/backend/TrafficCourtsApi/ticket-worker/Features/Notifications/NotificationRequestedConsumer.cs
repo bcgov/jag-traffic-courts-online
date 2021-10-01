@@ -2,7 +2,6 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Contract;
 
@@ -19,22 +18,42 @@ namespace Gov.TicketWorker.Features.Notifications
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task Consume(ConsumeContext<NotificationContract> context)
+        public async Task Consume(ConsumeContext<NotificationContract> context)
         {
-            try
+            _logger.LogInformation("get dispute notification");
+            NotificationContract n = context.Message;
+            (bool IsValid, string InvalidReason) validation = IsValid(n);
+            _logger.LogDebug("receive dispute notification {n}", n);
+            if ( validation.IsValid )
             {
-                NotificationContract n = context.Message;
-
-                TicketDisputeContract disputeContract = n.TicketDisputeContract;
-                _emailSender.SendUsingTemplate(disputeContract.Disputant.EmailAddress, "Ticket request submitted successfully", disputeContract);
-                _logger.LogInformation("receive requested notification {n}", JsonSerializer.Serialize(n));
+                await _emailSender.SendUsingTemplateAsync(n.TicketDisputeContract.Disputant.EmailAddress, "Ticket request submitted successfully", n.TicketDisputeContract);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError("ProductChangedConsumerError", ex);
+                _logger.LogDebug("receive invalid dispute notification {invalidReason}", validation.InvalidReason);
+                await context.Publish(new InvalidContract<NotificationContract> { Contract = n, Reason =  validation.InvalidReason});
             }
+        }
 
-            return Task.CompletedTask;
+        private static (bool IsValid, string InvalidReason) IsValid(NotificationContract notificationContract)
+        {
+            if (notificationContract.TicketDisputeContract == null)
+            {
+                return (false, "TicketDisputeContract could not be null");
+            }
+            if (notificationContract.TicketDisputeContract.Disputant == null)
+            {
+                return (false, "Disputant could not be null");
+            }
+            if (string.IsNullOrWhiteSpace(notificationContract.TicketDisputeContract.Disputant.EmailAddress))
+            {
+                return (false, "Email address could not be empty");
+            }
+            if( !Validation.IsValidEmail(notificationContract.TicketDisputeContract.Disputant.EmailAddress))
+            {
+                return (false, "Email address is invalid");
+            }
+            return (true, string.Empty);
         }
     }
-}
+}   
