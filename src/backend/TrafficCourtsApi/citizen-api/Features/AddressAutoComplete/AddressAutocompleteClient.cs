@@ -30,8 +30,8 @@ namespace Gov.CitizenApi.Features.AddressAutoComplete
         {
             // Base Url is set in Startup.cs
             _client = client ?? throw new ArgumentNullException(nameof(client));
-            _logger = logger;
-            _credentials = credentials;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
         }
 
         public async Task<IEnumerable<AddressAutocompleteFindResponse>> Find(string searchTerm, string lastId)

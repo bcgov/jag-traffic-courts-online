@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Gov.CitizenApi.Features;
@@ -17,7 +18,7 @@ namespace Gov.CitizenApi.Features.AddressAutoComplete
 
         public AddressAutocompleteController(IAddressAutocompleteClient addressAutocompleteClient)
         {
-            _addressAutocompleteClient = addressAutocompleteClient;
+            _addressAutocompleteClient = addressAutocompleteClient ?? throw new ArgumentNullException(nameof(addressAutocompleteClient));
         }
 
         // GET: api/AddressAutocomplete/find
@@ -28,9 +29,8 @@ namespace Gov.CitizenApi.Features.AddressAutoComplete
         /// <param name="searchTerm"></param>
         /// <param name="lastId"></param>
         [HttpGet("find", Name = nameof(Find))]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ApiResultResponse<IEnumerable<AddressAutocompleteFindResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IEnumerable<AddressAutocompleteFindResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult> Find([FromQuery] string searchTerm, [FromQuery] string lastId = null)
         {
             if (searchTerm == null)
@@ -48,9 +48,8 @@ namespace Gov.CitizenApi.Features.AddressAutoComplete
         /// </summary>
         /// <param name="id"></param>
         [HttpGet("retrieve", Name = nameof(Retrieve))]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(ApiResultResponse<IEnumerable<AddressAutocompleteRetrieveResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IEnumerable<AddressAutocompleteRetrieveResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult> Retrieve([FromQuery] string id)
         {
             if (id == null)
