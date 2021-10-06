@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { of } from 'rxjs';
 import { Component } from '@angular/core';
@@ -31,6 +32,7 @@ describe('DisputeSummaryComponent', () => {
         ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
+        CdkAccordionModule,
         TranslateModule.forRoot(),
       ],
       declarations: [DisputeSummaryComponent, BlankComponent],
