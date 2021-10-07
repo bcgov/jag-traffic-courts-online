@@ -1,0 +1,291 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${COMPONENT_NAME}
+  description: Deployment template for RabbitMq cluster
+
+labels:
+  app: ${COMPONENT_NAME}
+  app.kubernetes.io/name: ${COMPONENT_NAME}
+  app.kubernetes.io/part-of: ${APP_NAME}
+  app.kubernetes.io/component: ${COMPONENT_NAME}
+  app.openshift.io/runtime: ${RUNTIME}
+
+parameters:
+  - name: APP_NAME
+    description: The application name that each component is part of
+    required: false
+    value: traffic-court
+
+  - name: OC_NAMESPACE
+    description: The OpenShift namespace prefix
+    required: true
+    value: 0198bb
+
+  - name: OC_ENV
+    description: The OpenShift environment, ie dev, test or prod
+    required: true
+  
+  - name: COMPONENT_NAME
+    description: The application name that each component is part of
+    required: false
+    value: rabbitmq-cluster
+
+  - name: RUNTIME
+    description: The application name that each component is part of
+    required: false
+    value: rabbitmq
+
+  - name: SC_RABBITMQ_USER
+    description: Username to connect to RabbitMq
+    required: true
+
+  - name: SC_RABBITMQ_PWD
+    description: Password to connect to RabbitMq
+    required: true
+
+  - name: SC_ERLANGCOOKIE
+    description: Erlang Cookie required for RabbitMq cluster set-up
+    required: true
+
+objects:
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}-secret
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+  data:
+    #assign some value for erlang cookie
+    cookie: ${SC_ERLANGCOOKIE}
+    #assign some username & password to connect to rabbitmq
+    password: ${SC_RABBITMQ_PWD}
+    username: ${SC_RABBITMQ_USER}
+  type: Opaque
+
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}-config
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+  data:
+    enabled_plugins: |
+      [rabbitmq_management,rabbitmq_peer_discovery_k8s].
+    rabbitmq.conf: >
+      loopback_users.guest = false
+
+      ## Clustering
+
+      cluster_formation.peer_discovery_backend = rabbit_peer_discovery_k8s
+
+      cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+
+      cluster_formation.k8s.address_type = hostname
+
+      cluster_formation.k8s.service_name = ${COMPONENT_NAME}
+
+      cluster_formation.k8s.hostname_suffix =
+      .${COMPONENT_NAME}.${OC_NAMESPACE}-${OC_ENV}.svc.cluster.local
+
+      cluster_formation.node_cleanup.interval = 10
+
+      cluster_formation.node_cleanup.only_log_warning = true
+
+      cluster_partition_handling = autoheal
+
+      ## queue master locator
+
+      queue_master_locator=min-masters
+
+- kind: StatefulSet
+  apiVersion: apps/v1
+  metadata:
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+    labels:
+      app: ${COMPONENT_NAME}
+      app.kubernetes.io/part-of: traffic-court
+      app.openshift.io/runtime: rabbitmq
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: ${COMPONENT_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${COMPONENT_NAME}
+      spec:
+        restartPolicy: Always
+        serviceAccountName: rabbitmq-discovery
+        schedulerName: default-scheduler
+        terminationGracePeriodSeconds: 120
+        securityContext: {}
+        containers:
+          - resources: {}
+            readinessProbe:
+              exec:
+                command:
+                  - rabbitmqctl
+                  - status
+              initialDelaySeconds: 80
+              timeoutSeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              failureThreshold: 30
+            terminationMessagePath: /dev/termination-log
+            name: rabbitmq
+            command:
+              - sh
+            livenessProbe:
+              exec:
+                command:
+                  - rabbitmqctl
+                  - status
+              initialDelaySeconds: 60
+              timeoutSeconds: 15
+              periodSeconds: 15
+              successThreshold: 1
+              failureThreshold: 30
+            env:
+              - name: RABBITMQ_DEFAULT_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: ${COMPONENT_NAME}-secret
+                    key: username
+              - name: RABBITMQ_DEFAULT_PASS
+                valueFrom:
+                  secretKeyRef:
+                    name: ${COMPONENT_NAME}-secret
+                    key: password
+              - name: RABBITMQ_ERLANG_COOKIE
+                valueFrom:
+                  secretKeyRef:
+                    name: ${COMPONENT_NAME}-secret
+                    key: cookie
+              - name: K8S_SERVICE_NAME
+                value: ${COMPONENT_NAME}
+              - name: POD_IP
+                valueFrom:
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: status.podIP
+              - name: POD_NAME
+                valueFrom:
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.name
+              - name: POD_NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.namespace
+              - name: RABBITMQ_USE_LONGNAME
+                value: 'true'
+              - name: RABBITMQ_NODENAME
+                value: >-
+                  rabbit@$(POD_NAME).${COMPONENT_NAME}.$(POD_NAMESPACE).svc.cluster.local
+              - name: RABBITMQ_CONFIG_FILE
+                value: /var/lib/rabbitmq/rabbitmq
+            ports:
+              - name: http
+                containerPort: 15672
+                protocol: TCP
+              - name: amqp
+                containerPort: 5672
+                protocol: TCP
+              - name: clustering
+                containerPort: 25672
+                protocol: TCP
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+              - name: config-volume
+                mountPath: /etc/rabbitmq
+              - name: ${COMPONENT_NAME}-pv
+                mountPath: /var/lib/rabbitmq
+            terminationMessagePolicy: File
+            image: >-
+              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-${OC_ENV}/rabbitmq:3.9.4-management
+            args:
+              - '-c'
+              - >-
+                cp -v /etc/rabbitmq/rabbitmq.conf ${RABBITMQ_CONFIG_FILE}.conf;
+                exec docker-entrypoint.sh rabbitmq-server
+        serviceAccount: rabbitmq-discovery
+        volumes:
+          - name: config-volume
+            configMap:
+              name: ${COMPONENT_NAME}-config
+              items:
+                - key: rabbitmq.conf
+                  path: rabbitmq.conf
+                - key: enabled_plugins
+                  path: enabled_plugins
+              defaultMode: 420
+        dnsPolicy: ClusterFirst
+        
+    volumeClaimTemplates:
+      - kind: PersistentVolumeClaim
+        apiVersion: v1
+        metadata:
+          name: ${COMPONENT_NAME}-pv
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+          volumeMode: Filesystem
+
+    serviceName: ${COMPONENT_NAME}
+    podManagementPolicy: OrderedReady
+    updateStrategy:
+      type: RollingUpdate
+      rollingUpdate:
+        partition: 0
+    revisionHistoryLimit: 10
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}-loadbalancer
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+    labels:
+      app: ${COMPONENT_NAME}
+      type: LoadBalancer
+  spec:
+    ports:
+      - name: http
+        protocol: TCP
+        port: 15672
+        targetPort: 15672
+      - name: amqp
+        protocol: TCP
+        port: 5672
+        targetPort: 5672
+    selector:
+      app: ${COMPONENT_NAME}
+    type: ClusterIP
+    sessionAffinity: None
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+    labels:
+      app: ${COMPONENT_NAME}
+  spec:
+    ports:
+      - name: amqp
+        protocol: TCP
+        port: 5672
+        targetPort: 5672
+      - name: clustering
+        protocol: TCP
+        port: 25672
+        targetPort: 25672
+    selector:
+      app: ${COMPONENT_NAME}
+    clusterIP: None
+    type: ClusterIP
+    sessionAffinity: None
