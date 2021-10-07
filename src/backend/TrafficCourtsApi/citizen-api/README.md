@@ -50,5 +50,12 @@ Example that can be placed in appsettings.Development.json to use debug level lo
 }
 ```
 
+For testing Canada Post AddressAutoComplete API, an API key with 14 days expiration can be created at :
+https://www.canadapost-postescanada.ca/pca/register/
+
+After creating the test key for development purposes  , add it to appsettings.Development.json with name ADDRESS_AUTOCOMPLETE_API_KEY.
+
+
+
 connected components:
 ticket-search

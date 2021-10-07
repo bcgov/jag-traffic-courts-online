@@ -1,15 +1,9 @@
 ﻿using FluentEmail.Core;
-using FluentEmail.Core.Models;
 using Gov.TicketWorker.Models;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Contract;
 
@@ -88,6 +82,7 @@ namespace Gov.TicketWorker.Features.Emails
 
             try
             {
+                _logger.LogInformation("prepare to send email to {to}", to);
                 DisputeEmail emailModel = new DisputeEmail(model);
 
                 emailModel.LogoImage = dataURIScheme("png", "ticket-worker.Features.Emails.Resources.bc-gov-logo.png");
@@ -99,15 +94,10 @@ namespace Gov.TicketWorker.Features.Emails
 
                 if (_emailFilter.IsAllowed(to))
                 {
-                    _logger.LogInformation("The target email address is allowed to be sent email to");
                     var result = await email.SendAsync();
                     if (!result.Successful)
                     {
-                        foreach (string error in result.ErrorMessages)
-                        {
-                            _logger.LogError(error);
-                        }
-                        
+                        throw new Exception(String.Join(";", result.ErrorMessages));                        
                     }
                     else
                     {
@@ -116,7 +106,7 @@ namespace Gov.TicketWorker.Features.Emails
                 }
                 else
                 {
-                    _logger.LogError("The target email address is not allowed to be sent email to");
+                    _logger.LogError("The target email address is not allowed to be sent to.");
                 }
                
             }

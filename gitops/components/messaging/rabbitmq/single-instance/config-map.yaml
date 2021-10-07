@@ -6,3 +6,6 @@ data:
   enabled_plugins: |
     [rabbitmq_management,rabbitmq_shovel,rabbitmq_shovel_management].
   rabbitmq.conf: |
+    loopback_users = none 
+    #this loopback user is only for test and dev. Do not use it for production.
+    #https://www.rabbitmq.com/access-control.html guest" user can only connect from localhost
