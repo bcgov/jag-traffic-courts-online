@@ -245,10 +245,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       postalCode: [null],
       city: [null],
       province: [null],
-      _mailingAddress: this.formUtilsService.buildAddressForm({
-        areRequired: ['address', 'city', 'provinceCode', 'countryCode', 'postalCode'],
-        useDefaults: ['countryCode']
-      }),
+      _mailingAddress: [null],
       driverLicenseNumber: [null],
       driverLicenseProvince: [null],
       emailAddress: [null, [Validators.required, Validators.email]],

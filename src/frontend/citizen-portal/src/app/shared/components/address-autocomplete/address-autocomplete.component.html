@@ -8,6 +8,7 @@
         <mat-label>Address autocompleted by Canada Post</mat-label>
         <input matInput
                formControlName="autocomplete"
+               autocomplete="new-password"
                [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option *ngFor="let field of addressAutocompleteFields"
