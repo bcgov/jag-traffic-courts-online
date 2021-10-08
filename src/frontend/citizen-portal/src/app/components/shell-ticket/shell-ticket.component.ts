@@ -23,7 +23,6 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { Address } from '@shared/models/address.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
@@ -67,13 +66,6 @@ export class ShellTicketComponent implements OnInit {
 
   private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
-
-  /**
-   * @description
-   * Whether to show the address line fields.
-   */
-  public showManualButton: boolean;
-  public showAddressFields: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -142,11 +134,7 @@ export class ShellTicketComponent implements OnInit {
       detachmentLocation: [null, [Validators.required]],
       _chargeCount: [1],
       _amountOwing: [null],
-      _mailingAddress: [null]
     });
-
-    this.showManualButton = !this.mailingAddress.value;
-    this.showAddressFields = !!this.mailingAddress.value;
 
     this.disputeService.shellTicketData$.subscribe((shellTicketData) => {
       if (!shellTicketData) {
@@ -199,19 +187,6 @@ export class ShellTicketComponent implements OnInit {
 
   public onClearBirthdate(): void {
     this.birthdate.setValue(null);
-  }
-
-  /**
-   * Updates form fields with Canada Post Autocomplete Retrieve result
-   */
-  public onAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
-    this.form.patchValue({countryCode});
-    this.form.patchValue({province: provinceCode});
-    this.form.patchValue({postalCode});
-    this.form.patchValue({address});
-    this.form.patchValue({city});
-    this.showManualButton = !address;
-    this.showAddressFields = !!address;
   }
 
   public onSubmit(): void {
@@ -305,10 +280,6 @@ export class ShellTicketComponent implements OnInit {
       };
       this.disputeService.shellTicketData$.next(shellTicketData);
     };
-  }
-
-  public showManualAddress(): void {
-    this.showAddressFields = true;
   }
 
   private findMatchingCharge(
@@ -598,7 +569,6 @@ export class ShellTicketComponent implements OnInit {
             : 0,
           _chargeCount: chargeCount,
           _amountOwing: 0,
-          _mailingAddress: null,
         };
 
         this.logger.info('before', { ...shellTicket });
@@ -680,9 +650,5 @@ export class ShellTicketComponent implements OnInit {
 
   public get count3FineAmount(): FormControl {
     return this.form.get('count3FineAmount') as FormControl;
-  }
-
-  public get mailingAddress(): FormControl {
-    return this.form.get('address') as FormControl;
   }
 }
