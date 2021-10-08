@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
+import { Address } from '@shared/models/address.model';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -17,8 +18,7 @@ import { DisputeService } from 'app/services/dispute.service';
 })
 export class StepDisputantComponent
   extends BaseDisputeFormPage
-  implements OnInit
-{
+  implements OnInit {
   @Input() public stepper: MatStepper;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
@@ -31,6 +31,13 @@ export class StepDisputantComponent
   public maxDateOfBirth: Date;
 
   private MINIMUM_AGE = 18;
+
+  /**
+   * @description
+   * Whether to show the address line fields.
+   */
+   public showManualButton: boolean;
+   public showAddressFields: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -55,11 +62,16 @@ export class StepDisputantComponent
     this.maxDateOfBirth = new Date();
     this.maxDateOfBirth.setFullYear(today.getFullYear() - this.MINIMUM_AGE);
     this.isMobile = this.utilsService.isMobile();
+    this.showManualButton = true;
+    this.showAddressFields = false;
   }
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepDisputantForm;
-    this.patchForm();
+    this.patchForm().then(() => {
+      this.showManualButton = !this.mailingAddress.value;
+      this.showAddressFields = !!this.mailingAddress.value;
+    });
   }
 
   public onBack() {
@@ -74,6 +86,23 @@ export class StepDisputantComponent
     }
   }
 
+  /**
+   * Updates form fields with Canada Post Autocomplete Retrieve result
+   */
+  public onAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
+    this.form.patchValue({countryCode});
+    this.form.patchValue({province: provinceCode});
+    this.form.patchValue({postalCode});
+    this.form.patchValue({mailingAddress: address});
+    this.form.patchValue({city});
+    this.showManualButton = !address;
+    this.showAddressFields = !!address;
+  }
+
+  public showManualAddress(): void {
+    this.showAddressFields = true;
+  }
+
   public get phoneNumber(): FormControl {
     return this.form.get('phoneNumber') as FormControl;
   }
@@ -84,5 +113,9 @@ export class StepDisputantComponent
 
   public get emailAddress(): FormControl {
     return this.form.get('emailAddress') as FormControl;
+  }
+
+  public get mailingAddress(): FormControl {
+    return this.form.get('mailingAddress') as FormControl;
   }
 }

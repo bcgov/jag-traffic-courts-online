@@ -34,25 +34,6 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     });
   }
 
-  public onViewYourTicket(): void {
-    const ticket = this.disputeService.ticket;
-    const params = {
-      ticketNumber: ticket.violationTicketNumber,
-      time: ticket.violationTime,
-    };
-
-    this.disputeService.ticket$.next(null);
-
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-      queryParams: params,
-    });
-  }
-
-  public onExitTicket(): void {
-    this.disputeService.ticket$.next(null);
-    this.router.navigate(['/']);
-  }
-
   public onMakePayment(): void {
     const { countsToPay, countsToPayAmount } = this.getListOfCountsToPay();
     const formParams = {

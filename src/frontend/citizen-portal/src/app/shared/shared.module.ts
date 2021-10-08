@@ -29,6 +29,7 @@ import { PhonePipe } from './pipes/phone.pipe';
 import { PostalPipe } from './pipes/postal.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { AddressAutocompleteComponent } from './components/address-autocomplete/address-autocomplete.component';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 
 @NgModule({
@@ -56,6 +57,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     StepperPageComponent,
     ResolutionFooterComponent,
     ResolutionHeaderComponent,
+    AddressAutocompleteComponent,
   ],
   imports: [
     CommonModule,
@@ -98,6 +100,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     ResolutionHeaderComponent,
     FeatureFlagDirective,
     StepperPageComponent,
+    AddressAutocompleteComponent,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

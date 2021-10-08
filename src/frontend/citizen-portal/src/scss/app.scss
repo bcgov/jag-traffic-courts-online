@@ -47,3 +47,8 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .mat-step-label-selected .mat-step-text-label {
   font-weight: bold;
 }
+
+.hide-address {
+  height: 0;
+  overflow: hidden;
+}

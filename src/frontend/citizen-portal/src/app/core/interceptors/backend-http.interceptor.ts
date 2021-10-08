@@ -1,18 +1,13 @@
-import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpResponse,
-  HttpErrorResponse,
+  HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { RouteUtils } from '@core/utils/route-utils.class';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
+import { Injectable } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
-import { MockConfig } from 'tests/mocks/mock-config';
+import { RouteUtils } from '@core/utils/route-utils.class';
 import { AppConfigService } from 'app/services/app-config.service';
+import { Observable, of } from 'rxjs';
+import { MockConfig } from 'tests/mocks/mock-config';
+import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 @Injectable()
 export class BackendHttpInterceptor implements HttpInterceptor {
@@ -20,7 +15,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     private mockDisputeService: MockDisputeService,
     private appConfigService: AppConfigService,
     private logger: LoggerService
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<unknown>,
@@ -45,7 +40,9 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         !currentRoutePath.includes('ticket') &&
         !currentRoutePath.includes('dispute') &&
         !currentRoutePath.includes('pay') &&
-        !currentRoutePath.includes('lookup')
+        !currentRoutePath.includes('lookup') &&
+        !currentRoutePath.includes('find') &&
+        !currentRoutePath.includes('retrieve')
       ) {
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
@@ -62,6 +59,14 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         // Handle 'dispute' requests
       } else if (currentRoutePath.includes('dispute')) {
         return this.handleDisputesRequests(request.method);
+
+        // Handle 'addressAutocomplete' requests
+      } else if (currentRoutePath.includes('find')) {
+        return this.handleAddressAutocompleteFindRequests(request.method);
+
+        // Handle 'addressAutocomplete' requests
+      } else if (currentRoutePath.includes('retrieve')) {
+        return this.handleAddressAutocompleteRetrieveRequests(request.method);
 
         // Handle 'lookup' requests
       } else if (currentRoutePath === 'lookup') {
@@ -130,6 +135,46 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         break;
       case 'GET':
       case 'PUT':
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handleAddressAutocompleteFindRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    switch (requestMethod) {
+      case 'GET':
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: this.mockDisputeService.addressAutocompleteFindResponse,
+          })
+        );
+        break;
+      default:
+        throw new HttpErrorResponse({
+          error: 'Mock Bad Request',
+          status: 400,
+        });
+    }
+  }
+
+  private handleAddressAutocompleteRetrieveRequests(
+    requestMethod: string
+  ): Observable<HttpEvent<unknown>> {
+    switch (requestMethod) {
+      case 'GET':
+        return of(
+          new HttpResponse({
+            status: 200,
+            body: this.mockDisputeService.addressAutocompleteRetrieveResponse,
+          })
+        );
+        break;
       default:
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',
