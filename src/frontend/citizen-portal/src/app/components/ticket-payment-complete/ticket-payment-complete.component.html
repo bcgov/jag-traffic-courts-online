@@ -16,7 +16,9 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-between">
+
+
+      <div class="d-flex justify-content-between d-print-none">
         <div class="conf-email text-dark" *ngIf="ticket?.disputant?.emailAddress">
           A confirmation email of the request information has been sent to: <br />
           <strong>{{ ticket?.disputant?.emailAddress }}</strong>
@@ -44,6 +46,12 @@
         </button>
       </div>
     </section>
+
+    <div class="d-none d-print-block">
+      <h2>
+        <small>Payment confirmation #:</small> <strong>{{ paymentConfNo }}</strong>
+      </h2>
+    </div>
 
     <ng-template #paymentCancelled>
       <section class="mb-2 mt-4">
