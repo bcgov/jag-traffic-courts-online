@@ -7,10 +7,13 @@ h1 {
 
 .heading-hr {
   border: 1px solid theme-palette(yellow);
+  background: #fcba19;
   opacity: 1;
+  margin: 16px 0 !important;
 }
 
 .subheader {
   color: theme-palette(grey, dark);
   line-height: 1.3em;
+  font: 400 18px/28px BCSans, Noto Sans, Verdana, Arial, sans-serif;
 }

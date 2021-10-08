@@ -27,7 +27,7 @@
 
   <div class="row mt-2 mb-2"
        *ngIf="selectView">
-    <div class="col-md-8">
+    <div class="col">
       <mat-checkbox (change)="onSelectAllChange($event)"
                     class="me-4 mb-2"
                     color="primary">
@@ -53,7 +53,7 @@
             {{ ticket.discountDueDate | formatDate }}
           </div>
           <div class="col-lg-2 text-success">
-            <strong>{{
+            <strong class="accent-header">{{
               ticket._outstandingBalanceDue
                 | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
             }}</strong>

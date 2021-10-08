@@ -2,7 +2,43 @@
   <app-page-header>
     <ng-container header>Violation ticket lookup</ng-container>
     <ng-container subHeader>
-      <strong>Ticket found.</strong> Please confirm ticket details below.
+      <cdk-accordion>
+        <cdk-accordion-item
+          #accordionItem="cdkAccordionItem"
+          role="button"
+          tabindex="0"
+          [attr.id]="'accordion-header'"
+          [attr.aria-expanded]="accordionItem.expanded"
+          [attr.aria-controls]="'accordion-body'">
+          <div class="subheader-desc" (click)="accordionItem.toggle()">
+            <strong class="text-success">Ticket found.</strong> Please review ticket details below, then <strong>choose the action you would like to take.</strong>
+            <span class="text-primary ms-3">
+              {{ accordionItem.expanded ? ' - Hide resolution options' : ' + See resolution options' }}
+            </span>
+          </div>
+          <div
+            role="region"
+            [style.display]="accordionItem.expanded ? '' : 'none'"
+            [attr.id]="'accordion-body'"
+            [attr.aria-labelledby]="'accordion-header'">
+            <div class="col my-3">
+              <app-alert type="info"
+                         icon="info">
+                <ng-container #alertContent
+                              class="alert-content">
+                  This online service allows you to action individual, multiple count or whole ticket requests. You can pay, or action a request for your ticket using the buttons below.
+                  <strong> Resolution options for your violation ticket are:</strong>
+                  <ul class="mt-3">
+                    <li>Paying ticket fines on all or individual ticket counts</li>
+                    <li>Requesting a fine reduction and/or time to pay on all or individual counts</li>
+                    <li>Dispute charges on all or individual counts</li>
+                  </ul>
+                </ng-container>
+              </app-alert>
+            </div>
+          </div>
+        </cdk-accordion-item>
+      </cdk-accordion>
     </ng-container>
   </app-page-header>
 
@@ -29,7 +65,7 @@
                     color="accent"
                     class="large"
                     (click)="onPayTicket()">
-              Pay ticket
+              <strong>Pay ticket</strong>
             </button>
           </div>
           <!--  *ngIf="!ticket._requestSubmitted || useMockServices" -->
@@ -38,7 +74,7 @@
                     color="primary"
                     class="large"
                     (click)="onDisputeTicket()">
-              Initiate dispute
+              <strong>Action ticket</strong>
             </button>
           </div>
         </div>

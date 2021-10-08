@@ -5,10 +5,14 @@
 }
 
 hr {
-  border-top: 1px solid theme-palette(grey, light);
-
+  border-top: 2px solid theme-palette(grey, light);
+  opacity: 1;
   margin-top: 2em;
   margin-bottom: 2em;
+}
+
+.text-body {
+  color: #333333 !important;
 }
 
 .flex {

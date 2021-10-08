@@ -293,18 +293,9 @@ export class DisputeStepperComponent
           reductionAppearInCourt = reductionAppearInCourtControl.value;
 
         } else {
-          applyToAllCountsControl.setValue(applyToAllCounts);
           if (applyToAllCounts) {
             offenceAgreementStatusControl.setValue(offenceAgreementStatus);
             reductionAppearInCourtControl.setValue(reductionAppearInCourt);
-
-            offenceAgreementStatusControl.disable();
-            reductionAppearInCourtControl.disable();
-            applyToAllCountsControl.disable();
-          } else {
-            offenceAgreementStatusControl.enable();
-            reductionAppearInCourtControl.enable();
-            applyToAllCountsControl.enable();
           }
         }
       }

@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ConfigService } from '@config/config.service';
 
@@ -23,6 +24,7 @@ describe('FindTicketComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         NgxMaterialModule,
+        CdkAccordionModule,
         TranslateModule.forRoot(),
       ],
       declarations: [FindTicketComponent],

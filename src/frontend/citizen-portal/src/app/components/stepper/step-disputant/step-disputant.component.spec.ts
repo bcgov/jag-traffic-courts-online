@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 
 import { StepDisputantComponent } from './step-disputant.component';
 import { Component } from '@angular/core';
@@ -30,6 +31,7 @@ describe('StepDisputantComponent', () => {
         ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
+        CdkAccordionModule,
         TranslateModule.forRoot(),
       ],
       declarations: [StepDisputantComponent, BlankComponent],

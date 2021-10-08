@@ -23,8 +23,8 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="w-100"
-                 [ngClass]="{ 'inactive': offenceAgreementStatus.disabled }">What action would you like to take?
+          <label class="w-100">
+            What action would you like to take?
           </label>
           <mat-radio-group formControlName="offenceAgreementStatus">
             <mat-radio-button value="NOTHING" *ngIf="showDoNothingOption">
@@ -49,7 +49,7 @@
             <mat-radio-button value="REDUCTION">
               <span class="wrap-mat-radio-label">
                 I agree I committed this offence and I would like to request a
-                fine reduction and/or more time to pay for this count.
+                fine reduction and/or time to pay for this count.
               </span>
               <span matTooltip="Ask for a fine reduction or more time to pay for the count."
                     #tooltip3="matTooltip">

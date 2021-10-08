@@ -1,5 +1,10 @@
-<mat-dialog-content>
+<div mat-dialog-title class="d-flex justify-content-between">
   <h2>Ticket example</h2>
+  <button mat-icon-button mat-dialog-close color="primary">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
   <ng-container *ngIf="visiblePanel">
     <mat-expansion-panel class="pt-0">
       <mat-expansion-panel-header>
@@ -18,7 +23,11 @@
           >Electronic Motor Vehicle Act Violation ticket</mat-panel-title
         >
       </mat-expansion-panel-header>
-      <img class="img-fluid" src="/assets/e-ticket-sample.jpg" alt="Ticket" />
+      <img
+        class="img-fluid"
+        src="/assets/e-ticket-sample.jpg"
+        alt="Ticket"
+      />
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -38,7 +47,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <span class="flex-grow-1"></span>
-  <button mat-flat-button mat-dialog-close color="primary" class="my-2 me-1">
-    Close
+  <button mat-button mat-dialog-close color="primary" class="my-2 me-1">
+    Close window &#215;
   </button>
 </mat-dialog-actions>

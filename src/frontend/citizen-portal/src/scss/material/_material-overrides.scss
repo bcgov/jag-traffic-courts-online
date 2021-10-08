@@ -16,6 +16,10 @@ mat-label {
   color: theme-palette(grey, dark);
 }
 
+mat-error {
+  font-weight: bold;
+}
+
 //
 // Forms
 //
@@ -33,9 +37,9 @@ mat-label {
   margin-bottom: 0.3rem;
 }
 
-.mat-checkbox label,
-.mat-radio-button label {
-  color: theme-palette(blue);
+.mat-checkbox-checked label,
+.mat-radio-checked label {
+  font-weight: 700;
 }
 
 .mat-drawer-container {
@@ -69,6 +73,16 @@ mat-label {
   font-weight: 400;
 }
 
+.mat-step-icon-selected {
+  transform: scale(1.5);
+}
+
+.mat-step-label-selected .mat-step-text-label {
+  color: theme-palette(blue);
+  font-weight: 700;
+  font-size: 24px;
+}
+
 .mat-form-field .mat-form-field-label-wrapper label {
   line-height: 21px;
 }
@@ -87,6 +101,39 @@ mat-label {
 
 .mat-form-field-ripple {
   background-color:  theme-palette(blue);
+}
+
+.mat-form-field-wrapper .mat-form-field-flex {
+  border: 2px transparent solid;
+}
+
+.mat-checkbox-label.mat-checkbox-label,
+.wrap-mat-radio-label.wrap-mat-radio-label {
+  color: #333333;
+}
+
+.mat-form-field-invalid {
+  & mat-icon {
+    color: theme-palette(red);
+  }
+
+  & .mat-form-field-wrapper .mat-form-field-flex {
+    border: 2px theme-palette(red) solid;
+    border-radius: 0;
+  }
+}
+
+.mat-tooltip {
+  font-size: 1em;
+}
+
+// Prevents scrolling on smaller option dropdowns
+.mat-select-panel.mat-select-panel {
+  max-height: 290px;
+}
+
+.mat-radio-container {
+  margin: 4px 0 auto !important;
 }
 
 @media (max-width: 767px) {
@@ -113,6 +160,6 @@ mat-label {
   }
 
   .mat-radio-container {
-    top: 5px;
+    top: -5px;
   }
 }

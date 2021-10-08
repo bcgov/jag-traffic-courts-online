@@ -25,7 +25,7 @@ export class StepDisputantComponent
 
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
-  public previousButtonKey = 'stepper.cancel';
+  public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
 
   public maxDateOfBirth: Date;

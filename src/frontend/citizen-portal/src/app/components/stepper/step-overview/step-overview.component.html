@@ -1,11 +1,8 @@
 <app-stepper-page>
   <app-page-header>
-    <ng-container header>{{
-      "stepper.overview.heading" | translate
-      }}</ng-container>
-    <ng-container subHeader>{{
-      "stepper.overview.sub_heading" | translate
-      }}</ng-container>
+    <ng-container subHeader>
+      Please review the information below for each count to ensure details are correct. <strong>If you need to make  changes, please do so before submitting request.</strong>
+    </ng-container>
   </app-page-header>
 
   <app-dispute-ticket-summary [ticket]="overviewTicket"></app-dispute-ticket-summary>

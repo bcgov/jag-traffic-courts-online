@@ -1,22 +1,22 @@
 <app-page [busy]="busy">
-  <app-tco-page-header>
-    <ng-container header>Pay ticket</ng-container>
-    <ng-container subHeader>
-      Please enter a contact email for receipt and confirmation, then select
-      each count you would like to pay for and follow the instructions provided.
-    </ng-container>
-  </app-tco-page-header>
+  <div class="row">
+    <app-tco-page-header class="col" [showHorizontalRule]="false">
+      <ng-container header>Pay ticket</ng-container>
+      <ng-container subHeader>
+        <strong>Please enter an email for receipt and confirmation</strong>, then select
+        each count you would like to pay for and follow the instructions provided.
+      </ng-container>
+    </app-tco-page-header>
 
-  <section>
-    <div class="row mt-4">
-      <div class="col-md-6">
+    <section class="col">
+      <div [ngStyle]="{'margin-top': '40px'}">
         <form [formGroup]="form"
               novalidate>
           <mat-form-field class="w-100">
             <mat-label>Contact email</mat-label>
             <input matInput
-                   formControlName="emailAddress"
-                   autocomplete="off" />
+                  formControlName="emailAddress"
+                  autocomplete="off" />
             <mat-error *ngIf="emailAddress.hasError('required')">{{
               "error.required" | translate
               }}</mat-error>
@@ -26,10 +26,10 @@
           </mat-form-field>
         </form>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <hr class="mt-0" />
+  <hr class="heading-hr mt-3" />
 
   <div *ngIf="ticket">
     <app-count-summary [ticket]="ticket"

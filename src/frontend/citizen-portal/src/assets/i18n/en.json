@@ -56,6 +56,7 @@
   "stepper": {
     "next": "Next",
     "cancel": "Back",
+    "backReview": "Back to ticket review",
     "back": "Back",
     "submit": "Submit request",
     "disputant": {
@@ -109,7 +110,7 @@
       "note": "If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable."
     },
     "overview": {
-      "heading": "Dispute Overview",
+      "heading": "Ticket request overview",
       "sub_heading": "Please review the following information. You can go back to any step to update the information.",
       "disputant_information": "Disputant Information",
       "address_information": "Address",

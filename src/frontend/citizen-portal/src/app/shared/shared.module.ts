@@ -18,6 +18,7 @@ import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-he
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { ImageRequirementsDialogComponent } from './dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
 import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
@@ -54,6 +55,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     FooterComponent,
     FeatureFlagDirective,
     TicketExampleDialogComponent,
+    ImageRequirementsDialogComponent,
     StepperPageComponent,
     ResolutionFooterComponent,
     ResolutionHeaderComponent,

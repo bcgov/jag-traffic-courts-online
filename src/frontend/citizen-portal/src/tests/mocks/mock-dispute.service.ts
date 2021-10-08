@@ -307,7 +307,7 @@ export class MockDisputeService {
     // --------------------------
     offence = {
       offenceNumber: 3,
-      ticketedAmount: 167,
+      ticketedAmount: 175,
       amountDue: 200,
       violationDateTime: offenceDate,
       offenceDescription:

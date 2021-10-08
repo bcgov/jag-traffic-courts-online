@@ -1,31 +1,49 @@
 @import "palette";
 
 .or-separator {
-  width: 100%;
-  text-align: center;
-  border-bottom: 1px solid theme-palette(grey, light);
-  line-height: 0.1em !important;
-  margin: 20px 0 5px !important;
+  display: flex;
 
   span {
     color: theme-palette(blue);
-     background:#fff;
-     padding:0 10px;
+    background:#fff;
+    padding:0 10px;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  hr {
+    flex: 1;
+    background: #696969;
+    height: 2px;
+  }
+}
+
+.subheader-desc {
+  font: 400 16px/22px BCSans, Noto Sans, Verdana, Arial, sans-serif;
+}
+
+@media (min-width: 751px) {
+  .subheader-desc {
+    font: 400 18px/26px BCSans, Noto Sans, Verdana, Arial, sans-serif;
   }
 }
 
 .vertical-or-separator {
-  left: 49%;
-  top: 35%;
+  left: 48.5%;
+  top: 40%;
   position: absolute;
+  color: theme-palette(blue);
   background-color: white;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .find-large {
   width: 100%;
 
   height: 46px;
-  font-size: 1rem;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .find-xlarge {
@@ -33,13 +51,14 @@
   margin-bottom: 1em !important;
 
   height: 62px;
-  font-size: 1rem;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .icon-large {
-  font-size: 40px !important;
-  height: 40px !important;
-  width: 40px !important;
+  font-size: 32px !important;
+  height: 32px !important;
+  width: 32px !important;
 }
 
 .icon-xlarge {
@@ -52,15 +71,9 @@
   display: inline-flex;
   height: 46px;
   line-height: 25px;
-}
 
-@media (max-width: 767px) {
-  .view-link {
-    margin-bottom: 1em;
-
-    .view-link-text {
-      padding-top: 10px;
-    }
+  & .view-link-text {
+   margin: auto;
   }
 }
 
@@ -91,7 +104,7 @@
 
   &-2-col + &-2-col {
     padding-left: 50px;
-    border-left: solid 1px theme-palette(grey, light);
+    border-left: solid 2px theme-palette(grey, light);
   }
 }
 

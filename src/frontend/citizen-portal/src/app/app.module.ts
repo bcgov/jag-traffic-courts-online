@@ -48,6 +48,7 @@ import { TicketPaymentCompleteComponent } from './components/ticket-payment-comp
 import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { CdkAccordionModule} from '@angular/cdk/accordion';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -93,6 +94,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
+    CdkAccordionModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

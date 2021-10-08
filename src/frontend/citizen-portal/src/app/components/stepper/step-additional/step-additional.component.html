@@ -1,6 +1,6 @@
 <app-stepper-page>
   <app-page-header>
-    <ng-container subHeader>
+    <ng-container subHeader class="subheader-desc">
       The following additional information is required and will apply to all counts on this ticket made with that
       selection.
     </ng-container>
@@ -8,8 +8,8 @@
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
     <section *ngIf="isReductionRequired.value">
-      <h3 class="mt-4 mb-2">
-        <span class="fw-bold">Request fine reduction and/ or more time to pay. </span>Please make your selection(s)
+      <h3 class="mt-4 mb-2 reduction-text">
+        <span class="fw-bold">Request fine reduction and/ or time to pay. </span>Please make your selection(s)
         below:
       </h3>
       <div class="row">
@@ -78,7 +78,7 @@
     </section>
 
     <section *ngIf="isCourtRequired.value">
-      <h3 class="mt-4 mb-2">
+      <h3 class="mt-4 mb-2 reduction-text">
         <span class="fw-bold">Dispute charge. </span>Please indicate which (if any) of the following apply to you:
       </h3>
       <div class="row">
@@ -91,7 +91,7 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="interpreterRequired">
+          <mat-checkbox class="me-4 mb-2"    formControlName="interpreterRequired">
             I require a language interpreter at the hearing.
           </mat-checkbox>
           <mat-error *ngIf="interpreterRequired.hasError('requiredIfTrue')">
