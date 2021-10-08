@@ -72,9 +72,9 @@ export abstract class AbstractResource {
   protected handleSuccess<T>(): (
     response: HttpResponse<ApiHttpResponse<T>>
   ) => ApiHttpResponse<T> {
-    return ({ body }: HttpResponse<ApiHttpResponse<T>>): ApiHttpResponse<T> => {
+    return ({ headers, status, body: result }: HttpResponse<ApiHttpResponse<T>>): ApiHttpResponse<T> => {
       // this.logger.info(`RESPONSE: ${status}`, body);
-      return body;
+      return new ApiHttpResponse<T>( status, headers, result as any, '');
     };
   }
 

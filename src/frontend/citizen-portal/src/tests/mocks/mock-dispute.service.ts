@@ -1,3 +1,5 @@
+import { AddressAutocompleteFindResponse, AddressAutocompleteRetrieveResponse } from '@shared/models/address-autocomplete.model';
+import { Address } from '@shared/models/address.model';
 import { DisputantView } from '@shared/models/disputantView.model';
 import { OffenceView } from '@shared/models/offenceView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
@@ -8,8 +10,8 @@ export class MockDisputeService {
   private _ticket: BehaviorSubject<TicketDisputeView>;
 
   constructor() {
-    // const ticket = this.createTicketWithoutDisputes();
-    const ticket = this.createTicketWithDispute();
+    const ticket = this.createTicketWithoutDisputes();
+    // const ticket = this.createTicketWithDispute();
 
     this._ticket = new BehaviorSubject<TicketDisputeView>(ticket);
   }
@@ -20,6 +22,72 @@ export class MockDisputeService {
 
   public get ticket(): TicketDisputeView {
     return this._ticket.value;
+  }
+
+  public get addressAutocompleteFindResponse(): AddressAutocompleteFindResponse[] {
+    const resp: AddressAutocompleteFindResponse[] = [
+      {
+        id: '001',
+        text: '1235 Douglas Street',
+        highlight: '0',
+        cursor: 1,
+        description: 'Victoria, BC, V8D 8E8',
+        next: 'Retrieve'
+      }, {
+        id: '002',
+        text: '1244 Douglas Street',
+        highlight: '0',
+        cursor: 1,
+        description: 'Victoria, BC, V8D 8E8',
+        next: 'Retrieve'
+      }
+    ];
+    return resp;
+  }
+
+  public get addressAutocompleteRetrieveResponse(): AddressAutocompleteRetrieveResponse[] {
+    const resp: AddressAutocompleteRetrieveResponse[] = [
+      {
+        id: '',
+        domesticId: '',
+        language: 'ENG',
+        languageAlternatives: '',
+        department: '',
+        company: '',
+        subBuilding: '',
+        buildingNumber: '',
+        buildingName: '',
+        secondaryStreet: '',
+        street: '',
+        block: '',
+        neighbourhood: '',
+        district: '',
+        city: faker.address.city(),
+        line1: faker.address.streetAddress(),
+        line2: faker.address.secondaryAddress(),
+        line3: '',
+        line4: '',
+        line5: '',
+        adminAreaName: '',
+        adminAreaCode: '',
+        province: '',
+        provinceName: '',
+        provinceCode: 'BC',
+        postalCode: 'V9D 9S9',
+        countryName: '',
+        countryIso2: 'CA',
+        countryIso3: '',
+        countryIsoNumber: 0,
+        sortingNumber1: '',
+        sortingNumber2: '',
+        barcode: '',
+        poBoxNumber: '',
+        label: '',
+        dataLevel: '',
+      }
+    ];
+
+    return resp;
   }
 
   private createTicketWithoutDisputes(): TicketDisputeView {
@@ -64,7 +132,7 @@ export class MockDisputeService {
       _within30days: true,
     };
 
-    ticket.disputant = this.createDisputant();
+    ticket.disputant = this.createEmptyDisputant();
 
     // --------------------------
     let offence: OffenceView = {
@@ -267,6 +335,7 @@ export class MockDisputeService {
   }
 
   private createDisputant(): DisputantView {
+    const mailingAddress = new Address('CA', 'BC', faker.address.streetAddress(), faker.address.secondaryAddress(), faker.address.city(), 'V8R3E3', 0);
     return {
       lastName: faker.name.lastName(),
       givenNames: faker.name.firstName(),
@@ -274,11 +343,29 @@ export class MockDisputeService {
       city: faker.address.city(),
       province: faker.address.state(),
       postalCode: 'V8R3E3',
-      birthdate: null, // faker.date.past().toDateString(),
+      birthdate: null,
       emailAddress: faker.internet.email(),
       driverLicenseNumber: '2342342',
       driverLicenseProvince: 'BC',
-      phoneNumber: '2506653434', // faker.phone.phoneNumberFormat(10),
+      phoneNumber: '2506653434',
+      _mailingAddress: mailingAddress
+    };
+  }
+
+  private createEmptyDisputant(): DisputantView {
+    return {
+      lastName: null,
+      givenNames: null,
+      mailingAddress: null,
+      postalCode: null,
+      city: null,
+      province: null,
+      birthdate: null,
+      emailAddress: null,
+      driverLicenseNumber: null,
+      driverLicenseProvince: null,
+      phoneNumber: null,
+      _mailingAddress: null
     };
   }
 

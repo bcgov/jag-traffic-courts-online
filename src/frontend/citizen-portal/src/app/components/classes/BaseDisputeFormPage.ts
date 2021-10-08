@@ -27,11 +27,11 @@ export abstract class BaseDisputeFormPage implements IBaseDisputeFormPage {
    * @description
    * Patch the form with dispute information.
    */
-  protected patchForm(): void {
+  protected async patchForm(): Promise<void> {
     // Store a local copy of the dispute for views
     this.ticket = this.disputeService.ticket;
 
     // Attempt to patch the form if not already patched
-    this.disputeFormStateService.setForm(this.ticket);
+    await this.disputeFormStateService.setForm(this.ticket);
   }
 }

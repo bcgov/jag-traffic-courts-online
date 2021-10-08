@@ -35,3 +35,12 @@
 
 // Import application overridden styles
 @import './overrides/index.scss';
+
+.mat-step-label-selected .mat-step-text-label {
+  font-weight: bold;
+}
+
+.hide-address {
+  height: 0;
+  overflow: hidden;
+}

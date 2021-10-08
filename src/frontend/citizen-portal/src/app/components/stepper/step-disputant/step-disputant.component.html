@@ -30,48 +30,65 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-6">
-            <mat-form-field class="w-100">
-              <mat-label>Mailing address</mat-label>
-              <input matInput
-                     formControlName="mailingAddress" />
-              <mat-error>{{ "error.required" | translate }}</mat-error>
-            </mat-form-field>
+        <section>
+          <app-address-form-autocomplete
+            (autocompleteAddress)="onAutocomplete($event)">
+            <button *ngIf="showManualButton"
+              mat-button
+              type="button"
+              color="primary"
+              [disabled]="showAddressFields"
+              (click)="showManualAddress()">
+              <mat-icon>add</mat-icon>
+              Add address manually
+            </button>
+          </app-address-form-autocomplete>
+        </section>
+
+        <section [ngClass]="{'hide-address': !showAddressFields}">
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Mailing address</mat-label>
+                <input matInput
+                       formControlName="mailingAddress" />
+                <mat-error>{{ "error.required" | translate }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>City</mat-label>
+                <input matInput
+                       formControlName="city" />
+                <mat-error>{{ "error.required" | translate }}</mat-error>
+              </mat-form-field>
+            </div>
           </div>
 
-          <div class="col-md-6">
-            <mat-form-field class="w-100">
-              <mat-label>City</mat-label>
-              <input matInput
-                     formControlName="city" />
-              <mat-error>{{ "error.required" | translate }}</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Province</mat-label>
+                <input matInput
+                       formControlName="province" />
+                <mat-error>{{ "error.required" | translate }}</mat-error>
+              </mat-form-field>
+            </div>
 
-        <div class="row">
-          <div class="col-md-6">
-            <mat-form-field class="w-100">
-              <mat-label>Province</mat-label>
-              <input matInput
-                     formControlName="province" />
-              <mat-error>{{ "error.required" | translate }}</mat-error>
-            </mat-form-field>
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Postal code</mat-label>
+                <input matInput
+                       mask="S0S 0S0"
+                       oninput="this.value = this.value.toUpperCase()"
+                       formControlName="postalCode"
+                       [showMaskTyped]="true" />
+                <mat-error>{{ "error.required" | translate }}</mat-error>
+              </mat-form-field>
+            </div>
           </div>
-
-          <div class="col-md-6">
-            <mat-form-field class="w-100">
-              <mat-label>Postal code</mat-label>
-              <input matInput
-                     mask="S0S 0S0"
-                     oninput="this.value = this.value.toUpperCase()"
-                     formControlName="postalCode"
-                     [showMaskTyped]="true" />
-              <mat-error>{{ "error.required" | translate }}</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
+        </section>
 
         <div class="row">
           <div class="col-md-6">

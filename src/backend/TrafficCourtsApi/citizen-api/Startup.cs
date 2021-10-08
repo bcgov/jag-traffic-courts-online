@@ -25,6 +25,7 @@ using Gov.TicketSearch;
 using Gov.CitizenApi.Features.Lookups.Configuration;
 using TrafficCourts.Common.Contract;
 using TrafficCourts.Common.Configuration;
+using Gov.CitizenApi.Features.AddressAutoComplete;
 
 namespace Gov.CitizenApi
 {
@@ -57,6 +58,7 @@ namespace Gov.CitizenApi
             ConfigureOpenApi(services);
             ConfigureTicketSearchApi(services);
             ConfigureServiceBus(services);
+            ConfigureAddressAutoCompleteApi(services);
 
 #if USE_AUTHENTICATION
             services.AddAuthentication(options =>
@@ -159,6 +161,18 @@ namespace Gov.CitizenApi
             string baseUrl = _configuration.GetSection("TicketSearchApi:BaseUrl").Value;
 
             services.AddHttpClient<ITicketSearchClient, TicketSearchClient>(c => c.BaseAddress = new Uri(baseUrl));
+        }
+
+        internal void ConfigureAddressAutoCompleteApi(IServiceCollection services)
+        {
+            string baseUrl = _configuration.GetSection("ADDRESS_AUTOCOMPLETE_URL").Value;
+            string apiKey = _configuration.GetSection("ADDRESS_AUTOCOMPLETE_API_KEY").Value;
+
+            services.AddSingleton(new AddressAutoCompleteClientCredentials
+            {
+                ApiKey = apiKey
+            })
+           .AddHttpClient<IAddressAutocompleteClient, AddressAutocompleteClient>(c => c.BaseAddress = new Uri(baseUrl));
         }
 
         internal void ConfigureServiceBus(IServiceCollection services)

@@ -6,7 +6,11 @@ import {
   ValidatorFn,
   FormArray,
   FormBuilder,
+  Validators,
 } from '@angular/forms';
+import { Country } from '@shared/enums/country.enum';
+import { Province } from '@shared/enums/province.enum';
+import { AddressLine } from '@shared/models/address.model';
 
 import { LoggerService } from './logger.service';
 
@@ -14,7 +18,7 @@ import { LoggerService } from './logger.service';
   providedIn: 'root',
 })
 export class FormUtilsService {
-  constructor(private fb: FormBuilder, private logger: LoggerService) {}
+  constructor(private fb: FormBuilder, private logger: LoggerService) { }
 
   /**
    * @description
@@ -129,5 +133,59 @@ export class FormUtilsService {
       return acc;
     }, {}); // as { [key: string]: any });
     return hasError ? result : null;
+  }
+
+  /**
+   * @description
+   * Provide an address form group.
+   *
+   * @param options available for manipulating the form group
+   *  areRequired control names that are required
+   *  areDisabled control names that are disabled
+   *  useDefaults for province and country, otherwise empty
+   *  exclude control names that are not needed
+   */
+  public buildAddressForm(options: {
+    areRequired?: AddressLine[],
+    areDisabled?: AddressLine[],
+    useDefaults?: Extract<AddressLine, 'provinceCode' | 'countryCode'>[],
+    exclude?: AddressLine[];
+  } = null): FormGroup {
+    const controlsConfig = {
+      id: [0, []],
+      address: [{ value: null, disabled: false }, []],
+      street2: [{ value: null, disabled: false }, []],
+      city: [{ value: null, disabled: false }, []],
+      provinceCode: [{ value: null, disabled: false }, []],
+      countryCode: [{ value: null, disabled: false }, []],
+      postalCode: [{ value: null, disabled: false }, []]
+    };
+
+    Object.keys(controlsConfig)
+      .filter((key: AddressLine) => !options?.exclude?.includes(key))
+      .forEach((key: AddressLine, index: number) => {
+        const control = controlsConfig[key];
+        const controlProps = control[0] as { value: any, disabled: boolean; };
+        const controlValidators = control[1] as Array<ValidatorFn>;
+
+        if (options?.areDisabled?.includes(key)) {
+          controlProps.disabled = true;
+        }
+
+        const useDefaults = options?.useDefaults;
+        if (useDefaults) {
+          if (key === 'provinceCode') {
+            controlProps.value = Province.BRITISH_COLUMBIA;
+          } else if (key === 'countryCode') {
+            controlProps.value = Country.CANADA;
+          }
+        }
+
+        if (options?.areRequired?.includes(key)) {
+          controlValidators.push(Validators.required);
+        }
+      });
+
+    return this.fb.group(controlsConfig);
   }
 }
