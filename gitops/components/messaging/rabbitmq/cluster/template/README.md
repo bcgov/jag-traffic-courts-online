@@ -10,4 +10,4 @@
 ### Command to execute template to create/update RabbitMq cluster components.
 1) Login to OC using login command
 2) Run below command in each env. namespace dev/test/prod/tools
-   ``oc process -f rabbitmq_cluster.yaml --param-file=rabbitmq_cluster.env | oc apply -f -``
+   ``oc process -f rabbitmq_cluster.yml --param-file=rabbitmq_cluster.env | oc apply -f -``

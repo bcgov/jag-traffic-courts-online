@@ -7,6 +7,7 @@ metadata:
 labels:
   app: ${APP_NAME}
   app.kubernetes.io/name: ${COMPONENT_NAME}
+  app.kubernetes.io/part-of: ${APP_NAME}
   app.openshift.io/runtime: ${RUNTIME}
   
 parameters:
@@ -159,8 +160,11 @@ objects:
               - name: ${COMPONENT_NAME}-data
                 mountPath: /var/lib/redis/data
             terminationMessagePolicy: File
+            #Below commented line is required only if image needs to be pulled directly from redhat image registry.
+            #image: >-
+            #  registry.redhat.io/rhel8/redis-6:1-21
             image: >-
-              registry.redhat.io/rhel8/redis-6:1-21
+                image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/redis-6:1-21
         restartPolicy: Always
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirst

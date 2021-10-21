@@ -2,6 +2,7 @@ apiVersion: ops.gov.bc.ca/v1alpha1
 kind: SysdigTeam
 metadata:
   name: 0198bb-sysdigteam
+  namespace: 0198bb-tools
 spec:
   team: 
     description: The Sysdig Team for the TCO Namespaces
@@ -10,3 +11,8 @@ spec:
       role: ROLE_TEAM_MANAGER
     - name: poggdogg@gmail.com
       role: ROLE_TEAM_MANAGER
+    - name: suganth.s1987@gmail.com
+      role: ROLE_TEAM_MANAGER
+    - name: chris.hoban@gov.bc.ca
+      role: ROLE_TEAM_MANAGER
+

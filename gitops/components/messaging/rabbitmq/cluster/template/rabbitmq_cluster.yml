@@ -49,6 +49,7 @@ parameters:
     required: true
 
 objects:
+
 - kind: Secret
   apiVersion: v1
   metadata:
@@ -210,7 +211,7 @@ objects:
                 mountPath: /var/lib/rabbitmq
             terminationMessagePolicy: File
             image: >-
-              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-${OC_ENV}/rabbitmq:3.9.4-management
+              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-tools/rabbitmq:3.9.4-management
             args:
               - '-c'
               - >-
@@ -303,3 +304,24 @@ objects:
     clusterIP: None
     type: ClusterIP
     sessionAffinity: None
+
+- kind: Route
+  apiVersion: route.openshift.io/v1
+  metadata:
+    name: ${COMPONENT_NAME}
+    namespace: ${OC_NAMESPACE}-${OC_ENV}
+    labels:
+      app: ${COMPONENT_NAME}
+      type: LoadBalancer
+  spec:
+    host: ${COMPONENT_NAME}-${OC_NAMESPACE}-${OC_ENV}.apps.silver.devops.gov.bc.ca
+    to:
+      kind: Service
+      name: ${COMPONENT_NAME}-loadbalancer
+      weight: 100
+    port:
+      targetPort: http
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: None
+    wildcardPolicy: None
