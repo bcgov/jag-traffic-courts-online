@@ -89,7 +89,6 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     this.ticket?.offences
       ?.filter((offence) => (offence.offenceAgreementStatus === 'DISPUTE' || offence.offenceAgreementStatus === 'REDUCTION'))
       .forEach((offence) => {
-        console.log("for each")
         if (count > 0) {
           countsDisputed += ',';
         }
