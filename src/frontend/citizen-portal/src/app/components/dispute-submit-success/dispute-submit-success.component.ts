@@ -15,6 +15,8 @@ import { Subscription } from 'rxjs';
 export class DisputeSubmitSuccessComponent implements OnInit {
   public busy: Subscription;
   public ticket: TicketDisputeView;
+  public readonly changeOfAddressURL: string  = "https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr805.pdf?forcedownload=true";
+  public readonly whatToExpectURL: string  = "https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf";
 
   constructor(
     private router: Router,
@@ -80,6 +82,23 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     return { countsToPay, countsToPayAmount };
   }
 
+  private getListOfCountsDisputed(): string
+  {
+    let countsDisputed = '';
+    let count = 0;
+    this.ticket?.offences
+      ?.filter((offence) => (offence.offenceAgreementStatus === 'DISPUTE' || offence.offenceAgreementStatus === 'REDUCTION'))
+      .forEach((offence) => {
+        console.log("for each")
+        if (count > 0) {
+          countsDisputed += ',';
+        }
+        countsDisputed += offence.offenceNumber;
+        count++;
+      });
+    return countsDisputed;
+  }
+
   public get countsToPay(): string {
     const { countsToPay, countsToPayAmount } = this.getListOfCountsToPay();
 
@@ -91,6 +110,24 @@ export class DisputeSubmitSuccessComponent implements OnInit {
       }
     }
 
+    return null;
+  }
+
+  public get isWitnessPresent(): boolean {
+    const witnessPresent = this.ticket?.additional?.witnessPresent;
+    return witnessPresent;
+  }
+
+  public get countsDisputed(): string{
+    const countsDisputed = this.getListOfCountsDisputed();
+
+    if (countsDisputed) {
+      if (countsDisputed.indexOf(',') > -1) {
+        return 'Counts ' + countsDisputed;
+      } else {
+        return 'Count ' + countsDisputed;
+      }
+    }
     return null;
   }
 }

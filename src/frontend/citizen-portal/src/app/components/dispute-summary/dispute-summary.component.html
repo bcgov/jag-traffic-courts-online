@@ -1,6 +1,6 @@
 <app-page [busy]="busy">
   <app-page-header>
-    <ng-container header>Violation ticket lookup</ng-container>
+    <ng-container header>Violation ticket details</ng-container>
     <ng-container subHeader>
       <cdk-accordion>
         <cdk-accordion-item
@@ -11,7 +11,7 @@
           [attr.aria-expanded]="accordionItem.expanded"
           [attr.aria-controls]="'accordion-body'">
           <div class="subheader-desc" (click)="accordionItem.toggle()">
-            <strong class="text-success">Ticket found.</strong> Please review ticket details below, then <strong>choose the action you would like to take.</strong>
+            <strong class="text-success">Ticket found.</strong> Please review ticket details below, then <strong>choose to pay or start a ticket resolution(Includes requesting fine reductions, time to pay or disputes).</strong>
             <span class="text-primary ms-3">
               {{ accordionItem.expanded ? ' - Hide resolution options' : ' + See resolution options' }}
             </span>

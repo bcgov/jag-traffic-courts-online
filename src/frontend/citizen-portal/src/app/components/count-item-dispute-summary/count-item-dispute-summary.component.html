@@ -36,9 +36,12 @@
     <small class="d-block">I will appear in court</small>
     <strong> Yes </strong>
   </div>
+
 </div>
 
-<hr class="d-print-none" />
+<div class="row mb-2 justify-content-end">
+  <hr class="d-print-none col-lg-10 pull-right" />
+</div>
 
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-7">
@@ -46,7 +49,7 @@
     <div class="text">{{ count.offenceDescription | titlecase }}</div>
   </div>
   <div class="col-lg-3">
-    <small class="d-block">Amount due</small>
+    <small class="d-block">Offence amount</small>
     <div class="text">{{ count._amountDue | currency }}</div>
   </div>
 </div>
