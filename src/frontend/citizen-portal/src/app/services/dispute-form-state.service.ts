@@ -293,7 +293,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       interpreterRequired: [false],
       interpreterLanguage: [null],
       witnessPresent: [false],
-      numberOfWitnesses: [null, [Validators.min(0)]],
+      numberOfWitnesses: [null],
       requestReduction: [false],
       requestMoreTime: [false],
       reductionReason: [null],
