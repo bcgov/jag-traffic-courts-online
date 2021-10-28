@@ -129,9 +129,9 @@
                icon="warning">
       <ng-container #alertContent
                     class="alert-content">
-        <strong>If you choose to not appear in court, you must submit written reasons
-          for each request to ask for more time or a fine reduction for each
-          count.</strong>
+        <strong>You must provide written reasons in the Additional Information area of the form below for this option. If you do choose to appear in court to discuss you will not need to provide this information until the court hearing date. <br><br>
+
+          If you provide written reasons, you will be notified in writing by the Court if your application was successful.</strong>
       </ng-container>
     </app-alert>
   </div>
@@ -139,22 +139,45 @@
   <div class="col mt-4"
        *ngIf="
       (offenceAgreementStatus.value === 'REDUCTION' &&
-        reductionAppearInCourt.value) ||
-      offenceAgreementStatus.value === 'DISPUTE'
+        reductionAppearInCourt.value)
     ">
     <app-alert type="warning"
                icon="warning">
       <ng-container #alertContent
                     class="alert-content">
-        If the disputant or the disputant’s agent does not attend the court
-        hearing, the court will treat the violation ticket as not disputed, the
-        conviction(s) to the allegation(s) will be recorded against the record
-        of the disputant, and the prescribed ticketed amount(s) will become
-        immediately due and payable.
+                  <strong>A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing.  <br><br>
+
+                    If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.</strong>  
       </ng-container>
     </app-alert>
   </div>
+  <div class="col mt-4"
+  *ngIf="
+ offenceAgreementStatus.value === 'DISPUTE'
+">
+<app-alert type="warning"
+          icon="warning">
+ <ng-container #alertContent
+               class="alert-content">
+             <strong>You will be required to attend a hearing to defend your claim. A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing. <br><br>
 
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.</strong>  
+ </ng-container>
+</app-alert>
+</div>
+<div class="col mt-4"
+  *ngIf="
+ (offenceAgreementStatus.value === 'DISPUTE' && ticketName === ticketTypesEnum.CAMERA_TICKET)
+">
+<app-alert type="warning"
+          icon="warning">
+ <ng-container #alertContent
+               class="alert-content">
+             <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court to explain the offence and 
+              provide evidence.</strong>  
+ </ng-container>
+</app-alert>
+</div>
   <app-stepper-footer (save)="onSubmit()"
                       (back)="onBack()"
                       [secondaryActionButtonIcon]="previousButtonIcon"

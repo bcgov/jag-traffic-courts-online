@@ -49,6 +49,7 @@ import { CountItemSummaryComponent } from './components/count-item-summary/count
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CdkAccordionModule} from '@angular/cdk/accordion';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -110,6 +111,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CurrencyPipe,
     AppConfigService,
     MockDisputeService,
+    TicketTypePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BackendHttpInterceptor,

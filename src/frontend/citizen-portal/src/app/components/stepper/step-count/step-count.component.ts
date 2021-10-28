@@ -12,6 +12,8 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ticketTypes } from '@shared/enums/ticket-type.enum';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -26,6 +28,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepper: MatStepper;
   @Input() public stepControl: FormGroup;
   @Input() public showDoNothingOption = true;
+  @Input() public ticketName: string;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
@@ -33,6 +36,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.next';
+  public ticketTypesEnum = ticketTypes;
 
   constructor(
     protected route: ActivatedRoute,
@@ -44,7 +48,8 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     private formUtilsService: FormUtilsService,
     private utilsService: UtilsService,
     private logger: LoggerService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private ticketTypePipe:TicketTypePipe,
   ) {
     super(
       route,
@@ -60,8 +65,8 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.stepControl;
     this.patchForm();
+    this.ticketName = this.ticketTypePipe.transform(this.ticketName.charAt(0));
   }
-
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
       this.stepSave.emit(this.stepper);

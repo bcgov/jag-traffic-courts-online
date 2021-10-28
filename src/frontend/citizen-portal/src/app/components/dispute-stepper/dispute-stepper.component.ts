@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/f
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DisputeSubmitSuccessComponent } from '@components/dispute-submit-success/dispute-submit-success.component';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
@@ -35,6 +36,7 @@ export class DisputeStepperComponent
   public offence3Form: FormGroup;
   public additionalForm: FormGroup;
   public overviewForm: FormGroup;
+  public ticketName:string;
 
   public offence1Exists: boolean;
   public offence2Exists: boolean;
@@ -103,6 +105,7 @@ export class DisputeStepperComponent
         });
       }
     });
+    this.ticketName = this.disputeService.ticket.violationTicketNumber;
   }
 
   public onStepCancel(): void {

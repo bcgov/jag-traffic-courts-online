@@ -167,6 +167,28 @@
           </ng-container>
         </app-alert>
       </div>
+      <div class="col" *ngIf="lawyerPresent.value">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your Notice of Dispute. The lawyer’s schedule will have to be considered when a date is set for your hearing and many lawyers are not available on short notice.<br />
+            If you hire a lawyer they will generally give the Violation Ticket Center dates when they are available for your hearing.</strong>
+          </ng-container>
+        </app-alert>
+      </div>
+      <div class="col" *ngIf="interpreterRequired.value">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>The court also provides visual language interpreters (American Sign Language) and CART (Communication Access Realtime Translation - captioning services) for any court proceeding.</strong>
+          </ng-container>
+        </app-alert>
+      </div>
+      <div class="col" *ngIf="witnessPresent.value">
+        <app-alert type="warning" icon="warning">
+          <ng-container #alertContent class="alert-content">
+            <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing date and know the expectations of attending court.</strong>
+          </ng-container>
+        </app-alert>
+      </div>
     </section>
 
     <section *ngIf="!isReductionRequired.value && !isCourtRequired.value">

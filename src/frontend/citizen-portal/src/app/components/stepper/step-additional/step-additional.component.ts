@@ -82,8 +82,7 @@ export class StepAdditionalComponent
     if (event.checked) {
       this.form.controls.numberOfWitnesses.setValidators([Validators.min(0), Validators.required]);
     } else {
-      this.form.controls.numberOfWitnesses.clearValidators();
-      this.form.controls.numberOfWitnesses.updateValueAndValidity();
+      this.form.controls.numberOfWitnesses.setValidators([]);
     }
   }
 
@@ -129,5 +128,8 @@ export class StepAdditionalComponent
 
   public get moreTimeReason(): FormControl {
     return this.form.get('moreTimeReason') as FormControl;
+  }
+  public get lawyerPresent(): FormControl {
+    return this.form.get('lawyerPresent') as FormControl;
   }
 }

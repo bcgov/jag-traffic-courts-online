@@ -8,6 +8,11 @@ import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
+import {ticketTypes} from '../../shared/enums/ticket-type.enum';
+import {TicketNotFoundDialogComponent} from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component'
+import { MatDialog } from '@angular/material/dialog';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
+
 
 @Component({
   selector: 'app-dispute-summary',
@@ -19,6 +24,8 @@ export class DisputeSummaryComponent implements OnInit {
   public ticket: TicketDisputeView;
   public defaultLanguage: string;
   public useMockServices: boolean;
+  public ticketType:string;
+  ticketTypeLocal = ticketTypes;
 
   constructor(
     protected route: ActivatedRoute,
@@ -26,8 +33,10 @@ export class DisputeSummaryComponent implements OnInit {
     private disputeResource: DisputeResourceService,
     private disputeService: DisputeService,
     private logger: LoggerService,
+    private dialog: MatDialog,
     private translateService: TranslateService,
-    private appConfigService: AppConfigService
+    private appConfigService: AppConfigService,
+    private ticketTypePipe:TicketTypePipe,
   ) { }
 
   public ngOnInit(): void {
@@ -64,8 +73,8 @@ export class DisputeSummaryComponent implements OnInit {
         this.performSearch(params);
       }
     });
+    this.ticketType = this.ticketTypePipe.transform(this.ticket.violationTicketNumber.charAt(0));
   }
-
   private performSearch(params): void {
     this.logger.log('DisputeSummaryComponent::performSearch');
 
@@ -84,7 +93,13 @@ export class DisputeSummaryComponent implements OnInit {
       this.ticket = response;
     });
   }
+  public onTicketNotFound(): void {
+    this.dialog.open(TicketNotFoundDialogComponent, {
+      width: '400px',
+    });
+  }
 
+public change
   public onDisputeTicket(): void {
     this.logger.info(
       'DisputeSummaryComponent::onDisputeTicket',

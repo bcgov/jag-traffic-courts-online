@@ -32,6 +32,7 @@
             [showDoNothingOption]="offence2Exists"
             [stepControl]="offence1Form"
             [stepper]="disputeStepper"
+            [ticketName]="ticketName"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
@@ -41,6 +42,7 @@
             id="stepCount"
             [stepControl]="offence2Form"
             [stepper]="disputeStepper"
+            [ticketName]="ticketName"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
@@ -49,6 +51,7 @@
           <app-step-count
             id="stepCount"
             [stepControl]="offence3Form"
+            [ticketName]="ticketName"
             [stepper]="disputeStepper"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
