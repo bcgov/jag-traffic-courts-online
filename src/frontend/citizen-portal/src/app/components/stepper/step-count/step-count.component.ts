@@ -49,7 +49,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     private utilsService: UtilsService,
     private logger: LoggerService,
     private translateService: TranslateService,
-    private ticketTypePipe:TicketTypePipe,
+    private ticketTypePipe: TicketTypePipe,
   ) {
     super(
       route,

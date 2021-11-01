@@ -36,7 +36,7 @@ export class DisputeStepperComponent
   public offence3Form: FormGroup;
   public additionalForm: FormGroup;
   public overviewForm: FormGroup;
-  public ticketName:string;
+  public ticketName: string;
 
   public offence1Exists: boolean;
   public offence2Exists: boolean;

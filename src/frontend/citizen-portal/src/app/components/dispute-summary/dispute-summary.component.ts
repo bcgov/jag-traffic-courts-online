@@ -9,7 +9,7 @@ import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { Subscription } from 'rxjs';
 import {ticketTypes} from '../../shared/enums/ticket-type.enum';
-import {TicketNotFoundDialogComponent} from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component'
+import {TicketNotFoundDialogComponent} from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
@@ -20,12 +20,6 @@ import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
   styleUrls: ['./dispute-summary.component.scss'],
 })
 export class DisputeSummaryComponent implements OnInit {
-  public busy: Subscription;
-  public ticket: TicketDisputeView;
-  public defaultLanguage: string;
-  public useMockServices: boolean;
-  public ticketType:string;
-  ticketTypeLocal = ticketTypes;
 
   constructor(
     protected route: ActivatedRoute,
@@ -36,8 +30,16 @@ export class DisputeSummaryComponent implements OnInit {
     private dialog: MatDialog,
     private translateService: TranslateService,
     private appConfigService: AppConfigService,
-    private ticketTypePipe:TicketTypePipe,
-  ) { }
+    private ticketTypePipe: TicketTypePipe
+  ) {}
+  public busy: Subscription;
+  public ticket: TicketDisputeView;
+  public defaultLanguage: string;
+  public useMockServices: boolean;
+  public ticketType: string;
+  ticketTypeLocal = ticketTypes;
+
+  public change;
 
   public ngOnInit(): void {
     this.defaultLanguage = this.translateService.getDefaultLang();
@@ -73,7 +75,9 @@ export class DisputeSummaryComponent implements OnInit {
         this.performSearch(params);
       }
     });
-    this.ticketType = this.ticketTypePipe.transform(this.ticket.violationTicketNumber.charAt(0));
+    this.ticketType = this.ticketTypePipe.transform(
+      this.ticket.violationTicketNumber.charAt(0)
+    );
   }
   private performSearch(params): void {
     this.logger.log('DisputeSummaryComponent::performSearch');
@@ -98,8 +102,6 @@ export class DisputeSummaryComponent implements OnInit {
       width: '400px',
     });
   }
-
-public change
   public onDisputeTicket(): void {
     this.logger.info(
       'DisputeSummaryComponent::onDisputeTicket',

@@ -22,7 +22,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     'https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr805.pdf?forcedownload=true';
   public readonly whatToExpectURL: string =
     'https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf';
-    public ticketTypesEnum = ticketTypes;
+  public ticketTypesEnum = ticketTypes;
   constructor(
     private router: Router,
     private disputeResource: DisputeResourceService,
@@ -134,25 +134,25 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     return interpreterRequired;
   }
   public get isReductionRequested(): boolean {
-   const filteredOffences =  this.ticket?.offences.filter((offence) => 
-      offence.offenceAgreementStatus == 'REDUCTION'
+    const filteredOffences = this.ticket?.offences.filter(
+      (offence) => offence.offenceAgreementStatus === 'REDUCTION'
     );
-    if(filteredOffences.length>0){
+    if (filteredOffences.length > 0) {
       return true;
     }
     return false;
   }
   public get willAppearInCourt(): boolean {
-    const filteredOffences =  this.ticket?.offences.filter((offence) => 
-      offence.reductionAppearInCourt
+    const filteredOffences = this.ticket?.offences.filter(
+      (offence) => offence.reductionAppearInCourt
     );
-    if(filteredOffences.length>0){
+    if (filteredOffences.length > 0) {
       return true;
     }
     return false;
   }
   public get ticketType(): string {
-    const ticketNumber = this.ticket.violationTicketNumber
+    const ticketNumber = this.ticket.violationTicketNumber;
     return this.ticketTypePipe.transform(ticketNumber.charAt(0));
   }
   public get countsDisputed(): string {
