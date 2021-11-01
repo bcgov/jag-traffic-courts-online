@@ -105,7 +105,7 @@ export class DisputeStepperComponent
         });
       }
     });
-    this.ticketName = this.disputeService.ticket.violationTicketNumber;
+    this.ticketName = this.disputeService?.ticket?.violationTicketNumber;
   }
 
   public onStepCancel(): void {

@@ -137,7 +137,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     const filteredOffences = this.ticket?.offences.filter(
       (offence) => offence.offenceAgreementStatus === 'REDUCTION'
     );
-    if (filteredOffences.length > 0) {
+    if (filteredOffences?.length > 0) {
       return true;
     }
     return false;

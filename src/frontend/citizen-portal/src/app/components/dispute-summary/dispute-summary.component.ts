@@ -76,7 +76,7 @@ export class DisputeSummaryComponent implements OnInit {
       }
     });
     this.ticketType = this.ticketTypePipe.transform(
-      this.ticket.violationTicketNumber.charAt(0)
+      this.ticket?.violationTicketNumber.charAt(0)
     );
   }
   private performSearch(params): void {

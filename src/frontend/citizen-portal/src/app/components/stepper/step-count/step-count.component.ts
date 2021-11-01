@@ -65,7 +65,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.defaultLanguage = this.translateService.getDefaultLang();
     this.form = this.stepControl;
     this.patchForm();
-    this.ticketName = this.ticketTypePipe.transform(this.ticketName.charAt(0));
+    this.ticketName = this.ticketTypePipe.transform(this.ticketName?.charAt(0));
   }
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {

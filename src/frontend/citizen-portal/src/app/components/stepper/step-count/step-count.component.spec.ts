@@ -13,6 +13,9 @@ import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 
 import { StepCountComponent } from './step-count.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { ConfigService } from '@config/config.service';
+import { MockConfigService } from 'tests/mocks/mock-config.service';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 describe('StepCountComponent', () => {
   let component: StepCountComponent;
@@ -35,7 +38,15 @@ describe('StepCountComponent', () => {
         CapitalizePipe,
         SafeHtmlPipe,
       ],
-      providers: [MockDisputeService, DisputeFormStateService],
+      providers: [
+        MockDisputeService,
+        DisputeFormStateService,
+        TicketTypePipe,
+        {
+          provide: ConfigService,
+          useClass: MockConfigService,
+        },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
