@@ -14,10 +14,16 @@ public abstract class TrafficCourtsConfigurationProvider : ConfigurationProvider
         if (variable == null) throw new ArgumentNullException(nameof(variable));
         if (appKey == null) throw new ArgumentNullException(nameof(appKey));
 
-        var value = Environment.GetEnvironmentVariable(variable);
-        if (value != null)
+        // note the Load method may be called multiple times if before the
+        // application builder Build method is called, the configuration is requested
+        // so check if the key already exists before adding it
+        if (!Data.ContainsKey(appKey))
         {
-            Data.Add(appKey, value);
+            var value = Environment.GetEnvironmentVariable(variable);
+            if (value != null)
+            {
+                Data.Add(appKey, value);
+            }
         }
     }
 }

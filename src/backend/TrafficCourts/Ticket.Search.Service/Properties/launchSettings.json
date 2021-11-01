@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -11,13 +11,17 @@
   "profiles": {
     "TrafficCourts.Ticket.Search.Service": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7150;http://localhost:5254",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "OAUTH__RESOURCEURL": "https:/wsgw.test.jag.gov.bc.ca:8443/paybc",
+        "OAUTH__SECRET": "4f6dd58b-6bff-4c54-8ea9-2290fb90e015",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OAUTH__OAUTHURL": "https:/wsgw.test.jag.gov.bc.ca/auth/oauth/v2/token",
+        "OAUTH__CLIENTID": "9f74d586-d3d8-4eb4-a737-0b1fcd605346"
+      },
+      "applicationUrl": "https://localhost:7150;http://localhost:5254",
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
