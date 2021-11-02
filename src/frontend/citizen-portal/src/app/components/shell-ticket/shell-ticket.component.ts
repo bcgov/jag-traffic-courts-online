@@ -205,9 +205,8 @@ export class ShellTicketComponent implements OnInit {
     const data: DialogOptions = {
       titleKey: 'Are you sure all ticket information is correct?',
       messageKey: `Please ensure that all entered fields match the paper ticket copy exactly.
-        If you do not ensure all fields match it could cause issues during reconciliation.
         If you are not sure, please go back and update any fields as needed before submitting ticket information.`,
-      actionTextKey: 'Yes, continue to resolution options',
+      actionTextKey: 'Yes I am sure, create online ticket',
       cancelTextKey: 'Go back and edit',
     };
 

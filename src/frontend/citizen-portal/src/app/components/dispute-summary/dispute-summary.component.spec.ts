@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { Component } from '@angular/core';
 
 import { DisputeSummaryComponent } from './dispute-summary.component';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
@@ -39,6 +40,7 @@ describe('DisputeSummaryComponent', () => {
       providers: [
         FormatDatePipe,
         CurrencyPipe,
+        TicketTypePipe,
         {
           provide: ActivatedRoute,
           useValue: {

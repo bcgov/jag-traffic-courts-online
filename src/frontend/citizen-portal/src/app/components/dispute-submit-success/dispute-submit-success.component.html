@@ -10,7 +10,7 @@
                    icon="check">
           <ng-container #alertContent
                         class="alert-content">
-            <strong>Ticket request sent successfully</strong><br />
+            <h1>Ticket request sent successfully</h1>
             Ticket reference #: <strong>TR-001-00001</strong>
           </ng-container>
         </app-alert>
@@ -37,6 +37,7 @@
     </div>
   </div>
 
+  <hr class="d-print-none">
   <div class="mt-4 d-print-none"
        *ngIf="countsToPay">
     <span class="text-dark">You have selected '<strong>Pay for this count</strong>' for
@@ -49,13 +50,125 @@
             (click)="onMakePayment()">
       Make payment
     </button>
-  </div>
+    <hr class="d-print-none">
+  </div >
 
-  <hr class="d-print-none" />
+  <div class="d-print-none"
+       *ngIf="countsDisputed">
+    <strong>Next Steps</strong><br>
+    <p class="text-dark">
+      You will receive an email and mailed letter with your court hearing date in the next six to nine months. Some helpful documents are listed below.
+    </p>
+    <div>
+      <a
+         href="{{ whatToExpectURL }}" target="_blank">
+        <img class="me-2"
+             src="/assets/pdf-icon.svg" />
+        What to expect at traffic court
+      </a>
+      <a class="print-link p-3"
+        href="{{ changeOfAddressURL }}">
+        <img class="me-2"
+             src="/assets/pdf-icon.svg" />
+        Change of address form
+      </a>
+    </div>
+    <hr class="d-print-none" />
+  </div >
 
   <strong class="d-print-none">Submission details</strong>
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
+
+  <section class="mb-2 mt-4 d-print-none">
+    <div class="row" *ngIf="isWitnessPresent">
+      <div class="col">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong>If you are calling a witness please keep the following information in
+              mind:</strong><br />
+            If the disputant or the disputant’s agent does not attend the court
+            hearing, the court will treat the violation ticket as not disputed, the
+            conviction(s) to the allegation(s) will be recorded against the record
+            of the disputant.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+    <div class="row" *ngIf="(isReductionRequested &&
+    willAppearInCourt)">
+      <div class="col">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing.  <br><br>
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.  
+          </ng-container>
+        </app-alert>
+      </div>
+    </div> 
+    <div class="row" *ngIf="countsDisputed">
+      <div class="col">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            You will be required to attend a hearing to defend your claim. A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing. <br><br>
+
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately. 
+          </ng-container>
+        </app-alert>
+      </div>
+    </div> 
+    <div class="row" *ngIf="countsDisputed && ticketType ===ticketTypesEnum.CAMERA_TICKET">
+      <div class="col">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            If you dispute the ticket, an intersection safety camera officer will always appear in court to explain the offence and 
+              provide evidence.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div> 
+  </section>
+
+  <section class="mb-2 mt-4 d-print-none">
+    <div class="row" *ngIf="countsDisputed">
+      <div class="col">
+        <app-alert type="warning"
+               icon="info">
+          <ng-container #alertContent
+                        class="alert-content">
+            If the disputant or the disputant’s agent does not attend the court
+            hearing, the court will treat the violation ticket as not disputed, the
+            conviction(s) to the allegation(s) will be recorded against the record
+            of the disputant, and the prescribed ticketed amount(s) will become
+            immediately due and payable.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+    <div class="row" *ngIf="isLawyerPresent">
+      <div class="col">
+        <app-alert type="warning"
+               icon="info">
+          <ng-container #alertContent
+                        class="alert-content">
+                        If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your Notice of Dispute. The lawyer’s schedule will have to be considered when a date is set for your hearing and many lawyers are not available on short notice.<br />
+                        If you hire a lawyer they will generally give the Violation Ticket Center dates when they are available for your hearing.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+    <div class="row" *ngIf="isInterpreterRequired">
+      <div class="col">
+        <app-alert type="warning"
+               icon="info">
+          <ng-container #alertContent
+                        class="alert-content">
+                        The court also provides visual language interpreters (American Sign Language) and CART (Communication Access Realtime Translation - captioning services) for any court proceeding.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+  </section>
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>

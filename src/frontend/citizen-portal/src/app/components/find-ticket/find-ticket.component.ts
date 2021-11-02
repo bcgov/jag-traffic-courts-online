@@ -11,6 +11,7 @@ import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
+import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -83,17 +84,19 @@ export class FindTicketComponent implements OnInit {
       .getTicket(formParams)
       .subscribe((response) => {
         this.disputeService.ticket$.next(response);
-
         if (response) {
           this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
             queryParams: formParams,
           });
         } else {
           this.notFound = true;
+          this.onTicketNotFound();
         }
       });
   }
-
+ public onTicketNotFound(): void {
+    this.dialog.open(TicketNotFoundDialogComponent);
+  }
   public onFileChange(event: any) {
     let filename: string;
     let ticketImage: string;

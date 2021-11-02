@@ -130,4 +130,7 @@ export class StepAdditionalComponent
   public get moreTimeReason(): FormControl {
     return this.form.get('moreTimeReason') as FormControl;
   }
+  public get lawyerPresent(): FormControl {
+    return this.form.get('lawyerPresent') as FormControl;
+  }
 }
