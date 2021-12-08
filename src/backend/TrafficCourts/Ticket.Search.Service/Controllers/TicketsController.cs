@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Ticket.Search.Service.Features.Search;
 
@@ -18,13 +17,18 @@ namespace TrafficCourts.Ticket.Search.Service.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(TicketSearch.Response), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Produces("application/json")]
         public async Task<IActionResult> Get([FromQuery] TicketSearch.Request searchRequest)
         {
             var response = await _mediator.Send(searchRequest);
+
+            if (response == TicketSearch.Response.NotFound)
+            {
+                return NotFound();
+            }
 
             return Ok(response);
         }

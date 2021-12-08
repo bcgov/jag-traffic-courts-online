@@ -210,7 +210,7 @@ objects:
                 mountPath: /var/lib/rabbitmq
             terminationMessagePolicy: File
             image: >-
-              image-registry.openshift-image-registry.svc:5000/${OC_NAMESPACE}-${OC_ENV}/rabbitmq:3.9.4-management
+              rabbitmq:3.9.8-management
             args:
               - '-c'
               - >-

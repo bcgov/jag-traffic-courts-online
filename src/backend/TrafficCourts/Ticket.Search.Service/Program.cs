@@ -1,28 +1,15 @@
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Ticket.Search.Service.Configuration;
-using TrafficCourts.Ticket.Search.Service.Services.Authentication;
-
-using MediatR;
-using OpenTelemetry.Instrumentation.AspNetCore;
-using OpenTelemetry.Metrics;
-using System.Diagnostics.Metrics;
+using TrafficCourts.Ticket.Search.Service;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using TrafficCourts.Common.Health;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.UseSerilog<TicketSearchServiceConfiguration>();
-builder.UseAuthenticationClient();
 
 // Add services to the container.
-
-builder.Services.AddMediatR(typeof(Program));
-builder.Services.AddMemoryCache();
-
-builder.Services.AddOpenTelemetryMetrics();
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.ConfigureServices();
 
 var app = builder.Build();
 
@@ -35,8 +22,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    // this endpoint returns HTTP 200 if all "liveness" checks have passed, otherwise, it returns HTTP 500
+    endpoints.MapHealthChecks("/self", new HealthCheckOptions()
+    {
+        Predicate = registration => registration.Tags.Contains(HealthCheckType.Liveness)
+    });
+
+    // this endpoint returns HTTP 200 if all "readiness" checks have passed, otherwise, it returns HTTP 500
+    endpoints.MapHealthChecks("/ready", new HealthCheckOptions()
+    {
+        Predicate = registration => registration.Tags.Contains(HealthCheckType.Readiness)
+    });
+});
 
 app.Run();

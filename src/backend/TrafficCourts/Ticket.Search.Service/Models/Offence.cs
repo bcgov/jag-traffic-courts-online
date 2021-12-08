@@ -23,17 +23,17 @@ namespace TrafficCourts.Ticket.Search.Service.Models
         /// <summary>
         /// The offence happened time in format of yyyy-mm-ddThh:mm.
         /// </summary>
-        public string ViolationDateTime { get; set; }
+        public string? ViolationDateTime { get; set; }
 
         /// <summary>
         /// The offence description.
         /// </summary>
-        public string OffenceDescription { get; set; }
+        public string? OffenceDescription { get; set; }
 
         /// <summary>
         /// The vehicle description.
         /// </summary>
-        public string VehicleDescription { get; set; }
+        public string? VehicleDescription { get; set; }
 
         /// <summary>
         /// The disount amount.
@@ -43,11 +43,11 @@ namespace TrafficCourts.Ticket.Search.Service.Models
         /// <summary>
         /// The discount amount due date
         /// </summary>
-        public string DiscountDueDate { get; set; }
+        public string? DiscountDueDate { get; set; }
 
         /// <summary>
         /// The invoice type.
         /// </summary>
-        public string InvoiceType { get; set; }
+        public string? InvoiceType { get; set; }
     }
 }

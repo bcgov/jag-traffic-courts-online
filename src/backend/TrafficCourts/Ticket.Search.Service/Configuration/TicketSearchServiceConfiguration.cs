@@ -1,11 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Ticket.Search.Service.Features.Search;
 
 namespace TrafficCourts.Ticket.Search.Service.Configuration
 {
     public class TicketSearchServiceConfiguration : TrafficCourtsConfiguration
     {
-        public ServiceCredentials Credentials { get; set; }
+        public TicketSearchProperties? TicketSearch { get; set; }
+    }
+
+    public enum TicketSearchType
+    {
+        RoadSafety,
+        Mock
     }
 
     public class TicketSearchServiceConfigurationProvider : TrafficCourtsConfigurationProvider
@@ -13,43 +20,52 @@ namespace TrafficCourts.Ticket.Search.Service.Configuration
         public override void Load()
         {
             // legacy configuration
-            Add("OAUTH__OAUTHURL", "Credentials:AuthenticationUrl");
-            Add("OAUTH__RESOURCEURL", "Credentials:ResourceUrl");
-            Add("OAUTH__CLIENTID", "Credentials:ClientId");
-            Add("OAUTH__SECRET", "Credentials:ClientSecret");
+            Add("OAUTH__OAUTHURL", "TicketSearch:AuthenticationUrl");
+            Add("OAUTH__RESOURCEURL", "TicketSearch:ResourceUrl");
+            Add("OAUTH__CLIENTID", "TicketSearch:ClientId");
+            Add("OAUTH__SECRET", "TicketSearch:ClientSecret");
 
             // new configuration, change this variables?
-            Add("OAUTH_OAUTHURL", "Credentials:AuthenticationUrl");
-            Add("OAUTH_RESOURCEURL", "Credentials:ResourceUrl");
-            Add("OAUTH_CLIENTID", "Credentials:ClientId");
-            Add("OAUTH_SECRET", "Credentials:ClientSecret");
+            Add("OAUTH_OAUTHURL", "TicketSearch:AuthenticationUrl");
+            Add("OAUTH_RESOURCEURL", "TicketSearch:ResourceUrl");
+            Add("OAUTH_CLIENTID", "TicketSearch:ClientId");
+            Add("OAUTH_SECRET", "TicketSearch:ClientSecret");
         }
     }
 
-    public class ServiceCredentials
+    public class TicketSearchProperties
     {
+        [Required]
+        public TicketSearchType SearchType { get; set; }
+
         /// <summary>
         /// The url of the server that will authenicate the credentials.
         /// </summary>
         [Required]
-        public string AuthenticationUrl { get; set; }
+        public Uri AuthenticationUrl { get; set; } = null!;
 
         /// <summary>
         /// The url of the resource to access.
         /// </summary>
         [Required]
-        public string ResourceUrl { get; set; }
+        public Uri ResourceUrl { get; set; } = null!;
 
         /// <summary>
         /// The client id.
         /// </summary>
         [Required]
-        public string ClientId { get; set; }
+        public string ClientId { get; set; } = null!;
 
         /// <summary>
         /// The client secret.
         /// </summary>
         [Required]
-        public string ClientSecret { get; set; }
+        public string ClientSecret { get; set; } = null!;
+
+        public bool IsValid()
+        {
+            if (SearchType == TicketSearchType.Mock) return true;
+            return AuthenticationUrl != null && ResourceUrl != null && !string.IsNullOrEmpty(ClientId) || !string.IsNullOrEmpty(ClientSecret);
+        }
     }
 }

@@ -7,6 +7,6 @@
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public Task<Token> GetToken(CancellationToken cancellationToken = default);
+        public Task<Token> GetTokenAsync(CancellationToken cancellationToken = default);
     }
 }

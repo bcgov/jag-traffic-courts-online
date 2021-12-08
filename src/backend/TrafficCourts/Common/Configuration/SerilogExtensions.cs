@@ -37,7 +37,7 @@ namespace TrafficCourts.Common.Configuration
                     return;
                 }
 
-                HttpClientHandler handler = null;
+                HttpClientHandler? handler = null;
 
                 if (!splunk.ValidatServerCertificate)
                 {

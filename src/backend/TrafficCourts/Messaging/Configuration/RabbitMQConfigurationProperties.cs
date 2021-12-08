@@ -8,7 +8,7 @@ namespace TrafficCourts.Messaging.Configuration
         /// RabbitMQ Host
         /// </summary>
         [Required]
-        public string Host { get; set; }
+        public string? Host { get; set; }
 
         /// <summary>
         /// RabbitMQ Port
@@ -20,12 +20,12 @@ namespace TrafficCourts.Messaging.Configuration
         /// RabbitMQ Username
         /// </summary>
         [Required]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         /// <summary>
         /// RabbitMQ Password
         /// </summary>
         [Required]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 }
