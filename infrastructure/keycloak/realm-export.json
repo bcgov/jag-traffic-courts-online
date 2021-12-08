@@ -1,7 +1,7 @@
 {
-    "id": "test",
-    "realm": "traffic-court",
-    "displayName": "Traffic Court Hub",
+    "id": "csrs-portal-dev",
+    "realm": "csrs-portal",
+    "displayName": "Child Support Recalculation Service Portal",
     "notBefore": 0,
     "revokeRefreshToken": false,
     "refreshTokenMaxReuse": 0,

@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace Gov.CitizenApi.Features.Lookups
 {
+    public class SingletonAttribute : Attribute
+    {
+
+    }
+
     public interface ILookupsService
     {
         IEnumerable<Statute> GetStatutes();
