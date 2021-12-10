@@ -63,7 +63,7 @@
         </mat-step>
 
         <mat-step [stepControl]="overviewForm">
-          <ng-template matStepLabel>Dispute overview</ng-template>
+          <ng-template matStepLabel>Ticket request overview</ng-template>
           <app-step-overview id="stepOverview" [stepper]="disputeStepper" [overviewTicket]="overviewTicket"
             (busy)="(busy)" (stepSave)="onStepSave($event)"></app-step-overview>
         </mat-step>

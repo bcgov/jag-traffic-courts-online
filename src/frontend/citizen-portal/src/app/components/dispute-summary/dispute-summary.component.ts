@@ -109,12 +109,4 @@ export class DisputeSummaryComponent implements OnInit {
     );
     this.router.navigate([AppRoutes.disputePath(AppRoutes.STEPPER)]);
   }
-
-  public onPayTicket(): void {
-    this.logger.info(
-      'DisputeSummaryComponent::onPayTicket',
-      this.disputeService.ticket
-    );
-    this.router.navigate([AppRoutes.disputePath(AppRoutes.PAYMENT)]);
-  }
 }

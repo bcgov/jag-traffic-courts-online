@@ -1,6 +1,6 @@
 <app-page [busy]="busy">
   <app-page-header>
-    <ng-container header>Submission confirmation</ng-container>
+    <ng-container header>Ticket resolution request confirmation</ng-container>
   </app-page-header>
 
   <section class="mb-2 mt-4 d-print-none">
@@ -101,32 +101,32 @@
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
             A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing.  <br><br>
-              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.  
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.
           </ng-container>
         </app-alert>
       </div>
-    </div> 
+    </div>
     <div class="row" *ngIf="countsDisputed">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
             You will be required to attend a hearing to defend your claim. A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing. <br><br>
 
-              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately. 
+              If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.
           </ng-container>
         </app-alert>
       </div>
-    </div> 
+    </div>
     <div class="row" *ngIf="countsDisputed && ticketType ===ticketTypesEnum.CAMERA_TICKET">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
-            If you dispute the ticket, an intersection safety camera officer will always appear in court to explain the offence and 
+            If you dispute the ticket, an intersection safety camera officer will always appear in court to explain the offence and
               provide evidence.
           </ng-container>
         </app-alert>
       </div>
-    </div> 
+    </div>
   </section>
 
   <section class="mb-2 mt-4 d-print-none">
