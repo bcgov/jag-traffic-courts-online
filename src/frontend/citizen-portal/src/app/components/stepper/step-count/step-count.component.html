@@ -69,9 +69,8 @@
 
   <div class="col mt-4"
        *ngIf="
-      offenceAgreementStatus.value === 'REDUCTION' &&
-      reductionAppearInCourt.value === false
-    ">
+      offenceAgreementStatus.value === 'REDUCTION'"
+    >
     <app-alert type="warning"
                icon="warning">
       <ng-container #alertContent
