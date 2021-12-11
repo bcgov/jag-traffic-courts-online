@@ -68,11 +68,14 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.ticketName = this.ticketTypePipe.transform(this.ticketName?.charAt(0));
   }
   public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.form)) {
-      this.stepSave.emit(this.stepper);
-    } else {
-      this.utilsService.scrollToErrorSection();
-    }
+    this.stepSave.emit(this.stepper);
+    // TODO: As the reduction appear in court functionality is moved to additional,
+    // the validation needs to be done there
+    // if (this.formUtilsService.checkValidity(this.form)) {
+
+    // } else {
+    //   this.utilsService.scrollToErrorSection();
+    // }
   }
 
   public onBack() {

@@ -10,8 +10,19 @@
                    icon="check">
           <ng-container #alertContent
                         class="alert-content">
-            <h1>Ticket request sent successfully</h1>
+
+            <div class="d-flex justify-content-between d-print-none">
+              <span>
+                <h1>Ticket request sent successfully</h1>
             Ticket reference #: <strong>TR-001-00001</strong>
+              </span>
+              <a class="print-link"
+                 (click)="onPrint()">
+                <img class="me-2"
+                     src="/assets/print-icon.svg" />
+                Print confirmation page
+              </a>
+            </div>
           </ng-container>
         </app-alert>
       </div>
@@ -22,61 +33,22 @@
     Ticket reference #: <strong>TR-001-00001</strong>
   </div>
 
-  <div class="d-flex justify-content-between d-print-none">
-    <div class="col-lg-8 conf-email text-dark">
-      A confirmation email of the request information has been sent to: <br />
-      <strong>{{ ticket?.disputant?.emailAddress }}</strong>
-    </div>
-    <div class="d-print-none">
-      <a class="print-link"
-         (click)="onPrint()">
-        <img class="me-2"
-             src="/assets/print-icon.svg" />
-        Print confirmation page
-      </a>
-    </div>
-  </div>
-
   <hr class="d-print-none">
-  <div class="mt-4 d-print-none"
-       *ngIf="countsToPay">
-    <span class="text-dark">You have selected '<strong>Pay for this count</strong>' for
-    <strong>{{ countsToPay }}</strong>, please use the button below to proceed to payment.</span><br />
-    <button type="button"
-            mat-flat-button
-            color="accent"
-            class="large mt-3 mb-2"
-            style="width: unset"
-            (click)="onMakePayment()">
-      Make payment
-    </button>
-    <hr class="d-print-none">
-  </div >
-
-  <div class="d-print-none"
-       *ngIf="countsDisputed">
+  <div class="d-print-none">
     <strong>Next Steps</strong><br>
     <p class="text-dark">
-      You will receive an email and mailed letter with your court hearing date in the next six to nine months. Some helpful documents are listed below.
+      A member of the court registry will review your request and you will receive an email to the address you supplied
+      which will inform you if the ticket request has been approved or rejected, and what to expect next.
+      <br>
+      <br>
+       A confirmation email of the request information will be sent to:
+       <br>
+       {{ ticket?.disputant?.emailAddress }}
     </p>
-    <div>
-      <a
-         href="{{ whatToExpectURL }}" target="_blank">
-        <img class="me-2"
-             src="/assets/pdf-icon.svg" />
-        What to expect at traffic court
-      </a>
-      <a class="print-link p-3"
-        href="{{ changeOfAddressURL }}">
-        <img class="me-2"
-             src="/assets/pdf-icon.svg" />
-        Change of address form
-      </a>
-    </div>
     <hr class="d-print-none" />
   </div >
 
-  <strong class="d-print-none">Submission details</strong>
+  <strong class="d-print-none">Request details</strong>
 
   <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary>
 
