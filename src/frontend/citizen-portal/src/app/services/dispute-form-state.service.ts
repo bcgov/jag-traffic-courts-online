@@ -244,6 +244,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       mailingAddress: [null, [Validators.required]],
       postalCode: [null],
       city: [null],
+      country: [null],
       province: [null],
       _mailingAddress: [null],
       driverLicenseNumber: [null],
