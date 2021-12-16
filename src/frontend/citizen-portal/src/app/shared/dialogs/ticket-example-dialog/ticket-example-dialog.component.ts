@@ -18,6 +18,7 @@ export class TicketExampleDialogComponent implements OnInit, AfterViewInit {
     //
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public ngOnInit(): void {
     //
   }

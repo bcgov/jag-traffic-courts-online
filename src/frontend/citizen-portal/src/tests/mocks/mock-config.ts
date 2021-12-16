@@ -2,7 +2,7 @@ import { Configuration } from '@config/config.model';
 
 export class MockConfig {
   public static get(): Configuration {
-    // tslint:disable
+    /* eslint-disable */
     // Export of /lookup response:
     return {
       courtLocations: [
@@ -7681,6 +7681,6 @@ export class MockConfig {
         },
       ],
     };
-    // tslint:enable
+    /* eslint-enable */
   }
 }

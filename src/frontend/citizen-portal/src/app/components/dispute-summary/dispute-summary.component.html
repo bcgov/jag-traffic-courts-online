@@ -20,7 +20,7 @@
           {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
         </span>
       </div>
-      <div 
+      <div
         role="region"
         [style.display]="accordionItem.expanded ? '' : 'none'"
         [attr.id]="'accordion-body'"
@@ -28,8 +28,8 @@
         <div class="col my-3">
           <app-alert type="info"
                      icon="info">
-            <ng-container class="alert-content" #alertContent 
-            *ngIf="ticketType==ticketTypeLocal.ELECTRONIC_TICKET">
+            <ng-container class="alert-content" #alertContent
+            *ngIf="ticketType === ticketTypeLocal.ELECTRONIC_TICKET">
             <strong>Things you should know: </strong>
             <ul class="mt-3">
                             <li>You can pay this ticket type on <a target="_blank" href="https://pay.gov.bc.ca/">PayBc</a>. </li>
@@ -37,8 +37,8 @@
                             <li>If you don’t pay your fine you may not be able to get or renew licences and permits, including your driver’s licence.</li>
                           </ul>
             </ng-container>
-            <ng-container class="alert-content" #alertContent 
-            *ngIf="ticketType==ticketTypeLocal.CAMERA_TICKET"
+            <ng-container class="alert-content" #alertContent
+            *ngIf="ticketType === ticketTypeLocal.CAMERA_TICKET"
                           >
                           <strong>Things you should know: </strong>
                           <ul class="mt-3">
@@ -47,8 +47,8 @@
                             <li> If you don’t pay your fine you may not be able to get or renew licences and permits, including your driver’s licence. </li>
                           </ul>
             </ng-container>
-            <ng-container class="alert-content" #alertContent 
-                          *ngIf="ticketType==ticketTypeLocal.HANDWRITTEN_TICKET">
+            <ng-container class="alert-content" #alertContent
+                          *ngIf="ticketType === ticketTypeLocal.HANDWRITTEN_TICKET">
                           <strong>Things you should know: </strong>
                           <ul class="mt-3">
                             <li>You can pay these ticket types in person, by mail, or telephone with a credit card. See Payment Options for more information. (If Pay is not included.)
