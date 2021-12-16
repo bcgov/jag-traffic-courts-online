@@ -16,7 +16,7 @@ COPY . .
 RUN yarn run build-prod
 
 # Runtime image
-FROM registry.access.redhat.com/ubi8/nginx-118
+FROM registry.access.redhat.com/ubi8/nginx-120
 
 COPY --from=build-deps /usr/src/app/src/favicon.ico /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/dist/citizen-portal /usr/share/nginx/html
