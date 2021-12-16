@@ -41,6 +41,8 @@ export class DisputeStepperComponent
   public offence1Exists: boolean;
   public offence2Exists: boolean;
   public offence3Exists: boolean;
+  public isCheckBoxSelected: any;
+
 
   constructor(
     protected route: ActivatedRoute,
@@ -67,6 +69,7 @@ export class DisputeStepperComponent
   }
 
   public ngOnInit(): void {
+    this.isCheckBoxSelected = {};
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -125,7 +128,20 @@ export class DisputeStepperComponent
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
-
+    if (currentStep === 3){
+      this.isCheckBoxSelected[currentStep] = {
+        reductionAppearInCourt : this.offence2Form.value.reductionAppearInCourt,
+        reductionAppearInCourtDoNot: this.offence2Form.value.reductionAppearInCourtDoNot
+      };
+      // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt
+    }
+    if (currentStep === 2){
+      this.isCheckBoxSelected[currentStep] = {
+        reductionAppearInCourt : this.offence1Form.value.reductionAppearInCourt,
+        reductionAppearInCourtDoNot: this.offence1Form.value.reductionAppearInCourtDoNot
+      };
+      // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt
+    }
     // on the last step
     if (numberOfSteps === currentStep) {
       this.submitDispute();

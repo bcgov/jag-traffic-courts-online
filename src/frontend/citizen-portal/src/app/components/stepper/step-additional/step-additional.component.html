@@ -7,57 +7,24 @@
   </app-page-header>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-    <section *ngIf="isReductionRequired.value">
-      <h3 class="mt-4 mb-2 reduction-text">
-        <span class="fw-bold">Request fine reduction and/ or time to pay. </span>Please make your selection(s)
-        below:
-      </h3>
-      <div class="row">
-        <div class="col-12">
-          <mat-checkbox formControlName="requestReduction" color="primary" class="w-100">
-            I would like to request a fine reduction.
-          </mat-checkbox>
-
-          <div class="row mt-2" *ngIf="isReductionNotInCourt.value && requestReduction.value">
-            <div class="col">
+    <div *ngFor="let item of isShowCheckbox | keyvalue">
+      <span>Count: {{item.key-1}}</span>
+      <div *ngFor="let item1 of item.value | keyvalue">
+        <div *ngIf="item1.value === true">
+          <div class="row">
+            <div class="col-md-12">
               <mat-form-field class="w-100">
-                <mat-label>
+                <mat-label *ngIf="item1.key === 'reductionAppearInCourt'">
                   Please enter your reasons for why you are requesting a fine reduction.
                 </mat-label>
-                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5" formControlName="reductionReason"></textarea>
-                <mat-error *ngIf="(reductionReason.dirty ||
-                  reductionReason.touched) &&
-                  reductionReason.invalid &&
-                  reductionReason.hasError('requiredIfFlags')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <strong class="ms-4">and/or</strong>
-          <mat-checkbox formControlName="requestMoreTime" color="primary" class="w-100">
-            I would like to request more time to pay.
-            <mat-error *ngIf="(requestMoreTime.dirty ||
-              requestMoreTime.touched) &&
-              requestMoreTime.invalid &&
-              requestMoreTime.hasError('atLeastOneCheckedIf')">
-              At least one request must be selected
-            </mat-error>
-          </mat-checkbox>
-
-          <div class="row mt-2" *ngIf="isReductionNotInCourt.value && requestMoreTime.value">
-            <div class="col">
-              <mat-form-field class="w-100">
-                <mat-label>
-                  Please enter your reasons for why you are requesting more time to pay.
+                <mat-label *ngIf="item1.key === 'reductionAppearInCourtDoNot'">
+                  Please enter your reasons for why you are requesting time to pay.
                 </mat-label>
-                <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5" formControlName="moreTimeReason"></textarea>
-                <mat-error *ngIf="(moreTimeReason.dirty ||
-                  moreTimeReason.touched) &&
-                  moreTimeReason.invalid &&
-                  moreTimeReason.hasError('requiredIfFlags')">
+                <input matInput formControlName="reductionReason"/>
+                <mat-error *ngIf="(reductionReason.dirty ||
+                    reductionReason.touched) &&
+                    reductionReason.invalid &&
+                    reductionReason.hasError('requiredIfFlags')">
                   {{ "error.required" | translate }}
                 </mat-error>
               </mat-form-field>
@@ -65,17 +32,9 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="col mt-4">
-        <app-alert type="warning" icon="warning">
-          <ng-container #alertContent class="alert-content">
-            If you choose to not appear in court, you must submit written reasons for each request to ask for more time
-            or a fine reduction for each count.
-          </ng-container>
-        </app-alert>
-      </div>
-      <hr *ngIf="isCourtRequired.value" />
-    </section>
+
 
     <section *ngIf="isCourtRequired.value">
       <h3 class="mt-4 mb-2 reduction-text">

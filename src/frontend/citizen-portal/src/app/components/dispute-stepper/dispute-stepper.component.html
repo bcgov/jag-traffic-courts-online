@@ -58,7 +58,11 @@
 
         <mat-step [stepControl]="additionalForm">
           <ng-template matStepLabel>Additional information</ng-template>
-          <app-step-additional id="stepCourt" [stepper]="disputeStepper" (stepSave)="onStepSave($event)">
+          <app-step-additional 
+          id="stepCourt" 
+          [stepper]="disputeStepper" 
+          [isShowCheckbox]="isCheckBoxSelected"
+          (stepSave)="onStepSave($event)">
           </app-step-additional>
         </mat-step>
 

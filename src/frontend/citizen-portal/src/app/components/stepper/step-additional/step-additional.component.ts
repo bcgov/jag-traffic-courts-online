@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,6 +22,7 @@ export class StepAdditionalComponent
   extends BaseDisputeFormPage
   implements OnInit {
   @Input() public stepper: MatStepper;
+  @Input() public isShowCheckbox: any;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public previousButtonIcon = 'keyboard_arrow_left';
@@ -132,5 +133,14 @@ export class StepAdditionalComponent
   }
   public get lawyerPresent(): FormControl {
     return this.form.get('lawyerPresent') as FormControl;
+  }
+  public get skills() : FormArray {
+    return this.form.get('skills') as FormArray;
+  }
+  newSkill(value1, value2): FormGroup {
+    return this.formBuilder.group({
+      reductionAppearInCourt: value1,
+      reductionAppearInCourtDoNot: value2,
+    });
   }
 }

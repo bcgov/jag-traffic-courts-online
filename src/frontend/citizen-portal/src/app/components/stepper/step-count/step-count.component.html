@@ -58,6 +58,19 @@
           </mat-radio-group>
         </div>
       </div>
+       <div class="row" *ngIf="!isShowCheckbox">
+         <div *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
+          <mat-checkbox formControlName="reductionAppearInCourt" color="primary" class="w-100 mt-4"> I would like to request a fine reduction on this count.<mat-icon>info</mat-icon></mat-checkbox>
+          <mat-checkbox formControlName="reductionAppearInCourtDoNot" color="primary" class="w-100 mt-4"> I would like to request more time to pay on this count.<mat-icon>info</mat-icon></mat-checkbox>
+         </div>
+        <mat-checkbox formControlName="reductionAppearInCourtDo" *ngIf="offenceAgreementStatus?.value !== 'PAY'" color="primary" class="w-100 mt-4"> I would like to appear in court in person and speak to a judicial judge about this count<mat-icon>info</mat-icon></mat-checkbox>
+
+        <div *ngIf="allowApplyToAllCounts.value">
+          <mat-checkbox formControlName="_applyToAllCounts" color="primary" *ngIf="firstOffence.value"
+            class="w-100 mt-2">Apply these selections to all counts on this violation ticket.</mat-checkbox>
+        </div>
+      </div>
+
       <div class="row"
            *ngIf="allowApplyToAllCounts.value && offenceAgreementStatus.value == 'DISPUTE' && firstOffence.value">
         <mat-checkbox formControlName="_applyToAllCounts"
@@ -69,7 +82,8 @@
 
   <div class="col mt-4"
        *ngIf="
-      offenceAgreementStatus.value === 'REDUCTION'"
+      offenceAgreementStatus.value === 'REDUCTION'" &&
+      reductionAppearInCourt.value === false
     >
     <app-alert type="warning"
                icon="warning">
@@ -85,7 +99,7 @@
   <div class="col mt-4"
        *ngIf="
       (offenceAgreementStatus.value === 'REDUCTION' &&
-        reductionAppearInCourt.value)
+        reductionAppearInCourtDo.value)
     ">
     <app-alert type="warning"
                icon="warning">

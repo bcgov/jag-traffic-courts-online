@@ -29,6 +29,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public stepControl: FormGroup;
   @Input() public showDoNothingOption = true;
   @Input() public ticketName: string;
+  @Input() public isShowCheckbox: boolean;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
 
@@ -101,7 +102,12 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   public get reductionAppearInCourt(): FormControl {
     return this.form.get('reductionAppearInCourt') as FormControl;
   }
-
+  public get reductionAppearInCourtDo(): FormControl {
+    return this.form.get('reductionAppearInCourtDo') as FormControl;
+  }
+  public get reductionAppearInCourtDoNot(): FormControl {
+    return this.form.get('reductionAppearInCourtDoNot') as FormControl;
+  }
   public get offenceDescription(): FormControl {
     return this.form.get('offenceDescription') as FormControl;
   }
