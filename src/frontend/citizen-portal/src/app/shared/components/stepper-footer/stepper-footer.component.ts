@@ -24,6 +24,7 @@ export class StepperFooterComponent implements OnInit {
     this.secondaryActionButtonIcon = 'keyboard_arrow_left';
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public ngOnInit(): void {
     //
   }

@@ -24,7 +24,9 @@ export class CountSummaryComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void { }
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
+  ngOnInit(): void {
+  }
 
   public onSelectAllChange(event: MatCheckboxChange): void {
     this.countComponents.forEach((child) => {

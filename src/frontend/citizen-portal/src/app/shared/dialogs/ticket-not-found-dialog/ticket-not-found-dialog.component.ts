@@ -11,9 +11,10 @@ export class TicketNotFoundDialogComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-  ) { 
+  ) {
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
   }
   public onViewImageRequirements(): void {

@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit {
     this.version = this.appConfigService.version;
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public async ngOnInit() {
     // const authenticated = await this.authService.isLoggedIn();
     // if (authenticated) {
