@@ -1,4 +1,4 @@
-@media print{
+@media print {
   * {
     color: #333333 !important;
     fill: #333333 !important;
@@ -9,5 +9,8 @@
   }
   .text-success.text-success {
     color: #333333 !important;
+  }
+  .pagebreak {
+    page-break-before: always;
   }
 }
