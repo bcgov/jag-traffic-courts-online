@@ -28,12 +28,31 @@
             </mat-form-field>
           </div>
         </div>
-        <!-- <section [ngClass]="{'hide-address': !showAddressFields}"> -->
+
+        <section>
+          <app-address-form-autocomplete
+            (autocompleteAddress)="onAutocomplete($event)">
+            <button *ngIf="showManualButton"
+              mat-button
+              type="button"
+              color="primary"
+              [disabled]="showAddressFields"
+              (click)="showManualAddress()">
+              <mat-icon>add</mat-icon>
+              Add address manually
+            </button>
+          </app-address-form-autocomplete>
+        </section>
+
+        <section [ngClass]="{'hide-address': !showAddressFields}">
           <div class="row">
             <div class="col-md-6">
-              <app-address-form-autocomplete
-                (autocompleteAddress)="onAutocomplete($event)">
-              </app-address-form-autocomplete>
+              <mat-form-field class="w-100">
+                <mat-label>Mailing address</mat-label>
+                <input matInput
+                       formControlName="mailingAddress" />
+                <mat-error>{{ "error.required" | translate }}</mat-error>
+              </mat-form-field>
             </div>
             <div class="col-md-6">
               <mat-form-field class="w-100">
@@ -63,9 +82,10 @@
               </mat-form-field>
             </div>
           </div>
-        <!-- </section> -->
+        </section>
 
         <div class="row">
+
           <div class="col-md-6">
             <mat-form-field class="w-100">
               <mat-label>Postal code</mat-label>
@@ -129,14 +149,6 @@
         <div class="row">
           <div class="col-md-6">
             <mat-form-field class="w-100">
-              <mat-label>Province or state of driver's license</mat-label>
-              <input matInput
-                     formControlName="driverLicenseProvince" />
-              <mat-error>{{ "error.required" | translate }}</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-md-6">
-            <mat-form-field class="w-100">
               <mat-label>Driver's license number</mat-label>
               <input matInput
                      formControlName="driverLicenseNumber"
@@ -146,20 +158,14 @@
             </mat-form-field>
           </div>
 
-          <!-- <div class="col-md-6">
+          <div class="col-md-6">
             <mat-form-field class="w-100">
-              <mat-label>Email address</mat-label>
+              <mat-label>Province or state of driver's license</mat-label>
               <input matInput
-                     formControlName="emailAddress"
-                     autocomplete="off" />
-              <mat-error *ngIf="emailAddress.hasError('required')">{{
-                "error.required" | translate
-                }}</mat-error>
-              <mat-error *ngIf="emailAddress.hasError('email')">{{
-                "error.email_address" | translate
-                }}</mat-error>
+                     formControlName="driverLicenseProvince" />
+              <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
-          </div> -->
+          </div>
         </div>
       </section>
     </form>

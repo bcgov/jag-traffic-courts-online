@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col">
           <label class="w-100">
-            What action would you like to take?
+            What would youi to like to action on this count?
           </label>
           <mat-radio-group formControlName="offenceAgreementStatus">
             <mat-radio-button value="REDUCTION">
@@ -58,12 +58,15 @@
           </mat-radio-group>
         </div>
       </div>
-       <div class="row" *ngIf="!isShowCheckbox">
+       <div class="row mt-4" *ngIf="!isShowCheckbox">
+        <label class="w-100" *ngIf="offenceAgreementStatus?.value !== 'PAY'" >
+          Please provide additional selections below:
+        </label>
          <div *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
-          <mat-checkbox formControlName="reductionAppearInCourt" color="primary" class="w-100 mt-4"> I would like to request a fine reduction on this count.<mat-icon>info</mat-icon></mat-checkbox>
-          <mat-checkbox formControlName="reductionAppearInCourtDoNot" color="primary" class="w-100 mt-4"> I would like to request more time to pay on this count.<mat-icon>info</mat-icon></mat-checkbox>
+          <mat-checkbox formControlName="reductionAppearInCourt" color="primary" class="w-100"> I would like to request a fine reduction on this count.<mat-icon>info</mat-icon></mat-checkbox>
+          <mat-checkbox formControlName="reductionAppearInCourtDoNot" color="primary" class="w-100"> I would like to request more time to pay on this count.<mat-icon>info</mat-icon></mat-checkbox>
          </div>
-        <mat-checkbox formControlName="reductionAppearInCourtDo" *ngIf="offenceAgreementStatus?.value !== 'PAY'" color="primary" class="w-100 mt-4"> I would like to appear in court in person and speak to a judicial judge about this count<mat-icon>info</mat-icon></mat-checkbox>
+        <mat-checkbox formControlName="reductionAppearInCourtDo" *ngIf="offenceAgreementStatus?.value !== 'PAY'" color="primary" class="w-100"> I would like to appear in court in person and speak to a judicial judge about this count<mat-icon>info</mat-icon></mat-checkbox>
 
         <div *ngIf="allowApplyToAllCounts.value">
           <mat-checkbox formControlName="_applyToAllCounts" color="primary" *ngIf="firstOffence.value"
