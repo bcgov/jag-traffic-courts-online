@@ -1,6 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormArray,AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -42,8 +42,8 @@ export class DisputeStepperComponent
   public offence2Exists: boolean;
   public offence3Exists: boolean;
   public isCheckBoxSelected: any;
-
-
+  public isErrorCheckMsg1: string;
+  public countDataList:any;
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -122,26 +122,49 @@ export class DisputeStepperComponent
       queryParams: params,
     });
   }
-
+public getCountData(newObj):void{
+  debugger
+  this.countDataList = newObj;
+}
   public onStepSave(stepper: MatStepper): void {
     this.logger.info('DisputeStepperComponent::onStepSave Dispute Data:', this.disputeFormStateService.json);
 
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
+    debugger
+    if(currentStep ==2 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence1Form.value.reductionAppearInCourt && !this.offence1Form.value.reductionAppearInCourt){
+      this.isErrorCheckMsg1 = 'select atleast one checkbox';
+      return;
+    }else{
+      this.isErrorCheckMsg1 = "";
+    }
+    if(currentStep ==3 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence2Form.value.reductionAppearInCourt && !this.offence2Form.value.reductionAppearInCourt){
+      this.isErrorCheckMsg1 = 'select atleast one checkbox';
+      return;
+    }
     if (currentStep === 3){
       this.isCheckBoxSelected[currentStep] = {
         reductionAppearInCourt : this.offence2Form.value.reductionAppearInCourt,
-        reductionAppearInCourtDoNot: this.offence2Form.value.reductionAppearInCourtDoNot
+        reductionAppearInCourtDoNot: this.offence2Form.value.reductionAppearInCourtDoNot,
+        count:2
       };
       // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt
     }
     if (currentStep === 2){
+     
+
       this.isCheckBoxSelected[currentStep] = {
         reductionAppearInCourt : this.offence1Form.value.reductionAppearInCourt,
-        reductionAppearInCourtDoNot: this.offence1Form.value.reductionAppearInCourtDoNot
+        reductionAppearInCourtDoNot: this.offence1Form.value.reductionAppearInCourtDoNot,
+        count:1
       };
+     // let copyObj = Object.assign({},this.isCheckBoxSelected);
+     // this.isCheckBoxSelected = copyObj;
       // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt
     }
+    // let addForm = this.disputeFormStateService.stepAdditionalForm;
+    // let add = addForm.get('countData') as FormArray;
+    // add.push(this.createItem());
     // on the last step
     if (numberOfSteps === currentStep) {
       this.submitDispute();
@@ -149,7 +172,11 @@ export class DisputeStepperComponent
       this.saveStep(stepper);
     }
   }
-
+  createItem(): FormGroup {
+    return this.formBuilder.group({
+      name:''
+    });
+  }
   /**
    * @description
    * Save the data on the current step

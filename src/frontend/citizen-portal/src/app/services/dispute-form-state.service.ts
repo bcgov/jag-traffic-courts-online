@@ -252,6 +252,8 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       emailAddress: [null, [Validators.required, Validators.email]],
       phoneNumber: [null, [FormControlValidators.phone]],
       birthdate: [null, []],
+      countData: this.formBuilder.array([]),
+      countData2: this.formBuilder.array([])
     });
   }
 
@@ -302,28 +304,12 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       moreTimeReason: [null],
       _isCourtRequired: [false],
       _isReductionRequired: [false],
-      _isReductionNotInCourt: [false]
     },
       {
         validators: [
           FormGroupValidators.requiredIfTrue(
             'interpreterRequired',
             'interpreterLanguage'
-          ),
-          FormGroupValidators.requiredIfFlags(
-            '_isReductionNotInCourt',
-            'requestReduction',
-            'reductionReason'
-          ),
-          FormGroupValidators.requiredIfFlags(
-            '_isReductionNotInCourt',
-            'requestMoreTime',
-            'moreTimeReason'
-          ),
-          FormGroupValidators.atLeastOneCheckedIf(
-            '_isReductionRequired',
-            'requestReduction',
-            'requestMoreTime'
           ),
         ],
       });

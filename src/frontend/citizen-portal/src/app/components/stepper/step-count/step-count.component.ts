@@ -3,7 +3,10 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
@@ -24,7 +27,7 @@ import { DisputeService } from 'app/services/dispute.service';
   templateUrl: './step-count.component.html',
   styleUrls: ['./step-count.component.scss'],
 })
-export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
+export class StepCountComponent extends BaseDisputeFormPage implements OnInit,OnChanges {
   @Input() public stepper: MatStepper;
   @Input() public stepControl: FormGroup;
   @Input() public showDoNothingOption = true;
@@ -32,7 +35,8 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   @Input() public isShowCheckbox: boolean;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
-
+  @Input() public isSelectedChekcError:String;
+  public errorMsg:string = "display here";
   public defaultLanguage: string;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
@@ -67,6 +71,13 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.form = this.stepControl;
     this.patchForm();
     this.ticketName = this.ticketTypePipe.transform(this.ticketName?.charAt(0));
+  }
+  
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.isSelectedChekcError && changes.isSelectedChekcError.currentValue){
+      this.errorMsg = changes.isSelectedChekcError.currentValue
+    }
+    console.log('-----------------------',changes);
   }
   public onSubmit(): void {
     this.stepSave.emit(this.stepper);

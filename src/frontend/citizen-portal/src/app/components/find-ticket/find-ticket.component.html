@@ -123,8 +123,11 @@
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Enter violation time</mat-label>
+               
                 <input matInput
                        type="time"
+                       value="22:00"
+                       timeformat = "24h"
                        formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>

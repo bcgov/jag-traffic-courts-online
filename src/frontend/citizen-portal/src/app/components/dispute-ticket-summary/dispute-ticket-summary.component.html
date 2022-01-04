@@ -13,10 +13,20 @@
              *ngIf="ticket.additional">
       <div class="page-subheader">
         <strong> Additional information </strong>
-        <p>
+        <hr/>
+        <!-- <p>
           The following additional information is required and will apply to all counts on this ticket made with that
           selection.
-        </p>
+        </p> -->
+
+        <div *ngFor="let count of countDataList | keyvalue;index as i">
+          <h3>Count:{{i+1}}</h3>
+          <h3>Request fine reduction and/or time to pay written reasons:</h3>
+          <div class="count-heading">Written reasons for fine reduction request</div>
+          <div class="count-data">{{count.value.reductionAppearInCourt}}</div>
+          <div class="count-heading">Written reasons for fine reduction request</div>
+          <div class="count-data">{{count.value.reductionAppearInCourtDoNot}}</div>
+        </div>
         <hr />
       </div>
 
