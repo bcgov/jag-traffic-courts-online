@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <span *ngIf="ref.children.length == 0"
+  <span *ngIf="ref.children.length === 0"
         [ngClass]="getTextAlignment()">
      {{ loadingMessage }}
   </span>

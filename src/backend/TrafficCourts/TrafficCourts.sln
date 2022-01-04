@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Common", "Common\TrafficCourts.Common.csproj", "{AE7E7ABC-33D7-43CD-8FEB-9E6A04BAE46E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Messaging", "Messaging\TrafficCourts.Messaging.csproj", "{926C4FF9-8876-4FA5-ACC8-AE509F587A0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Citizen.Service", "Citizen.Service\TrafficCourts.Citizen.Service.csproj", "{567B4C3E-1BFF-4CBE-9B0A-1D89CCA4F67E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Ticket.Search.Service", "Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj", "{B1D33696-F98A-4F35-A571-924D88A74FD9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Test", "Test\TrafficCourts.Test.csproj", "{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7B716295-C23B-4849-B1B9-0BBF9800D8E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Workflow.Service", "Workflow.Service\TrafficCourts.Workflow.Service.csproj", "{9B1ABBE6-249B-4AB4-8AE2-48FBAEDEB8AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE7E7ABC-33D7-43CD-8FEB-9E6A04BAE46E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE7E7ABC-33D7-43CD-8FEB-9E6A04BAE46E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE7E7ABC-33D7-43CD-8FEB-9E6A04BAE46E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE7E7ABC-33D7-43CD-8FEB-9E6A04BAE46E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{926C4FF9-8876-4FA5-ACC8-AE509F587A0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{926C4FF9-8876-4FA5-ACC8-AE509F587A0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{926C4FF9-8876-4FA5-ACC8-AE509F587A0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{926C4FF9-8876-4FA5-ACC8-AE509F587A0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{567B4C3E-1BFF-4CBE-9B0A-1D89CCA4F67E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{567B4C3E-1BFF-4CBE-9B0A-1D89CCA4F67E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{567B4C3E-1BFF-4CBE-9B0A-1D89CCA4F67E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{567B4C3E-1BFF-4CBE-9B0A-1D89CCA4F67E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1D33696-F98A-4F35-A571-924D88A74FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1D33696-F98A-4F35-A571-924D88A74FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1D33696-F98A-4F35-A571-924D88A74FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1D33696-F98A-4F35-A571-924D88A74FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B1ABBE6-249B-4AB4-8AE2-48FBAEDEB8AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B1ABBE6-249B-4AB4-8AE2-48FBAEDEB8AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B1ABBE6-249B-4AB4-8AE2-48FBAEDEB8AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B1ABBE6-249B-4AB4-8AE2-48FBAEDEB8AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F53B0D46-E55D-4CE9-8617-6CD7FD73C49B}
+	EndGlobalSection
+EndGlobal

@@ -48,10 +48,10 @@ export class AppConfigService {
   private UNDERSTAND_YOUR_TICKET_DEFAULT =
     'https://understandmyticket.gov.bc.ca/' as const;
   private PAYMENT_OPTIONS_DEFAULT =
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket' as const;
   private RESOLUTION_OPTIONS_DEFAULT =
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-len
     'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket' as const;
 
   private RSBC_VISIT_US_DEFAULT =

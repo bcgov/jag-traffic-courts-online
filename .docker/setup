@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#######################################
+# FUNCTIONS
+#######################################
+
+cert_generate_ca() {
+  rm -fR rootCA.key rootCA.crt
+  # create root certificate key (non password protected - local dev use only)
+  openssl genrsa -out rootCA.key 4096
+
+  # create and self sign the root certificate
+  openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
+}
+
+cert_generate() {
+
+}
+
+# create the certifcate signing request (csr)
+openssl req -new -sha256 -key mydomain.com.key -subj "/C=CA/ST=BC/O=MyOrg, Inc./CN=mydomain.com" -out mydomain.com.csr
+
+# generate the certificate using the mydomain csr and key along with the CA Root key
+openssl x509 -req -in mydomain.com.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out mydomain.com.crt -days 500 -sha256
+

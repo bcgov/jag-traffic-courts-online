@@ -1,8 +1,8 @@
 #!/bin/bash
 
-KEYCLOAK_REALM_URL="$KEYCLOAK_URL/auth/admin/realms/traffic-court"
+KEYCLOAK_REALM_URL="$KEYCLOAK_URL/auth/admin/realms/csrs-portal"
 USERNAME="bobross"
-ADMIN_GROUP="traffic-court-admin"
+ADMIN_GROUP="csrs-portal-admin"
 
 # Get admin user token
 ADMIN_TOKEN=$(curl -s --location --request POST "$KEYCLOAK_URL/auth/realms/master/protocol/openid-connect/token" \
@@ -21,7 +21,7 @@ fi
 
 echo "Successfully connected to keycloak"
 
-# Create traffic-court-hub user
+# Create csrs-portal user
 CREATE_USER_STATUS=$(curl -s -o /dev/null -w '%{http_code}' \
     --request POST "$KEYCLOAK_REALM_URL/users" \
     --header "Authorization: Bearer $ADMIN_TOKEN" \
@@ -70,7 +70,7 @@ if [ -z "$ADMIN_GROUP_ID" ]; then
     exit 4
 fi
 
-# Add user to traffic-court-admin group
+# Add user to csrs-portal-admin group
 ADD_TO_ADMIN_STATUS=$(curl -s -o /dev/null -w '%{http_code}' \
     --request PUT "$KEYCLOAK_REALM_URL/users/$USER_ID/groups/$ADMIN_GROUP_ID" \
     --header "Authorization: Bearer $ADMIN_TOKEN" \

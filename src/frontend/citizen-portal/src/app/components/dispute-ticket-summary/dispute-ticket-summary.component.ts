@@ -15,6 +15,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
     //
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
     //
   }

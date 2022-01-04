@@ -29,7 +29,7 @@
           <app-alert type="info"
                      icon="info">
             <ng-container class="alert-content" #alertContent
-            *ngIf="ticketType==ticketTypeLocal.ELECTRONIC_TICKET">
+            *ngIf="ticketType === ticketTypeLocal.ELECTRONIC_TICKET">
             <strong>Things you should know: </strong>
             <ul class="mt-3">
                             <li>Online payment available through <a target="_blank" href="https://pay.gov.bc.ca/">PayBc</a>. If you pay your ticket within 30 days of the issue you can save $25 per count.</li>
@@ -38,7 +38,7 @@
                           </ul>
             </ng-container>
             <ng-container class="alert-content" #alertContent
-            *ngIf="ticketType==ticketTypeLocal.CAMERA_TICKET"
+            *ngIf="ticketType === ticketTypeLocal.CAMERA_TICKET"
                           >
                           <strong>Things you should know: </strong>
                           <ul class="mt-3">
@@ -48,7 +48,7 @@
                           </ul>
             </ng-container>
             <ng-container class="alert-content" #alertContent
-                          *ngIf="ticketType==ticketTypeLocal.HANDWRITTEN_TICKET">
+                          *ngIf="ticketType === ticketTypeLocal.HANDWRITTEN_TICKET">
                           <strong>Things you should know: </strong>
                           <ul class="mt-3">
                             <li>You can pay these ticket types in person, by mail, or telephone with a credit card. See Payment Options for more information. (If Pay is not included.)

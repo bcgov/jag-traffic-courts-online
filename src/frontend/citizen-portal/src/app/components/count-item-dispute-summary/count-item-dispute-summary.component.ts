@@ -9,7 +9,10 @@ import { OffenceView } from '@shared/models/offenceView.model';
 export class CountItemDisputeSummaryComponent implements OnInit {
   @Input() public count: OffenceView;
 
-  constructor() { }
+  constructor() { // do nothing.
+  }
 
-  ngOnInit(): void { }
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
+  ngOnInit(): void {
+  }
 }

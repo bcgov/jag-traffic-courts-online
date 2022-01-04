@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>435ec3aa-a9e2-4529-945c-14755637cb75</UserSecretsId>
+	<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Features\Search\MockTicketSearch\Data\invoice-EZ020004601.json" />
+    <Content Remove="Features\Search\MockTicketSearch\Data\invoice-EZ020004602.json" />
+    <Content Remove="Features\Search\MockTicketSearch\Data\invoice-EZ020004603.json" />
+    <Content Remove="Features\Search\MockTicketSearch\Data\ticket-EZ02000460.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Features\Search\MockTicketSearch\Data\invoice-EZ020004601.json" />
+    <EmbeddedResource Include="Features\Search\MockTicketSearch\Data\invoice-EZ020004602.json" />
+    <EmbeddedResource Include="Features\Search\MockTicketSearch\Data\invoice-EZ020004603.json" />
+    <EmbeddedResource Include="Features\Search\MockTicketSearch\Data\ticket-EZ02000460.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.Network" Version="5.0.4" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="6.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Prometheus" Version="1.2.0-beta1" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc8" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc8" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.1.15" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
+  </ItemGroup>
+
+</Project>

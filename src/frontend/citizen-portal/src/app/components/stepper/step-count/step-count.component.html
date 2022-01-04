@@ -80,7 +80,7 @@
       </div>
 
       <div class="row"
-           *ngIf="allowApplyToAllCounts.value && offenceAgreementStatus.value == 'DISPUTE' && firstOffence.value">
+           *ngIf="allowApplyToAllCounts.value && offenceAgreementStatus.value === 'DISPUTE' && firstOffence.value">
         <mat-checkbox formControlName="_applyToAllCounts"
                       color="primary"
                       class="w-100 mt-4">Apply this selection to all counts on this violation ticket.</mat-checkbox>
