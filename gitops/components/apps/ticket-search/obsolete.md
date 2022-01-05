@@ -1,0 +1,1 @@
+This folder is now obsolete and been superseded by ticket-search-service
