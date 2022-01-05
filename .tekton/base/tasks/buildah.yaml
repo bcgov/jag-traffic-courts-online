@@ -48,6 +48,14 @@ spec:
       description: Extra parameters passed for the push command when pushing images.
       name: PUSH_EXTRA_ARGS
       type: string
+    - name: IMAGE_REGISTRY
+      description: The Root url of the image registry.
+      default: docker.io
+    - name: IMAGE
+      description: Reference of the image buildah will produce.
+    - name: IMAGE_TAG
+      description: Reference of the target image tag.
+      default: latest
   workspaces:
     - name: shared-data
       description: |
