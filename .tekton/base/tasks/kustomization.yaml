@@ -3,4 +3,5 @@ kind: Kustomization
 namePrefix: t-
 
 resources:
+- buildah.yaml
 - generate-id.yaml

@@ -4,7 +4,7 @@ metadata:
   name: build-ticket-search-service
 spec:
   tasks:
-    - name: git-clone
+    - name: fetch-repository
       params:
         - name: submodules
           value: 'true'
@@ -28,7 +28,16 @@ spec:
       workspaces:
         - name: output
           workspace: shared-data
-    - name: buildah
+    - name: generate-id
+      taskRef:
+        name: t-generate-id
+        kind: Task
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: docker-build-push
       params:
         - name: IMAGE
           value: image-registry.openshift-image-registry.svc:5000/0198bb-tools/ticket-search-service
@@ -37,15 +46,15 @@ spec:
         - name: STORAGE_DRIVER
           value: vfs
         - name: DOCKERFILE
-          value: ./Dockerfile
+          value:  ./Ticket.Search.Service/Dockerfile
         - name: CONTEXT
-          value: src/backend/TrafficCourts/Ticket.Search.Service
+          value: src/backend/TrafficCourts
         - name: TLSVERIFY
           value: 'true'
         - name: FORMAT
           value: docker
       runAfter:
-        - git-clone
+        - generate-id
       taskRef:
         kind: ClusterTask
         name: buildah
