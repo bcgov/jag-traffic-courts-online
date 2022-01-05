@@ -1,5 +1,5 @@
 apiVersion: tekton.dev/v1beta1
-kind: Pipeline
+kind: Task
 metadata:
   name: buildah
 spec:
@@ -13,8 +13,8 @@ spec:
     Dockerfile to assemble a container image, then pushes that image to a
     container registry.
   params:
-    - description: Reference of the image buildah will produce.
-      name: IMAGE
+    - name: IMAGE
+      description: Reference of the image buildah will produce.
       type: string
     - default: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
       description: The location of the buildah builder image.
@@ -36,7 +36,7 @@ spec:
       description: Verify the TLS on the registry endpoint (for push/pull to a non-TLS  registry)
       name: TLSVERIFY
       type: string
-    - default: oci
+    - default: docker
       description: 'The format of the built container, oci or docker'
       name: FORMAT
       type: string
@@ -53,3 +53,17 @@ spec:
       description: |
         This workspace will receive the cloned git repo and be passed
         to the next Task for the repo's README.md file to be read.
+  results:
+    - description: Digest of the image just built.
+      name: IMAGE_DIGEST
+  steps:
+    - image: $(params.BUILDER_IMAGE)
+      name: build
+      resources: {}
+      script: |
+        buildah --storage-driver=$(params.STORAGE_DRIVER) bud \
+          $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) \
+          --tls-verify=$(params.TLSVERIFY) --no-cache \
+          -f $(params.DOCKERFILE) -t $(params.IMAGE) $(params.CONTEXT)
+        buildah --storage-driver=$(params.STORAGE_DRIVER) push $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.IMAGE_TAG)
+        set -x
