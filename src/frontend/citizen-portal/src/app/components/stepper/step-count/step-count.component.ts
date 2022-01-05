@@ -3,7 +3,10 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
@@ -24,14 +27,16 @@ import { DisputeService } from 'app/services/dispute.service';
   templateUrl: './step-count.component.html',
   styleUrls: ['./step-count.component.scss'],
 })
-export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
+export class StepCountComponent extends BaseDisputeFormPage implements OnInit,OnChanges {
   @Input() public stepper: MatStepper;
   @Input() public stepControl: FormGroup;
   @Input() public showDoNothingOption = true;
   @Input() public ticketName: string;
+  @Input() public isShowCheckbox: boolean;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
-
+  @Input() public isSelectedChekcError:String;
+  public errorMsg:string = "display here";
   public defaultLanguage: string;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
@@ -67,12 +72,22 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
     this.patchForm();
     this.ticketName = this.ticketTypePipe.transform(this.ticketName?.charAt(0));
   }
-  public onSubmit(): void {
-    if (this.formUtilsService.checkValidity(this.form)) {
-      this.stepSave.emit(this.stepper);
-    } else {
-      this.utilsService.scrollToErrorSection();
+  
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes.isSelectedChekcError && changes.isSelectedChekcError.currentValue){
+      this.errorMsg = changes.isSelectedChekcError.currentValue
     }
+    console.log('-----------------------',changes);
+  }
+  public onSubmit(): void {
+    this.stepSave.emit(this.stepper);
+    // TODO: As the reduction appear in court functionality is moved to additional,
+    // the validation needs to be done there
+    // if (this.formUtilsService.checkValidity(this.form)) {
+
+    // } else {
+    //   this.utilsService.scrollToErrorSection();
+    // }
   }
 
   public onBack() {
@@ -98,7 +113,12 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit {
   public get reductionAppearInCourt(): FormControl {
     return this.form.get('reductionAppearInCourt') as FormControl;
   }
-
+  public get reductionAppearInCourtDo(): FormControl {
+    return this.form.get('reductionAppearInCourtDo') as FormControl;
+  }
+  public get reductionAppearInCourtDoNot(): FormControl {
+    return this.form.get('reductionAppearInCourtDoNot') as FormControl;
+  }
   public get offenceDescription(): FormControl {
     return this.form.get('offenceDescription') as FormControl;
   }

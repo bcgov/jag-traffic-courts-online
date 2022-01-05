@@ -1,12 +1,17 @@
 <app-stepper-page>
   <app-page-header>
     <ng-container subHeader>
-      Please review the information below for each count to ensure details are correct. <strong>If you need to make  changes, please do so before submitting request.</strong>
+      Review the information for each count to ensure details are correct. <strong>Once request has been submitted you may not make changes.</strong>
     </ng-container>
   </app-page-header>
 
-  <app-dispute-ticket-summary [ticket]="overviewTicket"></app-dispute-ticket-summary>
+  <app-dispute-ticket-summary [ticket]="overviewTicket" [countDataList]='countDataList'></app-dispute-ticket-summary>
 
+    <!-- <div *ngFor="let count of countDataList | keyvalue;index as i">
+      <h1>Count:{{i+1}}</h1>
+      <div>{{count.value.reductionAppearInCourt}}</div>
+      <div>{{count.value.reductionAppearInCourtDoNot}}</div>
+    </div> -->
   <div class="col mb-2">
     <app-alert type="warning"
                icon="warning">

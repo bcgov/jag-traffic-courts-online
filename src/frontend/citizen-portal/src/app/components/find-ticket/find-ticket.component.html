@@ -11,9 +11,9 @@
           [attr.aria-expanded]="accordionItem.expanded"
           [attr.aria-controls]="'accordion-body'">
           <div class="subheader-desc" (click)="accordionItem.toggle()">
-              Use this service to pay ticket fines, ask for fine reductions or time
-              to pay, or initiate a dispute.
-              <strong> Enter violation ticket information, or upload image of ticket to begin.</strong>
+            Ask for fine reductions or time to pay, or dispute your ticket.
+              <strong> . Enter your ticket number and time, or upload an
+                image of your ticket to begin.</strong>
             <span class="text-primary ms-3">
               {{ accordionItem.expanded ? ' - Hide information' : ' + See more information' }}
             </span>
@@ -123,8 +123,11 @@
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Enter violation time</mat-label>
+               
                 <input matInput
                        type="time"
+                       value="22:00"
+                       timeformat = "24h"
                        formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
               </mat-form-field>

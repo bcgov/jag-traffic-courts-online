@@ -244,6 +244,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       mailingAddress: [null, [Validators.required]],
       postalCode: [null],
       city: [null],
+      country: [null],
       province: [null],
       _mailingAddress: [null],
       driverLicenseNumber: [null],
@@ -251,6 +252,8 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       emailAddress: [null, [Validators.required, Validators.email]],
       phoneNumber: [null, [FormControlValidators.phone]],
       birthdate: [null, []],
+      countData: this.formBuilder.array([]),
+      countData2: this.formBuilder.array([])
     });
   }
 
@@ -259,7 +262,8 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       offenceNumber: [null],
       offenceAgreementStatus: [null, [Validators.required]],
       reductionAppearInCourt: [false],
-
+      reductionAppearInCourtDo: [false],
+      reductionAppearInCourtDoNot: [false],
       // Here for display purposes
       offenceDescription: [null],
       status: [null],
@@ -300,28 +304,12 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       moreTimeReason: [null],
       _isCourtRequired: [false],
       _isReductionRequired: [false],
-      _isReductionNotInCourt: [false]
     },
       {
         validators: [
           FormGroupValidators.requiredIfTrue(
             'interpreterRequired',
             'interpreterLanguage'
-          ),
-          FormGroupValidators.requiredIfFlags(
-            '_isReductionNotInCourt',
-            'requestReduction',
-            'reductionReason'
-          ),
-          FormGroupValidators.requiredIfFlags(
-            '_isReductionNotInCourt',
-            'requestMoreTime',
-            'moreTimeReason'
-          ),
-          FormGroupValidators.atLeastOneCheckedIf(
-            '_isReductionRequired',
-            'requestReduction',
-            'requestMoreTime'
           ),
         ],
       });

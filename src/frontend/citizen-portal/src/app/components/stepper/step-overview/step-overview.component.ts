@@ -24,6 +24,7 @@ export class StepOverviewComponent
   implements OnInit {
   @Input() public overviewTicket: TicketDisputeView;
   @Input() public stepper: MatStepper;
+  @Input() public countDataList:any;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
 
   public defaultLanguage: string;

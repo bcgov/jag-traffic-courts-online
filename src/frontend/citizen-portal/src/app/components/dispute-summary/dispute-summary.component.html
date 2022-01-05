@@ -2,7 +2,7 @@
   <app-page-header>
     <ng-container header>Violation ticket details</ng-container>
     <ng-container subHeader>
-      <strong class="text-success">Ticket found.</strong> review ticket details below, then <strong>choose to pay or start a ticket resolution (includes requesting fine reductions, time to pay or disputes).  </strong>
+      <strong class="text-success">Ticket found.</strong> review ticket details below, then <strong>start a ticket resolution (includes requesting fine reductions, time to pay or disputes).  </strong>
 
     </ng-container>
   </app-page-header>
@@ -32,7 +32,7 @@
             *ngIf="ticketType === ticketTypeLocal.ELECTRONIC_TICKET">
             <strong>Things you should know: </strong>
             <ul class="mt-3">
-                            <li>You can pay this ticket type on <a target="_blank" href="https://pay.gov.bc.ca/">PayBc</a>. </li>
+                            <li>Online payment available through <a target="_blank" href="https://pay.gov.bc.ca/">PayBc</a>. If you pay your ticket within 30 days of the issue you can save $25 per count.</li>
                             <li>You can request a fine reduction or time to pay without having to dispute your ticket and go to a court hearing</li>
                             <li>If you don’t pay your fine you may not be able to get or renew licences and permits, including your driver’s licence.</li>
                           </ul>
@@ -77,29 +77,22 @@
           Cancel and search again
         </button>
       </div>
-      <div class="offset-md-2 col-md-6"
-           *ngIf="ticket._outstandingBalanceDue > 0 || useMockServices">
-        <div class="row">
+      <!-- <div class="offset-md-2 col-md-6"
+           *ngIf="ticket._outstandingBalanceDue > 0 || useMockServices"> -->
+        <!-- <div class="row"> -->
           <!--  [ngClass]="{ 'offset-md-6': ticket._requestSubmitted && !useMockServices }" -->
-          <div class="col-md-6">
-            <button mat-flat-button
-                    color="accent"
-                    class="large"
-                    (click)="onPayTicket()">
-              <strong>Pay ticket</strong>
-            </button>
-          </div>
           <!--  *ngIf="!ticket._requestSubmitted || useMockServices" -->
-          <div class="col-md-6">
+          <div class="col-md-6 start-button">
             <button mat-flat-button
                     color="primary"
                     class="large"
+                    style="float: right;"
                     (click)="onDisputeTicket()">
-              <strong>Action ticket</strong>
+              <strong>Start ticket resolution request</strong>
             </button>
           </div>
-        </div>
-      </div>
+        <!-- </div> -->
+      <!-- </div> -->
     </div>
 
     <app-resolution-footer></app-resolution-footer>

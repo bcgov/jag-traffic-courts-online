@@ -90,7 +90,7 @@ export class StepDisputantComponent
    * Updates form fields with Canada Post Autocomplete Retrieve result
    */
   public onAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
-    this.form.patchValue({countryCode});
+    this.form.patchValue({country: countryCode});
     this.form.patchValue({province: provinceCode});
     this.form.patchValue({postalCode});
     this.form.patchValue({mailingAddress: address});

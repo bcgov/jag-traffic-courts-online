@@ -8,6 +8,7 @@ import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 })
 export class DisputeTicketSummaryComponent implements OnInit {
   @Input() public ticket: TicketDisputeView;
+  @Input() public countDataList:any;
   public defaultLanguage: string;
 
   constructor() {

@@ -1,5 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component,
+   EventEmitter,
+   Input,
+  OnInit,
+   Output,
+   OnChanges,
+   SimpleChanges,
+   ChangeDetectionStrategy,
+ } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,17 +26,28 @@ import { DisputeService } from 'app/services/dispute.service';
   templateUrl: './step-additional.component.html',
   styleUrls: ['./step-additional.component.scss'],
 })
-export class StepAdditionalComponent
-  extends BaseDisputeFormPage
-  implements OnInit {
+export class StepAdditionalComponent extends BaseDisputeFormPage implements OnInit,OnChanges {
   @Input() public stepper: MatStepper;
+  @Input() public isShowCheckbox: any;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
+  @Output() public countEmit: EventEmitter<any> = new EventEmitter();
+  
 
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.next';
 
   public languages: Config<string>[];
+  public countFormList:any;
+  public countFormList2:any;
+  public newObj={
+    "2":{
+
+    },
+    "3":{
+
+    }
+  };
   /**
    * Form field behaviour, customWitnessOption == true shows number input
    * and allows user to type, otherwise use original select options 1 through 5
@@ -61,13 +80,41 @@ export class StepAdditionalComponent
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepAdditionalForm;
+    debugger
     this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
     this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
     this.patchForm();
   }
-
+  ngOnChanges(changes: SimpleChanges) {
+    debugger
+    console.log('-----------------------',changes);
+   
+    // if(changes.isShowCheckbox && changes.isShowCheckbox.currentValue && changes.isShowCheckbox.currentValue[2]){
+    //   this.countFormList = this.form.get('countData') as FormArray;
+    //  if(!this.countFormList){
+    //   this.countFormList =[];
+     
+    //  }
+    //  this.countFormList.push(this.createItem());
+     
+    // }
+    // if(changes.isShowCheckbox && changes.isShowCheckbox.currentValue && changes.isShowCheckbox.currentValue[3]){
+    //   this.countFormList2 = this.form.get('countData2') as FormArray;
+    //   if(!this.countFormList2){
+    //     this.countFormList2 =[];
+    //   }
+    //   this.countFormList2.push(this.createItem());
+    // }
+   
+  }
+  createItem(): FormGroup {
+    return this.formBuilder.group({
+      name:''
+    });
+  }
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
+      this.countEmit.emit(this.newObj);
       this.stepSave.emit(this.stepper);
     } else {
       this.utilsService.scrollToErrorSection();
@@ -132,5 +179,17 @@ export class StepAdditionalComponent
   }
   public get lawyerPresent(): FormControl {
     return this.form.get('lawyerPresent') as FormControl;
+  }
+  public get countData() : FormArray {
+    return this.form.get('countData') as FormArray;
+  }
+  public get countData2() : FormArray {
+    return this.form.get('countData2') as FormArray;
+  }
+  newSkill(value1, value2): FormGroup {
+    return this.formBuilder.group({
+      reductionAppearInCourt: value1,
+      reductionAppearInCourtDoNot: value2,
+    });
   }
 }

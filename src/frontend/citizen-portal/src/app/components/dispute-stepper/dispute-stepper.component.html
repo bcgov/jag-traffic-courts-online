@@ -2,11 +2,10 @@
   <div class="col-lg-12">
     <app-page [busy]="busy">
       <app-tco-page-header>
-        <ng-container header>Initiate resolution form </ng-container>
+        <ng-container header>Start ticket resolution</ng-container>
         <ng-container subHeader>
-          Please enter your contact information below, and then <strong>choose the
-          action you would like to take for each ticket count and follow the
-          instructions provided.</strong>
+          Enter your contact information, then <strong>choose the
+          action you would like to take.</strong>
         </ng-container>
       </app-tco-page-header>
 
@@ -26,46 +25,54 @@
         </mat-step>
 
         <mat-step [stepControl]="offence1Form" *ngIf="offence1Exists">
-          <ng-template matStepLabel>Count 1: Review and action</ng-template>
+          <ng-template matStepLabel>Count 1: Review</ng-template>
           <app-step-count
             id="stepCount"
             [showDoNothingOption]="offence2Exists"
             [stepControl]="offence1Form"
             [stepper]="disputeStepper"
             [ticketName]="ticketName"
+            [isSelectedChekcError]='isErrorCheckMsg1'
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
         <mat-step [stepControl]="offence2Form" *ngIf="offence2Exists">
-          <ng-template matStepLabel>Count 2: Review and action</ng-template>
+          <ng-template matStepLabel>Count 2: Review</ng-template>
           <app-step-count
             id="stepCount"
             [stepControl]="offence2Form"
             [stepper]="disputeStepper"
             [ticketName]="ticketName"
+            [isSelectedChekcError]='isErrorCheckMsg1'
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
         <mat-step [stepControl]="offence3Form" *ngIf="offence3Exists">
-          <ng-template matStepLabel>Count 3: Review and action</ng-template>
+          <ng-template matStepLabel>Count 3: Review</ng-template>
           <app-step-count
             id="stepCount"
             [stepControl]="offence3Form"
             [ticketName]="ticketName"
             [stepper]="disputeStepper"
+           
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
         <mat-step [stepControl]="additionalForm">
           <ng-template matStepLabel>Additional information</ng-template>
-          <app-step-additional id="stepCourt" [stepper]="disputeStepper" (stepSave)="onStepSave($event)">
+          <app-step-additional 
+          id="stepCourt" 
+          [stepper]="disputeStepper" 
+          [isShowCheckbox]="isCheckBoxSelected"
+          (stepSave)="onStepSave($event)"
+          (countEmit)="getCountData($event)">
           </app-step-additional>
         </mat-step>
 
         <mat-step [stepControl]="overviewForm">
-          <ng-template matStepLabel>Dispute overview</ng-template>
+          <ng-template matStepLabel>Ticket request overview</ng-template>
           <app-step-overview id="stepOverview" [stepper]="disputeStepper" [overviewTicket]="overviewTicket"
-            (busy)="(busy)" (stepSave)="onStepSave($event)"></app-step-overview>
+            (busy)="(busy)" (stepSave)="onStepSave($event)" [countDataList]="countDataList"></app-step-overview>
         </mat-step>
       </mat-vertical-stepper>
 

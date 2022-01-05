@@ -32,20 +32,12 @@ const routes: Routes = [
         component: DisputeSubmitSuccessComponent,
       },
       {
-        path: AppRoutes.PAYMENT_COMPLETE,
-        component: TicketPaymentCompleteComponent,
-      },
-      {
         path: AppRoutes.SUMMARY,
         component: DisputeSummaryComponent,
       },
       {
         path: AppRoutes.STEPPER,
         component: DisputeStepperComponent,
-      },
-      {
-        path: AppRoutes.PAYMENT,
-        component: TicketPaymentComponent,
       },
       {
         path: '',
