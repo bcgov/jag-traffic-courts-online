@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: build-ticket-search-service
+  name: build-ticket-search-service-legacy
 spec:
   tasks:
     - name: git-clone
@@ -31,7 +31,7 @@ spec:
     - name: buildah
       params:
         - name: IMAGE
-          value: image-registry.openshift-image-registry.svc:5000/0198bb-tools/ticket-search-service
+          value: image-registry.openshift-image-registry.svc:5000/0198bb-tools/ticket-search-legacy
         - name: BUILDER_IMAGE
           value: registry.redhat.io/rhel8/buildah@sha256:6a68ece207bc5fd8db2dd5cc2d0b53136236fb5178eb5b71eebe5d07a3c33d13
         - name: STORAGE_DRIVER
@@ -39,7 +39,7 @@ spec:
         - name: DOCKERFILE
           value: ./Dockerfile
         - name: CONTEXT
-          value: src/backend/TrafficCourts/Ticket.Search.Service
+          value: src/ticket-search
         - name: TLSVERIFY
           value: 'true'
         - name: FORMAT
