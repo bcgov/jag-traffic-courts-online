@@ -8,9 +8,10 @@ metadata:
   labels:
     app: ticket-search-service
     app.kubernetes.io/name: ticket-search-service
-    app.kubernetes.io/component: backend
+    app.kubernetes.io/component: web-service
     app.kubernetes.io/instance: ticket-search-service
     app.kubernetes.io/part-of: traffic-court
+    app.kubernetes.io/managed-by: kustomize
 spec:
   ports:
     - name: web
