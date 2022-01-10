@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: service-ca.crt
+  annotations:
+    description: Provides the PEM-encoded CA signing bundle for service certificates.
+    service.beta.openshift.io/inject-cabundle: "true"
+    app.kubernetes.io/part-of: traffic-court
