@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - image: >-
-            image-registry.openshift-image-registry.svc:5000/0198bb-tools/dispute-api:dev
+            image-registry.openshift-image-registry.svc:5000/0198bb-tools/dispute-api:1.1
           name: citizen-api
           imagePullPolicy: Always
           ports:
