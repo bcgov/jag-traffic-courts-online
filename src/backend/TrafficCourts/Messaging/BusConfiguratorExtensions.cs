@@ -1,7 +1,9 @@
 ﻿using MassTransit;
 using MassTransit.ExtensionsDependencyInjectionIntegration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Configuration;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging.Configuration;
@@ -16,17 +18,20 @@ public static class BusConfiguratorExtensions
     // Action<IRabbitMqHostConfigurator>? configureHost = null,
     // Action<IRabbitMqBusFactoryConfigurator>? configureBusFactory = null
 
-    public static void AddMassTransit<TConfiguration>(this IServiceCollection services, ConfigurationManager configurationManager)
+    public static void AddMassTransit<TConfiguration>(this IServiceCollection services, WebApplicationBuilder builder)
         where TConfiguration : IMassTransitConfiguration, IRabbitMQConfiguration
     {
         if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configurationManager == null) throw new ArgumentNullException(nameof(configurationManager));
+        if (builder == null) throw new ArgumentNullException(nameof(builder));
 
+        ConfigurationManager configurationManager = builder.Configuration;
         // map environment variables to configuration
         configurationManager.Add<RabbitMQConfigurationProvider>();
 
         // get the configuration type
         TConfiguration configuration = configurationManager.Get<TConfiguration>();
+
+        ApplyDevelopmentDefaults(builder, configuration);
 
         services.AddMassTransit(config =>
         {
@@ -42,9 +47,20 @@ public static class BusConfiguratorExtensions
                 default:
                     throw new ConfigurationErrorsException($"Invalid MassTransit Transport: ${configuration.MassTransit.Transport}");
             }
-
             services.AddMassTransitHostedService();
         });
+    }
+
+    private static void ApplyDevelopmentDefaults<TConfiguration>(WebApplicationBuilder builder, TConfiguration configuration)
+        where TConfiguration : IMassTransitConfiguration
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            if (configuration.MassTransit is null)
+            {
+                configuration.MassTransit = new MassTransitConfigurationProperties { Transport = MassTransitTransport.InMemory };
+            }
+        }
     }
 
     private static void UseInMemory(IServiceCollectionBusConfigurator config)
