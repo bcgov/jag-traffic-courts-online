@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-namePrefix: p-
-
-resources:
-- build-citizen-api.yaml
-- build-citizen-web.yaml
-- build-ticket-search.yaml

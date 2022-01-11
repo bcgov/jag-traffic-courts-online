@@ -1,8 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  annotations:
-    description: Contains all the non-secret configuration settings for the ticket-search-service deployment.
-  name: ticket-search-service-configuration
-data:
-  appsettings.Production.json: '{ }'
