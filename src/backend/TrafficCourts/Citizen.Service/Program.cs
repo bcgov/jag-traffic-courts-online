@@ -4,7 +4,7 @@ using TrafficCourts.Messaging;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder.Configuration);
+builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
 
 builder.Services.AddMediatR(typeof(Program).GetType().Assembly);
 
