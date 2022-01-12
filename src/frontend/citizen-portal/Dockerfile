@@ -1,5 +1,5 @@
 # Build image
-FROM node:14.17 as build-deps
+FROM node:14.18 as build-deps
 
 # set working directory
 ENV NODE_ROOT /usr/src/app
@@ -9,11 +9,11 @@ WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 
+RUN yarn config set network-timeout 300000
 RUN yarn install
 
 COPY . .
 
-RUN yarn config set network-timeout 300000
 RUN yarn run build-prod
 
 # Runtime image
