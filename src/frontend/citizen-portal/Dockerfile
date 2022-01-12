@@ -14,7 +14,7 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn run build-prod
+RUN NODE_OPTIONS=--max_old_space_size=4096 yarn run build-prod
 
 # Runtime image
 FROM registry.access.redhat.com/ubi8/nginx-120
