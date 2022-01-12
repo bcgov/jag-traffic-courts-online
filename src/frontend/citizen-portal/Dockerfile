@@ -13,6 +13,7 @@ RUN yarn install
 
 COPY . .
 
+RUN yarn config set network-timeout 300000
 RUN yarn run build-prod
 
 # Runtime image
