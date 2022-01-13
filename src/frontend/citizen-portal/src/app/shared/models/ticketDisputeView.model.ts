@@ -12,4 +12,5 @@ export interface TicketDisputeView extends Omit<TicketDispute, 'disputant' | 'of
   _outstandingBalanceDue?: number;
   _totalBalanceDue?: number;
   _requestSubmitted?: boolean;
+  countList?:any;
 }

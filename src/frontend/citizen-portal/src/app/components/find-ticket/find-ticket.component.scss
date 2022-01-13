@@ -17,7 +17,31 @@
     height: 2px;
   }
 }
-
+.toggle-example{
+  display: flex
+  
+}
+.time-picker-input{
+  width: 100%;
+  background: inherit;
+  border: none;
+  color: #0f48ae
+}
+.time-picker-wrapper{
+  padding: 5px;
+  font-size: 13px;
+  padding-left: 15px;
+}
+.time-picker{
+  background-color: rgba(0, 0, 0, 0.04);
+  padding-left: 0;
+  margin-left: 12px;
+  margin-bottom: 15px;
+  margin-right: 12px;
+  border-bottom: 1px solid;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
 .subheader-desc {
   font: 400 16px/22px BCSans, Noto Sans, Verdana, Arial, sans-serif;
 }
@@ -40,7 +64,6 @@
 
 .find-large {
   width: 100%;
-
   height: 46px;
   font-size: 18px;
   font-weight: 700;
@@ -151,4 +174,7 @@
       }
     }
   }
+}
+.ngx-timepicker-control__arrow{
+  height: 10px;
 }

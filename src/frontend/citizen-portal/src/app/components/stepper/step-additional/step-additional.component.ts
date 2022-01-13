@@ -40,6 +40,9 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
   public languages: Config<string>[];
   public countFormList:any;
   public countFormList2:any;
+  public dispute={
+
+  };
   public newObj={
     "2":{
 
@@ -114,7 +117,12 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
   }
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
-      this.countEmit.emit(this.newObj);
+      debugger 
+      let obj = {
+        newObj : this.newObj,
+        dispute:this.dispute
+      }
+      this.countEmit.emit(obj);
       this.stepSave.emit(this.stepper);
     } else {
       this.utilsService.scrollToErrorSection();

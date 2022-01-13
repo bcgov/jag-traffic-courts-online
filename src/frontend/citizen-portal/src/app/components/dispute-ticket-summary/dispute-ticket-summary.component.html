@@ -10,7 +10,7 @@
     </section>
 
     <section class="px-4 py-2 mb-4 card-section"
-             *ngIf="ticket.additional">
+             >
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
         <hr/>
@@ -18,19 +18,33 @@
           The following additional information is required and will apply to all counts on this ticket made with that
           selection.
         </p> -->
-
-        <div *ngFor="let count of countDataList | keyvalue;index as i">
+        
+        <div *ngFor="let count of countDataList.newObj | keyvalue;index as i">
           <h3>Count:{{i+1}}</h3>
+         
           <h3>Request fine reduction and/or time to pay written reasons:</h3>
           <div class="count-heading">Written reasons for fine reduction request</div>
           <div class="count-data">{{count.value.reductionAppearInCourt}}</div>
-          <div class="count-heading">Written reasons for fine reduction request</div>
+          <div class="count-heading" *ngIf="count.value.reductionAppearInCourtDoNot">Written reasons for fine reduction request</div>
           <div class="count-data">{{count.value.reductionAppearInCourtDoNot}}</div>
         </div>
         <hr />
+        <div>
+          <b>Dispute charge.</b><p>Please indicate which (if any) of the following apply for you:</p>
+          <table class="disputre">
+            <tr>
+              <th>Action</th>
+              <th>* of witness</th>
+            </tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.lawyerPresent'><td> interpreterRequired</td><td>Yes</td>
+            </tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'><td>Language</td><td>{{countDataList.dispute.interpreterLanguage}}</td></tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'><td>witnessPresent</td><td>{{countDataList.dispute.numberOfWitnesses}}</td></tr>
+          </table>
+        </div>
       </div>
-
-      <section *ngIf="ticket.additional._isReductionRequired">
+      
+      <section *ngIf="ticket.additional && ticket.additional._isReductionRequired">
         <h3 class="fw-bold mb-0">Request fine reduction and/ or time to pay.</h3>
 
         <ng-container *ngIf="ticket.additional.requestReduction">
@@ -79,7 +93,7 @@
         <hr *ngIf="ticket.additional._isCourtRequired" />
       </section>
 
-      <section *ngIf="ticket.additional._isCourtRequired">
+      <section *ngIf="ticket.additional && ticket.additional._isCourtRequired">
         <h3 class="fw-bold mb-0">Dispute charge.</h3>
 
         <div class="row"

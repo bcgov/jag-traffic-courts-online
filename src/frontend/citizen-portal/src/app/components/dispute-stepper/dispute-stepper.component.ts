@@ -211,11 +211,19 @@ public getCountData(newObj):void{
           this.busy = this.disputeResource
             .createTicketDispute(payload)
             .subscribe((newDisputeTicket: TicketDisputeView) => {
+              // newDisputeTicket.additional = {
+              //   _isCourtRequired:true,
+              //   _isReductionRequired: true,
+              //   _isReductionNotInCourt: true
+              // }
+              newDisputeTicket.countList = this.countDataList;
               this.disputeService.ticket$.next(newDisputeTicket);
 
               this.router.navigate([
                 AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS),
-              ]);
+              ],{
+                queryParams: this.countDataList,
+              });
             });
         }
       });
