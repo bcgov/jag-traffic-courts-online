@@ -49,7 +49,7 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
                 DocumentAnalysisClient client = new DocumentAnalysisClient(_endpoint, credential);
 
                 using Stream stream = GetImageStream(request.Image);
-                AnalyzeDocumentOperation analyseDocumentOperation = await client.StartAnalyzeDocumentAsync("ViolationTicket", stream);
+                AnalyzeDocumentOperation analyseDocumentOperation = await client.StartAnalyzeDocumentAsync("ViolationTicket", stream, null, cancellationToken);
                 await analyseDocumentOperation.WaitForCompletionAsync();
 
                 AnalyzeResult result = analyseDocumentOperation.Value;

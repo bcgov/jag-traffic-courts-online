@@ -27,10 +27,10 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         [HttpPost("analyse")]
         [DisableRequestSizeLimit]
-        public Task<Analyse.AnalyseResponse> Analyse([Required] IFormFile image)
+        public Task<Analyse.AnalyseResponse> AnalyseSync([Required] IFormFile image, CancellationToken cancellationToken)
         {
             Analyse.AnalyseRequest request = new Analyse.AnalyseRequest(image);
-            return _mediator.Send(request);
+            return _mediator.Send(request, cancellationToken);
         }
     }
 }
