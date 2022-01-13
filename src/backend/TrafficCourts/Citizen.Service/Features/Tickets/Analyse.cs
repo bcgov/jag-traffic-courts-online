@@ -32,13 +32,13 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
         {
             private readonly ILogger<Handler> _logger;
             private readonly string _apiKey;
-            private readonly string _endpoint;
+            private readonly Uri _endpoint;
 
             public Handler(ILogger<Handler> logger, IOptions<FormRecognizerConfigurationOptions> options)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _apiKey = String.IsNullOrEmpty(options.Value.ApiKey) ? throw new ArgumentNullException(nameof(options.Value.ApiKey)) : options.Value.ApiKey;
-                _endpoint = String.IsNullOrEmpty(options.Value.Endpoint) ? throw new ArgumentNullException(nameof(options.Value.Endpoint)) : options.Value.Endpoint;
+                _endpoint = options.Value.Endpoint ?? throw new ArgumentNullException(nameof(options.Value.Endpoint));
             }
 
             public async Task<AnalyseResponse> Handle(AnalyseRequest request, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
                 _logger.LogDebug("Analysing {FileName}", request.Image.FileName);
 
                 AzureKeyCredential credential = new AzureKeyCredential(_apiKey);
-                DocumentAnalysisClient client = new DocumentAnalysisClient(new Uri(_endpoint), credential);
+                DocumentAnalysisClient client = new DocumentAnalysisClient(_endpoint, credential);
 
                 using Stream stream = GetImageStream(request.Image);
                 AnalyzeDocumentOperation analyseDocumentOperation = await client.StartAnalyzeDocumentAsync("ViolationTicket", stream);

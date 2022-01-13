@@ -19,7 +19,7 @@ namespace TrafficCourts.Citizen.Service.Configuration
         /// Azure FormRecognizer URL
         /// </summary>
         [Required]
-        public string? Endpoint { get; set; }
+        public Uri? Endpoint { get; set; }
 
     }
 }
