@@ -12,27 +12,27 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
         {
             public AnalyseRequest(IFormFile image)
             {
-                this.image = image;
+                this.Image = image ?? throw new ArgumentNullException(nameof(image));
             }
 
-            public IFormFile image { get; set; }
+            public IFormFile Image { get; set; }
         }
 
         public class AnalyseResponse
         {
             public AnalyseResponse(ViolationTicket violationTicket)
             {
-                this.violationTicket = violationTicket;
+                this.ViolationTicket = violationTicket;
             }
 
-            public ViolationTicket? violationTicket { get; set; }
+            public ViolationTicket? ViolationTicket { get; set; }
         }
 
         public class Handler : IRequestHandler<AnalyseRequest, AnalyseResponse>
         {
             private readonly ILogger<Handler> _logger;
-            private readonly String _apiKey;
-            private readonly String _endpoint;
+            private readonly string _apiKey;
+            private readonly string _endpoint;
 
             public Handler(ILogger<Handler> logger, IOptions<FormRecognizerConfigurationOptions> options)
             {
@@ -43,12 +43,12 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
 
             public async Task<AnalyseResponse> Handle(AnalyseRequest request, CancellationToken cancellationToken)
             {
-                _logger.LogDebug($"Analysing {request.image.FileName}");
+                _logger.LogDebug("Analysing {FileName}", request.Image.FileName);
 
                 AzureKeyCredential credential = new AzureKeyCredential(_apiKey);
                 DocumentAnalysisClient client = new DocumentAnalysisClient(new Uri(_endpoint), credential);
 
-                using Stream stream = getImageStream(request.image);
+                using Stream stream = GetImageStream(request.Image);
                 AnalyzeDocumentOperation analyseDocumentOperation = await client.StartAnalyzeDocumentAsync("ViolationTicket", stream);
                 await analyseDocumentOperation.WaitForCompletionAsync();
 
@@ -58,12 +58,13 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
                 // return new Response(result.Documents[0].Fields);
 
                 // Return a custom mapping of DocumentFields to a structured object for validation and serialization.
-                ViolationTicket violationTicket = map(result);
+                ViolationTicket violationTicket = Map(result);
                 AnalyseResponse response = new AnalyseResponse(violationTicket);
                 return response;
             }
 
-            private Stream getImageStream(IFormFile image)
+            /// Returns a Stream for the given image
+            private Stream GetImageStream(IFormFile image)
             {
                 // Work around for a "System.ObjectDisposedException : Cannot access a closed file." error
                 // - extract data from the file attachment to an in-memory byte[]
@@ -79,34 +80,35 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
                 return stream;
             }
 
-            private ViolationTicket map(AnalyzeResult result)
+            /// Maps AnalyzeResult to ViolationTicket
+            private ViolationTicket Map(AnalyzeResult result)
             {
                 // Iterate over results, creating a structured document
                 ViolationTicket violationTicket = new ViolationTicket();
                 foreach (AnalyzedDocument document in result.Documents)
                 {
-                    violationTicket.confidence = document.Confidence;
+                    violationTicket.Confidence = document.Confidence;
 
-                    if (document.Fields != null)
+                    if (document.Fields is not null)
                     {
                         foreach (KeyValuePair<String, DocumentField> pair in document.Fields)
                         {
                             ViolationTicket.Field field = new ViolationTicket.Field();
-                            field.name = pair.Key;
-                            field.value = pair.Value.Content;
-                            field.confidence = pair.Value.Confidence;
-                            field.type = Enum.GetName(pair.Value.ValueType);
+                            field.Name = pair.Key;
+                            field.Value = pair.Value.Content;
+                            field.Confidence = pair.Value.Confidence;
+                            field.Type = Enum.GetName(pair.Value.ValueType);
                             foreach (BoundingRegion region in pair.Value.BoundingRegions)
                             {
                                 ViolationTicket.BoundingBox boundingBox = new ViolationTicket.BoundingBox();
-                                boundingBox.points.Add(new ViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                                boundingBox.points.Add(new ViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                                boundingBox.points.Add(new ViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                                boundingBox.points.Add(new ViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
-                                field.boundingBoxes.Add(boundingBox);
+                                boundingBox.Points.Add(new ViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
+                                boundingBox.Points.Add(new ViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
+                                boundingBox.Points.Add(new ViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
+                                boundingBox.Points.Add(new ViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                                field.BoundingBoxes.Add(boundingBox);
                             }
 
-                            violationTicket.fields.Add(field);
+                            violationTicket.Fields.Add(field);
                         }
                     }
                 }
