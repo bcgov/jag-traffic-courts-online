@@ -63,6 +63,16 @@ namespace TrafficCourts.Ticket.Search.Service
             else
             {
                 builder.Services.AddTransient<ITicketSearchService, MockTicketSearchService>();
+
+                // if a valid data file has been configured, use that, otherwise use the embedded data
+                if (FileMockDataProvider.HasValidConfiguration(builder.Configuration))
+                {
+                    builder.Services.AddTransient<IMockDataProvider, FileMockDataProvider>();
+                }
+                else
+                {
+                    builder.Services.AddTransient<IMockDataProvider, EmbeddedMockDataProvider>();
+                }
             }
 
             // Add services to the container.
@@ -83,7 +93,7 @@ namespace TrafficCourts.Ticket.Search.Service
             IHealthChecksBuilder healthChecksBuilder = builder.Services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { HealthCheckType.Liveness });
 
-            if (configuration.TicketSearch.SearchType == TicketSearchType.RoadSafety)
+            if (configuration?.TicketSearch?.SearchType == TicketSearchType.RoadSafety)
             {
                 healthChecksBuilder.AddCheck<AccessTokenAvailableHealthCheck>("access-token-available", failureStatus: HealthStatus.Unhealthy, tags: new[] { HealthCheckType.Readiness });
             }

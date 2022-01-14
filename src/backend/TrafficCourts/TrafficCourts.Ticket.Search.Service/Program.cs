@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using TrafficCourts.Ticket.Search.Service;
 using TrafficCourts.Ticket.Search.Service.Services;
 
@@ -9,7 +10,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureServices();
 builder.WebHost.UseKestrel(options =>
 {
-    options.ListenAnyIP(8443, o => o.UseHttpsWithFullChain("d:\\temp\\tls.crt", "d:\\temp\\tls.key"));
+
+    options.ListenAnyIP(8080, o =>
+    {
+        o.Protocols = HttpProtocols.Http2;
+
+        // OpenShift
+        //   CertificateMountPoint -> /var/run/secrets/service-cert
+        //     tls.crt
+        //     tls.key
+        //
+        // Local
+        //o.UseHttpsWithFullChain("d:\\temp\\tls.crt", "d:\\temp\\tls.key");
+    });
 });
 
 var app = builder.Build();
