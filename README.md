@@ -8,27 +8,28 @@ Welcome to Traffic Courts Online
 
 ## Project Structure
 
+```
     ├── .github                                 # Contains GitHub Related sources
-    ├── infrastructure                          # openshift templates and pipeline
     ├── docs                                    # docs and images
-    ├── src                                     # application source files
-    |   ├── backend                             # backend apis
-    |   |   └── CitizenApi.Web                  # Citizen api
-            └── TicketSearchApi.Web             # Ticket Search api
-    │   └── frontend                            # frontend applications
-    │       └── citizen-portal                  # citizen portal
-    ├── COMPLIANCE.yaml                         #
-    ├── CONTRIBUTING.md                         #
-    ├── LICENSE                                 # Apache License
-    └── README.md                               # This file.
-
+    │   └── data-model                          # Oracle designer data model
+    ├── splunk-dash-board
+    ├── src                                      # application source files
+    │   ├── backend                              # Backend code
+    │   └── frontend                             # Frontend code
+    ├── tools
+    ├── COMPLIANCE.yaml
+    ├── CONTRIBUTING.md
+    ├── docker-compose.yml
+    ├── LICENSE                                  # Apache License
+    └── README.md                                # This file
+```
 ## Apps
 
 | Name                | Description                                  | Doc                             |
 | ------------------- | -------------------------------------------- | --------------------------------|
 | backend             | all server side services                     |                                 |
-| citizen api          | base citizen api                            | [README](src/backend/README.md)|
-| ticket search api    | ticket search api called from citizen api   | [README](src/backend/README.md)|
+| citizen api         | base citizen api                             | [README](src/backend/README.md)|
+| ticket search api   | ticket search api called from citizen api    | [README](src/backend/README.md)|
 | frontend            | all client side applications                 | [README](src/frontend/README.md)|
 
 
