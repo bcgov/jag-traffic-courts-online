@@ -19,9 +19,21 @@ namespace TrafficCourts.Citizen.Service.Controllers
         [HttpGet("search")]
         [ProducesResponseType(typeof(Search.Response), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public Task<Search.Response> Search(Search.Request request)
+        public async Task<IActionResult> SearchAsync(Search.Request request, CancellationToken cancellationToken)
         {
-            return _mediator.Send(request);
+            Search.Response response = await _mediator.Send(request, cancellationToken);
+
+            if (response == Search.Response.Empty)
+            {
+                return NotFound();
+            }
+
+            return Ok(response.Ticket);
         }
+    }
+
+    public class Ticket
+    {
+        // TODO
     }
 }

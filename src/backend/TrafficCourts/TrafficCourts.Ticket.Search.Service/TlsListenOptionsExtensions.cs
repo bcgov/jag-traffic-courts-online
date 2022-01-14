@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using System.Net.Security;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
 namespace TrafficCourts.Ticket.Search.Service
@@ -16,11 +17,17 @@ namespace TrafficCourts.Ticket.Search.Service
             ArgumentNullException.ThrowIfNull(keyPath);
 
             var leafCertWithKey = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // https://github.com/dotnet/runtime/issues/23749
+                leafCertWithKey = new X509Certificate2(leafCertWithKey.Export(X509ContentType.Pkcs12));
+            }
 
             // Import the full cert chain
             var fullChain = new X509Certificate2Collection();
             fullChain.ImportFromPemFile(certPath);
 
+                 
             var options = new SslServerAuthenticationOptions
             {
                 // Don't go online to retrieve cert chain

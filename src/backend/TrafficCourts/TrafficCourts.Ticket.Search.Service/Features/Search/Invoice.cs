@@ -7,28 +7,28 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search
     public class Invoice
     {
         [JsonPropertyName("invoice_number")]
-        public string InvoiceNumber { get; set; }
+        public string? InvoiceNumber { get; set; }
 
         [JsonPropertyName("pbc_ref_number")]
-        public string PbcRefNumber { get; set; }
+        public string? PbcRefNumber { get; set; }
 
         [JsonPropertyName("party_number")]
-        public string PartyNumber { get; set; }
+        public string? PartyNumber { get; set; }
 
         [JsonPropertyName("party_name")]
-        public string PartyName { get; set; }
+        public string? PartyName { get; set; }
 
         [JsonPropertyName("account_number")]
-        public string AccountNumber { get; set; }
+        public string? AccountNumber { get; set; }
 
         [JsonPropertyName("site_number")]
-        public string SiteNumber { get; set; }
+        public string? SiteNumber { get; set; }
 
         [JsonPropertyName("cust_trx_type")]
-        public string InvoiceType { get; set; }
+        public string? InvoiceType { get; set; }
 
         [JsonPropertyName("term_due_date")]
-        public string ViolationDateTime { get; set; }
+        public string? ViolationDateTime { get; set; }
 
         [JsonPropertyName("total")]
         public decimal TicketedAmount { get; set; }
@@ -37,16 +37,16 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search
         public decimal AmountDue { get; set; }
 
         [JsonPropertyName("attribute1")]
-        public string OffenceDescription { get; set; }
+        public string? OffenceDescription { get; set; }
 
         [JsonPropertyName("attribute2")]
-        public string VehicleDescription { get; set; }
+        public string? VehicleDescription { get; set; }
 
         [JsonPropertyName("attribute3")]
-        public string ViolationDate { get; set; }
+        public string? ViolationDate { get; set; }
 
         [JsonPropertyName("attribute4")]
-        public string DiscountAmount { get; set; }
+        public string? DiscountAmount { get; set; }
     }
 
     [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
