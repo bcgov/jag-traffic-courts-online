@@ -4,12 +4,19 @@ using Grpc.Net.Client.Configuration;
 using MediatR;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Messaging;
+using TrafficCourts.Citizen.Service.Features.Tickets;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
 
 builder.Services.AddMediatR(typeof(Program).GetType().Assembly);
+// Need to manually register a MediatR.IRequest, getting a "Handler was not found for request of type MediatR.IRequestHandler" otherwise.
+builder.Services.AddTransient<IRequestHandler<Analyse.AnalyseRequest, Analyse.AnalyseResponse>, Analyse.Handler>();
+
+// Bind FormRecognizer configuration properties
+// builder.Services.AddOptions<FormRecognizerConfigurationOptions>().ValidateDataAnnotations().ValidateOnStart(); // doesn't recognize ENV vars
+builder.Services.Configure<FormRecognizerConfigurationOptions>(builder.Configuration.GetSection(FormRecognizerConfigurationOptions.FormRecognizer)); // Better, recognizes ENV vars, but doesn't validate on start.
 
 // Add services to the container.
 

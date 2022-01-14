@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
@@ -29,6 +30,14 @@ namespace TrafficCourts.Citizen.Service.Controllers
             }
 
             return Ok(response.Ticket);
+        }
+
+        [HttpPost("analyse")]
+        [DisableRequestSizeLimit]
+        public Task<Analyse.AnalyseResponse> AnalyseSync([Required] IFormFile image, CancellationToken cancellationToken)
+        {
+            Analyse.AnalyseRequest request = new Analyse.AnalyseRequest(image);
+            return _mediator.Send(request, cancellationToken);
         }
     }
 
