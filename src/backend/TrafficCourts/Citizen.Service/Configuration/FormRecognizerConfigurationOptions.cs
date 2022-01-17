@@ -5,11 +5,6 @@ namespace TrafficCourts.Citizen.Service.Configuration
     public class FormRecognizerConfigurationOptions
     {
         /// <summary>
-        /// Configuration provider key
-        /// </summary>
-        public const string FormRecognizer = "FormRecognizer";
-
-        /// <summary>
         /// Azure FormRecognizer API KEY
         /// </summary>
         [Required]
@@ -20,6 +15,5 @@ namespace TrafficCourts.Citizen.Service.Configuration
         /// </summary>
         [Required]
         public Uri? Endpoint { get; set; }
-
     }
 }
