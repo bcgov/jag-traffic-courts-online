@@ -1,9 +1,11 @@
+namespace TrafficCourts.Citizen.Service.Models.Tickets;
+
 /// <summary>
 /// A model representation of the extracted OCR results.
 /// </summary>
-public class ViolationTicket
+public class OcrViolationTicket
 {
-    public ViolationTicket() { }
+    public OcrViolationTicket() { }
 
     /// <summary>
     /// Confidence of correctly extracting the document.
