@@ -1,40 +1,11 @@
-using Grpc.Core;
-using Grpc.Net.Client;
-using Grpc.Net.Client.Configuration;
-using MediatR;
 using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Messaging;
-using TrafficCourts.Citizen.Service.Features.Tickets;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
-
-builder.Services.AddMediatR(typeof(Program).GetType().Assembly);
-// Need to manually register a MediatR.IRequest, getting a "Handler was not found for request of type MediatR.IRequestHandler" otherwise.
-builder.Services.AddTransient<IRequestHandler<Analyse.AnalyseRequest, Analyse.AnalyseResponse>, Analyse.Handler>();
-
-// Bind FormRecognizer configuration properties
-// builder.Services.AddOptions<FormRecognizerConfigurationOptions>().ValidateDataAnnotations().ValidateOnStart(); // doesn't recognize ENV vars
-builder.Services.Configure<FormRecognizerConfigurationOptions>(builder.Configuration.GetSection(FormRecognizerConfigurationOptions.FormRecognizer)); // Better, recognizes ENV vars, but doesn't validate on start.
+builder.ConfigureApplication(); // this can throw ConfigurationErrorsException
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-
-builder.Services.AddSingleton(services =>
-{
-    var backendUrl = builder.Configuration["TicketSearchUrl"];
-
-    var channel = GrpcChannel.ForAddress(backendUrl, new GrpcChannelOptions
-    {
-        Credentials = ChannelCredentials.Insecure,
-        ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
-        ServiceProvider = services
-    });
-
-    return channel;
-});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

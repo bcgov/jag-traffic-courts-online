@@ -1,9 +1,10 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+using OneOf;
+using System.Text.RegularExpressions;
 using TrafficCourts.Ticket.Search.Service;
+using TicketSearchResult = TrafficCourts.Citizen.Service.Models.Search.TicketSearchResult;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets
 {
@@ -11,16 +12,43 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
     {
         public class Request : IRequest<Response>
         {
-            [FromQuery(Name = "ticketNumber")]
-            [Required]
-            [RegularExpression("^[A-Z]{2}[0-9]{6,}$", ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")]
-            public string TicketNumber { get; set; }
+            public const string TicketNumberRegex = "^[A-Z]{2}[0-9]{6,}$";
+            public const string TimeRegex = "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$";
 
-            [FromQuery(Name = "time")]
-            [Required]
-            [RegularExpression("^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
-                ErrorMessage = "time must be properly formatted 24 hour clock")]
-            public string Time { get; set; }
+            public string TicketNumber { get; }
+
+            /// <summary>
+            /// The 24 hour clock
+            /// </summary>
+            public int Hour { get; }
+            public int Minute { get; }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="ticketNumber"></param>
+            /// <param name="time"></param>
+            /// <exception cref="ArgumentNullException"></exception>
+            /// <exception cref="ArgumentException"></exception>
+            public Request(string ticketNumber, string time)
+            {
+                ArgumentNullException.ThrowIfNull(ticketNumber);
+                ArgumentNullException.ThrowIfNull(time);
+
+                if (!Regex.IsMatch(ticketNumber, TicketNumberRegex))
+                {
+                    throw new ArgumentException(nameof(ticketNumber));
+                }
+
+                if (!Regex.IsMatch(time, TimeRegex))
+                {
+                    throw new ArgumentException(nameof(time));
+                }
+
+                TicketNumber = ticketNumber;
+                Hour = int.Parse(time[0..2]);
+                Minute = int.Parse(time[3..5]);
+            }
         }
 
         public class Response
@@ -31,13 +59,22 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
 
             public Response(SearchReply reply)
             {
+                TicketSearchResult ticketSearchResult = new TicketSearchResult
+                {
+                    // set properties
+                };
+
+                Result = ticketSearchResult;
             }
 
             public Response(Exception exception)
             {
+                Result = exception;
             }
 
-            public object Ticket { get; }
+            public OneOf<TicketSearchResult, Exception> Result { get; }
+
+            public TicketSearchResult? Ticket { get; }
 
             public static readonly Response Empty = new Response();
         }
@@ -55,17 +92,17 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                TicketSearch.TicketSearchClient client = new TicketSearch.TicketSearchClient(_grpcChannel);
+                ArgumentNullException.ThrowIfNull(request);
 
-                // 24 hour clock
-                var time = int.Parse(request.Time);
+                TicketSearch.TicketSearchClient client = new TicketSearch.TicketSearchClient(_grpcChannel);
 
                 var searchResult = new SearchRequest
                 {
                     Number = request.TicketNumber,
-                    Time = new TimeOfDay {
-                        Hour = time / 100,
-                        Minute = time % 100
+                    Time = new TimeOfDay
+                    {
+                        Hour = request.Hour,
+                        Minute = request.Minute
                     }
                 };
 
