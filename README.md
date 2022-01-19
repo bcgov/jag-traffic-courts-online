@@ -32,6 +32,24 @@ Welcome to Traffic Courts Online
 | ticket search api   | ticket search api called from citizen api    | [README](src/backend/README.md)|
 | frontend            | all client side applications                 | [README](src/frontend/README.md)|
 
+### Citizen Service (API)
+
+#### Configuration
+
+| Key                             | Description                                  | Default                         |
+| ------------------------------- | -------------------------------------------- | --------------------------------|
+| RabbitMQ:Host                   |                                              |                                 |
+| RabbitMQ:Port                   |                                              |                                 |
+| RabbitMQ:Username               |                                              |                                 |
+| RabbitMQ:Password               |                                              |                                 |
+| MassTransit:Transport           | InMemory or RabbitMQ                         |                                 |
+| FormRecognizer:ApiKey           |                                              |                                 |
+| FormRecognizer:Endpoint         |                                              |                                 |
+| TicketSearchClient:Address      |                                              |                                 |
+| Splunk:Url                      |                                              |                                 |
+| Splunk:Token                    |                                              |                                 |
+| Splunk:ValidatServerCertificate |                                              |                                 |
+
 
 # Splunk Docker Examples
 
