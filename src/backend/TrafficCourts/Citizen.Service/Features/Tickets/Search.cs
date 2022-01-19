@@ -94,7 +94,11 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
             {
                 ArgumentNullException.ThrowIfNull(request);
 
+                using var requestScope = _logger.BeginScope(new Dictionary<string, object> { { "Request", request } });
+
                 TicketSearch.TicketSearchClient client = new TicketSearch.TicketSearchClient(_grpcChannel);
+
+                _logger.LogDebug("Creating SearchRequest");
 
                 var searchResult = new SearchRequest
                 {
@@ -108,15 +112,20 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
 
                 try
                 {
+
+                    _logger.LogDebug("Searching for ticket");
                     SearchReply searchReply = await client.SearchAsync(searchResult, cancellationToken: cancellationToken);
+                    _logger.LogDebug("Search complete");
                     return new Response(searchReply);
                 }
                 catch (RpcException exception) when (exception.StatusCode is StatusCode.NotFound)
                 {
+                    _logger.LogInformation(exception, "Not found");
                     return Response.Empty;
                 }
                 catch (RpcException exception)
                 {
+                    _logger.LogInformation(exception, "Error");
                     return Response.Empty;
                 }
             }
