@@ -25,10 +25,10 @@ namespace TrafficCourts.Ticket.Search.Service.Configuration
             Add("OAUTH__SECRET", "TicketSearch:ClientSecret");
 
             // new configuration, change this variables?
-            Add("OAUTH_OAUTHURL", "TicketSearch:AuthenticationUrl");
-            Add("OAUTH_RESOURCEURL", "TicketSearch:ResourceUrl");
-            Add("OAUTH_CLIENTID", "TicketSearch:ClientId");
-            Add("OAUTH_SECRET", "TicketSearch:ClientSecret");
+            Add("RSI_OAUTH_OAUTHURL", "TicketSearch:AuthenticationUrl");
+            Add("RSI_OAUTH_RESOURCEURL", "TicketSearch:ResourceUrl");
+            Add("RSI_OAUTH_CLIENTID", "TicketSearch:ClientId");
+            Add("RSI_OAUTH_SECRET", "TicketSearch:ClientSecret");
         }
     }
 

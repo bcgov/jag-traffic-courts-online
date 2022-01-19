@@ -31,7 +31,7 @@ public static class ConfigurationExtensions
         // configure application
         var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
 
-        var logger = GetLogger(builder.Configuration);
+        var logger = GetLogger();
 
         ValidateConfiguration(configuration, logger); // throws ConfigurationErrorsException if configuration has issues
 
@@ -47,9 +47,8 @@ public static class ConfigurationExtensions
     /// <summary>
     /// Gets a logger for application setup.
     /// </summary>
-    /// <param name="configuration"></param>
     /// <returns></returns>
-    private static ILogger GetLogger(IConfiguration configuration)
+    private static ILogger GetLogger()
     {
         var logger = new LoggerConfiguration()
             .WriteTo.Console()

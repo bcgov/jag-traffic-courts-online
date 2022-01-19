@@ -8,21 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
 builder.ConfigureServices();
+
+builder.UseOpenShiftIntegration(_ => _.CertificateMountPoint = "/var/run/secrets/service-cert");
+
 builder.WebHost.UseKestrel(options =>
 {
-
-    options.ListenAnyIP(8080, o =>
-    {
-        o.Protocols = HttpProtocols.Http2;
-
-        // OpenShift
-        //   CertificateMountPoint -> /var/run/secrets/service-cert
-        //     tls.crt
-        //     tls.key
-        //
-        // Local
-        //o.UseHttpsWithFullChain("d:\\temp\\tls.crt", "d:\\temp\\tls.key");
-    });
+    options.Limits.MaxRequestBodySize = 25 * 1024 * 1024; // allow large transfers
 });
 
 var app = builder.Build();
