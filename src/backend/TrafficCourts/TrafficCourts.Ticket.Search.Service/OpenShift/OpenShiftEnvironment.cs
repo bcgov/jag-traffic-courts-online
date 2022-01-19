@@ -4,7 +4,7 @@
     {
         private static string? _namespace;
 
-        public static bool IsOpenShift => !string.IsNullOrWhiteSpace(GetFromEnvironmentVariable("OPENSHIFT_NAMESPACE", ref _namespace));
+        public static bool IsOpenShift => !string.IsNullOrWhiteSpace(GetFromEnvironmentVariable("OPENSHIFT", ref _namespace));
 
         private static string? GetFromEnvironmentVariable(string name, ref string? cached)
         {
