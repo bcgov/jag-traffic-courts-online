@@ -17,11 +17,14 @@ namespace TrafficCourts.Ticket.Search.Service
 {
     public static class Startup
     {
-        public static void ConfigureServices(this WebApplicationBuilder builder)
+        public static void ConfigureApplication(this WebApplicationBuilder builder)
         {
             ArgumentNullException.ThrowIfNull(builder);
 
             builder.Configuration.Add<TicketSearchServiceConfigurationProvider>();
+
+            builder.UseSerilog<TicketSearchServiceConfiguration>(); // configure logging
+
             var configuration = builder.Configuration.Get<TicketSearchServiceConfiguration>();
 
             if (configuration == null || configuration.TicketSearch == null || !configuration.TicketSearch.IsValid())
@@ -86,6 +89,12 @@ namespace TrafficCourts.Ticket.Search.Service
 
             builder.Services.AddMemoryCache();
 
+            builder.UseOpenShiftIntegration(_ => _.CertificateMountPoint = "/var/run/secrets/service-cert");
+
+            builder.WebHost.UseKestrel(options =>
+            {
+                options.Limits.MaxRequestBodySize = 25 * 1024 * 1024; // allow large transfers
+            });
         }
 
         private static void AddHealthChecks(WebApplicationBuilder builder, TicketSearchServiceConfiguration configuration)

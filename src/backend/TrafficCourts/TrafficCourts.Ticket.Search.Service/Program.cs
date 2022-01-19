@@ -7,14 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Additional configuration is required to successfully run gRPC on macOS.
 // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
 
-builder.ConfigureServices();
+builder.ConfigureApplication();
 
-builder.UseOpenShiftIntegration(_ => _.CertificateMountPoint = "/var/run/secrets/service-cert");
 
-builder.WebHost.UseKestrel(options =>
-{
-    options.Limits.MaxRequestBodySize = 25 * 1024 * 1024; // allow large transfers
-});
 
 var app = builder.Build();
 
