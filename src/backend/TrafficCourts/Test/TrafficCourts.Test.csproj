@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="xunit" Version="2.4.1" />
@@ -29,6 +30,10 @@
     <Folder Include="Messaging\" />
     <Folder Include="Workflow.Service\" />
     <Folder Include="Ticket.Search.Service\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
   </ItemGroup>
 
 </Project>

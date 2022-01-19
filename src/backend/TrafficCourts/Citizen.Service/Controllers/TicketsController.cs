@@ -51,11 +51,21 @@ namespace TrafficCourts.Citizen.Service.Controllers
         }
 
         [HttpPost("analyse")]
+        [ProducesResponseType(typeof(Search.Response), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Search.Response), (int)HttpStatusCode.BadRequest)]
         [DisableRequestSizeLimit]
-        public Task<Analyse.AnalyseResponse> AnalyseSync([Required] IFormFile image, CancellationToken cancellationToken)
+        public async Task<IActionResult> AnalyseAsync([Required] IFormFile image, CancellationToken cancellationToken)
         {
-            Analyse.AnalyseRequest request = new Analyse.AnalyseRequest(image);
-            return _mediator.Send(request, cancellationToken);
+            AnalyseHandler.AnalyseRequest request = new AnalyseHandler.AnalyseRequest(image);
+            AnalyseHandler.AnalyseResponse response = await _mediator.Send(request, cancellationToken);
+            if (response.OcrViolationTicket is null)
+            {
+                // Return BadRequest 
+                // - if the image is not an image of a TrafficViolation
+                // - if the TicketNumber could not be extracted
+                return BadRequest();
+            }
+            return Ok(response);
         }
     }
 }

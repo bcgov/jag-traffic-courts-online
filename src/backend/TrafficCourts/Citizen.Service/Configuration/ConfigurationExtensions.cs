@@ -8,6 +8,7 @@ using TrafficCourts.Messaging.Configuration;
 using MediatR;
 using TrafficCourts.Common.Configuration;
 using ILogger = Serilog.ILogger;
+using TrafficCourts.Citizen.Service.Services;
 
 namespace TrafficCourts.Citizen.Service.Configuration;
 
@@ -25,7 +26,7 @@ public static class ConfigurationExtensions
 
         // setup the mapping for friendly environment variables
         ((IConfigurationBuilder)builder.Configuration).Add(new EnvironmentVariablesConfigurationSource());
-        
+
         builder.UseSerilog<CitizenServiceConfiguration>(); // configure logging
 
         // configure application
@@ -147,7 +148,10 @@ public static class ConfigurationExtensions
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
 
-
+        builder.Services.AddSingleton<IFormRecognizerService>(service => {
+            var logger = service.GetRequiredService<ILogger<FormRecognizerService>>();
+            return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, logger);
+        }); 
     }
 
     /// <summary>
