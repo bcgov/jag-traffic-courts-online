@@ -1,5 +1,4 @@
 using TrafficCourts.Citizen.Service.Models.Tickets;
-using static TrafficCourts.Citizen.Service.Models.Tickets.OcrViolationTicket;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
 

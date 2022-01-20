@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace TrafficCourts.Citizen.Service.Models.Tickets;
 
@@ -62,21 +63,28 @@ public class OcrViolationTicket
     /// <summary>
     /// Helper method to return the given field from the Fields Dictionary (workaround for KeyNotFoundException).
     /// </summary>
-    public Field? GetField(string fieldName) {
+    public Field? GetField(string fieldName)
+    {
         Field? field;
-        if (Fields.TryGetValue(fieldName, out field)) {
+        if (Fields.TryGetValue(fieldName, out field))
+        {
             return field;
         }
-        else {
+        else
+        {
             return null;
         }
     }
 
     public class Field
     {
-        public Field() {}
 
-        public Field(String? value) {
+        private static readonly string DateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
+
+        public Field() { }
+
+        public Field(String? value)
+        {
             Value = value;
         }
 
@@ -106,6 +114,45 @@ public class OcrViolationTicket
             if (Value?.Equals("unselected") ?? false)
             {
                 return false;
+            }
+            return null;
+        }
+
+        /// <summary>Returns a valid DateTime object if the Value string represents a date and is of the form 'yyyy MM dd', null otherwise.</summary>
+        public DateTime? GetDate()
+        {
+            if (Value is not null)
+            {
+                try
+                {
+                    Regex rg = new Regex(DateRegex);
+                    Match match = rg.Match(Value);
+                    if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
+                    {
+                        int year = Int32.Parse(match.Groups[1].Value);
+                        if (year < 100)
+                        {
+                            year += 2000;
+                        }
+                        int month = Int32.Parse(match.Groups[2].Value);
+                        int day = Int32.Parse(match.Groups[3].Value);
+                        return new DateTime(year, month, day);
+                    }
+                    else {
+                        // pattern didn't match.  Try extracting all digits. If there are 8, convert to a date.
+                        string newValue = Regex.Replace(Value, @"\D", "");
+                        if (newValue.Length == 8) {
+                            int year = Int32.Parse(newValue.Substring(0, 4));
+                            int month = Int32.Parse(newValue.Substring(4, 2));
+                            int day = Int32.Parse(newValue.Substring(6, 2));
+                            return new DateTime(year, month, day);
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    // No-op.  Will return null.
+                }
             }
             return null;
         }
