@@ -26,7 +26,7 @@ namespace TrafficCourts.Ticket.Search.Service
 
             builder.Configuration.Add<TicketSearchServiceConfigurationProvider>();
 
-            logger.Debug("Configuring Serilog logging");
+            logger.Information("Configuring Serilog logging");
             builder.UseSerilog<TicketSearchServiceConfiguration>(); // configure logging
 
             var configuration = builder.Configuration.Get<TicketSearchServiceConfiguration>();
@@ -41,7 +41,7 @@ namespace TrafficCourts.Ticket.Search.Service
             builder.Services.AddSingleton(configuration.TicketSearch);
 
             //builder.Services.AddOpenTelemetryMetrics();
-            logger.Debug("Adding health checks");
+            logger.Information("Adding health checks");
             AddHealthChecks(builder, configuration);
 
             if (configuration.TicketSearch.SearchType == TicketSearchType.RoadSafety)
@@ -85,7 +85,7 @@ namespace TrafficCourts.Ticket.Search.Service
             }
 
             // Add services to the container.
-            logger.Debug("Configuring services");
+            logger.Information("Configuring services");
             builder.Services.AddGrpc(options =>
             {
                 options.EnableMessageValidation();
@@ -96,7 +96,7 @@ namespace TrafficCourts.Ticket.Search.Service
 
             builder.Services.AddMemoryCache();
 
-            logger.Debug("Adding OpenShift integration");
+            logger.Information("Adding OpenShift integration");
 
             builder.UseOpenShiftIntegration(_ => _.CertificateMountPoint = "/var/run/secrets/service-cert");
 

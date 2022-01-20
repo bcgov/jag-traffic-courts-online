@@ -176,12 +176,14 @@ public static class Startup
 
         builder.Services.AddSingleton(services =>
         {
-            var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-            {
-                Credentials = credentials,
-                ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
-                ServiceProvider = services
-            });
+            //var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
+            //{
+            //    Credentials = credentials,
+            //    ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
+            //    ServiceProvider = services
+            //});
+
+            var channel = GrpcChannel.ForAddress(address);
 
             return channel;
         });
