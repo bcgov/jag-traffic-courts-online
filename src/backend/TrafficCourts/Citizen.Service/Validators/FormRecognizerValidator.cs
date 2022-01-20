@@ -17,8 +17,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // - In "Did commit offence(s) indicated, under the following act or its regulations" section, only 'MVA' is selected.
         // - If the Violation Date is less than 30 days
         List<ValidationRule> rules = new List<ValidationRule>();
-        rules.Add(new FieldMatchesRegexRule(violationTicket.GetField(OcrViolationTicket.TicketTitle), TicketTitleRegex, ValidationMessages.TicketTitleInvalid));
-        rules.Add(new FieldMatchesRegexRule(violationTicket.GetField(OcrViolationTicket.ViolationTicketNumber), ViolationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
+        rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], TicketTitleRegex, ValidationMessages.TicketTitleInvalid));
+        rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], ViolationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
         // TODO: Add OnlyMCAIsSelectedRule
         // TODO: Add ViolationDateLT30Rule
 

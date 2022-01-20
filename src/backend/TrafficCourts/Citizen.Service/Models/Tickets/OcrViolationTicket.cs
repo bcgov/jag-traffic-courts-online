@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace TrafficCourts.Citizen.Service.Models.Tickets;
 
 /// <summary>
@@ -5,80 +7,41 @@ namespace TrafficCourts.Citizen.Service.Models.Tickets;
 /// </summary>
 public class OcrViolationTicket
 {
-    // This list of static variables are the labels used in the Azure Form Recognizer
-    public readonly static string TicketTitle = "Violation Ticket Label";
-    public readonly static string ViolationTicketNumber = "Violation Ticket Number";
-    public readonly static string Surname = "Surname";
-    public readonly static string GivenName = "Given Name";
-    public readonly static string ViolationDate = "Violation Date";
-    public readonly static string ViolationTime = "Violation Time";
-    public readonly static string OffenseIsMVA = "Offense is MVA";
-    public readonly static string OffenseIsMCA = "Offense is MCA";
-    public readonly static string OffenseIsCTA = "Offense is CTA";
-    public readonly static string OffenseIsWLA = "Offense is WLA";
-    public readonly static string OffenseIsFAA = "Offense is FAA";
-    public readonly static string OffenseIsLCA = "Offense is LCA";
-    public readonly static string OffenseIsTCR = "Offense is TCR";
-    public readonly static string OffenseIsOther = "Offense is Other";
-    public readonly static string Count1Description = "Count 1 Description";
-    public readonly static string Count1ActRegs = "Count 1 Act/Regs";
-    public readonly static string Count1IsACT = "Count 1 Is ACT";
-    public readonly static string Count1IsREGS = "Count 1 Is REGS";
-    public readonly static string Count1Section = "Count 1 Section";
-    public readonly static string Count1TicketAmount = "Count 1 Ticket Amount";    
-    public readonly static string Count2Description = "Count 2 Description";
-    public readonly static string Count2ActRegs = "Count 2 Act/Regs";
-    public readonly static string Count2IsACT = "Count 2 Is ACT";
-    public readonly static string Count2IsREGS = "Count 2 Is REGS";
-    public readonly static string Count2Section = "Count 2 Section";
-    public readonly static string Count2TicketAmount = "Count 2 Ticket Amount";    
-    public readonly static string Count3Description = "Count 3 Description";
-    public readonly static string Count3ActRegs = "Count 3 Act/Regs";
-    public readonly static string Count3IsACT = "Count 3 Is ACT";
-    public readonly static string Count3IsREGS = "Count 3 Is REGS";
-    public readonly static string Count3Section = "Count 3 Section";
-    public readonly static string Count3TicketAmount = "Count 3 Ticket Amount";
-    public readonly static string DetachmentLocation = "Detachment Location";
-    public readonly static string DriverLicenceNumber = "Drivers Licence Number";
 
-    /// Not all fields on the handwritten ticket are of value.
-    /// This is a list of fields that are to be saved in ARC
-    public readonly static List<string> FIELDS = new List<string>() {
-        TicketTitle,
-        ViolationTicketNumber,
-        Surname,
-        GivenName,
-        ViolationDate,
-        ViolationTime,
-        OffenseIsMVA,
-        OffenseIsMCA,
-        OffenseIsCTA,
-        OffenseIsWLA,
-        OffenseIsFAA,
-        OffenseIsLCA,
-        OffenseIsTCR,
-        OffenseIsOther,
-        Count1Description,
-        Count1ActRegs,
-        Count1IsACT,
-        Count1IsREGS,
-        Count1Section,
-        Count1TicketAmount,
-        Count2Description,
-        Count2ActRegs,
-        Count2IsACT,
-        Count2IsREGS,
-        Count2Section,
-        Count2TicketAmount,
-        Count3Description,
-        Count3ActRegs,
-        Count3IsACT,
-        Count3IsREGS,
-        Count3Section,
-        Count3TicketAmount,
-        DetachmentLocation,
-        DriverLicenceNumber
-    };
+    public static readonly string ViolationTicketTitle = "violationTicketTitle";
+    public static readonly string ViolationTicketNumber = "violationTicketNumber";
+    public static readonly string Surname = "surname";
+    public static readonly string GivenName = "givenName";
+    public static readonly string DriverLicenceNumber = "driverLicenceNumber";
+    public static readonly string ViolationDate = "violationDate";
+    public static readonly string ViolationTime = "violationTime";
+    public static readonly string OffenseIsMVA = "offenseIsMVA";
+    public static readonly string OffenseIsMCA = "offenseIsMCA";
+    public static readonly string OffenseIsCTA = "offenseIsCTA";
+    public static readonly string OffenseIsWLA = "offenseIsWLA";
+    public static readonly string OffenseIsFAA = "offenseIsFAA";
+    public static readonly string OffenseIsLCA = "offenseIsLCA";
+    public static readonly string OffenseIsTCR = "offenseIsTCR";
+    public static readonly string OffenseIsOther = "offenseIsOther";
+    public static readonly string Count1Description = "count1Description";
+    public static readonly string Count1ActRegs = "count1ActRegs";
+    public static readonly string Count1IsACT = "count1IsACT";
+    public static readonly string Count1IsREGS = "count1IsREGS";
+    public static readonly string Count1Section = "count1Section";
+    public static readonly string Count1TicketAmount = "count1TicketAmount";
+    public static readonly string Count2Description = "count2Description";
+    public static readonly string Count2ActRegs = "count2ActRegs";
+    public static readonly string Count2IsACT = "count2IsACT";
+    public static readonly string Count2IsREGS = "count2IsREGS";
+    public static readonly string Count2Section = "count2Section";
+    public static readonly string Count2TicketAmount = "count2TicketAmount";
+    public static readonly string Count3Description = "count3Description";
+    public static readonly string Count3ActRegs = "count3ActRegs";
+    public static readonly string Count3IsACT = "count3IsACT";
+    public static readonly string Count3IsREGS = "count3IsREGS";
+    public static readonly string Count3Section = "count3Section";
+    public static readonly string Count3TicketAmount = "count3TicketAmount";
+    public static readonly string DetachmentLocation = "detachmentLocation";
 
     /// <summary>
     /// A global confidence of correctly extracting the document. This value will be low if the title of this 
@@ -94,18 +57,10 @@ public class OcrViolationTicket
     /// <summary>
     /// An enumeration of all fields in this Violation Ticket.
     /// </summary>
-    /// TODO: convert to a Dictionary or actual class Properties
-    public List<Field> Fields { get; set; } = new List<Field>();
-
-    /// <summary>Finds the field with the given name</summary>
-    public OcrViolationTicket.Field? GetField(String name)
-    {
-        return Fields.Find(_ => name.Equals(_.Name));
-    }
+    public Dictionary<string, Field> Fields { get; set; } = new Dictionary<string, Field>();
 
     public class Field
     {
-        public String? Name { get; set; }
         public String? Value { get; set; }
         public float? Confidence { get; set; }
         /// <summary>

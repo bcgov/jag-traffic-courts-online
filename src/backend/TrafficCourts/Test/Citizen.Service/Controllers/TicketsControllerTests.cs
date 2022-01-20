@@ -33,7 +33,7 @@ public class TicketsControllerTests
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal(analyseResponse, okResult.Value);
+        Assert.Equal(analyseResponse.OcrViolationTicket, okResult.Value);
     }
 
     [Fact]

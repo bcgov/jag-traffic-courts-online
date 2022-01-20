@@ -65,7 +65,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 // - if the TicketNumber could not be extracted
                 return BadRequest();
             }
-            return Ok(response);
+            return Ok(response.OcrViolationTicket);
         }
     }
 }
