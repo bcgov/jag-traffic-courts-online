@@ -95,6 +95,7 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
                 ArgumentNullException.ThrowIfNull(request);
 
                 using var requestScope = _logger.BeginScope(new Dictionary<string, object> { { "Request", request } });
+                _logger.LogTrace("Begin handler");
 
                 TicketSearch.TicketSearchClient client = new TicketSearch.TicketSearchClient(_grpcChannel);
 
