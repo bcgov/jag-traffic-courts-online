@@ -17,6 +17,6 @@ FROM build AS publish
 RUN dotnet publish "TrafficCourts.Ticket.Search.Service.csproj" -c Release -o /app/publish
 
 FROM base AS final
-WORKDIR /app
+WORKDIR /opt/app-root/app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "TrafficCourts.Ticket.Search.Service.dll"]
