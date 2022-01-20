@@ -41,22 +41,26 @@ public class FormRecognizerService : IFormRecognizerService
             {
                 foreach (KeyValuePair<String, DocumentField> pair in document.Fields)
                 {
-                    OcrViolationTicket.Field field = new OcrViolationTicket.Field();
-                    field.Name = pair.Key;
-                    field.Value = pair.Value.Content;
-                    field.Confidence = pair.Value.Confidence;
-                    field.Type = Enum.GetName(pair.Value.ValueType);
-                    foreach (BoundingRegion region in pair.Value.BoundingRegions)
+                    // Only map fields of interest
+                    if (pair.Key is not null && OcrViolationTicket.FIELDS.Contains<string>(pair.Key))
                     {
-                        OcrViolationTicket.BoundingBox boundingBox = new OcrViolationTicket.BoundingBox();
-                        boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                        boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                        boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                        boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
-                        field.BoundingBoxes.Add(boundingBox);
-                    }
+                        OcrViolationTicket.Field field = new OcrViolationTicket.Field();
+                        field.Name = pair.Key;
+                        field.Value = pair.Value.Content;
+                        field.Confidence = pair.Value.Confidence;
+                        field.Type = Enum.GetName(pair.Value.ValueType);
+                        foreach (BoundingRegion region in pair.Value.BoundingRegions)
+                        {
+                            OcrViolationTicket.BoundingBox boundingBox = new OcrViolationTicket.BoundingBox();
+                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
+                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
+                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
+                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                            field.BoundingBoxes.Add(boundingBox);
+                        }
 
-                    violationTicket.Fields.Add(field);
+                        violationTicket.Fields.Add(field);
+                    }
                 }
             }
         }

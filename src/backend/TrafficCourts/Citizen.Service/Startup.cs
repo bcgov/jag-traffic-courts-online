@@ -10,6 +10,7 @@ using TrafficCourts.Common.Configuration;
 using ILogger = Serilog.ILogger;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Configuration;
+using TrafficCourts.Citizen.Service.Validators;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -153,6 +154,7 @@ public static class Startup
             var logger = service.GetRequiredService<ILogger<FormRecognizerService>>();
             return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, logger);
         }); 
+        builder.Services.AddSingleton<IFormRecognizerValidator, FormRecognizerValidator>();
     }
 
     /// <summary>

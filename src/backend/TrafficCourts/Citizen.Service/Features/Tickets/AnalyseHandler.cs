@@ -2,6 +2,7 @@ using Azure.AI.FormRecognizer.DocumentAnalysis;
 using MediatR;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Citizen.Service.Validators;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;
 
@@ -26,11 +27,13 @@ public static class AnalyseHandler
     {
         private readonly ILogger<Handler> _logger;
         private readonly IFormRecognizerService _formRegognizerService;
+        private readonly IFormRecognizerValidator _formRecognizerValidator;
 
-        public Handler(IFormRecognizerService formRegognizerService, ILogger<Handler> logger)
+        public Handler(IFormRecognizerService formRegognizerService, IFormRecognizerValidator formRecognizerValidator, ILogger<Handler> logger)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _formRegognizerService = formRegognizerService ?? throw new ArgumentNullException(nameof(logger));
+            _formRecognizerValidator = formRecognizerValidator ?? throw new ArgumentNullException(nameof(formRecognizerValidator));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<AnalyseResponse> Handle(AnalyseRequest request, CancellationToken cancellationToken)
@@ -43,7 +46,8 @@ public static class AnalyseHandler
             //   (for some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves)
             OcrViolationTicket violationTicket = _formRegognizerService.Map(result);
 
-            // TODO: validate violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
+            // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
+            _formRecognizerValidator.ValidateViolationTicket(violationTicket);
 
             AnalyseResponse response = new AnalyseResponse();
             response.OcrViolationTicket = violationTicket;
