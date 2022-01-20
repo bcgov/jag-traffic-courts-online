@@ -74,13 +74,22 @@ public static class Startup
 
         Dictionary<string, List<string>> errors = new();
 
-        // RabbitMQ
-        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Host)) AddError(errors, "RabbitMQ", "Host is not configured");
-        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Username)) AddError(errors, "RabbitMQ", "Username is not configured");
-        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Password)) AddError(errors, "RabbitMQ", "Password is not configured");
-
         // MassTransit
-        if (configuration?.MassTransit?.Transport is null) AddError(errors, "MassTransit", "Transport is not configured");
+        if (configuration?.MassTransit?.Transport is null)
+        {
+            AddError(errors, "MassTransit", "Transport is not configured");
+        }
+        else
+        {
+            var transport = configuration.MassTransit.Transport;
+            if (transport == MassTransitTransport.RabbitMQ)
+            {
+                // RabbitMQ
+                if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Host)) AddError(errors, "RabbitMQ", "Host is not configured");
+                if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Username)) AddError(errors, "RabbitMQ", "Username is not configured");
+                if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Password)) AddError(errors, "RabbitMQ", "Password is not configured");
+            }
+        }
 
         // FormRecognizer
         if (string.IsNullOrEmpty(configuration?.FormRecognizer?.ApiKey)) AddError(errors, "FormRecognizer", "ApiKey not specified");
@@ -123,7 +132,6 @@ public static class Startup
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
-
     }
 
     /// <summary>
