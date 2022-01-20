@@ -18,9 +18,13 @@ public class FieldMatchesRegexRule : ValidationRule
 
     public override void Run()
     {
-        if (_field is null || _field.Value is null)
+        if (_field is null)
         {
-            ValidationErrors.Add(FieldIsBlankError);
+            ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, "Field"));
+        }
+        else if (_field.Value is null)
+        {
+            ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, _field.Name));
         }
         else if (!Regex.IsMatch(_field.Value, _pattern))
         {

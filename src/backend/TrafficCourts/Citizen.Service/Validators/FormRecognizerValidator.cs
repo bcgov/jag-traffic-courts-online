@@ -19,20 +19,20 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         List<ValidationRule> rules = new List<ValidationRule>();
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], TicketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], ViolationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
-        // TODO: Add OnlyMCAIsSelectedRule
+        rules.Add(new OnlyMCAIsSelectedRule(violationTicket));
         // TODO: Add ViolationDateLT30Rule
 
         // Run each rule and aggregate the results
         rules.ForEach(_ =>
         {
             _.Run();
-            violationTicket.ValidationErrors.AddRange(_.ValidationErrors);
+            violationTicket.GlobalValidationErrors.AddRange(_.ValidationErrors);
         });
 
         // drop global Confidence to 0 if this does not appear to be a valid ticket
-        if (violationTicket.ValidationErrors.Count > 0)
+        if (violationTicket.GlobalValidationErrors.Count > 0)
         {
-            violationTicket.Confidence = 0f;
+            violationTicket.GlobalConfidence = 0f;
         }
     }
 }
