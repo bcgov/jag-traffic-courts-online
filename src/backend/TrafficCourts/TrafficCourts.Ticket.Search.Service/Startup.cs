@@ -1,6 +1,7 @@
 ﻿using Calzolari.Grpc.AspNetCore.Validation;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Refit;
+using Serilog;
 using System.Configuration;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
@@ -21,8 +22,11 @@ namespace TrafficCourts.Ticket.Search.Service
         {
             ArgumentNullException.ThrowIfNull(builder);
 
+            Serilog.ILogger logger = GetLogger();
+
             builder.Configuration.Add<TicketSearchServiceConfigurationProvider>();
 
+            logger.Debug("Configuring Serilog logging");
             builder.UseSerilog<TicketSearchServiceConfiguration>(); // configure logging
 
             var configuration = builder.Configuration.Get<TicketSearchServiceConfiguration>();
@@ -30,18 +34,19 @@ namespace TrafficCourts.Ticket.Search.Service
             if (configuration == null || configuration.TicketSearch == null || !configuration.TicketSearch.IsValid())
             {
                 const string message = "Ticket Search configuration is not configured correctly, check the TicketSearch section";
-                Serilog.Log.Logger.Error(message);
+                logger.Error(message);
                 throw new ConfigurationErrorsException(message);
             }
 
             builder.Services.AddSingleton(configuration.TicketSearch);
-            
-            //builder.Services.AddOpenTelemetryMetrics();
 
+            //builder.Services.AddOpenTelemetryMetrics();
+            logger.Debug("Adding health checks");
             AddHealthChecks(builder, configuration);
 
             if (configuration.TicketSearch.SearchType == TicketSearchType.RoadSafety)
             {
+                logger.Information("Using RSI ticket search service");
                 builder.Services.AddHttpClient<AuthenticationClient>(client =>
                 {
                     client.BaseAddress = configuration.TicketSearch.AuthenticationUrl.BaseAddress();
@@ -59,26 +64,28 @@ namespace TrafficCourts.Ticket.Search.Service
 
                 builder.Services.AddTransient<ITicketSearchService, RoadSafetyTicketSearchService>();
                 builder.Services.AddTransient<ITokenCache, TokenCache>();
-
-                //builder.Services.AddHostedService<AccessTokenUpdateWorker>();
-
             }
             else
             {
+                logger.Information("Using mock ticket search service");
+
                 builder.Services.AddTransient<ITicketSearchService, MockTicketSearchService>();
 
                 // if a valid data file has been configured, use that, otherwise use the embedded data
                 if (FileMockDataProvider.HasValidConfiguration(builder.Configuration))
                 {
+                    logger.Information("Using file mock ticket data");
                     builder.Services.AddTransient<IMockDataProvider, FileMockDataProvider>();
                 }
                 else
                 {
+                    logger.Information("Using embedded mock ticket data");
                     builder.Services.AddTransient<IMockDataProvider, EmbeddedMockDataProvider>();
                 }
             }
 
             // Add services to the container.
+            logger.Debug("Configuring services");
             builder.Services.AddGrpc(options =>
             {
                 options.EnableMessageValidation();
@@ -88,6 +95,8 @@ namespace TrafficCourts.Ticket.Search.Service
             builder.Services.AddValidator<SearchRequestValidator>();
 
             builder.Services.AddMemoryCache();
+
+            logger.Debug("Adding OpenShift integration");
 
             builder.UseOpenShiftIntegration(_ => _.CertificateMountPoint = "/var/run/secrets/service-cert");
 
@@ -106,6 +115,22 @@ namespace TrafficCourts.Ticket.Search.Service
             {
                 healthChecksBuilder.AddCheck<AccessTokenAvailableHealthCheck>("access-token-available", failureStatus: HealthStatus.Unhealthy, tags: new[] { HealthCheckType.Readiness });
             }
+        }
+
+
+        /// <summary>
+        /// Gets a logger for application setup.
+        /// </summary>
+        /// <returns></returns>
+        private static Serilog.ILogger GetLogger()
+        {
+            var logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Debug()
+                .CreateLogger();
+
+            return logger;
         }
     }
 }

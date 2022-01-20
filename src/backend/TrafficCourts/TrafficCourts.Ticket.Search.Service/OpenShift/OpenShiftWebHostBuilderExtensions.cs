@@ -14,6 +14,7 @@ public static class OpenShiftWebHostBuilderExtensions
 
         if (PlatformEnvironment.IsOpenShift)
         {
+            // Clear the urls. We'll explicitly configure Kestrel depending on the options.
             builder.WebHost.UseUrls();
 
             builder.WebHost.ConfigureServices(services =>

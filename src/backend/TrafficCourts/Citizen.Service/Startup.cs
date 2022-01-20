@@ -53,6 +53,7 @@ public static class Startup
     private static ILogger GetLogger()
     {
         var logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
             .WriteTo.Console()
             .WriteTo.Debug()
             .CreateLogger();
