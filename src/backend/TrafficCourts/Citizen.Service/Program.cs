@@ -1,4 +1,4 @@
-using TrafficCourts.Citizen.Service.Configuration;
+using TrafficCourts.Citizen.Service;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
