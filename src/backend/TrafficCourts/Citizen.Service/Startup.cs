@@ -9,10 +9,11 @@ using MediatR;
 using TrafficCourts.Common.Configuration;
 using ILogger = Serilog.ILogger;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Citizen.Service.Configuration;
 
-namespace TrafficCourts.Citizen.Service.Configuration;
+namespace TrafficCourts.Citizen.Service;
 
-public static class ConfigurationExtensions
+public static class Startup
 {
     /// <summary>
     /// 
@@ -42,7 +43,7 @@ public static class ConfigurationExtensions
         Configure(builder, configuration?.TicketSearchClient, logger);
 
         // add MediatR handlers in this program
-        builder.Services.AddMediatR(typeof(ConfigurationExtensions).Assembly);
+        builder.Services.AddMediatR(typeof(Startup).Assembly);
     }
 
     /// <summary>
@@ -165,14 +166,16 @@ public static class ConfigurationExtensions
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
 
+        ChannelCredentials credentials = configuration.Secure ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure;
+        string address = configuration.Address;
+
+        logger.Information("Configuring ticket search to use {Address} with {CredentialType}", address, configuration.Secure ? "secure" : "insecure");
 
         builder.Services.AddSingleton(services =>
         {
-            var address = configuration.Address;
-
             var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
             {
-                Credentials = ChannelCredentials.Insecure,
+                Credentials = credentials,
                 ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
                 ServiceProvider = services
             });
