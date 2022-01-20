@@ -16,8 +16,10 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./dispute-submit-success.component.scss'],
 })
 export class DisputeSubmitSuccessComponent implements OnInit {
+  debugger
   public busy: Subscription;
   public ticket: TicketDisputeView;
+  public countList:any;
   public readonly changeOfAddressURL: string =
     'https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr805.pdf?forcedownload=true';
   public readonly whatToExpectURL: string =
@@ -39,6 +41,9 @@ export class DisputeSubmitSuccessComponent implements OnInit {
       }
 
       this.ticket = ticket;
+      if(ticket && ticket.countList){
+          this.countList = ticket.countList;
+      }
     });
   }
 

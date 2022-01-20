@@ -50,6 +50,8 @@ import { CountItemDisputeSummaryComponent } from './components/count-item-disput
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CdkAccordionModule} from '@angular/cdk/accordion';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { FormsModule } from '@angular/forms';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -96,6 +98,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     MatStepperModule,
     CdkAccordionModule,
+    NgxMaterialTimepickerModule,
+    FormsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

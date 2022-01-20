@@ -6,9 +6,9 @@
     </ng-container>
   </app-page-header>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+  <form (ngSubmit)="onSubmit()" name = 'check-form-uni' novalidate>
     <div *ngFor="let item of isShowCheckbox | keyvalue;index as i">
-      
+     
       <div *ngFor="let item1 of item.value | keyvalue;index as i1">
         <div *ngIf="item1.value === true">
           <div *ngIf="i1 === 1">Count: {{i+1}}</div>
@@ -21,7 +21,7 @@
                 <mat-label *ngIf="item1.key === 'reductionAppearInCourtDoNot'">
                   Please enter your reasons for why you are requesting time to pay.
                 </mat-label>
-                <input matInput formControlName="reductionReason" [(ngModel)]='newObj[item.key][item1.key]'/>
+                <input matInput name = '{{item.key+item1.key}}' [(ngModel)]='newObj[item.key][item1.key]'/>
                 <mat-error *ngIf="(reductionReason.dirty ||
                     reductionReason.touched) &&
                     reductionReason.invalid &&
@@ -31,9 +31,12 @@
                
               </mat-form-field>
             </div>
+
           </div>
+          
         </div>
       </div>
+      
     </div>
 
     <section *ngIf="isCourtRequired.value">
@@ -42,7 +45,7 @@
       </h3>
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="lawyerPresent">
+          <mat-checkbox class="me-4 mb-2" color="primary" name= "lawyerPresent" [(ngModel)]='dispute["lawyerPresent"]' >
             I intend to be represented by a lawyer in court.
           </mat-checkbox>
         </div>
@@ -50,7 +53,7 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" formControlName="interpreterRequired">
+          <mat-checkbox class="me-4 mb-2" color="primary" name= "interpreterRequired" [(ngModel)]='dispute["interpreterRequired"]'>
             I require a language interpreter at the hearing.
           </mat-checkbox>
           <mat-error *ngIf="interpreterRequired.hasError('requiredIfTrue')">
@@ -59,13 +62,13 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="interpreterRequired.value">
+      <div class="row" *ngIf="dispute['interpreterRequired']">
         <div class="col">
           <mat-form-field>
             <mat-label>{{
               "stepper.additional.interpreter_language" | translate
               }}</mat-label>
-            <mat-select formControlName="interpreterLanguage">
+            <mat-select name= "interpreterLanguage"  [(ngModel)]='dispute["interpreterLanguage"]'>
               <mat-option *ngFor="let language of languages" [value]="language.code">
                 {{ language.name }}
               </mat-option>
@@ -79,17 +82,17 @@
 
       <div class="row">
         <div class="col">
-          <mat-checkbox class="me-4 mb-2" color="primary" formControlName="witnessPresent" (change)="onChangeCallWitnesses($event)">
+          <mat-checkbox class="me-4 mb-2" color="primary"  name= "witnessPresent" [(ngModel)]='dispute["witnessPresent"]' >
             I intend to call a witness(es).
           </mat-checkbox>
         </div>
       </div>
 
-      <div class="row" *ngIf="witnessPresent.value">
+      <div class="row" *ngIf="dispute['witnessPresent']">
         <div class="col">
           <mat-form-field class="pe-4">
             <mat-label>Number of witnesses</mat-label>
-            <mat-select (selectionChange)="customWitnessOption = false" formControlName="numberOfWitnesses">
+            <mat-select (selectionChange)="customWitnessOption = false" name= "numberOfWitnesses" [(ngModel)]='dispute["numberOfWitnesses"]'>
               <mat-option [value]=1>1</mat-option>
               <mat-option [value]=2>2</mat-option>
               <mat-option [value]=3>3</mat-option>
@@ -103,7 +106,7 @@
           </mat-form-field>
           <mat-form-field *ngIf="customWitnessOption">
             <mat-label>Number of witnesses</mat-label>
-            <input matInput type="number" min="0" step="1" formControlName="numberOfWitnesses" />
+            <input matInput type="number" min="0" step="1" name ="numberOfWitnesses" [(ngModel)]='dispute["numberOfWitnesses"]' />
             <mat-error *ngIf="numberOfWitnesses.hasError('required')">
               {{ "error.required" | translate }}
             </mat-error>
@@ -114,7 +117,7 @@
         </div>
       </div>
 
-      <div class="col" *ngIf="witnessPresent.value">
+      <div class="col" *ngIf="dispute['witnessPresent']">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
             <strong>If you are calling a witness please keep the following information in
@@ -126,7 +129,7 @@
           </ng-container>
         </app-alert>
       </div>
-      <div class="col" *ngIf="lawyerPresent.value">
+      <div class="col" *ngIf="dispute['lawyerPresent']">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
             <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to submitting your Notice of Dispute. The lawyer’s schedule will have to be considered when a date is set for your hearing and many lawyers are not available on short notice.<br />
@@ -134,14 +137,14 @@
           </ng-container>
         </app-alert>
       </div>
-      <div class="col" *ngIf="interpreterRequired.value">
+      <div class="col" *ngIf="dispute['interpreterRequired']">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
             <strong>The court also provides visual language interpreters (American Sign Language) and CART (Communication Access Realtime Translation - captioning services) for any court proceeding.</strong>
           </ng-container>
         </app-alert>
       </div>
-      <div class="col" *ngIf="witnessPresent.value">
+      <div class="col" *ngIf="dispute['witnessPresent']">
         <app-alert type="warning" icon="warning">
           <ng-container #alertContent class="alert-content">
             <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing date and know the expectations of attending court.</strong>
@@ -149,6 +152,8 @@
         </app-alert>
       </div>
     </section>
+
+    
 
     <section *ngIf="!isReductionRequired.value && !isCourtRequired.value">
       <div class="col">

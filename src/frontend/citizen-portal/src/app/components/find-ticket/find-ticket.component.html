@@ -12,10 +12,10 @@
           [attr.aria-controls]="'accordion-body'">
           <div class="subheader-desc" (click)="accordionItem.toggle()">
             Ask for fine reductions or time to pay, or dispute your ticket.
-              <strong> . Enter your ticket number and time, or upload an
+              <strong>Enter your ticket number and time, or upload an
                 image of your ticket to begin.</strong>
             <span class="text-primary ms-3">
-              {{ accordionItem.expanded ? ' - Hide information' : ' + See more information' }}
+              {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
             </span>
           </div>
           <div
@@ -68,9 +68,10 @@
   <div class="row d-sm-block d-md-block d-lg-none">
     <div class="col my-3">
       <button type="button"
-              mat-flat-button
+              mat-raised-button
+              disabled
               color="primary"
-              class="find-large"
+              class="find-xlarge"
               (click)="fileInput.click()">
         <mat-icon class="me-2">photo_camera</mat-icon>
         Upload photo of ticket
@@ -120,17 +121,30 @@
           </div>
 
           <div class="row">
-            <div class="col">
-              <mat-form-field class="w-100">
+            <div class="col time-picker">
+              <div class='time-picker-wrapper'>
                 <mat-label>Enter violation time</mat-label>
-               
+                <!-- <div class="toggle-example">
+                  <input class='time-picker-input' [ngxTimepicker]="toggleTimepicker" placeholder="--:--" [format]="24" formControlName="time">
+                  <ngx-material-timepicker-toggle [for]="toggleTimepicker"></ngx-material-timepicker-toggle>
+                  <ngx-material-timepicker #toggleTimepicker></ngx-material-timepicker>
+                </div> -->
+                <div class="ngx-timepicker-field-example">
+                  <ngx-timepicker-field [format]="24" placeholder="--:--" formControlName="time"></ngx-timepicker-field>
+              </div>
+              </div>
+              
+           
+              <!-- <mat-form-field class="w-100">
+                <mat-label>Enter violation time</mat-label>
+              
                 <input matInput
                        type="time"
                        value="22:00"
                        timeformat = "24h"
                        formControlName="time" />
                 <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
+              </mat-form-field> -->
             </div>
           </div>
 
@@ -176,7 +190,8 @@
       <div class="row">
         <div class="col">
           <button type="button"
-                  mat-flat-button
+                  mat-raised-button
+                  disabled
                   color="primary"
                   class="find-xlarge"
                   (click)="fileInput.click()">

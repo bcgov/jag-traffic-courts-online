@@ -8,6 +8,8 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ConfigService } from '@config/config.service';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+
 
 import { FindTicketComponent } from './find-ticket.component';
 
@@ -25,6 +27,7 @@ describe('FindTicketComponent', () => {
         ReactiveFormsModule,
         NgxMaterialModule,
         CdkAccordionModule,
+        NgxMaterialTimepickerModule,
         TranslateModule.forRoot(),
       ],
       declarations: [FindTicketComponent],
