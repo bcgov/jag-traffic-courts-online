@@ -10,6 +10,45 @@ public class FormRecognizerService : IFormRecognizerService
     private readonly string _apiKey;
     private readonly Uri _endpoint;
 
+    // A mapping list of fields extracted from Azure Form Recognizer and their equivalent JSON name
+    private readonly static Dictionary<string, string> FieldLabels = new Dictionary<string, string>()
+    {
+        { "Violation Ticket Label",     OcrViolationTicket.ViolationTicketTitle },
+        { "Violation Ticket Number",    OcrViolationTicket.ViolationTicketNumber },
+        { "Surname",                    OcrViolationTicket.Surname },
+        { "Given Name",                 OcrViolationTicket.GivenName },
+        { "Drivers Licence Number",     OcrViolationTicket.DriverLicenceNumber },
+        { "Violation Date",             OcrViolationTicket.ViolationDate },
+        { "Violation Time",             OcrViolationTicket.ViolationTime },
+        { "Offense is MVA",             OcrViolationTicket.OffenseIsMVA },
+        { "Offense is MCA",             OcrViolationTicket.OffenseIsMCA },
+        { "Offense is CTA",             OcrViolationTicket.OffenseIsCTA },
+        { "Offense is WLA",             OcrViolationTicket.OffenseIsWLA },
+        { "Offense is FAA",             OcrViolationTicket.OffenseIsFAA },
+        { "Offense is LCA",             OcrViolationTicket.OffenseIsLCA },
+        { "Offense is TCR",             OcrViolationTicket.OffenseIsTCR },
+        { "Offense is Other",           OcrViolationTicket.OffenseIsOther },
+        { "Count 1 Description",        OcrViolationTicket.Count1Description },
+        { "Count 1 Act/Regs",           OcrViolationTicket.Count1ActRegs },
+        { "Count 1 Is ACT",             OcrViolationTicket.Count1IsACT },
+        { "Count 1 Is REGS",            OcrViolationTicket.Count1IsREGS },
+        { "Count 1 Section",            OcrViolationTicket.Count1Section },
+        { "Count 1 Ticket Amount",      OcrViolationTicket.Count1TicketAmount },
+        { "Count 2 Description",        OcrViolationTicket.Count2Description },
+        { "Count 2 Act/Regs",           OcrViolationTicket.Count2ActRegs },
+        { "Count 2 Is ACT",             OcrViolationTicket.Count2IsACT },
+        { "Count 2 Is REGS",            OcrViolationTicket.Count2IsREGS },
+        { "Count 2 Section",            OcrViolationTicket.Count2Section },
+        { "Count 2 Ticket Amount",      OcrViolationTicket.Count2TicketAmount },
+        { "Count 3 Description",        OcrViolationTicket.Count3Description },
+        { "Count 3 Act/Regs",           OcrViolationTicket.Count3ActRegs },
+        { "Count 3 Is ACT",             OcrViolationTicket.Count3IsACT },
+        { "Count 3 Is REGS",            OcrViolationTicket.Count3IsREGS },
+        { "Count 3 Section",            OcrViolationTicket.Count3Section },
+        { "Count 3 Ticket Amount",      OcrViolationTicket.Count3TicketAmount },
+        { "Detachment Location",        OcrViolationTicket.DetachmentLocation }
+    };
+
     public FormRecognizerService(String apiKey, Uri endpoint, ILogger<FormRecognizerService> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -42,10 +81,9 @@ public class FormRecognizerService : IFormRecognizerService
                 foreach (KeyValuePair<String, DocumentField> pair in document.Fields)
                 {
                     // Only map fields of interest
-                    if (pair.Key is not null && OcrViolationTicket.FIELDS.Contains<string>(pair.Key))
+                    if (pair.Key is not null && FieldLabels.Keys.Contains<string>(pair.Key))
                     {
                         OcrViolationTicket.Field field = new OcrViolationTicket.Field();
-                        field.Name = pair.Key;
                         field.Value = pair.Value.Content;
                         field.Confidence = pair.Value.Confidence;
                         field.Type = Enum.GetName(pair.Value.ValueType);
@@ -59,7 +97,7 @@ public class FormRecognizerService : IFormRecognizerService
                             field.BoundingBoxes.Add(boundingBox);
                         }
 
-                        violationTicket.Fields.Add(field);
+                        violationTicket.Fields.Add(FieldLabels[pair.Key], field);
                     }
                 }
             }
