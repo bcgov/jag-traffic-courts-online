@@ -51,7 +51,7 @@ namespace TrafficCourts.Common.Configuration
                     splunkHost: splunk.Url,
                     eventCollectorToken: splunk.Token,
                     sourceType: typeof(TConfiguration).Assembly?.GetName()?.Name,
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
+                    //restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Information,
                     messageHandler: handler);
             });
         }
