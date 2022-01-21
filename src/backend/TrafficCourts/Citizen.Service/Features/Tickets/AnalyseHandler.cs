@@ -20,7 +20,11 @@ public static class AnalyseHandler
 
     public class AnalyseResponse
     {
-        public OcrViolationTicket? OcrViolationTicket { get; set; }
+        public AnalyseResponse(OcrViolationTicket violationTicket) {
+            OcrViolationTicket = violationTicket;
+        }
+
+        public OcrViolationTicket OcrViolationTicket { get; set; }
     }
 
     public class Handler : IRequestHandler<AnalyseRequest, AnalyseResponse>
@@ -49,8 +53,7 @@ public static class AnalyseHandler
             // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
             _formRecognizerValidator.ValidateViolationTicket(violationTicket);
 
-            AnalyseResponse response = new AnalyseResponse();
-            response.OcrViolationTicket = violationTicket;
+            AnalyseResponse response = new AnalyseResponse(violationTicket);
             return response;
         }
     }
