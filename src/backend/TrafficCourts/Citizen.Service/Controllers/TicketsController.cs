@@ -3,11 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
+using Microsoft.OpenApi.Models;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
 
     [ApiController]
+    [Route("api/[controller]")]
     public class TicketsController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -5,6 +5,7 @@ using System.Net;
 namespace TrafficCourts.Citizen.Service.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class DisputeController : ControllerBase
     {
         private readonly IMediator _mediator;
