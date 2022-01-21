@@ -60,14 +60,14 @@ namespace TrafficCourts.Citizen.Service.Controllers
         {
             AnalyseHandler.AnalyseRequest request = new AnalyseHandler.AnalyseRequest(image);
             AnalyseHandler.AnalyseResponse response = await _mediator.Send(request, cancellationToken);
-            if (response.OcrViolationTicket.ValidationErrors.Count > 0)
+            if (response.OcrViolationTicket.GlobalValidationErrors.Count > 0)
             {
                 string? detail = "";
                 string? instance = null;
                 int? statusCode = (int)HttpStatusCode.BadRequest;
                 string? title = "Violation Ticket is not valid or could not be read.";
                 string? type = null;
-                response.OcrViolationTicket.ValidationErrors.ForEach(_ => detail += _ + " ");
+                response.OcrViolationTicket.GlobalValidationErrors.ForEach(_ => detail += _ + " ");
 
                 // Return BadRequest 
                 // - if the image is not an image of a TrafficViolation (could not read title)
