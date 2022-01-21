@@ -1,6 +1,6 @@
 <app-page [busy]="busy">
   <app-tco-page-header>
-    <ng-container header>British Columbia ticket resolution</ng-container>
+    <ng-container header>British Columbia Ticket Resolution</ng-container>
     <ng-container subHeader>
       <cdk-accordion>
         <cdk-accordion-item
@@ -14,8 +14,9 @@
             Ask for fine reductions or time to pay, or dispute your ticket.
               <strong>Enter your ticket number and time, or upload an
                 image of your ticket to begin.</strong>
-            <span class="text-primary ms-3">
+            <span class="text-primary ms-3"><u>
               {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
+            </u>
             </span>
           </div>
           <div
@@ -29,8 +30,7 @@
                 <ng-container #alertContent
                               class="alert-content">
                               The types of tickets you can resolve are:
-                              <br>
-                              <ul>
+                              <ul class="mt-3">
                                 <li>
                                   <b>Handwritten tickets(start with A):</b> upload an image or take photo of your ticket to create your online ticket.
                                 </li>
@@ -66,15 +66,15 @@
 
   <!-- MOBILE VIEW -->
   <div class="row d-sm-block d-md-block d-lg-none">
+    <h3 class="text-dark"><strong>If your ticket number starts with A:</strong></h3>
     <div class="col my-3">
       <button type="button"
               mat-raised-button
-              disabled
               color="primary"
               class="find-xlarge"
               (click)="fileInput.click()">
         <mat-icon class="me-2">photo_camera</mat-icon>
-        Upload photo of ticket
+        Upload ticket image
       </button>
     </div>
     <div class="row">
@@ -97,11 +97,13 @@
               (ngSubmit)="onSearch()"
               novalidate>
           <div class="row">
+            <h3 class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></h3>
+
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Enter violation ticket number</mat-label>
                 <input formControlName="ticketNumber"
-                       placeholder="A ticket number is 2 letters and 8 numbers"
+                       placeholder="XX-00000000"
                        matInput
                        type="text"
                        oninput="this.value =
@@ -130,7 +132,7 @@
                   <ngx-material-timepicker #toggleTimepicker></ngx-material-timepicker>
                 </div> -->
                 <div class="ngx-timepicker-field-example">
-                  <ngx-timepicker-field [format]="24" placeholder="--:--" formControlName="time"></ngx-timepicker-field>
+                  <ngx-timepicker-field [format]="24" formControlName="time"></ngx-timepicker-field>
               </div>
               </div>
               
@@ -188,15 +190,16 @@
         </div>
       </div>
       <div class="row">
+        <h3 class="text-dark px-5"><strong>If your ticket number starts with A:</strong></h3>
+
         <div class="col">
           <button type="button"
                   mat-raised-button
-                  disabled
                   color="primary"
                   class="find-xlarge"
                   (click)="fileInput.click()">
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
-            Upload photo of ticket
+            Upload ticket image
           </button>
 
           <input hidden

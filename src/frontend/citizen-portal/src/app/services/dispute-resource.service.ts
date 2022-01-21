@@ -274,8 +274,8 @@ export class DisputeResourceService {
         offenceStatus = 'Owe';
         offenceStatusDesc = 'Balance outstanding';
       } else {
-        offenceStatus = 'Paid';
-        offenceStatusDesc = 'Paid';
+        offenceStatus = 'Active';
+        offenceStatusDesc = 'Active';
       }
     }
 
