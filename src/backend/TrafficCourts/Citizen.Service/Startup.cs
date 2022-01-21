@@ -38,13 +38,20 @@ public static class Startup
 
         ValidateConfiguration(configuration, logger); // throws ConfigurationErrorsException if configuration has issues
 
-        Configure(builder, configuration?.RabbitMQ, logger);
+        if (configuration.RabbitMQ is not null)
+        {
+            Configure(builder, configuration.RabbitMQ, logger);
+        }
+
         Configure(builder, configuration?.MassTransit, logger);
         Configure(builder, configuration?.FormRecognizer, logger);
         Configure(builder, configuration?.TicketSearchClient, logger);
 
         // add MediatR handlers in this program
         builder.Services.AddMediatR(typeof(Startup).Assembly);
+
+        // use lowercase routes
+        builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
     /// <summary>
@@ -139,11 +146,15 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
-    private static void Configure(WebApplicationBuilder builder, MassTransitConfigurationProperties configuration, ILogger logger)
+    private static void Configure(WebApplicationBuilder builder, MassTransitConfigurationProperties? configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
+
+        if (configuration is null)
+        {
+            return;
+        }
 
         builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
     }
@@ -153,16 +164,21 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
-    private static void Configure(WebApplicationBuilder builder, FormRecognizerConfigurationOptions configuration, ILogger logger)
+    private static void Configure(WebApplicationBuilder builder, FormRecognizerConfigurationOptions? configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
+
+        if (configuration is null)
+        {
+            return;
+        }
 
         builder.Services.AddSingleton<IFormRecognizerService>(service => {
             var logger = service.GetRequiredService<ILogger<FormRecognizerService>>();
             return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, logger);
-        }); 
+        });
+
         builder.Services.AddSingleton<IFormRecognizerValidator, FormRecognizerValidator>();
     }
 
@@ -171,11 +187,15 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
-    private static void Configure(WebApplicationBuilder builder, TicketSearchServiceConfigurationProperties configuration, ILogger logger)
+    private static void Configure(WebApplicationBuilder builder, TicketSearchServiceConfigurationProperties? configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
+
+        if (configuration is null)
+        {
+            return;
+        }
 
         ChannelCredentials credentials = configuration.Secure ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure;
         string address = configuration.Address;
