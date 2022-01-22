@@ -61,7 +61,9 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
             public Response(SearchReply reply)
             {
                 ArgumentNullException.ThrowIfNull(reply);
-                if (reply.ViolationTicketNumber is null) throw new ArgumentException("Search reply does not contain a voilation ticket", nameof(reply));
+                if (reply.ViolationTicketNumber is null) throw new ArgumentException("Search reply does not contain a violation ticket", nameof(reply));
+                if (reply.ViolationDate is null) throw new ArgumentException("Search reply does not contain a violation date", nameof(reply));
+                if (reply.ViolationTime is null) throw new ArgumentException("Search reply does not contain a violation time", nameof(reply));
 
                 TicketSearchResult ticketSearchResult = new()
                 {
