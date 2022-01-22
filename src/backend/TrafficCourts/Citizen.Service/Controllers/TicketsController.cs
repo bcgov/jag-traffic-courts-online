@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models;
 using TrafficCourts.Citizen.Service.Models.Search;
+using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
@@ -101,19 +102,28 @@ namespace TrafficCourts.Citizen.Service.Controllers
         }
 
         [HttpPost("analyse")]
-        [ProducesResponseType(typeof(Search.Response), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(Search.Response), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(OcrViolationTicket), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [DisableRequestSizeLimit]
         public async Task<IActionResult> AnalyseAsync([Required] IFormFile image, CancellationToken cancellationToken)
         {
             AnalyseHandler.AnalyseRequest request = new AnalyseHandler.AnalyseRequest(image);
             AnalyseHandler.AnalyseResponse response = await _mediator.Send(request, cancellationToken);
-            if (response.OcrViolationTicket is null)
+            if (response.OcrViolationTicket.GlobalValidationErrors.Count > 0)
             {
+                string? detail = "";
+                string? instance = null;
+                int? statusCode = (int)HttpStatusCode.BadRequest;
+                string? title = "Violation Ticket is not valid or could not be read.";
+                string? type = null;
+                response.OcrViolationTicket.GlobalValidationErrors.ForEach(_ => detail += _ + " ");
+
                 // Return BadRequest 
-                // - if the image is not an image of a TrafficViolation
-                // - if the TicketNumber could not be extracted
-                return BadRequest();
+                // - if the image is not an image of a TrafficViolation (could not read title)
+                // - if the TicketNumber could not be extracted or is invalid (ie doesn't start with an A)
+                // - if MVA is not the only checkbox selected under the 'Did commit the offence(s) indicated' section
+                // - if ViolationDate is > 30 days ago
+                return Problem(detail, instance, statusCode, title, type);
             }
             return Ok(response.OcrViolationTicket);
         }

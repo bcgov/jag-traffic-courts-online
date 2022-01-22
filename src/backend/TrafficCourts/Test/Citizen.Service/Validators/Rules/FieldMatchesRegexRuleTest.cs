@@ -44,6 +44,7 @@ public class FieldMatchesRegexRuleTest
     {
         // Given
         Field field = new Field();
+        field.Name = "Field";
         field.Value = null;
         FieldMatchesRegexRule rule = new FieldMatchesRegexRule(field, "AAAA", "Field is blank");
 

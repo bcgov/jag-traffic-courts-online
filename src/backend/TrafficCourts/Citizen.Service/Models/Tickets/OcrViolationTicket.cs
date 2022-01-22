@@ -47,28 +47,68 @@ public class OcrViolationTicket
     /// A global confidence of correctly extracting the document. This value will be low if the title of this 
     /// Violation Ticket form is not found (or of low confidence itself) or if the main ticket number is missing or invalid.
     /// </summary>
-    public float Confidence { get; set; }
+    public float GlobalConfidence { get; set; }
 
     /// <summary>
     /// A list of global reasons why the global Confidence may be low (ie, missing ticket number, not a Violation Ticket, etc.)
     /// </summary>
-    public List<string> ValidationErrors { get; set; } = new List<string>();
+    public List<string> GlobalValidationErrors { get; set; } = new List<string>();
 
     /// <summary>
     /// An enumeration of all fields in this Violation Ticket.
     /// </summary>
     public Dictionary<string, Field> Fields { get; set; } = new Dictionary<string, Field>();
 
+    /// <summary>
+    /// Helper method to return the given field from the Fields Dictionary (workaround for KeyNotFoundException).
+    /// </summary>
+    public Field? GetField(string fieldName) {
+        Field? field;
+        if (Fields.TryGetValue(fieldName, out field)) {
+            return field;
+        }
+        else {
+            return null;
+        }
+    }
+
     public class Field
     {
+        public Field() {}
+
+        public Field(String? value) {
+            Value = value;
+        }
+
+        [JsonIgnore]
+        public String? Name { get; set; }
+
         public String? Value { get; set; }
-        public float? Confidence { get; set; }
+
+        public float? FieldConfidence { get; set; }
+
         /// <summary>
         /// A list of field-specific reasons why the field Confidence may be low
         /// </summary>
-        public List<string> Validation { get; set; } = new List<string>();
+        public List<string> FieldValidationErrors { get; set; } = new List<string>();
+
         public String? Type { get; set; }
+
         public List<BoundingBox> BoundingBoxes { get; set; } = new List<BoundingBox>();
+
+        /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
+        public bool? IsCheckboxSelected()
+        {
+            if (Value?.Equals("selected") ?? false)
+            {
+                return true;
+            }
+            if (Value?.Equals("unselected") ?? false)
+            {
+                return false;
+            }
+            return null;
+        }
     }
 
     public class BoundingBox

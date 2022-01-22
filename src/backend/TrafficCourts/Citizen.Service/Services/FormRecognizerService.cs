@@ -74,7 +74,7 @@ public class FormRecognizerService : IFormRecognizerService
         OcrViolationTicket violationTicket = new OcrViolationTicket();
         foreach (AnalyzedDocument document in result.Documents)
         {
-            violationTicket.Confidence = document.Confidence;
+            violationTicket.GlobalConfidence = document.Confidence;
 
             if (document.Fields is not null)
             {
@@ -84,8 +84,9 @@ public class FormRecognizerService : IFormRecognizerService
                     if (pair.Key is not null && FieldLabels.Keys.Contains<string>(pair.Key))
                     {
                         OcrViolationTicket.Field field = new OcrViolationTicket.Field();
+                        field.Name = pair.Key;
                         field.Value = pair.Value.Content;
-                        field.Confidence = pair.Value.Confidence;
+                        field.FieldConfidence = pair.Value.Confidence;
                         field.Type = Enum.GetName(pair.Value.ValueType);
                         foreach (BoundingRegion region in pair.Value.BoundingRegions)
                         {
