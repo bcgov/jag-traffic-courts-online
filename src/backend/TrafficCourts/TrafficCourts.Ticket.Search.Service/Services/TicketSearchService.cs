@@ -34,8 +34,12 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
                 if (invoices.Count != 0)
                 {
-                    _logger.LogDebug("Found violation ticket with {OffenceCount} oOffence", invoices.Count);
+                    _logger.LogDebug("Found violation ticket with {OffenceCount} offence", invoices.Count);
                     var reply = CreateReply(request, invoices);
+
+                    using var replyScope = _logger.BeginScope(new Dictionary<string, object> { { "SearchReply", reply } });
+                    _logger.LogDebug("Search complete");
+
                     return reply;
                 }
 
