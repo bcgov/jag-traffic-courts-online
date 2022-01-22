@@ -147,6 +147,7 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
 
                     _logger.LogDebug("Searching for ticket");
                     SearchReply searchReply = await client.SearchAsync(searchResult, cancellationToken: cancellationToken);
+                    using var replyScope = _logger.BeginScope(new Dictionary<string, object> { { "SearchReply", searchReply } });
                     _logger.LogDebug("Search complete");
                     return new Response(searchReply);
                 }
