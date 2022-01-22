@@ -1,4 +1,6 @@
 using Grpc.Core;
+using System.Diagnostics;
+using System.Globalization;
 using TrafficCourts.Ticket.Search.Service.Features.Search;
 
 namespace TrafficCourts.Ticket.Search.Service.Services
@@ -30,7 +32,7 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
                 if (invoices.Count != 0)
                 {
-                    _logger.LogDebug("Found voilation ticket with {OffenceCount} offsences", invoices.Count);
+                    _logger.LogDebug("Found violation ticket with {OffenceCount} offsences", invoices.Count);
                     var reply = CreateReply(request, invoices);
                     return reply;
                 }
@@ -49,29 +51,33 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
         private SearchReply CreateReply(SearchRequest request, List<Invoice> invoices)
         {
+            Debug.Assert(invoices.Count != 0);
+
+            if (!string.IsNullOrEmpty(invoices[0].ViolationDateTime))
+            {
+                _logger.LogInformation("Violation date and time is empty");
+            }
+
             SearchReply reply = new SearchReply();
 
             reply.ViolationTicketNumber = request.Number;
 
-            if (invoices.Count != 0 && !string.IsNullOrEmpty(invoices[0].ViolationDateTime))
+            if (DateTime.TryParseExact(invoices[0].ViolationDateTime, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime violationDateTime))
             {
-                if (DateTime.TryParse(invoices[0].ViolationDateTime, out DateTime violationDateTime))
+                reply.ViolationDate = new Date
                 {
-                    reply.ViolationDate = new Date
-                    {
-                        Year = violationDateTime.Year,
-                        Month = violationDateTime.Month,
-                        Day = violationDateTime.Day,
-                    };
+                    Year = violationDateTime.Year,
+                    Month = violationDateTime.Month,
+                    Day = violationDateTime.Day,
+                };
 
-                    reply.ViolationTime = new TimeOfDay
-                    {
-                        Hour = violationDateTime.Hour,
-                        Minute = violationDateTime.Minute
-                    };
-                }
+                reply.ViolationTime = new TimeOfDay
+                {
+                    Hour = violationDateTime.Hour,
+                    Minute = violationDateTime.Minute
+                };
             }
-            
+
             foreach (var invoice in invoices)
             {
                 var offence = CreateOffence(invoice);
@@ -103,7 +109,11 @@ namespace TrafficCourts.Ticket.Search.Service.Services
             {
                 offence.DiscountAmount = (int)(Convert.ToDecimal(item.DiscountAmount) * 100);
 
-                if (!string.IsNullOrEmpty(item.ViolationDateTime))
+                if (string.IsNullOrEmpty(item.ViolationDateTime))
+                {
+
+                }
+                else
                 {
                     if (DateTime.TryParse(item.ViolationDateTime, out DateTime violationDateTime))
                     {
@@ -117,6 +127,5 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
             return offence;
         }
-
     }
 }
