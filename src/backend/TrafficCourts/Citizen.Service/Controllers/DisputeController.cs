@@ -8,8 +8,10 @@ namespace TrafficCourts.Citizen.Service.Controllers
     [Route("api/[controller]")]
     public class DisputeController : ControllerBase
     {
+#pragma warning disable IDE0052 // Remove unread private members - will be used in the future
         private readonly IMediator _mediator;
         private readonly ILogger<DisputeController> _logger;
+#pragma warning restore IDE0052 // Remove unread private members
 
         /// <summary>
         /// 
@@ -33,9 +35,10 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <returns></returns>
         [HttpPost("create")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> CreateAsync(CancellationToken cancellationToken)
+        public Task<IActionResult> CreateAsync(CancellationToken cancellationToken)
         {
-            return Ok(string.Empty);
+            IActionResult result = Ok(string.Empty);
+            return Task.FromResult(result);
         }
     }
 }
