@@ -35,7 +35,7 @@ public class FieldMatchesRegexRuleTest
         Assert.Equal(expectedErrorCount, rule.ValidationErrors.Count);
         if (expectedErrorCount > 0 && value is not null)
         {
-            Assert.True(rule.ValidationErrors[0].StartsWith("ERROR"));
+            Assert.StartsWith("ERROR", rule.ValidationErrors[0]);
         }
     }
 

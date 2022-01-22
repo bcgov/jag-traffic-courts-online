@@ -73,6 +73,7 @@ public static class Startup
     /// 
     /// </summary>
     /// <param name="configuration"></param>
+    /// <param name="logger"></param>
     /// <exception cref="ConfigurationErrorsException">Configuration is not correct.</exception>
     private static void ValidateConfiguration(CitizenServiceConfiguration configuration, ILogger logger)
     {
@@ -134,6 +135,7 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="logger"></param>
     private static void Configure(WebApplicationBuilder builder, RabbitMQConfigurationProperties configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -146,6 +148,7 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="logger"></param>
     private static void Configure(WebApplicationBuilder builder, MassTransitConfigurationProperties? configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -164,6 +167,7 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="logger"></param>
     private static void Configure(WebApplicationBuilder builder, FormRecognizerConfigurationOptions? configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -187,6 +191,7 @@ public static class Startup
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
+    /// <param name="logger"></param>
     private static void Configure(WebApplicationBuilder builder, TicketSearchServiceConfigurationProperties? configuration, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -197,21 +202,25 @@ public static class Startup
             return;
         }
 
-        ChannelCredentials credentials = configuration.Secure ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure;
         string address = configuration.Address;
+
+        if (string.IsNullOrEmpty(address))
+        {
+            throw new ConfigurationErrorsException("TicketSearchClient:Address is not configured");
+        }
+
+        ChannelCredentials credentials = configuration.Secure ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure;
 
         logger.Information("Configuring ticket search to use {Address} with {CredentialType}", address, configuration.Secure ? "secure" : "insecure");
 
         builder.Services.AddSingleton(services =>
         {
-            //var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-            //{
-            //    Credentials = credentials,
-            //    ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
-            //    ServiceProvider = services
-            //});
-
-            var channel = GrpcChannel.ForAddress(address);
+            var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
+            {
+                Credentials = credentials,
+                ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
+                ServiceProvider = services
+            });
 
             return channel;
         });
