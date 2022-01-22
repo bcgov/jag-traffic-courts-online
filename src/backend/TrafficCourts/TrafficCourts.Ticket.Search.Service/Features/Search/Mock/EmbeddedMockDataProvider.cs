@@ -10,7 +10,7 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
 
         public EmbeddedMockDataProvider(ILogger<EmbeddedMockDataProvider> logger)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public Stream? GetDataStream()

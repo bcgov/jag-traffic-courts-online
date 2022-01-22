@@ -18,7 +18,9 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
         public override async Task<SearchReply> Search(SearchRequest request, ServerCallContext context)
         {
-            var time = $"{request.Time.Hour:d2}{request.Time.Minute:d2}";
+            ArgumentNullException.ThrowIfNull(request);
+
+            var time = $"{request.Time.Hour:d2}:{request.Time.Minute:d2}";
 
             using var scope = _logger.BeginScope(new Dictionary<string, string> { { "TicketNumber", request.Number }, { "Time", time } });
 
@@ -32,7 +34,7 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
                 if (invoices.Count != 0)
                 {
-                    _logger.LogDebug("Found violation ticket with {OffenceCount} offsences", invoices.Count);
+                    _logger.LogDebug("Found violation ticket with {OffenceCount} oOffence", invoices.Count);
                     var reply = CreateReply(request, invoices);
                     return reply;
                 }

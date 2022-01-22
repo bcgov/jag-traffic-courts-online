@@ -29,11 +29,13 @@
     <Folder Include="Common\" />
     <Folder Include="Messaging\" />
     <Folder Include="Workflow.Service\" />
-    <Folder Include="Ticket.Search.Service\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
+    <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
+    <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
+    <ProjectReference Include="..\TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj" />
   </ItemGroup>
 
 </Project>
