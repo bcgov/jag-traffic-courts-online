@@ -77,19 +77,12 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
                     TicketOffence ticketOffence = new()
                     {
                         AmountDue = offence.AmountDue / 100m,
-                        DiscountAmount = offence.DiscountAmount / 100m,
                         OffenceDescription = offence.OffenceDescription,
                         VehicleDescription = offence.VehicleDescription,
                         OffenceNumber = offence.OffenceNumber,
                         TicketedAmount = offence.TicketedAmount / 100m,
                         InvoiceType = offence.InvoiceType
                     };
-
-                    Date discountDueDate = offence.DiscountDueDate;
-                    if (discountDueDate is not null)
-                    {
-                        ticketOffence.DiscountDueDate = new DateTime(discountDueDate.Year, discountDueDate.Month, discountDueDate.Day);
-                    }
 
                     ticketSearchResult.Offences.Add(ticketOffence);
                 }

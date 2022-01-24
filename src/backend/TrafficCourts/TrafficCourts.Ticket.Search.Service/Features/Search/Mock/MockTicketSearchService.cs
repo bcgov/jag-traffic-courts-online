@@ -42,12 +42,10 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
                 return Enumerable.Empty<Invoice>();
             }
 
-            using (var reader = new StreamReader(stream))
-            {
-                var options = new SeparatedValueOptions() { IsFirstRecordSchema = true };
-                var invoices = mapper.Read(reader, options).ToList();
-                return invoices;
-            }
+            using var reader = new StreamReader(stream);
+            var options = new SeparatedValueOptions() { IsFirstRecordSchema = true };
+            var invoices = mapper.Read(reader, options).ToList();
+            return invoices;
         }
 
         private ISeparatedValueTypeMapper<Invoice> GetTypeMapper()
