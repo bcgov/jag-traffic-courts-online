@@ -42,14 +42,6 @@ namespace TrafficCourts.Citizen.Service.Models.Search
         /// </summary>
         public decimal TicketedAmount { get; set; }
         /// <summary>
-        /// The discount amount. Will be $25 if the ticketed amount is over $58.
-        /// </summary>
-        public decimal DiscountAmount { get; set; }
-        /// <summary>
-        /// The date that the offender must pay the ticket by to receive the discount. This is 30 days after the violation date.
-        /// </summary>
-        public DateTime DiscountDueDate { get; set; }
-        /// <summary>
         /// The current amount due.
         /// </summary>
         public decimal AmountDue { get; set; }

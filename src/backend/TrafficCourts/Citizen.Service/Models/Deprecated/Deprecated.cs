@@ -26,12 +26,10 @@ namespace TrafficCourts.Citizen.Service.Models
                 dispute.Offences.Add(new Deprecated.Offence
                 {
                     AmountDue = offence.AmountDue,
-                    DiscountAmount = offence.DiscountAmount,
-                    DiscountDueDate = offence.DiscountDueDate.ToString("yyyy-MM-dd"),
                     OffenceDescription = offence.OffenceDescription,
                     VehicleDescription = offence.VehicleDescription!,
                     OffenceNumber = offence.OffenceNumber,
-                }); ;
+                });
             }
 
             return dispute;

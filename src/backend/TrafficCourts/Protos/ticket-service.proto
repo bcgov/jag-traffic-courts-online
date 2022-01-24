@@ -42,11 +42,7 @@ message Offence {
 	string offence_description = 4;
 	// The description of the vehicle.
 	string vehicle_description = 5;
-	// The discount amount in cents.
-	int32 discount_amount = 6;
-	// The date the offence must be paid by to be eligible for the discount.
-	Date discount_due_date = 7;
-	// The invoice type (?).
+	// The invoice type. Always Traffic Violation Ticket
 	string invoice_type = 8;
 }
 

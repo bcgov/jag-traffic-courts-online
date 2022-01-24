@@ -44,13 +44,13 @@ namespace TrafficCourts.Ticket.Search.Service.Services
                 }
 
                 _logger.LogDebug("Violation ticket not found");
-                Status status = new Status(StatusCode.NotFound, "Violation ticket not found");
+                Status status = new(StatusCode.NotFound, "Violation ticket not found");
                 throw new RpcException(status);
             }
             catch (Exception exception)
             {
                 _logger.LogInformation(exception, "Error finding violation ticket");
-                Status status = new Status(StatusCode.Internal, "Error finding violation ticket");
+                Status status = new(StatusCode.Internal, "Error finding violation ticket");
                 throw new RpcException(status);
             }
         }
@@ -64,7 +64,7 @@ namespace TrafficCourts.Ticket.Search.Service.Services
                 _logger.LogInformation("Violation date and time is empty");
             }
 
-            SearchReply reply = new SearchReply();
+            SearchReply reply = new();
 
             reply.ViolationTicketNumber = request.Number;
 
@@ -105,31 +105,6 @@ namespace TrafficCourts.Ticket.Search.Service.Services
             offence.InvoiceType = item.InvoiceType;
             offence.VehicleDescription = item.VehicleDescription ?? String.Empty;
             offence.TicketedAmount = (int)item.TicketedAmount * 100;
-
-            if (item.DiscountAmount == "n/a")
-            {
-                offence.DiscountAmount = 0;
-                offence.DiscountDueDate = null;
-            }
-            else
-            {
-                offence.DiscountAmount = (int)(Convert.ToDecimal(item.DiscountAmount) * 100);
-
-                if (string.IsNullOrEmpty(item.ViolationDateTime))
-                {
-
-                }
-                else
-                {
-                    if (DateTime.TryParse(item.ViolationDateTime, out DateTime violationDateTime))
-                    {
-                        var plus30days = violationDateTime.AddDays(30);
-                        offence.DiscountDueDate.Year = plus30days.Year;
-                        offence.DiscountDueDate.Month = plus30days.Month;
-                        offence.DiscountDueDate.Day = plus30days.Day;
-                    }
-                }
-            }
 
             return offence;
         }
