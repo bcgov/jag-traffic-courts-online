@@ -20,7 +20,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], TicketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], ViolationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
         rules.Add(new OnlyMCAIsSelectedRule(violationTicket));
-        // TODO: Add ViolationDateLT30Rule
+        rules.Add(new ViolationDateLT30Rule(violationTicket));
 
         // Run each rule and aggregate the results
         rules.ForEach(_ =>
