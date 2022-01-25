@@ -66,13 +66,24 @@ namespace TrafficCourts.Citizen.Service.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.
+        /// </summary>
+        /// <param name="file">A PNG, JPEG, or PDF of a scanned Traffic Violation Ticket</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <response code="200">The file appears to be a valid Violation Ticket. JSON data is extracted.</response>
+        /// <response code="400">The Violation Ticket does not appear to be valid. Either the ticket title could not be found,
+        /// the ticket number is invalid, the violation date is invalid or more than 30 days ago, or MVA is not selected or 
+        /// not the only ACT selected.</response>
         [HttpPost]
         [ProducesResponseType(typeof(OcrViolationTicket), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> AnalyseAsync([Required] IFormFile image, CancellationToken cancellationToken)
+        public async Task<IActionResult> AnalyseAsync([Required] IFormFile file, CancellationToken cancellationToken)
         {
-            AnalyseHandler.AnalyseRequest request = new AnalyseHandler.AnalyseRequest(image);
+            // TODO: validate file type to be PNG, JPEG, or PDF
+            AnalyseHandler.AnalyseRequest request = new AnalyseHandler.AnalyseRequest(file);
             AnalyseHandler.AnalyseResponse response = await _mediator.Send(request, cancellationToken);
             if (response.OcrViolationTicket.GlobalValidationErrors.Count > 0)
             {
@@ -84,7 +95,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 response.OcrViolationTicket.GlobalValidationErrors.ForEach(_ => detail += _ + " ");
 
                 // Return BadRequest 
-                // - if the image is not an image of a TrafficViolation (could not read title)
+                // - if the file is not an image/pdf of a TrafficViolation (could not read title)
                 // - if the TicketNumber could not be extracted or is invalid (ie doesn't start with an A)
                 // - if MVA is not the only checkbox selected under the 'Did commit the offence(s) indicated' section
                 // - if ViolationDate is > 30 days ago
