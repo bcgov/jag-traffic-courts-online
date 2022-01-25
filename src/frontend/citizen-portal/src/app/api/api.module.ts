@@ -2,9 +2,10 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { DisputeAPIService } from './api/disputeAPI.service';
-import { LookupAPIService } from './api/lookupAPI.service';
-import { TicketAPIService } from './api/ticketAPI.service';
+import { AddressAutocompleteService } from './api/addressAutocomplete.service';
+import { DisputesService } from './api/disputes.service';
+import { LookupService } from './api/lookup.service';
+import { TicketsService } from './api/tickets.service';
 
 @NgModule({
   imports:      [],

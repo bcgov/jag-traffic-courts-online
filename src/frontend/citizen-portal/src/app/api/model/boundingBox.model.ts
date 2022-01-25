@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Point } from './point.model';
 
 
-export interface Statute { 
-    code?: number;
-    name?: string | null;
+export interface BoundingBox { 
+    points?: Array<Point> | null;
 }
 

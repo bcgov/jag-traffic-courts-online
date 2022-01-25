@@ -1,31 +1,30 @@
-# @
+## @
 
-## Building
+### Building
 
 To install the required dependencies and to build the typescript sources run:
-
-```bash
+```
 npm install
 npm run build
 ```
 
-## Publishing
+### publishing
 
-First build the package then run `npm publish dist` (don't forget to specify the `dist` folder!)
+First build the package then run ```npm publish dist``` (don't forget to specify the `dist` folder!)
 
-## Consuming
+### consuming
 
 Navigate to the folder of your consuming project and run one of next commands.
 
 _published:_
 
-```bash
+```
 npm install @ --save
 ```
 
 _without publishing (not recommended):_
 
-```bash
+```
 npm install PATH_TO_GENERATED_PACKAGE/dist.tgz --save
 ```
 
@@ -34,24 +33,26 @@ _It's important to take the tgz file, otherwise you'll get trouble with links on
 _using `npm link`:_
 
 In PATH_TO_GENERATED_PACKAGE/dist:
-
-```bash
+```
 npm link
 ```
 
 In your project:
-
-```bash
-npm link
+```
+npm link 
 ```
 
-**Note for Windows users:** The Angular CLI has troubles to use linked npm packages. Please refer to this issue <https://github.com/angular/angular-cli/issues/8284> for a solution / workaround. Published packages are not effected by this issue.
+__Note for Windows users:__ The Angular CLI has troubles to use linked npm packages.
+Please refer to this issue https://github.com/angular/angular-cli/issues/8284 for a solution / workaround.
+Published packages are not effected by this issue.
 
-### General usage
+
+#### General usage
 
 In your Angular project:
 
-```typescript
+
+```
 // without configuring providers
 import { ApiModule } from '';
 import { HttpClientModule } from '@angular/common/http';
@@ -70,7 +71,7 @@ import { HttpClientModule } from '@angular/common/http';
 export class AppModule {}
 ```
 
-```typescript
+```
 // configuring providers
 import { ApiModule, Configuration, ConfigurationParameters } from '';
 
@@ -90,7 +91,7 @@ export function apiConfigFactory (): Configuration {
 export class AppModule {}
 ```
 
-```typescript
+```
 // configuring providers with an authentication service that manages your access tokens
 import { ApiModule, Configuration } from '';
 
@@ -115,7 +116,7 @@ import { ApiModule, Configuration } from '';
 export class AppModule {}
 ```
 
-```typescript
+```
 import { DefaultApi } from '';
 
 export class AppComponent {
@@ -123,13 +124,14 @@ export class AppComponent {
 }
 ```
 
-Note: The ApiModule is restricted to being instantiated once app wide. This is to ensure that all services are treated as singletons.
+Note: The ApiModule is restricted to being instantiated once app wide.
+This is to ensure that all services are treated as singletons.
 
-### Using multiple OpenAPI files / APIs / ApiModules
-
-In order to use multiple `ApiModules` generated from different OpenAPI files, you can create an alias name when importing the modules in order to avoid naming conflicts:
-
-```typescript
+#### Using multiple OpenAPI files / APIs / ApiModules
+In order to use multiple `ApiModules` generated from different OpenAPI files,
+you can create an alias name when importing the modules
+in order to avoid naming conflicts:
+```
 import { ApiModule } from 'my-api-path';
 import { ApiModule as OtherApiModule } from 'my-other-api-path';
 import { HttpClientModule } from '@angular/common/http';
@@ -148,21 +150,20 @@ export class AppModule {
 }
 ```
 
-## Set service base path
 
+### Set service base path
 If different than the generated base path, during app bootstrap, you can provide the base path to your service.
 
-```typescript
+```
 import { BASE_PATH } from '';
 
 bootstrap(AppComponent, [
     { provide: BASE_PATH, useValue: 'https://your-web-service.com' },
 ]);
 ```
-
 or
 
-```typescript
+```
 import { BASE_PATH } from '';
 
 @NgModule({
@@ -174,11 +175,11 @@ import { BASE_PATH } from '';
 export class AppModule {}
 ```
 
-### Using @angular/cli
 
+#### Using @angular/cli
 First extend your `src/environments/*.ts` files by adding the corresponding base path:
 
-```typescript
+```
 export const environment = {
   production: false,
   API_BASE_PATH: 'http://127.0.0.1:8080'
@@ -186,8 +187,7 @@ export const environment = {
 ```
 
 In the src/app/app.module.ts:
-
-```typescript
+```
 import { BASE_PATH } from '';
 import { environment } from '../environments/environment';
 

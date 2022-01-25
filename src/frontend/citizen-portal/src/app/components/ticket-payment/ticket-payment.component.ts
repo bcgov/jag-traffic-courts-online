@@ -117,15 +117,6 @@ export class TicketPaymentComponent implements OnInit {
     };
 
     this.logger.info('onMakePayment', formParams);
-
-    this.busy = this.disputeResource
-      .initiateTicketPayment(formParams)
-      .subscribe((response) => {
-        // todo: update later
-        if (response.redirectUrl) {
-          window.location.href = response.redirectUrl;
-        }
-      });
   }
 
   public get emailAddress(): FormControl {

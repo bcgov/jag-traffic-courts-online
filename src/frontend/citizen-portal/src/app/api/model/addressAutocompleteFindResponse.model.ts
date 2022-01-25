@@ -11,8 +11,12 @@
  */
 
 
-export interface Statute { 
-    code?: number;
-    name?: string | null;
+export interface AddressAutocompleteFindResponse { 
+    id?: string | null;
+    text?: string | null;
+    highlight?: string | null;
+    cursor?: string | null;
+    description?: string | null;
+    next?: string | null;
 }
 

@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using TrafficCourts.Citizen.Service;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

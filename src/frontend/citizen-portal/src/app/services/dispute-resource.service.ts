@@ -7,7 +7,8 @@ import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
-import { DisputeAPIService, ShellTicket, TicketAPIService, TicketDispute } from 'app/api';
+import { TicketSearchResult } from 'app/api/model/ticketSearchResult.model';
+import { DisputesService, ShellTicket, TicketsService, TicketDispute } from 'app/api';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -19,8 +20,8 @@ export class DisputeResourceService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private ticketAPIService: TicketAPIService,
-    private disputeAPIService: DisputeAPIService
+    private ticketAPIService: TicketsService,
+    private disputeAPIService: DisputesService
   ) { }
 
   /**
@@ -33,10 +34,10 @@ export class DisputeResourceService {
     time: string;
   }): Observable<TicketDisputeView> {
 
-    return this.ticketAPIService.ticketsTicket(params.ticketNumber, params.time)
+    return this.ticketAPIService.apiTicketsSearchGet(params.ticketNumber, params.time)
       .pipe(
-        map((response: ApiHttpResponse<TicketDispute>) =>
-          response ? response.result : null
+        map((response: TicketSearchResult) =>
+          response ? response : null
         ),
         map((ticket: TicketDisputeView) => {
           if (ticket) {
@@ -60,129 +61,47 @@ export class DisputeResourceService {
   }
 
   /**
-   * Initiate  a ticket payment.
-   *
-   * @param params containing the ticketNumber, time and counts
-   */
-  public initiateTicketPayment(params: {
-    ticketNumber: string;
-    time: string;
-    counts: string;
-    amount: number;
-  }): Observable<any> {
-
-    return this.ticketAPIService.ticketsPay(params.ticketNumber, params.time, params.counts, params.amount.toString()).pipe(
-      map((response: ApiHttpResponse<any>) =>
-        response ? response.result : null
-      ),
-      tap((result) =>
-        this.logger.info(
-          'DisputeResourceService::initiateTicketPayment',
-          result
-        )
-      ),
-      catchError((error: any) => {
-        this.toastService.openErrorToast('Payment could not be made');
-        this.logger.error(
-          'DisputeResourceService::initiateTicketPayment error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
-  /**
-   * After a return from the initiating of a payment, notify the backend of the results
-   *
-   * @param params containing the id, amount, status, confNo, and transId
-   */
-  public makeTicketPayment(params: {
-    id: string;
-    amount?: string;
-    status: string;
-    confNo?: string;
-    transId?: string;
-  }): Observable<TicketDisputeView> {
-    const isPaid = status === 'paid';
-
-    if (!isPaid) {
-      params.amount = '0';
-      delete params.confNo;
-      delete params.transId;
-    }
-
-    return this.ticketAPIService.ticketsPay2(params.id, params.status, params.amount, params.confNo, params.transId).pipe(
-      map((response: ApiHttpResponse<any>) =>
-        response ? response.result : null
-      ),
-      map((ticket: TicketDisputeView) => {
-        if (ticket) {
-          this.updateTicketViewModel(ticket);
-        }
-        return ticket;
-      }),
-      tap((updatedTicket) => {
-        if (isPaid) {
-          this.toastService.openSuccessToast('Payment was successful');
-        }
-        this.logger.info('DisputeResourceService::makeTicketPayment', updatedTicket);
-      }),
-      catchError((error: any) => {
-        this.toastService.openErrorToast('Payment could not be made');
-        this.logger.error(
-          'DisputeResourceService::makeTicketPayment error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-  }
-
-  /**
    * Create the ticket dispute
    *
    * @param ticketDispute The dispute to be created
    */
-  public createTicketDispute(
-    ticketDispute: TicketDisputeView
-  ): Observable<TicketDisputeView> {
+  public createTicketDispute(ticketDispute: TicketDisputeView): Observable<TicketDisputeView> {
     const ticketToCreate = this.cleanTicketDispute(ticketDispute);
-    this.logger.info(
-      'DisputeResourceService::createTicketDispute',
-      ticketToCreate
-    );
+    this.logger.info('DisputeResourceService::createTicketDispute', ticketToCreate);
 
-    return this.disputeAPIService.disputesTicketDispute(ticketDispute).pipe(
-      map((response: ApiHttpResponse<TicketDisputeView>) =>
-        response ? response.result : null
-      ),
-      map((ticket: TicketDisputeView) => {
-        if (ticket) {
-          this.updateTicketViewModel(ticket);
-        }
-        return ticket;
-      }),
-      tap((updatedTicket) => {
-        this.toastService.openSuccessToast(
-          'The request has been successfully submitted'
-        );
-
-        this.logger.info(
-          'DisputeResourceService::NEW_DISPUTE_TICKET',
-          updatedTicket
-        );
-      }),
-      catchError((error: any) => {
-        this.toastService.openErrorToast('The request could not be created');
-        this.logger.error(
-          'DisputeResourceService::createTicketDispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    var result: TicketDisputeView;
+    return new Observable();
   }
+  //   return this.disputeAPIService.apiDisputesCreatePost(ticketDispute).pipe(
+  //     map((response: ApiHttpResponse<TicketDisputeView>) =>
+  //       response ? response.result : null
+  //     ),
+  //     map((ticket: TicketDisputeView) => {
+  //       if (ticket) {
+  //         this.updateTicketViewModel(ticket);
+  //       }
+  //       return ticket;
+  //     }),
+  //     tap((updatedTicket) => {
+  //       this.toastService.openSuccessToast(
+  //         'The request has been successfully submitted'
+  //       );
+
+  //       this.logger.info(
+  //         'DisputeResourceService::NEW_DISPUTE_TICKET',
+  //         updatedTicket
+  //       );
+  //     }),
+  //     catchError((error: any) => {
+  //       this.toastService.openErrorToast('The request could not be created');
+  //       this.logger.error(
+  //         'DisputeResourceService::createTicketDispute error has occurred: ',
+  //         error
+  //       );
+  //       throw error;
+  //     })
+  //   );
+  // }
 
   /**
    * Create the shell ticket
@@ -193,7 +112,7 @@ export class DisputeResourceService {
     const ticketToCreate = this.cleanShellTicket(ticket);
     this.logger.info('DisputeResourceService::createShellTicket', ticketToCreate);
 
-    return this.ticketAPIService.ticketsShellTicket(ticket)
+    return this.ticketAPIService.apiTicketsShellticketPost(ticket)
       .pipe(
         map((response: ApiHttpResponse<TicketDisputeView>) =>
           response ? response.result : null
