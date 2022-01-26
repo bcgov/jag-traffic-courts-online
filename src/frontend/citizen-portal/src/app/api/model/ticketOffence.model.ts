@@ -9,25 +9,29 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DisputeStatus } from './disputeStatus.model';
 
 
-export interface Offence { 
+export interface TicketOffence { 
+    /**
+     * The offence or count number.
+     */
     offenceNumber?: number;
+    /**
+     * The ticketed amount for this offence.
+     */
     ticketedAmount?: number;
+    /**
+     * The current amount due.
+     */
     amountDue?: number;
-    violationDateTime?: string | null;
-    offenceDescription?: string | null;
-    vehicleDescription?: string | null;
-    discountAmount?: number;
-    discountDueDate?: string | null;
     invoiceType?: string | null;
-    offenceAgreementStatus?: string | null;
-    requestReduction?: boolean;
-    requestMoreTime?: boolean;
-    reductionAppearInCourt?: boolean | null;
-    reductionReason?: string | null;
-    moreTimeReason?: string | null;
-    status?: DisputeStatus;
+    /**
+     * The description of the offence.
+     */
+    offenceDescription?: string | null;
+    /**
+     * The description of vehicle.
+     */
+    vehicleDescription?: string | null;
 }
 

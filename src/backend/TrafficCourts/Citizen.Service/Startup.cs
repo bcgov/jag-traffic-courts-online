@@ -11,6 +11,8 @@ using ILogger = Serilog.ILogger;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Validators;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -52,6 +54,8 @@ public static class Startup
 
         // use lowercase routes
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+        builder.Services.AddTransient<IConfigureOptions<JsonOptions>, ConfigureJsonOptions>();
     }
 
     /// <summary>

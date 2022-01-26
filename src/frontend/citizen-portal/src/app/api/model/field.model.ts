@@ -9,16 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BoundingBox } from './boundingBox.model';
 
 
-export interface ProblemDetails { 
-  [key: string]: any | any;
-
-
+export interface Field { 
+    value?: string | null;
+    fieldConfidence?: number | null;
+    /**
+     * A list of field-specific reasons why the field Confidence may be low
+     */
+    fieldValidationErrors?: Array<string> | null;
     type?: string | null;
-    title?: string | null;
-    status?: number | null;
-    detail?: string | null;
-    instance?: string | null;
+    boundingBoxes?: Array<BoundingBox> | null;
 }
 

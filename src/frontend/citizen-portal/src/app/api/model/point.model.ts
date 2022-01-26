@@ -11,8 +11,8 @@
  */
 
 
-export interface Statute { 
-    code?: number;
-    name?: string | null;
+export interface Point { 
+    x?: number;
+    y?: number;
 }
 

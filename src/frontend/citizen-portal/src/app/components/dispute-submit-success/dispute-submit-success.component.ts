@@ -57,14 +57,6 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     };
 
     this.logger.info('onMakePayment', formParams);
-
-    this.busy = this.disputeResource
-      .initiateTicketPayment(formParams)
-      .subscribe((response) => {
-        if (response.redirectUrl) {
-          window.location.href = response.redirectUrl;
-        }
-      });
   }
 
   public onPrint(): void {

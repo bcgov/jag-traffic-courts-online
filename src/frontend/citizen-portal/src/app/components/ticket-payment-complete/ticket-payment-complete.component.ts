@@ -73,20 +73,6 @@ export class TicketPaymentCompleteComponent implements OnInit {
         confNo,
         transId,
       };
-
-      this.busy = this.disputeResource.makeTicketPayment(paramsApi).subscribe({
-        next: (res) => {
-          this.paymentStatus = status;
-          this.paymentConfNo = confNo;
-
-          this.disputeService.ticket$.next(res);
-          this.ticket = res;
-        },
-        error: (err) => {
-          this.paymentStatus = 'error';
-          console.log('HTTP Error', err);
-        },
-      });
     });
   }
 

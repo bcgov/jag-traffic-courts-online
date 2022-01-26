@@ -1,7 +1,9 @@
-export * from './disputeAPI.service';
-import { DisputeAPIService } from './disputeAPI.service';
-export * from './lookupAPI.service';
-import { LookupAPIService } from './lookupAPI.service';
-export * from './ticketAPI.service';
-import { TicketAPIService } from './ticketAPI.service';
-export const APIS = [DisputeAPIService, LookupAPIService, TicketAPIService];
+export * from './addressAutocomplete.service';
+import { AddressAutocompleteService } from './addressAutocomplete.service';
+export * from './disputes.service';
+import { DisputesService } from './disputes.service';
+export * from './lookup.service';
+import { LookupService } from './lookup.service';
+export * from './tickets.service';
+import { TicketsService } from './tickets.service';
+export const APIS = [AddressAutocompleteService, DisputesService, LookupService, TicketsService];

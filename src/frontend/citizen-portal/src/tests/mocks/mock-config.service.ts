@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Configuration } from '@config/config.model';
 import { ConfigService, IConfigService } from '@config/config.service';
 import { UtilsService } from '@core/services/utils.service';
-import { LookupAPIService } from 'app/api';
+import { LookupService } from 'app/api';
 import { AppConfigService } from 'app/services/app-config.service';
 import { Observable } from 'rxjs';
 import { MockConfig } from './mock-config';
@@ -12,7 +12,7 @@ import { MockConfig } from './mock-config';
 })
 export class MockConfigService extends ConfigService implements IConfigService {
   constructor(
-    protected lookupAPIService: LookupAPIService,
+    protected lookupAPIService: LookupService,
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService
   ) {

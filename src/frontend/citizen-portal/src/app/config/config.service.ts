@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Config, Configuration, ProvinceConfig } from '@config/config.model';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
-import { LookupAPIService } from 'app/api';
+import { LookupService } from 'app/api';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -30,7 +30,7 @@ export class ConfigService implements IConfigService {
   constructor(
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService,
-    protected lookupAPIService: LookupAPIService
+    protected lookupAPIService: LookupService
   ) { }
 
   public get dispute_submitted$(): BehaviorSubject<string> {
@@ -118,7 +118,7 @@ export class ConfigService implements IConfigService {
    * Get the configuration for bootstrapping the application.
    */
   private getConfiguration(): Observable<Configuration> {
-    return this.lookupAPIService.lookupGet().pipe(map((response: ApiHttpResponse<Configuration>) => response.result));
+    return this.lookupAPIService.apiLookupGetGet().pipe(map((response: ApiHttpResponse<Configuration>) => response.result));
   }
 
   /**
