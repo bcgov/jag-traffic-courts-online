@@ -19,7 +19,9 @@ public class LookupController : ControllerBase
         //    return NoContent();
         //return Ok(new ApiResultResponse<LookupsAll>(lookUpsAll));
 
-        return NoContent();
+        var response = new ApiResultResponse<LookupsAll>(new LookupsAll());
+
+        return Ok(response);
     }
 }
 

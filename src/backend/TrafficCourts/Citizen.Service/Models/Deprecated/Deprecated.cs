@@ -216,13 +216,13 @@ namespace TrafficCourts.Citizen.Service.Models
 
         public class LookupsAll
         {
-            public List<CourtLocation> CourtLocations { get; set; }
-            public List<Language> Languages { get; set; }
-            public List<Status> Statuses { get; set; }
-            public List<Country> Countries { get; set; }
-            public List<Province> Provinces { get; set; }
-            public List<Statute> Statutes { get; set; }
-            public List<PoliceLocation> PoliceLocations { get; set; }
+            public List<CourtLocation> CourtLocations { get; set; } = new List<CourtLocation>();
+            public List<Language> Languages { get; set; } = new List<Language>();
+            public List<Status> Statuses { get; set; } = new List<Status>();
+            public List<Country> Countries { get; set; } = new List<Country>();
+            public List<Province> Provinces { get; set; } = new List<Province>();
+            public List<Statute> Statutes { get; set; } = new List<Statute>();
+            public List<PoliceLocation> PoliceLocations { get; set; } = new List<PoliceLocation>();
         }
 
         public class AddressAutocompleteFindResponse
