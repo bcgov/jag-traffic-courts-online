@@ -46,6 +46,7 @@ public class FormRecognizerService : IFormRecognizerService
         { "Count 3 Is REGS",            OcrViolationTicket.Count3IsREGS },
         { "Count 3 Section",            OcrViolationTicket.Count3Section },
         { "Count 3 Ticket Amount",      OcrViolationTicket.Count3TicketAmount },
+        { "Hearing Location",           OcrViolationTicket.HearingLocation },
         { "Detachment Location",        OcrViolationTicket.DetachmentLocation }
     };
 
