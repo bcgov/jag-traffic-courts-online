@@ -18,10 +18,11 @@ public class ViolationDateLT30Rule : ValidationRule
 
     public override void Run()
     {
-        DateTime? violationDate = _violationTicket.GetField(OcrViolationTicket.ViolationDate)?.GetDate();
+        Field? field = _violationTicket.GetField(OcrViolationTicket.ViolationDate);
+        DateTime? violationDate = field?.GetDate();
         if (violationDate is null)
         {
-            ValidationErrors.Add(ValidationMessages.ViolationDateInvalid);
+            ValidationErrors.Add(String.Format(ValidationMessages.ViolationDateInvalid, field?.Value));
         }
         else {
             DateTime dateTime = DateTime.Now;
@@ -29,10 +30,10 @@ public class ViolationDateLT30Rule : ValidationRule
             DateTime now = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
             if (violationDate > now) {
                 // Violation Date is in the future ... we must have mis-read it.  Consider this invalid.
-                ValidationErrors.Add(ValidationMessages.ViolationDateInvalid);
+            ValidationErrors.Add(String.Format(ValidationMessages.ViolationDateInvalid, field?.Value));
             }
             else if (violationDate < (now.AddDays(-30))) {
-                ValidationErrors.Add(ValidationMessages.ViolationDateGT30Days);
+                ValidationErrors.Add(String.Format(ValidationMessages.ViolationDateGT30Days, violationDate.Value.ToString("yyyy-MM-dd")));
             }
         }
     }

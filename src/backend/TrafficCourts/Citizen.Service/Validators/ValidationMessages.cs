@@ -15,6 +15,6 @@ public static class ValidationMessages
     internal static readonly string UnknownOtherValueError = @"Unknown Other selection. Could not determine if MVA is the only checkbox selected under the 'Did commit the offence(s) indicated' section.";
     internal static readonly string MVAMustBeSelectedError = @"MVA must be selected under the 'Did commit the offence(s) indicated' section.";
     internal static readonly string OnlyMVAMustBeSelectedError = @"MVA must be the only selected ACT under the 'Did commit the offence(s) indicated' section.";
-    internal static readonly string ViolationDateInvalid = @"Violation Date must be a valid date.";
-    internal static readonly string ViolationDateGT30Days = @"Violation Date is more than 30 days ago.";
+    internal static readonly string ViolationDateInvalid = @"Violation Date must be a valid date. Read '{0}'.";
+    internal static readonly string ViolationDateGT30Days = @"Violation Date '{0}' is more than 30 days ago.";
 }
