@@ -53,6 +53,7 @@ public class OcrViolationTicket
     /// <summary>
     /// A list of global reasons why the global Confidence may be low (ie, missing ticket number, not a Violation Ticket, etc.)
     /// </summary>
+    [JsonIgnore]
     public List<string> GlobalValidationErrors { get; set; } = new List<string>();
 
     /// <summary>
@@ -89,7 +90,10 @@ public class OcrViolationTicket
         }
 
         [JsonIgnore]
-        public String? Name { get; set; }
+        public String? TagName { get; set; }
+        
+        [JsonIgnore]
+        public String? JsonName { get; set; }
 
         public String? Value { get; set; }
 
@@ -98,7 +102,7 @@ public class OcrViolationTicket
         /// <summary>
         /// A list of field-specific reasons why the field Confidence may be low
         /// </summary>
-        public List<string> FieldValidationErrors { get; set; } = new List<string>();
+        public List<string> ValidationErrors { get; set; } = new List<string>();
 
         public String? Type { get; set; }
 

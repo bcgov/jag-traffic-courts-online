@@ -5,30 +5,24 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 
 public class FieldMatchesRegexRule : ValidationRule
 {
-    private readonly Field? _field;
     private readonly string _pattern;
     private readonly string _reason;
 
-    public FieldMatchesRegexRule(Field? field, string pattern, string reason)
+    public FieldMatchesRegexRule(Field field, string pattern, string reason) : base(field)
     {
-        this._field = field;
         this._pattern = pattern;
         this._reason = reason;
     }
 
     public override void Run()
     {
-        if (_field is null)
+        if (Field.Value is null)
         {
-            ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, "Field"));
+            Field.ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, Field.JsonName));
         }
-        else if (_field.Value is null)
+        else if (!Regex.IsMatch(Field.Value, _pattern))
         {
-            ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, _field.Name));
-        }
-        else if (!Regex.IsMatch(_field.Value, _pattern))
-        {
-            ValidationErrors.Add(_reason);
+            Field.ValidationErrors.Add(_reason);
         }
     }
 }

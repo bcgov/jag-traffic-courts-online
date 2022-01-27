@@ -9,30 +9,31 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 /// </summary>
 public class ViolationDateLT30Rule : ValidationRule
 {
-    private readonly OcrViolationTicket _violationTicket;
 
-    public ViolationDateLT30Rule(OcrViolationTicket violationTicket)
+    public ViolationDateLT30Rule(Field field) : base(field)
     {
-        this._violationTicket = violationTicket;
     }
 
     public override void Run()
     {
-        DateTime? violationDate = _violationTicket.GetField(OcrViolationTicket.ViolationDate)?.GetDate();
+        DateTime? violationDate = Field.GetDate();
         if (violationDate is null)
         {
-            ValidationErrors.Add(ValidationMessages.ViolationDateInvalid);
+            AddValidationError(String.Format(ValidationMessages.ViolationDateInvalid, Field.Value));
         }
-        else {
+        else
+        {
             DateTime dateTime = DateTime.Now;
             // remove time portion (which may affect the below calculations)
-            DateTime now = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
-            if (violationDate > now) {
+            DateTime now = new(dateTime.Year, dateTime.Month, dateTime.Day);
+            if (violationDate > now)
+            {
                 // Violation Date is in the future ... we must have mis-read it.  Consider this invalid.
-                ValidationErrors.Add(ValidationMessages.ViolationDateInvalid);
+                AddValidationError(String.Format(ValidationMessages.ViolationDateInvalid, Field.Value));
             }
-            else if (violationDate < (now.AddDays(-30))) {
-                ValidationErrors.Add(ValidationMessages.ViolationDateGT30Days);
+            else if (violationDate < (now.AddDays(-30)))
+            {
+                AddValidationError(String.Format(ValidationMessages.ViolationDateGT30Days, violationDate.Value.ToString("yyyy-MM-dd")));
             }
         }
     }
