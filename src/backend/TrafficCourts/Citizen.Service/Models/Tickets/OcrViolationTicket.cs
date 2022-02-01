@@ -13,6 +13,7 @@ public class OcrViolationTicket
     public static readonly string ViolationTicketNumber = "violationTicketNumber";
     public static readonly string Surname = "surname";
     public static readonly string GivenName = "givenName";
+    public static readonly string DriverLicenceProvince = "driverLicenceProvince";
     public static readonly string DriverLicenceNumber = "driverLicenceNumber";
     public static readonly string ViolationDate = "violationDate";
     public static readonly string ViolationTime = "violationTime";

@@ -17,6 +17,7 @@ public class FormRecognizerService : IFormRecognizerService
         { "Violation Ticket Number",    OcrViolationTicket.ViolationTicketNumber },
         { "Surname",                    OcrViolationTicket.Surname },
         { "Given Name",                 OcrViolationTicket.GivenName },
+        { "Drivers Licence Province",   OcrViolationTicket.DriverLicenceProvince },
         { "Drivers Licence Number",     OcrViolationTicket.DriverLicenceNumber },
         { "Violation Date",             OcrViolationTicket.ViolationDate },
         { "Violation Time",             OcrViolationTicket.ViolationTime },

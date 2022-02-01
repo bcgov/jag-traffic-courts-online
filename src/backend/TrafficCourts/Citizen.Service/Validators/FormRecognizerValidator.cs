@@ -11,6 +11,19 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
     public void ValidateViolationTicket(OcrViolationTicket violationTicket)
     {
+        ApplyGlobalRules(violationTicket);
+        // abort validation if this is not a valid Violation Ticket.
+        if (violationTicket.GlobalValidationErrors.Count > 0)
+        {
+            return;
+        }
+
+        ApplyFieldRules(violationTicket);
+    }
+
+    /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
+    private static void ApplyGlobalRules(OcrViolationTicket violationTicket)
+    {
         // TCVP-933 A ticket is considered valid iff
         // - Ticket title reads 'VIOLATION TICKET' at top
         // - Ticket number must start with 'A', another alphabetic character, and then 8 digits
@@ -42,5 +55,15 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         {
             violationTicket.GlobalConfidence = 0f;
         }
+    }
+
+    private static void ApplyFieldRules(OcrViolationTicket violationTicket)
+    {
+        List<ValidationRule> rules = new();
+
+        // TCVP-1004 Validate Driver's Licence
+        rules.Add(new DriversLicenceValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsTCR], violationTicket));
+
+        rules.ForEach(_ => _.Run());
     }
 }
