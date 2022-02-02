@@ -8,7 +8,7 @@ public class DriversLicenceValidRule : ValidationRule
 {
 
     private static readonly string DriverLicenceProvinceRegex = @"^BC$";
-    private static readonly string DriverLicenceNumberRegex = @"^\d{7}$";
+    private static readonly string DriverLicenceNumberRegex = @"^\d{1,7}$";
 
     private readonly OcrViolationTicket _violationTicket;
 
