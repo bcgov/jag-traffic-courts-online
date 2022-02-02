@@ -42,6 +42,7 @@ public class OcrViolationTicket
     public static readonly string Count3IsREGS = "count3IsREGS";
     public static readonly string Count3Section = "count3Section";
     public static readonly string Count3TicketAmount = "count3TicketAmount";
+    public static readonly string HearingLocation = "hearingLocation";
     public static readonly string DetachmentLocation = "detachmentLocation";
 
     /// <summary>
