@@ -56,11 +56,9 @@ public class TicketsControllerTests
         var result = await ticketController.AnalyseAsync(mockImage.Object, CancellationToken.None);
 
         // Assert
-        var badRequestResult = Assert.IsType<ObjectResult>(result);
-        Assert.Equal((int)HttpStatusCode.BadRequest, badRequestResult.StatusCode);
-        
-        var problemDetails = Assert.IsType<ProblemDetails>(badRequestResult.Value);
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+        Assert.Equal((int)HttpStatusCode.BadRequest, problemDetails.Status);
         Assert.True(problemDetails?.Title?.StartsWith("Violation Ticket is not valid"));
-        Assert.Equal("Some validation error ", problemDetails?.Detail);
     }
 }

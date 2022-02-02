@@ -23,19 +23,19 @@ public class FieldMatchesRegexRuleTest
     public void TestRegexPattern(string value, string pattern, int expectedErrorCount)
     {
         // Given
-        Field field = new Field();
+        Field field = new();
         field.Value = value;
-        FieldMatchesRegexRule rule = new FieldMatchesRegexRule(field, pattern, "ERROR: Pattern mismatch ...");
+        FieldMatchesRegexRule rule = new(field, pattern, "ERROR: Pattern mismatch ...");
 
         // When
         rule.Run();
 
         // Then
         Assert.Equal(expectedErrorCount == 0, rule.IsValid());
-        Assert.Equal(expectedErrorCount, rule.ValidationErrors.Count);
+        Assert.Equal(expectedErrorCount, rule.Field.ValidationErrors.Count);
         if (expectedErrorCount > 0 && value is not null)
         {
-            Assert.StartsWith("ERROR", rule.ValidationErrors[0]);
+            Assert.StartsWith("ERROR", rule.Field.ValidationErrors[0]);
         }
     }
 
@@ -43,32 +43,17 @@ public class FieldMatchesRegexRuleTest
     public void TestFieldValueNull()
     {
         // Given
-        Field field = new Field();
-        field.Name = "Field";
+        Field field = new();
+        field.JsonName = "Field";
         field.Value = null;
-        FieldMatchesRegexRule rule = new FieldMatchesRegexRule(field, "AAAA", "Field is blank");
+        FieldMatchesRegexRule rule = new(field, "AAAA", "Field is blank");
 
         // When
         rule.Run();
 
         // Then
         Assert.False(rule.IsValid());
-        Assert.Single(rule.ValidationErrors);
-        Assert.True(rule.ValidationErrors[0].StartsWith("Field is blank"));
-    }
-
-    [Fact]
-    public void TestFieldNotExisting()
-    {
-        // Given
-        FieldMatchesRegexRule rule = new FieldMatchesRegexRule(null, "AAAA", "Field is blank");
-
-        // When
-        rule.Run();
-
-        // Then
-        Assert.False(rule.IsValid());
-        Assert.Single(rule.ValidationErrors);
-        Assert.True(rule.ValidationErrors[0].StartsWith("Field is blank"));
+        Assert.Single(rule.Field.ValidationErrors);
+        Assert.StartsWith("Field is blank", rule.Field.ValidationErrors[0]);
     }
 }

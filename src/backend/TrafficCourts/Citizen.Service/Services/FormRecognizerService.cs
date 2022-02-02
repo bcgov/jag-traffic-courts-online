@@ -17,6 +17,7 @@ public class FormRecognizerService : IFormRecognizerService
         { "Violation Ticket Number",    OcrViolationTicket.ViolationTicketNumber },
         { "Surname",                    OcrViolationTicket.Surname },
         { "Given Name",                 OcrViolationTicket.GivenName },
+        { "Drivers Licence Province",   OcrViolationTicket.DriverLicenceProvince },
         { "Drivers Licence Number",     OcrViolationTicket.DriverLicenceNumber },
         { "Violation Date",             OcrViolationTicket.ViolationDate },
         { "Violation Time",             OcrViolationTicket.ViolationTime },
@@ -30,20 +31,20 @@ public class FormRecognizerService : IFormRecognizerService
         { "Offense is Other",           OcrViolationTicket.OffenseIsOther },
         { "Count 1 Description",        OcrViolationTicket.Count1Description },
         { "Count 1 Act/Regs",           OcrViolationTicket.Count1ActRegs },
-        { "Count 1 Is ACT",             OcrViolationTicket.Count1IsACT },
-        { "Count 1 Is REGS",            OcrViolationTicket.Count1IsREGS },
+        { "Count 1 is ACT",             OcrViolationTicket.Count1IsACT },
+        { "Count 1 is REGS",            OcrViolationTicket.Count1IsREGS },
         { "Count 1 Section",            OcrViolationTicket.Count1Section },
         { "Count 1 Ticket Amount",      OcrViolationTicket.Count1TicketAmount },
         { "Count 2 Description",        OcrViolationTicket.Count2Description },
         { "Count 2 Act/Regs",           OcrViolationTicket.Count2ActRegs },
-        { "Count 2 Is ACT",             OcrViolationTicket.Count2IsACT },
-        { "Count 2 Is REGS",            OcrViolationTicket.Count2IsREGS },
+        { "Count 2 is ACT",             OcrViolationTicket.Count2IsACT },
+        { "Count 2 is REGS",            OcrViolationTicket.Count2IsREGS },
         { "Count 2 Section",            OcrViolationTicket.Count2Section },
         { "Count 2 Ticket Amount",      OcrViolationTicket.Count2TicketAmount },
         { "Count 3 Description",        OcrViolationTicket.Count3Description },
         { "Count 3 Act/Regs",           OcrViolationTicket.Count3ActRegs },
-        { "Count 3 Is ACT",             OcrViolationTicket.Count3IsACT },
-        { "Count 3 Is REGS",            OcrViolationTicket.Count3IsREGS },
+        { "Count 3 is ACT",             OcrViolationTicket.Count3IsACT },
+        { "Count 3 is REGS",            OcrViolationTicket.Count3IsREGS },
         { "Count 3 Section",            OcrViolationTicket.Count3Section },
         { "Count 3 Ticket Amount",      OcrViolationTicket.Count3TicketAmount },
         { "Hearing Location",           OcrViolationTicket.HearingLocation },
@@ -71,44 +72,50 @@ public class FormRecognizerService : IFormRecognizerService
 
     public OcrViolationTicket Map(AnalyzeResult result)
     {
-        // Iterate over results, creating a structured document
-        OcrViolationTicket violationTicket = new OcrViolationTicket();
-        foreach (AnalyzedDocument document in result.Documents)
+        // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
+        OcrViolationTicket violationTicket = new();
+        violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+
+        foreach (var fieldLabel in FieldLabels)
         {
-            violationTicket.GlobalConfidence = document.Confidence;
+            OcrViolationTicket.Field field = new();
+            field.TagName = fieldLabel.Key;
+            field.JsonName = fieldLabel.Value;
 
-            if (document.Fields is not null)
+            DocumentField? extractedField = GetDocumentField(result, fieldLabel.Key);
+            if (extractedField is not null)
             {
-                foreach (KeyValuePair<String, DocumentField> pair in document.Fields)
+                field.Value = extractedField.Content;
+                field.FieldConfidence = extractedField.Confidence;
+                field.Type = Enum.GetName(extractedField.ValueType);
+                foreach (BoundingRegion region in extractedField.BoundingRegions)
                 {
-                    // Only map fields of interest
-                    if (pair.Key is not null && FieldLabels.Keys.Contains<string>(pair.Key))
-                    {
-                        OcrViolationTicket.Field field = new OcrViolationTicket.Field();
-                        field.Name = pair.Key;
-                        field.Value = pair.Value.Content;
-                        field.FieldConfidence = pair.Value.Confidence;
-                        field.Type = Enum.GetName(pair.Value.ValueType);
-                        foreach (BoundingRegion region in pair.Value.BoundingRegions)
-                        {
-                            OcrViolationTicket.BoundingBox boundingBox = new OcrViolationTicket.BoundingBox();
-                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                            boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
-                            field.BoundingBoxes.Add(boundingBox);
-                        }
-
-                        violationTicket.Fields.Add(FieldLabels[pair.Key], field);
-                    }
+                    OcrViolationTicket.BoundingBox boundingBox = new();
+                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
+                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
+                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
+                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                    field.BoundingBoxes.Add(boundingBox);
                 }
             }
+
+            violationTicket.Fields.Add(fieldLabel.Value, field);
         }
+
         return violationTicket;
     }
 
+    private static DocumentField? GetDocumentField(AnalyzeResult result, string fieldKey)
+    {
+        if (result.Documents is not null && result.Documents.Count > 0)
+        {
+            return result.Documents[0].Fields[fieldKey];
+        }
+        return null;
+    }
+
     /// Returns a Stream for the given image
-    private Stream GetImageStream(IFormFile image)
+    private static Stream GetImageStream(IFormFile image)
     {
         // Work around for a "System.ObjectDisposedException : Cannot access a closed file." error
         // - extract data from the file attachment to an in-memory byte[]

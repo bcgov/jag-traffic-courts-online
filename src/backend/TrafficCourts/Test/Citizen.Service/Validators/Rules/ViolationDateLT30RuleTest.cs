@@ -51,11 +51,11 @@ public class ViolationDateLT30RuleTest
     public void TestDateLT30Rule(string dateStr, bool isValid)
     {
         // Given
-        OcrViolationTicket violationTicket = new OcrViolationTicket();
-        Field violationDate = new Field();
+        OcrViolationTicket violationTicket = new();
+        Field violationDate = new();
         violationDate.Value = dateStr;
         violationTicket.Fields.Add(OcrViolationTicket.ViolationDate, violationDate);
-        ViolationDateLT30Rule rule = new ViolationDateLT30Rule(violationTicket);
+        ViolationDateLT30Rule rule = new(violationDate);
 
         // When
         rule.Run();
