@@ -11,7 +11,7 @@ public class FormRecognizerService : IFormRecognizerService
     private readonly Uri _endpoint;
 
     // A mapping list of fields extracted from Azure Form Recognizer and their equivalent JSON name
-    private readonly static Dictionary<string, string> FieldLabels = new Dictionary<string, string>()
+    private readonly static Dictionary<string, string> FieldLabels = new()
     {
         { "Violation Ticket Label",     OcrViolationTicket.ViolationTicketTitle },
         { "Violation Ticket Number",    OcrViolationTicket.ViolationTicketNumber },
@@ -60,12 +60,12 @@ public class FormRecognizerService : IFormRecognizerService
 
     public async Task<AnalyzeResult> AnalyzeImageAsync(IFormFile image, CancellationToken cancellationToken)
     {
-        AzureKeyCredential credential = new AzureKeyCredential(_apiKey);
-        DocumentAnalysisClient documentAnalysisClient = new DocumentAnalysisClient(_endpoint, credential);
+        AzureKeyCredential credential = new(_apiKey);
+        DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
         using Stream stream = GetImageStream(image);
         AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket", stream, null, cancellationToken);
-        await analyseDocumentOperation.WaitForCompletionAsync();
+        await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
         return analyseDocumentOperation.Value;
     }
@@ -127,7 +127,7 @@ public class FormRecognizerService : IFormRecognizerService
             fileStream.CopyTo(ms);
             fileBytes = ms.ToArray();
         }
-        MemoryStream stream = new MemoryStream(fileBytes);
+        MemoryStream stream = new(fileBytes);
         return stream;
     }
 

@@ -26,7 +26,7 @@ public class ViolationDateLT30RuleTest
     public void TestDateParse(string dateStr, bool expectedValid, int expectedYear, int expectedMonth, int expectedDay)
     {
         // Given
-        Field dateField = new Field();
+        Field dateField = new();
         dateField.Value = dateStr;
 
         // When

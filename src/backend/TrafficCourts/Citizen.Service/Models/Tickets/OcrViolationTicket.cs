@@ -68,8 +68,7 @@ public class OcrViolationTicket
     /// </summary>
     public Field? GetField(string fieldName)
     {
-        Field? field;
-        if (Fields.TryGetValue(fieldName, out field))
+        if (Fields.TryGetValue(fieldName, out Field? field))
         {
             return field;
         }
@@ -132,7 +131,7 @@ public class OcrViolationTicket
             {
                 try
                 {
-                    Regex rg = new Regex(DateRegex);
+                    Regex rg = new(DateRegex);
                     Match match = rg.Match(Value);
                     if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
                     {
@@ -151,7 +150,7 @@ public class OcrViolationTicket
                         string newValue = Regex.Replace(Value, @"\D", "");
                         if (newValue.Length == 8)
                         {
-                            int year = Int32.Parse(newValue.Substring(0, 4));
+                            int year = Int32.Parse(newValue[..4]);
                             int month = Int32.Parse(newValue.Substring(4, 2));
                             int day = Int32.Parse(newValue.Substring(6, 2));
                             return new DateTime(year, month, day);

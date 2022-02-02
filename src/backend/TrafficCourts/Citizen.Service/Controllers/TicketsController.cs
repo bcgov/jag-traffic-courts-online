@@ -86,7 +86,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
             [Required][PermittedFileContentType(new string[] { "image/png", "image/jpeg", "application/pdf" })] IFormFile file,
             CancellationToken cancellationToken)
         {
-            AnalyseHandler.AnalyseRequest request = new AnalyseHandler.AnalyseRequest(file);
+            AnalyseHandler.AnalyseRequest request = new(file);
             AnalyseHandler.AnalyseResponse response = await _mediator.Send(request, cancellationToken);
             if (response.OcrViolationTicket.GlobalValidationErrors.Count > 0)
             {
@@ -95,7 +95,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 // - if the TicketNumber could not be extracted or is invalid (ie doesn't start with an A)
                 // - if MVA is not the only checkbox selected under the 'Did commit the offence(s) indicated' section
                 // - if ViolationDate is > 30 days ago
-                ProblemDetails problemDetails = new ProblemDetails();
+                ProblemDetails problemDetails = new();
                 problemDetails.Status = (int)HttpStatusCode.BadRequest;
                 problemDetails.Title = "Violation Ticket is not valid or could not be read.";
                 problemDetails.Instance = HttpContext?.Request?.Path;

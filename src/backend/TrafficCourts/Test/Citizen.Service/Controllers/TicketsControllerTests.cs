@@ -45,7 +45,7 @@ public class TicketsControllerTests
         var mockLogger = new Mock<ILogger<TicketsController>>();
         var ticketController = new TicketsController(mockMediator.Object, mockLogger.Object);
         var request = new AnalyseHandler.AnalyseRequest(mockImage.Object);
-        OcrViolationTicket violationTicket = new OcrViolationTicket();
+        OcrViolationTicket violationTicket = new();
         violationTicket.GlobalValidationErrors.Add("Some validation error");
         var analyseResponse = new AnalyseHandler.AnalyseResponse(violationTicket);
         mockMediator
