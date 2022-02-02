@@ -62,7 +62,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         List<ValidationRule> rules = new();
 
         // TCVP-1004 Validate Driver's Licence
-        rules.Add(new DriversLicenceValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsTCR], violationTicket));
+        rules.Add(new DriversLicenceValidRule(violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber], violationTicket));
+        rules.Add(new TimeRule(violationTicket.Fields[OcrViolationTicket.ViolationTime]));
 
         rules.ForEach(_ => _.Run());
     }

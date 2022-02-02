@@ -82,6 +82,7 @@ public class OcrViolationTicket
     {
 
         private static readonly string DateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
+        private static readonly string TimeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
 
         public Field() { }
 
@@ -92,7 +93,7 @@ public class OcrViolationTicket
 
         [JsonIgnore]
         public String? TagName { get; set; }
-        
+
         [JsonIgnore]
         public String? JsonName { get; set; }
 
@@ -143,14 +144,51 @@ public class OcrViolationTicket
                         int day = Int32.Parse(match.Groups[3].Value);
                         return new DateTime(year, month, day);
                     }
-                    else {
+                    else
+                    {
                         // pattern didn't match.  Try extracting all digits. If there are 8, convert to a date.
                         string newValue = Regex.Replace(Value, @"\D", "");
-                        if (newValue.Length == 8) {
+                        if (newValue.Length == 8)
+                        {
                             int year = Int32.Parse(newValue.Substring(0, 4));
                             int month = Int32.Parse(newValue.Substring(4, 2));
                             int day = Int32.Parse(newValue.Substring(6, 2));
                             return new DateTime(year, month, day);
+                        }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    // No-op.  Will return null.
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Returns a valid DateTime object if the Value string represents a date and is of the form 'HH mm', null otherwise.</summary>
+        public TimeSpan? GetTime()
+        {
+            if (Value is not null)
+            {
+                try
+                {
+                    Regex rg = new(TimeRegex);
+                    Match match = rg.Match(Value);
+                    if (match.Groups.Count == 3 && Value.Length > 2) // 2 + index 0 (the Value itself)
+                    {
+                        int hour = Int32.Parse(match.Groups[1].Value);
+                        int minute = Int32.Parse(match.Groups[2].Value);
+                        return new(hour, minute, 0);
+                    }
+                    else
+                    {
+                        // pattern didn't match.  Try extracting all digits. If there are 4, convert to a time.
+                        string newValue = Regex.Replace(Value, @"\D", "");
+                        if (newValue.Length == 4)
+                        {
+                            int hour = Int32.Parse(newValue[..2]);
+                            int minute = Int32.Parse(newValue.Substring(2, 2));
+                            return new(hour, minute, 0);
                         }
                     }
                 }
