@@ -44,7 +44,7 @@ public class FieldMatchesRegexRuleTest
     {
         // Given
         Field field = new();
-        field.JsonName = "Field";
+        field.TagName = "Field";
         field.Value = null;
         FieldMatchesRegexRule rule = new(field, "AAAA", "Field is blank");
 
