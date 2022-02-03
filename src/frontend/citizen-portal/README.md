@@ -21,6 +21,13 @@ git clone https://github.com/bcgov/jag-traffic-courts-online
 #### Node
 
 [Download](https://nodejs.org/en/) and install **Node v14.x**
+NOTE: ensure to use v14.x. More recent versions (i.e. v17.x) do not work.
+It's useful to install different versions of node (https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows)
+For this project, before building any code perform a:
+```bash
+nvm install 14.19.0
+nvm use 14.19.0
+```
 
 #### Angular cli
 
