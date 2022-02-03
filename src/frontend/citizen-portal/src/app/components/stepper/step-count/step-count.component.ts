@@ -119,6 +119,13 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit,On
   public get reductionAppearInCourtDoNot(): FormControl {
     return this.form.get('reductionAppearInCourtDoNot') as FormControl;
   }
+
+  public get disputeAppearInCourtDo(): FormControl {
+    return this.form.get('disputeAppearInCourtDo') as FormControl;
+  }
+  public get disputeAppearInCourtDoNot(): FormControl {
+    return this.form.get('disputeAppearInCourtDoNot') as FormControl;
+  }
   public get offenceDescription(): FormControl {
     return this.form.get('offenceDescription') as FormControl;
   }

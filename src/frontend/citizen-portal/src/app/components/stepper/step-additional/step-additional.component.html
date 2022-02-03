@@ -21,7 +21,7 @@
                 <mat-label *ngIf="item1.key === 'reductionAppearInCourtDoNot'">
                   Please enter your reasons for why you are requesting time to pay.
                 </mat-label>
-                <input matInput name = '{{item.key+item1.key}}' [(ngModel)]='newObj[item.key][item1.key]'/>
+                <!-- <input matInput name = '{{item.key+item1.key}}' [(ngModel)]='newObj[item.key][item1.key]'/> -->
                 <mat-error *ngIf="(reductionReason.dirty ||
                     reductionReason.touched) &&
                     reductionReason.invalid &&

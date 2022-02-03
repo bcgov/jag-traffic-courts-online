@@ -127,37 +127,97 @@ public getCountData(newObj):void{
   this.countDataList = newObj;
 }
   public onStepSave(stepper: MatStepper): void {
+    let stepsObjects ={
+      2:'offence1Form',
+      3:'offence2Form',
+      4:'offence3Form',
+    }
+    debugger;
     this.logger.info('DisputeStepperComponent::onStepSave Dispute Data:', this.disputeFormStateService.json);
-
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
-    debugger
-    if(currentStep ==2 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence1Form.value.reductionAppearInCourt && !this.offence1Form.value.reductionAppearInCourt){
-      this.isErrorCheckMsg1 = 'select atleast one checkbox';
-      return;
-    }else{
-      this.isErrorCheckMsg1 = "";
+    if(currentStep ==1){
+      this.offence1Form.patchValue({
+        _allowApplyToAllCounts: false
+      });
     }
-    if(currentStep ==3 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence2Form.value.reductionAppearInCourt && !this.offence2Form.value.reductionAppearInCourt){
-      this.isErrorCheckMsg1 = 'select atleast one checkbox';
-      return;
+    if(currentStep ==2 && this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._allowApplyToAllCounts){
+      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+      let listArray = [2,3,4].filter((ele)=> ele != currentStep)
+      
+      listArray.map((ele)=>{
+
+        this[stepsObjects[ele]].patchValue({
+          reductionAppearInCourt : this[stepsObjects[currentStep]].value.reductionAppearInCourt,
+          reductionAppearInCourtDoNot:this[stepsObjects[currentStep]].value.reductionAppearInCourtDoNot,
+          disputeAppearInCourt : this[stepsObjects[currentStep]].value.disputeAppearInCourt,
+          disputeAppearInCourtDoNot:this[stepsObjects[currentStep]].value.disputeAppearInCourtDoNot,
+          offenceAgreementStatus: this[stepsObjects[currentStep]].value.offenceAgreementStatus,
+          _applyToAllCounts:this[stepsObjects[currentStep]].value.offenceAgreementStatus
+        });
+      })
+    
+    } 
+    if(currentStep ==2 && this[stepsObjects[currentStep]] && !this[stepsObjects[currentStep]].value._allowApplyToAllCounts){
+      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+      let listArray = [2,3,4].filter((ele)=> ele != currentStep)
+      
+      listArray.map((ele)=>{
+
+        this[stepsObjects[ele]].patchValue({
+          reductionAppearInCourt : false,
+          reductionAppearInCourtDoNot:false,
+          disputeAppearInCourt : false,
+          disputeAppearInCourtDoNot:false,
+          offenceAgreementStatus: false,
+          // _applyToAllCounts:this[stepsObjects[currentStep]].value.offenceAgreementStatus
+        });
+      })
     }
+    if(currentStep ==3 && this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._applyToAllCounts ){
+      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+      let listArray = [3,4].filter((ele)=> ele != currentStep)
+      
+      listArray.map((ele)=>{
+
+        this[stepsObjects[ele]].patchValue({
+          reductionAppearInCourt : this[stepsObjects[currentStep]].value.reductionAppearInCourt,
+          reductionAppearInCourtDoNot:this[stepsObjects[currentStep]].value.reductionAppearInCourtDoNot,
+          disputeAppearInCourt : this[stepsObjects[currentStep]].value.disputeAppearInCourt,
+          disputeAppearInCourtDoNot:this[stepsObjects[currentStep]].value.disputeAppearInCourtDoNot,
+          offenceAgreementStatus: this[stepsObjects[currentStep]].value.offenceAgreementStatus,
+          _applyToAllCounts:this[stepsObjects[currentStep]].value.offenceAgreementStatus
+        });
+      })
+    
+    }
+
+    // if(currentStep ==2 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence1Form.value.reductionAppearInCourt && !this.offence1Form.value.reductionAppearInCourt){
+    //   this.isErrorCheckMsg1 = 'select atleast one checkbox';
+    //   return;
+    // }else{
+    //   this.isErrorCheckMsg1 = "";
+    // }
+    // if(currentStep ==3 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence2Form.value.reductionAppearInCourt && !this.offence2Form.value.reductionAppearInCourt){
+    //   this.isErrorCheckMsg1 = 'select atleast one checkbox';
+    //   return;
+    // }
     if (currentStep === 3){
-      this.isCheckBoxSelected[currentStep] = {
-        reductionAppearInCourt : this.offence2Form.value.reductionAppearInCourt,
-        reductionAppearInCourtDoNot: this.offence2Form.value.reductionAppearInCourtDoNot,
-        count:2
-      };
+      // this.isCheckBoxSelected[currentStep] = {
+      //   reductionAppearInCourt : this.offence2Form.value.reductionAppearInCourt,
+      //   reductionAppearInCourtDoNot: this.offence2Form.value.reductionAppearInCourtDoNot,
+      //   count:2
+      // };
       // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt
     }
     if (currentStep === 2){
      
 
-      this.isCheckBoxSelected[currentStep] = {
-        reductionAppearInCourt : this.offence1Form.value.reductionAppearInCourt,
-        reductionAppearInCourtDoNot: this.offence1Form.value.reductionAppearInCourtDoNot,
-        count:1
-      };
+      // this.isCheckBoxSelected[currentStep] = {
+      //   reductionAppearInCourt : this.offence1Form.value.reductionAppearInCourt,
+      //   reductionAppearInCourtDoNot: this.offence1Form.value.reductionAppearInCourtDoNot,
+      //   count:1
+      // };
      // let copyObj = Object.assign({},this.isCheckBoxSelected);
      // this.isCheckBoxSelected = copyObj;
       // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt

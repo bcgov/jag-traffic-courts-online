@@ -23,32 +23,46 @@
     <section>
       <div class="row">
         <div class="col">
-          <label class="w-100">
-            What action would you like to take?
-          </label>
+          <div class="flex-last-info-content">
+            <h4>Did you know?</h4>
+  
+            <div class="bullet-list">
+              <ul>
+                <li class="pt-0">
+                  You can make a dispute request by attending a court hearing in person, or you may supply written reasons
+                  requesting a fine reduction and/or time to pay without having to attend a court hearing.
+                </li>
+              </ul>
+            </div>
+          </div>
           <mat-radio-group formControlName="offenceAgreementStatus">
+            <div>
+              <span style="font-weight: 600;">I do not want to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."
+              #tooltip3="matTooltip">
+          <mat-icon>info</mat-icon>
+        </span>
+             </div> 
             <mat-radio-button value="REDUCTION">
               <span class="wrap-mat-radio-label">
-                I agree I committed this offence and I would like to request a
-                fine reduction and/or time to pay for this count.
+                I agree I committed this offence and would like to request a fine reduction and/or time to pay and supply written
+                reasons to a judicial justice to review.
               </span>
-              <span matTooltip="Ask for a fine reduction or more time to pay for the count."
-                    #tooltip3="matTooltip">
-                <mat-icon>info</mat-icon>
-              </span>
+           
             </mat-radio-button>
+           
+           <div>
+            <span style="font-weight: 600;">I want to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."
+            #tooltip3="matTooltip">
+        <mat-icon>info</mat-icon>
+      </span>
+           </div> 
             <mat-radio-button value="DISPUTE">
               <span class="wrap-mat-radio-label">
-                I do not agree that I committed this offence and I would like to
-                dispute this count.
-              </span>
-              <span matTooltip="Go to court and dispute this count."
-                    #tooltip4="matTooltip">
-                <mat-icon>info</mat-icon>
+                I want to attend a court hearing in person and discuss my ticket with the police officer and judicial justice.
               </span>
             </mat-radio-button>
             <mat-error *ngIf="
-                (offenceAgreementStatus.dirty ||
+                (
                   offenceAgreementStatus.touched) &&
                 offenceAgreementStatus.invalid &&
                 offenceAgreementStatus.errors.required
@@ -64,26 +78,35 @@
         </label>
          <div *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
           <mat-checkbox formControlName="reductionAppearInCourt" color="primary" class="w-100"> I would like to request a fine reduction on this count.</mat-checkbox>
+          <p> and/or</p>
           <mat-checkbox formControlName="reductionAppearInCourtDoNot" color="primary" class="w-100"> I would like to request more time to pay on this count.</mat-checkbox>
         
         </div>
-        
+
+        <div *ngIf="offenceAgreementStatus.value == 'DISPUTE'">
+          <mat-checkbox formControlName="disputeAppearInCourtDo" color="primary" class="w-100"> I agree I committed this offence and would like to request a fine reduction and/or time to pay on this count.</mat-checkbox>
+          <p> and/or</p>
+          <mat-checkbox formControlName="disputeAppearInCourtDoNot" color="primary" class="w-100"> I do not agree I committed this offence and would like to dispute this count</mat-checkbox>
+        </div>
+<!--         
         <mat-checkbox formControlName="reductionAppearInCourtDo" *ngIf="offenceAgreementStatus?.value !== 'PAY'" color="primary" class="w-100"> I would like to appear in court in person and speak to a judicial judge about this count.<mat-icon>info</mat-icon></mat-checkbox>
         
         <div style="font-size: 20px; color: red;">
           {{isSelectedChekcError}}
-        </div>
-        <div *ngIf="allowApplyToAllCounts.value">
-          <mat-checkbox formControlName="_applyToAllCounts" color="primary" *ngIf="firstOffence.value"
-            class="w-100 mt-2">Apply these selections to all counts on this violation ticket.</mat-checkbox>
-        </div>
+        </div> -->
       </div>
-
-      <div class="row"
-           *ngIf="allowApplyToAllCounts.value && offenceAgreementStatus.value === 'DISPUTE' && firstOffence.value">
-        <mat-checkbox formControlName="_applyToAllCounts"
+     <hr/>
+      <div class="row">
+        <mat-checkbox  *ngIf="offenceNumber.value === 1" formControlName="_allowApplyToAllCounts"
                       color="primary"
                       class="w-100 mt-4">Apply this selection to all counts on this violation ticket.</mat-checkbox>
+       <mat-checkbox  *ngIf="offenceNumber.value === 2" formControlName="_applyToAllCounts"
+                      color="primary"
+                      class="w-100 mt-4">Apply this selection to remaining counts on ticket.</mat-checkbox>
+
+        <mat-checkbox formControlName=""
+                      color="primary"
+                      class="w-100 mt-4">Skip this count, no action required.</mat-checkbox>
       </div>
     </section>
   </form>
