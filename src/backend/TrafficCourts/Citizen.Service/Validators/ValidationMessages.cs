@@ -12,6 +12,7 @@ public static class ValidationMessages
     public static readonly string MVAMustBeSelectedError = @"MVA must be selected under the 'Did commit the offence(s) indicated' section.";
     public static readonly string OnlyMVAMustBeSelectedError = @"MVA must be the only selected ACT under the 'Did commit the offence(s) indicated' section.";
     public static readonly string ViolationDateInvalid = @"Violation Date must be a valid date. Read '{0}'.";
+    public static readonly string ViolationDateFutureInvalid = @"Violation Date must not be in the future. Read '{0}'.";
     public static readonly string ViolationDateGT30Days = @"Violation Date '{0}' is more than 30 days ago.";
     public static readonly string TimeInvalid = @"'{0}' is not a valid time.";
 }
