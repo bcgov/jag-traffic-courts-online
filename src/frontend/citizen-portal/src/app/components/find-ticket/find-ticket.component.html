@@ -11,9 +11,7 @@
           [attr.aria-expanded]="accordionItem.expanded"
           [attr.aria-controls]="'accordion-body'">
           <div class="subheader-desc" (click)="accordionItem.toggle()">
-            Ask for fine reductions or time to pay, or dispute your ticket.
-              <strong>Enter your ticket number and time, or upload an
-                image of your ticket to begin.</strong>
+            Request fine reductions or time to pay, or dispute your Motor Vehicle Act violation ticket. 
             <span class="text-primary ms-3"><u>
               {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
             </u>
@@ -29,16 +27,16 @@
                          icon="info">
                 <ng-container #alertContent
                               class="alert-content">
-                              The types of tickets you can resolve are:
+                              The types of <strong>Motor Vehicle Act</strong> tickets you can make requests for are:
                               <ul class="mt-3">
                                 <li>
-                                  <b>Handwritten tickets(start with A):</b> upload an image or take photo of your ticket to create your online ticket.
+                                  <b>Handwritten tickets(start with A):</b>
                                 </li>
                                 <li>
-                                  <b>E-tickets (start with E):</b> enter the ticket number and violation time or upload image to find your ticket.
+                                  <b>E-tickets (start with E):</b>
                                 </li>
                                 <li>
-                                  <b>Intersection Safety Camera tickets (start with S):</b>  enter the ticket number and violation time or upload an image to find your ticket.
+                                  <b>Intersection Safety Camera tickets (start with S):</b> red light and speed camera tickets.
                                 </li>
                               </ul>
                 </ng-container>
@@ -74,7 +72,7 @@
               class="find-xlarge"
               (click)="fileInput.click()">
         <mat-icon class="me-2">photo_camera</mat-icon>
-        Upload ticket image
+        Take photo of ticket
       </button>
     </div>
     <div class="row">

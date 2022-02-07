@@ -267,6 +267,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       disputeAppearInCourt: [false],
       disputeAppearInCourtDo: [false],
       disputeAppearInCourtDoNot: [false],
+      _skip: [false],
       // Here for display purposes
       offenceDescription: [null],
       status: [null],

@@ -14,7 +14,7 @@
 export interface ShellTicket { 
     violationTicketNumber?: string | null;
     violationTime?: string | null;
-    violationDate?: string | null;
+    violationDate?: Date | null;
     lastName?: string | null;
     givenNames?: string | null;
     driverLicenseNumber?: string | null;
@@ -24,10 +24,13 @@ export interface ShellTicket {
     detachmentLocation?: string | null;
     count1Charge?: number | null;
     count1FineAmount?: number | null;
+    count1ActRegs?: string | null;
     count2Charge?: number | null;
     count2FineAmount?: number | null;
+    count2ActRegs?: string | null;
     count3Charge?: number | null;
     count3FineAmount?: number | null;
+    count3ActRegs?: string | null;
     photo?: string | null;
     address?: string | null;
     city?: string | null;

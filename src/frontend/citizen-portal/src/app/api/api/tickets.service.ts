@@ -67,7 +67,17 @@ export class TicketsService {
         }
         return false;
     }
+    public imageData={}
 
+    public setImageData(data){
+     this.imageData=data
+
+    }
+
+    public getImageData(){
+        return this.imageData
+   
+       }
     private addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         if (typeof value === "object" && value instanceof Date === false) {
             httpParams = this.addToHttpParamsRecursive(httpParams, value);

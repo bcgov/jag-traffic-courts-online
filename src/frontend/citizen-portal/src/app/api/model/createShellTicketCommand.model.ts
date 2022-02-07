@@ -14,7 +14,7 @@
 export interface CreateShellTicketCommand { 
     violationTicketNumber?: string | null;
     violationTime?: string | null;
-    violationDate?: string | null;
+    violationDate?: Date | null;
     lastName?: string | null;
     givenNames?: string | null;
     driverLicenseNumber?: string | null;

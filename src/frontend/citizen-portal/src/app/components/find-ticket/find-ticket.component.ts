@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   FormBuilder,
@@ -13,10 +14,13 @@ import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirem
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
+import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { Configuration, TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
+import { FileDetector } from 'protractor';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -30,6 +34,9 @@ export class FindTicketComponent implements OnInit {
   public form: FormGroup;
 
   public notFound = false;
+  protected basePath = 'http://localhost:5000'; 
+  public configuration = new Configuration();
+  // public encoder: HttpParameterCodec;
 
   constructor(
     private router: Router,
@@ -39,9 +46,15 @@ export class FindTicketComponent implements OnInit {
     private disputeService: DisputeService,
     private dialog: MatDialog,
     private ngProgress: NgProgress,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private http: HttpClient,
+    public ticketService:TicketsService
   ) {
     //
+  
+  if (typeof this.configuration.basePath !== 'string') {
+      this.configuration.basePath = this.basePath;
+  }
   }
 
   public ngOnInit(): void {
@@ -133,12 +146,39 @@ export class FindTicketComponent implements OnInit {
       // console.log('filename', filename, 'ticketImage', ticketImage.length);
       const shellTicketData: ShellTicketData = {
         filename,
-        ticketImage,
         ticketFile,
+        ticketImage
       };
-      this.disputeService.shellTicketData$.next(shellTicketData);
 
+      const formParams = { image:ticketFile};
+      const fd = new FormData();
+      fd.append('image',ticketFile);
+      console.log('fd',ticketFile,filename);
+
+      // this.busy = this.disputeResource
+      // .postTicket(ticketFile)
+      // .subscribe((response) => {
+      //   console.log('image data',response);
+      //   this.disputeService.shellTicketData$.next(shellTicketData);
+      //   if (response) {
+      //     this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)], {
+      //       queryParams: shellTicketData
+      //     });
+      //   } else {
+      //     this.notFound = true;
+      //     this.onTicketNotFound();
+      //   }
+      // });
+      
+      this.http.post(`${this.configuration.basePath }/api/tickets/analyse`,fd)
+      .subscribe(res=>{
+        console.log('image data',res);
+        this.ticketService.setImageData(res);
+        this.disputeService.shellTicketData$.next(shellTicketData);
       this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
+      })
+        
+      
     };
   }
 

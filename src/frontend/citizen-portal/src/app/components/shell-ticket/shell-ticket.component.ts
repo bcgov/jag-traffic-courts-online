@@ -26,6 +26,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -66,7 +67,7 @@ export class ShellTicketComponent implements OnInit {
 
   private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
-
+  public fieldsData;
   constructor(
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
@@ -78,7 +79,8 @@ export class ShellTicketComponent implements OnInit {
     private router: Router,
     private ngProgress: NgProgress,
     private appConfigService: AppConfigService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    public ticketService:TicketsService
   ) {
     this.progressRef = this.ngProgress.ref();
     this.statutes = this.configService.statutes;
@@ -90,7 +92,8 @@ export class ShellTicketComponent implements OnInit {
       this.todayDate.getFullYear() - this.MINIMUM_AGE
     );
     this.isMobile = this.utilsService.isMobile();
-
+    console.log("ticket service",this.ticketService.getImageData())
+    this.fieldsData = this.ticketService.getImageData()
     this.form = this.formBuilder.group({
       violationTicketNumber: [null, [Validators.required]],
       violationDate: [null, [Validators.required]],
@@ -105,10 +108,9 @@ export class ShellTicketComponent implements OnInit {
       postalCode: [null, [Validators.required]],
       driverLicenseNumber: [null, [Validators.required]],
       driverLicenseProvince: [null, [Validators.required]],
-
       count1Charge: [
         null,
-        [Validators.required, autocompleteObjectValidator()],
+        [Validators.required],
       ],
       count1FineAmount: [
         null,
@@ -116,7 +118,7 @@ export class ShellTicketComponent implements OnInit {
       ],
       count2Charge: [
         null,
-        [Validators.required, autocompleteObjectValidator()],
+        [Validators.required],
       ],
       count2FineAmount: [
         null,
@@ -124,7 +126,7 @@ export class ShellTicketComponent implements OnInit {
       ],
       count3Charge: [
         null,
-        [Validators.required, autocompleteObjectValidator()],
+        [Validators.required],
       ],
       count3FineAmount: [
         null,
@@ -135,7 +137,7 @@ export class ShellTicketComponent implements OnInit {
       _chargeCount: [1],
       _amountOwing: [null],
     });
-
+    this.onFulfilled()
     this.disputeService.shellTicketData$.subscribe((shellTicketData) => {
       if (!shellTicketData) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -374,216 +376,290 @@ export class ShellTicketComponent implements OnInit {
 
     this.busy = poller;
 
-    poller.then(this.onFulfilled(), this.onRejected);
+    // poller.then(this.onFulfilled(), this.onRejected);
   }
 
-  private onFulfilled(): (poller: FormPollerLike) => void {
-    return (poller: FormPollerLike) => {
-      this.busy = poller.pollUntilDone().then(() => {
+  private onFulfilled() {
+    // return (poller: FormPollerLike) => {
+      // this.busy = poller.pollUntilDone().then(() => {
         // this.logger.info('result', poller.getResult());
-        const invoices = poller.getResult();
+        const invoices = this.fieldsData
 
         if (!invoices || invoices.length <= 0) {
           throw new Error('Expecting at least one invoice in analysis result');
         }
 
-        const invoice = invoices[0];
+        const invoice = invoices;
         this.logger.info('First invoice:', invoice);
+        if(!invoice.fields){
+          return  true
+        }
 
-        const invoiceIdFieldIndex = 'violation ticket number';
+        const invoiceIdFieldIndex = 'violationTicketNumber';
         const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
-        if (invoiceIdField.valueType === 'string') {
+        if (invoiceIdField.type === 'String') {
           this.logger.info(
-            `  violation ticket number: '${invoiceIdField.value || '<missing>'
+            `  violationTicketNumber: '${invoiceIdField.value || '<missing>'
             }', with confidence of ${invoiceIdField.confidence}`
+          );
+        }
+        const invoiceDateFieldIndex = 'violationDate';
+        const invoiceDateField = invoice.fields[invoiceDateFieldIndex];
+        if (invoiceIdField.type === 'Date') {
+          this.logger.info(
+            `  violationTicketNumber: '${invoiceDateField.value || '<missing>'
+            }', with confidence of ${invoiceDateField.confidence}`
+          );
+        }
+        const invoiceTimeFieldIndex = 'violationTime';
+        const invoiceTimeField = invoice.fields[invoiceTimeFieldIndex];
+        if (invoiceTimeField.type === 'Time') {
+          this.logger.info(
+            `  violationTicketNumber: '${invoiceTimeField.value || '<missing>'
+            }', with confidence of ${invoiceTimeField.confidence}`
           );
         }
         const surnameFieldIndex = 'surname';
         const surnameField = invoice.fields[surnameFieldIndex];
-        if (surnameField.valueType === 'string') {
+        if (surnameField.type === 'String') {
           this.logger.info(
-            `  surname: '${surnameField.valueData?.text || '<missing>'
-            }', with confidence of ${surnameField.confidence}`
+            `  surname: '${surnameField.value || '<missing>'
+            }', with confidence of ${surnameField.fieldConfidence}`
           );
         }
-        const givenNameFieldIndex = 'given name';
+        const givenNameFieldIndex = 'givenName';
         const givenNameField = invoice.fields[givenNameFieldIndex];
-        if (givenNameField.valueType === 'string') {
+        if (givenNameField.type === 'String') {
           this.logger.info(
-            `  given name: '${givenNameField.valueData?.text || '<missing>'
+            `  given name: '${givenNameField.value || '<missing>'
             }', with confidence of ${givenNameField.confidence}`
           );
         }
-        const count1DescFieldIndex = 'count 1 description';
-        const count1DescField = invoice.fields[count1DescFieldIndex];
-        if (count1DescField.valueType === 'string') {
+        const driverLicenceFieldIndex = 'driverLicenceNumber';
+        const driverLicenceField = invoice.fields[driverLicenceFieldIndex];
+        if (driverLicenceField.type === 'String') {
           this.logger.info(
-            `  count 1 description: '${count1DescField.valueData?.text || '<missing>'
+            `  given name: '${driverLicenceField.value || '<missing>'
+            }', with confidence of ${driverLicenceField.confidence}`
+          );
+        }
+        const detachmentLocationFieldIndex = 'detachmentLocation';
+        const detachmentLocationField = invoice.fields[detachmentLocationFieldIndex];
+        if (detachmentLocationField.type === 'String') {
+          this.logger.info(
+            `  given name: '${detachmentLocationField.value || '<missing>'
+            }', with confidence of ${detachmentLocationField.confidence}`
+          );
+        }
+        const count1DescFieldIndex = 'count1Description';
+        const count1DescField = invoice.fields[count1DescFieldIndex];
+        if (count1DescField.type === 'String') {
+          this.logger.info(
+            `  count 1 description: '${count1DescField.value || '<missing>'
             }', with confidence of ${count1DescField.confidence}`
           );
         }
-        const count1SectionFieldIndex = 'count 1 section';
+        const count1SectionFieldIndex = 'count1Section';
         const count1SectionField = invoice.fields[count1SectionFieldIndex];
-        if (count1SectionField.valueType === 'string') {
+        if (count1SectionField.valueType === 'String') {
           this.logger.info(
-            `  count 1 section: '${count1SectionField.valueData?.text || '<missing>'
+            `  count 1 section: '${count1SectionField.value || '<missing>'
             }', with confidence of ${count1SectionField.confidence}`
           );
         }
-        const count1TicketAmountFieldIndex = 'count 1 ticket amount';
+        const count1TicketAmountFieldIndex = 'count1TicketAmount';
         const count1TicketAmountField =
           invoice.fields[count1TicketAmountFieldIndex];
-        if (count1TicketAmountField.valueType === 'number') {
+        if (count1TicketAmountField.type === 'Double') {
           this.logger.info(
             `  count 1 ticket amount: '${count1TicketAmountField.value || '<missing>'
             }', with confidence of ${count1TicketAmountField.confidence}`
           );
         }
-        const count2DescFieldIndex = 'count 2 description';
-        const count2DescField = invoice.fields[count2DescFieldIndex];
-        if (count2DescField.valueType === 'string') {
+        debugger
+        const count1ActRegsFieldIndex = 'count1ActRegs';
+        const count1ActRegsField = invoice.fields[count1ActRegsFieldIndex];
+        if (count1ActRegsField.type === 'String') {
           this.logger.info(
-            `  count 2 description: '${count2DescField.valueData?.text || '<missing>'
+            `  count 1 ticket amount: '${count1ActRegsField.value || '<missing>'
+            }', with confidence of ${count1ActRegsField.confidence}`
+          );
+        }
+        const count2DescFieldIndex = 'count2Description';
+        const count2DescField = invoice.fields[count2DescFieldIndex];
+        if (count2DescField.type === 'String') {
+          this.logger.info(
+            `  count 2 description: '${count2DescField.value || '<missing>'
             }', with confidence of ${count2DescField.confidence}`
           );
         }
-        const count2SectionFieldIndex = 'count 2 section';
+        const count2SectionFieldIndex = 'count2Section';
         const count2SectionField = invoice.fields[count2SectionFieldIndex];
-        if (count2SectionField.valueType === 'string') {
+        if (count2SectionField.type === 'String') {
           this.logger.info(
-            `  count 2 section: '${count2SectionField.valueData?.text || '<missing>'
+            `  count 2 section: '${count2SectionField.value || '<missing>'
             }', with confidence of ${count2SectionField.confidence}`
           );
         }
-        const count2TicketAmountFieldIndex = 'count 2 ticket amount';
+        const count2TicketAmountFieldIndex = 'count2TicketAmount';
         const count2TicketAmountField =
           invoice.fields[count2TicketAmountFieldIndex];
-        if (count2TicketAmountField.valueType === 'number') {
+        if (count2TicketAmountField.type === 'Double') {
           this.logger.info(
             `  count 2 ticket amount: '${count2TicketAmountField.value || '<missing>'
             }', with confidence of ${count2TicketAmountField.confidence}`
           );
         }
-        const count3DescFieldIndex = 'count 3 description';
-        const count3DescField = invoice.fields[count3DescFieldIndex];
-        if (count3DescField.valueType === 'string') {
+        const count2ActRegsFieldIndex = 'count2ActRegs';
+        const count2ActRegsField = invoice.fields[count2ActRegsFieldIndex];
+        if (count2ActRegsField.type === 'String') {
           this.logger.info(
-            `  count 3 description: '${count3DescField.valueData?.text || '<missing>'
+            `  count 2 ticket amount: '${count2ActRegsField.value || '<missing>'
+            }', with confidence of ${count2ActRegsField.confidence}`
+          );
+        }
+        const count3DescFieldIndex = 'count3Description';
+        const count3DescField = invoice.fields[count3DescFieldIndex];
+        if (count3DescField.type === 'String') {
+          this.logger.info(
+            `  count 3 description: '${count3DescField.value || '<missing>'
             }', with confidence of ${count3DescField.confidence}`
           );
         }
-        const count3SectionFieldIndex = 'count 3 section';
+        const count3SectionFieldIndex = 'count3Section';
         const count3SectionField = invoice.fields[count3SectionFieldIndex];
-        if (count3SectionField.valueType === 'string') {
+        if (count3SectionField.type === 'String') {
           this.logger.info(
-            `  count 3 section: '${count3SectionField.valueData?.text || '<missing>'
+            `  count 3 section: '${count3SectionField.value || '<missing>'
             }', with confidence of ${count3SectionField.confidence}`
           );
         }
-        const count3TicketAmountFieldIndex = 'count 3 ticket amount';
+        const count3TicketAmountFieldIndex = 'count3TicketAmount';
         const count3TicketAmountField =
           invoice.fields[count3TicketAmountFieldIndex];
-        if (count3TicketAmountField.valueType === 'number') {
+        if (count3TicketAmountField.type === 'Double') {
           this.logger.info(
             `  count 3 ticket amount: '${count3TicketAmountField.value || '<missing>'
             }', with confidence of ${count3TicketAmountField.confidence}`
           );
         }
+        const count3ActRegsFieldIndex = 'count3ActRegs';
+        const count3ActRegsField = invoice.fields[count3ActRegsFieldIndex];
+        if (count3ActRegsField.type === 'String') {
+          this.logger.info(
+            `  count 3 ticket amount: '${count3ActRegsField.value || '<missing>'
+            }', with confidence of ${count3ActRegsField.confidence}`
+          );
+        }
 
         let chargeCount = 0;
         if (
-          count1DescField.valueData?.text ||
-          count1SectionField.valueData?.text ||
+          count1DescField.value ||
+          count1SectionField.value ||
           count1TicketAmountField.value
         ) {
           chargeCount++;
         }
         if (
-          count2DescField.valueData?.text ||
-          count2SectionField.valueData?.text ||
+          count2DescField.value ||
+          count2SectionField.value ||
           count2TicketAmountField.value
         ) {
           chargeCount++;
         }
         if (
-          count3DescField.valueData?.text ||
-          count3SectionField.valueData?.text ||
+          count3DescField.value ||
+          count3SectionField.valuet ||
           count3TicketAmountField.value
         ) {
           chargeCount++;
         }
         this.logger.info('chargeCount', chargeCount);
 
-        const shellTicket: ShellTicketView = {
-          violationTicketNumber: String(invoiceIdField.value),
-          violationTime: '',
-          violationDate: '',
+    const shellTicket: ShellTicketView = {
+      violationTicketNumber: invoiceIdField.value
+        ? String(invoiceIdField.value)
+        : '',
+      violationTime: invoiceTimeField.value
+        ? invoiceTimeField.value.replace('.', ':')
+        : '',
+      violationDate: new Date(invoiceDateField.value),
 
-          lastName: surnameField.valueData?.text
-            ? surnameField.valueData?.text
-            : '',
-          givenNames: givenNameField.valueData?.text
-            ? givenNameField.valueData?.text
-            : '',
-          birthdate: '',
-          gender: '',
-          address: '',
-          city: '',
-          province: '',
-          postalCode: '',
-          driverLicenseNumber: '',
-          driverLicenseProvince: '',
-          courtHearingLocation: '',
-          detachmentLocation: '',
+      lastName: surnameField.value
+        ? surnameField.value
+        : '',
+      givenNames: givenNameField.value
+        ? givenNameField.value
+        : '',
+      birthdate: '',
+      gender: '',
+      address: '',
+      city: '',
+      province: '',
+      postalCode: '',
+      driverLicenseNumber: driverLicenceField.value
+        ? driverLicenceField.value
+        : '',
+      driverLicenseProvince: '',
+      courtHearingLocation: '',
+      detachmentLocation: detachmentLocationField.value
+        ? detachmentLocationField.value
+        : '',
 
-          count1Charge: null,
-          _count1ChargeDesc: count1DescField.valueData?.text
-            ? count1DescField.valueData?.text
-            : '',
-          _count1ChargeSection: count1SectionField.valueData?.text
-            ? count1SectionField.valueData?.text.replace(/\s/g, '')
-            : '',
-          count1FineAmount: count1TicketAmountField.value
-            ? Number(count1TicketAmountField.value)
-            : 0,
-          count2Charge: null,
-          _count2ChargeDesc: count2DescField.valueData?.text
-            ? count2DescField.valueData?.text
-            : '',
-          _count2ChargeSection: count2SectionField.valueData?.text
-            ? count2SectionField.valueData?.text.replace(/\s/g, '')
-            : '',
-          count2FineAmount: count2TicketAmountField.value
-            ? Number(count2TicketAmountField.value)
-            : 0,
-          count3Charge: null,
-          _count3ChargeDesc: count3DescField.valueData?.text
-            ? count3DescField.valueData?.text
-            : '',
-          _count3ChargeSection: count3SectionField.valueData?.text
-            ? count3SectionField.valueData?.text.replace(/\s/g, '')
-            : '',
-          count3FineAmount: count3TicketAmountField.value
-            ? Number(count3TicketAmountField.value)
-            : 0,
-          _chargeCount: chargeCount,
-          _amountOwing: 0,
-        };
+      count1Charge: count1ActRegsField.value
+        ? count1ActRegsField.value
+        : '',
+      _count1ChargeDesc: count1DescField.value
+        ? count1DescField.value
+        : '',
+      _count1ChargeSection: count1SectionField.value
+        ? count1SectionField.value.replace(/\s/g, '')
+        : '',
+      count1FineAmount: count1TicketAmountField.value
+        ? Number(count1TicketAmountField.value)
+        : 0,
+      count2Charge: count2ActRegsField.value
+        ? count2ActRegsField.value
+        : '',
+      _count2ChargeDesc: count2DescField.value
+        ? count2DescField.value
+        : '',
+      _count2ChargeSection: count2SectionField.value
+        ? count2SectionField.value.replace(/\s/g, '')
+        : '',
+      count2FineAmount: count2TicketAmountField.value
+        ? Number(count2TicketAmountField.value)
+        : 0,
+      count3Charge: count3ActRegsField.value
+        ? count3ActRegsField.value
+        : '',
+      _count3ChargeDesc: count3DescField.value
+        ? count3DescField.value
+        : '',
+      _count3ChargeSection: count3SectionField.value
+        ? count3SectionField.value.replace(/\s/g, '')
+        : '',
+      count3FineAmount: count3TicketAmountField.value
+        ? Number(count3TicketAmountField.value)
+        : 0,
+      _chargeCount: chargeCount,
+      _amountOwing: 0,
+    };
 
         this.logger.info('before', { ...shellTicket });
 
-        shellTicket.count1Charge = this.findMatchingCharge(
-          shellTicket._count1ChargeDesc,
-          shellTicket._count1ChargeSection
-        );
-        shellTicket.count2Charge = this.findMatchingCharge(
-          shellTicket._count2ChargeDesc,
-          shellTicket._count2ChargeSection
-        );
-        shellTicket.count3Charge = this.findMatchingCharge(
-          shellTicket._count3ChargeDesc,
-          shellTicket._count3ChargeSection
-        );
+        // shellTicket.count1Charge = this.findMatchingCharge(
+        //   shellTicket._count1ChargeDesc,
+        //   shellTicket._count1ChargeSection
+        // );
+        // shellTicket.count2Charge = this.findMatchingCharge(
+        //   shellTicket._count2ChargeDesc,
+        //   shellTicket._count2ChargeSection
+        // );
+        // shellTicket.count3Charge = this.findMatchingCharge(
+        //   shellTicket._count3ChargeDesc,
+        //   shellTicket._count3ChargeSection
+        // );
 
         // console.log('after', { ...shellTicket });
 
@@ -598,8 +674,8 @@ export class ShellTicketComponent implements OnInit {
         // this.disputeService.shellTicket$.next(shellTicket);
 
         this.progressRef.complete();
-      });
-    };
+      // });
+    // };
   }
 
   private onRejected(info) {

@@ -121,7 +121,7 @@ export class MockDisputeService {
             max: 59,
           })
           .toString(),
-      violationDate: '2021-09-18',
+      violationDate: new Date(),
       discountDueDate: soonDate,
       discountAmount: 25,
       disputant: null,
@@ -223,7 +223,7 @@ export class MockDisputeService {
             max: 59,
           })
           .toString(),
-      violationDate: '2021-09-18',
+      violationDate: new Date(),
       discountDueDate: soonDate,
       discountAmount: 25,
       disputant: null,

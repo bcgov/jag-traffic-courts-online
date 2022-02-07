@@ -141,6 +141,10 @@ public getCountData(newObj):void{
         _allowApplyToAllCounts: false
       });
     }
+    if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]]._skip){
+      this.saveStep(stepper);
+    }
+    
     if(currentStep ==2 && this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._allowApplyToAllCounts){
       let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
       let listArray = [2,3,4].filter((ele)=> ele != currentStep)

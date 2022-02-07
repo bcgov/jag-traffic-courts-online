@@ -153,4 +153,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit,On
   public get within30days(): FormControl {
     return this.form.get('_within30days') as FormControl;
   }
+  public get _skip(): FormControl {
+    return this.form.get('_skip') as FormControl;
+  }
 }

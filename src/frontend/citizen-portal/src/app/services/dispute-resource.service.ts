@@ -8,7 +8,7 @@ import { ToastService } from '@core/services/toast.service';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { TicketSearchResult } from 'app/api/model/ticketSearchResult.model';
-import { DisputesService, ShellTicket, TicketsService, TicketDispute } from 'app/api';
+import { DisputesService, ShellTicket, TicketsService, TicketDispute, OcrViolationTicket } from 'app/api';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -59,6 +59,37 @@ export class DisputeResourceService {
         })
       );
   }
+
+  	public postTicket(
+	  image: any
+  	): Observable<OcrViolationTicket> {
+      const formData = new FormData();
+      formData.append('image',image)
+	  return this.ticketAPIService.apiTicketsAnalysePost(image)
+	    .pipe(
+	      map((response: any) =>
+	        response ? response : null
+	      ),
+	      map((ticket: any) => {
+	        if (ticket) {
+	        console.log('service',ticket)
+	        }
+
+	        return ticket;
+	      }),
+	      tap((updatedTicket) =>
+	        this.logger.info('DisputeResourceService::getTicket', updatedTicket)
+	      ),
+	      catchError((error: any) => {
+	        this.toastService.openErrorToast(this.configService.ticket_error);
+	        this.logger.error(
+	          'DisputeResourceService::getTicket error has occurred: ',
+	          error
+	        );
+	        throw error;
+	      })
+	    );
+	}
 
   /**
    * Create the ticket dispute

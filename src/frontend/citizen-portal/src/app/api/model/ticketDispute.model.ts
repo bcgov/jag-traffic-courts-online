@@ -17,7 +17,7 @@ import { Offence } from './offence.model';
 export interface TicketDispute { 
     violationTicketNumber?: string | null;
     violationTime?: string | null;
-    violationDate?: string | null;
+    violationDate?: Date | null;
     disputant?: Disputant;
     additional?: Additional;
     offences?: Array<Offence> | null;
