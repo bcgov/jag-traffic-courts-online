@@ -21,6 +21,11 @@
   display: flex
   
 }
+.tool-tip{
+  color: deepskyblue;
+  transform: scale(0.70); 
+  vertical-align: middle;
+}
 .time-picker-input{
   width: 100%;
   background: inherit;
