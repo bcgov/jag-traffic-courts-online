@@ -221,8 +221,8 @@ export class DisputeResourceService {
       }
     } else {
       if (amountDue > 0) {
-        offenceStatus = 'Owe';
-        offenceStatusDesc = 'Balance outstanding';
+        offenceStatus = 'complete';
+        offenceStatusDesc = 'Active';
       } else {
         offenceStatus = 'Active';
         offenceStatusDesc = 'Active';

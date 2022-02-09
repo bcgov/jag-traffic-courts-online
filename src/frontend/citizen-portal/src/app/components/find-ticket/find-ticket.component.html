@@ -11,11 +11,11 @@
           [attr.aria-expanded]="accordionItem.expanded"
           [attr.aria-controls]="'accordion-body'">
           <div class="subheader-desc" (click)="accordionItem.toggle()">
-            Request fine reductions or time to pay, or dispute your Motor Vehicle Act violation ticket. 
-            <span class="text-primary ms-3"><u>
+            Request fine reductions or time to pay, or dispute your Motor Vehicle Act violation ticket.<br>
+            <a style="color: deepskyblue;"><u>
               {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
             </u>
-            </span>
+          </a>
           </div>
           <div
             role="region"
@@ -95,13 +95,13 @@
               (ngSubmit)="onSearch()"
               novalidate>
           <div class="row">
-            <h3 class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></h3>
+            <span class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></span>
 
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Enter violation ticket number</mat-label>
                 <input formControlName="ticketNumber"
-                       placeholder="XX-00000000"
+                       placeholder="XX00000000"
                        matInput
                        type="text"
                        oninput="this.value =
@@ -150,14 +150,6 @@
 
           <div class="row">
             <div class="col">
-              <a class="view-link"
-                 (click)="onViewTicketExample()">
-                <img class="me-2"
-                     src="/assets/ticket-example-icon.svg" />
-                <span class="view-link-text">View ticket examples</span>
-              </a>
-            </div>
-            <div class="col">
               <button type="submit"
                       mat-flat-button
                       color="primary"
@@ -188,8 +180,9 @@
         </div>
       </div>
       <div class="row">
-        <h3 class="text-dark px-5"><strong>If your ticket number starts with A:</strong></h3>
-
+        <span class="text-dark mb-2"><strong>If your ticket number starts with A:</strong></span>
+          </div>      
+      <div class="row">
         <div class="col">
           <button type="button"
                   mat-raised-button
@@ -199,7 +192,11 @@
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
             Upload ticket image
           </button>
-
+          <div class="row mb-4">
+            <span>I can't upload an image of my ticket
+              <mat-icon class="tool-tip">info</mat-icon>
+            </span>
+          </div>
           <input hidden
                  (change)="onFileChange($event)"
                  #fileInput
@@ -208,6 +205,9 @@
                  id="file" />
         </div>
       </div>
+      <div class="row m-2">
+        <hr style="opacity: 100%;">
+       </div>
       <div class="row">
         <div class="col">
           <a class="view-link"
@@ -215,6 +215,14 @@
             <img class="me-2"
                 src="/assets/image-requirements-icon.svg" />
             <span class="view-link-text">View image requirements</span>
+          </a>
+        </div>
+        <div class="col">
+          <a class="view-link"
+             (click)="onViewTicketExample()">
+            <img class="me-2"
+                 src="/assets/ticket-example-icon.svg" />
+            <span class="view-link-text">View ticket examples</span>
           </a>
         </div>
       </div>
