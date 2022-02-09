@@ -34,7 +34,8 @@ export class FindTicketComponent implements OnInit {
   public form: FormGroup;
 
   public notFound = false;
-  protected basePath = 'http://localhost:5000'; 
+  // protected basePath = 'http://localhost:5000'; 
+  protected basePath = ''; 
   public configuration = new Configuration();
   // public encoder: HttpParameterCodec;
 
@@ -152,7 +153,7 @@ export class FindTicketComponent implements OnInit {
 
       const formParams = { image:ticketFile};
       const fd = new FormData();
-      fd.append('image',ticketFile);
+      fd.append('file',ticketFile);
       console.log('fd',ticketFile,filename);
 
       // this.busy = this.disputeResource

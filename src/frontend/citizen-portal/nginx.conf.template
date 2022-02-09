@@ -39,6 +39,7 @@ location /nginx_status {
 
 location /api/ {
     proxy_pass ${API_BASE_PATH};
+    client_max_body_size 10M;
 }
 
 # Disables emitting nginx version in error messages and in the “Server” response header field.
