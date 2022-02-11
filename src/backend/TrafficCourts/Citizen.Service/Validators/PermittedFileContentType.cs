@@ -26,6 +26,6 @@ public class PermittedFileContentType : ValidationAttribute
 
     public string GetErrorMessage(string contentType)
     {
-        return String.Format($"ContentType '{contentType}' is not allowed.", contentType);
+        return string.Format($"ContentType '{contentType}' is not allowed.", contentType);
     }
 }

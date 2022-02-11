@@ -29,7 +29,7 @@ public class CheckboxIsValidRuleTest
             Assert.Single(rule.Field.ValidationErrors);
             foreach (string errorMsg in rule.Field.ValidationErrors)
             {
-                Assert.Equal(String.Format(ValidationMessages.CheckboxInvalid, name, value), errorMsg);
+                Assert.Equal(string.Format(ValidationMessages.CheckboxInvalid, name, value), errorMsg);
             }
         }
         else

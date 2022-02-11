@@ -18,14 +18,14 @@ public class TimeRule : ValidationRule
     {
         if (Field.Value is null)
         {
-            AddValidationError(String.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
+            AddValidationError(string.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
         }
         else
         {
             TimeSpan? time = Field.GetTime();
             if (time is null)
             {
-                AddValidationError(String.Format(ValidationMessages.TimeInvalid, Field.Value));
+                AddValidationError(string.Format(ValidationMessages.TimeInvalid, Field.Value));
             }
         }
     }
