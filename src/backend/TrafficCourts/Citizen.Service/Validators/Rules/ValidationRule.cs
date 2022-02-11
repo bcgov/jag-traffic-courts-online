@@ -20,6 +20,7 @@ public abstract class ValidationRule
     public void AddValidationError(string message)
     {
         Field.ValidationErrors.Add(message);
+        Field.FieldConfidence = 0;
     }
 
     public abstract void Run();

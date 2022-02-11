@@ -16,7 +16,7 @@ public class TicketAmountValidRule : ValidationRule
     {
         if (Field.Value is not null && Field.GetCurrency() is null)
         {
-            Field.ValidationErrors.Add(String.Format(ValidationMessages.CurrencyInvalid, Field.Value));
+            AddValidationError(String.Format(ValidationMessages.CurrencyInvalid, Field.Value));
         }
     }
 }
