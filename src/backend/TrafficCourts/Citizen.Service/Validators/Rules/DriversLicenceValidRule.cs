@@ -34,7 +34,7 @@ public class DriversLicenceValidRule : ValidationRule
         
         if (Field.Value is not null && provMatches && !Regex.IsMatch(Field.Value, DriverLicenceNumberRegex))
         {
-            Field.ValidationErrors.Add(ValidationMessages.DriversLicenceNumberError);
+            AddValidationError(ValidationMessages.DriversLicenceNumberError);
         }
     }
 }

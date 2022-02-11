@@ -11,7 +11,7 @@ public class CheckboxIsValidRule : ValidationRule
     public override void Run()
     {
         if (Field.IsCheckboxSelected() is null) {
-            Field.ValidationErrors.Add(String.Format(ValidationMessages.CheckboxInvalid, Field.TagName, Field.Value));
+            AddValidationError(String.Format(ValidationMessages.CheckboxInvalid, Field.TagName, Field.Value));
         }
     }
 }

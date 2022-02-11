@@ -19,6 +19,10 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
 
         ApplyFieldRules(violationTicket);
+
+        // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
+        LowConfidenceGlobalRule.Run(violationTicket);
+
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
