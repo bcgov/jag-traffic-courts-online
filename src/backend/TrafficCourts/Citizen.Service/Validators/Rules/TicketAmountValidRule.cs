@@ -14,9 +14,18 @@ public class TicketAmountValidRule : ValidationRule
 
     public override void Run()
     {
-        if (Field.Value is not null && Field.GetCurrency() is null)
+        if (Field.Value is not null)
         {
-            AddValidationError(String.Format(ValidationMessages.CurrencyInvalid, Field.Value));
+            float? currency = Field.GetCurrency();
+            if (currency is null)
+            {
+                AddValidationError(String.Format(ValidationMessages.CurrencyInvalid, Field.Value));
+            }
+            else
+            {
+                // Format the Field Value as recognized by the validator
+                Field.Value =  String.Format("{0:C}", currency);
+            }
         }
     }
 }

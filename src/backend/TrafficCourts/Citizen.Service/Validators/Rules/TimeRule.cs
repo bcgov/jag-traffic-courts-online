@@ -27,6 +27,11 @@ public class TimeRule : ValidationRule
             {
                 AddValidationError(String.Format(ValidationMessages.TimeInvalid, Field.Value));
             }
+            else
+            {
+                // Format the Field Value as recognized by the validator
+                Field.Value = time.Value.ToString(@"hh\:mm");
+            }
         }
     }
 }

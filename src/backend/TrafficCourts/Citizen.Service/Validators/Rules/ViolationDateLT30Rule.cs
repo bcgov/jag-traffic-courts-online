@@ -23,6 +23,9 @@ public class ViolationDateLT30Rule : ValidationRule
         }
         else
         {
+            // Format the Field Value as recognized by the validator
+            Field.Value = violationDate.Value.ToString("yyyy-MM-dd");
+
             DateTime dateTime = DateTime.Now;
             // remove time portion (which may affect the below calculations)
             DateTime now = new(dateTime.Year, dateTime.Month, dateTime.Day);
