@@ -18,7 +18,7 @@ public class FieldMatchesRegexRule : ValidationRule
     {
         if (Field.Value is null)
         {
-            Field.ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, Field.JsonName));
+            Field.ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
         }
         else if (!Regex.IsMatch(Field.Value, _pattern))
         {
