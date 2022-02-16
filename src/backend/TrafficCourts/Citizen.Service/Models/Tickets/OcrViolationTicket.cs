@@ -72,18 +72,18 @@ public class OcrViolationTicket
 
         public Field() { }
 
-        public Field(String? value)
+        public Field(string? value)
         {
             Value = value;
         }
 
         [JsonIgnore]
-        public String? TagName { get; set; }
+        public string? TagName { get; set; }
 
         [JsonIgnore]
-        public String? JsonName { get; set; }
+        public string? JsonName { get; set; }
 
-        public String? Value { get; set; }
+        public string? Value { get; set; }
 
         public float? FieldConfidence { get; set; }
 
@@ -92,7 +92,7 @@ public class OcrViolationTicket
         /// </summary>
         public List<string> ValidationErrors { get; set; } = new List<string>();
 
-        public String? Type { get; set; }
+        public string? Type { get; set; }
 
         public List<BoundingBox> BoundingBoxes { get; set; } = new List<BoundingBox>();
 
@@ -121,13 +121,13 @@ public class OcrViolationTicket
                     Match match = rg.Match(Value);
                     if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
                     {
-                        int year = Int32.Parse(match.Groups[1].Value);
+                        int year = int.Parse(match.Groups[1].Value);
                         if (year < 100)
                         {
                             year += 2000;
                         }
-                        int month = Int32.Parse(match.Groups[2].Value);
-                        int day = Int32.Parse(match.Groups[3].Value);
+                        int month = int.Parse(match.Groups[2].Value);
+                        int day = int.Parse(match.Groups[3].Value);
                         return new DateTime(year, month, day);
                     }
                     else
@@ -136,9 +136,9 @@ public class OcrViolationTicket
                         string newValue = Regex.Replace(Value, @"\D", "");
                         if (newValue.Length == 8)
                         {
-                            int year = Int32.Parse(newValue[..4]);
-                            int month = Int32.Parse(newValue.Substring(4, 2));
-                            int day = Int32.Parse(newValue.Substring(6, 2));
+                            int year = int.Parse(newValue[..4]);
+                            int month = int.Parse(newValue.Substring(4, 2));
+                            int day = int.Parse(newValue.Substring(6, 2));
                             return new DateTime(year, month, day);
                         }
                     }
@@ -162,8 +162,8 @@ public class OcrViolationTicket
                     Match match = rg.Match(Value);
                     if (match.Groups.Count == 3 && Value.Length > 2) // 2 + index 0 (the Value itself)
                     {
-                        int hour = Int32.Parse(match.Groups[1].Value);
-                        int minute = Int32.Parse(match.Groups[2].Value);
+                        int hour = int.Parse(match.Groups[1].Value);
+                        int minute = int.Parse(match.Groups[2].Value);
                         return new(hour, minute, 0);
                     }
                     else
@@ -172,8 +172,8 @@ public class OcrViolationTicket
                         string newValue = Regex.Replace(Value, @"\D", "");
                         if (newValue.Length == 4)
                         {
-                            int hour = Int32.Parse(newValue[..2]);
-                            int minute = Int32.Parse(newValue.Substring(2, 2));
+                            int hour = int.Parse(newValue[..2]);
+                            int minute = int.Parse(newValue.Substring(2, 2));
                             return new(hour, minute, 0);
                         }
                     }

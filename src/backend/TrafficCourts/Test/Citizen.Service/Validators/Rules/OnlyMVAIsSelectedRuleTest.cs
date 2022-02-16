@@ -43,7 +43,7 @@ public class OnlyMVAIsSelectedRuleTest
             Assert.Single(rule.Field.ValidationErrors);
             foreach (string errorMsg in rule.Field.ValidationErrors)
             {
-                Assert.True(Regex.IsMatch(errorMsg, expectedPattern), String.Format("Expected '{0}', Actual '{1}'", expectedPattern, errorMsg));
+                Assert.True(Regex.IsMatch(errorMsg, expectedPattern), string.Format("Expected '{0}', Actual '{1}'", expectedPattern, errorMsg));
             }
         }
         else

@@ -51,7 +51,7 @@ public class FormRecognizerService : IFormRecognizerService
         { "Detachment Location",        OcrViolationTicket.DetachmentLocation }
     };
 
-    public FormRecognizerService(String apiKey, Uri endpoint, ILogger<FormRecognizerService> logger)
+    public FormRecognizerService(string apiKey, Uri endpoint, ILogger<FormRecognizerService> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));

@@ -103,7 +103,7 @@ namespace TrafficCourts.Ticket.Search.Service.Services
             offence.AmountDue = (int)item.AmountDue * 100;
             offence.OffenceDescription = item.OffenceDescription;
             offence.InvoiceType = item.InvoiceType;
-            offence.VehicleDescription = item.VehicleDescription ?? String.Empty;
+            offence.VehicleDescription = item.VehicleDescription ?? string.Empty;
             offence.TicketedAmount = (int)item.TicketedAmount * 100;
 
             return offence;
