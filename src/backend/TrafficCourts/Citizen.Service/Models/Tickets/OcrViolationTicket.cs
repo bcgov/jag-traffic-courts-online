@@ -63,26 +63,12 @@ public class OcrViolationTicket
     /// </summary>
     public Dictionary<string, Field> Fields { get; set; } = new Dictionary<string, Field>();
 
-    /// <summary>
-    /// Helper method to return the given field from the Fields Dictionary (workaround for KeyNotFoundException).
-    /// </summary>
-    public Field? GetField(string fieldName)
-    {
-        if (Fields.TryGetValue(fieldName, out Field? field))
-        {
-            return field;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
     public class Field
     {
 
         private static readonly string DateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
         private static readonly string TimeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
+        private static readonly string CurrencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
 
         public Field() { }
 
@@ -190,6 +176,27 @@ public class OcrViolationTicket
                             int minute = int.Parse(newValue.Substring(2, 2));
                             return new(hour, minute, 0);
                         }
+                    }
+                }
+                catch (System.Exception)
+                {
+                    // No-op.  Will return null.
+                }
+            }
+            return null;
+        }
+
+        /// <summary>Returns a valid float if the Value string represents a currency and is of the form '$xx.xx' (or similar), null otherwise.</summary>
+        public float? GetCurrency()
+        {
+            if (Value is not null)
+            {
+                try
+                {
+                    Regex rg = new(CurrencyRegex);
+                    if (Regex.IsMatch(Value, CurrencyRegex))
+                    {
+                        return float.Parse(Value.Replace("$", "").Replace(",", ""));
                     }
                 }
                 catch (System.Exception)

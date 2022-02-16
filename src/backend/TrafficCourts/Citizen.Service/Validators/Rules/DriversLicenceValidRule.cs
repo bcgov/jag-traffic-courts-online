@@ -26,15 +26,15 @@ public class DriversLicenceValidRule : ValidationRule
         // - if Driver's Licence Number is blank flag for staff review
         OcrViolationTicket.Field province = _violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince];
         bool provMatches = true;
-        if (province.Value is null || !Regex.IsMatch(province.Value, DriverLicenceProvinceRegex))
+        if (province.Value is not null && !Regex.IsMatch(province.Value, DriverLicenceProvinceRegex))
         {
             province.ValidationErrors.Add(ValidationMessages.DriversLicenceProvinceError);
             provMatches = false;
         }
         
-        if (Field.Value is null || (provMatches && !Regex.IsMatch(Field.Value, DriverLicenceNumberRegex)))
+        if (Field.Value is not null && provMatches && !Regex.IsMatch(Field.Value, DriverLicenceNumberRegex))
         {
-            Field.ValidationErrors.Add(ValidationMessages.DriversLicenceNumberError);
+            AddValidationError(ValidationMessages.DriversLicenceNumberError);
         }
     }
 }

@@ -19,8 +19,8 @@ public class DriversLicenceValidRuleTest
     [InlineData("BC", "12345678", true, false)]
     [InlineData("BC", "123456", true, false)]
     [InlineData("AB", "1234567", false, true)]
-    [InlineData(null, "1234567", false, true)]
-    [InlineData("BC", null, true, false)]
+    [InlineData(null, "1234567", true, true)]
+    [InlineData("BC", null, true, true)]
     public void TestDriversLicenceIsValid(string province, string licenceNumber, bool expectProvValid, bool expectLicValid)
     {
         // Given
@@ -49,10 +49,10 @@ public class DriversLicenceValidRuleTest
                 Assert.Equal(ValidationMessages.DriversLicenceNumberError, licenceField.ValidationErrors[0]);
             }
         }
-        else
+        else if (province is not null)
         {
-            Assert.Single(provinceField.ValidationErrors);
-            Assert.Equal(ValidationMessages.DriversLicenceProvinceError, provinceField.ValidationErrors[0]);
-        }
+            Assert.Single(provinceField.ValidationErrors); 
+            Assert.Equal(ValidationMessages.DriversLicenceProvinceError, provinceField.ValidationErrors[0]); 
+        } 
     }
 }

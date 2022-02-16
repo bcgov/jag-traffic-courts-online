@@ -75,19 +75,46 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <response code="200">The file appears to be a valid Violation Ticket. JSON data is extracted.</response>
-        /// <response code="400">The Violation Ticket does not appear to be valid. Either the ticket title could not be found,
-        /// the ticket number is invalid, the violation date is invalid or more than 30 days ago, or MVA is not selected or 
-        /// not the only ACT selected.</response>
+        /// <response code="400">The uploaded file is too large or the Violation Ticket does not appear to be valid. Either 
+        /// the ticket title could not be found, the ticket number is invalid, the violation date is invalid or more than 
+        /// 30 days ago, or MVA is not selected or not the only ACT selected.</response>
         [HttpPost]
         [ProducesResponseType(typeof(OcrViolationTicket), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [DisableRequestSizeLimit]
+        [RequestSizeLimit(10485760)]
         public async Task<IActionResult> AnalyseAsync(
             [Required][PermittedFileContentType(new string[] { "image/png", "image/jpeg", "application/pdf" })] IFormFile file,
             CancellationToken cancellationToken)
         {
             AnalyseHandler.AnalyseRequest request = new(file);
-            AnalyseHandler.AnalyseResponse response = await _mediator.Send(request, cancellationToken);
+            AnalyseHandler.AnalyseResponse response;
+            try
+            {
+                response = await _mediator.Send(request, cancellationToken);
+            }
+            catch (Azure.RequestFailedException e)
+            {
+                _logger.LogError(e, "Azure.RequestFailedException");
+                ProblemDetails problemDetails = new();
+                problemDetails.Status = e.Status;
+                problemDetails.Title = e.Source + ": " + e.ErrorCode;
+                problemDetails.Instance = HttpContext?.Request?.Path;
+                problemDetails.Extensions.Add("errors", e.Message);
+
+                return new ObjectResult(problemDetails);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Exception invoking Azure Form Recognizer");
+                ProblemDetails problemDetails = new();
+                problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+                problemDetails.Title = "Error invoking Azure Form Recognizer";
+                problemDetails.Instance = HttpContext?.Request?.Path;
+                problemDetails.Extensions.Add("errors", e.Message);
+
+                return new ObjectResult(problemDetails);
+            }
+
             if (response.OcrViolationTicket.GlobalValidationErrors.Count > 0)
             {
                 // Return BadRequest 

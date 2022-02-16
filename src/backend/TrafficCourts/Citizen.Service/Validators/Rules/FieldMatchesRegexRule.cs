@@ -18,11 +18,11 @@ public class FieldMatchesRegexRule : ValidationRule
     {
         if (Field.Value is null)
         {
-            Field.ValidationErrors.Add(string.Format(ValidationMessages.FieldIsBlankError, Field.JsonName));
+            AddValidationError(String.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
         }
         else if (!Regex.IsMatch(Field.Value, _pattern))
         {
-            Field.ValidationErrors.Add(_reason);
+            AddValidationError(_reason);
         }
     }
 }

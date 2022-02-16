@@ -8,9 +8,12 @@ public static class ValidationMessages
     public static readonly string TicketTitleInvalid = @"Ticket title must be 'VIOLATION TICKET'.";
     public static readonly string TicketNumberInvalid = @"Violation ticket number must start with an A and be of the form 'AX00000000'.";
     public static readonly string CheckboxInvalid = @"Checkbox '{0}' has an unknown value '{1}'. Expecting 'selected' or 'unselected'.";
+    public static readonly string CurrencyInvalid = @"Amount '{0}' is not a valid currency value.";
     public static readonly string MVAMustBeSelectedError = @"MVA must be selected under the 'Did commit the offence(s) indicated' section.";
     public static readonly string OnlyMVAMustBeSelectedError = @"MVA must be the only selected ACT under the 'Did commit the offence(s) indicated' section.";
     public static readonly string ViolationDateInvalid = @"Violation Date must be a valid date. Read '{0}'.";
+    public static readonly string ViolationDateFutureInvalid = @"Violation Date must not be in the future. Read '{0}'.";
     public static readonly string ViolationDateGT30Days = @"Violation Date '{0}' is more than 30 days ago.";
     public static readonly string TimeInvalid = @"'{0}' is not a valid time.";
+    public static readonly string LowConfidenceError = "Too many fields have a low confidence.";
 }

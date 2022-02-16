@@ -29,7 +29,7 @@ public class ViolationDateLT30Rule : ValidationRule
             if (violationDate > now)
             {
                 // Violation Date is in the future ... we must have mis-read it.  Consider this invalid.
-                AddValidationError(string.Format(ValidationMessages.ViolationDateInvalid, Field.Value));
+                AddValidationError(String.Format(ValidationMessages.ViolationDateFutureInvalid, Field.Value));
             }
             else if (violationDate < (now.AddDays(-30)))
             {
