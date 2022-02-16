@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{7B716295-C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Workflow.Service", "Workflow.Service\TrafficCourts.Workflow.Service.csproj", "{9B1ABBE6-249B-4AB4-8AE2-48FBAEDEB8AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.Ticket.Search.Service", "TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj", "{DC5129D4-DAC0-44B0-8335-8FA8F9FBA113}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Ticket.Search.Service", "TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj", "{DC5129D4-DAC0-44B0-8335-8FA8F9FBA113}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.Arc.Dispute.Service", "TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj", "{58705BA7-9770-426E-A0D2-A98BEBAB9F55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{DC5129D4-DAC0-44B0-8335-8FA8F9FBA113}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC5129D4-DAC0-44B0-8335-8FA8F9FBA113}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC5129D4-DAC0-44B0-8335-8FA8F9FBA113}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
