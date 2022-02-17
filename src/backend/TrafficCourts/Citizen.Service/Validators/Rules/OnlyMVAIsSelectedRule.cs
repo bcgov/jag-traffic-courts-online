@@ -17,14 +17,14 @@ public class OnlyMVAIsSelectedRule : ValidationRule
 
     public override void Run()
     {
-        bool? mva = _violationTicket.Fields[OcrViolationTicket.OffenseIsMVA].IsCheckboxSelected();
-        bool? mca = _violationTicket.Fields[OcrViolationTicket.OffenseIsMCA].IsCheckboxSelected();
-        bool? cta = _violationTicket.Fields[OcrViolationTicket.OffenseIsCTA].IsCheckboxSelected();
-        bool? wla = _violationTicket.Fields[OcrViolationTicket.OffenseIsWLA].IsCheckboxSelected();
-        bool? faa = _violationTicket.Fields[OcrViolationTicket.OffenseIsFAA].IsCheckboxSelected();
-        bool? lca = _violationTicket.Fields[OcrViolationTicket.OffenseIsLCA].IsCheckboxSelected();
-        bool? tcr = _violationTicket.Fields[OcrViolationTicket.OffenseIsTCR].IsCheckboxSelected();
-        bool? other = _violationTicket.Fields[OcrViolationTicket.OffenseIsOther].IsCheckboxSelected();
+        bool? mva = _violationTicket.Fields[OcrViolationTicket.OffenceIsMVA].IsCheckboxSelected();
+        bool? mca = _violationTicket.Fields[OcrViolationTicket.OffenceIsMCA].IsCheckboxSelected();
+        bool? cta = _violationTicket.Fields[OcrViolationTicket.OffenceIsCTA].IsCheckboxSelected();
+        bool? wla = _violationTicket.Fields[OcrViolationTicket.OffenceIsWLA].IsCheckboxSelected();
+        bool? faa = _violationTicket.Fields[OcrViolationTicket.OffenceIsFAA].IsCheckboxSelected();
+        bool? lca = _violationTicket.Fields[OcrViolationTicket.OffenceIsLCA].IsCheckboxSelected();
+        bool? tcr = _violationTicket.Fields[OcrViolationTicket.OffenceIsTCR].IsCheckboxSelected();
+        bool? other = _violationTicket.Fields[OcrViolationTicket.OffenceIsOther].IsCheckboxSelected();
 
         if (!mva ?? false)
         {

@@ -24,14 +24,14 @@ public class OnlyMVAIsSelectedRuleTest
     {
         // Given
         OcrViolationTicket violationTicket = new();
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsMVA, new Field(mva));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsMCA, new Field(mca));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsCTA, new Field(cta));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsWLA, new Field(wla));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsFAA, new Field(faa));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsLCA, new Field(lca));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsTCR, new Field(tcr));
-        violationTicket.Fields.Add(OcrViolationTicket.OffenseIsOther, new Field(other));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMVA, new Field(mva));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsMCA, new Field(mca));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsCTA, new Field(cta));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsWLA, new Field(wla));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsFAA, new Field(faa));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsLCA, new Field(lca));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsTCR, new Field(tcr));
+        violationTicket.Fields.Add(OcrViolationTicket.OffenceIsOther, new Field(other));
         OnlyMVAIsSelectedRule rule = new(new Field(mva), violationTicket);
 
         // When

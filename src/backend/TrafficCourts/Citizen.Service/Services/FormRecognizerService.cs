@@ -21,14 +21,14 @@ public class FormRecognizerService : IFormRecognizerService
         { "Drivers Licence Number",     OcrViolationTicket.DriverLicenceNumber },
         { "Violation Date",             OcrViolationTicket.ViolationDate },
         { "Violation Time",             OcrViolationTicket.ViolationTime },
-        { "Offense is MVA",             OcrViolationTicket.OffenseIsMVA },
-        { "Offense is MCA",             OcrViolationTicket.OffenseIsMCA },
-        { "Offense is CTA",             OcrViolationTicket.OffenseIsCTA },
-        { "Offense is WLA",             OcrViolationTicket.OffenseIsWLA },
-        { "Offense is FAA",             OcrViolationTicket.OffenseIsFAA },
-        { "Offense is LCA",             OcrViolationTicket.OffenseIsLCA },
-        { "Offense is TCR",             OcrViolationTicket.OffenseIsTCR },
-        { "Offense is Other",           OcrViolationTicket.OffenseIsOther },
+        { "Offence is MVA",             OcrViolationTicket.OffenceIsMVA },
+        { "Offence is MCA",             OcrViolationTicket.OffenceIsMCA },
+        { "Offence is CTA",             OcrViolationTicket.OffenceIsCTA },
+        { "Offence is WLA",             OcrViolationTicket.OffenceIsWLA },
+        { "Offence is FAA",             OcrViolationTicket.OffenceIsFAA },
+        { "Offence is LCA",             OcrViolationTicket.OffenceIsLCA },
+        { "Offence is TCR",             OcrViolationTicket.OffenceIsTCR },
+        { "Offence is Other",           OcrViolationTicket.OffenceIsOther },
         { "Count 1 Description",        OcrViolationTicket.Count1Description },
         { "Count 1 Act/Regs",           OcrViolationTicket.Count1ActRegs },
         { "Count 1 is ACT",             OcrViolationTicket.Count1IsACT },
@@ -64,7 +64,7 @@ public class FormRecognizerService : IFormRecognizerService
         DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
         using Stream stream = GetImageStream(image);
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket", stream, null, cancellationToken);
+        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket_v2", stream, null, cancellationToken);
         await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
         return analyseDocumentOperation.Value;
