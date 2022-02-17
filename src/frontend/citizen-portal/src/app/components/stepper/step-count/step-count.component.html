@@ -84,9 +84,11 @@
         </div>
 
         <div *ngIf="offenceAgreementStatus.value == 'DISPUTE'">
-          <mat-checkbox formControlName="disputeAppearInCourtDo" color="primary" class="w-100"> I agree I committed this offence and would like to request a fine reduction and/or time to pay on this count.</mat-checkbox>
+        <mat-radio-group formControlName="disputeAppearInCourt">
+          <mat-radio-button value="yes" color="primary" class="w-100"> I agree I committed this offence and would like to request a fine reduction and/or time to pay on this count.</mat-radio-button>
           <p> and/or</p>
-          <mat-checkbox formControlName="disputeAppearInCourtDoNot" color="primary" class="w-100"> I do not agree I committed this offence and would like to dispute this count</mat-checkbox>
+          <mat-radio-button value="no" color="primary" class="w-100"> I do not agree I committed this offence and would like to dispute this count</mat-radio-button>
+        </mat-radio-group>
         </div>
 <!--         
         <mat-checkbox formControlName="reductionAppearInCourtDo" *ngIf="offenceAgreementStatus?.value !== 'PAY'" color="primary" class="w-100"> I would like to appear in court in person and speak to a judicial judge about this count.<mat-icon>info</mat-icon></mat-checkbox>

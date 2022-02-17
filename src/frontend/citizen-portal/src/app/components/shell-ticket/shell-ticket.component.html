@@ -35,6 +35,82 @@
              class="img-fluid mb-4" />
       </span>
     </div>
+    <!-- <div class="col-lg-6 col-md-12">
+      <mat-stepper orientation="vertical" #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+          <form [formGroup]="firstFormGroup">
+            <section>
+              <div class="row">
+                <div class="col-lg-12 pb-4">
+                  <mat-form-field class="w-100 mb-2">
+                    <mat-label>Violation ticket number</mat-label>
+                    <input formControlName="violationTicketNumber"
+                           matInput
+                           type="text"
+                           oninput="this.value = this.value.toUpperCase()"
+                           mask="SS00000000"
+                           autocomplete="off" />
+                    <mat-hint>
+                      <strong>A ticket number is 2 letters and 8 numbers</strong>
+                    </mat-hint>
+                    <mat-error *ngIf="violationTicketNumber.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="violationTicketNumber.hasError('mask')">
+                      This ticket number is not valid. It must be 2 letters and 8
+                      numbers.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+    
+                <div class="col-lg-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Surname</mat-label>
+                    <input matInput
+                           formControlName="lastName" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+    
+                <div class="col-lg-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Given names</mat-label>
+                    <input matInput
+                           formControlName="givenNames" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+            <div>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+          <form [formGroup]="secondFormGroup">
+            <ng-template matStepLabel>Fill out your address</ng-template>
+            <mat-form-field appearance="fill">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                     required>
+            </mat-form-field>
+            <div>
+              <button mat-button matStepperPrevious>Back</button>
+              <button mat-button matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Done</ng-template>
+          <p>You are now done.</p>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="stepper.reset()">Reset</button>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </div> -->
     <div class="col-lg-6 col-md-12">
       <label><strong>Ticket details</strong></label>
       <form [formGroup]="form"
