@@ -1,7 +1,7 @@
 {
   "/api": {
-    "target": "http://citizen-api-0198bb-dev.apps.silver.devops.gov.bc.ca",
+    "target": "http://localhost:5000",
     "secure": false,
-    "changeOrigin": true
+    "logLevel": "debug"
   }
 }
