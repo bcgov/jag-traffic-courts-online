@@ -38,9 +38,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
         {
             if (ModelState.IsValid)
             {
-                var adnotatedTicketData = _mapper.Map<AdnotatedTicket>(disputeData);
-                var disputedTicketData = _mapper.Map<DisputedTicket>(disputeData);
-                return Ok(adnotatedTicketData);
+                var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
+                return Ok(arcFileRecords);
             }
             
             return BadRequest(ModelState);

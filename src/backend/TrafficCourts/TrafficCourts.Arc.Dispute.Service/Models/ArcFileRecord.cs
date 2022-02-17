@@ -22,8 +22,8 @@
     public class AdnotatedTicket : ArcFileRecord
     {
         public string Name { get; set; }
-        public int Section { get; set; }
-        public int Subsection { get; set; }
+        public string Section { get; set; }
+        public string Subsection { get; set; }
         public string Paragraph { get; set; }
         public string Act { get; set; }
         public double OriginalAmount { get; set; }
