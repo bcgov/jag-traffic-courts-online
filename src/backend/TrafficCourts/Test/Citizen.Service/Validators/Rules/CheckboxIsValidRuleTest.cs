@@ -42,10 +42,10 @@ public class CheckboxIsValidRuleTest
     {
         public TestData()
         {
-            Add(OcrViolationTicket.OffenseIsMVA, "selected", false);
-            Add(OcrViolationTicket.OffenseIsMVA, "unselected", false);
-            Add(OcrViolationTicket.OffenseIsMVA, "randomText", true);
-            Add(OcrViolationTicket.OffenseIsMVA, null, true);
+            Add(OcrViolationTicket.OffenceIsMVA, "selected", false);
+            Add(OcrViolationTicket.OffenceIsMVA, "unselected", false);
+            Add(OcrViolationTicket.OffenceIsMVA, "randomText", true);
+            Add(OcrViolationTicket.OffenceIsMVA, null, true);
         }
     }
 }
