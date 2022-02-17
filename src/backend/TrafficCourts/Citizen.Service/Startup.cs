@@ -9,6 +9,7 @@ using MediatR;
 using TrafficCourts.Common.Configuration;
 using ILogger = Serilog.ILogger;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Validators;
 using Microsoft.Extensions.Options;
@@ -48,6 +49,7 @@ public static class Startup
         Configure(builder, configuration?.MassTransit, logger);
         Configure(builder, configuration?.FormRecognizer, logger);
         Configure(builder, configuration?.TicketSearchClient, logger);
+        Configure(builder, configuration?.FlatFileLookupService, logger);
 
         // add MediatR handlers in this program
         builder.Services.AddMediatR(typeof(Startup).Assembly);
@@ -188,6 +190,26 @@ public static class Startup
         });
 
         builder.Services.AddSingleton<IFormRecognizerValidator, FormRecognizerValidator>();
+    }
+
+    /// <summary>
+    /// Configures Lookup Service.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="configuration"></param>
+    /// <param name="logger"></param>
+    private static void Configure(WebApplicationBuilder builder, FlatFileLookupServiceConfiguration? configuration, ILogger logger)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(logger);
+
+        builder.Services.AddSingleton<ILookupService>(service => {
+            var logger = service.GetRequiredService<ILogger<FlatFileLookupService>>();
+            if (configuration is null) {
+                configuration = new FlatFileLookupServiceConfiguration();
+            }
+            return new FlatFileLookupService(configuration.BasePath!, logger);
+        });
     }
 
     /// <summary>
