@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Arc.Dispute.Service.Models;
+using TrafficCourts.Arc.Dispute.Service.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,11 +12,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
     public class TcoDisputeTicketController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IArcFileService _arcFileService;
 
         // Assign the object in the constructor for dependency injection
-        public TcoDisputeTicketController(IMapper mapper)
+        public TcoDisputeTicketController(IMapper mapper, IArcFileService arcFileService)
         {
             _mapper = mapper;
+            _arcFileService = arcFileService;
         }
 
         // GET: api/<TcoDisputeTicketController>
@@ -39,6 +42,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
             if (ModelState.IsValid)
             {
                 var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
+
+                Stream stream = await _arcFileService.createArcFile(arcFileRecords);
                 return Ok(arcFileRecords);
             }
             
