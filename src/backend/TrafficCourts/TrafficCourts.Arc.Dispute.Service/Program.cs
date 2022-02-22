@@ -1,4 +1,5 @@
 using TrafficCourts.Arc.Dispute.Service.Mappings;
+using TrafficCourts.Arc.Dispute.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Registering and Initializing AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddScoped<IArcFileService, ArcFileService>();
 
 var app = builder.Build();
 

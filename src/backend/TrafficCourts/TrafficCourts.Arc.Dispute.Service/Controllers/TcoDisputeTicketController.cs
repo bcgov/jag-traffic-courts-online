@@ -43,8 +43,9 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
             {
                 var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
 
-                Stream stream = await _arcFileService.createArcFile(arcFileRecords);
-                return Ok(arcFileRecords);
+                var stream = await _arcFileService.createArcFile(arcFileRecords);
+                return File(stream, "application/octet-stream", "test.txt");
+                //return Ok(arcFileRecords);
             }
             
             return BadRequest(ModelState);
