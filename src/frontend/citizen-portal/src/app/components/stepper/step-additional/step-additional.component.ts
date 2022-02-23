@@ -44,12 +44,10 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
 
   };
   public newObj={
-    "2":{
-
-    },
-    "3":{
-
-    }
+      count1:'',
+      count: null,
+      reductionAppearInCourt :'',
+      reductionAppearInCourtDoNot:''
   };
   /**
    * Form field behaviour, customWitnessOption == true shows number input
@@ -77,19 +75,25 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
       disputeResource,
       disputeFormStateService
     );
+    console.log(">>>>>>>>>>",this.isShowCheckbox)
 
     this.languages = this.configService.languages;
   }
 
   public ngOnInit() {
     this.form = this.disputeFormStateService.stepAdditionalForm;
-    debugger
     this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
     this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
     this.patchForm();
+    debugger
+     console.log(">>>>>>>>>>",this.isShowCheckbox)
   }
   ngOnChanges(changes: SimpleChanges) {
     debugger
+    console.log(">>>>>>>>>>",this.isShowCheckbox)
+    let array = [...this.isShowCheckbox.reductionAppearInCourt,...this.isShowCheckbox.reductionAppearInCourtDoNot]
+    this.newObj.count = [...new Set(array)]
+    this.newObj.count1 = this.isShowCheckbox.disputeAppearInCourt
     console.log('-----------------------',changes);
    
     // if(changes.isShowCheckbox && changes.isShowCheckbox.currentValue && changes.isShowCheckbox.currentValue[2]){

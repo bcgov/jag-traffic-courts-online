@@ -29,16 +29,18 @@
   <div class="row">
     <div class="col-lg-6 col-md-12">
       <span *ngIf="ticketImageSrc">
-        <label><strong>Ticket image</strong></label>
+        <h1><strong>Ticket image</strong></h1>
         <img [src]="ticketImageSrc"
              style="width: 100%"
              class="img-fluid mb-4" />
       </span>
     </div>
-    <!-- <div class="col-lg-6 col-md-12">
+    <div class="col-lg-6 col-md-12">
+      <h1 class="mb-4" style="margin-left: 30px;"><strong>Ticket details</strong></h1>
       <mat-stepper orientation="vertical" #stepper>
-        <mat-step [stepControl]="firstFormGroup">
-          <form [formGroup]="firstFormGroup">
+        <mat-step [stepControl]="form">
+          <form [formGroup]="form">
+            <ng-template matStepLabel>Please review the details below and ensure they match the information on the ticket</ng-template>
             <section>
               <div class="row">
                 <div class="col-lg-12 pb-4">
@@ -53,17 +55,47 @@
                     <mat-hint>
                       <strong>A ticket number is 2 letters and 8 numbers</strong>
                     </mat-hint>
-                    <mat-error *ngIf="violationTicketNumber.hasError('required')">
+                    <!-- <mat-error *ngIf="violationTicketNumber.hasError('required')">
                       {{ "error.required" | translate }}
                     </mat-error>
                     <mat-error *ngIf="violationTicketNumber.hasError('mask')">
                       This ticket number is not valid. It must be 2 letters and 8
                       numbers.
+                    </mat-error> -->
+                  </mat-form-field>
+                </div>
+                <div class="col-lg-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Violation date</mat-label>
+                    <input matInput
+                           [matDatepicker]="picker"
+                           formControlName="violationDate"
+                           [max]="todayDate"
+                           readonly
+                           (click)="picker.open()" />
+                    <mat-datepicker-toggle matSuffix
+                                           [for]="picker">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker
+                                    [touchUi]="isMobile"
+                                    startView="multi-year"></mat-datepicker>
+                    <mat-error *ngIf="violationDate.hasError('required')">
+                      {{ "error.required" | translate }}
                     </mat-error>
                   </mat-form-field>
                 </div>
     
                 <div class="col-lg-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Violation time</mat-label>
+                    <input matInput
+                           type="time"
+                           formControlName="violationTime" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+    
+                <div class="col-lg-12">
                   <mat-form-field class="w-100">
                     <mat-label>Surname</mat-label>
                     <input matInput
@@ -72,7 +104,7 @@
                   </mat-form-field>
                 </div>
     
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                   <mat-form-field class="w-100">
                     <mat-label>Given names</mat-label>
                     <input matInput
@@ -80,394 +112,218 @@
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
+                <div class="col-lg-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Province / State of DL</mat-label>
+                    <input matInput
+                           formControlName="driverLicenseProvince" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+    
+                <div class="col-lg-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Drivers lincence number</mat-label>
+                    <input matInput
+                           formControlName="driverLicenseNumber"
+                           mask="0000000"
+                           autocomplete="off"
+                           [showMaskTyped]="false" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+                <p><strong>IF your surname, given names, or drivers licence number <span style="color: red;">do not match </span></strong>
+                the scanned ticket details, please check the box below and describe the difference</p>
+                <p><strong>EXample: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
+                <mat-checkbox color="primary" class="w-100" (click)='toggle()'> Yes, there are differences between the information on the tikcet
+                  and the information scanned above.
+                </mat-checkbox> <br>
+                <mat-form-field appearance="fill" [hidden]="isHidden">
+                  <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
+                  <textarea matInput #input
+                  rows="4"
+                  placeholder="qwert">
+
+                  </textarea>  </mat-form-field>
               </div>
             </section>
-            <div>
-              <button mat-button matStepperNext>Next</button>
+            <div class="row mb-4 mt-4">
+              <div class="col-lg-6">
+                <button id="secondaryButton"
+                        mat-stroked-button
+                        type="button"
+                        color="primary"
+                        class="large"
+                        routerLink="/ticket/find">
+                  Cancel and search again
+                </button>
+              </div>
+              <div class="offset-lg-2 col-lg-4">
+                <button type="button"
+                        mat-flat-button
+                        color="primary"
+                        class="large"
+                        matStepperNext>
+                  Next >
+                </button>
+              </div>
             </div>
           </form>
         </mat-step>
-        <mat-step [stepControl]="secondFormGroup">
-          <form [formGroup]="secondFormGroup">
-            <ng-template matStepLabel>Fill out your address</ng-template>
-            <mat-form-field appearance="fill">
-              <mat-label>Address</mat-label>
-              <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                     required>
-            </mat-form-field>
-            <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button matStepperNext>Next</button>
+        <!-- <mat-step [stepControl]="form">
+          <form [formGroup]="form">
+            <ng-template matStepLabel>Please review the details below and ensure they match the information on the ticket</ng-template>
+            <div class="row">
+              <div class="col-lg-4">
+                <mat-label class="w-100"><strong>Number of counts</strong></mat-label>
+              </div>
+              <div class="col-lg-8 pb-4">
+                <mat-radio-group aria-labelledby="Number of Counts"
+                                 formControlName="_chargeCount">
+                  <mat-radio-button class="w-33"
+                                    [value]="1">1</mat-radio-button>
+                  <mat-radio-button class="w-33"
+                                    [value]="2">2</mat-radio-button>
+                  <mat-radio-button class="w-33"
+                                    [value]="3">3</mat-radio-button>
+                </mat-radio-group>
+              </div>
+  
+              <div class="col-lg-12">
+                <mat-form-field class="table-cell w-100">
+                  <mat-label>Count 1 Act / reg / section</mat-label>
+                  <input type="text"
+                         matInput
+                         formControlName="count1Charge"
+                          />
+                  <mat-error *ngIf="count1Charge.hasError('required')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                  
+                </mat-form-field>
+              </div>
+  
+              <div class="offset-lg-6 col-lg-6">
+                <mat-form-field class="table-cell w-100">
+                  <mat-label>Count 1 fine amount ($)</mat-label>
+                  <input matInput
+                         type="number"
+                         formControlName="count1FineAmount"
+                          style="float: left;"/>
+                  <mat-error *ngIf="count1FineAmount.hasError('required')">
+                    {{ "error.required" | translate }}
+                  </mat-error>
+                  <mat-error *ngIf="count1FineAmount.hasError('currency')">
+                    This must be numeric
+                  </mat-error>
+                </mat-form-field>
+              </div>
+  
+              <ng-container *ngIf="_chargeCount.value > 1">
+                <div class="col-lg-12">
+                  <mat-form-field class="table-cell w-100">
+                    <mat-label>Count 2 Act / reg / section</mat-label>
+                    <input type="text"
+                           matInput
+                           formControlName="count2Charge"
+                          />
+                    
+                    <mat-error *ngIf="count2Charge.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                    
+                  </mat-form-field>
+                </div>
+                <div class="offset-lg-6 col-lg-6">
+                  <mat-form-field class="table-cell w-100">
+                    <mat-label>Count 2 fine amount ($)</mat-label>
+                    <input matInput
+                           type="number"
+                           formControlName="count2FineAmount"
+                           />
+                    <mat-error *ngIf="count2FineAmount.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="count2FineAmount.hasError('currency')">
+                      This must be numeric
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </ng-container>
+  
+              <ng-container *ngIf="_chargeCount.value > 2">
+                <div class="col-lg-12">
+                  <mat-form-field class="table-cell w-100">
+                    <mat-label>Count 3 Act / reg / section</mat-label>
+                    <input type="text"
+                           matInput
+                           formControlName="count3Charge"
+                           />
+                    <mat-error *ngIf="count3Charge.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="offset-lg-6 col-lg-6">
+                  <mat-form-field class="table-cell w-100">
+                    <mat-label>Count 3 fine amount ($)</mat-label>
+                    <input matInput
+                           type="number"
+                           formControlName="count3FineAmount"
+                           />
+                    <mat-error *ngIf="count3FineAmount.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="count3FineAmount.hasError('currency')">
+                      This must be numeric
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+            <div class="row mb-4 mt-4">
+              <div class="col-lg-5">
+                <button id="secondaryButton"
+                        mat-stroked-button
+                        type="button"
+                        color="primary"
+                        class="large"
+                        matStepperPrevious
+                        >
+                   Back
+                </button>
+              </div>
+              <div class="offset-lg-2 col-lg-5">
+                <button type="button"
+                        mat-flat-button
+                        color="primary"
+                        matStepperNext>
+                  Next >
+                </button>
+              </div>
             </div>
           </form>
-        </mat-step>
+        </mat-step> -->
         <mat-step>
-          <ng-template matStepLabel>Done</ng-template>
-          <p>You are now done.</p>
+          <ng-template matStepLabel>Save information and create online ticket</ng-template>
+          <p>Ensure all information entered above is correct to the best of my knowledge before submission.<strong>
+            you may not make changes once the online ticket is created.
+          </strong></p>
           <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
+            <button type="button"
+            mat-flat-button
+            color="primary"
+            class="large"
+            (click)="onSubmit()">Save and create online ticket ></button>
+            <button type="button"
+            mat-flat-button
+            class="large" matStepperPrevious> Go back and review ticket details</button>
           </div>
         </mat-step>
       </mat-stepper>
-    </div> -->
-    <div class="col-lg-6 col-md-12">
-      <label><strong>Ticket details</strong></label>
-      <form [formGroup]="form"
-            novalidate>
-        <section>
-          <div class="row">
-            <div class="col-lg-12 pb-4">
-              <mat-form-field class="w-100 mb-2">
-                <mat-label>Violation ticket number</mat-label>
-                <input formControlName="violationTicketNumber"
-                       matInput
-                       type="text"
-                       oninput="this.value = this.value.toUpperCase()"
-                       mask="SS00000000"
-                       autocomplete="off" />
-                <mat-hint>
-                  <strong>A ticket number is 2 letters and 8 numbers</strong>
-                </mat-hint>
-                <mat-error *ngIf="violationTicketNumber.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <mat-error *ngIf="violationTicketNumber.hasError('mask')">
-                  This ticket number is not valid. It must be 2 letters and 8
-                  numbers.
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Surname</mat-label>
-                <input matInput
-                       formControlName="lastName" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Given names</mat-label>
-                <input matInput
-                       formControlName="givenNames" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="row">
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>DL Province/State</mat-label>
-                <input matInput
-                       formControlName="driverLicenseProvince" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Driver's license #</mat-label>
-                <input matInput
-                       formControlName="driverLicenseNumber"
-                       mask="0000000"
-                       autocomplete="off"
-                       [showMaskTyped]="false" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Gender</mat-label>
-                <mat-select formControlName="gender">
-                  <mat-option value="F">Female</mat-option>
-                  <mat-option value="M">Male</mat-option>
-                  <mat-option value="O">Other</mat-option>
-                </mat-select>
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Birthdate</mat-label>
-                <input matInput
-                       [matDatepicker]="picker2"
-                       formControlName="birthdate"
-                       [max]="maxDateOfBirth"
-                       readonly
-                       (click)="picker2.open()" />
-                <mat-datepicker-toggle matSuffix
-                                       [for]="picker2"></mat-datepicker-toggle>
-                <mat-datepicker-toggle matSuffix
-                                       (click)="onClearBirthdate()">
-                  <mat-icon matDatepickerToggleIcon>clear</mat-icon>
-                </mat-datepicker-toggle>
-
-                <mat-datepicker #picker2
-                                [touchUi]="isMobile"
-                                startView="multi-year"></mat-datepicker>
-                <mat-error *ngIf="birthdate.hasError('required')">{{
-                  "error.required" | translate
-                  }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="row">
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Address</mat-label>
-                <input matInput
-                       formControlName="address" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>City</mat-label>
-                <input matInput
-                       formControlName="city" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Province</mat-label>
-                <input matInput
-                       formControlName="province" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Postal code</mat-label>
-                <input matInput
-                       mask="S0S 0S0"
-                       oninput="this.value = this.value.toUpperCase()"
-                       formControlName="postalCode"
-                       [showMaskTyped]="true" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="row">
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Violation date</mat-label>
-                <input matInput
-                       [matDatepicker]="picker"
-                       formControlName="violationDate"
-                       [max]="todayDate"
-                       readonly
-                       (click)="picker.open()" />
-                <mat-datepicker-toggle matSuffix
-                                       [for]="picker">
-                </mat-datepicker-toggle>
-                <mat-datepicker #picker
-                                [touchUi]="isMobile"
-                                startView="multi-year"></mat-datepicker>
-                <mat-error *ngIf="violationDate.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-6">
-              <mat-form-field class="w-100">
-                <mat-label>Violation time</mat-label>
-                <input matInput
-                       type="time"
-                       formControlName="violationTime" />
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div class="row">
-            <div class="col-lg-4">
-              <mat-label class="w-100"><strong>Number of counts</strong></mat-label>
-            </div>
-            <div class="col-lg-8 pb-4">
-              <mat-radio-group aria-labelledby="Number of Counts"
-                               formControlName="_chargeCount">
-                <mat-radio-button class="w-33"
-                                  [value]="1">1</mat-radio-button>
-                <mat-radio-button class="w-33"
-                                  [value]="2">2</mat-radio-button>
-                <mat-radio-button class="w-33"
-                                  [value]="3">3</mat-radio-button>
-              </mat-radio-group>
-            </div>
-
-            <div class="col-lg-12">
-              <mat-form-field class="table-cell w-100">
-                <mat-label>Count 1 Act / reg / section</mat-label>
-                <input type="text"
-                       matInput
-                       formControlName="count1Charge"
-                        />
-                <!-- <mat-autocomplete autoActiveFirstOption
-                                  #auto1="matAutocomplete"
-                                  [displayWith]="onDisplayWithStatute.bind(this)"
-                                  (optionSelected)="onStatuteSelected($event)">
-                  <mat-option *ngFor="let option of filteredStatutes1 | async"
-                              [value]="option.code">
-                    {{ option.name }}
-                  </mat-option>
-                </mat-autocomplete> -->
-                <mat-error *ngIf="count1Charge.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <!-- <mat-error *ngIf="
-                    count1Charge.hasError('invalidAutocompleteObject') &&
-                    !count1Charge.hasError('required')
-                  ">
-                  Statute is not recognized. Select one from the list of
-                  options.
-                </mat-error> -->
-              </mat-form-field>
-            </div>
-
-            <div class="offset-lg-6 col-lg-6">
-              <mat-form-field class="table-cell w-100">
-                <mat-label>Count 1 fine amount ($)</mat-label>
-                <input matInput
-                       type="number"
-                       formControlName="count1FineAmount"
-                       style="text-align: right" />
-                <mat-error *ngIf="count1FineAmount.hasError('required')">
-                  {{ "error.required" | translate }}
-                </mat-error>
-                <mat-error *ngIf="count1FineAmount.hasError('currency')">
-                  This must be numeric
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <ng-container *ngIf="_chargeCount.value > 1">
-              <div class="col-lg-12">
-                <mat-form-field class="table-cell w-100">
-                  <mat-label>Count 2 Act / reg / section</mat-label>
-                  <input type="text"
-                         matInput
-                         formControlName="count2Charge"
-                        />
-                  
-                  <mat-error *ngIf="count2Charge.hasError('required')">
-                    {{ "error.required" | translate }}
-                  </mat-error>
-                  <!-- <mat-error *ngIf="
-                      count2Charge.hasError('invalidAutocompleteObject') &&
-                      !count2Charge.hasError('required')
-                    ">
-                    Statute is not recognized. Select one from the list of
-                    options.
-                  </mat-error> -->
-                </mat-form-field>
-              </div>
-              <div class="offset-lg-6 col-lg-6">
-                <mat-form-field class="table-cell w-100">
-                  <mat-label>Count 2 fine amount ($)</mat-label>
-                  <input matInput
-                         type="number"
-                         formControlName="count2FineAmount"
-                         style="text-align: right" />
-                  <mat-error *ngIf="count2FineAmount.hasError('required')">
-                    {{ "error.required" | translate }}
-                  </mat-error>
-                  <mat-error *ngIf="count2FineAmount.hasError('currency')">
-                    This must be numeric
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </ng-container>
-
-            <ng-container *ngIf="_chargeCount.value > 2">
-              <div class="col-lg-12">
-                <mat-form-field class="table-cell w-100">
-                  <mat-label>Count 3 Act / reg / section</mat-label>
-                  <input type="text"
-                         matInput
-                         formControlName="count3Charge"
-                         />
-                  <mat-error *ngIf="count3Charge.hasError('required')">
-                    {{ "error.required" | translate }}
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="offset-lg-6 col-lg-6">
-                <mat-form-field class="table-cell w-100">
-                  <mat-label>Count 3 fine amount ($)</mat-label>
-                  <input matInput
-                         type="number"
-                         formControlName="count3FineAmount"
-                         style="text-align: right" />
-                  <mat-error *ngIf="count3FineAmount.hasError('required')">
-                    {{ "error.required" | translate }}
-                  </mat-error>
-                  <mat-error *ngIf="count3FineAmount.hasError('currency')">
-                    This must be numeric
-                  </mat-error>
-                </mat-form-field>
-              </div>
-            </ng-container>
-          </div>
-        </section>
-
-        <section class="mb-2">
-          <div class="row">
-            <div class="col-lg-12">
-              <mat-form-field class="w-100">
-                <mat-label>Provincial court hearing location</mat-label>
-                <mat-select formControlName="courtHearingLocation">
-                  <mat-option *ngFor="let locn of courtLocations"
-                              [value]="locn.code">
-                    {{ locn.name }}
-                  </mat-option>
-                </mat-select>
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="col-lg-12">
-              <mat-form-field class="w-100">
-                <mat-label>Organization / detachment / location</mat-label>
-                <input type="text"
-                         matInput
-                         formControlName="detachmentLocation"
-                         />
-                <!-- <mat-select formControlName="detachmentLocation">
-                  <mat-option *ngFor="let locn of policeLocations"
-                              [value]="locn.code">
-                    {{ locn.name }}
-                  </mat-option>
-                </mat-select> -->
-                <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-      </form>
     </div>
   </div>
-  <div class="row mb-4 mt-4">
+  <!-- <div class="row mb-4 mt-4">
     <div class="col-lg-5">
       <button id="secondaryButton"
               mat-stroked-button
@@ -487,7 +343,7 @@
         Save and continue to resolution options
       </button>
     </div>
-  </div>
+  </div> -->
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>

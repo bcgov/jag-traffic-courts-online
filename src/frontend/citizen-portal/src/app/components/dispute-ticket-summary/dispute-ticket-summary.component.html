@@ -19,18 +19,20 @@
           selection.
         </p> -->
         
-        <div *ngFor="let count of countDataList.newObj | keyvalue;index as i">
-          <h3>Count:{{i+1}}</h3>
+        <div *ngIf="countDataList.newObj.count.toString()">
+          <h3>Count:{{countDataList.newObj.count.toString()}}</h3>
          
-          <h3>Request fine reduction and/or time to pay written reasons:</h3>
+          <h3>I do not want to attend a court hearing and want to supply written reasons:</h3>
           <div class="count-heading">Written reasons for fine reduction request</div>
-          <div class="count-data">{{count.value.reductionAppearInCourt}}</div>
-          <div class="count-heading" *ngIf="count.value.reductionAppearInCourtDoNot">Written reasons for fine reduction request</div>
-          <div class="count-data">{{count.value.reductionAppearInCourtDoNot}}</div>
+          <div class="count-data">{{countDataList.newObj.reductionAppearInCourt}}</div>
+          <div class="count-heading">Written reasons for time to pay request</div>
+          <div class="count-data">{{countDataList.newObj.reductionAppearInCourtDoNot}}</div>
         </div>
         <hr />
-        <div>
-          <b>Dispute charge.</b><p>Please indicate which (if any) of the following apply for you:</p>
+        <div *ngIf="countDataList.newObj.count1.toString()" >
+          <h3>Count:{{countDataList.newObj.count1.toString()}}</h3>
+
+          <h3>I want to attend a court hearing and want to supply written reasons:</h3>
           <table class="disputre">
             <tr>
               <th>Action</th>

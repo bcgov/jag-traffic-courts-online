@@ -60,7 +60,7 @@ export class ShellTicketComponent implements OnInit {
   public isMobile: boolean;
   protected basePath = ''; 
   public configuration = new Configuration();
-
+  isHidden= true;
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -206,6 +206,9 @@ export class ShellTicketComponent implements OnInit {
 
   public onClearBirthdate(): void {
     this.birthdate.setValue(null);
+  }
+  public toggle(){
+    this.isHidden = !this.isHidden;
   }
 
   public onSubmit(): void {

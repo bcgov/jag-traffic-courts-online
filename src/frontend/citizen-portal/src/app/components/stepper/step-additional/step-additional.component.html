@@ -7,21 +7,19 @@
   </app-page-header>
 
   <form (ngSubmit)="onSubmit()" name = 'check-form-uni' novalidate>
-    <div *ngFor="let item of isShowCheckbox | keyvalue;index as i">
-     
+    <!-- <div *ngFor="let item of isShowCheckbox | keyvalue;index as i">
       <div *ngFor="let item1 of item.value | keyvalue;index as i1">
-        <div *ngIf="item1.value === true">
-          <div *ngIf="i1 === 1">Count: {{i+1}}</div>
+        <div *ngIf="item1.value === true"> -->
+          <div *ngIf="isShowCheckbox && isShowCheckbox['reductionAppearInCourt'] && isShowCheckbox['reductionAppearInCourt'].length">     
+                 <div>Count: {{ isShowCheckbox['reductionAppearInCourt'].toString()}} </div>
           <div class="row">
             <div class="col-md-12">
               <mat-form-field class="w-100">
-                <mat-label *ngIf="item1.key === 'reductionAppearInCourt'">
+                <mat-label>
                   Please enter your reasons for why you are requesting a fine reduction.
                 </mat-label>
-                <mat-label *ngIf="item1.key === 'reductionAppearInCourtDoNot'">
-                  Please enter your reasons for why you are requesting time to pay.
-                </mat-label>
-                <!-- <input matInput name = '{{item.key+item1.key}}' [(ngModel)]='newObj[item.key][item1.key]'/> -->
+                <input matInput name="court" [(ngModel)]="newObj['reductionAppearInCourt']"/>
+            
                 <mat-error *ngIf="(reductionReason.dirty ||
                     reductionReason.touched) &&
                     reductionReason.invalid &&
@@ -33,13 +31,37 @@
             </div>
 
           </div>
-          
+        </div>
+        <div *ngIf="isShowCheckbox && isShowCheckbox['reductionAppearInCourtDoNot'] && isShowCheckbox['reductionAppearInCourtDoNot'].length">    
+          <div>Count: {{ isShowCheckbox['reductionAppearInCourtDoNot'].toString()}} </div>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-form-field class="w-100">
+              
+              <mat-label>
+                Please enter your reasons for why you are requesting time to pay.
+              </mat-label>
+              <input matInput name="donotcourt" [(ngModel)]="newObj['reductionAppearInCourtDoNot']"/>
+              <mat-error *ngIf="(reductionReason.dirty ||
+                  reductionReason.touched) &&
+                  reductionReason.invalid &&
+                  reductionReason.hasError('requiredIfFlags')">
+                {{ "error.required" | translate }}
+              </mat-error>
+             
+            </mat-form-field>
+          </div>
+
         </div>
       </div>
+          
+        <!-- </div>
+      </div>
       
-    </div>
-
-    <section *ngIf="isCourtRequired.value">
+    </div> -->
+    
+    <section *ngIf="isShowCheckbox && isShowCheckbox['disputeAppearInCourt'] && isShowCheckbox['disputeAppearInCourt'].length">
+      <div>Count: {{ isShowCheckbox['disputeAppearInCourt'].toString()}} </div>
       <h3 class="mt-4 mb-2 reduction-text">
         <span class="fw-bold">Dispute charge. </span>Please indicate which (if any) of the following apply to you:
       </h3>

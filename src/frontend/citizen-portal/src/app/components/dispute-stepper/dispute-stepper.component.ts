@@ -41,7 +41,9 @@ export class DisputeStepperComponent
   public offence1Exists: boolean;
   public offence2Exists: boolean;
   public offence3Exists: boolean;
-  public isCheckBoxSelected: any;
+  public isCheckBoxSelected: any = {
+    
+  };
   public isErrorCheckMsg1: string;
   public countDataList:any;
   constructor(
@@ -69,7 +71,12 @@ export class DisputeStepperComponent
   }
 
   public ngOnInit(): void {
-    this.isCheckBoxSelected = {};
+    this.isCheckBoxSelected = {
+      reductionAppearInCourt:[],
+      reductionAppearInCourtDoNot:[],
+      disputeAppearInCourt:[]
+
+    };
     this.disputeService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
@@ -123,7 +130,6 @@ export class DisputeStepperComponent
     });
   }
 public getCountData(newObj):void{
-  debugger
   this.countDataList = newObj;
 }
   public onStepSave(stepper: MatStepper): void {
@@ -132,7 +138,7 @@ public getCountData(newObj):void{
       3:'offence2Form',
       4:'offence3Form',
     }
-    debugger;
+  
     this.logger.info('DisputeStepperComponent::onStepSave Dispute Data:', this.disputeFormStateService.json);
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
@@ -190,12 +196,13 @@ public getCountData(newObj):void{
           disputeAppearInCourt : this[stepsObjects[currentStep]].value.disputeAppearInCourt,
           disputeAppearInCourtDoNot:this[stepsObjects[currentStep]].value.disputeAppearInCourtDoNot,
           offenceAgreementStatus: this[stepsObjects[currentStep]].value.offenceAgreementStatus,
-          _applyToAllCounts:this[stepsObjects[currentStep]].value.offenceAgreementStatus
+          _applyToAllCounts:this[stepsObjects[currentStep]].value._applyToAllCounts
         });
       })
     
     }
-
+    
+    this.addAddition()
     // if(currentStep ==2 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence1Form.value.reductionAppearInCourt && !this.offence1Form.value.reductionAppearInCourt){
     //   this.isErrorCheckMsg1 = 'select atleast one checkbox';
     //   return;
@@ -216,15 +223,12 @@ public getCountData(newObj):void{
     }
     if (currentStep === 2){
      
-
       // this.isCheckBoxSelected[currentStep] = {
       //   reductionAppearInCourt : this.offence1Form.value.reductionAppearInCourt,
       //   reductionAppearInCourtDoNot: this.offence1Form.value.reductionAppearInCourtDoNot,
       //   count:1
       // };
-     // let copyObj = Object.assign({},this.isCheckBoxSelected);
-     // this.isCheckBoxSelected = copyObj;
-      // this.isCheckBoxSelected= this.offence1Form.value.reductionAppearInCourt
+    
     }
     // let addForm = this.disputeFormStateService.stepAdditionalForm;
     // let add = addForm.get('countData') as FormArray;
@@ -235,6 +239,40 @@ public getCountData(newObj):void{
     } else {
       this.saveStep(stepper);
     }
+  }
+
+  addAddition(){
+    this.isCheckBoxSelected = {
+      reductionAppearInCourt:[],
+      reductionAppearInCourtDoNot:[],
+      disputeAppearInCourt:[]
+
+    };
+    let stepsObjects ={
+      2:'offence1Form',
+      3:'offence2Form',
+      4:'offence3Form',
+    };
+
+    [2,3,4].map((currentStep)=>{
+      if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.reductionAppearInCourt && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'REDUCTION'){
+
+        this.isCheckBoxSelected['reductionAppearInCourt'].push(currentStep-1);
+
+    } else {
+
+    }
+    if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.reductionAppearInCourtDoNot && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'REDUCTION'){
+
+      this.isCheckBoxSelected['reductionAppearInCourtDoNot'].push(currentStep-1);
+      
+  }
+  if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.disputeAppearInCourt && this[stepsObjects[currentStep]].value.disputeAppearInCourt == 'yes' && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'DISPUTE'){
+
+    this.isCheckBoxSelected['disputeAppearInCourt'].push(currentStep-1);
+    
+}
+    })
   }
   createItem(): FormGroup {
     return this.formBuilder.group({
