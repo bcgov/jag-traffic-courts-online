@@ -8,7 +8,7 @@
 
 # Add 'Traffic Courts' to changes in traffic court api
 "Traffic Courts API":
-  - src/backend/TrafficCourtsApi/**/*
+  - src/backend/TrafficCourts/**/*
 
 # Add 'DevOps' to changes in openshift folder
 "DevOps":

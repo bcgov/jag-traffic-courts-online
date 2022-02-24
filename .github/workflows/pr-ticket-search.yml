@@ -3,7 +3,8 @@ name: Ticket Search
 on:
   pull_request:
     paths:
-      - 'src/ticket-search/**'
+      - 'src/backend/TrafficCourts/Test/**'
+      - 'src/backend/TrafficCourts/Ticket.Search.Service/**'
 
 jobs:
   build:
@@ -14,10 +15,10 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.101
+          dotnet-version: 6.0.200
       - name: build ticket-search
-        run: dotnet build
-        working-directory: ./src/ticket-search
+        run: dotnet build Ticket.Search.Service/TrafficCourts.Ticket.Search.Service.csproj
+        working-directory: ./src/backend/TrafficCourts
       - name: test ticket-search
-        run: dotnet test
-        working-directory: ./src/ticket-search
+        run: dotnet test Test/TrafficCourts.Test.csproj
+        working-directory: ./src/backend/TrafficCourts
