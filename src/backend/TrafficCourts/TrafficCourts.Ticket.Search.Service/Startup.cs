@@ -12,6 +12,7 @@ using TrafficCourts.Ticket.Search.Service.Features.Search;
 using TrafficCourts.Ticket.Search.Service.Features.Search.Mock;
 using TrafficCourts.Ticket.Search.Service.Features.Search.Rsi;
 using TrafficCourts.Ticket.Search.Service.Health;
+using TrafficCourts.Ticket.Search.Service.Services;
 using TrafficCourts.Ticket.Search.Service.Validators;
 
 namespace TrafficCourts.Ticket.Search.Service
@@ -83,6 +84,8 @@ namespace TrafficCourts.Ticket.Search.Service
                     builder.Services.AddTransient<IMockDataProvider, EmbeddedMockDataProvider>();
                 }
             }
+
+            builder.Services.AddHostedService<AccessTokenUpdateWorker>();
 
             // Add services to the container.
             logger.Information("Configuring services");
