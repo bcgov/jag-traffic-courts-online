@@ -85,18 +85,29 @@ namespace TrafficCourts.Ticket.Search.Service.Authentication
     public class AuthenticationHandler : DelegatingHandler
     {
         private readonly ITokenCache _tokenCache;
+        private readonly ILogger<AuthenticationHandler> _logger;
 
-        public AuthenticationHandler(ITokenCache tokenCache)
+        public AuthenticationHandler(ITokenCache tokenCache, ILogger<AuthenticationHandler> logger)
         {
-            _tokenCache = tokenCache;
+            _tokenCache = tokenCache ?? throw new ArgumentNullException(nameof(tokenCache));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Token? token = _tokenCache.GetToken();
-            if (token != null)
+            if (token != null && !string.IsNullOrEmpty(token.AccessToken))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                _logger.LogTrace("Using {Token}", token);
+
+                // in testing, this access token is not a bearer token but more of an API key even though 
+                // the TokenType is returned as "Bearer"
+                ////request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                request.Headers.Authorization = new AuthenticationHeaderValue(token.AccessToken);
+            }
+            else
+            {
+                _logger.LogInformation("No authentication token available");
             }
 
             return await base.SendAsync(request, cancellationToken);
