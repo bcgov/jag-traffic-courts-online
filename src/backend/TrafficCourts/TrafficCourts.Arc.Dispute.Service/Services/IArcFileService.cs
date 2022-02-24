@@ -4,6 +4,6 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
 {
     public interface IArcFileService
     {
-        Task<Stream> createArcFile(List<ArcFileRecord> arcFileData);
+        Task createArcFile(List<ArcFileRecord> arcFileData);
     }
 }

@@ -1,35 +1,56 @@
 ﻿using FlatFiles;
 using FlatFiles.TypeMapping;
+using Microsoft.Extensions.Logging.Abstractions;
+using Renci.SshNet;
 using System.Text;
+using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Models;
 
 namespace TrafficCourts.Arc.Dispute.Service.Services
 {
     public class ArcFileService : IArcFileService
     {
-        public async Task<Stream> createArcFile(List<ArcFileRecord> arcFileData)
+        public async Task createArcFile(List<ArcFileRecord> arcFileData)
         {
+            // Inject ticket mapper function based on the derived class object
+            var selector = new FixedLengthTypeMapperInjector();
+            selector.When<AdnotatedTicket>().Use(CreateAdnotatedTicketMapper());
+            selector.When<DisputedTicket>().Use(CreateDisputedTicketMapper());
 
-                var selector = new FixedLengthTypeMapperInjector();
-                selector.When<AdnotatedTicket>().Use(CreateAdnotatedTicketMapper());
-                selector.When<DisputedTicket>().Use(CreateDisputedTicketMapper());
+            /*
+            Random rnd = new Random();
+            int num = rnd.Next(100);
+            string fileName = "arcfile" + num + ".txt";
+            */
+            // Create a name for the file from the unique file number field of the dispute ticket data
+            string fileName = "dispute-" + arcFileData[0].FileNumber + ".txt";
+            // Write ARC data into the memory stream that will be uploaded as a file
+            var stream = new MemoryStream();
+            var fileWriter = new StreamWriter(stream, Encoding.UTF8);
+            var writer = selector.GetWriter(fileWriter);
 
-                var stream = new MemoryStream();
+            foreach (var record in arcFileData)
+            {
+                await writer.WriteAsync(record);
+            }
 
-                var fileWriter = new StreamWriter(stream, Encoding.UTF8);
+            fileWriter.Flush();
+            stream.Position = 0;
 
-                var writer = selector.GetWriter(fileWriter);
-
-                foreach (var record in arcFileData)
-                {
-                    await writer.WriteAsync(record);
-                }
-
-                fileWriter.Flush();
-
-
-                stream.Position = 0;
-                return await Task.FromResult(stream);
+            // Configure sftp connection with the following required parameters
+            var config = new SftpConfig
+            {
+                Host = "localhost",
+                Port = 22,
+                Username = "demo",
+                Password = "demo"
+            };
+            // Create sftp service client
+            var sftpService = new SftpService(new NullLogger<SftpService>(), config);
+            // Define the path where the file will be uploaded including the filename
+            string remoteFilePath = @"./" + fileName;
+            // Call sftp upload service
+            sftpService.UploadFile(stream, remoteFilePath);
         }
 
         public static IFixedLengthTypeMapper<AdnotatedTicket> CreateAdnotatedTicketMapper()
