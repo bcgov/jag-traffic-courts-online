@@ -1,12 +1,8 @@
-# Add 'Ticket Search' to changes in ticket search
-"Ticket Search":
-  - src/ticket-search/**/*
-
 # Add 'Citizens Portal' to changes in citizen portal
 "Citizens Portal":
   - src/frontend/citizen-portal/**/*
 
-# Add 'Traffic Courts' to changes in traffic court api
+# Add 'Traffic Courts' to changes in citizen api
 "Traffic Courts API":
   - src/backend/TrafficCourts/**/*
 
