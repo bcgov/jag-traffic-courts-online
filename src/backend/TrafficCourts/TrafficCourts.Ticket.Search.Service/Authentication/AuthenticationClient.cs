@@ -95,19 +95,25 @@ namespace TrafficCourts.Ticket.Search.Service.Authentication
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Getting token from cache");
+
             Token? token = _tokenCache.GetToken();
             if (token != null && !string.IsNullOrEmpty(token.AccessToken))
             {
-                _logger.LogTrace("Using {Token}", token);
+                if (_logger.IsEnabled(LogLevel.Trace))
+                {
+                    _logger.LogTrace("Adding bearer authentication header using {Token}", token);
+                }
+                else
+                {
+                    _logger.LogDebug("Adding bearer authentication header");
+                }
 
-                // in testing, this access token is not a bearer token but more of an API key even though 
-                // the TokenType is returned as "Bearer"
-                ////request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-                request.Headers.Authorization = new AuthenticationHeaderValue(token.AccessToken);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
             }
             else
             {
-                _logger.LogInformation("No authentication token available");
+                _logger.LogInformation("Authentication token not available");
             }
 
             return await base.SendAsync(request, cancellationToken);

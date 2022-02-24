@@ -5,14 +5,10 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 {
     public class AccessTokenUpdateWorker : BackgroundService
     {
-        private const int _minSeconds = 60 * 10; // refresh the token 10-15 minutes before the previous token expires
-        private const int _maxSeconds = 60 * 15;
-
         private readonly IAuthenticationClient _authenticationClient;
         private readonly ITokenCache _cache;
         private readonly ILogger<AccessTokenUpdateWorker> _logger;
         private readonly Random _random = new();
-
 
         public AccessTokenUpdateWorker(
             IAuthenticationClient authenticationClient,
@@ -47,6 +43,18 @@ namespace TrafficCourts.Ticket.Search.Service.Services
                         throw;
                     }
                 }
+                catch (HttpRequestException exception) when (exception.InnerException is SocketException socketException && socketException.ErrorCode == (int)SocketError.TimedOut)
+                {
+                    // A connection attempt failed because the connected party did not properly respond after a period of time,
+                    // or established connection failed because connected host has failed to respond.
+
+                    // todo: log specific message about not being able to connect, not on VPN or address wrong
+                    var rethrow = await OnError(exception);
+                    if (rethrow)
+                    {
+                        throw;
+                    }
+                }
                 catch (HttpRequestException exception)
                 {
                     var rethrow = await OnError(exception);
@@ -59,20 +67,9 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
             async Task<bool> OnError(Exception exception)
             {
-                _logger.LogInformation(exception, "Failed to execute update access token");
-
-                retry++;
-                ////if (lastSuccess == DateTimeOffset.MinValue)
-                ////{
-                ////    // never have been successful
-                ////    if (retry > 30)
-                ////    {
-                ////        _logger.LogInformation(exception, "Too many retries");
-                ////        return true;
-                ////    }
-                ////}
-
-                await Task.Delay(TimeSpan.FromMilliseconds(500 + _random.Next(50, 100)), stoppingToken);
+                var delay = TimeSpan.FromMilliseconds(500 + _random.Next(50, 100));
+                _logger.LogInformation(exception, "Failed to update access token on {Attempt}, will delay {DelayTime} before next attempt", ++retry, delay);
+                await Task.Delay(delay, stoppingToken);
                 return false;
             }
         }
@@ -95,22 +92,28 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
         }
 
+        /// <summary>
+        /// Gets the new access token and returns the date when the next refresh attempt should 
+        /// occur.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         private async Task<DateTimeOffset> UpdateTokenAsync(CancellationToken cancellationToken)
         {
-            DateTimeOffset now = DateTimeOffset.UtcNow;
-
             try
             {
                 var token = await _authenticationClient.GetTokenAsync(cancellationToken);
+                // next refresh is in 1/2 the token life time +/- 30 seconds.
+                var nextRefresh = DateTimeOffset.UtcNow.AddSeconds(token.ExpiresIn / 2 - _random.Next(-30, 30));
                 _cache.SaveToken(token);
-                return now.AddSeconds(token.ExpiresIn - _random.Next(_minSeconds, _maxSeconds)); // generally 3600 seconds or 1 hour
+                return nextRefresh;
             }
             catch (AuthenticationException ex) when (ex.StatusCode != System.Net.HttpStatusCode.Unauthorized)
             {
                 // config error?
                 // service down?
                 _logger.LogWarning(ex, "Failed to get new access token");
-                return now.AddSeconds(1); // try again in 1 second
+                return DateTimeOffset.UtcNow.AddSeconds(_random.Next(5, 30)); // try again in 5-30 seconds
             }
         }
     }
