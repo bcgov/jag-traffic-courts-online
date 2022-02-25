@@ -25,7 +25,7 @@ namespace TrafficCourts.Citizen.Service.Models.Search
         /// </summary>
         public string ViolationTime { get; set; }
         /// <summary>
-        /// The list of offenses on this violation ticket.
+        /// The list of offences on this violation ticket.
         /// </summary>
         public List<TicketOffence> Offences { get; set; }
     }

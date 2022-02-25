@@ -29,7 +29,7 @@ public class CheckboxIsValidRuleTest
             Assert.Single(rule.Field.ValidationErrors);
             foreach (string errorMsg in rule.Field.ValidationErrors)
             {
-                Assert.Equal(String.Format(ValidationMessages.CheckboxInvalid, name, value), errorMsg);
+                Assert.Equal(string.Format(ValidationMessages.CheckboxInvalid, name, value), errorMsg);
             }
         }
         else
@@ -42,10 +42,10 @@ public class CheckboxIsValidRuleTest
     {
         public TestData()
         {
-            Add(OcrViolationTicket.OffenseIsMVA, "selected", false);
-            Add(OcrViolationTicket.OffenseIsMVA, "unselected", false);
-            Add(OcrViolationTicket.OffenseIsMVA, "randomText", true);
-            Add(OcrViolationTicket.OffenseIsMVA, null, true);
+            Add(OcrViolationTicket.OffenceIsMVA, "selected", false);
+            Add(OcrViolationTicket.OffenceIsMVA, "unselected", false);
+            Add(OcrViolationTicket.OffenceIsMVA, "randomText", true);
+            Add(OcrViolationTicket.OffenceIsMVA, null, true);
         }
     }
 }

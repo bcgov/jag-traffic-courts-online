@@ -15,4 +15,5 @@ public static class ValidationMessages
     public static readonly string ViolationDateFutureInvalid = @"Violation Date must not be in the future. Read '{0}'.";
     public static readonly string ViolationDateGT30Days = @"Violation Date '{0}' is more than 30 days ago.";
     public static readonly string TimeInvalid = @"'{0}' is not a valid time.";
+    public static readonly string LowConfidenceError = "Too many fields have a low confidence.";
 }

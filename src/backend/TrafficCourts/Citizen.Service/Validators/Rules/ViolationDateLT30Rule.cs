@@ -19,10 +19,13 @@ public class ViolationDateLT30Rule : ValidationRule
         DateTime? violationDate = Field.GetDate();
         if (violationDate is null)
         {
-            AddValidationError(String.Format(ValidationMessages.ViolationDateInvalid, Field.Value));
+            AddValidationError(string.Format(ValidationMessages.ViolationDateInvalid, Field.Value));
         }
         else
         {
+            // Format the Field Value as recognized by the validator
+            Field.Value = violationDate.Value.ToString("yyyy-MM-dd");
+
             DateTime dateTime = DateTime.Now;
             // remove time portion (which may affect the below calculations)
             DateTime now = new(dateTime.Year, dateTime.Month, dateTime.Day);
@@ -33,7 +36,7 @@ public class ViolationDateLT30Rule : ValidationRule
             }
             else if (violationDate < (now.AddDays(-30)))
             {
-                AddValidationError(String.Format(ValidationMessages.ViolationDateGT30Days, violationDate.Value.ToString("yyyy-MM-dd")));
+                AddValidationError(string.Format(ValidationMessages.ViolationDateGT30Days, violationDate.Value.ToString("yyyy-MM-dd")));
             }
         }
     }

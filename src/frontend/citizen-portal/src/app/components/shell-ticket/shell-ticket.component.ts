@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -26,7 +27,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
-import { TicketsService } from 'app/api';
+import { Configuration, TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -57,6 +58,12 @@ export class ShellTicketComponent implements OnInit {
   public todayDate: Date = new Date();
   public maxDateOfBirth: Date;
   public isMobile: boolean;
+  protected basePath = ''; 
+  public configuration = new Configuration();
+  isHidden= true;
+  isLinear = false;
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
 
   public statutes: Config<number>[];
   public courtLocations: Config<string>[];
@@ -80,8 +87,12 @@ export class ShellTicketComponent implements OnInit {
     private ngProgress: NgProgress,
     private appConfigService: AppConfigService,
     private logger: LoggerService,
-    public ticketService:TicketsService
+    public ticketService:TicketsService,
+    private http: HttpClient,
   ) {
+    if (typeof this.configuration.basePath !== 'string') {
+      this.configuration.basePath = this.basePath;
+  }
     this.progressRef = this.ngProgress.ref();
     this.statutes = this.configService.statutes;
     this.courtLocations = this.configService.courtLocations;
@@ -146,15 +157,21 @@ export class ShellTicketComponent implements OnInit {
 
       this.ticketImageSrc = shellTicketData.ticketImage;
       this.ticketFilename = shellTicketData.filename;
-      if (this.appConfigService.useMockServices) {
-        this.progressRef.complete();
-      } else {
-        this.recognizeContent(shellTicketData.ticketFile);
-      }
+      // if (this.appConfigService.useMockServices) {
+      //   this.progressRef.complete();
+      // } else {
+      //   this.recognizeContent(shellTicketData.ticketFile);
+      // }
     });
   }
 
   public ngOnInit(): void {
+    // this.firstFormGroup = this.formBuilder.group({
+    //   firstCtrl: ['', Validators.required],
+    // });
+    // this.secondFormGroup = this.formBuilder.group({
+    //   secondCtrl: ['', Validators.required],
+    // });
     // Listen for typeahead changes in the statute fields
     this.filteredStatutes1 = this.count1Charge.valueChanges.pipe(
       startWith(''),
@@ -189,6 +206,9 @@ export class ShellTicketComponent implements OnInit {
 
   public onClearBirthdate(): void {
     this.birthdate.setValue(null);
+  }
+  public toggle(){
+    this.isHidden = !this.isHidden;
   }
 
   public onSubmit(): void {
@@ -279,7 +299,19 @@ export class ShellTicketComponent implements OnInit {
         ticketImage,
         ticketFile,
       };
-      this.disputeService.shellTicketData$.next(shellTicketData);
+      const fd = new FormData();
+      fd.append('file',ticketFile);
+
+      this.http.post(`${this.configuration.basePath }/api/tickets/analyse`,fd)
+      .subscribe(res=>{
+        console.log('image data 2',res);
+        this.fieldsData = res;
+        this.ticketService.setImageData(res);
+        this.onFulfilled()
+        this.disputeService.shellTicketData$.next(shellTicketData);
+        this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
+
+      })
     };
   }
 

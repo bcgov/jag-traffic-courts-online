@@ -19,6 +19,10 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
 
         ApplyFieldRules(violationTicket);
+
+        // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
+        LowConfidenceGlobalRule.Run(violationTicket);
+
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
@@ -32,15 +36,15 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         List<ValidationRule> rules = new();
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], TicketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], ViolationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsMVA]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsMCA]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsCTA]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsWLA]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsFAA]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsLCA]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsTCR]));
-        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenseIsOther]));
-        rules.Add(new OnlyMVAIsSelectedRule(violationTicket.Fields[OcrViolationTicket.OffenseIsMCA], violationTicket));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsMVA]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsMCA]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsCTA]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsWLA]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsFAA]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsLCA]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsTCR]));
+        rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsOther]));
+        rules.Add(new OnlyMVAIsSelectedRule(violationTicket.Fields[OcrViolationTicket.OffenceIsMCA], violationTicket));
         rules.Add(new ViolationDateLT30Rule(violationTicket.Fields[OcrViolationTicket.ViolationDate]));
 
         // Run each rule and aggregate the results

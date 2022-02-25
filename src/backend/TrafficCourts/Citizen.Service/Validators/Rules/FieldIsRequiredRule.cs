@@ -15,7 +15,7 @@ public class FieldIsRequiredRule : ValidationRule
     {
         if (Field.Value is null)
         {
-            Field.ValidationErrors.Add(String.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
+            AddValidationError(String.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
         }
     }
 }
