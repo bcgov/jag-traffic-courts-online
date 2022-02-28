@@ -6,8 +6,8 @@ namespace TrafficCourts.Citizen.Service.Validators;
 public class FormRecognizerValidator : IFormRecognizerValidator
 {
 
-    private static readonly string TicketTitleRegex = @"^VIOLATION TICKET$";
-    private static readonly string ViolationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
+    private static readonly string _ticketTitleRegex = @"^VIOLATION TICKET$";
+    private static readonly string _violationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
 
     public void ValidateViolationTicket(OcrViolationTicket violationTicket)
     {
@@ -22,7 +22,6 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
         // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
         LowConfidenceGlobalRule.Run(violationTicket);
-
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
@@ -34,8 +33,8 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // - In "Did commit offence(s) indicated, under the following act or its regulations" section, only 'MVA' is selected.
         // - If the Violation Date is less than 30 days
         List<ValidationRule> rules = new();
-        rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], TicketTitleRegex, ValidationMessages.TicketTitleInvalid));
-        rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], ViolationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
+        rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], _ticketTitleRegex, ValidationMessages.TicketTitleInvalid));
+        rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], _violationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsMVA]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsMCA]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsCTA]));
