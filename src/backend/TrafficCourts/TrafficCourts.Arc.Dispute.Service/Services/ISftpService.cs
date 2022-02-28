@@ -2,6 +2,6 @@
 {
     public interface ISftpService : IDisposable
     {
-        void UploadFile(Stream file, string remoteFilePath);
+        void UploadFile(MemoryStream file, string remoteFilePath);
     }
 }

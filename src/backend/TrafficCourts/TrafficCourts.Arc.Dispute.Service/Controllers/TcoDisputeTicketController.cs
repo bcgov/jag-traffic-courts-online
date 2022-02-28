@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;
 
@@ -37,18 +38,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
 
         // POST api/<TcoDisputeTicketController>
         [HttpPost]
-        public async Task<IActionResult> CreateArcFile([FromBody] TcoDisputeTicket disputeData)
+        public async Task<IActionResult> CreateArcFile([Required][FromBody] TcoDisputeTicket disputeData)
         {
-            if (ModelState.IsValid)
-            {
-                var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
+            var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
 
-                await _arcFileService.createArcFile(arcFileRecords);
+            await _arcFileService.CreateArcFile(arcFileRecords);
 
-                return Ok(arcFileRecords);
-            }
-            
-            return BadRequest(ModelState);
+            return Ok(arcFileRecords);
         }
 
         // PUT api/<TcoDisputeTicketController>/5

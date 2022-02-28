@@ -21,8 +21,10 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
             _client.Dispose();
         }
 
-        public void UploadFile(Stream file, string remoteFilePath)
+        public void UploadFile(MemoryStream file, string remoteFilePath)
         {
+            ArgumentNullException.ThrowIfNull(file);
+            ArgumentNullException.ThrowIfNull(remoteFilePath);
 
             try
             {
