@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Options;
+using Renci.SshNet;
+using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Services;
 
@@ -13,7 +16,18 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 // Registering and Initializing AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddScoped<IArcFileService, ArcFileService>();
+builder.Services.AddTransient<IArcFileService, ArcFileService>();
+
+builder.Services.Configure<SftpConfig>(builder.Configuration.GetRequiredSection(SftpConfig.Section));
+
+builder.Services.AddTransient<ISftpService, SftpService>();
+
+builder.Services.AddTransient<SftpClient>(services =>
+{
+    var configurationOptions = services.GetRequiredService<IOptions<SftpConfig>>();
+    var configuration = configurationOptions.Value;
+    return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, configuration.Password);
+});
 
 var app = builder.Build();
 

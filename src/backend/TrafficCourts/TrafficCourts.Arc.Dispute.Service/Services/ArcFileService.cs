@@ -10,6 +10,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
 {
     public class ArcFileService : IArcFileService
     {
+        private readonly ISftpService _sftpService;
+        public ArcFileService(ISftpService sftpService)
+        {
+            _sftpService = sftpService; 
+        }
         public async Task createArcFile(List<ArcFileRecord> arcFileData)
         {
             // Inject ticket mapper function based on the derived class object
@@ -38,19 +43,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
             stream.Position = 0;
 
             // Configure sftp connection with the following required parameters
-            var config = new SftpConfig
-            {
-                Host = "localhost",
-                Port = 22,
-                Username = "demo",
-                Password = "demo"
-            };
+
             // Create sftp service client
-            var sftpService = new SftpService(new NullLogger<SftpService>(), config);
+
             // Define the path where the file will be uploaded including the filename
             string remoteFilePath = @"./" + fileName;
             // Call sftp upload service
-            sftpService.UploadFile(stream, remoteFilePath);
+            _sftpService.UploadFile(stream, remoteFilePath);
         }
 
         public static IFixedLengthTypeMapper<AdnotatedTicket> CreateAdnotatedTicketMapper()

@@ -1,4 +1,6 @@
-﻿using Renci.SshNet;
+﻿using Microsoft.Extensions.Options;
+using Renci.SshNet;
+using System.Runtime.Serialization;
 using TrafficCourts.Arc.Dispute.Service.Configuration;
 
 namespace TrafficCourts.Arc.Dispute.Service.Services
@@ -6,38 +8,62 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
     public class SftpService : ISftpService
     {
         private readonly ILogger<SftpService> _logger;
-        private readonly SftpConfig _config;
+        private readonly SftpClient _client;
 
-        public SftpService(ILogger<SftpService> logger, SftpConfig sftpConfig)
+        public SftpService(ILogger<SftpService> logger, SftpClient client)
         {
             _logger = logger;
-            _config = sftpConfig;
+            _client = client;
+        }
+
+        public void Dispose()
+        {
+            _client.Dispose();
         }
 
         public void UploadFile(Stream file, string remoteFilePath)
         {
-            using var client = new SftpClient(_config.Host, _config.Port == 0 ? 22 : _config.Port, _config.Username, _config.Password);
+
             try
             {
-                client.Connect();
+                _client.Connect();
 
-                if (client.IsConnected && file != null)
+                if (_client.IsConnected && file != null)
                 {
-                    client.BufferSize = 4 * 1024;
-                    client.UploadFile(file, remoteFilePath);
-                    _logger.LogInformation($"Finished uploading file to [{remoteFilePath}]");
+                    _client.BufferSize = 32 * 1024;
+                    _client.UploadFile(file, remoteFilePath);
+                    _logger.LogDebug("Finished uploading file to [{RemoteFilePath}]", remoteFilePath);
                 }
                 
             }
+            catch (Renci.SshNet.Common.SftpPermissionDeniedException exception)
+            {
+                _logger.LogError(exception, "Operation permission denied for uploading file to [{RemoteFilePath}]", remoteFilePath);
+                throw new FileUploadFailedException($"Operation permission denied for uploading file to [{remoteFilePath}]. Please check if you have write access.", exception);
+            }
+            catch (Renci.SshNet.Common.SshAuthenticationException exception)
+            {
+                _logger.LogError(exception, "Authentication failed for uploading file to [{RemoteFilePath}]", remoteFilePath);
+                throw new FileUploadFailedException($"Authentication failed for uploading file to [{remoteFilePath}]", exception);
+            }
             catch (Exception exception)
             {
-                _logger.LogError(exception, $"Failed in uploading file to [{remoteFilePath}]");
+                _logger.LogError(exception, "Failed in uploading file to [{RemoteFilePath}]", remoteFilePath);
+                throw new FileUploadFailedException($"Failed in uploading file to [{remoteFilePath}]", exception);
             }
             finally
             {
-                client.Disconnect();
-                client.Dispose();
+                _client.Disconnect();
             }
         }
+    }
+
+    [Serializable]
+    internal class FileUploadFailedException : Exception
+    {
+        public FileUploadFailedException(){}
+        public FileUploadFailedException(string? message) : base(message) { }
+        public FileUploadFailedException(string? message, Exception? innerException) : base(message, innerException) { }
+        protected FileUploadFailedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }
