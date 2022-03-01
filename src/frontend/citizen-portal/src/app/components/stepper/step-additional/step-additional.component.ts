@@ -75,7 +75,6 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
       disputeResource,
       disputeFormStateService
     );
-    console.log(">>>>>>>>>>",this.isShowCheckbox)
 
     this.languages = this.configService.languages;
   }
@@ -85,16 +84,11 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
     this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
     this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
     this.patchForm();
-    debugger
-     console.log(">>>>>>>>>>",this.isShowCheckbox)
   }
   ngOnChanges(changes: SimpleChanges) {
-    debugger
-    console.log(">>>>>>>>>>",this.isShowCheckbox)
     let array = [...this.isShowCheckbox.reductionAppearInCourt,...this.isShowCheckbox.reductionAppearInCourtDoNot]
     this.newObj.count = [...new Set(array)]
     this.newObj.count1 = this.isShowCheckbox.disputeAppearInCourt
-    console.log('-----------------------',changes);
    
     // if(changes.isShowCheckbox && changes.isShowCheckbox.currentValue && changes.isShowCheckbox.currentValue[2]){
     //   this.countFormList = this.form.get('countData') as FormArray;
@@ -121,7 +115,6 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
   }
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
-      debugger 
       let obj = {
         newObj : this.newObj,
         dispute:this.dispute

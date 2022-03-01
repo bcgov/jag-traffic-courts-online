@@ -73,10 +73,10 @@
         </div>
       </div>
        <div class="row mt-4" *ngIf="!isShowCheckbox">
-        <label class="w-100" *ngIf="offenceAgreementStatus?.value !== 'PAY'" >
-          Please provide additional selections below:
-        </label>
          <div *ngIf="offenceAgreementStatus.value == 'REDUCTION'">
+          <label class="w-100" *ngIf="offenceAgreementStatus?.value !== 'PAY'" >
+            Please provide additional selections below:
+          </label>
           <mat-checkbox formControlName="reductionAppearInCourt" color="primary" class="w-100"> I would like to request a fine reduction on this count.</mat-checkbox>
           <p> and/or</p>
           <mat-checkbox formControlName="reductionAppearInCourtDoNot" color="primary" class="w-100"> I would like to request more time to pay on this count.</mat-checkbox>
@@ -84,6 +84,9 @@
         </div>
 
         <div *ngIf="offenceAgreementStatus.value == 'DISPUTE'">
+          <label class="w-100" *ngIf="offenceAgreementStatus?.value !== 'PAY'" >
+            Please provide additional selections below:
+          </label>
         <mat-radio-group formControlName="disputeAppearInCourt">
           <mat-radio-button value="yes" color="primary" class="w-100"> I agree I committed this offence and would like to request a fine reduction and/or time to pay on this count.</mat-radio-button>
           <p> and/or</p>

@@ -64,6 +64,7 @@ export class ShellTicketComponent implements OnInit {
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+  public toggleDisplay: boolean = true;
 
   public statutes: Config<number>[];
   public courtLocations: Config<string>[];
@@ -103,7 +104,6 @@ export class ShellTicketComponent implements OnInit {
       this.todayDate.getFullYear() - this.MINIMUM_AGE
     );
     this.isMobile = this.utilsService.isMobile();
-    console.log("ticket service",this.ticketService.getImageData())
     this.fieldsData = this.ticketService.getImageData()
     this.form = this.formBuilder.group({
       violationTicketNumber: [null, [Validators.required]],
@@ -508,7 +508,6 @@ export class ShellTicketComponent implements OnInit {
             }', with confidence of ${count1TicketAmountField.confidence}`
           );
         }
-        debugger
         const count1ActRegsFieldIndex = 'count1ActRegs';
         const count1ActRegsField = invoice.fields[count1ActRegsFieldIndex];
         if (count1ActRegsField.type === 'String') {
@@ -607,7 +606,6 @@ export class ShellTicketComponent implements OnInit {
           chargeCount++;
         }
         this.logger.info('chargeCount', chargeCount);
-
     const shellTicket: ShellTicketView = {
       violationTicketNumber: invoiceIdField.value
         ? String(invoiceIdField.value)
@@ -677,8 +675,36 @@ export class ShellTicketComponent implements OnInit {
       _chargeCount: chargeCount,
       _amountOwing: 0,
     };
-
-        this.logger.info('before', { ...shellTicket });
+    const shellTicketConfidence:any={
+      lastName: surnameField.fieldConfidence
+        ? surnameField.fieldConfidence
+        : '',
+      givenNames: givenNameField.fieldConfidence
+        ? givenNameField.fieldConfidence
+        : '',
+        driverLicenseNumber: driverLicenceField.fieldConfidence
+        ? driverLicenceField.fieldConfidence
+        : '',
+      driverLicenseProvince: '',
+      _count1ChargeSection: count1SectionField.value
+      ? count1SectionField.fieldConfidence
+      : '',
+    count1FineAmount: count1TicketAmountField.value
+      ? Number(count1TicketAmountField.fieldConfidence)
+      : 0,
+    }
+    const confidenceChecking = ['lastName','givenNames','driverLicenseProvince', 'driverLicenseNumber', 'count1Charge','count1FineAmount' ]
+   let count =0 
+  Object.keys(shellTicketConfidence).map((ele)=>{
+         if(shellTicketConfidence[ele] > 0.80){
+           count+=1
+         }
+    })
+    if(count<3){
+      this.toggleDisplay = false
+    }
+    console.log('data', count)
+        this.logger.info('before',count, { ...shellTicket });
 
         // shellTicket.count1Charge = this.findMatchingCharge(
         //   shellTicket._count1ChargeDesc,

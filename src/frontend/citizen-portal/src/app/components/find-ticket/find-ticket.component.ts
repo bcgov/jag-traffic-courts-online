@@ -144,7 +144,6 @@ export class FindTicketComponent implements OnInit {
     reader.onload = () => {
       ticketImage = reader.result as string;
 
-      // console.log('filename', filename, 'ticketImage', ticketImage.length);
       const shellTicketData: ShellTicketData = {
         filename,
         ticketFile,
@@ -154,7 +153,6 @@ export class FindTicketComponent implements OnInit {
       const formParams = { image:ticketFile};
       const fd = new FormData();
       fd.append('file',ticketFile);
-      console.log('fd',ticketFile,filename);
 
       // this.busy = this.disputeResource
       // .postTicket(ticketFile)
@@ -171,9 +169,8 @@ export class FindTicketComponent implements OnInit {
       //   }
       // });
       
-      this.http.post(`${this.configuration.basePath }/api/tickets/analyse`,fd)
+      this.http.post(`http://localhost:5000/api/tickets/analyse`,fd)
       .subscribe(res=>{
-        console.log('image data',res);
         this.ticketService.setImageData(res);
         this.disputeService.shellTicketData$.next(shellTicketData);
       this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);

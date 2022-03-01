@@ -16,7 +16,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./dispute-submit-success.component.scss'],
 })
 export class DisputeSubmitSuccessComponent implements OnInit {
-  debugger
   public busy: Subscription;
   public ticket: TicketDisputeView;
   public countList:any;

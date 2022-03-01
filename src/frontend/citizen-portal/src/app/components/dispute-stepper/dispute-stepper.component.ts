@@ -8,6 +8,7 @@ import { DisputeSubmitSuccessComponent } from '@components/dispute-submit-succes
 import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { CheckBoxSelected } from '@shared/models/checkBoxSelected.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { AppRoutes } from 'app/app.routes';
 import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
@@ -41,9 +42,7 @@ export class DisputeStepperComponent
   public offence1Exists: boolean;
   public offence2Exists: boolean;
   public offence3Exists: boolean;
-  public isCheckBoxSelected: any = {
-    
-  };
+  public isCheckBoxSelected: CheckBoxSelected;
   public isErrorCheckMsg1: string;
   public countDataList:any;
   constructor(
@@ -142,34 +141,34 @@ public getCountData(newObj):void{
     this.logger.info('DisputeStepperComponent::onStepSave Dispute Data:', this.disputeFormStateService.json);
     const numberOfSteps = stepper.steps.length;
     const currentStep = stepper.selectedIndex + 1;
+    let stepsObjectsCurrentStep = this[stepsObjects[currentStep]];
+
     if(currentStep ==1){
       this.offence1Form.patchValue({
         _allowApplyToAllCounts: false
       });
     }
-    if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]]._skip){
-      this.saveStep(stepper);
-    }
+ 
     
-    if(currentStep ==2 && this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._allowApplyToAllCounts){
-      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+    if(currentStep ==2 && stepsObjectsCurrentStep && stepsObjectsCurrentStep.value._allowApplyToAllCounts){
+      let applyAll = stepsObjectsCurrentStep.value._allowApplyToAllCounts
       let listArray = [2,3,4].filter((ele)=> ele != currentStep)
       
       listArray.map((ele)=>{
 
         this[stepsObjects[ele]].patchValue({
-          reductionAppearInCourt : this[stepsObjects[currentStep]].value.reductionAppearInCourt,
-          reductionAppearInCourtDoNot:this[stepsObjects[currentStep]].value.reductionAppearInCourtDoNot,
-          disputeAppearInCourt : this[stepsObjects[currentStep]].value.disputeAppearInCourt,
-          disputeAppearInCourtDoNot:this[stepsObjects[currentStep]].value.disputeAppearInCourtDoNot,
-          offenceAgreementStatus: this[stepsObjects[currentStep]].value.offenceAgreementStatus,
-          _applyToAllCounts:this[stepsObjects[currentStep]].value.offenceAgreementStatus
+          reductionAppearInCourt : stepsObjectsCurrentStep.value.reductionAppearInCourt,
+          reductionAppearInCourtDoNot:stepsObjectsCurrentStep.value.reductionAppearInCourtDoNot,
+          disputeAppearInCourt : stepsObjectsCurrentStep.value.disputeAppearInCourt,
+          disputeAppearInCourtDoNot:stepsObjectsCurrentStep.value.disputeAppearInCourtDoNot,
+          offenceAgreementStatus: stepsObjectsCurrentStep.value.offenceAgreementStatus,
+          _applyToAllCounts:stepsObjectsCurrentStep.value.offenceAgreementStatus
         });
       })
     
     } 
-    if(currentStep ==2 && this[stepsObjects[currentStep]] && !this[stepsObjects[currentStep]].value._allowApplyToAllCounts){
-      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+    if(currentStep ==2 && stepsObjectsCurrentStep && !stepsObjectsCurrentStep.value._allowApplyToAllCounts){
+      let applyAll = stepsObjectsCurrentStep.value._allowApplyToAllCounts
       let listArray = [2,3,4].filter((ele)=> ele != currentStep)
       
       listArray.map((ele)=>{
@@ -180,23 +179,23 @@ public getCountData(newObj):void{
           disputeAppearInCourt : false,
           disputeAppearInCourtDoNot:false,
           offenceAgreementStatus: false,
-          // _applyToAllCounts:this[stepsObjects[currentStep]].value.offenceAgreementStatus
+          // _applyToAllCounts:stepsObjectsCurrentStep.value.offenceAgreementStatus
         });
       })
     }
-    if(currentStep ==3 && this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._applyToAllCounts ){
-      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+    if(currentStep ==3 && stepsObjectsCurrentStep && stepsObjectsCurrentStep.value._applyToAllCounts ){
+      let applyAll = stepsObjectsCurrentStep.value._allowApplyToAllCounts
       let listArray = [3,4].filter((ele)=> ele != currentStep)
       
       listArray.map((ele)=>{
 
         this[stepsObjects[ele]].patchValue({
-          reductionAppearInCourt : this[stepsObjects[currentStep]].value.reductionAppearInCourt,
-          reductionAppearInCourtDoNot:this[stepsObjects[currentStep]].value.reductionAppearInCourtDoNot,
-          disputeAppearInCourt : this[stepsObjects[currentStep]].value.disputeAppearInCourt,
-          disputeAppearInCourtDoNot:this[stepsObjects[currentStep]].value.disputeAppearInCourtDoNot,
-          offenceAgreementStatus: this[stepsObjects[currentStep]].value.offenceAgreementStatus,
-          _applyToAllCounts:this[stepsObjects[currentStep]].value._applyToAllCounts
+          reductionAppearInCourt : stepsObjectsCurrentStep.value.reductionAppearInCourt,
+          reductionAppearInCourtDoNot:stepsObjectsCurrentStep.value.reductionAppearInCourtDoNot,
+          disputeAppearInCourt : stepsObjectsCurrentStep.value.disputeAppearInCourt,
+          disputeAppearInCourtDoNot:stepsObjectsCurrentStep.value.disputeAppearInCourtDoNot,
+          offenceAgreementStatus: stepsObjectsCurrentStep.value.offenceAgreementStatus,
+          _applyToAllCounts:stepsObjectsCurrentStep.value._applyToAllCounts
         });
       })
     
@@ -234,7 +233,12 @@ public getCountData(newObj):void{
     // let add = addForm.get('countData') as FormArray;
     // add.push(this.createItem());
     // on the last step
-    if (numberOfSteps === currentStep) {
+    if(stepsObjectsCurrentStep && stepsObjectsCurrentStep.value._skip){
+       stepsObjectsCurrentStep.get('offenceAgreementStatus').clearValidators()
+       stepsObjectsCurrentStep.get('offenceAgreementStatus').updateValueAndValidity();
+        this.saveStep(stepper);
+     
+    } else if (numberOfSteps === currentStep) {
       this.submitDispute();
     } else {
       this.saveStep(stepper);
@@ -255,19 +259,21 @@ public getCountData(newObj):void{
     };
 
     [2,3,4].map((currentStep)=>{
-      if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.reductionAppearInCourt && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'REDUCTION'){
+      let stepsObjectsCurrentStep = this[stepsObjects[currentStep]]
+
+      if(stepsObjectsCurrentStep && stepsObjectsCurrentStep.value.reductionAppearInCourt && stepsObjectsCurrentStep.value.offenceAgreementStatus == 'REDUCTION'){
 
         this.isCheckBoxSelected['reductionAppearInCourt'].push(currentStep-1);
 
     } else {
 
     }
-    if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.reductionAppearInCourtDoNot && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'REDUCTION'){
+    if(stepsObjectsCurrentStep && stepsObjectsCurrentStep.value.reductionAppearInCourtDoNot && stepsObjectsCurrentStep.value.offenceAgreementStatus == 'REDUCTION'){
 
       this.isCheckBoxSelected['reductionAppearInCourtDoNot'].push(currentStep-1);
       
   }
-  if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.disputeAppearInCourt && this[stepsObjects[currentStep]].value.disputeAppearInCourt == 'yes' && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'DISPUTE'){
+  if(stepsObjectsCurrentStep && stepsObjectsCurrentStep.value.disputeAppearInCourt && stepsObjectsCurrentStep.value.disputeAppearInCourt == 'yes' && stepsObjectsCurrentStep.value.offenceAgreementStatus == 'DISPUTE'){
 
     this.isCheckBoxSelected['disputeAppearInCourt'].push(currentStep-1);
     

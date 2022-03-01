@@ -77,7 +77,6 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit,On
     if(changes.isSelectedChekcError && changes.isSelectedChekcError.currentValue){
       this.errorMsg = changes.isSelectedChekcError.currentValue
     }
-    console.log('-----------------------',changes);
   }
   public onSubmit(): void {
     this.stepSave.emit(this.stepper);

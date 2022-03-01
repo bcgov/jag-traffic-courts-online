@@ -1,6 +1,6 @@
 <app-page [busy]="busy">
   <app-tco-page-header>
-    <ng-container header>British Columbia Ticket Resolution</ng-container>
+    <ng-container header style="font-size: 32px;">British Columbia Ticket Resolution</ng-container>
     <ng-container subHeader>
       <cdk-accordion>
         <cdk-accordion-item
@@ -10,7 +10,7 @@
           [attr.id]="'accordion-header'"
           [attr.aria-expanded]="accordionItem.expanded"
           [attr.aria-controls]="'accordion-body'">
-          <div class="subheader-desc" (click)="accordionItem.toggle()">
+          <div class="subheader-desc" style="font-size: 20px;" (click)="accordionItem.toggle()">
             Request fine reductions or time to pay, or dispute your Motor Vehicle Act violation ticket.<br>
             <a style="color: deepskyblue;"><u>
               {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
@@ -64,7 +64,7 @@
 
   <!-- MOBILE VIEW -->
   <div class="row d-sm-block d-md-block d-lg-none">
-    <h3 class="text-dark"><strong>If your ticket number starts with A:</strong></h3>
+    <h3 class="text-dark" style="font-size: 20px;"><strong>If your ticket number starts with A:</strong></h3>
     <div class="col my-3">
       <button type="button"
               mat-raised-button
@@ -95,11 +95,11 @@
               (ngSubmit)="onSearch()"
               novalidate>
           <div class="row">
-            <span class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></span>
+            <span class="text-dark mx-2" style="font-size: 20px;"><strong>If your ticket number starts with E or S:</strong></span>
 
             <div class="col">
               <mat-form-field class="w-100">
-                <mat-label>Enter violation ticket number</mat-label>
+                <mat-label style="font-size: 14px;">Enter violation ticket number</mat-label>
                 <input formControlName="ticketNumber"
                        placeholder="XX00000000"
                        matInput
@@ -123,7 +123,7 @@
           <div class="row">
             <div class="col time-picker">
               <div class='time-picker-wrapper'>
-                <mat-label>Enter violation time</mat-label>
+                <mat-label style="font-size: 14px;">Enter violation time</mat-label>
                 <!-- <div class="toggle-example">
                   <input class='time-picker-input' [ngxTimepicker]="toggleTimepicker" placeholder="--:--" [format]="24" formControlName="time">
                   <ngx-material-timepicker-toggle [for]="toggleTimepicker"></ngx-material-timepicker-toggle>
@@ -149,11 +149,11 @@
           </div>
 
           <div class="row">
-            <div class="col">
+            <div class="col" style="font-size: 20px;">
               <button type="submit"
                       mat-flat-button
                       color="primary"
-                      class="find-large">
+                      class="find-xlarge">
                 <mat-icon class="me-2">search</mat-icon>
                 Find ticket
               </button>
@@ -180,7 +180,7 @@
         </div>
       </div>
       <div class="row">
-        <span class="text-dark mb-2"><strong>If your ticket number starts with A:</strong></span>
+        <span class="text-dark mb-2" style="font-size: 20px;"><strong>If your ticket number starts with A:</strong></span>
           </div>      
       <div class="row">
         <div class="col">
@@ -190,10 +190,10 @@
                   class="find-xlarge"
                   (click)="fileInput.click()">
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
-            Upload ticket image
+            <span style="font-size: 20px;">Upload ticket image</span>
           </button>
           <div class="row mb-4">
-            <span>I can't upload an image of my ticket
+            <span style="font-size: 18px;">I can't upload an image of my ticket
               <mat-icon class="tool-tip">info</mat-icon>
             </span>
           </div>
@@ -214,7 +214,7 @@
             (click)="onViewImageRequirements()">
             <img class="me-2"
                 src="/assets/image-requirements-icon.svg" />
-            <span class="view-link-text">View image requirements</span>
+            <span class="view-link-text">Image requirements</span>
           </a>
         </div>
         <div class="col">

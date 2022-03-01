@@ -72,7 +72,6 @@ export class DisputeResourceService {
 	      ),
 	      map((ticket: any) => {
 	        if (ticket) {
-	        console.log('service',ticket)
 	        }
 
 	        return ticket;
