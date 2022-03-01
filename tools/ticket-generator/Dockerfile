@@ -3,10 +3,15 @@
 #############################################################################################
 FROM maven:3.8.1-openjdk-8
 
-WORKDIR /
-
-COPY . .
+WORKDIR /opt/ticket-gen
+COPY . /opt/ticket-gen
 
 RUN mvn clean package -Dmaven.test.skip=true 
 
-CMD ["java", "-jar", "./target/ticket-generator-0.0.1-SNAPSHOT.jar"]
+RUN chown -R 1001:0 /opt/ticket-gen && \
+    chown -R 1001:0 $HOME && \
+    chmod -R ug+rwX /opt/ticket-gen
+
+USER 1001
+
+CMD ["java", "-jar", "/opt/ticket-gen/target/ticket-generator-0.0.1-SNAPSHOT.jar"]
