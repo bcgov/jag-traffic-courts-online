@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;
@@ -29,7 +30,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
             var arcFileService = new ArcFileService(_mockArcFileService.Object);
 
             // Act
-            var actual = await arcFileService.CreateStreamFromArcData(records);
+            var actual = await arcFileService.CreateStreamFromArcData(records, CancellationToken.None);
 
             // Assert
             Assert.NotNull(actual);
@@ -41,7 +42,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         public async void Test_throw_ArgumentNullException_if_null_value_passed_for_CreateArcFile()
         {
             var arcFileService = new ArcFileService(_mockArcFileService.Object);
-            await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFile(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFile(null, CancellationToken.None));
         }
     }
 }

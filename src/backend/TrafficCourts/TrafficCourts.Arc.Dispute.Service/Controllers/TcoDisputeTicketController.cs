@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;
 
@@ -22,41 +23,25 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
             _arcFileService = arcFileService;
         }
 
-        // GET: api/<TcoDisputeTicketController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<TcoDisputeTicketController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
+        /// <summary>
+        /// Creates ARC file and uploads it to a SFTP location by extracting TCO Dispute Ticket data from the JSON request.
+        /// </summary>
+        /// <param name="disputeData">A JSON object that contains TCO Dispute Ticket data.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <response code="200">TCO Dispute Ticket data extracted from JSON request, created the ARC file in proper format and uploaded it to the SFTP location successfully.</response>
+        /// <response code="400">The request JSON data is empty or not valid that does not contain the required data to output an ARC file in proper format.</response>
         // POST api/<TcoDisputeTicketController>
         [HttpPost]
-        public async Task<IActionResult> CreateArcFile([Required][FromBody] TcoDisputeTicket disputeData)
+        [ProducesResponseType(typeof(List<ArcFileRecord>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> CreateArcFile([Required][FromBody] TcoDisputeTicket disputeData, CancellationToken cancellationToken)
         {
             var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);
 
-            await _arcFileService.CreateArcFile(arcFileRecords);
+            await _arcFileService.CreateArcFile(arcFileRecords, cancellationToken);
 
             return Ok(arcFileRecords);
-        }
-
-        // PUT api/<TcoDisputeTicketController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<TcoDisputeTicketController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

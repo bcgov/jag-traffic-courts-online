@@ -7,6 +7,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
     {
         public List<ArcFileRecord> Convert(TcoDisputeTicket source, List<ArcFileRecord> destination, ResolutionContext context)
         {
+            ArgumentNullException.ThrowIfNull(source);
+
             List<ArcFileRecord> arcFileRecordList = new List<ArcFileRecord>();
 
             foreach (TicketDetails ticket in source.TicketDetails)
@@ -17,15 +19,15 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.TransactionTime = source.TicketIssuanceDate;
                 adnotated.FileNumber = source.TicketFileNumber;
                 adnotated.MvbClientNumber = source.DriversLicense;
-                adnotated.Organization = source.IssuingOrganization;
-                adnotated.OrganizationLocation = source.IssuingLocation;
-                adnotated.Name = source.CitizenName;
                 // Mapping adnotated ticket specific data
+                adnotated.Name = source.CitizenName;
                 adnotated.Section = ticket.section;
                 adnotated.Subsection = ticket.subsection;
                 adnotated.Paragraph = ticket.paragraph;
                 adnotated.Act = ticket.act;
                 adnotated.OriginalAmount = ticket.amount;
+                adnotated.Organization = source.IssuingOrganization;
+                adnotated.OrganizationLocation = source.IssuingLocation;
                 // Create a dispute key to check if the corresponding dispute data is in the dictionary
                 var disputeKey = CreateDisputeKey(ticket.section, ticket.subsection, ticket.paragraph, ticket.act);
 
@@ -44,16 +46,15 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                             disputed.TransactionTime = source.TicketIssuanceDate;
                             disputed.FileNumber = source.TicketFileNumber;
                             disputed.MvbClientNumber = source.DriversLicense;
-                            disputed.Name = source.CitizenName;
                             // Mapping disputed ticket specific data
+                            disputed.Name = source.CitizenName;
                             disputed.DisputeType = disputeValue.DisputeType;
-                            disputed.StreetAddress = source.StreetAddress;
-                            disputed.City = source.City;
-                            disputed.Province = source.Province;
-                            disputed.PostalCode = source.PostalCode;
+                            disputed.StreetAddress = source.StreetAddress != null ? source.StreetAddress : "";
+                            disputed.City = source.City != null ? source.City : "";
+                            disputed.Province = source.Province != null ? source.Province : "";
+                            disputed.PostalCode = source.PostalCode != null ? source.PostalCode : "";
 
                             arcFileRecordList.Add(disputed);
-
                         }
                     }
                 }              

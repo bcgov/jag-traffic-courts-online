@@ -17,11 +17,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
         {
             _sftpService = sftpService; 
         }
-        public async Task CreateArcFile(List<ArcFileRecord> arcFileData)
+        public async Task CreateArcFile(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(arcFileData);
 
-            var stream = await CreateStreamFromArcData(arcFileData);
+            var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
             /*
             Random rnd = new Random();
             int num = rnd.Next(100);
@@ -36,8 +36,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
             _sftpService.UploadFile(stream, remoteFilePath);
         }
 
-        public async Task<MemoryStream> CreateStreamFromArcData(List<ArcFileRecord> arcFileData)
+        internal async Task<MemoryStream> CreateStreamFromArcData(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
         {
+            System.Diagnostics.Debug.Assert(arcFileData != null, "Arc File Data List is null to create a stream out of it");
+            System.Diagnostics.Debug.Assert(arcFileData.Count != 0, "Arc File Data List is empty to create a stream out of it");
+
             // Inject ticket mapper function based on the derived class object
             var selector = new FixedLengthTypeMapperInjector();
             selector.When<AdnotatedTicket>().Use(AdnotatedTicketMapper);

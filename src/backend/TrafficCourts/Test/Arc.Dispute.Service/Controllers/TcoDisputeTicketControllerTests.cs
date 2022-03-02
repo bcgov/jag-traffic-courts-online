@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Controllers;
 using TrafficCourts.Arc.Dispute.Service.Models;
@@ -41,10 +42,10 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Controllers
                 .Returns(arcFileRecordList);
 
             _mockArcFileService
-                .Setup(_ => _.CreateArcFile(It.Is<List<ArcFileRecord>>((_) => _ == arcFileRecordList)));
+                .Setup(_ => _.CreateArcFile(It.Is<List<ArcFileRecord>>((_) => _ == arcFileRecordList), It.IsAny<CancellationToken>()));
 
             // Act
-            var result = await disputeTicketController.CreateArcFile(mockTcoDisputeTicket.Object);
+            var result = await disputeTicketController.CreateArcFile(mockTcoDisputeTicket.Object, CancellationToken.None);
 
             // Assert
             _mockArcFileService.VerifyAll();

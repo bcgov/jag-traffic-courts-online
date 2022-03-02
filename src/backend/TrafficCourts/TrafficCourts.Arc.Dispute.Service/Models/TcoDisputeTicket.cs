@@ -5,19 +5,19 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 {
     public class TcoDisputeTicket
     {
-        [JsonProperty("citizen_name")]
+        [JsonProperty("citizen_name"), JsonRequired]
         public string CitizenName { get; set; }
-        [JsonProperty("ticket_issuance_date")]
+        [JsonProperty("ticket_issuance_date"), JsonRequired]
         public DateTime TicketIssuanceDate { get; set; }
-        [JsonProperty("ticket_file_number")]
+        [JsonProperty("ticket_file_number"), JsonRequired]
         public string TicketFileNumber { get; set; }
-        [JsonProperty("issuing_organization")]
+        [JsonProperty("issuing_organization"), JsonRequired]
         public string IssuingOrganization { get; set; }
-        [JsonProperty("issuing_location")]
+        [JsonProperty("issuing_location"), JsonRequired]
         public string IssuingLocation { get; set; }
-        [JsonProperty("drivers_license")]
+        [JsonProperty("drivers_license"), JsonRequired]
         public string DriversLicense { get; set; }
-        [JsonProperty("ticket_counts")]
+        [JsonProperty("ticket_counts"), JsonRequired]
         public List<TicketDetails> TicketDetails { set; get; }
         [JsonProperty("street_address")]
         public string? StreetAddress { get; set; }

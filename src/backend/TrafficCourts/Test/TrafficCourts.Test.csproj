@@ -35,6 +35,7 @@
     <ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
+    <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj" />
     <ProjectReference Include="..\TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj" />
   </ItemGroup>
 
