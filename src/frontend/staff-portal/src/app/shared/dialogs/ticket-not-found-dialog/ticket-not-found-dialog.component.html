@@ -1,0 +1,26 @@
+    <div>
+          <mat-icon class="icon-error" aria-hidden="false" color="error" aria-label="Example icon">error</mat-icon>
+        <span class="ticket-error"><strong>Ticket not found</strong></span>
+        <button mat-icon-button mat-dialog-close color="primary">
+            <mat-icon class="close-icon">close</mat-icon>
+          </button>
+        </div>
+        <br>
+<p>If your ticket starts with A and is not found, it is not in the system yet. <strong>Please upload  an image of your ticket to begin.</strong> </p>
+<br>
+<p>If your ticket starts with <strong>S</strong> or <strong>E</strong>  and you do not get a result, you may need to call the Violation Ticket Centre at <a href="tel:1-888-661-9026"> 1-888-661-9026</a></p>
+<div>
+    <a class="view-link"
+    (click)="onViewImageRequirements()">
+      <img class="me-2"
+           src="/assets/image-requirements-icon.svg" />
+      <span class="view-link-text">View image requirements</span>
+    </a>
+    <button 
+    class="close-button"
+    type="submit"
+    mat-flat-button mat-dialog-close
+    color="primary">
+Close
+</button>
+  </div>

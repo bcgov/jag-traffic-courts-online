@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+  <g id="Group_32" data-name="Group 32" transform="translate(-1057 -471)">
+    <g id="Ellipse_296" data-name="Ellipse 296" transform="translate(1057 471)" fill="none" stroke="#009cde" stroke-width="2">
+      <circle cx="25" cy="25" r="25" stroke="none"/>
+      <circle cx="25" cy="25" r="24" fill="none"/>
+    </g>
+    <g id="document_scanner_black_24dp" transform="translate(1065 479)">
+      <rect id="Rectangle_845" data-name="Rectangle 845" width="34" height="34" fill="none"/>
+      <path id="Path_78" data-name="Path 78" d="M8.979,3.792H4.792V7.979H2V1H8.979ZM29.917,7.979V1H22.938V3.792h4.188V7.979ZM8.979,28.917H4.792V24.729H2v6.979H8.979Zm18.146-4.187v4.188H22.938v2.792h6.979V24.729ZM22.938,7.979H8.979v16.75H22.938Zm2.792,16.75a2.8,2.8,0,0,1-2.792,2.792H8.979a2.8,2.8,0,0,1-2.792-2.792V7.979A2.8,2.8,0,0,1,8.979,5.188H22.938a2.8,2.8,0,0,1,2.792,2.792ZM20.146,10.771H11.771v2.792h8.375Zm0,4.188H11.771V17.75h8.375Zm0,4.188H11.771v2.792h8.375Z" transform="translate(0.792 0.396)" fill="#009cde"/>
+    </g>
+  </g>
+</svg>

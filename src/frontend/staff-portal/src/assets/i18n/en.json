@@ -1,0 +1,186 @@
+{
+  "app_heading": "Ticket information in British Columbia",
+  "landing": {
+    "description1": "The online tool for submitting and resolving your BC Violation Ticket disputes.",
+    "description2": "If you would like to simply pay for your ticket, please click on the 'Pay Now' button.",
+    "step_1": {
+      "heading": "Initiate Dispute",
+      "detail": "Login using your BC Services card and initiate the online resolution process."
+    },
+    "step_2": {
+      "heading": "Violation Ticket Lookup",
+      "detail": "Find your Violation Ticket and ensure that the specifics of the ticket are correct. Through our step-by-step process, you can indicate your preferences and how you would like the ticket to be disputed."
+    },
+    "step_3": {
+      "heading": "Violation Ticket Resolution",
+      "detail": "Submit your resolution or save the details until you are ready to proceed with the resolution process. You have 365 days to dispute your ticket from the date the ticket was issued."
+    },
+    "self_resolution": {
+      "heading": "Self Resolution Wizard",
+      "detail": "Interact with an online wizard and explore reasons behind your ticket. The online wizard will take you through multiple options demonstrated through text, videos and images.",
+      "explore": "Explore My Options"
+    }
+  },
+  "find": {
+    "heading": "Find Your BC Traffic Ticket",
+    "sub_heading": "Enter the Violation Ticket Number and the Violation Time to find your ticket.",
+    "note_heading": "VIOLATION TICKET CENTRE CONTACT INFORMATION",
+    "note_phone": "Phone Toll Free",
+    "note_forms": "Forms are available on the website at",
+    "note_form_name": "Online Forms"
+  },
+  "summary": {
+    "heading": "Summary of your BC Traffic Ticket",
+    "sub_heading": "Summary of your ticket and any disputes that exist.",
+    "ticket_number": "Ticket #",
+    "ticket_outstanding": "Your Ticket is Outstanding",
+    "ticket_outstanding_detail": "See below to find out more information about your ticket.",
+    "dispute_status_1": "The dispute has been filed. An email with the court information will be sent soon.",
+    "dispute_status_2": "A court date has been set for this dispute. Check your email for more information.",
+    "paid_early_1": "If paid by",
+    "paid_early_2": "the amount due includes a",
+    "paid_early_3": "discount",
+    "dispute_count": "Dispute Count",
+    "dispute_ticket": "Take Action",
+    "questions": "Questions",
+    "questions_detail_1": "Any further questions about your dispute should be directed to:",
+    "questions_detail_2": "Phone Toll Free",
+    "status_0": "Balance outstanding",
+    "status_1": "Submitted",
+    "status_2": "In Progress",
+    "status_3": "Resolved",
+    "status_4": "Rejected",
+    "status_unpaid": "Balance outstanding",
+    "status_paid": "Paid"
+  },
+  "stepper": {
+    "next": "Next",
+    "cancel": "Back",
+    "backReview": "Back to ticket review",
+    "back": "Back",
+    "submit": "Submit request",
+    "disputant": {
+      "heading": "Disputant Information",
+      "sub_heading": "Please fill in the following information.",
+      "note": "A notice of hearing will be mailed to the above address. You MUST notify the Violation Ticket Centre of any new address of change of address in writing.",
+      "lastName": "Surname of Disputant",
+      "given_names": "Given Names",
+      "mailing_address": "Mailing Address",
+      "city": "City",
+      "province": "Province",
+      "postal_code": "Postal Code",
+      "home_phone_number": "Home Phone Number",
+      "work_phone_number": "Work Phone Number",
+      "driver_license_number": "Driver's License Number",
+      "driver_license_province": "Province or State of Driver's License",
+      "email_address": "Email Address",
+      "birthdate": "Birthdate"
+    },
+    "count": {
+      "heading": "Count Review and Action",
+      "sub_heading_1": "Count",
+      "sub_heading_2": "Review and Action",
+      "desc_of_offence": "Description of Offence",
+      "offence_amount": "Offence Amount",
+      "amount_due": "Amount Due",
+      "discount_if_paid_by": "Ticket Discount (if paid by",
+      "dispute_yes_no": "I would like to dispute this offence",
+      "for_this_offence": "Regarding Count",
+      "what_to_do": "what would you like to do?",
+      "offence_agreement_1": "Nothing, I will pay the fine for this count",
+      "offence_agreement_2": "Request a reduction or time to pay for the count",
+      "offence_agreement_3": "Dispute the charge",
+      "requests": "Which requests would you like to make?",
+      "requestReduction": "I request a reduction of the ticketed amount",
+      "requestReductionReasonLabel": "Please enter your reasons for why you are requesting a fine reduction.",
+      "requestMoreTime": "I request time to pay the ticketed amount",
+      "requestMoreTimeReasonLabel": "Please enter your reasons for why you are requesting more time to pay."
+    },
+    "additional": {
+      "heading": "Additional Information",
+      "sub_heading": "The following questions apply to ALL counts on this ticket that are currently under dispute. If any of these are required for any count in the dispute, please select them.",
+      "requests": "Please indicate if the following apply",
+      "lawyer": "I intend to be represented at the hearing by a lawyer",
+      "interpreter": "I require a speaking interpreter at the hearing",
+      "interpreter_language": "Interpreter Language",
+      "witness": "I intend to call a witness",
+      "no_lawyer": "I do NOT intend to be represented at the hearing by a lawyer",
+      "no_interpreter": "I do NOT require a speaking interpreter at the hearing",
+      "no_witness": "I do NOT intend to call a witness",
+      "note": "If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record of the disputant, and the prescribed ticketed amount(s) will become immediately due and payable."
+    },
+    "overview": {
+      "heading": "Ticket request overview",
+      "sub_heading": "Please review the following information. You can go back to any step to update the information.",
+      "disputant_information": "Disputant Information",
+      "address_information": "Address",
+      "count": "Count",
+      "count_information": "Count Information",
+      "additional_information": "Additional Information",
+      "offence_not_included": "This offence is NOT included in the dispute",
+      "offence_dispute": "I do want to dispute this offence",
+      "certify": "I certify that all information provided is true and complete. I understand it is an offence under the law to knowingly provide false or misleading information.",
+      "note_heading": "VIOLATION TICKET SUBMISSION",
+      "note_detail": "Once it has been submitted, it cannot be updated."
+    }
+  },
+  "submit": {
+    "heading": "BC Traffic Ticket Dispute Submitted",
+    "sub_heading": "The dispute was successfully submitted.",
+    "note_heading": "Dispute Received",
+    "note_detail": "Your dispute was successfully submitted. Please check your email (including your Junk folder) for updates.",
+    "next_steps": "Next Steps",
+    "next_steps_detail_1": "Your Dispute is now under by the Traffic Courts. You will be notified once your dispute has been reviewed.",
+    "next_steps_detail_2": "Question about your dispute should be directed to",
+    "next_steps_detail_3": "Phone Toll Free",
+    "view_your_ticket": "View Your Ticket",
+    "exit": "Exit"
+  },
+  "ticket_dispute": {
+    "heading": "BC Traffic Court Ticket Dispute"
+  },
+  "offence_dispute": {
+    "heading": "BC Traffic Court Offence Dispute"
+  },
+  "label": {
+    "search": "Search",
+    "back": "Back",
+    "pay_now": "Pay Now",
+    "pay_count": "Pay Count",
+    "pay_balance": "Pay Ticket Balance of",
+    "initiate_dispute": "Initiate Dispute",
+    "find_another_ticket": "Find Another Ticket",
+    "violation_ticket_number": "Violation Ticket Number",
+    "violation_ticket_number_hint": "A Violation Ticket Number is 2 letters and 8 numbers",
+    "violation_time": "Violation Time",
+    "count_number": "Count #",
+    "desc_of_offence": "Description of Offence",
+    "for_vehicle": "for Vehicle",
+    "offence_amount": "Offence Amount",
+    "amount_due": "Amount Due",
+    "status": "Status"
+  },
+  "submit_confirmation": {
+    "heading": "Submit request",
+    "message": "When your request is submitted for adjudication, it can no longer be updated. Are you ready to submit your request?",
+    "confirm": "Submit request",
+    "cancel": "Cancel"
+  },
+  "toaster": {
+    "dispute_submitted": "Dispute has been successfully submitted",
+    "dispute_validation_error": "Your dispute has an error that needs to be corrected before you will be able to submit",
+    "ticket_error": "Ticket could not be retrieved",
+    "dispute_create_error": "Dispute could not be created"
+  },
+  "error": {
+    "required": "Required",
+    "positive_number": "Enter positive number",
+    "email_address": "Must be a valid email address"
+  },
+  "shell_ticket_confirmation": {
+    "heading": "Create your traffic ticket",
+    "message": "Are you sure the information is correct and you want to create this ticket?",
+    "confirm": "Yes, create ticket",
+    "cancel": "No, do not create ticket"
+  }
+}

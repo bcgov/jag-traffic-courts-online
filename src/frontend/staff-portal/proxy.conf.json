@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "http://citizen-api-0198bb-dev.apps.silver.devops.gov.bc.ca",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "production": false,
+  "environment": "dev",
+  "version": "1.0.0",
+  "useMockServices": false,
+  "apiBaseUrl": "/api",
+  "features": {
+  }
+}

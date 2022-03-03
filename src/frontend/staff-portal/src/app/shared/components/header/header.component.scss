@@ -1,0 +1,41 @@
+@import "palette";
+
+.header {
+  background-color: theme-palette(blue);
+}
+
+.mat-toolbar {
+  height: 70px;
+  padding: 0;
+
+  img {
+    margin-top: -15px;
+
+    &.hasMobileSidemenu {
+      // Provide space between sidemenu toggle and BC Gov. logo
+      margin-left: 15px;
+    }
+  }
+
+  .language {
+    font-size: 0.8rem;
+    color: white;
+    cursor: pointer;
+  }
+
+  .fullName {
+    font-size: 0.8rem;
+  }
+
+  .mat-icon {
+    cursor: pointer;
+    font-size: 1.5em;
+    margin-top: 0.4em;
+    user-select: none;
+  }
+
+  .logout {
+    margin-left: 1.2em;
+    margin-right: 0.2em;
+  }
+}
