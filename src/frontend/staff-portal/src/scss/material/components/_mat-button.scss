@@ -1,0 +1,56 @@
+@import "palette";
+
+//
+// MATERIAL BUTTON
+//
+
+.mat-stroked-button {
+  &.mat-button-base.mat-primary {
+    border-color: theme-palette(blue);
+
+    &:hover {
+      background-color: theme-palette(blue);
+      color: white;
+    }
+  }
+}
+
+.mat-flat-button {
+  &.mat-button-base.mat-accent {
+    border: 1px solid theme-palette(yellow);
+    color: theme-palette(blue);
+
+    &:hover {
+      border: 1px solid theme-palette(blue);
+      background-color: theme-palette(blue);
+      color: white;
+    }
+  }
+
+  &.mat-button-base.mat-primary {
+    border: 1px solid theme-palette(blue);
+
+    &:hover {
+      border: 1px solid theme-palette(blue);
+      color: theme-palette(blue);
+      background-color: white;
+    }
+  }
+}
+
+.mat-checkbox-inner-container {
+  margin-top: 5px !important;
+}
+
+.mat-button-toggle-group {
+  border: 1px solid theme-palette(blue);
+}
+
+.mat-button-toggle {
+  color: theme-palette(blue);
+}
+
+.mat-button-toggle-checked {
+  background-color: theme-palette(blue, light);
+  color: white !important;
+}

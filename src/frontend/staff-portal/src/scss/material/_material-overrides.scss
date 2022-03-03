@@ -1,0 +1,165 @@
+@import "../bootstrap/bootstrap-variables";
+//
+// MATERIAL OVERRIDES
+//
+
+// NOTE: Used to fix issues OR augment Material components
+// that are not theme related
+
+// Remove all outlines from all elements.  This is very aggressive! and should
+// be removed once supported by Angular Material.
+* {
+  outline: none !important;
+}
+
+mat-label {
+  color: theme-palette(grey, dark);
+}
+
+mat-error {
+  font-weight: bold;
+}
+
+//
+// Forms
+//
+
+.mat-checkbox-layout,
+.mat-slide-toggle-content {
+  // Force checkbox and slide labels to line wrap if required
+  // instead of overflowing their container
+  white-space: normal !important;
+}
+
+.mat-form-field {
+  // Provide a bit more spacing under form fields so error
+  // messages are not resting on underlying field labels
+  margin-bottom: 0.3rem;
+}
+
+.mat-checkbox-checked label,
+.mat-radio-checked label {
+  font-weight: 700;
+}
+
+.mat-drawer-container {
+  color: $body-color;
+}
+
+.mat-vertical-content {
+  padding: 0 !important;
+}
+
+.mat-step-header .mat-step-icon-state-done,
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: #155724 !important;
+  color: #fff !important;
+}
+
+.mat-step-icon-state-error .mat-icon {
+  font-size: 28px !important;
+  height: 28px !important;
+  width: 28px !important;
+}
+
+.mat-step-label-selected {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.mat-step-text-label {
+  white-space: normal;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.mat-step-icon-selected {
+  transform: scale(1.5);
+}
+
+.mat-step-label-selected .mat-step-text-label {
+  color: theme-palette(blue);
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.mat-form-field .mat-form-field-label-wrapper label {
+  line-height: 21px;
+}
+
+.mat-form-field .mat-form-field-infix input {
+  line-height: 21px;
+}
+
+.mat-vertical-content {
+  padding: 0 24px 0px 24px !important;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-underline::before {
+  background-color: theme-palette(blue);
+}
+
+.mat-form-field-ripple {
+  background-color:  theme-palette(blue);
+}
+
+.mat-form-field-wrapper .mat-form-field-flex {
+  border: 2px transparent solid;
+}
+
+.mat-checkbox-label.mat-checkbox-label,
+.wrap-mat-radio-label.wrap-mat-radio-label {
+  color: #333333;
+}
+
+.mat-form-field-invalid {
+  & mat-icon {
+    color: theme-palette(red);
+  }
+
+  & .mat-form-field-wrapper .mat-form-field-flex {
+    border: 2px theme-palette(red) solid;
+    border-radius: 0;
+  }
+}
+
+.mat-tooltip {
+  font-size: 1em;
+}
+
+// Prevents scrolling on smaller option dropdowns
+.mat-select-panel.mat-select-panel {
+  max-height: 290px;
+}
+
+.mat-radio-container {
+  margin: 4px 0 auto !important;
+}
+
+@media (max-width: 767px) {
+  .mat-vertical-content {
+    padding: 0 0 0px 14px !important;
+  }
+
+  .mat-vertical-content-container {
+    margin-left: 10px !important;
+  }
+
+  .mat-stepper-label-position-bottom .mat-horizontal-stepper-header,
+  .mat-vertical-stepper-header {
+    padding: 24px 0;
+  }
+
+  mat-radio-button .mat-radio-label-content {
+    white-space: normal;
+    line-height: 1.3em;
+  }
+
+  mat-radio-button .mat-radio-label {
+    align-items: normal;
+  }
+
+  .mat-radio-container {
+    top: -5px;
+  }
+}
