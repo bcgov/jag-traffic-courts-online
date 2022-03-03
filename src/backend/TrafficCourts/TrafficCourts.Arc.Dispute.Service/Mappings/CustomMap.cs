@@ -21,15 +21,15 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.MvbClientNumber = source.DriversLicense;
                 // Mapping adnotated ticket specific data
                 adnotated.Name = source.CitizenName;
-                adnotated.Section = ticket.section;
-                adnotated.Subsection = ticket.subsection;
-                adnotated.Paragraph = ticket.paragraph;
-                adnotated.Act = ticket.act;
-                adnotated.OriginalAmount = ticket.amount;
+                adnotated.Section = ticket.Section;
+                adnotated.Subsection = ticket.Subsection;
+                adnotated.Paragraph = ticket.Paragraph;
+                adnotated.Act = ticket.Act;
+                adnotated.OriginalAmount = ticket.Amount;
                 adnotated.Organization = source.IssuingOrganization;
                 adnotated.OrganizationLocation = source.IssuingLocation;
                 // Create a dispute key to check if the corresponding dispute data is in the dictionary
-                var disputeKey = CreateDisputeKey(ticket.section, ticket.subsection, ticket.paragraph, ticket.act);
+                var disputeKey = CreateDisputeKey(ticket.Section, ticket.Subsection, ticket.Paragraph, ticket.Act);
 
                 arcFileRecordList.Add(adnotated);
                 // Check if there are data required to encapsulate citizen dispute information
@@ -48,7 +48,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                             disputed.MvbClientNumber = source.DriversLicense;
                             // Mapping disputed ticket specific data
                             disputed.Name = source.CitizenName;
-                            disputed.DisputeType = disputeValue.DisputeType;
+                            disputed.DisputeType = disputeValue.DisputeType != null ? disputeValue.DisputeType : "A";
                             disputed.StreetAddress = source.StreetAddress != null ? source.StreetAddress : "";
                             disputed.City = source.City != null ? source.City : "";
                             disputed.Province = source.Province != null ? source.Province : "";

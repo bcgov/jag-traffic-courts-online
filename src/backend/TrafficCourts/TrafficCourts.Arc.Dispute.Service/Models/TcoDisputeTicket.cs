@@ -35,20 +35,25 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 
     public class TicketDetails
     {
-        public string section { get; set; }
-        public string subsection { get; set; }
-        public string paragraph { get; set; }
-        public string act { get; set; }
-        public double amount { get; set; }
+        [JsonRequired]
+        public string Section { get; set; }
+        [JsonRequired]
+        public string Subsection { get; set; }
+        [JsonRequired]
+        public string Paragraph { get; set; }
+        [JsonRequired]
+        public string Act { get; set; }
+        [JsonRequired]
+        public double Amount { get; set; }
     }
 
     public partial class DisputeDetails
     {
         [JsonProperty("dispute_type")]
-        public string DisputeType { get; set; }
+        public string? DisputeType { get; set; }
 
         [JsonProperty("dispute_reason")]
-        public string DisputeReason { get; set; }
+        public string? DisputeReason { get; set; }
     }
 
 }
