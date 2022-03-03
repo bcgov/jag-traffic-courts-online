@@ -44,11 +44,11 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 {
                     AdnotatedTicket actualAdnotatedTicket = (AdnotatedTicket)actualRec;
                     Assert.Equal(tcoDisputeTicket.CitizenName, actualAdnotatedTicket.Name);
-                    Assert.True(tcoDisputeTicket.TicketDetails.Any(_ => _.section == actualAdnotatedTicket.Section));
-                    Assert.True(tcoDisputeTicket.TicketDetails.Any(_ => _.subsection == actualAdnotatedTicket.Subsection));
-                    Assert.True(tcoDisputeTicket.TicketDetails.Any(_ => _.paragraph == actualAdnotatedTicket.Paragraph));
-                    Assert.True(tcoDisputeTicket.TicketDetails.Any(_ => _.act == actualAdnotatedTicket.Act));
-                    Assert.True(tcoDisputeTicket.TicketDetails.Any(_ => _.amount == actualAdnotatedTicket.OriginalAmount));
+                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Section == actualAdnotatedTicket.Section);
+                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subsection == actualAdnotatedTicket.Subsection);
+                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Paragraph == actualAdnotatedTicket.Paragraph);
+                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Act == actualAdnotatedTicket.Act);
+                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Amount == actualAdnotatedTicket.OriginalAmount);
                     Assert.Equal(tcoDisputeTicket.IssuingOrganization, actualAdnotatedTicket.Organization);
                     Assert.Equal(tcoDisputeTicket.IssuingLocation, actualAdnotatedTicket.OrganizationLocation);
                 }
