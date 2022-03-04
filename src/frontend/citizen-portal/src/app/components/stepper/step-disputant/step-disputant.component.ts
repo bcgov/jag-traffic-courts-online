@@ -27,6 +27,60 @@ export class StepDisputantComponent
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
+  public provinces: any = [
+    {
+      "name": "Alberta",
+      "abbreviation": "AB"
+    },
+    {
+      "name": "British Columbia",
+      "abbreviation": "BC"
+    },
+    {
+      "name": "Manitoba",
+      "abbreviation": "MB"
+    },
+    {
+      "name": "New Brunswick",
+      "abbreviation": "NB"
+    },
+    {
+      "name": "Newfoundland and Labrador",
+      "abbreviation": "NL"
+    },
+    {
+      "name": "Northwest Territories",
+      "abbreviation": "NT"
+    },
+    {
+      "name": "Nova Scotia",
+      "abbreviation": "NS"
+    },
+    {
+      "name": "Nunavut",
+      "abbreviation": "NU"
+    },
+    {
+      "name": "Ontario",
+      "abbreviation": "ON"
+    },
+    {
+      "name": "Prince Edward Island",
+      "abbreviation": "PE"
+    },
+    {
+      "name": "Quebec",
+      "abbreviation": "QC"
+    },
+    {
+      "name": "Saskatchewan",
+      "abbreviation": "SK"
+    },
+    {
+      "name": "Yukon Territory",
+      "abbreviation": "YT"
+    }
+  ]
 
   public maxDateOfBirth: Date;
 
