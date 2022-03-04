@@ -23,18 +23,14 @@
     <section>
       <div class="row">
         <div class="col">
-          <div class="flex-last-info-content">
-            <h4>Did you know?</h4>
-  
-            <div class="bullet-list">
-              <ul>
-                <li class="pt-0">
-                  You can make a dispute request by attending a court hearing in person, or you may supply written reasons
-                  requesting a fine reduction and/or time to pay without having to attend a court hearing.
-                </li>
-              </ul>
-            </div>
-          </div>
+          <app-alert type="info"
+                     icon="info">
+            <ng-container class="alert-content" #alertContent>
+            <strong>Did you know? </strong>
+                You can make a dispute request by attending a court hearing in person, or you may supply written reasons
+                requesting a fine reduction and/or time to pay without having to attend a court hearing.
+            </ng-container>
+          </app-alert>
           <mat-radio-group formControlName="offenceAgreementStatus">
             <div>
               <span style="font-weight: 600;">I do not want to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."

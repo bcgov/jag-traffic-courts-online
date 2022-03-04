@@ -75,6 +75,11 @@
         Take photo of ticket
       </button>
     </div>
+    <div class="row mb-4">
+      <span>I can't upload an image of my ticket
+        <mat-icon class="tool-tip">info</mat-icon>
+      </span>
+    </div>
     <div class="row">
       <div class="col">
         <a class="view-link"
@@ -82,6 +87,16 @@
           <img class="me-2"
                src="/assets/image-requirements-icon.svg" />
           <span class="view-link-text">View image requirements</span>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <a class="view-link"
+           (click)="onViewTicketExample()">
+          <img class="me-2"
+               src="/assets/ticket-example-icon.svg" />
+          <span class="view-link-text">View ticket examples</span>
         </a>
       </div>
     </div>

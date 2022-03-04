@@ -112,39 +112,33 @@ export class ShellTicketComponent implements OnInit {
       lastName: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
-      gender: [null, [Validators.required]],
-      address: [null, [Validators.required]],
-      city: [null, [Validators.required]],
-      province: [null, [Validators.required]],
-      postalCode: [null, [Validators.required]],
-      driverLicenseNumber: [null, [Validators.required]],
-      driverLicenseProvince: [null, [Validators.required]],
+      gender: [null],
+      address: [null],
+      city: [null],
+      province: [null],
+      postalCode: [null],
+      driverLicenseNumber: [null],
+      driverLicenseProvince: [null],
       count1Charge: [
-        null,
-        [Validators.required],
+        null
       ],
       count1FineAmount: [
-        null,
-        [Validators.required, FormControlValidators.currency],
+        null
       ],
       count2Charge: [
-        null,
-        [Validators.required],
+        null
       ],
       count2FineAmount: [
-        null,
-        [Validators.required, FormControlValidators.currency],
+        null
       ],
       count3Charge: [
         null,
-        [Validators.required],
       ],
       count3FineAmount: [
         null,
-        [Validators.required, FormControlValidators.currency],
       ],
-      courtHearingLocation: [null, [Validators.required]],
-      detachmentLocation: [null, [Validators.required]],
+      courtHearingLocation: [null],
+      detachmentLocation: [null],
       _chargeCount: [1],
       _amountOwing: [null],
     });
@@ -212,6 +206,7 @@ export class ShellTicketComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    debugger;
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 
@@ -238,6 +233,12 @@ export class ShellTicketComponent implements OnInit {
       .subscribe((response: boolean) => {
         if (response) {
           const payload: ShellTicketView = this.form.getRawValue();
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+                queryParams: {
+                  ticketNumber: payload.violationTicketNumber,
+                  time: payload.violationTime,
+                },
+              });
 
           this.busy = this.disputeResource
             .createShellTicket(payload)

@@ -161,8 +161,11 @@
           <div class="col-md-6">
             <mat-form-field class="w-100">
               <mat-label>Province or state of driver's licence</mat-label>
-              <input matInput
-                     formControlName="driverLicenseProvince" />
+                     <mat-select formControlName= "driverLicenseProvince" >
+                      <mat-option *ngFor="let province of provinces" [value]="province.name">
+                        {{ province.name }}
+                      </mat-option>
+                    </mat-select>
               <mat-error>{{ "error.required" | translate }}</mat-error>
             </mat-form-field>
           </div>
