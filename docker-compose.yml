@@ -110,7 +110,8 @@ services:
 
   form-rec-layout:
     container_name: azure-cognitive-service-layout
-    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout
+    build:
+      context: ./tools/form-recognizer
     depends_on:
       - rabbitmq
     environment:
