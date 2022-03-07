@@ -10,7 +10,6 @@ using OpenTelemetry.Trace;
 using Serilog;
 using System.Configuration;
 using System.Diagnostics;
-using System.Reflection;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Services;
@@ -18,7 +17,8 @@ using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
-using TrafficCourts.Messaging.Configuration;
+using ILogger = Serilog.ILogger;
+using TrafficCourts.Citizen.Service.Services.Impl;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -47,7 +47,7 @@ public static class Startup
             loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
         });
 
-        // configure application
+        // configure application 
         var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
 
         var logger = GetLogger(builder);
@@ -65,7 +65,7 @@ public static class Startup
             builder.AddObjectStorageFilePersistence();
         }
 
-
+        Configure(builder, configuration?.FlatFileLookupService, logger);
         Configure(builder, configuration?.FormRecognizer, logger);
         Configure(builder, configuration?.TicketSearchClient, logger);
 
@@ -203,7 +203,30 @@ public static class Startup
             return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, logger);
         });
 
-        builder.Services.AddSingleton<IFormRecognizerValidator, FormRecognizerValidator>();
+        builder.Services.AddSingleton<IFormRecognizerValidator>(service => {
+            var lookupService = service.GetRequiredService<ILookupService>();
+            return new FormRecognizerValidator(lookupService);
+        });
+    }
+
+    /// <summary>
+    /// Configures Lookup Service.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="configuration"></param>
+    /// <param name="logger"></param>
+    private static void Configure(WebApplicationBuilder builder, FlatFileLookupServiceConfiguration? configuration, ILogger logger)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(logger);
+
+        builder.Services.AddSingleton<ILookupService>(service => {
+            var logger = service.GetRequiredService<ILogger<FlatFileLookupService>>();
+            if (configuration is null) {
+                configuration = new FlatFileLookupServiceConfiguration();
+            }
+            return new FlatFileLookupService(configuration.BasePath!, logger);
+        });
     }
 
     /// <summary>
