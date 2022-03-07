@@ -72,7 +72,7 @@ export class DisputeSummaryComponent implements OnInit {
         this.ticket = ticket;
       } else {
         this.logger.info('DisputeSummaryComponent:: Search for ticket');
-        this.performSearch(params);
+         this.performSearch(params);
       }
     });
     this.ticketType = this.ticketTypePipe.transform(

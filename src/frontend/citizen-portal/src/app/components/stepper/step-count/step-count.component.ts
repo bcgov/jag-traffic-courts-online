@@ -36,6 +36,7 @@ export class StepCountComponent extends BaseDisputeFormPage implements OnInit,On
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
   @Output() public stepCancel: EventEmitter<MatStepper> = new EventEmitter();
   @Input() public isSelectedChekcError:String;
+  @Input() public offenceCount:number;
   public errorMsg:string = "display here";
   public defaultLanguage: string;
   public previousButtonIcon = 'keyboard_arrow_left';

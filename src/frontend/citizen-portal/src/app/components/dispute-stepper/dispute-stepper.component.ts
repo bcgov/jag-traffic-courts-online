@@ -46,6 +46,7 @@ export class DisputeStepperComponent
   };
   public isErrorCheckMsg1: string;
   public countDataList:any;
+  public offenceCount:any = 0;
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -71,6 +72,7 @@ export class DisputeStepperComponent
   }
 
   public ngOnInit(): void {
+    
     this.isCheckBoxSelected = {
       reductionAppearInCourt:[],
       reductionAppearInCourtDoNot:[],
@@ -97,6 +99,7 @@ export class DisputeStepperComponent
       ] = formsList as FormGroup[];
 
       const currentTicket = this.disputeService.ticket;
+      this.offenceCount =0
       if (currentTicket) {
         this.disputantForm.patchValue(currentTicket.disputant);
         this.additionalForm.patchValue(currentTicket.additional);
@@ -104,12 +107,15 @@ export class DisputeStepperComponent
         this.disputeService.ticket.offences.forEach((offence) => {
           if (offence.offenceNumber === 1) {
             this.offence1Exists = true;
+            this.offenceCount+=1
             this.offence1Form.patchValue(offence);
           } else if (offence.offenceNumber === 2) {
             this.offence2Exists = true;
+            this.offenceCount+=1
             this.offence2Form.patchValue(offence);
           } else if (offence.offenceNumber === 3) {
             this.offence3Exists = true;
+            this.offenceCount+=1
             this.offence3Form.patchValue(offence);
           }
         });

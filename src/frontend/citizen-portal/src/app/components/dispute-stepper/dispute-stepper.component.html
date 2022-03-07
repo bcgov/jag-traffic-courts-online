@@ -31,6 +31,7 @@
             [showDoNothingOption]="offence2Exists"
             [stepControl]="offence1Form"
             [stepper]="disputeStepper"
+            [offenceCount]="offenceCount"
             [ticketName]="ticketName"
             [isSelectedChekcError]='isErrorCheckMsg1'
             (stepSave)="onStepSave($event)"></app-step-count>
@@ -43,6 +44,7 @@
             [stepControl]="offence2Form"
             [stepper]="disputeStepper"
             [ticketName]="ticketName"
+            [offenceCount]="offenceCount"
             [isSelectedChekcError]='isErrorCheckMsg1'
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
@@ -54,7 +56,7 @@
             [stepControl]="offence3Form"
             [ticketName]="ticketName"
             [stepper]="disputeStepper"
-           
+            [offenceCount]="offenceCount"
             (stepSave)="onStepSave($event)"></app-step-count>
         </mat-step>
 
