@@ -4,9 +4,9 @@ import { DisputantView } from './disputantView.model';
 import { OffenceView } from './offenceView.model';
 
 export interface TicketDisputeView extends Omit<TicketDispute, 'disputant' | 'offences' | 'additional'> {
-  disputant: DisputantView;
+  disputant?: DisputantView;
   offences: OffenceView[];
-  additional: AdditionalView;
+  additional?: AdditionalView;
 
   _within30days?: boolean;
   _outstandingBalanceDue?: number;

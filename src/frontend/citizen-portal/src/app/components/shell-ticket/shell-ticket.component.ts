@@ -27,7 +27,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
-import { Configuration, TicketsService } from 'app/api';
+import { Configuration, TicketSearchResult, TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -141,6 +141,10 @@ export class ShellTicketComponent implements OnInit {
       detachmentLocation: [null],
       _chargeCount: [1],
       _amountOwing: [null],
+      _count1ChargeDesc: [null],
+      _count2ChargeDesc: [null],
+      _count3ChargeDesc: [null]
+
     });
     this.onFulfilled()
     this.disputeService.shellTicketData$.subscribe((shellTicketData) => {
@@ -160,6 +164,8 @@ export class ShellTicketComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.form.disable();
+
     // this.firstFormGroup = this.formBuilder.group({
     //   firstCtrl: ['', Validators.required],
     // });
@@ -206,7 +212,6 @@ export class ShellTicketComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    debugger;
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 
@@ -226,32 +231,115 @@ export class ShellTicketComponent implements OnInit {
       actionTextKey: 'Yes I am sure, create online ticket',
       cancelTextKey: 'Go back and edit',
     };
+    const payload: ShellTicketView = this.form.getRawValue();
 
+const data2: TicketDisputeView
+ = 
+  {
+    violationTicketNumber: payload.violationTicketNumber,
+    violationDate: new Date("2020-09-18T00:00:00"),
+    violationTime: payload.violationTime? payload.violationTime.replace(' ',':'): '',
+    offences: [
+      {
+        offenceNumber: 1,
+        ticketedAmount:payload.count1FineAmount,
+        amountDue: payload.count1FineAmount,
+        violationDateTime: '2020-09-18T00:00:00',
+        offenceDescription:payload._count1ChargeDesc,
+        invoiceType: 'Traffic Violation Ticket',
+        vehicleDescription: null,
+        discountAmount: 25,
+        status: 'New',
+        offenceAgreementStatus: null,
+        requestReduction: false,
+        requestMoreTime: false,
+        reductionAppearInCourt: false,
+        _applyToAllCounts: false,
+        _allowApplyToAllCounts: false,
+        _firstOffence: false,
+        _within30days: false,
+        _amountDue:  payload.count1FineAmount,
+        _offenceStatusDesc:'Active',
+        _offenceStatus:'New'
+      },
+      {
+        offenceNumber: 2,
+        ticketedAmount: payload.count2FineAmount,
+        amountDue: payload.count2FineAmount,
+        violationDateTime: '2020-09-18T00:00:00',
+        offenceDescription:payload._count2ChargeDesc,
+        invoiceType: 'Traffic Violation Ticket',
+        vehicleDescription: null,
+        discountAmount: null,
+        status: 'New',
+        offenceAgreementStatus: null,
+        requestReduction: false,
+        requestMoreTime: false,
+        reductionAppearInCourt: false,
+        _applyToAllCounts: false,
+        _allowApplyToAllCounts: false,
+        _firstOffence: false,
+        _within30days: false,
+        _amountDue: payload.count2FineAmount,
+        _offenceStatusDesc:'Active',
+        _offenceStatus:'New'
+      },
+      {
+        offenceNumber: 3,
+        ticketedAmount: payload.count3FineAmount,
+        amountDue: payload.count3FineAmount,
+        violationDateTime: '2020-09-18T00:00:00',
+        offenceDescription:
+          payload._count3ChargeDesc,
+        invoiceType: 'Traffic Violation Ticket',
+        vehicleDescription: null,
+        discountAmount: 25,
+        status: 'New',
+        offenceAgreementStatus: null,
+        requestReduction: false,
+        requestMoreTime: false,
+        reductionAppearInCourt: false,
+        _applyToAllCounts: false,
+        _allowApplyToAllCounts: false,
+        _firstOffence: false,
+        _within30days: false,
+        _amountDue: payload.count3FineAmount,
+        _offenceStatusDesc:'Active',
+        _offenceStatus:'New'
+      }
+    ]
+}
+// this.disputeService.setTicketData({value:data2});
+
+// this.disputeResource.updateTicketViewModel(data2)
     this.dialog
       .open(ConfirmDialogComponent, { data })
       .afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
           const payload: ShellTicketView = this.form.getRawValue();
+
+          this.disputeService.ticket$.next(data2);
+
           this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-                queryParams: {
-                  ticketNumber: payload.violationTicketNumber,
-                  time: payload.violationTime,
-                },
-              });
+            queryParams: {
+              ticketNumber: payload.violationTicketNumber,
+              time: payload.violationTime? payload.violationTime.replace(' ',':'): '' ,
+            },
+          });
 
-          this.busy = this.disputeResource
-            .createShellTicket(payload)
-            .subscribe((newShellTicket: TicketDisputeView) => {
-              this.disputeService.ticket$.next(newShellTicket);
+          // this.busy = this.disputeResource
+          //   .createShellTicket(payload)
+          //   .subscribe((newShellTicket: TicketDisputeView) => {
+          //     this.disputeService.ticket$.next(newShellTicket);
 
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-                queryParams: {
-                  ticketNumber: payload.violationTicketNumber,
-                  time: payload.violationTime,
-                },
-              });
-            });
+          //     this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+          //       queryParams: {
+          //         ticketNumber: payload.violationTicketNumber,
+          //         time: payload.violationTime,
+          //       },
+          //     });
+          //   });
         }
       });
   }
@@ -696,9 +784,9 @@ export class ShellTicketComponent implements OnInit {
 
         // console.log('after', { ...shellTicket });
 
-        delete shellTicket._count1ChargeDesc;
-        delete shellTicket._count2ChargeDesc;
-        delete shellTicket._count3ChargeDesc;
+        // delete shellTicket._count1ChargeDesc;
+        // delete shellTicket._count2ChargeDesc;
+        // delete shellTicket._count3ChargeDesc;
         delete shellTicket._count1ChargeSection;
         delete shellTicket._count2ChargeSection;
         delete shellTicket._count3ChargeSection;

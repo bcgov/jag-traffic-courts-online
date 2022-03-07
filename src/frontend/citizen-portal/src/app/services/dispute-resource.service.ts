@@ -266,7 +266,7 @@ export class DisputeResourceService {
    * @description
    * populate the offence object with the calculated information
    */
-  private updateTicketViewModel(ticket: TicketDisputeView): void {
+  public updateTicketViewModel(ticket: TicketDisputeView): void {
     let balance = 0;
     let total = 0;
     let requestSubmitted = false;

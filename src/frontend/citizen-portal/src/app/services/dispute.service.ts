@@ -35,4 +35,15 @@ export class DisputeService implements IDisputeService {
   public get shellTicketData(): ShellTicketData {
     return this._shellTicketData.value;
   }
+  // public imageData={}
+
+    public setTicketData(data){
+     this._ticket=data
+
+    }
+
+    // public getImageData(){
+    //     return this.imageData
+   
+    //    }
 }
