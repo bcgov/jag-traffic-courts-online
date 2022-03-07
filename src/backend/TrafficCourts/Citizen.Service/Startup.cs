@@ -46,10 +46,10 @@ public static class Startup
             Configure(builder, configuration.RabbitMQ, logger);
         }
 
+        Configure(builder, configuration?.FlatFileLookupService, logger);
         Configure(builder, configuration?.MassTransit, logger);
         Configure(builder, configuration?.FormRecognizer, logger);
         Configure(builder, configuration?.TicketSearchClient, logger);
-        Configure(builder, configuration?.FlatFileLookupService, logger);
 
         // add MediatR handlers in this program
         builder.Services.AddMediatR(typeof(Startup).Assembly);
@@ -189,7 +189,10 @@ public static class Startup
             return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, logger);
         });
 
-        builder.Services.AddSingleton<IFormRecognizerValidator, FormRecognizerValidator>();
+        builder.Services.AddSingleton<IFormRecognizerValidator>(service => {
+            var lookupService = service.GetRequiredService<ILookupService>();
+            return new FormRecognizerValidator(lookupService);
+        });
     }
 
     /// <summary>
