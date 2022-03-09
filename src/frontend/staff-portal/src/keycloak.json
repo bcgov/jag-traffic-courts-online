@@ -1,8 +1,8 @@
 {
-  "realm": "traffic-court",
-  "auth-server-url": "http://localhost:8081/auth",
+  "realm": "ezb8kej4",
+  "auth-server-url": "https://dev.oidc.gov.bc.ca/auth/",
   "ssl-required": "external",
-  "resource": "traffic-court-frontend",
+  "resource": "tco-staff-portal",
   "public-client": true,
   "confidential-port": 0
 }

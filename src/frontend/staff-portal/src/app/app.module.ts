@@ -3,7 +3,7 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 // import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
 import { NgBusyModule } from 'ng-busy';
@@ -35,6 +35,9 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 
+import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
+import { initializeKeycloak } from './init/keycloak-init.factory';
+
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
 
@@ -61,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CoreModule,
     SharedModule,
     ConfigModule,
+    KeycloakAngularModule,
     HttpClientModule,
     MatStepperModule,
     CdkAccordionModule,
@@ -91,12 +95,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: appInit,
-    //   multi: true,
-    //   deps: [AppConfigService], // , KeycloakService],
-    // },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
+    },
     // WindowRefService,
   ],
   bootstrap: [AppComponent],
