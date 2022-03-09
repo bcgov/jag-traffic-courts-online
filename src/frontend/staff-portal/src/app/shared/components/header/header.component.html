@@ -20,16 +20,14 @@
     </a>
   -->
 
-      <!--
-  <ng-container *ngIf="fullName">
-    <span class="fullName d-none d-md-block">
-      {{ fullName }}
-    </span>
-    <span class="logout">
-      <mat-icon (click)="onLogout()">logout</mat-icon>
-    </span>
-  </ng-container>
-  -->
+      <ng-container *ngIf="fullName">
+        <span class="fullName d-none d-md-block">
+          {{ fullName }}
+        </span>
+        <span class="logout" title="Logout">
+          <mat-icon (click)="onLogout()">logout</mat-icon>
+        </span>
+      </ng-container>
     </mat-toolbar>
   </div>
 </div>

@@ -1,68 +1,42 @@
 import { Injectable } from '@angular/core';
 import {
-  CanActivate,
-  CanActivateChild,
-  Router,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
+  Router,
+  RouterStateSnapshot
 } from '@angular/router';
-import { LoggerService } from '@core/services/logger.service';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 
-@Injectable()
-export class AuthGuard implements CanActivate, CanActivateChild {
-  private authenticated: boolean;
-
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard extends KeycloakAuthGuard {
   constructor(
-    protected router: Router,
-    protected keycloakService: KeycloakService,
-    private logger: LoggerService
-  ) {}
-
-  public get isAuthenticated(): boolean {
-    return this.authenticated;
+    protected readonly router: Router,
+    protected readonly keycloak: KeycloakService
+  ) {
+    super(router, keycloak);
   }
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
+  public async isAccessAllowed(
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Promise<boolean> {
-    return this.checkLogin(state.url);
-  }
+  ) {
+    // Force the user to log in if currently unauthenticated.
+    if (!this.authenticated) {
+      await this.keycloak.login({
+        redirectUri: window.location.origin + state.url
+      });
+    }
 
-  canActivateChild(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Promise<boolean> {
-    return this.checkLogin(state.url);
-  }
+    // Get the roles required from the route.
+    const requiredRoles = route.data.roles;
 
-  private checkLogin(url: string): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        this.authenticated = await this.keycloakService.isLoggedIn();
-        if (!this.authenticated) {
-          this.keycloakService.login().catch((e) => {
-            this.logger.error('keycloakService.login failure', e);
-            this.router.navigate(['/']);
-          });
-        }
-        const result = await this.canAccess(this.authenticated, url);
-        resolve(result);
-      } catch (error) {
-        const destination = url ? ` to ${url} ` : ' ';
-        const message = `Route access ${destination} has been denied`;
-        reject(`${message}: ${error}`);
-      }
-    });
-  }
+    // Allow the user to to proceed if no additional roles are required to access the route.
+    if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
+      return true;
+    }
 
-  protected canAccess(
-    authenticated: boolean,
-    routePath: string = null
-  ): Promise<boolean> {
-    return new Promise((resolve, reject) =>
-      authenticated ? resolve(true) : reject(false)
-    );
+    // Allow the user to proceed if all the required roles are present.
+    return requiredRoles.every((role) => this.roles.includes(role));
   }
 }
