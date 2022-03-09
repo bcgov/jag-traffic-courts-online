@@ -28,7 +28,7 @@ RUN envsubst '${API_BASE_PATH}' < /usr/src/app/nginx.conf.template > /usr/src/ap
 FROM registry.access.redhat.com/ubi8/nginx-120
 
 COPY --from=build-deps /usr/src/app/src/favicon.ico /usr/share/nginx/html
-COPY --from=build-deps /usr/src/app/dist/citizen-portal /usr/share/nginx/html
+COPY --from=build-deps /usr/src/app/dist/staff-portal /usr/share/nginx/html
 COPY --from=build-deps /usr/src/app/nginx.conf /opt/app-root/etc/nginx.default.d/default.conf
 
 EXPOSE 8080
