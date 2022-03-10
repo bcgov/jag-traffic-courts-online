@@ -65,6 +65,8 @@ namespace TrafficCourts.Ticket.Search.Service
 
                 builder.Services.AddTransient<ITicketSearchService, RoadSafetyTicketSearchService>();
                 builder.Services.AddTransient<ITokenCache, TokenCache>();
+
+                builder.Services.AddHostedService<AccessTokenUpdateWorker>();
             }
             else
             {
@@ -84,8 +86,6 @@ namespace TrafficCourts.Ticket.Search.Service
                     builder.Services.AddTransient<IMockDataProvider, EmbeddedMockDataProvider>();
                 }
             }
-
-            builder.Services.AddHostedService<AccessTokenUpdateWorker>();
 
             // Add services to the container.
             logger.Information("Configuring services");
