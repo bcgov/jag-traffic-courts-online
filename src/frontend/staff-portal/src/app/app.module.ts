@@ -34,6 +34,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
+import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
 import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
 import { initializeKeycloak } from './init/keycloak-init.factory';
@@ -55,7 +56,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   declarations: [
     AppComponent,
     LandingComponent,
-    TicketPageComponent
+    TicketPageComponent,
+    UnauthorizedComponent
   ],
   imports: [
     CommonModule,
