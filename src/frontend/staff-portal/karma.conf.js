@@ -23,7 +23,7 @@ module.exports = function (config) {
       'src/**/*.ts': ['coverage']
     },
     coverageReporter: {
-      dir: require("path").join(__dirname, "./coverage/citizen-portal"),
+      dir: require("path").join(__dirname, "./coverage/staff-portal"),
       reporters: [{ type: 'lcov', subdir: 'report-lcov' }]
     },
     port: 9876,
