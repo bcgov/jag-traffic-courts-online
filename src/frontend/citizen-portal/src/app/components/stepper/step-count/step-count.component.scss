@@ -44,3 +44,7 @@ small {
 .mat-radio-button {
   vertical-align: top;
 }
+::ng-deep .alert-info-text-color .alert-warning{
+  color: rgb(255, 136, 0) !important;
+  border-left: 2px solid rgb(255, 136, 0) !important;
+}

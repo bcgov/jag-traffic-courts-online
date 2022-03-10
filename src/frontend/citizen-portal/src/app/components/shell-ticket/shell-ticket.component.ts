@@ -596,7 +596,9 @@ const data2: TicketDisputeView
             }', with confidence of ${count1TicketAmountField.confidence}`
           );
         }
-        debugger
+        const driverLicenseProvinceIndex = 'driverLicenceProvince';
+        const driverLicenceProvinceField = invoice.fields[driverLicenseProvinceIndex];
+        
         const count1ActRegsFieldIndex = 'count1ActRegs';
         const count1ActRegsField = invoice.fields[count1ActRegsFieldIndex];
         if (count1ActRegsField.type === 'String') {
@@ -720,7 +722,9 @@ const data2: TicketDisputeView
       driverLicenseNumber: driverLicenceField.value
         ? driverLicenceField.value
         : '',
-      driverLicenseProvince: '',
+      driverLicenseProvince: driverLicenceProvinceField.value
+        ? driverLicenceProvinceField.value
+        : '',
       courtHearingLocation: '',
       detachmentLocation: detachmentLocationField.value
         ? detachmentLocationField.value

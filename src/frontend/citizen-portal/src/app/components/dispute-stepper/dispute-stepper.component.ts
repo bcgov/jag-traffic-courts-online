@@ -290,7 +290,7 @@ public getCountData(newObj):void{
       this.isCheckBoxSelected['reductionAppearInCourtDoNot'].push(currentStep-1);
       
   }
-  if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.disputeAppearInCourt && this[stepsObjects[currentStep]].value.disputeAppearInCourt == 'yes' && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'DISPUTE'){
+  if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value.disputeAppearInCourt && this[stepsObjects[currentStep]].value.offenceAgreementStatus == 'DISPUTE'){
 
     this.isCheckBoxSelected['disputeAppearInCourt'].push(currentStep-1);
     
