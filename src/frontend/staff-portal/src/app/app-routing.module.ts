@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { AuthGuard } from '@core/guards/auth.guard';
 // import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
@@ -20,6 +21,10 @@ const routes: Routes = [
     component: TicketPageComponent,
     canActivate: [AuthGuard],
     //data: { roles: ["tco-staff"]},
+  },
+  {
+    path: 'error/401',
+    component: UnauthorizedComponent,
   },
   {
     path: '**',
