@@ -103,7 +103,6 @@ export class ShellTicketComponent implements OnInit {
       this.todayDate.getFullYear() - this.MINIMUM_AGE
     );
     this.isMobile = this.utilsService.isMobile();
-    console.log("ticket service",this.ticketService.getImageData())
     this.fieldsData = this.ticketService.getImageData()
     this.form = this.formBuilder.group({
       violationTicketNumber: [null, [Validators.required]],
@@ -237,7 +236,7 @@ const data2: TicketDisputeView
  = 
   {
     violationTicketNumber: payload.violationTicketNumber,
-    violationDate: new Date("2020-09-18T00:00:00"),
+    violationDate: new Date(payload.violationDate),
     violationTime: payload.violationTime? payload.violationTime.replace(' ',':'): '',
     offences: [
       {
@@ -702,7 +701,7 @@ const data2: TicketDisputeView
         ? String(invoiceIdField.value)
         : '',
       violationTime: invoiceTimeField.value
-        ? invoiceTimeField.value.replace('.', ':')
+        ? invoiceTimeField.value.replace(' ', ':')
         : '',
       violationDate: new Date(invoiceDateField.value),
 

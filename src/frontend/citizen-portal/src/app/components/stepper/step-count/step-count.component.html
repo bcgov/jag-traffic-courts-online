@@ -26,14 +26,14 @@
           <app-alert type="info"
                      icon="info">
             <ng-container class="alert-content" #alertContent>
-            <strong>Did you know? </strong>
+            <strong>Did you know? </strong><br>
                 You can make a dispute request by attending a court hearing in person, or you may supply written reasons
                 requesting a fine reduction and/or time to pay without having to attend a court hearing.
             </ng-container>
           </app-alert>
           <mat-radio-group formControlName="offenceAgreementStatus">
             <div>
-              <span style="font-weight: 600;">I do not want to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."
+              <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."
               #tooltip3="matTooltip">
           <mat-icon>info</mat-icon>
         </span>
@@ -47,7 +47,7 @@
             </mat-radio-button>
            
            <div>
-            <span style="font-weight: 600;">I want to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."
+            <span style="font-weight: 600;">I <span style="text-decoration: underline;">want</span> to attend a court hearing</span>    <span matTooltip="Ask for a fine reduction or more time to pay for the count."
             #tooltip3="matTooltip">
         <mat-icon>info</mat-icon>
       </span>
@@ -118,28 +118,30 @@
       reductionAppearInCourt.value === false
     >
     <app-alert type="warning"
-               icon="warning">
+               icon="info">
       <ng-container #alertContent
                     class="alert-content">
-        <strong>You must provide written reasons in the Additional Information area of the form below for this option. If you do choose to appear in court to discuss you will not need to provide this information until the court hearing date. <br><br>
+                    <span>
+                      <strong>You must provide written reasons in the Additional Information area of the form below for this option. If you do choose to appear in court to discuss you will not need to provide this information until the court hearing date. <br><br>
 
-          If you provide written reasons, you will be notified in writing by the Court if your application was successful.</strong>
+                        If you provide written reasons, you will be notified in writing by the Court if your application was successful.</strong>
+                    </span>
+        
       </ng-container>
     </app-alert>
   </div>
 
   <div class="col mt-4"
-       *ngIf="
-      (offenceAgreementStatus.value === 'REDUCTION' &&
-        reductionAppearInCourt.value)
-    ">
+       *ngIf="offenceAgreementStatus.value === 'REDUCTION'">
     <app-alert type="warning"
-               icon="warning">
+               icon="info">
       <ng-container #alertContent
                     class="alert-content">
-                  <strong>A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing.  <br><br>
-
-                    If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.</strong>
+                    <span class="text-dark">
+                      <strong>You have selected that you do not want to attend a court hearing.</strong>
+                      You must provide written reasons in the Additional  Information area of the form below for this option. You will be notified in writing to the address supplied above by the Court if your request was successful.
+                    </span>
+                  
       </ng-container>
     </app-alert>
   </div>
@@ -151,9 +153,11 @@
           icon="info">
  <ng-container #alertContent
                class="alert-content">
-             <strong>If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount
-              must be paid immediately.
-              </strong>
+               <span class="text-dark">
+                <strong>You have selected that you wish to attend a court hearing in person.
+                </strong>
+                A Notice of Hearing will be mailed to you – it will have the date, time and location of your hearing. If you fail to appear before the provincial court on your hearing date you will be found guilty and the full ticketed amount must be paid immediately.
+               </span>
  </ng-container>
 </app-alert>
 </div>
