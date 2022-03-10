@@ -95,7 +95,7 @@
         <hr *ngIf="ticket.additional._isCourtRequired" />
       </section>
 
-      <section *ngIf="ticket.additional && ticket.additional._isCourtRequired">
+      <section *ngIf="ticket.additional && (ticket.additional.lawyerPresent || ticket.additional.interpreterRequired || ticket.additional.witnessPresent)">
         <h3 class="fw-bold mb-0">Dispute charge.</h3>
 
         <div class="row"

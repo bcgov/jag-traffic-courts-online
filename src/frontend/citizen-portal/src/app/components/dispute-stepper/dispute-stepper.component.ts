@@ -207,7 +207,24 @@ public getCountData(newObj):void{
       })
     
     }
+
+      if(currentStep ==3 && this[stepsObjects[currentStep]] && !this[stepsObjects[currentStep]].value._applyToAllCounts ){
+      let applyAll = this[stepsObjects[currentStep]].value._allowApplyToAllCounts
+      let listArray = [3,4].filter((ele)=> ele != currentStep)
+      
+      listArray.map((ele)=>{
+
+        this[stepsObjects[ele]].patchValue({
+          reductionAppearInCourt : false,
+          reductionAppearInCourtDoNot:false,
+          disputeAppearInCourt : false,
+          disputeAppearInCourtDoNot:false,
+          offenceAgreementStatus: false,
+          // _applyToAllCounts:this[stepsObjects[currentStep]].value._applyToAllCounts
+        });
+      })
     
+    }
     this.addAddition()
     // if(currentStep ==2 && this.offence1Form.value.offenceAgreementStatus == "REDUCTION" && !this.offence1Form.value.reductionAppearInCourt && !this.offence1Form.value.reductionAppearInCourt){
     //   this.isErrorCheckMsg1 = 'select atleast one checkbox';

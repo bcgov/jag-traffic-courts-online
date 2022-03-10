@@ -59,8 +59,7 @@
       </div>
       
     </div> -->
-    
-    <section *ngIf="isShowCheckbox && isShowCheckbox['disputeAppearInCourt'] && isShowCheckbox['disputeAppearInCourt'].length">
+    <section *ngIf="isShowCheckbox && isShowCheckbox['disputeAppearInCourt'] && isShowCheckbox['disputeAppearInCourt'].length ">
       <div>Count: {{ isShowCheckbox['disputeAppearInCourt'].toString()}} </div>
       <h3 class="mt-4 mb-2 reduction-text">
         <span class="fw-bold">Dispute charge. </span>Please indicate which (if any) of the following apply to you:
@@ -68,7 +67,7 @@
       <div class="row">
         <div class="col">
           <mat-checkbox class="me-4 mb-2" color="primary" name= "lawyerPresent" [(ngModel)]='dispute["lawyerPresent"]' >
-            I intend to be represented by a lawyer in court.<span *ngIf="dispute['lawyerPresent']" style="font-weight: lighter;">Enter lawyer contact details below.</span>
+            I intend to be represented by a lawyer in court. <span *ngIf="dispute['lawyerPresent']" style="font-weight: lighter;">Enter lawyer contact details below.</span>
           </mat-checkbox>
         </div>
       </div>
@@ -133,7 +132,7 @@
               "stepper.additional.interpreter_language" | translate
               }}</mat-label>
             <mat-select name= "interpreterLanguage"  [(ngModel)]='dispute["interpreterLanguage"]'>
-              <mat-option *ngFor="let language of languages" [value]="language.code">
+              <mat-option *ngFor="let language of languages" [value]="language.name">
                 {{ language.name }}
               </mat-option>
             </mat-select>

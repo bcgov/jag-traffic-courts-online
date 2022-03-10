@@ -35,7 +35,7 @@
              class="img-fluid mb-4" />
       </span>
     </div>
-    <div class="col-lg-6 col-md-12">
+    <div class="col-lg-6 col-md-12 feild-border">
       <h1 class="mb-4" style="margin-left: 30px;"><strong>Ticket details</strong></h1>
       <mat-stepper orientation="vertical" #stepper>
         <mat-step [stepControl]="form">
@@ -123,7 +123,7 @@
     
                 <div class="col-lg-6">
                   <mat-form-field class="w-100">
-                    <mat-label>Drivers lincence number</mat-label>
+                    <mat-label>Drivers licence number</mat-label>
                     <input matInput
                            formControlName="driverLicenseNumber"
                            mask="0000000"
@@ -132,18 +132,17 @@
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
-                <p><strong>IF your surname, given names, or drivers licence number <span style="color: red;">do not match </span></strong>
+                <p class="text-dark"><strong>If your surname, given names, or drivers licence number <span style="color: red;">do not match </span></strong>
                 the scanned ticket details, please check the box below and describe the difference</p>
-                <p><strong>EXample: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
-                <mat-checkbox color="primary" class="w-100" (click)='toggle()'> Yes, there are differences between the information on the tikcet
+                <p class="text-dark"><strong>Example: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
+                <mat-checkbox color="primary" class="w-100" (click)='toggle()'> Yes, there are differences between the information on the ticket
                   and the information scanned above.
                 </mat-checkbox> <br>
                 <mat-form-field appearance="fill" [hidden]="isHidden">
                   <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
                   <textarea matInput #input
                   rows="4"
-                  placeholder="qwert">
-
+                  placeholder="">
                   </textarea>  </mat-form-field>
               </div>
             </section>
@@ -306,8 +305,8 @@
         </mat-step> -->
         <mat-step>
           <ng-template matStepLabel>Save information and create online ticket</ng-template>
-          <p>Ensure all information entered above is correct to the best of my knowledge before submission.<strong>
-            you may not make changes once the online ticket is created.
+          <p class="text-dark">Ensure all information entered above is correct to the best of my knowledge before submission.<strong>
+            You may not make changes once the online ticket is created.
           </strong></p>
           <div>
             <button type="button"
