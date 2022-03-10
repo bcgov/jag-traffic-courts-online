@@ -77,7 +77,7 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
     );
 
     this.languages = this.configService.languages;
-    this.languages = [{name:'french',code:'fr'},{name:'spanish',code:'sp'},{name:'arabic',code:'Ar'}];
+    this.languages = [{name:'French',code:'fr'},{name:'Spanish',code:'sp'},{name:'Arabic',code:'Ar'}];
   }
 
   public ngOnInit() {

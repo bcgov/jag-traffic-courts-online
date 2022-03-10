@@ -138,11 +138,11 @@
                 <mat-checkbox color="primary" class="w-100" (click)='toggle()'> Yes, there are differences between the information on the ticket
                   and the information scanned above.
                 </mat-checkbox> <br>
-                <mat-form-field appearance="fill" [hidden]="isHidden">
+                <mat-form-field [hidden]="isHidden">
                   <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
-                  <textarea matInput #input
-                  rows="4"
-                  placeholder="">
+                  <textarea class="text-dark" matInput #input
+                  value=""
+                  rows="4">
                   </textarea>  </mat-form-field>
               </div>
             </section>
