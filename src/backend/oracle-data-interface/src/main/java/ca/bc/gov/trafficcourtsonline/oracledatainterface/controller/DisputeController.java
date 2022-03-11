@@ -1,7 +1,10 @@
 package ca.bc.gov.trafficcourtsonline.oracledatainterface.controller;
 
+import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +22,13 @@ public class DisputeController {
 	@Autowired  
 	DisputeService disputeService; 
 	
+	private Logger log = LoggerFactory.getLogger(DisputeController.class);
+	
 	//creating a get mapping that retrieves all the dispute detail from the database   
 	@GetMapping("/disputes")  
 	private List<Dispute> getAllDisputes()   
 	{  
+		log.info("Retrieve all disputes endpoint is called." + new Date());
 		return disputeService.getAllDisputes();  
 	}  
 	//creating a get mapping that retrieves the detail of a specific dispute  
