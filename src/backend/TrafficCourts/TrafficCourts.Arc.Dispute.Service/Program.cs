@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Renci.SshNet;
+using TrafficCourts.Arc.Dispute.Service;
 using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Services;
@@ -22,11 +23,34 @@ builder.Services.Configure<SftpConfig>(builder.Configuration.GetRequiredSection(
 
 builder.Services.AddTransient<ISftpService, SftpService>();
 
+var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+});
+
+ILogger logger = loggerFactory.CreateLogger<Startup>();
+
 builder.Services.AddTransient<SftpClient>(services =>
 {
     var configurationOptions = services.GetRequiredService<IOptions<SftpConfig>>();
     var configuration = configurationOptions.Value;
-    return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, configuration.Password);
+    try
+    {
+        var privateKey = new PrivateKeyFile(configuration.SshPrivateKeyPath);
+        if (privateKey != null)
+        {
+            return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, new[] { privateKey });
+        }
+        else
+        {
+            return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, configuration.Password);
+        }
+    }
+    catch (System.IO.DirectoryNotFoundException exception)
+    {
+        logger.LogInformation(exception, "SSH key for the provided path has not been found. Using default password authentication.");
+        return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, configuration.Password);
+    }    
 });
 
 var app = builder.Build();
