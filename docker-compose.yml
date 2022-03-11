@@ -77,6 +77,23 @@ services:
     networks:
       - traffic-court-net
 
+
+  # #############################################################################################
+  # ###                                 TrafficCourt Staff FRONTEND                           ###
+  # #############################################################################################
+  staff-portal:
+    container_name: staff-portal
+    build:
+      context: ./src/frontend/staff-portal
+      args:
+        - API_BASE_PATH=${API_BASE_PATH:-http://citizen-api:8080/api/}
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on: [citizen-api]
+    networks:
+      - traffic-court-net
+    
   #############################################################################################
   ###                           RABBITMQ                                                    ###
   #############################################################################################
