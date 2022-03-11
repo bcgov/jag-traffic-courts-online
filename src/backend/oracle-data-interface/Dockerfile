@@ -4,15 +4,17 @@
 FROM maven:3.8.3-jdk-11 as build
 
 ARG SKIP_TESTS=true
-ARG MVN_PROFILE=default
+ARG ENABLE_SPLUNK=false
+ARG SERVICE_NAME=oracle-data-interface-application
 
 WORKDIR /
 
 COPY . .
 
-RUN mvn -B clean install \
-        -P ${MVN_PROFILE} \
-        -Dmaven.test.skip=${SKIP_TESTS}
+RUN mvn -B clean package \
+		-Dtarget.fileName=${SERVICE_NAME} \
+        -Dmaven.test.skip=${SKIP_TESTS} \
+        -Denable-splunk=${ENABLE_SPLUNK}
 
 #############################################################################################
 
