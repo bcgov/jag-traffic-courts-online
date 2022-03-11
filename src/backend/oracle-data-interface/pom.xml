@@ -15,7 +15,17 @@
 	<description>Project for dispute ticket api and ords interface</description>
 	<properties>
 		<java.version>11</java.version>
+		<log4j2.version>2.17.1</log4j2.version>
 	</properties>
+	
+	<repositories>
+        <repository>
+            <id>splunk-artifactory</id>
+            <name>Splunk Releases</name>
+            <url>https://splunk.jfrog.io/splunk/ext-releases-local</url>
+        </repository>
+    </repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -41,6 +51,23 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Splunk logging -->
+		<dependency>
+		    <groupId>com.splunk.logging</groupId>
+		    <artifactId>splunk-library-javalogging</artifactId>
+		    <version>1.11.4</version>
+		</dependency>
+		<!-- Logging framework -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.10</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.10</version>
+        </dependency>
 	</dependencies>
 
 	<build>
