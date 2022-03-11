@@ -44,6 +44,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>oracle-data-interface-application</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
