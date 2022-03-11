@@ -51,3 +51,9 @@ artifacts/
 
 # paybc mock
 /src/mock_paybc/
+
+# Azure Form Recognizer
+/tools/form-recognizer/logs/*
+!/tools/form-recognizer/logs/.keep
+/tools/form-recognizer/shared*
+!/tools/form-recognizer/shared/.keep
