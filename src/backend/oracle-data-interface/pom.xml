@@ -8,7 +8,7 @@
 		<version>2.6.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ca.bc.gov.trafficcourtsonline</groupId>
+	<groupId>ca.bc.gov.open.jag</groupId>
 	<artifactId>oracle-data-interface</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>oracle-data-interface</name>
@@ -57,17 +57,6 @@
 		    <artifactId>splunk-library-javalogging</artifactId>
 		    <version>1.11.4</version>
 		</dependency>
-		<!-- Logging framework -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.10</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.2.10</version>
-        </dependency>
 	</dependencies>
 
 	<build>
