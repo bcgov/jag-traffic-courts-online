@@ -24,35 +24,58 @@ public class DisputeController {
 	
 	private Logger log = LoggerFactory.getLogger(DisputeController.class);
 	
-	//creating a get mapping that retrieves all the dispute detail from the database   
+	/**
+	 * GET endpoint that retrieves all the dispute detail from the database
+	 * @return	list of all dispute tickets
+	 */
 	@GetMapping("/disputes")  
-	private List<Dispute> getAllDisputes()   
+	public List<Dispute> getAllDisputes()   
 	{  
 		log.info("Retrieve all disputes endpoint is called." + new Date());
 		return disputeService.getAllDisputes();  
 	}  
-	//creating a get mapping that retrieves the detail of a specific dispute  
+ 
+	/**
+	 * GET endpoint that retrieves the detail of a specific dispute 
+	 * @param 	disputeId
+	 * @return	{@link Dispute}
+	 */
 	@GetMapping("/dispute/{disputeId}")  
-	private Dispute getDispute(@PathVariable("disputeId") int disputeId)   
+	public Dispute getDispute(@PathVariable("disputeId") int disputeId)   
 	{  
 		return disputeService.getDisputeById(disputeId);  
 	}  
-	//creating a delete mapping that deletes a specified dispute  
+
+	
+	/**
+	 * DELETE endpoint that deletes a specified dispute
+	 * @param 	id of the {@link Dispute} to be deleted
+	 */
 	@DeleteMapping("/dispute/{disputeId}")  
-	private void deleteDispute(@PathVariable("disputeId") int disputeId)   
+	public void deleteDispute(@PathVariable("disputeId") int disputeId)   
 	{  
 		disputeService.delete(disputeId);  
-	}  
-	//creating post mapping that post the dispute detail in the database  
+	}
+	
+	/**
+	 * POST endpoint that post the dispute detail to save in the database
+	 * @param 	dispute to be saved
+	 * @return 	id of the saved {@link Dispute}
+	 */
 	@PostMapping("/dispute")  
-	private int saveDispute(@RequestBody Dispute dispute)   
+	public int saveDispute(@RequestBody Dispute dispute)   
 	{  
 		disputeService.saveOrUpdate(dispute);  
 		return dispute.getId();  
 	}  
-	//creating put mapping that updates the dispute detail   
+  
+	/**
+	 * PUT endpoint that updates the dispute detail   
+	 * @param 	dispute to be updated
+	 * @return	{@link Dispute}
+	 */
 	@PutMapping("/dispute")  
-	private Dispute update(@RequestBody Dispute dispute)   
+	public Dispute update(@RequestBody Dispute dispute)   
 	{  
 		disputeService.saveOrUpdate(dispute);  
 		return dispute;  
