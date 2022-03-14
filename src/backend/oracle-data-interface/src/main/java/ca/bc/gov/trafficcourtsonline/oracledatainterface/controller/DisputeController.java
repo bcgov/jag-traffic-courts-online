@@ -48,7 +48,7 @@ public class DisputeController {
 	private int saveDispute(@RequestBody Dispute dispute)   
 	{  
 		disputeService.saveOrUpdate(dispute);  
-		return dispute.getDisputeId();  
+		return dispute.getId();  
 	}  
 	//creating put mapping that updates the dispute detail   
 	@PutMapping("/dispute")  

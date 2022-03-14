@@ -13,7 +13,7 @@ import ca.bc.gov.trafficcourtsonline.oracledatainterface.repository.DisputeRepos
 public class DisputeService {
 	@Autowired  
 	DisputeRepository disputeRepository;
-	
+
 	//getting all dispute records by using the method findAll() of CrudRepository  
 	public List<Dispute> getAllDisputes()   
 	{  
