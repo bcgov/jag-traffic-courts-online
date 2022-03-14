@@ -10,53 +10,27 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 //mark class as an Entity   
 @Entity  
 //defining class name as Table name  
-@Table  
+@Table
+@Getter @Setter @NoArgsConstructor
 public class TicketCount {
 	@Id
 	@GeneratedValue
-	private int id;
+	@Getter @Setter private int id;
 	@Column
-	private String offenceDeclaration;
+	@Getter @Setter private String offenceDeclaration;
 	@Column
-    private boolean timeToPayRequest;
+	@Getter @Setter private boolean timeToPayRequest;
 	@Column
-    private boolean fineReductionRequest;
+	@Getter @Setter private boolean fineReductionRequest;
 	@ManyToOne
 	@JoinColumn(name="dispute_id", nullable = false)
 	@JsonBackReference("dispute_ticket_counts")
-	private Dispute dispute;
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getOffenceDeclaration() {
-		return offenceDeclaration;
-	}
-	public void setOffenceDeclaration(String offenceDeclaration) {
-		this.offenceDeclaration = offenceDeclaration;
-	}
-	public boolean isTimeToPayRequest() {
-		return timeToPayRequest;
-	}
-	public void setTimeToPayRequest(boolean timeToPayRequest) {
-		this.timeToPayRequest = timeToPayRequest;
-	}
-	public boolean isFineReductionRequest() {
-		return fineReductionRequest;
-	}
-	public void setFineReductionRequest(boolean fineReductionRequest) {
-		this.fineReductionRequest = fineReductionRequest;
-	}
-	public Dispute getDispute() {
-		return dispute;
-	}
-	public void setDispute(Dispute dispute) {
-		this.dispute = dispute;
-	}
+	@Getter @Setter private Dispute dispute;
 }
