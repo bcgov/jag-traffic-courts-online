@@ -13,173 +13,57 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 //mark class as an Entity   
 @Entity  
 //defining class name as Table name  
-@Table  
+@Table
+@Getter @Setter @NoArgsConstructor
 public class Dispute {
 	@Id
 	@GeneratedValue
 	@Column
-	private int id;
+	@Getter @Setter private int id;
 	@Column
-	private String ticketNumber;
+	@Getter @Setter private String ticketNumber;
 	@Column
-	private String courtLocation;
+	@Getter @Setter private String courtLocation;
 	@Column
-	private Date violationDate;
+	@Getter @Setter private Date violationDate;
 	@Column
-	private String disputantSurname;
+	@Getter @Setter private String disputantSurname;
 	@Column
-	private String givenNames;
+	@Getter @Setter private String givenNames;
 	@Column
-	private String streetAddress;
+	@Getter @Setter private String streetAddress;
 	@Column
-    private String province;
+	@Getter @Setter private String province;
 	@Column
-    private String postalCode;
+	@Getter @Setter private String postalCode;
 	@Column
-    private String homePhone;
+	@Getter @Setter private String homePhone;
 	@Column
-    private String driversLicense;
+	@Getter @Setter private String driversLicense;
 	@Column
-    private String driversLicenseProvince;
+	@Getter @Setter private String driversLicenseProvince;
 	@Column
-    private String workPhone;
+	@Getter @Setter private String workPhone;
 	@Column
-    private Date dateOfBirth;
+	@Getter @Setter private Date dateOfBirth;
 	@Column
-    private String enforcementOrganization;
+	@Getter @Setter private String enforcementOrganization;
 	@Column
-    private Date serviceDate;
+	@Getter @Setter private Date serviceDate;
 	@OneToMany(mappedBy = "dispute", cascade = CascadeType.ALL)
 	@JsonManagedReference("dispute_ticket_counts")
-    private List<TicketCount> ticketCounts;
+	@Getter @Setter private List<TicketCount> ticketCounts;
     @Column
-    private boolean lawyerRepresentation;
+    @Getter @Setter private boolean lawyerRepresentation;
     @Column
-    private String interpreterLanguage;
+    @Getter @Setter private String interpreterLanguage;
     @Column
-    private boolean witnessIntent;
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getTicketNumber() {
-		return ticketNumber;
-	}
-	public void setTicketNumber(String ticketNumber) {
-		this.ticketNumber = ticketNumber;
-	}
-	public String getCourtLocation() {
-		return courtLocation;
-	}
-	public void setCourtLocation(String courtLocation) {
-		this.courtLocation = courtLocation;
-	}
-	public Date getViolationDate() {
-		return violationDate;
-	}
-	public void setViolationDate(Date violationDate) {
-		this.violationDate = violationDate;
-	}
-	public String getDisputantSurname() {
-		return disputantSurname;
-	}
-	public void setDisputantSurname(String disputantSurname) {
-		this.disputantSurname = disputantSurname;
-	}
-	public String getGivenNames() {
-		return givenNames;
-	}
-	public void setGivenNames(String givenNames) {
-		this.givenNames = givenNames;
-	}
-	public String getStreetAddress() {
-		return streetAddress;
-	}
-	public void setStreetAddress(String streetAddress) {
-		this.streetAddress = streetAddress;
-	}
-	public String getProvince() {
-		return province;
-	}
-	public void setProvince(String province) {
-		this.province = province;
-	}
-	public String getPostalCode() {
-		return postalCode;
-	}
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-	public String getHomePhone() {
-		return homePhone;
-	}
-	public void setHomePhone(String homePhone) {
-		this.homePhone = homePhone;
-	}
-	public String getDriversLicense() {
-		return driversLicense;
-	}
-	public void setDriversLicense(String driversLicense) {
-		this.driversLicense = driversLicense;
-	}
-	public String getDriversLicenseProvince() {
-		return driversLicenseProvince;
-	}
-	public void setDriversLicenseProvince(String driversLicenseProvince) {
-		this.driversLicenseProvince = driversLicenseProvince;
-	}
-	public String getWorkPhone() {
-		return workPhone;
-	}
-	public void setWorkPhone(String workPhone) {
-		this.workPhone = workPhone;
-	}
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
-	public String getEnforcementOrganization() {
-		return enforcementOrganization;
-	}
-	public void setEnforcementOrganization(String enforcementOrganization) {
-		this.enforcementOrganization = enforcementOrganization;
-	}
-	public Date getServiceDate() {
-		return serviceDate;
-	}
-	public void setServiceDate(Date serviceDate) {
-		this.serviceDate = serviceDate;
-	}
-	public List<TicketCount> getTicketCounts() {
-		return ticketCounts;
-	}
-	public void setTicketCounts(List<TicketCount> ticketCounts) {
-		this.ticketCounts = ticketCounts;
-	}
-	public boolean isLawyerRepresentation() {
-		return lawyerRepresentation;
-	}
-	public void setLawyerRepresentation(boolean lawyerRepresentation) {
-		this.lawyerRepresentation = lawyerRepresentation;
-	}
-	public String getInterpreterLanguage() {
-		return interpreterLanguage;
-	}
-	public void setInterpreterLanguage(String interpreterLanguage) {
-		this.interpreterLanguage = interpreterLanguage;
-	}
-	public boolean isWitnessIntent() {
-		return witnessIntent;
-	}
-	public void setWitnessIntent(boolean witnessIntent) {
-		this.witnessIntent = witnessIntent;
-	}
+    @Getter @Setter private boolean witnessIntent;
 }
