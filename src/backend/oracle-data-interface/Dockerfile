@@ -23,6 +23,8 @@ RUN mvn -B clean package \
 #############################################################################################
 FROM eclipse-temurin:11
 
+EXPOSE 8080
+
 ARG SERVICE_NAME=oracle-data-interface-application
 
 COPY --from=build ./target/${SERVICE_NAME}.jar /app/service.jar
