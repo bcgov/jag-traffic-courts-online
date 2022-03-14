@@ -14,29 +14,50 @@ public class DisputeService {
 	@Autowired  
 	DisputeRepository disputeRepository;
 
-	//getting all dispute records by using the method findAll() of CrudRepository  
+	/**
+	 * Retrieves all {@link Dispute} records, delegating to CrudRepository  
+	 * @return
+	 */
 	public List<Dispute> getAllDisputes()   
 	{  
 		List<Dispute> dispute = new ArrayList<Dispute>();  
 		disputeRepository.findAll().forEach(dispute1 -> dispute.add(dispute1));  
 		return dispute;  
 	}  
-	//getting a specific record by using the method findById() of CrudRepository  
+
+	/**
+	 * Retrieves a specific {@link Dispute} by using the method findById() of CrudRepository
+	 * @param id of the Dispute to be returned
+	 * @return
+	 */
 	public Dispute getDisputeById(int id)   
 	{  
 		return disputeRepository.findById(id).get();  
 	}  
-	//saving a specific record by using the method save() of CrudRepository  
+ 
+	/**
+	 * Saves a specific {@link Dispute} by using the method save() of CrudRepository 
+	 * @param dispute to be saved
+	 */
 	public void saveOrUpdate(Dispute dispute)   
 	{  
 		disputeRepository.save(dispute);  
 	}  
-	//deleting a specific record by using the method deleteById() of CrudRepository  
+
+	/**
+	 * Deletes a specific {@link Dispute} by using the method deleteById() of CrudRepository  
+	 * @param id of the dispute to be deleted
+	 */
 	public void delete(int id)   
 	{  
 		disputeRepository.deleteById(id);  
 	}  
-	//updating a record  
+
+	/**
+	 * Updates a specific {@link Dispute}, delegating to CrudRepository 
+	 * @param dispute
+	 * @param disputeid
+	 */
 	public void update(Dispute dispute, int disputeid)   
 	{  
 		disputeRepository.save(dispute);  
