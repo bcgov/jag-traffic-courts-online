@@ -1,4 +1,4 @@
-package ca.bc.gov.trafficcourtsonline.oracledatainterface;
+package ca.bc.gov.open.jag.tco.oracledatainterface;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package ca.bc.gov.trafficcourtsonline.oracledatainterface.model;
+package ca.bc.gov.open.jag.tco.oracledatainterface.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

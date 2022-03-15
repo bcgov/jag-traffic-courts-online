@@ -1,4 +1,4 @@
-package ca.bc.gov.trafficcourtsonline.oracledatainterface.controller;
+package ca.bc.gov.open.jag.tco.oracledatainterface.controller;
 
 import java.util.Date;
 import java.util.List;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.trafficcourtsonline.oracledatainterface.model.Dispute;
-import ca.bc.gov.trafficcourtsonline.oracledatainterface.service.DisputeService;
+import ca.bc.gov.open.jag.tco.oracledatainterface.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledatainterface.service.DisputeService;
 
 @RestController  
 public class DisputeController {
