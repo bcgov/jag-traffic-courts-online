@@ -22,15 +22,15 @@ import lombok.Setter;
 public class TicketCount {
 	@Id
 	@GeneratedValue
-	@Getter @Setter private int id;
+	private int id;
 	@Column
-	@Getter @Setter private String offenceDeclaration;
+	private String offenceDeclaration;
 	@Column
-	@Getter @Setter private boolean timeToPayRequest;
+	private boolean timeToPayRequest;
 	@Column
-	@Getter @Setter private boolean fineReductionRequest;
+	private boolean fineReductionRequest;
 	@ManyToOne
 	@JoinColumn(name="dispute_id", nullable = false)
 	@JsonBackReference("dispute_ticket_counts")
-	@Getter @Setter private Dispute dispute;
+	private Dispute dispute;
 }

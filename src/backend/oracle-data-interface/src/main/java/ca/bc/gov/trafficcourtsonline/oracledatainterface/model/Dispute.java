@@ -26,44 +26,44 @@ public class Dispute {
 	@Id
 	@GeneratedValue
 	@Column
-	@Getter @Setter private int id;
+	private int id;
 	@Column
-	@Getter @Setter private String ticketNumber;
+	private String ticketNumber;
 	@Column
-	@Getter @Setter private String courtLocation;
+	private String courtLocation;
 	@Column
-	@Getter @Setter private Date violationDate;
+	private Date violationDate;
 	@Column
-	@Getter @Setter private String disputantSurname;
+	private String disputantSurname;
 	@Column
-	@Getter @Setter private String givenNames;
+	private String givenNames;
 	@Column
-	@Getter @Setter private String streetAddress;
+	private String streetAddress;
 	@Column
-	@Getter @Setter private String province;
+	private String province;
 	@Column
-	@Getter @Setter private String postalCode;
+	private String postalCode;
 	@Column
-	@Getter @Setter private String homePhone;
+	private String homePhone;
 	@Column
-	@Getter @Setter private String driversLicense;
+	private String driversLicense;
 	@Column
-	@Getter @Setter private String driversLicenseProvince;
+	private String driversLicenseProvince;
 	@Column
-	@Getter @Setter private String workPhone;
+	private String workPhone;
 	@Column
-	@Getter @Setter private Date dateOfBirth;
+	private Date dateOfBirth;
 	@Column
-	@Getter @Setter private String enforcementOrganization;
+	private String enforcementOrganization;
 	@Column
-	@Getter @Setter private Date serviceDate;
+	private Date serviceDate;
 	@OneToMany(mappedBy = "dispute", cascade = CascadeType.ALL)
 	@JsonManagedReference("dispute_ticket_counts")
-	@Getter @Setter private List<TicketCount> ticketCounts;
+	private List<TicketCount> ticketCounts;
     @Column
-    @Getter @Setter private boolean lawyerRepresentation;
+    private boolean lawyerRepresentation;
     @Column
-    @Getter @Setter private String interpreterLanguage;
+    private String interpreterLanguage;
     @Column
-    @Getter @Setter private boolean witnessIntent;
+    private boolean witnessIntent;
 }
