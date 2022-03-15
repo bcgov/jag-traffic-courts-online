@@ -1,4 +1,4 @@
-package ca.bc.gov.trafficcourtsonline.oracledatainterface.model;
+package ca.bc.gov.open.jag.tco.oracledatainterface.model;
 
 import java.sql.Date;
 import java.util.List;
