@@ -57,6 +57,21 @@ services:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
+  #############################################################################################
+  ###                           Oracle Interface API                                        ###
+  #############################################################################################
+  oraface-api:
+    container_name: oraface-api
+    build:
+      context: ./src/backend/oracle-data-interface
+      args:
+        - SKIP_TESTS=true
+        - ENABLE_SPLUNK=${ENABLE_SPLUNK:-false}
+    ports:
+      - "5010:8080"
+    networks:
+      - traffic-court-net
+
   # #############################################################################################
   # ###                                 TrafficCourt FRONTEND                                 ###
   # #############################################################################################
@@ -104,6 +119,9 @@ services:
       ACCEPT_EULA: Y
     restart: unless-stopped
 
+# Note, this network def should be removed - it only adds to file bloat and not needed.
+#   By default, Docker creates a single network (bridge) to be used by all containers, each 
+#   accessible by the hostname (which defaults as the container_name).
 networks:
   traffic-court-net:
     driver: "bridge"
