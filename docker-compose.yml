@@ -62,12 +62,27 @@ services:
       context: ./src/backend/oracle-data-interface
       args:
         - SKIP_TESTS=true
-        - ENABLE_SPLUNK=${ENABLE_SPLUNK:-false}
+        - SPLUNK_URL=${SPLUNK_URL:-https://splunk:8088}
+        - SPLUNK_TOKEN=${SPLUNK_HEC_TOKEN:-token}
     ports:
       - "5010:8080"
-    networks:
-      - traffic-court-net
 
+  #############################################################################################
+  ###                           Splunk                                                      ###
+  #############################################################################################
+  splunk:
+    container_name: splunk
+    image: splunk/splunk:latest
+    ports:
+      - 8000:8000
+      - 8088:8088
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD:-password}
+      SPLUNK_HEC_TOKEN: ${SPLUNK_PASSWORD:-token}
+      TZ: America/Vancouver
+  
+  
   # #############################################################################################
   # ###                                 TrafficCourt FRONTEND                                 ###
   # #############################################################################################
@@ -100,8 +115,6 @@ services:
     ports:
       - "8081:8080"
     depends_on: [citizen-api]
-    networks:
-      - traffic-court-net
     
   #############################################################################################
   ###                           RABBITMQ                                                    ###
@@ -217,12 +230,7 @@ services:
       - type: bind
         source: ./tools/form-recognizer/logs
         target: /logs
-# Note, this network def should be removed - it only adds to file bloat and not needed.
-#   By default, Docker creates a single network (bridge) to be used by all containers, each 
-#   accessible by the hostname (which defaults as the container_name).
-networks:
-  traffic-court-net:
-    driver: "bridge"  
+
 volumes:
   data-rabbit:
   data-redis:
