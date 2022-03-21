@@ -1,22 +1,26 @@
 ﻿using FlatFiles;
 using FlatFiles.TypeMapping;
-using Microsoft.Extensions.Logging.Abstractions;
-using Renci.SshNet;
 using System.Text;
-using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Models;
 
 namespace TrafficCourts.Arc.Dispute.Service.Services
 {
     public class ArcFileService : IArcFileService
     {
+        /// <summary>
+        /// Unix newline record separateor 0x0a
+        /// </summary>
+        private const string NewLineRecordSeparator = "\n";
+
         private readonly ISftpService _sftpService;
         internal static readonly IFixedLengthTypeMapper<AdnotatedTicket> AdnotatedTicketMapper = CreateAdnotatedTicketMapper();
         internal static readonly IFixedLengthTypeMapper<DisputedTicket> DisputedTicketMapper = CreateDisputedTicketMapper();
+
         public ArcFileService(ISftpService sftpService)
         {
-            _sftpService = sftpService; 
+            _sftpService = sftpService ?? throw new ArgumentNullException(nameof(sftpService)); 
         }
+
         public async Task CreateArcFile(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(arcFileData);
@@ -49,7 +53,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
             // Write ARC data into the memory stream that will be uploaded as a file
             var stream = new MemoryStream();
             var fileWriter = new StreamWriter(stream, Encoding.UTF8);
-            var writer = selector.GetWriter(fileWriter);
+            var writer = selector.GetWriter(fileWriter, new FixedLengthOptions { RecordSeparator = NewLineRecordSeparator });
 
             await writer.WriteAllAsync(arcFileData);
 
