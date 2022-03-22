@@ -17,7 +17,6 @@
         <!--https://127.0.0.1:8088 for local-->
         <url>${SPLUNK_URL}</url>
         <token>${SPLUNK_TOKEN}</token>
-        <index>${SPLUNK_INDEX}</index>
         <source>oracle-data-interface</source>
         <sourcetype>oracle-data-interface-logs</sourcetype>
         <disableCertificateValidation>true</disableCertificateValidation>
