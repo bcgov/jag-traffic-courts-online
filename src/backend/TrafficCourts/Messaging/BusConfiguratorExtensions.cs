@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using System.Configuration;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging.Configuration;
+using TrafficCourts.Messaging.MessageContracts;
 using ConfigurationManager = Microsoft.Extensions.Configuration.ConfigurationManager;
 
 namespace TrafficCourts.Messaging;
@@ -96,5 +97,7 @@ public static class BusConfiguratorExtensions
                 hostConfig.Password(rabbitMQConfiguration.Password);
             });
         });
+
+        config.AddRequestClient<SubmitDispute>();
     }
 }
