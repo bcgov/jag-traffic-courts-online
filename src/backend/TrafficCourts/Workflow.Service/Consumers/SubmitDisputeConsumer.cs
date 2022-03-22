@@ -17,8 +17,18 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitDispute> context)
         {
-            _logger.LogInformation($@"SubmitDisputeConsumer is consuming dispute id {context.Message.Id}
-                                      for ticket number : {context.Message.TicketNumber}");
+            _logger.LogInformation("SubmitDisputeConsumer is consuming dispute id: " + context.Message.Id +
+                                      "for ticket number : " + context.Message.TicketNumber);
+
+            if (context.RequestId != null)
+            {
+                await context.RespondAsync<DisputeSubmitted>(new
+                {
+                    context.Message.Id,
+                    InVar.Timestamp,
+                    DisputeId = context.RequestId
+                });
+            }
         }
     }
 }

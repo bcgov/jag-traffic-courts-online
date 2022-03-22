@@ -8,5 +8,6 @@ namespace TrafficCourts.Messaging.MessageContracts
 {
     public interface DisputeSubmitted : Message
     {
+        int DisputeId { get; set; }
     }
 }

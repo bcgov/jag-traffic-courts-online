@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Deprecated;
 
 namespace TrafficCourts.Citizen.Service.Controllers
@@ -32,14 +33,16 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="createDisputeRequest"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public Task<IActionResult> CreateAsync(CancellationToken cancellationToken)
-        {
-            IActionResult result = Ok(string.Empty);
-            return Task.FromResult(result);
+        public async Task<IActionResult> CreateAsync([FromBody] Create.Request createDisputeRequest, CancellationToken cancellationToken)
+        { 
+            var response = await _mediator.Send(createDisputeRequest, cancellationToken);
+
+            return Ok(response);
         }
 
 

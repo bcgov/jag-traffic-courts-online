@@ -9,6 +9,6 @@ namespace TrafficCourts.Messaging.MessageContracts
     public interface Message
     {
         Guid Id { get; set; }
-        DateTime Timestamp { get; set; }
+        DateTimeOffset Timestamp { get; set; }
     }
 }
