@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Citizen.Service\" />
     <Folder Include="Messaging\" />
     <Folder Include="Workflow.Service\" />
   </ItemGroup>

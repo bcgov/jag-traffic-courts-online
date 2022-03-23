@@ -153,8 +153,22 @@ services:
       - type: bind
         source: ./tools/minio
         target: /data
+    environment:
+      MINIO_ROOT_USER: "username" 
+      MINIO_ROOT_PASSWORD: "password"
     command: server /data --console-address ":9001"
 
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set dockerminio http://minio:9000 username password;
+      /usr/bin/mc mb dockerminio/traffic-ticket-dev;
+      /usr/bin/mc policy set public dockerminio/traffic-ticket-dev;
+      exit 0;
+      "
   #############################################################################################
   ###                           Jaeger                                                      ###
   #############################################################################################

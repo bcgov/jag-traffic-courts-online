@@ -19,22 +19,15 @@ namespace TrafficCourts.Common.Features.FilePersistence
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
+            services.AddOptions<ObjectBucketConfiguration>()
+                .Bind(configuration)
+                .ValidateDataAnnotations();
+
             services.AddOptions<MinioClientConfiguration>()
                 .Bind(configuration)
                 .ValidateDataAnnotations();
 
-            services.AddOptions<MinioConfiguration>()
-                .Bind(configuration)
-                .ValidateDataAnnotations();
-
-            services.AddSingleton<MinioConfiguration>(serviceProvider =>
-            {
-                var options = serviceProvider.GetRequiredService<IOptions<MinioConfiguration>>();
-                var configuration = options.Value;
-                return configuration;
-            });
-
-            services.AddTransient<MinioClient>(serviceProvider =>
+            services.AddTransient<IObjectOperations>(serviceProvider =>
             {
                 var options = serviceProvider.GetRequiredService<IOptions<MinioClientConfiguration>>();
                 var configuration = options.Value;

@@ -47,6 +47,11 @@ public class OcrViolationTicket
     public static readonly string DetachmentLocation = "detachmentLocation";
 
     /// <summary>
+    /// Gets or sets the saved image filename.
+    /// </summary>
+    public string ImageFilename { get; set; }
+
+    /// <summary>
     /// A global confidence of correctly extracting the document. This value will be low if the title of this 
     /// Violation Ticket form is not found (or of low confidence itself) or if the main ticket number is missing or invalid.
     /// </summary>
