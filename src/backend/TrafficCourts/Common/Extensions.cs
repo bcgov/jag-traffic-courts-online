@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace TrafficCourts.Common
 {
@@ -23,5 +23,15 @@ namespace TrafficCourts.Common
             return new Uri($"{uri.Scheme}://{uri.Host}:{uri.Port}");
         }
 
+        /// <summary>
+        /// Registers MemoryStream Manager that pools memory allocations to improve application performance, especially in the area of garbage collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddRecyclableMemoryStreams(this IServiceCollection services)
+        {
+            services.AddSingleton<IMemoryStreamManager, RecyclableMemoryStreamManager>();
+            return services;
+        }
     }
 }

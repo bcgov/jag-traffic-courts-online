@@ -19,6 +19,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
     public class MinioFilePersistenceServiceTest
     {
         private readonly Mock<ILogger<MinioFilePersistenceService>> _loggerMock = new Mock<ILogger<MinioFilePersistenceService>>();
+        private readonly IMemoryStreamManager _memoryStreamManager = new SimpleMemoryStreamManager();
 
         [Theory]
         [MemberData(nameof(FileTypes))]
@@ -31,7 +32,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
 
-            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, clock, _loggerMock.Object);
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
 
             var stream = GetFile(bytes);
 
@@ -56,7 +57,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             var options = Options.Create(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" }); 
 
-            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, clock, _loggerMock.Object);
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, _memoryStreamManager, clock, _loggerMock.Object);
             var stream = new MemoryStream(File.ReadAllBytes("D:\\Pictures\\bear.jpg"));
             var filename = await sut.SaveFileAsync(stream, CancellationToken.None);
             var actual = await sut.GetFileAsync(filename, CancellationToken.None);

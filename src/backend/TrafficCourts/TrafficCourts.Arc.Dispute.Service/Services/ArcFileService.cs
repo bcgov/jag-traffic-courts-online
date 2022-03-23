@@ -2,6 +2,7 @@
 using FlatFiles.TypeMapping;
 using System.Text;
 using TrafficCourts.Arc.Dispute.Service.Models;
+using TrafficCourts.Common;
 
 namespace TrafficCourts.Arc.Dispute.Service.Services
 {
@@ -13,19 +14,21 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
         private const string NewLineRecordSeparator = "\n";
 
         private readonly ISftpService _sftpService;
+        private readonly IMemoryStreamManager _memoryStreamManager;
         internal static readonly IFixedLengthTypeMapper<AdnotatedTicket> AdnotatedTicketMapper = CreateAdnotatedTicketMapper();
         internal static readonly IFixedLengthTypeMapper<DisputedTicket> DisputedTicketMapper = CreateDisputedTicketMapper();
 
-        public ArcFileService(ISftpService sftpService)
+        public ArcFileService(ISftpService sftpService, IMemoryStreamManager memoryStreamManager)
         {
-            _sftpService = sftpService ?? throw new ArgumentNullException(nameof(sftpService)); 
+            _sftpService = sftpService ?? throw new ArgumentNullException(nameof(sftpService));
+            _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
         }
 
         public async Task CreateArcFile(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(arcFileData);
 
-            var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
+            using var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
             /*
             Random rnd = new Random();
             int num = rnd.Next(100);
@@ -51,7 +54,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Services
             selector.When<DisputedTicket>().Use(DisputedTicketMapper);
 
             // Write ARC data into the memory stream that will be uploaded as a file
-            var stream = new MemoryStream();
+            var stream = _memoryStreamManager.GetStream();
             var fileWriter = new StreamWriter(stream, Encoding.UTF8);
             var writer = selector.GetWriter(fileWriter, new FixedLengthOptions { RecordSeparator = NewLineRecordSeparator });
 

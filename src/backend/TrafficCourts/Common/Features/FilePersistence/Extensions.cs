@@ -31,8 +31,12 @@ namespace TrafficCourts.Common.Features.FilePersistence
             {
                 var options = serviceProvider.GetRequiredService<IOptions<MinioClientConfiguration>>();
                 var configuration = options.Value;
-
-                var client = new MinioClient(configuration.Endpoint, configuration.AccessKey, configuration.SecretKey);
+                
+                var client = new MinioClient()
+                    .WithEndpoint(configuration.Endpoint)
+                    .WithCredentials(configuration.AccessKey, configuration.SecretKey)
+                    .Build();
+                
                 return client;
             });
 

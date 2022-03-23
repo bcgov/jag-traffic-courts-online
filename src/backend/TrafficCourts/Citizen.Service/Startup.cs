@@ -14,6 +14,7 @@ using TrafficCourts.Citizen.Service.Validators;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
+using TrafficCourts.Common;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -68,6 +69,8 @@ public static class Startup
         builder.Services.AddTransient<IConfigureOptions<JsonOptions>, ConfigureJsonOptions>();
 
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
+
+        builder.Services.AddRecyclableMemoryStreams();
     }
 
     /// <summary>

@@ -1,13 +1,10 @@
 ﻿using Moq;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Models;
 using TrafficCourts.Arc.Dispute.Service.Services;
+using TrafficCourts.Common;
 using Xunit;
 
 namespace TrafficCourts.Test.Arc.Dispute.Service.Services
@@ -15,6 +12,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
     public class ArcFileServiceTests
     {
         private readonly Mock<ISftpService> _mockArcFileService;
+        private IMemoryStreamManager _memoryStreamManager = new SimpleMemoryStreamManager();
 
         public ArcFileServiceTests()
         {
@@ -27,7 +25,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
             // Arrange
             var records = new List<ArcFileRecord>();
             records.Add(new AdnotatedTicket());
-            var arcFileService = new ArcFileService(_mockArcFileService.Object);
+            var arcFileService = new ArcFileService(_mockArcFileService.Object, _memoryStreamManager);
 
             // Act
             var actual = await arcFileService.CreateStreamFromArcData(records, CancellationToken.None);
@@ -41,7 +39,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         [Fact]
         public async void Test_throw_ArgumentNullException_if_null_value_passed_for_CreateArcFile()
         {
-            var arcFileService = new ArcFileService(_mockArcFileService.Object);
+            var arcFileService = new ArcFileService(_mockArcFileService.Object, _memoryStreamManager);
             await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFile(null!, CancellationToken.None));
         }
     }

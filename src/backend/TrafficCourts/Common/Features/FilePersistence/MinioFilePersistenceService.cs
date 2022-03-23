@@ -13,18 +13,21 @@ namespace TrafficCourts.Common.Features.FilePersistence;
 public class MinioFilePersistenceService : FilePersistenceService
 {
     private IObjectOperations _objectOperations;
+    private readonly IMemoryStreamManager _memoryStreamManager;
     private readonly IClock _clock;
     private readonly string _bucketName;
 
     public MinioFilePersistenceService(
         IObjectOperations objectOperations,
         IOptions<ObjectBucketConfiguration> objectBucketConfiguration,
+        IMemoryStreamManager memoryStreamManager,
         IClock clock,
         ILogger<MinioFilePersistenceService> logger)
         : base(logger)
     {
         ArgumentNullException.ThrowIfNull(objectOperations);
         _objectOperations = objectOperations;
+        _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
         _bucketName = objectBucketConfiguration.Value.BucketName;
     }
@@ -33,7 +36,7 @@ public class MinioFilePersistenceService : FilePersistenceService
     {
         try
         {
-            MemoryStream objectStream = new MemoryStream();
+            MemoryStream objectStream = _memoryStreamManager.GetStream();
 
             GetObjectArgs args = new GetObjectArgs()
                 .WithBucket(_bucketName)
