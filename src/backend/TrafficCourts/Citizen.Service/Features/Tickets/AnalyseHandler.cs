@@ -3,6 +3,7 @@ using MediatR;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
+using TrafficCourts.Common;
 using TrafficCourts.Common.Features.FilePersistence;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;
@@ -37,16 +38,19 @@ public static class AnalyseHandler
         private readonly IFormRecognizerService _formRegognizerService;
         private readonly IFormRecognizerValidator _formRecognizerValidator;
         private readonly IFilePersistenceService _filePersistenceService;
+        private readonly IMemoryStreamManager _memoryStreamManager;
 
         public Handler(
             IFormRecognizerService formRegognizerService, 
             IFormRecognizerValidator formRecognizerValidator,
             IFilePersistenceService filePersistenceService,
+            IMemoryStreamManager memoryStreamManager,
             ILogger<Handler> logger)
         {
             _formRegognizerService = formRegognizerService ?? throw new ArgumentNullException(nameof(logger));
             _formRecognizerValidator = formRecognizerValidator ?? throw new ArgumentNullException(nameof(formRecognizerValidator));
             _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
+            _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -77,7 +81,7 @@ public static class AnalyseHandler
         private MemoryStream GetStreamForFile(IFormFile formFile)
         {
             int length = (int)formFile.Length;
-            MemoryStream stream = new MemoryStream(length);
+            MemoryStream stream = _memoryStreamManager.GetStream(); ;
 
             using var fileStream = formFile.OpenReadStream();
             fileStream.CopyTo(stream);

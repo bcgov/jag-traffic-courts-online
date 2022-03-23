@@ -4,6 +4,7 @@ using TrafficCourts.Arc.Dispute.Service;
 using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Services;
+using TrafficCourts.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 // Registering and Initializing AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddRecyclableMemoryStreams();
 
 builder.Services.AddTransient<IArcFileService, ArcFileService>();
 
@@ -36,20 +38,20 @@ builder.Services.AddTransient<SftpClient>(services =>
     var configuration = configurationOptions.Value;
     try
     {
-        var privateKey = new PrivateKeyFile(configuration.SshPrivateKeyPath);
-        if (privateKey != null)
+        var sshPrivateKeyPath = configuration.SshPrivateKeyPath;
+
+        if (!string.IsNullOrEmpty(sshPrivateKeyPath) && File.Exists(sshPrivateKeyPath))
         {
-            return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, new[] { privateKey });
+            var privateKey = new PrivateKeyFile(sshPrivateKeyPath);
+            return new SftpClient(configuration.Host, configuration.Port, configuration.Username, new[] { privateKey });
         }
-        else
-        {
-            return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, configuration.Password);
-        }
+
+        return new SftpClient(configuration.Host, configuration.Port, configuration.Username, configuration.Password);
     }
     catch (System.IO.DirectoryNotFoundException exception)
     {
         logger.LogInformation(exception, "SSH key for the provided path has not been found. Using default password authentication.");
-        return new SftpClient(configuration.Host, configuration.Port == 0 ? 22 : configuration.Port, configuration.Username, configuration.Password);
+        return new SftpClient(configuration.Host, configuration.Port, configuration.Username, configuration.Password);
     }    
 });
 

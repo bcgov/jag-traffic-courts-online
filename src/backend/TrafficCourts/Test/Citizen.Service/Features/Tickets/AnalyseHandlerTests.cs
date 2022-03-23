@@ -1,18 +1,18 @@
+using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Tickets;
+using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using System.Threading;
-using Xunit;
 using TrafficCourts.Common.Features.FilePersistence;
-using System.IO;
-using System;
-using System.Threading.Tasks;
-using System.Text;
-using Azure.AI.FormRecognizer.DocumentAnalysis;
-using TrafficCourts.Citizen.Service.Models.Tickets;
+using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Tickets;
 
@@ -42,7 +42,12 @@ public class AnalyseHandlerTests
             .Setup(_ => _.SaveFileAsync(It.IsAny<MemoryStream>(), It.IsAny<CancellationToken>()))
             .Returns(Task.FromResult(expectedFilename));
 
-        var handler = new AnalyseHandler.Handler(mockService.Object, mockValidator.Object, filePersistenceServiceMock.Object, mockLogger.Object);
+        var handler = new AnalyseHandler.Handler(
+            mockService.Object, 
+            mockValidator.Object, 
+            filePersistenceServiceMock.Object,
+            new SimpleMemoryStreamManager(),
+            mockLogger.Object);
 
         var bytes = Encoding.UTF8.GetBytes("This is a dummy file");
         IFormFile file = new FormFile(new MemoryStream(bytes), 0, bytes.Length, "Data", "dummy.txt");
@@ -57,7 +62,4 @@ public class AnalyseHandlerTests
         Assert.Equal(expectedOcrViolationTicket, response.OcrViolationTicket);
         Assert.Equal(expectedFilename, response.OcrViolationTicket.ImageFilename);
     }
-
-
-
 }

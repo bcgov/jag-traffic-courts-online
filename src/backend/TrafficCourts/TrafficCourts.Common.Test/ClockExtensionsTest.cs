@@ -4,7 +4,7 @@ using System;
 using TrafficCourts.Common;
 using Xunit;
 
-namespace TrafficCourts.Test.Common
+namespace TrafficCourts.Common.Test
 {
     public class ClockExtensionsTest
     {

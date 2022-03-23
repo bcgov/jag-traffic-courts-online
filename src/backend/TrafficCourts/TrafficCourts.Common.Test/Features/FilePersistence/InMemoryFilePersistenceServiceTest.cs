@@ -21,15 +21,15 @@ public class InMemoryFilePersistenceServiceTest
         var services = new ServiceCollection();
         services.AddMemoryCache();
         var serviceProvider = services.BuildServiceProvider();
-        _cache = serviceProvider.GetService<IMemoryCache>();
+        _cache = serviceProvider.GetRequiredService<IMemoryCache>();
         _loggerMock = new Mock<ILogger<InMemoryFilePersistenceService>>();
     }
 
     [Fact]
     public void Constructor_throws_ArgumentNullException_when_cache_null()
     {
-        Assert.Throws<ArgumentNullException>(() => new InMemoryFilePersistenceService(null, _loggerMock.Object));
-        Assert.Throws<ArgumentNullException>(() => new InMemoryFilePersistenceService(_cache, null));
+        Assert.Throws<ArgumentNullException>(() => new InMemoryFilePersistenceService(null!, _loggerMock.Object));
+        Assert.Throws<ArgumentNullException>(() => new InMemoryFilePersistenceService(_cache, null!));
     }
 
     [Fact]
