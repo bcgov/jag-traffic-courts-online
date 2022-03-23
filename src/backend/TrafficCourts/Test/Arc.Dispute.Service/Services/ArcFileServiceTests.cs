@@ -42,7 +42,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Services
         public async void Test_throw_ArgumentNullException_if_null_value_passed_for_CreateArcFile()
         {
             var arcFileService = new ArcFileService(_mockArcFileService.Object);
-            await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFile(null, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => arcFileService.CreateArcFile(null!, CancellationToken.None));
         }
     }
 }
