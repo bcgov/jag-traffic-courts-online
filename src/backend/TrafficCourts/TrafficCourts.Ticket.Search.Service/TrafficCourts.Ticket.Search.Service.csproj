@@ -24,7 +24,7 @@
     <PackageReference Include="Calzolari.Grpc.AspNetCore.Validation" Version="6.1.1" />
     <PackageReference Include="FlatFiles" Version="4.16.0" />
     <PackageReference Include="FluentValidation" Version="10.3.6" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.41.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.44.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Refit.HttpClientFactory" Version="6.1.15" />
