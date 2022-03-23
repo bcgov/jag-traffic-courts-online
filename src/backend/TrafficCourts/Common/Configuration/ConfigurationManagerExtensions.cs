@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 
 namespace TrafficCourts.Common.Configuration;
 
@@ -12,6 +13,9 @@ public static class ConfigurationManagerExtensions
     public static void Add<TConfigurationProvider>(this ConfigurationManager configurationManager) 
         where TConfigurationProvider : TrafficCourtsConfigurationProvider, new()
     {
+        ArgumentNullException.ThrowIfNull(configurationManager);
+        Debug.Assert(configurationManager is IConfigurationBuilder);
+
         ((IConfigurationBuilder)configurationManager).Add(new TrafficCourtsConfigurationSource<TConfigurationProvider>());
     }
 }
