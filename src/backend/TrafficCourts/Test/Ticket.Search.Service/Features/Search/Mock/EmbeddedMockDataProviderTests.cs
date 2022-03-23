@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Ticket.Search.Service.Features.Search.Mock;
@@ -22,13 +19,13 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
 
             using var actual = sut.GetDataStream();
             Assert.NotNull(actual);
-            Assert.True(actual.CanRead);
+            Assert.True(actual!.CanRead);
         }
 
         [Fact]
         public void constructor_logger_parameter_is_required()
         {
-            var actual = Assert.Throws<ArgumentNullException>(() => new EmbeddedMockDataProvider(null));
+            var actual = Assert.Throws<ArgumentNullException>(() => new EmbeddedMockDataProvider(null!));
             Assert.Equal("logger", actual.ParamName);
         }
     }

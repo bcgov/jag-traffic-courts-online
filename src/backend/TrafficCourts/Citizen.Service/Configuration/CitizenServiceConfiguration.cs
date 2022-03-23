@@ -17,4 +17,12 @@ public class CitizenServiceConfiguration :
     public FormRecognizerConfigurationOptions? FormRecognizer { get; set; }
     public TicketSearchServiceConfigurationProperties? TicketSearchClient { get; set; }
     public SplunkConfigurationProperties? Splunk { get; set; }
+    public TicketStorageType TicketStorage { get; set; } = TicketStorageType.InMemory;
+}
+
+
+public enum TicketStorageType
+{
+    InMemory,
+    ObjectStore
 }

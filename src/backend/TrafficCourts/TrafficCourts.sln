@@ -17,7 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Workflow.Serv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Ticket.Search.Service", "TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj", "{DC5129D4-DAC0-44B0-8335-8FA8F9FBA113}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.Arc.Dispute.Service", "TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj", "{58705BA7-9770-426E-A0D2-A98BEBAB9F55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficCourts.Arc.Dispute.Service", "TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj", "{58705BA7-9770-426E-A0D2-A98BEBAB9F55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficCourts.Common.Test", "TrafficCourts.Common.Test\TrafficCourts.Common.Test.csproj", "{126D6955-0CF2-4133-BBA4-A882B4B74A99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA8F24E3-1C87-4107-A134-F9A5F1392C0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,12 +57,17 @@ Global
 		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58705BA7-9770-426E-A0D2-A98BEBAB9F55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{126D6955-0CF2-4133-BBA4-A882B4B74A99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{126D6955-0CF2-4133-BBA4-A882B4B74A99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{126D6955-0CF2-4133-BBA4-A882B4B74A99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{126D6955-0CF2-4133-BBA4-A882B4B74A99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CFDE39FC-1A64-4AC7-B3EB-0EBBB5E6BB3B} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
+		{126D6955-0CF2-4133-BBA4-A882B4B74A99} = {7B716295-C23B-4849-B1B9-0BBF9800D8E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F53B0D46-E55D-4CE9-8617-6CD7FD73C49B}

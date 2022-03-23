@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,12 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="NodaTime.Testing" Version="3.0.9" />
+    <PackageReference Include="Moq" Version="4.17.2" />
+    <PackageReference Include="NodaTime.Testing" Version="3.0.10" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,16 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Messaging\" />
-    <Folder Include="Workflow.Service\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
-    <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
-    <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj" />
-    <ProjectReference Include="..\TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj" />
   </ItemGroup>
 
 </Project>

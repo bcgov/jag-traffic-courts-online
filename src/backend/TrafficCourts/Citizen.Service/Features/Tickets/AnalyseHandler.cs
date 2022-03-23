@@ -3,6 +3,8 @@ using MediatR;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
+using TrafficCourts.Common;
+using TrafficCourts.Common.Features.FilePersistence;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;
 
@@ -12,7 +14,8 @@ public static class AnalyseHandler
     {
         public AnalyseRequest(IFormFile image)
         {
-            this.Image = image ?? throw new ArgumentNullException(nameof(image));
+            ArgumentNullException.ThrowIfNull(image);
+            Image = image;
         }
 
         public IFormFile Image { get; set; }
@@ -20,7 +23,9 @@ public static class AnalyseHandler
 
     public class AnalyseResponse
     {
-        public AnalyseResponse(OcrViolationTicket violationTicket) {
+        public AnalyseResponse(OcrViolationTicket violationTicket) 
+        {
+            ArgumentNullException.ThrowIfNull(violationTicket);
             OcrViolationTicket = violationTicket;
         }
 
@@ -32,11 +37,20 @@ public static class AnalyseHandler
         private readonly ILogger<Handler> _logger;
         private readonly IFormRecognizerService _formRegognizerService;
         private readonly IFormRecognizerValidator _formRecognizerValidator;
+        private readonly IFilePersistenceService _filePersistenceService;
+        private readonly IMemoryStreamManager _memoryStreamManager;
 
-        public Handler(IFormRecognizerService formRegognizerService, IFormRecognizerValidator formRecognizerValidator, ILogger<Handler> logger)
+        public Handler(
+            IFormRecognizerService formRegognizerService, 
+            IFormRecognizerValidator formRecognizerValidator,
+            IFilePersistenceService filePersistenceService,
+            IMemoryStreamManager memoryStreamManager,
+            ILogger<Handler> logger)
         {
             _formRegognizerService = formRegognizerService ?? throw new ArgumentNullException(nameof(logger));
             _formRecognizerValidator = formRecognizerValidator ?? throw new ArgumentNullException(nameof(formRecognizerValidator));
+            _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
+            _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -44,17 +58,35 @@ public static class AnalyseHandler
         {
             _logger.LogDebug("Analysing {FileName}", request.Image.FileName);
 
-            AnalyzeResult result = await _formRegognizerService.AnalyzeImageAsync(request.Image, cancellationToken);
+            var stream = GetStreamForFile(request.Image);
+
+            // TODO: do the save file and analyze in parallel
+            var filename = await _filePersistenceService.SaveFileAsync(stream, cancellationToken);
+            stream.Position = 0L; // reset file position
+
+            AnalyzeResult result = await _formRegognizerService.AnalyzeImageAsync(stream, cancellationToken);
 
             // Create a custom mapping of DocumentFields to a structured object for validation and serialization.
             //   (for some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves)
             OcrViolationTicket violationTicket = _formRegognizerService.Map(result);
+            violationTicket.ImageFilename = filename;
 
             // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
             _formRecognizerValidator.ValidateViolationTicket(violationTicket);
 
             AnalyseResponse response = new(violationTicket);
             return response;
+        }
+
+        private MemoryStream GetStreamForFile(IFormFile formFile)
+        {
+            int length = (int)formFile.Length;
+            MemoryStream stream = _memoryStreamManager.GetStream(); ;
+
+            using var fileStream = formFile.OpenReadStream();
+            fileStream.CopyTo(stream);
+
+            return stream;
         }
     }
 }
