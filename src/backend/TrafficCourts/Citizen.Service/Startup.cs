@@ -13,6 +13,7 @@ using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Validators;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
+using NodaTime;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -40,6 +41,15 @@ public static class Startup
 
         ValidateConfiguration(configuration, logger); // throws ConfigurationErrorsException if configuration has issues
 
+        if (configuration.TicketStorage == TicketStorageType.InMemory)
+        {
+            builder.AddInMemoryFilePersistence();
+        } 
+        else if (configuration.TicketStorage == TicketStorageType.ObjectStore)
+        {
+            builder.AddObjectStorageFilePersistence();
+        }
+
         if (configuration.RabbitMQ is not null)
         {
             Configure(builder, configuration.RabbitMQ, logger);
@@ -56,6 +66,8 @@ public static class Startup
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         builder.Services.AddTransient<IConfigureOptions<JsonOptions>, ConfigureJsonOptions>();
+
+        builder.Services.AddSingleton<IClock>(SystemClock.Instance);
     }
 
     /// <summary>

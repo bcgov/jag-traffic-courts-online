@@ -58,12 +58,13 @@ public class FormRecognizerService : IFormRecognizerService
         _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
     }
 
-    public async Task<AnalyzeResult> AnalyzeImageAsync(IFormFile image, CancellationToken cancellationToken)
+    public async Task<AnalyzeResult> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
         AzureKeyCredential credential = new(_apiKey);
         DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
-        using Stream stream = GetImageStream(image);
         AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket_v2", stream, null, cancellationToken);
         await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
@@ -113,22 +114,4 @@ public class FormRecognizerService : IFormRecognizerService
         }
         return null;
     }
-
-    /// Returns a Stream for the given image
-    private static Stream GetImageStream(IFormFile image)
-    {
-        // Work around for a "System.ObjectDisposedException : Cannot access a closed file." error
-        // - extract data from the file attachment to an in-memory byte[]
-        // - create a new MemoryStream from the byte[]
-        byte[] fileBytes;
-        using (var fileStream = image.OpenReadStream())
-        using (var ms = new MemoryStream())
-        {
-            fileStream.CopyTo(ms);
-            fileBytes = ms.ToArray();
-        }
-        MemoryStream stream = new(fileBytes);
-        return stream;
-    }
-
 }

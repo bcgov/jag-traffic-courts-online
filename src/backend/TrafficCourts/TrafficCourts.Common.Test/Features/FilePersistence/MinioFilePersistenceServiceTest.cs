@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.FilePersistence;
 using Xunit;
+using Microsoft.Extensions.Options;
 
 namespace TrafficCourts.Common.Test.Features.FilePersistence
 {
@@ -24,16 +25,13 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
         public async Task should_create_file_with_correct_filename(byte[] bytes, string extension)
         {
             var now = DateTimeOffset.Now;
-            MinioClient client = new MinioClient();
             var clock = new FakeClock(Instant.FromDateTimeOffset(now));
 
-            Mock<IBucketOperations> bucketOperationsMock = new Mock<IBucketOperations>();
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
 
-            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, new MinioConfiguration(), clock, _loggerMock.Object);
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
 
-            sut.SetBucketOperations(bucketOperationsMock.Object);
-            sut.SetObjectOperations(objectOperationsMock.Object);
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, clock, _loggerMock.Object);
 
             var stream = GetFile(bytes);
 
@@ -42,6 +40,28 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             Assert.NotNull(actual);
             Assert.StartsWith(now.ToString("yyyy-MM-dd"), actual);
             Assert.Equal(extension, Path.GetExtension(actual));
+        }
+
+        [Fact(Skip = "Integration Test")]
+        public async Task should_be_able_to_save_file_and_get_it_back()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+
+            // be sure to run minio AND createbuckets via docker compose
+
+            MinioClient client = new MinioClient()
+                .WithEndpoint("localhost:9000")
+                .WithCredentials("username", "password");
+
+            var options = Options.Create(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" }); 
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, clock, _loggerMock.Object);
+            var stream = new MemoryStream(File.ReadAllBytes("D:\\Pictures\\bear.jpg"));
+            var filename = await sut.SaveFileAsync(stream, CancellationToken.None);
+            var actual = await sut.GetFileAsync(filename, CancellationToken.None);
+
+            Assert.Equal(stream.ToArray(), actual.ToArray());
         }
 
         private MemoryStream GetFile(byte[] bytes)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel;
 using Minio.Exceptions;
@@ -11,25 +12,21 @@ namespace TrafficCourts.Common.Features.FilePersistence;
 /// </summary>
 public class MinioFilePersistenceService : FilePersistenceService
 {
-    private readonly MinioConfiguration _configuration;
-    private readonly IClock _clock;
-
-    private IBucketOperations _bucketOperations;
     private IObjectOperations _objectOperations;
+    private readonly IClock _clock;
+    private readonly string _bucketName;
 
     public MinioFilePersistenceService(
-        MinioClient client,
-        MinioConfiguration configuration,
+        IObjectOperations objectOperations,
+        IOptions<ObjectBucketConfiguration> objectBucketConfiguration,
         IClock clock,
         ILogger<MinioFilePersistenceService> logger)
         : base(logger)
     {
-        ArgumentNullException.ThrowIfNull(client);
-        _bucketOperations = client;
-        _objectOperations = client;
-
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(objectOperations);
+        _objectOperations = objectOperations;
         _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+        _bucketName = objectBucketConfiguration.Value.BucketName;
     }
 
     public override async Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken)
@@ -39,8 +36,8 @@ public class MinioFilePersistenceService : FilePersistenceService
             MemoryStream objectStream = new MemoryStream();
 
             GetObjectArgs args = new GetObjectArgs()
-                .WithBucket(_configuration.BucketName)
-                .WithFile(filename)
+                .WithBucket(_bucketName)
+                .WithObject(filename)
                 .WithCallbackStream((stream) => { stream.CopyTo(objectStream); });
 
             ObjectStat? status = await _objectOperations.GetObjectAsync(args, cancellationToken);
@@ -65,14 +62,14 @@ public class MinioFilePersistenceService : FilePersistenceService
         catch (Exception exception)
         {
             _logger.LogWarning(exception, "Error fetching file from object storage");
-            throw new MinioFilePersistenceException("Error getting file", null); // TODO: add exception parameter that handles Exception data type
+            throw new MinioFilePersistenceException("Error getting file", null!); // TODO: add exception parameter that handles Exception data type
         }
     }
 
     public override async Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(data);
-        if (data.Length == 0) throw new ArgumentException("No data to save", nameof(data))
+        if (data.Length == 0) throw new ArgumentException("No data to save", nameof(data));
 
         var mimeType = await GetMimeTypeAsync(data);
         if (mimeType is null)
@@ -92,24 +89,13 @@ public class MinioFilePersistenceService : FilePersistenceService
 
         try
         {
-            // Make a bucket on the server, if not already present.
-            BucketExistsArgs bucketExistsArgs = new BucketExistsArgs()
-                .WithBucket(_configuration.BucketName);
-
-            bool found = await _bucketOperations.BucketExistsAsync(bucketExistsArgs, cancellationToken);
-            if (!found)
-            {
-                MakeBucketArgs makeBucketArgs = new MakeBucketArgs()
-                    .WithBucket(_configuration.BucketName)
-                    .WithLocation(_configuration.Location);
-
-                await _bucketOperations.MakeBucketAsync(makeBucketArgs, cancellationToken);
-            }
+            // bucket must exist prior to calling this otherwise BucketNotFoundException will be thrown
+            // in the shared services object store, we are not giving permissions to list or create buckets
 
             // Upload a file to bucket.
             PutObjectArgs putObjectArgs = new PutObjectArgs()
-                    .WithBucket(_configuration.BucketName)
-                    .WithFileName(objectName)
+                    .WithBucket(_bucketName)
+                    .WithObject(objectName)
                     .WithContentType(mimeType.Name)
                     .WithObjectSize(data.Length)
                     .WithStreamData(data);
@@ -117,22 +103,17 @@ public class MinioFilePersistenceService : FilePersistenceService
             await _objectOperations.PutObjectAsync(putObjectArgs, cancellationToken);
             return objectName;
         }
+        catch (BucketNotFoundException exception)
+        {
+            using var scope = _logger.BeginScope(new Dictionary<string, object> { { "BucketName", _bucketName } });
+            _logger.LogWarning("Object Store bucket not found");
+
+            throw new FileNotFoundException("File not found", filename, exception);
+        }
         catch (MinioException exception)
         {
             _logger.LogError(exception, "Failed up upload file");
             throw new MinioFilePersistenceException("Failed up upload file", exception);
         }
     }
-
-    /// <summary>
-    /// For unit testing, allows overriding the <see cref="IBucketOperations"/> implemetation.
-    /// </summary>
-    public void SetBucketOperations(IBucketOperations bucketOperations) => _bucketOperations = bucketOperations;
-    /// <summary>
-    /// For unit testing, allows overriding the <see cref="IObjectOperations"/> implemetation.
-    /// </summary>
-    public void SetObjectOperations(IObjectOperations objectOperations) => _objectOperations = objectOperations;
 }
-
-
-

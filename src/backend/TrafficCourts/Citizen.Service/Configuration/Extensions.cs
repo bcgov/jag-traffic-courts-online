@@ -11,12 +11,13 @@ public static class Extensions
     /// <returns></returns>
     public static WebApplicationBuilder AddObjectStorageFilePersistence(this WebApplicationBuilder builder)
     {        
-        builder.Services.AddObjectStorageFilePersistence(builder.Configuration.GetSection("S3"));
+        builder.Services.AddObjectStorageFilePersistence(builder.Configuration.GetSection("ObjectStorage"));
         return builder;
     }
 
     public static WebApplicationBuilder AddInMemoryFilePersistence(this WebApplicationBuilder builder)
     {
+        builder.Services.AddMemoryCache();
         builder.Services.AddInMemoryFilePersistence();
         return builder;
     }
