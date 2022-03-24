@@ -3,6 +3,7 @@ using MassTransit.Definition;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Consumers;
+using TrafficCourts.Workflow.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>();
 
 builder.Services.AddMassTransit(cfg =>
 {

@@ -9,5 +9,23 @@ namespace TrafficCourts.Messaging.MessageContracts
     public interface SubmitDispute : Message
     {
         string TicketNumber { get; set; }
+        string CourtLocation { get; set; }
+        DateTime ViolationDate { get; set; }
+        string DisputantSurname { get; set; }
+        string GivenNames { get; set; }
+        string StreetAddress { get; set; }
+        string Province { get; set; }
+        string PostalCode { get; set; }
+        string HomePhone { get; set; }
+        string DriversLicense { get; set; }
+        string DriversLicenseProvince { get; set; }
+        string WorkPhone { get; set; }
+        DateTime DateOfBirth { get; set; }
+        string EnforcementOrganization { get; set; }
+        DateTime ServiceDate { get; set; }
+        List<TicketCount> TicketCounts { get; set; }
+        bool LawyerRepresentation { get; set; }
+        string InterpreterLanguage { get; set; }
+        bool WitnessIntent { get; set; }
     }
 }

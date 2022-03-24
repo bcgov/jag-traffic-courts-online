@@ -1,6 +1,9 @@
-﻿namespace TrafficCourts.Citizen.Service.Models.Dispute
+﻿
+using System.Text;
+
+namespace TrafficCourts.Workflow.Service.Models
 {
-    public class TicketDispute
+    public class Dispute
     {
         public string TicketNumber { get; set; }
         public string CourtLocation { get; set; }
@@ -21,5 +24,15 @@
         public bool LawyerRepresentation { get; set; }
         public string InterpreterLanguage { get; set; }
         public bool WitnessIntent { get; set; }
+
+        public override string ToString()
+        {
+            return GetType().GetProperties()
+                .Select(info => (info.Name, Value: info.GetValue(this, null) ?? "(null)"))
+                .Aggregate(
+                    new StringBuilder(),
+                    (sb, pair) => sb.AppendLine($"{pair.Name}: {pair.Value}"),
+                    sb => sb.ToString());
+        }
     }
 }
