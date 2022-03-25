@@ -2,7 +2,9 @@
 using Grpc.Net.Client;
 using MediatR;
 using OneOf;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
+using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Models.Search;
 using TrafficCourts.Ticket.Search.Service;
 using TicketSearchResult = TrafficCourts.Citizen.Service.Models.Search.TicketSearchResult;
@@ -121,6 +123,8 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
             {
                 ArgumentNullException.ThrowIfNull(request);
 
+                using Activity? activity = Diagnostics.Source.StartActivity("Ticket Search");
+
                 using IDisposable? requestScope = _logger.BeginScope(new Dictionary<string, object> { { "Request", request } });
                 _logger.LogTrace("Begin handler");
 
@@ -140,21 +144,33 @@ namespace TrafficCourts.Citizen.Service.Features.Tickets
 
                 try
                 {
-
                     _logger.LogDebug("Searching for ticket");
                     SearchReply searchReply = await client.SearchAsync(searchResult, cancellationToken: cancellationToken);
                     using var replyScope = _logger.BeginScope(new Dictionary<string, object> { { "SearchReply", searchReply } });
                     _logger.LogDebug("Search complete");
+                    
+                    activity?
+                        .SetStatus(System.Diagnostics.ActivityStatusCode.Ok);
+                    
                     return new Response(searchReply);
                 }
                 catch (RpcException exception) when (exception.StatusCode is StatusCode.NotFound)
                 {
-                    _logger.LogInformation(exception, "Not found");
+                    // it will be normal for the ticket not to be found in the service
+                    _logger.LogDebug(exception, "Not found");
+                    
+                    activity?
+                        .SetStatus(ActivityStatusCode.Ok);
+                    
                     return Response.Empty;
                 }
                 catch (RpcException exception)
                 {
-                    _logger.LogInformation(exception, "Error");
+                    activity?
+                        .SetStatus(ActivityStatusCode.Error)
+                        .AddTag("grpc.status_code", exception.StatusCode);
+
+                    _logger.LogError(exception, "Error searching for ticket");
                     return Response.Empty;
                 }
             }

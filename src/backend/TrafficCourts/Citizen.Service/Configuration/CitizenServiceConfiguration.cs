@@ -8,12 +8,10 @@ namespace TrafficCourts.Citizen.Service.Configuration;
 /// </summary>
 public class CitizenServiceConfiguration : 
     IRabbitMQConfiguration, 
-    IMassTransitConfiguration,
     ITicketSearchServiceConfiguration,
     ISplunkConfiguration
 {
     public RabbitMQConfigurationProperties? RabbitMQ { get; set; }
-    public MassTransitConfigurationProperties? MassTransit { get; set; }
     public FormRecognizerConfigurationOptions? FormRecognizer { get; set; }
     public TicketSearchServiceConfigurationProperties? TicketSearchClient { get; set; }
     public SplunkConfigurationProperties? Splunk { get; set; }

@@ -2,6 +2,9 @@
 
 namespace TrafficCourts.Messaging.Configuration
 {
+    /// <summary>
+    /// Provides convenience environment variables for configuring RabbitMQ connections.
+    /// </summary>
     public class RabbitMQConfigurationProvider : TrafficCourtsConfigurationProvider
     {
         public override void Load()

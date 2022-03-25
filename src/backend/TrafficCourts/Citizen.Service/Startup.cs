@@ -1,20 +1,23 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Configuration;
-using System.Configuration;
-using Serilog;
-using TrafficCourts.Messaging;
-using TrafficCourts.Messaging.Configuration;
 using MediatR;
-using TrafficCourts.Common.Configuration;
-using ILogger = Serilog.ILogger;
-using TrafficCourts.Citizen.Service.Services;
-using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Citizen.Service.Validators;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using NodaTime;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Serilog;
+using System.Configuration;
+using System.Reflection;
+using TrafficCourts.Citizen.Service.Configuration;
+using TrafficCourts.Citizen.Service.Logging;
+using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common;
+using TrafficCourts.Common.Configuration;
+using TrafficCourts.Messaging.Configuration;
+using ILogger = Serilog.ILogger;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -38,7 +41,9 @@ public static class Startup
         // configure application
         var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
 
-        var logger = GetLogger();
+        var logger = GetLogger(builder);
+
+        AddOpenTelemetry(builder, logger);
 
         ValidateConfiguration(configuration, logger); // throws ConfigurationErrorsException if configuration has issues
 
@@ -56,7 +61,6 @@ public static class Startup
             Configure(builder, configuration.RabbitMQ, logger);
         }
 
-        Configure(builder, configuration?.MassTransit, logger);
         Configure(builder, configuration?.FormRecognizer, logger);
         Configure(builder, configuration?.TicketSearchClient, logger);
 
@@ -73,19 +77,55 @@ public static class Startup
         builder.Services.AddRecyclableMemoryStreams();
     }
 
+    private static void AddOpenTelemetry(WebApplicationBuilder builder, ILogger logger)
+    {
+        string? endpoint = builder.Configuration["OTEL_EXPORTER_JAEGER_ENDPOINT"];
+
+        if (string.IsNullOrEmpty(endpoint))
+        {
+            logger.Information("Jaeger endpoint is not configured, no telemetry will be collected.");
+            return;
+        }
+
+        var assemblyName = Assembly.GetExecutingAssembly().GetName();
+
+        string serviceName = "Citizen-API";
+        var assemblyVersion = assemblyName.Version?.ToString() ?? "unknown";
+
+        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: assemblyVersion, serviceInstanceId: Environment.MachineName);
+
+        builder.Services.AddOpenTelemetryTracing(options =>
+        {
+            options
+                .SetResourceBuilder(resourceBuilder)
+                .AddGrpcClientInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddAspNetCoreInstrumentation()
+                .AddSource(Diagnostics.Source.Name)
+                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddJaegerExporter();
+
+        });
+
+        // builder.Services.Configure<JaegerExporterOptions>( ... );
+    }
+
     /// <summary>
     /// Gets a logger for application setup.
     /// </summary>
     /// <returns></returns>
-    private static ILogger GetLogger()
+    private static ILogger GetLogger(WebApplicationBuilder builder)
     {
-        var logger = new LoggerConfiguration()
+        var configuration = new LoggerConfiguration()
             .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.Debug()
-            .CreateLogger();
+            .WriteTo.Console();
 
-        return logger;
+        if (builder.Environment.IsDevelopment())
+        {
+            configuration.WriteTo.Debug();
+        }
+
+        return configuration.CreateLogger();
     }
 
     /// <summary>
@@ -102,21 +142,10 @@ public static class Startup
         Dictionary<string, List<string>> errors = new();
 
         // MassTransit
-        if (configuration?.MassTransit?.Transport is null)
-        {
-            AddError(errors, "MassTransit", "Transport is not configured");
-        }
-        else
-        {
-            var transport = configuration.MassTransit.Transport;
-            if (transport == MassTransitTransport.RabbitMQ)
-            {
-                // RabbitMQ
-                if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Host)) AddError(errors, "RabbitMQ", "Host is not configured");
-                if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Username)) AddError(errors, "RabbitMQ", "Username is not configured");
-                if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Password)) AddError(errors, "RabbitMQ", "Password is not configured");
-            }
-        }
+        // RabbitMQ
+        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Host)) AddError(errors, "RabbitMQ", "Host is not configured");
+        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Username)) AddError(errors, "RabbitMQ", "Username is not configured");
+        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Password)) AddError(errors, "RabbitMQ", "Password is not configured");
 
         // FormRecognizer
         if (string.IsNullOrEmpty(configuration?.FormRecognizer?.ApiKey)) AddError(errors, "FormRecognizer", "ApiKey not specified");
@@ -134,7 +163,7 @@ public static class Startup
 
             Log.CloseAndFlush(); // force the writting of logs
 
-            throw new ConfigurationErrorsException($"{errors.Count} configuration errors, check previous log messages for details.");
+            throw new ConfigurationErrorsException($"{errors.Count} configuration error(s), check previous log messages for details.");
         }
     }
 
@@ -160,25 +189,6 @@ public static class Startup
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
-    }
-
-    /// <summary>
-    /// Configures MassTransit.
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, MassTransitConfigurationProperties? configuration, ILogger logger)
-    {
-        ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        if (configuration is null)
-        {
-            return;
-        }
-
-        builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
     }
 
     /// <summary>
