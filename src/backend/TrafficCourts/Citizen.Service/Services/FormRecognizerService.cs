@@ -1,5 +1,7 @@
 using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
+using System.Diagnostics;
+using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Services;
@@ -65,6 +67,9 @@ public class FormRecognizerService : IFormRecognizerService
         AzureKeyCredential credential = new(_apiKey);
         DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
+        using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
+        activity?.AddBaggage("ModelId", "ViolationTicket_v2");
+
         AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket_v2", stream, null, cancellationToken);
         await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
@@ -73,6 +78,8 @@ public class FormRecognizerService : IFormRecognizerService
 
     public OcrViolationTicket Map(AnalyzeResult result)
     {
+        using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
+
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();
         violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;

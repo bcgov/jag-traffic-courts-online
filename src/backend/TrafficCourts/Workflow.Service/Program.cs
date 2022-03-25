@@ -1,4 +1,8 @@
+using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using TrafficCourts.Workflow.Service.Configuration;
+using TrafficCourts.Workflow.Service.Consumers;
+using TrafficCourts.Workflow.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,21 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>();
+
+builder.Services.AddMassTransit(cfg =>
+{
+    cfg.AddConsumer<SubmitDisputeConsumer>();
+    cfg.UsingRabbitMq((context, configurator) =>
+    {
+        var configuration = context.GetService<IConfiguration>();
+        var rabbitMqConfig = configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+        configurator.Host(rabbitMqConfig.Host);
+        configurator.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(false));
+    });
+
+});
 
 var app = builder.Build();
 

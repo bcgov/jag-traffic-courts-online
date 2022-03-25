@@ -28,7 +28,11 @@ namespace TrafficCourts.Ticket.Search.Service
             builder.Configuration.Add<TicketSearchServiceConfigurationProvider>();
 
             logger.Information("Configuring Serilog logging");
-            builder.UseSerilog<TicketSearchServiceConfiguration>(); // configure logging
+
+            builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+            {
+                loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+            });
 
             var configuration = builder.Configuration.Get<TicketSearchServiceConfiguration>();
 

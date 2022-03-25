@@ -3,7 +3,6 @@ using MediatR;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Common;
 using TrafficCourts.Common.Features.FilePersistence;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;

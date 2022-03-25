@@ -47,14 +47,48 @@ Welcome to Traffic Courts Online
 | FormRecognizer:ApiKey           |                                              |                                 |
 | FormRecognizer:Endpoint         |                                              |                                 |
 | TicketSearchClient:Address      |                                              |                                 |
-| Splunk:Url                      |                                              |                                 |
-| Splunk:Token                    |                                              |                                 |
-| Splunk:ValidatServerCertificate |                                              |                                 |
 
+# Splunk
 
-# Splunk Docker Examples
+The default `docker-compose.yaml` file contains a local splunk service. A custom configuration file, `./.docker/splunk-dev-config.yaml`
+is used to adjust the default settings. A key setting is disabling the SSL on the HEC endpoint.
 
 https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
+
+Example configuring splunk logging using Serilog configuration.
+
+```
+{
+  "Serilog": {
+    "Using": [
+      "Serilog.Sinks.Splunk"
+    ],
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning"
+      }
+    },
+    "WriteTo": [
+      {
+        "Name": "EventCollector",
+        "Args": {
+          "splunkHost": "http://localhost:8088",
+          "eventCollectorToken": "token"
+        }
+      }
+    ]
+  }
+}
+```
+
+To apply this, save the configuration to a file, and run this command from the project directory (where the .csproj is)
+
+```
+type .\config.json | dotnet user-secrets set
+dotnet user-secrets list
+```
 
 #### Docker
 
