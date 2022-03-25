@@ -16,8 +16,8 @@ using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.Configuration;
-using ILogger = Serilog.ILogger;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -36,7 +36,10 @@ public static class Startup
         // setup the mapping for friendly environment variables
         ((IConfigurationBuilder)builder.Configuration).Add(new EnvironmentVariablesConfigurationSource());
 
-        builder.UseSerilog<CitizenServiceConfiguration>(); // configure logging
+        builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+        {
+            loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+        });
 
         // configure application
         var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
@@ -56,13 +59,11 @@ public static class Startup
             builder.AddObjectStorageFilePersistence();
         }
 
-        if (configuration.RabbitMQ is not null)
-        {
-            Configure(builder, configuration.RabbitMQ, logger);
-        }
 
         Configure(builder, configuration?.FormRecognizer, logger);
         Configure(builder, configuration?.TicketSearchClient, logger);
+
+        builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
 
         // add MediatR handlers in this program
         builder.Services.AddMediatR(typeof(Startup).Assembly);
@@ -77,7 +78,7 @@ public static class Startup
         builder.Services.AddRecyclableMemoryStreams();
     }
 
-    private static void AddOpenTelemetry(WebApplicationBuilder builder, ILogger logger)
+    private static void AddOpenTelemetry(WebApplicationBuilder builder, Serilog.ILogger logger)
     {
         string? endpoint = builder.Configuration["OTEL_EXPORTER_JAEGER_ENDPOINT"];
 
@@ -90,9 +91,8 @@ public static class Startup
         var assemblyName = Assembly.GetExecutingAssembly().GetName();
 
         string serviceName = "Citizen-API";
-        var assemblyVersion = assemblyName.Version?.ToString() ?? "unknown";
 
-        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: assemblyVersion, serviceInstanceId: Environment.MachineName);
+        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(serviceName, serviceInstanceId: Environment.MachineName);
 
         builder.Services.AddOpenTelemetryTracing(options =>
         {
@@ -114,7 +114,7 @@ public static class Startup
     /// Gets a logger for application setup.
     /// </summary>
     /// <returns></returns>
-    private static ILogger GetLogger(WebApplicationBuilder builder)
+    private static Serilog.ILogger GetLogger(WebApplicationBuilder builder)
     {
         var configuration = new LoggerConfiguration()
             .Enrich.FromLogContext()
@@ -134,7 +134,7 @@ public static class Startup
     /// <param name="configuration"></param>
     /// <param name="logger"></param>
     /// <exception cref="ConfigurationErrorsException">Configuration is not correct.</exception>
-    private static void ValidateConfiguration(CitizenServiceConfiguration configuration, ILogger logger)
+    private static void ValidateConfiguration(CitizenServiceConfiguration configuration, Serilog.ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(configuration);
         ArgumentNullException.ThrowIfNull(logger);
@@ -179,25 +179,12 @@ public static class Startup
     }
 
     /// <summary>
-    /// Configures RabbitMQ
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, RabbitMQConfigurationProperties configuration, ILogger logger)
-    {
-        ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(configuration);
-        ArgumentNullException.ThrowIfNull(logger);
-    }
-
-    /// <summary>
     /// Configures Form Recognizer.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
     /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, FormRecognizerConfigurationOptions? configuration, ILogger logger)
+    private static void Configure(WebApplicationBuilder builder, FormRecognizerConfigurationOptions? configuration, Serilog.ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(logger);
@@ -221,7 +208,7 @@ public static class Startup
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
     /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, TicketSearchServiceConfigurationProperties? configuration, ILogger logger)
+    private static void Configure(WebApplicationBuilder builder, TicketSearchServiceConfigurationProperties? configuration, Serilog.ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(logger);

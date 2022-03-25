@@ -1,5 +1,4 @@
 ﻿using MassTransit;
-using MassTransit.ExtensionsDependencyInjectionIntegration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +28,7 @@ public static class BusConfiguratorExtensions
         });
     }
 
-    private static void UseRabbitMq<TConfiguration>(IServiceCollectionBusConfigurator config, TConfiguration configuration)
+    private static void UseRabbitMq<TConfiguration>(IBusRegistrationConfigurator config, TConfiguration configuration)
         where TConfiguration : IRabbitMQConfiguration
     {
         RabbitMQConfigurationProperties? rabbitMQConfiguration = configuration.RabbitMQ;

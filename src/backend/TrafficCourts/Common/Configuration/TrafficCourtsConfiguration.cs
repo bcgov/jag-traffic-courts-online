@@ -2,7 +2,6 @@
 
 namespace TrafficCourts.Common.Configuration;
 
-public abstract class TrafficCourtsConfiguration : ISplunkConfiguration
+public abstract class TrafficCourtsConfiguration
 {
-    public SplunkConfigurationProperties? Splunk { get; set; }
 }
