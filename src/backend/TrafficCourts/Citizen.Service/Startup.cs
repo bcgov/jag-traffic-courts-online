@@ -9,6 +9,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
 using System.Configuration;
+using System.Diagnostics;
 using System.Reflection;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Logging;
@@ -35,6 +36,11 @@ public static class Startup
 
         // setup the mapping for friendly environment variables
         ((IConfigurationBuilder)builder.Configuration).Add(new EnvironmentVariablesConfigurationSource());
+
+        if (builder.Environment.IsDevelopment())
+        {
+            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
+        }
 
         builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
         {
