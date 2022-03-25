@@ -32,8 +32,11 @@ import { Subscription } from 'rxjs';
 export class FindTicketComponent implements OnInit {
   public busy: Subscription;
   public form: FormGroup;
+  public aboveTemplate = `<div class="color-red">Top Template<button style="background: white; color: black">Press me</button></div>`;
+
 
   public notFound = false;
+  public toolTipData = 'It is preferred that you include an image of your blue violation ticket. If you are not able to upload an image or take a photo of your ticket on your mobile device. You will need:  1. Ticket number and violation date 2. Driver\'s license number and loation 3. Count Act / Section / Description 4. Fine amount';
   // protected basePath = 'http://localhost:5000'; 
   protected basePath = ''; 
   public configuration = new Configuration();
@@ -77,6 +80,8 @@ export class FindTicketComponent implements OnInit {
     });
   }
 
+  
+  
   public onSearch(): void {
     this.logger.log('FindTicketComponent::onSearch');
 
@@ -185,5 +190,8 @@ export class FindTicketComponent implements OnInit {
 
   public get ticketNumber(): FormControl {
     return this.form.get('ticketNumber') as FormControl;
+  }
+  public get time(): FormControl {
+    return this.form.get('time') as FormControl;
   }
 }

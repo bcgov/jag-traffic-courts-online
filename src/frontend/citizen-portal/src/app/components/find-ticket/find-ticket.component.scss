@@ -25,6 +25,7 @@
   color: deepskyblue;
   transform: scale(0.70); 
   vertical-align: middle;
+  cursor: pointer;
 }
 .time-picker-input{
   width: 100%;
@@ -69,7 +70,7 @@
 
 .find-large {
   width: 100%;
-  height: 46px;
+  height: 70px;
   font-size: 18px;
   font-weight: 700;
 }
@@ -188,4 +189,10 @@ ngx-material-timepicker-toggle{
 }
 .ngx-timepicker-control__arrow{
   display: none;
+}
+.mat-tooltip{
+  font-size: 10px;
+  color: black !important;
+  background-color: white;
+  border: 2px solid orange;
 }

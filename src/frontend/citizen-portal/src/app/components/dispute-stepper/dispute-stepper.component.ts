@@ -153,8 +153,16 @@ public getCountData(newObj):void{
         _allowApplyToAllCounts: false
       });
     }
-    if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]]._skip){
-      this.saveStep(stepper);
+    if(this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._skip){
+      this[stepsObjects[currentStep]].patchValue({
+        reductionAppearInCourt : false,
+        reductionAppearInCourtDoNot:false,
+        disputeAppearInCourt : false,
+        disputeAppearInCourtDoNot: false,
+        offenceAgreementStatus: null,
+        _applyToAllCounts:false
+      });
+
     }
     
     if(currentStep ==2 && this[stepsObjects[currentStep]] && this[stepsObjects[currentStep]].value._allowApplyToAllCounts){

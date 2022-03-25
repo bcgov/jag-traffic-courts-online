@@ -260,7 +260,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
   public buildStepOffenceForm(): FormGroup {
     return this.formBuilder.group({
       offenceNumber: [null],
-      offenceAgreementStatus: [null, [Validators.required]],
+      offenceAgreementStatus: [null],
       reductionAppearInCourt: [false],
       reductionAppearInCourtDo: [false],
       reductionAppearInCourtDoNot: [false],
@@ -285,13 +285,7 @@ export class DisputeFormStateService extends AbstractFormStateService<TicketDisp
       _amountDue: [null],
     },
       {
-        validators: [
-          FormGroupValidators.requiredIfValue(
-            'offenceAgreementStatus',
-            'REDUCTION',
-            'reductionAppearInCourt'
-          )
-        ],
+        validators: [],
       });
   }
 
