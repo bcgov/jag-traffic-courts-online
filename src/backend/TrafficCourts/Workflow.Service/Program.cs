@@ -1,5 +1,4 @@
 using MassTransit;
-using MassTransit.Definition;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Consumers;
@@ -29,8 +28,6 @@ builder.Services.AddMassTransit(cfg =>
     });
 
 });
-
-builder.Services.AddMassTransitHostedService();
 
 var app = builder.Build();
 
