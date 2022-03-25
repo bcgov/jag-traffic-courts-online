@@ -19,18 +19,18 @@
           selection.
         </p> -->
         
-        <div *ngIf="countDataList.newObj.count.toString()">
-          <h3>Count:{{countDataList.newObj.count.toString()}}</h3>
+        <div *ngIf="countDataList?.newObj?.count.toString()">
+          <h3>Count:{{countDataList?.newObj?.count?.toString()}}</h3>
          
           <h3>I do not want to attend a court hearing and want to supply written reasons.</h3>
           <div class="count-heading">Written reasons for fine reduction request</div>
-          <div class="count-data">{{countDataList.newObj.reductionAppearInCourt}}</div>
+          <div class="count-data">{{countDataList?.newObj?.reductionAppearInCourt}}</div>
           <div class="count-heading">Written reasons for time to pay request</div>
-          <div class="count-data">{{countDataList.newObj.reductionAppearInCourtDoNot}}</div>
+          <div class="count-data">{{countDataList?.newObj?.reductionAppearInCourtDoNot}}</div>
         </div>
         <hr />
-        <div *ngIf="countDataList.newObj.count1.toString()" >
-          <h3>Count:{{countDataList.newObj.count1.toString()}}</h3>
+        <div *ngIf="countDataList?.newObj?.count1.toString()" >
+          <h3>Count:{{countDataList?.newObj?.count1.toString()}}</h3>
 
           <h3>I want to attend a court hearing and dispute the charge.</h3>
           <table class="disputre">
@@ -40,8 +40,8 @@
             </tr>
             <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.lawyerPresent'><td> interpreterRequired</td><td>Yes</td>
             </tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'><td>Language</td><td>{{countDataList.dispute.interpreterLanguage}}</td></tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'><td>witnessPresent</td><td>{{countDataList.dispute.numberOfWitnesses}}</td></tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'><td>Language</td><td>{{countDataList?.dispute?.interpreterLanguage}}</td></tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'><td>witnessPresent</td><td>{{countDataList?.dispute?.numberOfWitnesses}}</td></tr>
           </table>
         </div>
       </div>
@@ -63,7 +63,7 @@
             <div class="row">
               <div class="col-lg-9">
                 <small class="d-block">Request a fine reduction request</small>
-                <strong>{{ ticket.additional.requestReduction | yesNo }}</strong>
+                <strong>{{ ticket?.additional?.requestReduction | yesNo }}</strong>
               </div>
               <div class="col-lg-3"></div>
             </div>
@@ -76,7 +76,7 @@
                *ngIf="ticket.additional.moreTimeReason; else noRequestMoreTime">
             <div class="col-lg-9">
               <small class="d-block">Written reasons for more time to pay request</small>
-              <strong>{{ ticket.additional.moreTimeReason }}</strong>
+              <strong>{{ ticket?.additional?.moreTimeReason }}</strong>
             </div>
             <div class="col-lg-3"></div>
           </div>
@@ -85,7 +85,7 @@
             <div class="row">
               <div class="col-lg-9">
                 <small class="d-block">Request a more time to pay</small>
-                <strong>{{ ticket.additional.requestMoreTime | yesNo }}</strong>
+                <strong>{{ ticket?.additional?.requestMoreTime | yesNo }}</strong>
               </div>
               <div class="col-lg-3"></div>
             </div>
