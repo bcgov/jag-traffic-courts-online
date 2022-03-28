@@ -23,8 +23,17 @@ builder.Services.AddMassTransit(cfg =>
     {
         var configuration = context.GetService<IConfiguration>();
         var rabbitMqConfig = configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
+        var retryConfiguration = configuration.GetSection(nameof(RetryConfiguration)).Get<RetryConfiguration>();
+
         configurator.Host(rabbitMqConfig.Host);
         configurator.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(false));
+        configurator.UseConcurrencyLimit(retryConfiguration.ConcurrencyLimit);
+        configurator.UseMessageRetry(r =>
+        {
+            r.Ignore<ArgumentNullException>();
+            r.Ignore<InvalidOperationException>();
+            r.Interval(retryConfiguration.RetryTimes, TimeSpan.FromMinutes(retryConfiguration.RetryInterval));
+        });
     });
 
 });
