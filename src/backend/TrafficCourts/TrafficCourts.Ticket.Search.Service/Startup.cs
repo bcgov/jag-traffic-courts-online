@@ -1,5 +1,7 @@
 ﻿using Calzolari.Grpc.AspNetCore.Validation;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Refit;
 using Serilog;
 using System.Configuration;
@@ -12,6 +14,7 @@ using TrafficCourts.Ticket.Search.Service.Features.Search;
 using TrafficCourts.Ticket.Search.Service.Features.Search.Mock;
 using TrafficCourts.Ticket.Search.Service.Features.Search.Rsi;
 using TrafficCourts.Ticket.Search.Service.Health;
+using TrafficCourts.Ticket.Search.Service.Logging;
 using TrafficCourts.Ticket.Search.Service.Services;
 using TrafficCourts.Ticket.Search.Service.Validators;
 
@@ -48,6 +51,8 @@ namespace TrafficCourts.Ticket.Search.Service
             //builder.Services.AddOpenTelemetryMetrics();
             logger.Information("Adding health checks");
             AddHealthChecks(builder, configuration);
+
+            AddOpenTelemetry(builder, logger);
 
             if (configuration.TicketSearch.SearchType == TicketSearchType.RoadSafety)
             {
@@ -124,6 +129,29 @@ namespace TrafficCourts.Ticket.Search.Service
             }
         }
 
+        private static void AddOpenTelemetry(WebApplicationBuilder builder, Serilog.ILogger logger)
+        {
+            string? endpoint = builder.Configuration["OTEL_EXPORTER_JAEGER_ENDPOINT"];
+
+            if (string.IsNullOrEmpty(endpoint))
+            {
+                logger.Information("Jaeger endpoint is not configured, no telemetry will be collected.");
+                return;
+            }
+
+            var resourceBuilder = ResourceBuilder.CreateDefault().AddService(Diagnostics.ServiceName, serviceInstanceId: Environment.MachineName);
+
+            builder.Services.AddOpenTelemetryTracing(options =>
+            {
+                options
+                    .SetResourceBuilder(resourceBuilder)
+                    .AddHttpClientInstrumentation()
+                    .AddAspNetCoreInstrumentation()
+                    .AddSource(Diagnostics.Source.Name)
+                    .AddJaegerExporter();
+
+            });
+        }
 
         /// <summary>
         /// Gets a logger for application setup.

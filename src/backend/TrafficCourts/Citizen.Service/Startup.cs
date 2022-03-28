@@ -94,11 +94,7 @@ public static class Startup
             return;
         }
 
-        var assemblyName = Assembly.GetExecutingAssembly().GetName();
-
-        string serviceName = "Citizen-API";
-
-        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(serviceName, serviceInstanceId: Environment.MachineName);
+        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(Diagnostics.ServiceName, serviceInstanceId: Environment.MachineName);
 
         builder.Services.AddOpenTelemetryTracing(options =>
         {
@@ -110,10 +106,7 @@ public static class Startup
                 .AddSource(Diagnostics.Source.Name)
                 .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddJaegerExporter();
-
         });
-
-        // builder.Services.Configure<JaegerExporterOptions>( ... );
     }
 
     /// <summary>
