@@ -139,6 +139,8 @@ namespace TrafficCourts.Ticket.Search.Service
                 return;
             }
 
+            logger.Information("Adding OpenTelemetry");
+
             var resourceBuilder = ResourceBuilder.CreateDefault().AddService(Diagnostics.ServiceName, serviceInstanceId: Environment.MachineName);
 
             builder.Services.AddOpenTelemetryTracing(options =>
@@ -149,7 +151,6 @@ namespace TrafficCourts.Ticket.Search.Service
                     .AddAspNetCoreInstrumentation()
                     .AddSource(Diagnostics.Source.Name)
                     .AddJaegerExporter();
-
             });
         }
 
