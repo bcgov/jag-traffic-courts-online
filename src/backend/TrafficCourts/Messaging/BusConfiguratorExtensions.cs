@@ -16,9 +16,6 @@ public static class BusConfiguratorExtensions
         if (services == null) throw new ArgumentNullException(nameof(services));
         if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-        // map environment variables to configuration
-        builder.Configuration.Add<RabbitMQConfigurationProvider>();
-
         // get the configuration type
         TConfiguration configuration = builder.Configuration.Get<TConfiguration>();
 
