@@ -147,7 +147,11 @@ namespace TrafficCourts.Ticket.Search.Service
             {
                 options
                     .SetResourceBuilder(resourceBuilder)
-                    .AddHttpClientInstrumentation()
+                    .AddHttpClientInstrumentation(options =>
+                    {
+                        // do not trace calls to splunk
+                        options.Filter = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
+                    })
                     .AddAspNetCoreInstrumentation()
                     .AddSource(Diagnostics.Source.Name)
                     .AddJaegerExporter();
