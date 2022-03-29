@@ -2,6 +2,7 @@ using Grpc.Core;
 using System.Diagnostics;
 using System.Globalization;
 using TrafficCourts.Ticket.Search.Service.Features.Search;
+using TrafficCourts.Ticket.Search.Service.Logging;
 
 namespace TrafficCourts.Ticket.Search.Service.Services
 {
@@ -18,6 +19,8 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
         public override async Task<SearchReply> Search(SearchRequest request, ServerCallContext context)
         {
+            using var activity = Diagnostics.Source.StartActivity("Ticket Search");
+            
             ArgumentNullException.ThrowIfNull(request);
 
             var time = $"{request.Time.Hour:d2}:{request.Time.Minute:d2}";
@@ -45,12 +48,14 @@ namespace TrafficCourts.Ticket.Search.Service.Services
 
                 _logger.LogDebug("Violation ticket not found");
                 Status status = new(StatusCode.NotFound, "Violation ticket not found");
+                activity?.AddTag("status", "Not Found");
                 throw new RpcException(status);
             }
             catch (Exception exception)
             {
                 _logger.LogInformation(exception, "Error finding violation ticket");
                 Status status = new(StatusCode.Internal, "Error finding violation ticket");
+                activity?.SetStatus(ActivityStatusCode.Error, exception?.Message);
                 throw new RpcException(status);
             }
         }

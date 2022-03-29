@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using System.Reflection;
+using TrafficCourts.Ticket.Search.Service.Logging;
 
 namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
 {
@@ -15,12 +16,15 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
 
         public Stream? GetDataStream()
         {
+            using var activity = Diagnostics.Source.StartActivity("Get Embedded Data");
+
             var embeddedProvider = new EmbeddedFileProvider(Assembly.GetExecutingAssembly());
             var fileInfo = embeddedProvider.GetFileInfo(mockDataPath);
 
             if (!fileInfo.Exists)
             {
                 _logger.LogInformation("Mock data not found, expected {Filename} to exist", mockDataPath);
+                activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error, $"File {mockDataPath} not found");
                 return null;
 
             }

@@ -1,4 +1,6 @@
-﻿namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
+﻿using TrafficCourts.Ticket.Search.Service.Logging;
+
+namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
 {
     public class FileMockDataProvider : IMockDataProvider
     {
@@ -20,17 +22,21 @@
 
         public Stream? GetDataStream()
         {
+            using var activity = Diagnostics.Source.StartActivity("Get Mock File Data");
+
             string mockDataPath = _configuration[ConfigurationKey];
 
             if (string.IsNullOrEmpty(mockDataPath))
             {
                 _logger.LogInformation("{EnvironmentVariable} is not configured", ConfigurationKey);
+                activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error, $"Environment variable {ConfigurationKey} empty");
                 return null;
             }
 
             if (!File.Exists(mockDataPath))
             {
                 _logger.LogInformation("Mock data not found, expected {Filename} to exist", mockDataPath);
+                activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error, $"File {mockDataPath} not found");
                 return null;
             }
 

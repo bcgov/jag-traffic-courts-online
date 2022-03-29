@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using TrafficCourts.Ticket.Search.Service.Logging;
 
 namespace TrafficCourts.Ticket.Search.Service.Features.Search.Rsi
 {
@@ -16,6 +17,8 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search.Rsi
 
         public async Task<IEnumerable<Invoice>> SearchTicketAsync(string ticketNumber, string time, CancellationToken cancellationToken)
         {
+            using var activity = Diagnostics.Source.StartActivity("RSI Ticket Search");
+
             var response = await _api.GetTicket(GetParameters(ticketNumber, time), cancellationToken);
             if (response.Items == null && !string.IsNullOrEmpty(response.Error))
             {
@@ -30,6 +33,7 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search.Rsi
                     _logger.LogInformation("Road Safety service returned error message {Error}", response.Error);
                 }
 
+                activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
                 return Enumerable.Empty<Invoice>();
             }
 

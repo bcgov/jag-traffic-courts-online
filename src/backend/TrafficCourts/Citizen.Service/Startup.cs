@@ -101,7 +101,12 @@ public static class Startup
             options
                 .SetResourceBuilder(resourceBuilder)
                 .AddGrpcClientInstrumentation()
-                .AddHttpClientInstrumentation()
+                .AddHttpClientInstrumentation(options =>
+                {
+                    // do not trace calls to splunk
+                    options.Filter = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
+
+                })
                 .AddAspNetCoreInstrumentation()
                 .AddSource(Diagnostics.Source.Name)
                 .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
