@@ -37,9 +37,9 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             var stream = GetFile(bytes);
 
             var actual = await sut.SaveFileAsync(stream, CancellationToken.None);
-
+            
             Assert.NotNull(actual);
-            Assert.StartsWith(now.ToString("yyyy-MM-dd"), actual);
+            Assert.StartsWith(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now, "Pacific Standard Time").ToString("yyyy-MM-dd"), actual);
             Assert.Equal(extension, Path.GetExtension(actual));
         }
 
