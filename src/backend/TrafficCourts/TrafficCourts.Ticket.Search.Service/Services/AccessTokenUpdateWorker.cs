@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using TrafficCourts.Ticket.Search.Service.Authentication;
+using TrafficCourts.Ticket.Search.Service.Logging;
 
 namespace TrafficCourts.Ticket.Search.Service.Services
 {
@@ -100,12 +101,15 @@ namespace TrafficCourts.Ticket.Search.Service.Services
         /// <returns></returns>
         private async Task<DateTimeOffset> UpdateTokenAsync(CancellationToken cancellationToken)
         {
+            using var activity = Diagnostics.Source.StartActivity("Update Access Token");
+
             try
             {
                 var token = await _authenticationClient.GetTokenAsync(cancellationToken);
                 // next refresh is in 1/2 the token life time +/- 30 seconds.
                 var nextRefresh = DateTimeOffset.UtcNow.AddSeconds(token.ExpiresIn / 2 - _random.Next(-30, 30));
                 _cache.SaveToken(token);
+                activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Ok);
                 return nextRefresh;
             }
             catch (AuthenticationException ex) when (ex.StatusCode != System.Net.HttpStatusCode.Unauthorized)
@@ -113,6 +117,7 @@ namespace TrafficCourts.Ticket.Search.Service.Services
                 // config error?
                 // service down?
                 _logger.LogWarning(ex, "Failed to get new access token");
+                activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
                 return DateTimeOffset.UtcNow.AddSeconds(_random.Next(5, 30)); // try again in 5-30 seconds
             }
         }

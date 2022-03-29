@@ -1,5 +1,6 @@
 ﻿using FlatFiles;
 using FlatFiles.TypeMapping;
+using TrafficCourts.Ticket.Search.Service.Logging;
 
 namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
 {
@@ -16,6 +17,8 @@ namespace TrafficCourts.Ticket.Search.Service.Features.Search.Mock
 
         public Task<IEnumerable<Invoice>> SearchTicketAsync(string ticketNumber, string time, CancellationToken cancellationToken)
         {
+            using var activity = Diagnostics.Source.StartActivity("Mock Ticket Search");
+
             IEnumerable<Invoice> database = GetMockData();
 
             // find all the records where the invoice number starts with ticket number, and ends with a valid count(1..3)
