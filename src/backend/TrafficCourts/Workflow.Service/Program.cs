@@ -19,6 +19,8 @@ builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>()
 builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddConsumer<SubmitDisputeConsumer>();
+    cfg.AddConsumer<DisputeApprovedConsumer>();
+
     cfg.UsingRabbitMq((context, configurator) =>
     {
         var configuration = context.GetService<IConfiguration>();
