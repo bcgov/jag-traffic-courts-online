@@ -26,7 +26,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogInformation("DisputeApprovedConsumer is consuming message: {MessageId} ", context.Message.Id);
 
-                    List<Models.TicketDetails> ticketDetails = new List<Models.TicketDetails>();
+                    List<Models.TicketDetails> ticketDetails = new();
 
                     foreach (var td in context.Message.TicketDetails)
                     {
@@ -48,7 +48,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     {
                         for (int i = 0; i < context.Message.DisputeDetails.Length; i++)
                         {
-                            Dictionary<string, Models.DisputeDetails> disputeDetailsDictionary = new Dictionary<string, Models.DisputeDetails>();
+                            Dictionary<string, Models.DisputeDetails> disputeDetailsDictionary = new();
 
                             foreach (KeyValuePair<string, Messaging.MessageContracts.DisputeDetails> kvp in context.Message.DisputeDetails[i])
                             {
