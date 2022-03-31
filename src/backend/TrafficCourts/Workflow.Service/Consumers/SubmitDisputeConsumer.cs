@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             if (context.RequestId != null)
             {
-                _logger.LogInformation("SubmitDisputeConsumer is consuming message: " + context.Message.Id);
+                _logger.LogInformation("SubmitDisputeConsumer is consuming message: {MessageId}", context.Message.Id);
 
                 List<TicketCount> ticketCounts = new List<TicketCount>();
 
@@ -62,13 +62,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     WitnessIntent = context.Message.WitnessIntent
                 };
 
-                _logger.LogInformation("TRY CREATING DISPUTE: " + dispute.ToString());
+                _logger.LogInformation("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());
 
                 var disputeId = await _oracleInterfaceService.CreateDisputeAsync(dispute);
 
                 if (disputeId != -1)
                 {
-                    _logger.LogInformation("Dispute has been saved with dispute id: " + disputeId);
+                    _logger.LogInformation("Dispute has been saved with {DisputeId}: ", disputeId);
 
                     await context.RespondAsync<DisputeSubmitted>(new
                     {

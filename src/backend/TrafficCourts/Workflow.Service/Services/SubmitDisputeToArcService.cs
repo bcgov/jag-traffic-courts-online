@@ -38,7 +38,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 var apiResponse = await response.Content.ReadAsStringAsync();
                 if (apiResponse != null)
                 {
-                    _logger.LogInformation("An ARC file has been created successfully with the following data: " + apiResponse);
+                    _logger.LogInformation("An ARC file has been created successfully with the following data: {ArcApiResponse}", apiResponse);
                 }
             }
         }

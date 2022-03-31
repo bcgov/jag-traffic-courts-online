@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 if (context.RequestId != null)
                 {
-                    _logger.LogInformation("DisputeApprovedConsumer is consuming message: " + context.Message.Id);
+                    _logger.LogInformation("DisputeApprovedConsumer is consuming message: {MessageId} ", context.Message.Id);
 
                     List<Models.TicketDetails> ticketDetails = new List<Models.TicketDetails>();
 
@@ -82,7 +82,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         DisputeDetails = disputeDetailsArray
                     };
 
-                    _logger.LogDebug("TRY SENDING APPROVED DISPUTE TO ARC: " + tcoDisputeTicket.ToString());
+                    _logger.LogDebug("TRY SENDING APPROVED DISPUTE TO ARC: {ApprovedDisputeTicket} ", tcoDisputeTicket.ToString());
 
                     await _submitDisputeToArcService.SubmitDisputeToArcAsync(tcoDisputeTicket);
 
