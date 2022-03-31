@@ -15,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>();
+builder.Services.AddTransient<ISubmitDisputeToArcService, SubmitDisputeToArcService>();
 
 builder.Services.AddMassTransit(cfg =>
 {
