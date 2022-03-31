@@ -26,7 +26,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogInformation("DisputeApprovedConsumer is consuming message: " + context.Message.Id);
 
-                    List<Models.TicketDetails> ticketDetails = new List<Models.TicketDetails>();
+                    List<Models.TicketDetails> ticketDetails = new();
 
                     foreach (var td in context.Message.TicketDetails)
                     {
