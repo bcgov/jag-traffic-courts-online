@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
+using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Models;
 
 namespace TrafficCourts.Workflow.Service.Services
@@ -8,10 +10,12 @@ namespace TrafficCourts.Workflow.Service.Services
     public class SubmitDisputeToArcService : ISubmitDisputeToArcService
     {
         private readonly ILogger<SubmitDisputeToArcService> _logger;
+        private readonly ArcApiConfiguration _arcApiConfiguration;
 
-        public SubmitDisputeToArcService(ILogger<SubmitDisputeToArcService> logger)
+        public SubmitDisputeToArcService(ILogger<SubmitDisputeToArcService> logger, IOptions<ArcApiConfiguration> arcApiConfiguration)
         {
             _logger = logger;
+            _arcApiConfiguration = arcApiConfiguration.Value;
         }
 
         public async Task SubmitDisputeToArcAsync(TcoDisputeTicket approvedDispute)
@@ -25,7 +29,8 @@ namespace TrafficCourts.Workflow.Service.Services
             };
 
             using var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(@"https://localhost:7082/");
+            var arcBaseUri = $"https://{_arcApiConfiguration.Host}:{_arcApiConfiguration.Port}";
+            httpClient.BaseAddress = new Uri(arcBaseUri);
 
             using var response = await httpClient.PostAsync("api/TcoDisputeTicket", approvedDispute, formatter);
             if (response.IsSuccessStatusCode)
