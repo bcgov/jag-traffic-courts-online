@@ -4,13 +4,13 @@ namespace TrafficCourts.Workflow.Service.Models
 {
     public class TcoDisputeTicket
     {
-        public string CitizenName { get; set; }
+        public string CitizenName { get; set; } = null!;
         public DateTime TicketIssuanceDate { get; set; }
-        public string TicketFileNumber { get; set; }
-        public string IssuingOrganization { get; set; }
-        public string IssuingLocation { get; set; }
-        public string DriversLicense { get; set; }
-        public List<TicketDetails> TicketDetails { get; set; }
+        public string TicketFileNumber { get; set; } = null!;
+        public string IssuingOrganization { get; set; } = null!;
+        public string IssuingLocation { get; set; } = null!;
+        public string DriversLicense { get; set; } = null!;
+        public List<TicketDetails> TicketDetails { get; set; } = null!;
         public string? StreetAddress { get; set; }
         public string? City { get; set; }
         public string? Province { get; set; }
@@ -31,10 +31,10 @@ namespace TrafficCourts.Workflow.Service.Models
 
     public class TicketDetails
     {
-        public string Section { get; set; }
-        public string Subsection { get; set; }
-        public string Paragraph { get; set; }
-        public string Act { get; set; }
+        public string Section { get; set; } = null!;
+        public string Subsection { get; set; } = null!;
+        public string Paragraph { get; set; } = null!;
+        public string Act { get; set; } = null!;
         public double Amount { get; set; }
     }
 
