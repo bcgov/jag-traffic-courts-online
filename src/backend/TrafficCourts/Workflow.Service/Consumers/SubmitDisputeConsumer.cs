@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             if (context.RequestId != null)
             {
-                _logger.LogInformation("SubmitDisputeConsumer is consuming message: {MessageId}", context.Message.Id);
+                _logger.LogInformation("SubmitDisputeConsumer is consuming message: {MessageId}", context.MessageId);
 
                 List<TicketCount> ticketCounts = new List<TicketCount>();
 
@@ -72,7 +72,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                     await context.RespondAsync<DisputeSubmitted>(new
                     {
-                        context.Message.Id,
+                        context.MessageId,
                         InVar.Timestamp,
                         DisputeId = disputeId
                     });
@@ -83,7 +83,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                     await context.RespondAsync<DisputeRejected>(new
                     {
-                        context.Message.Id,
+                        context.MessageId,
                         InVar.Timestamp,
                         Reason = "Bad request"
                     });

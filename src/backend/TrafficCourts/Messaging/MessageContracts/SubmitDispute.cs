@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public interface SubmitDispute : Message
+    public interface SubmitDispute : IMessage
     {
         string TicketNumber { get; set; }
         string CourtLocation { get; set; }

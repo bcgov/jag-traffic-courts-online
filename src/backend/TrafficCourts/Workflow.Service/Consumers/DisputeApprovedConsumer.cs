@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 if (context.RequestId != null)
                 {
-                    _logger.LogInformation("DisputeApprovedConsumer is consuming message: {MessageId} ", context.Message.Id);
+                    _logger.LogInformation("DisputeApprovedConsumer is consuming message: {MessageId} ", context.MessageId);
 
                     List<Models.TicketDetails> ticketDetails = new();
 
