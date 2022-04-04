@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 if (context.RequestId != null)
                 {
-                    _logger.LogInformation("DisputeApprovedConsumer is consuming message: {MessageId} ", context.MessageId);
+                    _logger.LogDebug("Consuming message: {MessageId} ", context.MessageId);
 
                     List<Models.TicketDetails> ticketDetails = new();
 
@@ -90,7 +90,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
             catch (Exception ex)
             {
-                _logger.LogError("DisputeApprovedConsumer", ex);
+                _logger.LogError("Error: ", ex);
             }
         }
     }
