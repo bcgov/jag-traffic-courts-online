@@ -64,6 +64,12 @@ services:
         - SKIP_TESTS=true
         - SPLUNK_URL=${SPLUNK_URL:-http://splunk:8088}
         - SPLUNK_TOKEN=${SPLUNK_HEC_TOKEN:-token}
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+        - REDIS_PASSWORD=password
+        - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
+        - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
+        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
     ports:
       - "5010:8080"
 
@@ -197,8 +203,8 @@ services:
     image: rediscommander/redis-commander:latest
     restart: always
     environment:
-      - REDIS_PORT=6379
       - REDIS_HOST=redis
+      - REDIS_PORT=6379
       - REDIS_PASSWORD=password
     ports:
       - "8082:8081"
