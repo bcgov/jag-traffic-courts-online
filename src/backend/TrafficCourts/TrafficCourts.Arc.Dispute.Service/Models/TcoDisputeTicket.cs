@@ -15,7 +15,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public string IssuingOrganization { get; set; }
         [JsonProperty("issuing_location"), JsonRequired]
         public string IssuingLocation { get; set; }
-        [JsonProperty("drivers_license"), JsonRequired]
+        [JsonProperty("drivers_licence"), JsonRequired]
         public string DriversLicence { get; set; }
         [JsonProperty("ticket_counts"), JsonRequired]
         public List<TicketDetails> TicketDetails { set; get; }
