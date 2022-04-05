@@ -26,7 +26,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
 
-                List<TicketCount> ticketCounts = new List<TicketCount>();
+                List<TicketCount> ticketCounts = new();
 
                 foreach (var ticketCount in context.Message.TicketCounts)
                 {

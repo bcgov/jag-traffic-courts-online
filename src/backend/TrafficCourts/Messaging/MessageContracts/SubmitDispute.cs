@@ -23,7 +23,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         DateTime DateOfBirth { get; set; }
         string EnforcementOrganization { get; set; }
         DateTime ServiceDate { get; set; }
-        List<TicketCount> TicketCounts { get; set; }
+        IList<TicketCount> TicketCounts { get; set; }
         bool LawyerRepresentation { get; set; }
         string InterpreterLanguage { get; set; }
         bool WitnessIntent { get; set; }

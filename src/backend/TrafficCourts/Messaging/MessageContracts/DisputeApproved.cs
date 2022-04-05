@@ -14,13 +14,13 @@ namespace TrafficCourts.Messaging.MessageContracts
         string IssuingOrganization { get; set; }
         string IssuingLocation { get; set; }
         string DriversLicence { get; set; }
-        List<TicketDetails> TicketDetails { get; set; }
+        IList<TicketDetails> TicketDetails { get; set; }
         string? StreetAddress { get; set; }
         string? City { get; set; }
         string? Province { get; set; }
         string? PostalCode { get; set; }
         string? Email { get; set; }
-        Dictionary<string, DisputeDetails>[]? DisputeDetails { get; set; }
+        IDictionary<string, DisputeDetails>[]? DisputeDetails { get; set; }
     }
 
     public interface TicketDetails
