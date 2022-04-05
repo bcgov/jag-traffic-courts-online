@@ -9,7 +9,7 @@ namespace TrafficCourts.Workflow.Service.Models
         public string TicketFileNumber { get; set; } = null!;
         public string IssuingOrganization { get; set; } = null!;
         public string IssuingLocation { get; set; } = null!;
-        public string DriversLicense { get; set; } = null!;
+        public string DriversLicence { get; set; } = null!;
         public List<TicketDetails> TicketDetails { get; set; } = null!;
         public string? StreetAddress { get; set; }
         public string? City { get; set; }

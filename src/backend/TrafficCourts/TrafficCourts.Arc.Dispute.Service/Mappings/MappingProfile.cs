@@ -11,7 +11,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             CreateMap<TcoDisputeTicket, ArcFileRecord>()
                 .ForMember(dest => dest.TransactionDate, opt => opt.MapFrom(src => src.TicketIssuanceDate))
                 .ForMember(dest => dest.FileNumber, opt => opt.MapFrom(src => src.TicketFileNumber))
-                .ForMember(dest => dest.MvbClientNumber, opt => opt.MapFrom(src => src.DriversLicense))
+                .ForMember(dest => dest.MvbClientNumber, opt => opt.MapFrom(src => src.DriversLicence))
                 .IncludeAllDerived();
 
             CreateMap<TcoDisputeTicket, AdnotatedTicket>()

@@ -13,7 +13,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         string TicketFileNumber { get; set; }
         string IssuingOrganization { get; set; }
         string IssuingLocation { get; set; }
-        string DriversLicense { get; set; }
+        string DriversLicence { get; set; }
         List<TicketDetails> TicketDetails { get; set; }
         string? StreetAddress { get; set; }
         string? City { get; set; }

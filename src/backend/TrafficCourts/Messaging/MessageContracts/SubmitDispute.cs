@@ -17,8 +17,8 @@ namespace TrafficCourts.Messaging.MessageContracts
         string Province { get; set; }
         string PostalCode { get; set; }
         string HomePhone { get; set; }
-        string DriversLicense { get; set; }
-        string DriversLicenseProvince { get; set; }
+        string DriversLicence { get; set; }
+        string DriversLicenceProvince { get; set; }
         string WorkPhone { get; set; }
         DateTime DateOfBirth { get; set; }
         string EnforcementOrganization { get; set; }

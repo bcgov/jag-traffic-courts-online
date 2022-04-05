@@ -11,8 +11,8 @@
         public string Province { get; set; }
         public string PostalCode { get; set; }
         public string HomePhone { get; set; }
-        public string DriversLicense { get; set; }
-        public string DriversLicenseProvince { get; set; }
+        public string DriversLicence { get; set; }
+        public string DriversLicenceProvince { get; set; }
         public string WorkPhone { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string EnforcementOrganization { get; set; }

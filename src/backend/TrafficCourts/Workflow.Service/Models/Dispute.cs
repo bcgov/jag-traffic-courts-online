@@ -14,8 +14,8 @@ namespace TrafficCourts.Workflow.Service.Models
         public string Province { get; set; } = null!;
         public string PostalCode { get; set; } = null!;
         public string HomePhone { get; set; } = null!;
-        public string DriversLicense { get; set; } = null!;
-        public string DriversLicenseProvince { get; set; } = null!;
+        public string DriversLicence { get; set; } = null!;
+        public string DriversLicenceProvince { get; set; } = null!;
         public string WorkPhone { get; set; } = null!;
         public DateTime DateOfBirth { get; set; }
         public string EnforcementOrganization { get; set; } = null!;

@@ -72,7 +72,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         TicketFileNumber = context.Message.TicketFileNumber,
                         IssuingOrganization = context.Message.IssuingOrganization,
                         IssuingLocation = context.Message.IssuingLocation,
-                        DriversLicense = context.Message.DriversLicense,
+                        DriversLicence = context.Message.DriversLicence,
                         TicketDetails = ticketDetails,
                         StreetAddress = context.Message.StreetAddress,
                         City = context.Message.City,
