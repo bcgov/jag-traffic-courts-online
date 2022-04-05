@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - 'src/backend/TrafficCourts/Test/**'
-      - 'src/backend/TrafficCourts/Ticket.Search.Service/**'
+      - 'src/backend/TrafficCourts/TrafficCourts.Ticket.Search.Service/**'
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
         with:
           dotnet-version: 6.0.200
       - name: build ticket-search
-        run: dotnet build Ticket.Search.Service/TrafficCourts.Ticket.Search.Service.csproj
+        run: dotnet build TrafficCourts.Ticket.Search.Service/TrafficCourts.Ticket.Search.Service.csproj
         working-directory: ./src/backend/TrafficCourts
       - name: test ticket-search
         run: dotnet test Test/TrafficCourts.Test.csproj
