@@ -16,68 +16,86 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledatainterface.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledatainterface.service.DisputeService;
+import ca.bc.gov.open.jag.tco.oracledatainterface.service.LookupService;
+import io.swagger.v3.oas.annotations.Operation;
 
-@RestController  
+@RestController
 public class DisputeController {
-	@Autowired  
-	DisputeService disputeService; 
-	
+
+	@Autowired
+	private DisputeService disputeService;
+
+	@Autowired
+	private LookupService lookupService;
+
 	private Logger log = LoggerFactory.getLogger(DisputeController.class);
-	
+
 	/**
 	 * GET endpoint that retrieves all the dispute detail from the database
-	 * @return	list of all dispute tickets
+	 *
+	 * @return list of all dispute tickets
 	 */
-	@GetMapping("/disputes")  
-	public List<Dispute> getAllDisputes()   
-	{  
+	@GetMapping("/disputes")
+	public List<Dispute> getAllDisputes() {
 		log.info("Retrieve all disputes endpoint is called." + new Date());
-		return disputeService.getAllDisputes();  
-	}  
- 
-	/**
-	 * GET endpoint that retrieves the detail of a specific dispute 
-	 * @param 	disputeId
-	 * @return	{@link Dispute}
-	 */
-	@GetMapping("/dispute/{disputeId}")  
-	public Dispute getDispute(@PathVariable("disputeId") int disputeId)   
-	{  
-		return disputeService.getDisputeById(disputeId);  
-	}  
+		return disputeService.getAllDisputes();
+	}
 
-	
+	/**
+	 * GET endpoint that retrieves the detail of a specific dispute
+	 *
+	 * @param disputeId
+	 * @return {@link Dispute}
+	 */
+	@GetMapping("/dispute/{disputeId}")
+	public Dispute getDispute(@PathVariable("disputeId") int disputeId) {
+		return disputeService.getDisputeById(disputeId);
+	}
+
 	/**
 	 * DELETE endpoint that deletes a specified dispute
-	 * @param 	id of the {@link Dispute} to be deleted
+	 *
+	 * @param id of the {@link Dispute} to be deleted
 	 */
-	@DeleteMapping("/dispute/{disputeId}")  
-	public void deleteDispute(@PathVariable("disputeId") int disputeId)   
-	{  
-		disputeService.delete(disputeId);  
+	@DeleteMapping("/dispute/{disputeId}")
+	public void deleteDispute(@PathVariable("disputeId") int disputeId) {
+		disputeService.delete(disputeId);
 	}
-	
+
 	/**
 	 * POST endpoint that post the dispute detail to save in the database
-	 * @param 	dispute to be saved
-	 * @return 	id of the saved {@link Dispute}
+	 *
+	 * @param dispute to be saved
+	 * @return id of the saved {@link Dispute}
 	 */
-	@PostMapping("/dispute")  
-	public int saveDispute(@RequestBody Dispute dispute)   
-	{  
-		disputeService.saveOrUpdate(dispute);  
-		return dispute.getId();  
-	}  
-  
+	@PostMapping("/dispute")
+	public int saveDispute(@RequestBody Dispute dispute) {
+		disputeService.saveOrUpdate(dispute);
+		return dispute.getId();
+	}
+
 	/**
-	 * PUT endpoint that updates the dispute detail   
-	 * @param 	dispute to be updated
-	 * @return	{@link Dispute}
+	 * PUT endpoint that updates the dispute detail
+	 *
+	 * @param dispute to be updated
+	 * @return {@link Dispute}
 	 */
-	@PutMapping("/dispute")  
-	public Dispute update(@RequestBody Dispute dispute)   
-	{  
-		disputeService.saveOrUpdate(dispute);  
-		return dispute;  
-	}  
+	@PutMapping("/dispute")
+	public Dispute update(@RequestBody Dispute dispute) {
+		disputeService.saveOrUpdate(dispute);
+		return dispute;
+	}
+
+	/**
+	 * GET endpoint that refreshes all codetables cached in redis
+	 */
+	@GetMapping("/codetable/refresh")
+	@Operation(
+			summary = "An endpoint hook to trigger a redis rebuild of cached codetable data.",
+			description = "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint."
+			)
+	public void codeTableRefresh() {
+		lookupService.refresh();
+	}
+
 }

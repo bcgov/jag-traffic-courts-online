@@ -17,6 +17,34 @@ After running `docker-compose up` from the project root, these services should b
 ### oracle-data-interface
 An API that acts as an interface between Oracle and the TrafficCourts API 
 
+#### Configuration
+
+| Key                         | Description
+| --------------------------- | ----------------------------------------------------------------------------------------
+| CODETABLE_REFRESH_ENABLED   | If enabled, this refresh will trigger a pull from JUSTIN to populate a cached copy of the lookup data in redis.
+| CODETABLE_REFRESH_CRON      | A cron-like expression (defaulting to once per day at 3am), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week. 
+|                             | 
+|                             | For example, "0 * * * * MON-FRI" means once per minute on weekdays(at the top of the minute - the 0th second). 
+|                             | 
+|                             | The fields read from left to right are interpreted as follows:
+|                             |  ┌───────────── second (0-59)
+|                             |  │ ┌───────────── minute (0 - 59)
+|                             |  │ │ ┌───────────── hour (0 - 23)
+|                             |  │ │ │ ┌───────────── day of the month (1 - 31)
+|                             |  │ │ │ │ ┌───────────── month (1 - 12) (or JAN-DEC)
+|                             |  │ │ │ │ │ ┌───────────── day of the week (0 - 7)
+|                             |  │ │ │ │ │ │          (0 or 7 is Sunday, or MON-SUN)
+|                             |  │ │ │ │ │ │
+|                             |  * * * * * *
+| REDIS_HOST                  | The hostname of a redis server used to cache JUSTIN lookup data
+| REDIS_PORT                  | The port of redis server
+| REDIS_PASSWORD              | The password of redis server
+| SPLUNK_URL                  | 
+| SPLUNK_TOKEN                | 
+| JAVA_OPTS	                  | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG"
+
+Code tables can be refreshed manually at any time by hitting the "/codetable/refresh" endpoint.
+
 ### TrafficCourts
 An API for creating violation ticket disputes
 
