@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using TrafficCourts.Common.Utils;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
@@ -20,9 +22,11 @@ namespace TrafficCourts.Messaging.MessageContracts
         string DriversLicence { get; set; }
         string DriversLicenceProvince { get; set; }
         string WorkPhone { get; set; }
-        DateTime DateOfBirth { get; set; }
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
+        DateOnly DateOfBirth { get; set; }
         string EnforcementOrganization { get; set; }
-        DateTime ServiceDate { get; set; }
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
+        DateOnly ServiceDate { get; set; }
         IList<TicketCount> TicketCounts { get; set; }
         bool LawyerRepresentation { get; set; }
         string InterpreterLanguage { get; set; }
