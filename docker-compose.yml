@@ -1,13 +1,13 @@
 version: "3.9"
 
 services:
-  # #############################################################################################
-  # ###                                 TrafficCourt BACKEND                                  ###
-  # #############################################################################################
+  #############################################################################################
+  ###                                 TrafficCourt BACKEND                                  ###
+  #############################################################################################
 
-  # ---------------------------------------------------------------------------------------------
-  # Citizen API
-  # ---------------------------------------------------------------------------------------------
+  #############################################################################################
+  ### Citizen API                                                                           ###
+  #############################################################################################
   citizen-api:
     container_name: citizen-api
     build:
@@ -32,9 +32,9 @@ services:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
-  # ---------------------------------------------------------------------------------------------
-  # Ticket Search API
-  # ---------------------------------------------------------------------------------------------
+  #############################################################################################
+  ### Ticket Search API                                                                     ###
+  #############################################################################################
   ticket-search:
     container_name: ticket-search
     build:
@@ -115,6 +115,12 @@ services:
         - SKIP_TESTS=true
         - SPLUNK_URL=${SPLUNK_URL:-http://splunk:8088}
         - SPLUNK_TOKEN=${SPLUNK_HEC_TOKEN:-token}
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+        - REDIS_PASSWORD=password
+        - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
+        - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
+        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
     ports:
       - "5010:8080"
 
@@ -137,10 +143,10 @@ services:
       TZ: America/Vancouver
     volumes:
       - "./.docker/splunk-dev-config.yaml:/tmp/defaults/default.yml"
-  
-  # #############################################################################################
-  # ###                                 TrafficCourt FRONTEND                                 ###
-  # #############################################################################################
+
+  #############################################################################################
+  ###                                 TrafficCourt FRONTEND                                 ###
+  #############################################################################################
   citizen-portal:
     container_name: citizen-portal
     build:
@@ -156,10 +162,9 @@ services:
     #  - ./src/frontend/citizen-portal/nginx.conf:/opt/app-root/etc/nginx.default.d/default.conf
     depends_on: [citizen-api]
 
-
-  # #############################################################################################
-  # ###                                 TrafficCourt Staff FRONTEND                           ###
-  # #############################################################################################
+  #############################################################################################
+  ###                                 TrafficCourt Staff FRONTEND                           ###
+  #############################################################################################
   staff-portal:
     container_name: staff-portal
     build:
@@ -184,8 +189,6 @@ services:
     volumes:
       - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
     restart: always
-
-
 
   #############################################################################################
   ###                           Minio                                                       ###
@@ -215,6 +218,7 @@ services:
       /usr/bin/mc policy set public dockerminio/traffic-ticket-dev;
       exit 0;
       "
+
   #############################################################################################
   ###                           Jaeger                                                      ###
   #############################################################################################
@@ -231,7 +235,30 @@ services:
       - "14269:14269"
       - "9411:9411"
 
+  #############################################################################################
+  ###                                 REDIS server and UI                                   ###
+  #############################################################################################
+  redis:
+    container_name: redis
+    image: redis
+    command: redis-server --requirepass password
+    ports:
+      - "6379:6379"
+    volumes:
+      - data-redis:/data
+    restart: always
 
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=password
+    ports:
+      - "8082:8081"
 
 volumes:
   data-rabbit:

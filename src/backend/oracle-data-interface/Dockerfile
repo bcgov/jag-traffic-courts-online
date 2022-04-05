@@ -4,16 +4,13 @@
 FROM maven:3.8.3-jdk-11 as build
 
 ARG SKIP_TESTS=true
-ARG SERVICE_NAME=oracle-data-interface-application
-ARG SPLUNK_URL=https://localhost:8088
-ARG SPLUNK_TOKEN=token
 
 WORKDIR /
 
 COPY . .
 
 RUN mvn -B clean package \
-		-Dtarget.fileName=${SERVICE_NAME} \
+		-Dtarget.fileName=oraface-api \
         -Dmaven.test.skip=${SKIP_TESTS} 
 
 #############################################################################################
@@ -25,14 +22,25 @@ FROM eclipse-temurin:11
 
 EXPOSE 8080
 
-ARG SERVICE_NAME=oracle-data-interface-application
 ARG SPLUNK_URL=${SPLUNK_URL}
 ARG SPLUNK_TOKEN=${SPLUNK_TOKEN}
+ARG REDIS_HOST=${REDIS_HOST}
+ARG REDIS_PORT=${REDIS_PORT}
+ARG REDIS_PASSWORD=${REDIS_PASSWORD}
+ARG CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED}
+ARG CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON}
+ARG JAVA_OPTS=${JAVA_OPTS}
 
 ENV SPLUNK_URL=${SPLUNK_URL}
 ENV SPLUNK_TOKEN=${SPLUNK_TOKEN}
+ENV REDIS_HOST=${REDIS_HOST}
+ENV REDIS_PORT=${REDIS_PORT}
+ENV REDIS_PASSWORD=${REDIS_PASSWORD}
+ENV CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED}
+ENV CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON}
+ENV JAVA_OPTS=${JAVA_OPTS}
 
-COPY --from=build ./target/${SERVICE_NAME}.jar /app/service.jar
+COPY --from=build ./target/oraface-api.jar /app/service.jar
 
-CMD ["java", "-jar", "/app/service.jar"]
+CMD java $JAVA_OPTS -jar /app/service.jar
 #############################################################################################
