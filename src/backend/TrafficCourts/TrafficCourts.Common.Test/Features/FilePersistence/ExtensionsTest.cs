@@ -1,6 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoFixture;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio;
 using Moq;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TrafficCourts.Common.Features.FilePersistence;
 using Xunit;
@@ -30,6 +34,35 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             services.Single(ExistsTransient<IFilePersistenceService, MinioFilePersistenceService>);
             Assert.Same(services, actual);
+        }
+
+        [Fact]
+        public void can_resolve_IObjectOperations()
+        {
+            Fixture fixture = new Fixture();
+
+            // create services
+            ServiceCollection services = new ServiceCollection();
+
+            // create IConfiguration with required data
+            var values = new Dictionary<string, string>
+            {
+                { nameof(MinioClientConfiguration.Endpoint), fixture.Create<string>() },
+                { nameof(MinioClientConfiguration.AccessKey), fixture.Create<string>() },
+                { nameof(MinioClientConfiguration.SecretKey), fixture.Create<string>() }
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(values)
+                .Build();
+
+            // register types
+            Common.Features.FilePersistence.Extensions.AddObjectStorageFilePersistence(services, configuration);
+
+            // resolve IObjectOperations
+            var actual = services.BuildServiceProvider().GetService<IObjectOperations>();
+
+            Assert.NotNull(actual);
         }
 
         private bool ExistsTransient<TService, TImplementation>(ServiceDescriptor descriptor)

@@ -6,7 +6,7 @@
 /// <remarks>
 /// Taken from https://github.com/open-telemetry/opentelemetry-specification/issues/464
 /// </remarks>
-static class MeterExtension
+public static class MeterExtension
 {
     /// <summary>
     /// Create a timer to record  the number of milliseconds an operation takes.
@@ -71,7 +71,8 @@ public sealed class Timer<T> : Instrument<T> where T : struct
 
         if (type == typeof(int))
         {
-            value = (T)(object)elapsed.TotalMilliseconds;
+            int totalMilliseconds = (int)elapsed.TotalMilliseconds;
+            value = (T)(object)totalMilliseconds;
         }
         else if (type == typeof(double))
         {
