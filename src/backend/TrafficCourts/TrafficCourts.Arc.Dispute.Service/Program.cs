@@ -5,15 +5,22 @@ using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Services;
 using TrafficCourts.Common;
+using TrafficCourts.Common.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+// determine if swagger is enabled or not
+var swagger = SwaggerConfiguration.Get(builder.Configuration);
 
 // Add services to the container.
 
 builder.Services.AddControllers().AddNewtonsoftJson();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+
+if (swagger.Enabled)
+{
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+}
 
 // Registering and Initializing AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -61,8 +68,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+}
+
+if (swagger.Enabled)
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

@@ -5,6 +5,7 @@ using OpenTelemetry.Trace;
 using Refit;
 using Serilog;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Health;
@@ -22,6 +23,7 @@ namespace TrafficCourts.Ticket.Search.Service
 {
     public static class Startup
     {
+        [ExcludeFromCodeCoverage]
         public static void ConfigureApplication(this WebApplicationBuilder builder)
         {
             ArgumentNullException.ThrowIfNull(builder);
