@@ -117,3 +117,12 @@ docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml up
 ```
 
 Open [Local Seq](http://localhost:5341) to view logs.
+
+
+### Redis
+
+By default, redis runs in Standalone mode (a single container).
+To run the project where redis is configured to run in sentinel mode (a high-availability failover configuration), specify the redis override file and run:
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.redis.yml up -d
+```
