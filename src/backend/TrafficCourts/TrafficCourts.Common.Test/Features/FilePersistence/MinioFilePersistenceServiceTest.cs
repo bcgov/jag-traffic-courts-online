@@ -43,6 +43,44 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             Assert.Equal(extension, Path.GetExtension(actual));
         }
 
+        [Fact]
+        public async Task should_if_no_mime_type_can_be_determined()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+
+            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
+
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
+
+            var stream = GetFile(new byte[10]);
+
+            var actual = await sut.SaveFileAsync(stream, CancellationToken.None);
+
+            Assert.NotNull(actual);
+            Assert.StartsWith(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now, "Pacific Standard Time").ToString("yyyy-MM-dd"), actual);
+        }
+
+        [Fact]
+        public async Task should_throw_if_no_data_to_save()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+
+            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
+
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
+
+            var stream = GetFile(new byte[0]);
+
+            var actual = await Assert.ThrowsAsync<ArgumentException>(() => sut.SaveFileAsync(stream, CancellationToken.None));
+            Assert.Equal("No data to save (Parameter 'data')", actual.Message);
+        }
+
         [Fact(Skip = "Integration Test")]
         public async Task should_be_able_to_save_file_and_get_it_back()
         {

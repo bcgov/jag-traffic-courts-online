@@ -1,4 +1,4 @@
-﻿class RecyclableMemoryStreamManager : IMemoryStreamManager
+﻿public class RecyclableMemoryStreamManager : IMemoryStreamManager
 {
     // see https://github.com/microsoft/Microsoft.IO.RecyclableMemoryStream
     private readonly Microsoft.IO.RecyclableMemoryStreamManager _manager = new Microsoft.IO.RecyclableMemoryStreamManager();

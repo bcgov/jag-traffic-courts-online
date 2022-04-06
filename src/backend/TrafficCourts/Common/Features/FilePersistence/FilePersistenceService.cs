@@ -17,7 +17,7 @@ public abstract class FilePersistenceService : IFilePersistenceService
     public abstract Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken);
     public abstract Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken);
 
-    protected async Task<MimeType?> GetMimeTypeAsync(Stream data)
+    protected async Task<MimeType> GetMimeTypeAsync(Stream data)
     {
         var pool = ArrayPool<byte>.Shared;
         // get a buffer to read the first 1K of the file stream
@@ -28,7 +28,7 @@ public abstract class FilePersistenceService : IFilePersistenceService
         {
             int count = await data.ReadAsync(buffer, 0, buffer.Length);
             var mimeTypes = new MimeTypes();
-            MimeType? mimeType = mimeTypes.GetMimeType(buffer);
+            MimeType mimeType = mimeTypes.GetMimeType(buffer);
             return mimeType;
         }
         finally
@@ -38,15 +38,17 @@ public abstract class FilePersistenceService : IFilePersistenceService
         }
     }
 
-    protected string GetFileName(MimeType? mimeType)
+    protected string GetFileName(MimeType mimeType)
     {
-        if (mimeType is null || mimeType.Extensions is null || mimeType.Extensions.Length == 0)
+        string id = Guid.NewGuid().ToString("n");
+
+        // even with an empty buffer, MimeTypes.GetMimeType always seems to return a mime type
+        if (mimeType.Extensions is null || mimeType.Extensions.Length == 0)
         {
-            _logger.LogDebug("No mime type or extension available, cannot determine a filename.");
-            return string.Empty;
+            _logger.LogDebug("No mime type or extension available");
+            return id;
         }
 
-        string id = Guid.NewGuid().ToString("n");
         string extension = mimeType.Extensions[0];
         Debug.Assert(extension is not null);
         return $"{id}.{extension}";

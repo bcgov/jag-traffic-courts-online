@@ -38,6 +38,9 @@ TestResult.xml
 # Docker Environment Files
 .env
 
+# code coverage files
+**/coverage.info
+
 #RESHARPER
 .DotSettings
 

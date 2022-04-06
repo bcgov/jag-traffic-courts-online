@@ -5,6 +5,8 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  
+  workflow_dispatch:
 
 jobs:
   frontend:
@@ -56,6 +58,10 @@ jobs:
           #echo "::set-env name=GIT_BRANCH::main"
         if: env.GIT_BRANCH == 'refs/heads/main'
 
+      - uses: actions/setup-node@v3
+      - name: Install Yarn
+        run: npm install -g yarn
+        
       # Figure out where yarn is caching things
       - name: Yarn Cache
         run: yarn cache dir
@@ -148,12 +154,16 @@ jobs:
         if: env.GIT_BRANCH == 'refs/heads/main'
 
       # Run the .NET Coverage report for Backend - DisputeAPI & TrafficCourts
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.201
       - name: Generate .NET Code Coverage - CitizenAPI
         run: dotnet test ${{github.workspace}}/src/backend/TrafficCourts /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
 
       # Formatting the Backend Coverage Report
       - name: Format the CitizenAPI Coverage Report
-        run: ./cc-test-reporter format-coverage -t lcov -o coverage/backend-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourts/citizen-api-test/coverage.info
+        run: ./cc-test-reporter format-coverage -t lcov -o coverage/backend-codeclimate.json ${{github.workspace}}/src/backend/TrafficCourts/TrafficCourts.Common.Test/coverage.info ${{github.workspace}}/src/backend/TrafficCourts/Test/coverage.info
 
       # Upload JSON for debugging purposes
       - name: Upload JSON for debugging purposes
