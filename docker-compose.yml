@@ -63,12 +63,16 @@ services:
         - SKIP_TESTS=true
         - SPLUNK_URL=${SPLUNK_URL:-http://splunk:8088}
         - SPLUNK_TOKEN=${SPLUNK_HEC_TOKEN:-token}
-        - REDIS_HOST=redis
-        - REDIS_PORT=6379
+        - REDIS_SENTINAL_MASTER=mymaster
+        - REDIS_SENTINAL_NODES=redis-sentinel-1:26379,redis-sentinel-2:26380,redis-sentinel-3:26381
         - REDIS_PASSWORD=password
         - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
         - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
         - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
+    depends_on:
+      - redis-sentinel-1
+      - redis-sentinel-2
+      - redis-sentinel-3
     ports:
       - "5010:8080"
 
@@ -151,26 +155,71 @@ services:
   ###                                 REDIS server and UI                                   ###
   #############################################################################################
   redis:
-    container_name: redis
-    image: redis
-    command: redis-server --requirepass password
+    container_name: redis-master
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=password
     ports:
-      - "6379:6379"
-    volumes:
-      - data-redis:/data
-    restart: always
+      - 6379:6379
+      
+  redis-slave:
+    container_name: redis-slave
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PASSWORD=password
+      - REDIS_PASSWORD=password
+    ports:
+      - '6379'
+    depends_on:
+      - redis
+      
+  redis-sentinel-1:
+    container_name: redis-sentinel-1
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=password
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - 26379:26379
 
-  redis-commander:
-    container_name: redis-commander
+  redis-sentinel-2:
+    container_name: redis-sentinel-2
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=password
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - 26380:26379
+      
+  redis-sentinel-3:
+    container_name: redis-sentinel-3
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=password
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - 26381:26379
+      
+  redis-ui:
+    container_name: redis-ui
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
     restart: always
     environment:
-      - REDIS_HOST=redis
+      - REDIS_HOST=redis-master
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
     ports:
-      - "8082:8081"
+      - 8082:8081
 
 volumes:
   data-rabbit:
