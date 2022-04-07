@@ -20,6 +20,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSortModule } from '@angular/material/sort';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { AppConfigService } from 'app/services/app-config.service';
 
@@ -69,6 +70,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     KeycloakAngularModule,
     HttpClientModule,
     MatStepperModule,
+    MatSortModule,
     CdkAccordionModule,
     BrowserAnimationsModule,
     NgxMaterialTimepickerModule,

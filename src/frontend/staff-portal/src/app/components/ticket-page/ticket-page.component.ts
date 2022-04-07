@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import {MatSort, Sort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-ticket-page',
   templateUrl: './ticket-page.component.html',
   styleUrls: ['./ticket-page.component.scss'],
 })
-export class TicketPageComponent implements OnInit {
+export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
     'DateSubmitted',
@@ -163,11 +164,19 @@ export class TicketPageComponent implements OnInit {
       AssignedTo: 'Unassigned',
     },
   ];
+
+  @ViewChild('tickTbSort') tickTbSort = new MatSort();
+
   constructor() {}
 
   ngOnInit(): void {
     this.dataSource.data = this.remoteDummyData;
   }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.tickTbSort;
+  }
+
   public sort(_sort: any, key: any) {
     debugger;
     if (['DateSubmitted', 'FilingDate'].includes(key)) {
