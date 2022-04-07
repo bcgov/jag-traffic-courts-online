@@ -29,6 +29,7 @@ services:
       Serilog__WriteTo__0__Name: EventCollector
       Serilog__WriteTo__0__Args:splunkHost": "http://splunk:8088"
       Serilog__WriteTo__0__Args:eventCollectorToken": "token"
+    depends_on: [splunk]
 
   ticket-search:
     environment:
@@ -36,3 +37,4 @@ services:
       Serilog__WriteTo__0__Name: EventCollector
       Serilog__WriteTo__0__Args:splunkHost": "http://splunk:8088"
       Serilog__WriteTo__0__Args:eventCollectorToken": "token"
+    depends_on: [splunk]
