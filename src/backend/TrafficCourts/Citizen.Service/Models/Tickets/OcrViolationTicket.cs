@@ -49,7 +49,7 @@ public class OcrViolationTicket
     /// <summary>
     /// Gets or sets the saved image filename.
     /// </summary>
-    public string ImageFilename { get; set; }
+    public string? ImageFilename { get; set; }
 
     /// <summary>
     /// A global confidence of correctly extracting the document. This value will be low if the title of this 
@@ -68,12 +68,45 @@ public class OcrViolationTicket
     /// </summary>
     public Dictionary<string, Field> Fields { get; set; } = new Dictionary<string, Field>();
 
+    /// <summary>
+    /// Return true if any of the 4 Count fields has a value.
+    /// </summary>
+    public bool IsCount1Populated()
+    {
+        return Fields[Count1Description].IsPopulated()
+            || Fields[Count1ActRegs].IsPopulated()
+            || Fields[Count1Section].IsPopulated()
+            || Fields[Count1TicketAmount].IsPopulated();
+    }
+    
+    /// <summary>
+    /// Return true if any of the 4 Count fields has a value.
+    /// </summary>
+    public bool IsCount2Populated()
+    {
+        return Fields[Count2Description].IsPopulated()
+            || Fields[Count2ActRegs].IsPopulated()
+            || Fields[Count2Section].IsPopulated()
+            || Fields[Count2TicketAmount].IsPopulated();
+    }
+    
+    /// <summary>
+    /// Return true if any of the 4 Count fields has a value.
+    /// </summary>
+    public bool IsCount3Populated()
+    {
+        return Fields[Count3Description].IsPopulated()
+            || Fields[Count3ActRegs].IsPopulated()
+            || Fields[Count3Section].IsPopulated()
+            || Fields[Count3TicketAmount].IsPopulated();
+    }
+
     public class Field
     {
 
-        private static readonly string DateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
-        private static readonly string TimeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
-        private static readonly string CurrencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
+        private static readonly string _dateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
+        private static readonly string _timeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
+        private static readonly string _currencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
 
         public Field() { }
 
@@ -122,7 +155,7 @@ public class OcrViolationTicket
             {
                 try
                 {
-                    Regex rg = new(DateRegex);
+                    Regex rg = new(_dateRegex);
                     Match match = rg.Match(Value);
                     if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
                     {
@@ -163,7 +196,7 @@ public class OcrViolationTicket
             {
                 try
                 {
-                    Regex rg = new(TimeRegex);
+                    Regex rg = new(_timeRegex);
                     Match match = rg.Match(Value);
                     if (match.Groups.Count == 3 && Value.Length > 2) // 2 + index 0 (the Value itself)
                     {
@@ -198,8 +231,8 @@ public class OcrViolationTicket
             {
                 try
                 {
-                    Regex rg = new(CurrencyRegex);
-                    if (Regex.IsMatch(Value, CurrencyRegex))
+                    Regex rg = new(_currencyRegex);
+                    if (Regex.IsMatch(Value, _currencyRegex))
                     {
                         return float.Parse(Value.Replace("$", "").Replace(",", ""));
                     }
@@ -210,6 +243,11 @@ public class OcrViolationTicket
                 }
             }
             return null;
+        }
+
+        public bool IsPopulated()
+        {
+            return !String.IsNullOrEmpty(Value);
         }
     }
 

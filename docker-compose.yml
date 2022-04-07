@@ -21,8 +21,8 @@ services:
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-InMemory}
       RABBITMQ__HOST: rabbitmq
       RABBITMQ__PORT: 5672
-      RABBITMQ__USERNAME: ${RABBITMQ__USERNAME}
-      RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD}
+      RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
+      RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
       TICKETSEARCHCLIENT__ADDRESS: ${TICKETSEARCHCLIENT__ADDRESS:-http://ticket-search:8080/}
     ports:
       - "5000:8080"
@@ -48,7 +48,6 @@ services:
       - "5100:8080"
       - "5110:8088"
     restart: always
-    #depends_on: [splunk]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
@@ -72,26 +71,6 @@ services:
         - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
     ports:
       - "5010:8080"
-
-  #############################################################################################
-  ###                           Splunk                                                      ###
-  ###                                                                                       ###
-  ### The default configuration is loaded from file ./.docker/splunk-dev-config.yaml        ###
-  ###                                                                                       ###
-  ### Web: http://localhost:8000   Username: admin, Password: password                      ###
-  ### HEC: http://localhost:8088   Token: token                                             ###
-  #############################################################################################
-  splunk:
-    container_name: splunk
-    image: splunk/splunk:latest
-    ports:
-      - 8000:8000
-      - 8088:8088
-    environment:
-      SPLUNK_START_ARGS: --accept-license
-      TZ: America/Vancouver
-    volumes:
-      - "./.docker/splunk-dev-config.yaml:/tmp/defaults/default.yml"
 
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
@@ -167,22 +146,6 @@ services:
       /usr/bin/mc policy set public dockerminio/traffic-ticket-dev;
       exit 0;
       "
-
-  #############################################################################################
-  ###                           Jaeger                                                      ###
-  #############################################################################################
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - "5775:5775/udp"
-      - "6831:6831/udp"
-      - "6832:6832/udp"
-      - "5778:5778"
-      - "16686:16686"
-      - "14250:14250"
-      - "14268:14268"
-      - "14269:14269"
-      - "9411:9411"
 
   #############################################################################################
   ###                                 REDIS server and UI                                   ###

@@ -1,4 +1,5 @@
 version: "2"
+
 checks:
   method-lines:
     config:
@@ -11,6 +12,7 @@ checks:
   method-complexity:
     config:
       threshold: 10
+
 plugins:
   tslint:
     enabled: true
@@ -18,23 +20,27 @@ plugins:
     enabled: false
   csslint:
     enabled: true
+  similar-code:
+    enabled: false
+
 exclude_patterns:
   # Backend File Specific Excludes
   - "src/backend/BcGov.TrafficCourts.Api/DisputeApi.Web.Test/"
   # Frontend Pattern Excludes
-  - "src/frontend/citizen-portal/karma.conf.js"
-  - "src/frontend/citizen-portal/package.json"
-  - "src/frontend/citizen-portal/tsconfig.json"
-  - "src/frontend/citizen-portal/tslint.json"
-  - "src/frontend/citizen-portal/**/*.spec.*"
-  - "src/frontend/citizen-portal/**/*.model.*"
-  - "src/frontend/citizen-portal/**/*.module.*"
-  - "src/frontend/citizen-portal/**/*.routes.*"
-  - "src/frontend/citizen-portal/**/abstract*.*"
-  - "src/frontend/citizen-portal/tests/"
-  - "src/frontend/citizen-portal/shared/components/"
-  - "src/frontend/citizen-portal/src/tests/mocks/"
+  - "src/frontend/*/karma.conf.js"
+  - "src/frontend/*/package.json"
+  - "src/frontend/*/tsconfig.json"
+  - "src/frontend/*/tslint.json"
+  - "src/frontend/*/**/*.spec.*"
+  - "src/frontend/*/**/*.model.*"
+  - "src/frontend/*/**/*.module.*"
+  - "src/frontend/*/**/*.routes.*"
+  - "src/frontend/*/**/abstract*.*"
+  - "src/frontend/*/tests/"
+  - "src/frontend/*/shared/components/"
+  - "src/frontend/*/src/tests/mocks/"
   - "src/frontend/*/src/*.spec.ts"
   - "src/frontend/*/src/*/*/*.spec.ts"
   - "src/frontend/*/src/*.component.ts"
   - "src/frontend/*/src/*/*/*.component.ts"
+  - "src/frontend/**/mock-*.ts"

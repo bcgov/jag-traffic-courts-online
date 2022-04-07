@@ -1,28 +1,32 @@
 ﻿
 using System.Text;
+using System.Text.Json.Serialization;
+using TrafficCourts.Common.Utils;
 
 namespace TrafficCourts.Workflow.Service.Models
 {
     public class Dispute
     {
-        public string TicketNumber { get; set; }
-        public string CourtLocation { get; set; }
+        public string TicketNumber { get; set; } = null!;
+        public string CourtLocation { get; set; } = null!;
         public DateTime ViolationDate { get; set; }
-        public string DisputantSurname { get; set; }
-        public string GivenNames { get; set; }
-        public string StreetAddress { get; set; }
-        public string Province { get; set; }
-        public string PostalCode { get; set; }
-        public string HomePhone { get; set; }
-        public string DriversLicense { get; set; }
-        public string DriversLicenseProvince { get; set; }
-        public string WorkPhone { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string EnforcementOrganization { get; set; }
-        public DateTime ServiceDate { get; set; }
-        public List<TicketCount> TicketCounts { get; set; }
+        public string DisputantSurname { get; set; } = null!;
+        public string GivenNames { get; set; } = null!;
+        public string StreetAddress { get; set; } = null!;
+        public string Province { get; set; } = null!;
+        public string PostalCode { get; set; } = null!;
+        public string HomePhone { get; set; } = null!;
+        public string DriversLicence { get; set; } = null!;
+        public string DriversLicenceProvince { get; set; } = null!;
+        public string WorkPhone { get; set; } = null!;
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
+        public DateOnly DateOfBirth { get; set; }
+        public string EnforcementOrganization { get; set; } = null!;
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
+        public DateOnly ServiceDate { get; set; }
+        public List<TicketCount> TicketCounts { get; set; } = null!;
         public bool LawyerRepresentation { get; set; }
-        public string InterpreterLanguage { get; set; }
+        public string InterpreterLanguage { get; set; } = null!;
         public bool WitnessIntent { get; set; }
 
         public override string ToString()

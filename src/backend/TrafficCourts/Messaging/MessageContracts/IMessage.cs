@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public interface Message
+    /// <summary>
+    /// This is a marker interface for message contracts
+    /// </summary>
+    public interface IMessage
     {
-        Guid Id { get; set; }
-        DateTimeOffset Timestamp { get; set; }
+
     }
 }

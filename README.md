@@ -48,53 +48,11 @@ Welcome to Traffic Courts Online
 | FormRecognizer:Endpoint         |                                              |                                 |
 | TicketSearchClient:Address      |                                              |                                 |
 
-# Splunk
-
-The default `docker-compose.yaml` file contains a local splunk service. A custom configuration file, `./.docker/splunk-dev-config.yaml`
-is used to adjust the default settings. A key setting is disabling the SSL on the HEC endpoint.
-
-https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
-
-Example configuring splunk logging using Serilog configuration.
-
-```
-{
-  "Serilog": {
-    "Using": [
-      "Serilog.Sinks.Splunk"
-    ],
-    "MinimumLevel": {
-      "Default": "Debug",
-      "Override": {
-        "Microsoft": "Warning",
-        "System": "Warning"
-      }
-    },
-    "WriteTo": [
-      {
-        "Name": "EventCollector",
-        "Args": {
-          "splunkHost": "http://localhost:8088",
-          "eventCollectorToken": "token"
-        }
-      }
-    ]
-  }
-}
-```
-
-To apply this, save the configuration to a file, and run this command from the project directory (where the .csproj is)
-
-```
-type .\config.json | dotnet user-secrets set
-dotnet user-secrets list
-```
-
-#### Docker
+## Docker
 
 [Download](https://www.docker.com/products/docker-desktop) and install Docker
 
-# Run docker-compose
+## Run docker-compose
 
 Copy the `.env.template` to `.env` and then run docker-compose up.
 Add the configuration for token and password for splunk.
@@ -111,3 +69,51 @@ To remove services run (all services and networking)
 ```
 docker-compose down
 ```
+
+## Services
+
+| Service                         | URL                                          | Notes |
+| ------------------------------- | -------------------------------------------- | ----- |
+| citizen-portal                  | http://localhost:8080/                       |       |
+| citizen-api                     | http://localhost:5000/swagger/index.html     |       |
+| staff-portal                    | http://localhost:8081/                       |       |
+| ticket-search                   | n/a                                          | grpc  |
+| oraface-api                     | http://localhost:5010/                       |       |
+| rabbitmq                        | localhost:5672, localhost:15672              |       |
+| minio                           | localhost:9000, localhost:9001               |       |
+| redis                           | localhost:6379                               |       |
+| redis-commander                 | http://localhost:8082                        |       |
+| splunk                          | http://localhost:8000                        |       |
+| seq                             | http://localhost:5341                        |       |
+| jaeger                          | http://localhost:16686                       |       |
+
+### Logging
+
+Developers can choose how logging is configured in the running apps. Developer can choose Splunk or Seq.
+
+#### Splunk
+
+The default `docker-compose.yaml` file does NOT contain Splunk configuration. To use/test with Splunk,
+you can include a docker-compose override to configure Splunk for the requested services, ie,
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.splunk.yml up
+```
+
+Open [Local Splunk](http://localhost:8000) to view logs.  Login with username: admin, password: password.
+
+#### Splunk 
+A custom configuration file, `./.docker/splunk-dev-config.yaml`
+is used to adjust the default settings. A key setting is disabling the SSL on the HEC endpoint.
+
+See [Splunk Docker examples](https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec) for more information.
+
+#### Seq
+
+[Seq](https://datalust.co/seq) is an alternative logging source that is more developer friendly, especially those unfamilar with Splunk.
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml up
+```
+
+Open [Local Seq](http://localhost:5341) to view logs.
