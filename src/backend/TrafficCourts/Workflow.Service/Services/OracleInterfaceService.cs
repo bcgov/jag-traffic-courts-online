@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
+using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Models;
 
 namespace TrafficCourts.Workflow.Service.Services
@@ -8,10 +10,12 @@ namespace TrafficCourts.Workflow.Service.Services
     public class OracleInterfaceService : IOracleInterfaceService
     {
         private readonly ILogger<OracleInterfaceService> _logger;
+        private readonly OracleInterfaceApiConfiguration _oracleInterfaceApiConfiguration;
 
-        public OracleInterfaceService(ILogger<OracleInterfaceService> logger)
+        public OracleInterfaceService(ILogger<OracleInterfaceService> logger, IOptions<OracleInterfaceApiConfiguration> oracleInterfaceApiConfiguration)
         {
             _logger = logger;
+            _oracleInterfaceApiConfiguration = oracleInterfaceApiConfiguration.Value;
         }
 
         public async Task<int> CreateDisputeAsync(Dispute disputeToSubmit)
@@ -27,7 +31,8 @@ namespace TrafficCourts.Workflow.Service.Services
 
             using (var httpClient = new HttpClient())
             {
-                httpClient.BaseAddress = new Uri(@"http://localhost:5010/");
+                var orafaceBaseUri = $"http://{_oracleInterfaceApiConfiguration.Host}:{_oracleInterfaceApiConfiguration.Port}";
+                httpClient.BaseAddress = new Uri(orafaceBaseUri);
                 using (var response = await httpClient.PostAsync("dispute", disputeToSubmit, formatter))
                 {
                     if (response.IsSuccessStatusCode)
