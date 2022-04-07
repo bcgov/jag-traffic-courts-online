@@ -22,7 +22,7 @@
                   <div class="container">
                     <div class="row" >
                       <div class="col-md-2">
-                        <h4 style="color: green;" >5 NEW ticket records</h4> 
+                        <h4 style="color: green;" >{{ countNewTickets() }} NEW ticket records</h4> 
                       </div>
                       <div class="col-md-1">|</div>
                       <div class="col-md-3">
@@ -34,7 +34,7 @@
                         <h2 >Ticket number search: </h2>
                       </div>
                       <div class="col-md-3">
-                        <input type="input" #fileNumber value="" class="font_bold"/>
+                        <input matInput type="input" keyup="applyFilter($event)"/>
                       </div>
                     </div>
                   </div>

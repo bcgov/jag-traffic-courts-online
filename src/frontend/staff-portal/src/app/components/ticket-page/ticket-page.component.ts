@@ -165,17 +165,38 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
   ];
 
+  RegionName: string = "";
+
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
 
   constructor() {}
 
   ngOnInit(): void {
     this.dataSource.data = this.remoteDummyData;
+    this.RegionName = "Fraser Valley Region";
+
+    // initially sort data by Date Submitted
+    this.dataSource.data = this.dataSource.data.sort((a,b)=> { if (a.DateSubmitted > b.DateSubmitted) { return 1; } else { return -1 } } );
+
+    // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
+    this.dataSource.filterPredicate = function (record,filter) {
+      return record.Ticket.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
+    }
+  }
+
+  countNewTickets(): number {
+    if (this.dataSource.data.filter(x => x.Status == 'New'))
+     return this.dataSource.data.filter(x => x.Status == 'New').length;
+    else return 0;
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.tickTbSort;
   }
 
- 
+  // called on keyup in filter field
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
