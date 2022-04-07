@@ -21,8 +21,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { AppConfigService } from 'app/services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -71,6 +72,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     MatStepperModule,
     MatSortModule,
+    MatIconModule,
+    MatCheckboxModule,
     CdkAccordionModule,
     BrowserAnimationsModule,
     NgxMaterialTimepickerModule,
