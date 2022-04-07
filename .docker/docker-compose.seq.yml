@@ -10,7 +10,7 @@ services:
   seq:
     image: datalust/seq
     ports:
-      - 80:80
+      - 8001:80
       - 5341:5341
     environment:
       ACCEPT_EULA: "Y"
@@ -20,9 +20,11 @@ services:
       Serilog__Using__0: Serilog.Sinks.Seq
       Serilog__WriteTo__0__Name: Seq
       Serilog__WriteTo__0__Args__serverUrl: "http://seq:5341"
+    depends_on: [seq]
 
   ticket-search:
     environment:
       Serilog__Using__0: Serilog.Sinks.Seq
       Serilog__WriteTo__0__Name: Seq
       Serilog__WriteTo__0__Args__serverUrl: "http://seq:5341"
+    depends_on: [seq]
