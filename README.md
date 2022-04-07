@@ -50,38 +50,14 @@ Welcome to Traffic Courts Online
 
 # Splunk
 
-The default `docker-compose.yaml` file contains a local splunk service. A custom configuration file, `./.docker/splunk-dev-config.yaml`
+The default `docker-compose.yaml` file does NOT contain Splunk configuration. To use/test with Splunk,
+you can include 
+
+A custom configuration file, `./.docker/splunk-dev-config.yaml`
 is used to adjust the default settings. A key setting is disabling the SSL on the HEC endpoint.
 
 https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
 
-Example configuring splunk logging using Serilog configuration.
-
-```
-{
-  "Serilog": {
-    "Using": [
-      "Serilog.Sinks.Splunk"
-    ],
-    "MinimumLevel": {
-      "Default": "Debug",
-      "Override": {
-        "Microsoft": "Warning",
-        "System": "Warning"
-      }
-    },
-    "WriteTo": [
-      {
-        "Name": "EventCollector",
-        "Args": {
-          "splunkHost": "http://localhost:8088",
-          "eventCollectorToken": "token"
-        }
-      }
-    ]
-  }
-}
-```
 
 To apply this, save the configuration to a file, and run this command from the project directory (where the .csproj is)
 
