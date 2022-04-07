@@ -36,12 +36,16 @@ An API that acts as an interface between Oracle and the TrafficCourts API
 |                             |  │ │ │ │ │ │          (0 or 7 is Sunday, or MON-SUN)
 |                             |  │ │ │ │ │ │
 |                             |  * * * * * *
-| REDIS_HOST                  | The hostname of a redis server used to cache JUSTIN lookup data
-| REDIS_PORT                  | The port of redis server
-| REDIS_PASSWORD              | The password of redis server
+| REDIS_HOST                  | When redis is configured in a standalone configuration, the hostname of a redis server used to cache JUSTIN lookup data. Not used in sentinal configuration.
+| REDIS_PORT                  | When redis is configured in a standalone configuration, the port of redis server. Not used in sentinal configuration.
+| REDIS_PASSWORD              | The password of redis server (either configuration).
+| REDIS_SENTINAL_MASTER       | When redis is configured in a master-slave-sentinel configuration, the name of the master node, ie. "mymaster"
+| REDIS_SENTINAL_NODES        | When redis is configured in a master-slave-sentinel configuration, a comma-separated list of host:port sentinal nodes. ie "redis-sentinel-1:26379,redis-sentinel-2:26380,redis-sentinel-3:26381"
 | SPLUNK_URL                  | 
 | SPLUNK_TOKEN                | 
 | JAVA_OPTS	                  | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG"
+
+Note: Redis Standalone and Sentinel modes are mutually exclusive.  Either use host/port variables or master/nodes.
 
 Code tables can be refreshed manually at any time by hitting the "/codetable/refresh" endpoint.
 

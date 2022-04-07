@@ -69,6 +69,8 @@ services:
         - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
         - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
         - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
+    depends_on:
+      - redis
     ports:
       - "5010:8080"
 
@@ -152,16 +154,14 @@ services:
   #############################################################################################
   redis:
     container_name: redis
-    image: redis
-    command: redis-server --requirepass password
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_PASSWORD=password
     ports:
-      - "6379:6379"
-    volumes:
-      - data-redis:/data
-    restart: always
-
-  redis-commander:
-    container_name: redis-commander
+      - 6379:6379
+      
+  redis-ui:
+    container_name: redis-ui
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
     restart: always
@@ -169,8 +169,10 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
+    depends_on:
+      - redis
     ports:
-      - "8082:8081"
+      - 8082:8081
 
 volumes:
   data-rabbit:

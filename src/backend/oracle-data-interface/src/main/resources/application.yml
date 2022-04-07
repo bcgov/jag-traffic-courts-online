@@ -6,6 +6,9 @@ spring:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
     password: ${REDIS_PASSWORD:password}
+    sentinel:
+      master: ${REDIS_SENTINAL_MASTER:}
+      nodes: ${REDIS_SENTINAL_NODES:}
     
   datasource:
     driverClassName: org.h2.Driver
