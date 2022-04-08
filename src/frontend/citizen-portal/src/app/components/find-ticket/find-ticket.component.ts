@@ -130,6 +130,16 @@ export class FindTicketComponent implements OnInit {
       return;
     }
 
+    const mimeType = event.target.files[0].type;
+     console.log("mimeType",mimeType.match(/application\/pdf/));
+     console.log("mimeType",mimeType.match(/image\/*/));
+
+    if (!(mimeType.match(/image\/*/) != null || mimeType.match(/application\/pdf/) != null)) {
+      debugger
+      this.logger.info('Only images and pdf are supported');
+      return;
+    }
+
     const progressRef: NgProgressRef = this.ngProgress.ref();
     progressRef.start();
 
@@ -186,10 +196,11 @@ export class FindTicketComponent implements OnInit {
        
       },
       (err)=>{
+        console.log('err',err);
         const data: DialogOptions = {
           titleKey: err.error.title,
           actionType: 'warn',
-          messageKey: err.error?.errors.toString(),
+          messageKey: err.error.errors.toString(),
           actionTextKey: 'Ok',
           cancelHide: true,
         };

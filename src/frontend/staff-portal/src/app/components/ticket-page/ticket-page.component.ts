@@ -213,8 +213,4 @@ export class TicketPageComponent implements OnInit {
     this.dataSource.data = this.remoteDummyData;
   }
 
-  filter(event){
-    this.dataSource.data =  this.remoteDummyData.filter((ele)=> ele.Ticket.indexOf(event.target.value) > -1)
-
-  }
 }
