@@ -72,6 +72,10 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     {
         List<ValidationRule> rules = new();
 
+        // TCVP-932 Surname and Given Name are required fields
+        rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.GivenName]));
+        rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Surname]));
+
         // TCVP-1004 Validate Driver's Licence
         rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince]));
         rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.DriverLicenceNumber]));

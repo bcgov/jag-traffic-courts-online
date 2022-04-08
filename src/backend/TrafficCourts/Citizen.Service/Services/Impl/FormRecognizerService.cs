@@ -68,9 +68,9 @@ public class FormRecognizerService : IFormRecognizerService
         DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
         using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
-        activity?.AddBaggage("ModelId", "ViolationTicket_v2");
+        activity?.AddBaggage("ModelId", "ViolationTicket_v3");
 
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket_v2", stream, null, cancellationToken);
+        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket_v3", stream, null, cancellationToken);
         await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
         return analyseDocumentOperation.Value;

@@ -22,13 +22,17 @@ public class CountSectionRule : ValidationRule
 
     public override void Run()
     {
-        string? value = Field.Value;
-        if (!String.IsNullOrEmpty(value))
+        if (!String.IsNullOrEmpty(Field.Value))
         {
-            value = Field.Value = Regex.Replace(value, @"\s+", "");
-            IEnumerable<Statute> statutes = _lookupService.GetStatutes(value.ToLower().Trim());
-            if (statutes is null || !statutes.Any()) {
-                AddValidationError(String.Format(ValidationMessages.CountSectionInvalid, Field.Value));
+            Field.Value = Regex.Replace(Field.Value, @"\s+", "");
+            Field.Value = Regex.Replace(Field.Value, @"^\$$", "");
+            if (!String.IsNullOrEmpty(Field.Value))
+            {
+                IEnumerable<Statute> statutes = _lookupService.GetStatutes(Field.Value.ToLower().Trim());
+                if (statutes is null || !statutes.Any())
+                {
+                    AddValidationError(String.Format(ValidationMessages.CountSectionInvalid, Field.Value));
+                }
             }
         }
     }
