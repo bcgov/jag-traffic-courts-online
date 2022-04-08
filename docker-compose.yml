@@ -23,11 +23,12 @@ services:
       RABBITMQ__PORT: 5672
       RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
+      REDIS__CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING:-redis:6379,password=password}
       TICKETSEARCHCLIENT__ADDRESS: ${TICKETSEARCHCLIENT__ADDRESS:-http://ticket-search:8080/}
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [rabbitmq, ticket-search]
+    depends_on: [rabbitmq, ticket-search, redis]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
