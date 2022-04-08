@@ -89,7 +89,7 @@ static void AddOpenTelemetry(WebApplicationBuilder builder, Serilog.ILogger logg
         return;
     }
 
-    var resourceBuilder = ResourceBuilder.CreateDefault().AddService(Diagnostics.ServiceName, serviceInstanceId: Environment.MachineName);
+    var resourceBuilder = ResourceBuilder.CreateDefault().AddService(Diagnostics.Source.Name, serviceInstanceId: Environment.MachineName);
 
     builder.Services.AddOpenTelemetryTracing(options =>
     {
