@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
@@ -128,13 +130,6 @@ export class FindTicketComponent implements OnInit {
       return;
     }
 
-    const mimeType = event.target.files[0].type;
-
-    if (mimeType.match(/image\/*/) == null) {
-      this.logger.info('Only images are supported');
-      return;
-    }
-
     const progressRef: NgProgressRef = this.ngProgress.ref();
     progressRef.start();
 
@@ -179,9 +174,27 @@ export class FindTicketComponent implements OnInit {
       this.http.post(`${this.configuration.basePath }/api/tickets/analyse`,fd)
       .subscribe(res=>{
         console.log('image data',res);
-        this.ticketService.setImageData(res);
-        this.disputeService.shellTicketData$.next(shellTicketData);
-      this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
+        if(res){
+          this.ticketService.setImageData(res);
+          this.disputeService.shellTicketData$.next(shellTicketData);
+        this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
+        }
+        else {
+          this.notFound = true;
+          this.onTicketNotFound();
+        }
+       
+      },
+      (err)=>{
+        const data: DialogOptions = {
+          titleKey: err.error.title,
+          actionType: 'warn',
+          messageKey: err.error?.errors.toString(),
+          actionTextKey: 'Ok',
+          cancelHide: true,
+        };
+        
+        this.dialog.open(ConfirmDialogComponent, { data })
       })
         
       

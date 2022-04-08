@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TicketPageComponent implements OnInit {
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
+    'RedGreenAlert',
     'DateSubmitted',
     'Ticket',
     'Surname',
@@ -210,5 +211,10 @@ export class TicketPageComponent implements OnInit {
     }
 
     this.dataSource.data = this.remoteDummyData;
+  }
+
+  filter(event){
+    this.dataSource.data =  this.remoteDummyData.filter((ele)=> ele.Ticket.indexOf(event.target.value) > -1)
+
   }
 }
