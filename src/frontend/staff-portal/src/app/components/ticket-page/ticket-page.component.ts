@@ -5,7 +5,7 @@ import {MatSort, Sort} from '@angular/material/sort';
 @Component({
   selector: 'app-ticket-page',
   templateUrl: './ticket-page.component.html',
-  styleUrls: ['./ticket-page.component.scss'],
+  styleUrls: ['./ticket-page.component.scss', '../../app.component.scss'],
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
@@ -22,7 +22,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'SystemFlag',
     'AssignedTo',
   ];
-  remoteDummyData = [
+  remoteDummyData: disputeData[] = [
     {
       RedGreenAlert: 'Green',
       DateSubmitted: new Date('2022/02/08'),
@@ -166,27 +166,28 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   ];
 
   RegionName: string = "";
+  todayDate: Date = new Date();
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
 
   constructor() {}
 
   ngOnInit(): void {
-    this.dataSource.data = this.remoteDummyData;
+    this.dataSource.data = this.remoteDummyData as disputeData[];
     this.RegionName = "Fraser Valley Region";
 
     // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a,b)=> { if (a.DateSubmitted > b.DateSubmitted) { return 1; } else { return -1 } } );
+    this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return 1; } else { return -1 } } );
 
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record,filter) {
+    this.dataSource.filterPredicate = function (record:disputeData ,filter) {
       return record.Ticket.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter(x => x.Status == 'New'))
-     return this.dataSource.data.filter(x => x.Status == 'New').length;
+    if (this.dataSource.data.filter((x:disputeData) => x.Status == 'New'))
+     return this.dataSource.data.filter((x:disputeData) => x.Status == 'New').length;
     else return 0;
   }
 
@@ -199,4 +200,18 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+}
+export interface disputeData {
+  RedGreenAlert: string,
+  DateSubmitted: Date,
+  Ticket: string,
+  Surname: string,
+  GivenName: string,
+  RequestType: string,
+  Status: string,
+  FilingDate?: Date,
+  CourtHearing: string,
+  CitizenFlag: string,
+  SystemFlag: string,
+  AssignedTo: string,
 }

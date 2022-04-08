@@ -4,9 +4,14 @@
 
     <div class="container">
       <section>
-        <div>
-          <h1 class="mb-1">Welcome, User</h1>
-          <p style="color: black;">Court Registries Clerk, Abbotsford</p>
+        <div><br />
+          <h1 class="BC-Gov-32px-text"><b>Welcome, User</b></h1>
+          <p class="BC-Gov-20px-text">
+            Court Registries Clerk, Abbotsford
+            <span style="float:right">
+              {{todayDate|date:"EEEE, MMMM d"}}{{(todayDate|date:"d")|dateSuffix}}{{todayDate|date:",&nbsp;y"}}
+            </span>
+          </p>
           <hr style="opacity: 1; color: #fcba19" />
         </div>
       </section>
@@ -22,7 +27,7 @@
                   <div class="container">
                     <div class="row" >
                       <div class="col-md-2">
-                        <h4 style="color: green;" >{{ countNewTickets() }} NEW ticket records</h4> 
+                        <h4 style="color: rgb(68, 128, 0);" ><b>{{ countNewTickets() }} NEW ticket records</b></h4> 
                       </div>
                       <div class="col-md-1">|</div>
                       <div class="col-md-3">
@@ -34,7 +39,7 @@
                         <h2 >Ticket number search: </h2>
                       </div>
                       <div class="col-md-3">
-                        <input matInput type="input" keyup="applyFilter($event)"/>
+                        <input matInput type="input" (keyup)="applyFilter($event)"/>
                       </div>
                     </div>
                   </div>
@@ -43,7 +48,7 @@
              
               <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" matSort #tickTbSort="matSort">
               
-                <ng-container [matColumnDef]="RedGreenAlert">
+                <ng-container matColumnDef="RedGreenAlert">
                   <th mat-header-cell *matHeaderCellDef> 
                     &nbsp;
                   </th>
@@ -53,7 +58,7 @@
                   </td>
                 </ng-container>
 
-                <ng-container [matColumnDef]="DateSubmitted">
+                <ng-container matColumnDef="DateSubmitted">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Date Submitted 
                     </th>
@@ -62,7 +67,7 @@
                     </td>
                   </ng-container>
               
-                  <ng-container [matColumnDef]="Ticket">
+                  <ng-container matColumnDef="Ticket">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Ticket #  
                     </th>
@@ -71,7 +76,7 @@
                     </td>
                   </ng-container>
               
-                  <ng-container [matColumnDef]="Surname">
+                  <ng-container matColumnDef="Surname">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>  
                       Surname
                     </th>
@@ -80,7 +85,7 @@
                     </td>
                   </ng-container>
               
-                  <ng-container [matColumnDef]="GivenName">
+                  <ng-container matColumnDef="GivenName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Given Name
                     </th>
@@ -89,7 +94,7 @@
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="RequestType">
+                  <ng-container matColumnDef="RequestType">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Request Type  
                     </th>
@@ -98,7 +103,7 @@
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="Status">
+                  <ng-container matColumnDef="Status">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>   
                       Status
                     </th>
@@ -107,7 +112,7 @@
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="FilingDate">
+                  <ng-container matColumnDef="FilingDate">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Filing Date  
                     </th>
@@ -116,34 +121,34 @@
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="CourtHearing">
+                  <ng-container matColumnDef="CourtHearing">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Court Hearing
                     </th>
                     <td mat-cell *matCellDef="let row">  
-                      <mat-checkbox [checked]="row.CourtHearing == 'Y'" enabled="false"></mat-checkbox>
+                      <mat-checkbox [checked]="row.CourtHearing == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="CitizenFlag">
+                  <ng-container matColumnDef="CitizenFlag">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Citizen Flag 
                     </th>
                     <td mat-cell *matCellDef="let row">  
-                     <mat-checkbox [checked]="row.CitizenFlag == 'Y'" enabled="false"></mat-checkbox>
+                     <mat-checkbox [checked]="row.CitizenFlag == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="SystemFlag">
+                  <ng-container matColumnDef="SystemFlag">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       System Flag
                     </th>
                     <td mat-cell *matCellDef="let row">  
-                      <mat-checkbox [checked]="row.SystemFlag == 'Y'" enabled="false"></mat-checkbox>
+                      <mat-checkbox [checked]="row.SystemFlag == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
-                  <ng-container [matColumnDef]="AssignedTo">
+                  <ng-container matColumnDef="AssignedTo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Assigned
                     </th>

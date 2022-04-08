@@ -40,6 +40,7 @@ import { UnauthorizedComponent } from '@components/error/unauthorized/unauthoriz
 
 import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
 import { initializeKeycloak } from './init/keycloak-init.factory';
+import { DateSuffixPipe } from './services/date.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -59,7 +60,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AppComponent,
     LandingComponent,
     TicketPageComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    DateSuffixPipe
   ],
   imports: [
     CommonModule,
