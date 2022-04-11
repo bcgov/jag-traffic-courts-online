@@ -10,6 +10,7 @@ import {MatSort, Sort} from '@angular/material/sort';
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
+    'RedGreenAlert',
     'DateSubmitted',
     'Ticket',
     'Surname',

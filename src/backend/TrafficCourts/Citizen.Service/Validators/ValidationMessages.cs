@@ -16,4 +16,5 @@ public static class ValidationMessages
     public static readonly string ViolationDateGT30Days = @"Violation Date '{0}' is more than 30 days ago.";
     public static readonly string TimeInvalid = @"'{0}' is not a valid time.";
     public static readonly string LowConfidenceError = "Too many fields have a low confidence.";
+    public static readonly string CountSectionInvalid = @"'{0}' was not found in the list of known MVA Violation Ticket Contraventions.";
 }

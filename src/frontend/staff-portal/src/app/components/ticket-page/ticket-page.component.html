@@ -22,20 +22,20 @@
               <ng-template mat-tab-label>
                 <h1 class="mb-1 tabHeader">Inbox (1)</h1>
               </ng-template>
-              <div class="step1" style="border: 1px solid black;margin-bottom: 150px" >
+              <div class="step1" >
                 <div class="">
                   <div class="container">
                     <div class="row" >
                       <div class="col-md-2">
                         <h4 style="color: rgb(68, 128, 0);" ><b>{{ countNewTickets() }} NEW ticket records</b></h4> 
                       </div>
-                      <div class="col-md-1">|</div>
+                      <div class="col-md-1"style="width: 5px;" >|</div>
                       <div class="col-md-3">
-                       <select style="width: 200px;"><option>Fraser Valley Region</option></select>
+                       <select style="width: 200px;border: none;color: black;font-weight: 600;"><option>Fraser Valley Region</option></select>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-3" style="font-weight: 600;">
                         <h2 >Ticket number search: </h2>
                       </div>
                       <div class="col-md-3">
@@ -175,7 +175,7 @@
     
   </div>
 
-  <!-- <div class="flex-footer">
+  <div class="flex-footer">
     <app-footer></app-footer>
-  </div> -->
+  </div>
 </div>

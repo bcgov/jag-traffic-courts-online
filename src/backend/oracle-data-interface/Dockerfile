@@ -7,8 +7,12 @@ ARG SKIP_TESTS=true
 
 WORKDIR /
 
-COPY . .
+# Cache .m2 artifacts for subsequent builds.
+COPY pom.xml .
+RUN mvn verify clean --fail-never
 
+# Compile codebase to a single jar
+COPY . .
 RUN mvn -B clean package \
 		-Dtarget.fileName=oraface-api \
         -Dmaven.test.skip=${SKIP_TESTS} 
