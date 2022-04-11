@@ -24,12 +24,12 @@ public class CountSectionRule : ValidationRule
     {
         if (!String.IsNullOrEmpty(Field.Value))
         {
-            Field.Value = Regex.Replace(Field.Value, @"\s+", "");
-            Field.Value = Regex.Replace(Field.Value, @"^\$$", "");
+            Field.Value = Regex.Replace(Field.Value, @"\s+", ""); // remove whitespace
+            Field.Value = Regex.Replace(Field.Value, @"^\$$", ""); // remove $ if it's the only character.
             if (!String.IsNullOrEmpty(Field.Value))
             {
-                IEnumerable<Statute> statutes = _lookupService.GetStatutes(Field.Value.ToLower().Trim());
-                if (statutes is null || !statutes.Any())
+                IEnumerable<Statute> statutes = _lookupService.GetStatutes(Field.Value);
+                if (!statutes.Any())
                 {
                     AddValidationError(String.Format(ValidationMessages.CountSectionInvalid, Field.Value));
                 }
