@@ -11,9 +11,10 @@ public class FormRecognizerService : IFormRecognizerService
     private readonly ILogger<FormRecognizerService> _logger;
     private readonly string _apiKey;
     private readonly Uri _endpoint;
+    private readonly string _modelId;
 
     // A mapping list of fields extracted from Azure Form Recognizer and their equivalent JSON name
-    private readonly static Dictionary<string, string> FieldLabels = new()
+    private readonly static Dictionary<string, string> _fieldLabels = new()
     {
         { "Violation Ticket Label",     OcrViolationTicket.ViolationTicketTitle },
         { "Violation Ticket Number",    OcrViolationTicket.ViolationTicketNumber },
@@ -53,11 +54,12 @@ public class FormRecognizerService : IFormRecognizerService
         { "Detachment Location",        OcrViolationTicket.DetachmentLocation }
     };
 
-    public FormRecognizerService(string apiKey, Uri endpoint, ILogger<FormRecognizerService> logger)
+    public FormRecognizerService(string apiKey, Uri endpoint, string modelId, ILogger<FormRecognizerService> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
         _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
+        _modelId = modelId ?? throw new ArgumentNullException(nameof(modelId));
     }
 
     public async Task<AnalyzeResult> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken)
@@ -68,9 +70,9 @@ public class FormRecognizerService : IFormRecognizerService
         DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
         using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
-        activity?.AddBaggage("ModelId", "ViolationTicket_v3");
+        activity?.AddBaggage("ModelId", _modelId);
 
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync("ViolationTicket_v3", stream, null, cancellationToken);
+        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync(_modelId, stream, null, cancellationToken);
         await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
 
         return analyseDocumentOperation.Value;
@@ -84,7 +86,7 @@ public class FormRecognizerService : IFormRecognizerService
         OcrViolationTicket violationTicket = new();
         violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
 
-        foreach (var fieldLabel in FieldLabels)
+        foreach (var fieldLabel in _fieldLabels)
         {
             OcrViolationTicket.Field field = new();
             field.TagName = fieldLabel.Key;
