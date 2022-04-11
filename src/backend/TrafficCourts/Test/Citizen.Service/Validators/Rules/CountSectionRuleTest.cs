@@ -19,6 +19,8 @@ public class CountSectionRuleTest
     [InlineData(" 24(1)", true)]
     [InlineData("24 (1)", true)]
     [InlineData("224(1)", false)]
+    [InlineData("", true)] 
+    [InlineData("$", true)] // treat as blank (must have pulled this character from the adjacent Ticket Amount field).
     public void TestLookup(string sectionValue, bool expectValid)
     {
         // Given
