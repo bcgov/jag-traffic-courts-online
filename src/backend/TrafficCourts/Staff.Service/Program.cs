@@ -27,11 +27,7 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
 
 builder.Services.AddControllers();
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer();
-
-builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
+Authentication.Initialize(builder.Services, builder.Configuration);
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
