@@ -49,15 +49,15 @@ export class TicketInfoComponent
 
   public ngOnInit() {
     this.form = this.formBuilder.group({
-      violationTicketNumber: [null, [Validators.required]],
-      violationDate: [null, [Validators.required]],
-      violationTime: [null, [Validators.required]],
       surname: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
       birthdate: [null], // Optional
       gender: [null, [Validators.required]],
-      address: [null, [Validators.required]],
+      mailingAddress: [null, [Validators.required]],
       city: [null, [Validators.required]],
+      country: [null],
+      phoneNumber: [null],
+      emailAddress: [null],
       province: [null, [Validators.required]],
       postalCode: [null, [Validators.required]],
       driverLicenseNumber: [null, [Validators.required]],
@@ -68,8 +68,8 @@ export class TicketInfoComponent
       violationTicketNumber: "",
       violationDate: "",
       violationTime: "",
-      surname: this.ticketInfo.Surname,
-      givenNames: this.ticketInfo.GivenName,
+      surname: this.ticketInfo?.Surname,
+      givenNames: this.ticketInfo?.GivenName,
       birthdate: [null], // Optional
       gender: "",
       address: "",
