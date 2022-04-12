@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
+using TrafficCourts.Workflow.Service.Features.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ builder.Services.AddMassTransit(cfg =>
 {
     cfg.AddConsumer<SubmitDisputeConsumer>();
     cfg.AddConsumer<DisputeApprovedConsumer>();
+    cfg.AddConsumer<SendEmailConsumer>();
 
     cfg.UsingRabbitMq((context, configurator) =>
     {
