@@ -87,6 +87,7 @@
     font-size: 15px;
     color: #003366;
     font-weight: 600;
+    padding: 10px;
   }
   table td {
    padding: 10px;
@@ -207,12 +208,23 @@
   cursor: not-allowed;
 }
 
-.BC-Gov-32px-text {
+.BC-Gov-32px-blue-text {
     color: #003366;
     font-size: 32px;
 }
 
-.BC-Gov-20px-text {
+.BC-Gov-15px-black-text {
     color: #313132;
-    font-size: 20-px;
+    font-size: 15px;
+}
+
+.BC-Gov-15px-blue-text {
+  color: #003366;
+  font-size: 15px;
+}
+
+.BC-Gov-15px-blue-bold-text {
+  color: #003366;
+  font-size: 15px;
+  font-weight: 600;
 }

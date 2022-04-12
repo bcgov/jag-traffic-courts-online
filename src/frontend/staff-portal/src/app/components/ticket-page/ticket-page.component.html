@@ -5,8 +5,8 @@
     <div class="container">
       <section>
         <div><br />
-          <h1 class="BC-Gov-32px-text"><b>Welcome, User</b></h1>
-          <p class="BC-Gov-20px-text">
+          <h1 class="BC-Gov-32px-blue-text">Welcome, User</h1>
+          <p class="BC-Gov-15px-black-text">
             Court Registries Clerk, Abbotsford
             <span style="float:right">
               {{todayDate|date:"EEEE, MMMM d"}}{{(todayDate|date:"d")|dateSuffix}}{{todayDate|date:",&nbsp;y"}}
@@ -16,45 +16,36 @@
         </div>
       </section>
       <section>
-        <div class="flex-6-col ">
- 
+        <div class="flex-6-col">
             <div>
-              <ng-template mat-tab-label>
-                <h1 class="mb-1 tabHeader">Inbox (1)</h1>
-              </ng-template>
               <div class="step1" >
-                <div class="">
-                  <div class="container">
-                    <div class="row" >
-                      <div class="col-md-2">
-                        <h4 style="color: rgb(68, 128, 0);" ><b>{{ countNewTickets() }} NEW ticket records</b></h4> 
-                      </div>
-                      <div class="col-md-1"style="width: 5px;" >|</div>
-                      <div class="col-md-3">
-                       <select style="width: 200px;border: none;color: black;font-weight: 600;"><option>Fraser Valley Region</option></select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3" style="font-weight: 600;">
-                        <h2 >Ticket number search: </h2>
-                      </div>
-                      <div class="col-md-3">
-                        <input matInput type="input" (keyup)="applyFilter($event)"/>
-                      </div>
-                    </div>
+                <div>
+                  <div class="flex-container" style="width: 40%">
+                    <table>
+                      <tr>
+                        <td><span class="BC-Gov-15px-black-text" style="color:green" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
+                        <td style="width:5px">|</td>
+                        <td>
+                          <select style="border: none;">
+                            <option><span class="BC-Gov-15px-black-bold-text"><b>Fraser Valley Region</b>&nbsp;&nbsp;</span></option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><span class="BC-Gov-15px-blue-text" ><b>Ticket number search:</b></span></td>
+                        <td colspan="2"><input matInput type="input" (keyup)="applyFilter($event)"/></td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
-                <hr class="mt-0 mb-4" style="opacity: 0.5">
              
-              <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" matSort #tickTbSort="matSort">
+              <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort #tickTbSort="matSort">
               
                 <ng-container matColumnDef="RedGreenAlert">
-                  <th mat-header-cell *matHeaderCellDef> 
-                    &nbsp;
-                  </th>
-                  <td mat-cell  *matCellDef="let row">
-                    <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="row.RedGreenAlert=='Red'">cancel</mat-icon>
-                    <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="row.RedGreenAlert=='Green'">check_circle</mat-icon>
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell  *matCellDef="let element">
+                    <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="element.RedGreenAlert =='Red'">cancel</mat-icon>
+                    <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="element.RedGreenAlert =='Green'">check_circle</mat-icon>
                   </td>
                 </ng-container>
 
@@ -62,44 +53,44 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Date Submitted 
                     </th>
-                    <td mat-cell  *matCellDef="let row">
-                      {{ row.DateSubmitted ? (row.DateSubmitted | date: "yyyy/MM/dd") : "" }} 
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.DateSubmitted ? (element.DateSubmitted | date: "yyyy/MM/dd") : "" }}</span>
                     </td>
                   </ng-container>
               
                   <ng-container matColumnDef="Ticket">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
-                      Ticket #  
+                      Ticket
                     </th>
-                    <td mat-cell *matCellDef="let row"> 
-                      {{ row.Ticket }}
+                    <td mat-cell *matCellDef="let element"> 
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.Ticket }}</span>
                     </td>
                   </ng-container>
               
                   <ng-container matColumnDef="Surname">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>  
-                      Surname
+                      Name
                     </th>
-                    <td mat-cell *matCellDef="let row">
-                      {{ row.Surname }} 
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.Surname }}, {{ element.GivenName }}</span>
                     </td>
                   </ng-container>
               
-                  <ng-container matColumnDef="GivenName">
+                  <!-- <ng-container matColumnDef="GivenName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Given Name
                     </th>
-                    <td mat-cell *matCellDef="let row">
-                      {{ row.GivenName}} 
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.GivenName}} </span>
                     </td>
-                  </ng-container>
+                  </ng-container> -->
                   
                   <ng-container matColumnDef="RequestType">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Request Type  
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                      {{ row.RequestType }} 
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.RequestType }}</span> 
                     </td>
                   </ng-container>
                   
@@ -107,8 +98,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>   
                       Status
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                      {{ row.Status }} 
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.Status }}</span>
                     </td>
                   </ng-container>
                   
@@ -116,8 +107,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Filing Date  
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                      {{ row.FilingDate ? (row.FilingDate | date: "yyyy/MM/dd") : "" }} 
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.FilingDate ? (element.FilingDate | date: "yyyy/MM/dd") : "" }}</span>
                     </td>
                   </ng-container>
                   
@@ -125,8 +116,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Court Hearing
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                      <mat-checkbox [checked]="row.CourtHearing == 'Y'" [disabled]="true"></mat-checkbox>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox [checked]="element.CourtHearing == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
@@ -134,8 +125,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Citizen Flag 
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                     <mat-checkbox [checked]="row.CitizenFlag == 'Y'" [disabled]="true"></mat-checkbox>
+                    <td mat-cell *matCellDef="let element">  
+                     <mat-checkbox [checked]="element.CitizenFlag == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
@@ -143,8 +134,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       System Flag
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                      <mat-checkbox [checked]="row.SystemFlag == 'Y'" [disabled]="true"></mat-checkbox>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox [checked]="element.SystemFlag == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
@@ -152,14 +143,14 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> 
                       Assigned
                     </th>
-                    <td mat-cell *matCellDef="let row">  
-                      {{ row.AssignedTo ? row.AssignedTo : "Unassigned" }} 
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="element.Status == 'New' ? 'bold' : 'none'">{{ element.AssignedTo ? element.AssignedTo : "Unassigned" }}</span>
                     </td>
                   </ng-container>
           
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              
+             
               </table> 
               </div>
     

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import {MatSort, Sort} from '@angular/material/sort';
+import {MatSort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-ticket-page',
@@ -14,7 +14,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'DateSubmitted',
     'Ticket',
     'Surname',
-    'GivenName',
     'RequestType',
     'Status',
     'FilingDate',
@@ -25,7 +24,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   ];
   remoteDummyData: disputeData[] = [
     {
-      RedGreenAlert: 'Green',
       DateSubmitted: new Date('2022/02/08'),
       Ticket: 'AJ00214578',
       Surname: 'McGibbons',
@@ -39,7 +37,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: undefined,
     },
     {
-      RedGreenAlert: 'Green',
       DateSubmitted: new Date('2022/02/08'),
       Ticket: 'EZ02000460',
       Surname: 'Smithe',
@@ -53,7 +50,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: undefined,
     },
     {
-      RedGreenAlert: 'Green',
       DateSubmitted: new Date('2022/02/08'),
       Ticket: 'AJ00214578',
       Surname: 'Jacklin',
@@ -67,7 +63,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: undefined,
     },
     {
-      RedGreenAlert: 'Green',
       DateSubmitted: new Date('2022/02/08'),
       Ticket: 'AJ00214578',
       Surname: 'Morris',
@@ -81,7 +76,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: undefined,
     },
     {
-      RedGreenAlert: 'Green',
       DateSubmitted: new Date('2022/02/08'),
       Ticket: 'AJ00214578',
       Surname: 'Korrin',
@@ -95,7 +89,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: undefined,
     },
     {
-      RedGreenAlert: null,
       DateSubmitted: new Date('2022/02/06'),
       Ticket: 'AJ00214578',
       Surname: 'Aster',
@@ -109,7 +102,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: 'Barry Mann',
     },
     {
-      RedGreenAlert: null,
       DateSubmitted: new Date('2022/02/06'),
       Ticket: 'AJ00214578',
       Surname: 'Smith',
@@ -123,7 +115,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: undefined,
     },
     {
-      RedGreenAlert: 'Red',
       DateSubmitted: new Date('2022/02/06'),
       Ticket: 'AJ00214578',
       Surname: 'Brown',
@@ -137,7 +128,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: 'Barry Mann',
     },
     {
-      RedGreenAlert: null,
       DateSubmitted: new Date('2022/02/05'),
       Ticket: 'AJ00214578',
       Surname: 'Jones',
@@ -151,7 +141,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       AssignedTo: null,
     },
     {
-      RedGreenAlert: null,
       DateSubmitted: new Date('2022/02/04'),
       Ticket: 'AJ00214578',
       Surname: 'Price',
@@ -178,7 +167,10 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.RegionName = "Fraser Valley Region";
 
     // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return 1; } else { return -1 } } );
+    this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
+
+    // set red green alert
+    this.remoteDummyData.forEach(x => {x.RedGreenAlert = x.Status == 'New' ? 'Green' : (x.Status == 'Alert' ? 'Red' : '' )});
 
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
     this.dataSource.filterPredicate = function (record:disputeData ,filter) {
@@ -203,7 +195,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 }
 export interface disputeData {
-  RedGreenAlert: string,
+  RedGreenAlert?: string,
   DateSubmitted: Date,
   Ticket: string,
   Surname: string,
