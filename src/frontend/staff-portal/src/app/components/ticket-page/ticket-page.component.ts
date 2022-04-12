@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TicketPageComponent implements OnInit {
   dataSource = new MatTableDataSource();
+  public ticketInfo:any;
   displayedColumns: string[] = [
     'RedGreenAlert',
     'DateSubmitted',
@@ -164,6 +165,7 @@ export class TicketPageComponent implements OnInit {
       AssignedTo: 'Unassigned',
     },
   ];
+  public showTicket = false
   constructor() {}
 
   ngOnInit(): void {
@@ -213,4 +215,11 @@ export class TicketPageComponent implements OnInit {
     this.dataSource.data = this.remoteDummyData;
   }
 
+  backTicketList(element){
+    this.ticketInfo=element
+    this.showTicket = !this.showTicket;
+  }
+  backTicketpage(){
+    this.showTicket = !this.showTicket;
+  }
 }

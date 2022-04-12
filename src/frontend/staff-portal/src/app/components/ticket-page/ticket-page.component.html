@@ -20,9 +20,9 @@
         </div>
       </section>
       <section>
-        <div class="flex-6-col ">
+        <div class="flex-6-col">
  
-            <div>
+            <div *ngIf="!showTicket">
               <ng-template mat-tab-label>
                 <h1 class="mb-1 tabHeader">Inbox (1)</h1>
               </ng-template>
@@ -123,7 +123,7 @@
                         </div>
                       </div>
                 </th>
-                    <td mat-cell *matCellDef="let element"> <a href="javascript:void()">{{element.Ticket}}</a></td>
+                    <td mat-cell *matCellDef="let element"> <a (click)="backTicketList(element)" href="javascript:void()">{{element.Ticket}}</a></td>
                   </ng-container>
               
                   <ng-container matColumnDef="Surname">
@@ -307,7 +307,9 @@
     
           
             </div>
-
+           <div *ngIf="showTicket">
+             <app-ticket-info (backTicketList)="backTicketpage()" [ticketInfo]="ticketInfo"></app-ticket-info>
+           </div>
 
         </div>
       </section>
