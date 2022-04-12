@@ -202,7 +202,7 @@ public static class Startup
         builder.Services.AddSingleton<IFormRecognizerService>(service =>
         {
             var logger = service.GetRequiredService<ILogger<FormRecognizerService>>();
-            return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, logger);
+            return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, configuration.ModelId!, logger);
         });
 
         builder.Services.AddSingleton<IFormRecognizerValidator>(service =>

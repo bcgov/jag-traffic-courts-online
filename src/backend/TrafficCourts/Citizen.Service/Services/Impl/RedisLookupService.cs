@@ -36,6 +36,7 @@ public class RedisLookupService : ILookupService
             else
             {
                 // Get all Statute Keys that match the given section text
+                section = section.ToLower().Trim();
                 redisValues = db.SetCombine(SetOperation.Intersect, new RedisKey("statute:section:" + section), new RedisKey("statute:section:" + section));
             }
 
