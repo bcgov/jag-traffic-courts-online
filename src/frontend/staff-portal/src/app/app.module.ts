@@ -38,6 +38,8 @@ import { UnauthorizedComponent } from '@components/error/unauthorized/unauthoriz
 
 import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
 import { initializeKeycloak } from './init/keycloak-init.factory';
+import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -57,7 +59,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AppComponent,
     LandingComponent,
     TicketPageComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    TicketInfoComponent
   ],
   imports: [
     CommonModule,
