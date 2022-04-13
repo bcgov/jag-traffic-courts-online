@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ca.bc.gov.open.jag</groupId>
-	<artifactId>oracle-data-interface</artifactId>
+	<artifactId>oracle-data-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>oracle-data-interface</name>
+	<name>oracle-data-api</name>
 	<description>Project for dispute ticket api and ords interface</description>
 	<properties>
 		<java.version>11</java.version>

@@ -12,8 +12,8 @@
         <!--https://127.0.0.1:8088 for local-->
         <url>${SPLUNK_URL}</url>
         <token>${SPLUNK_TOKEN}</token>
-        <source>oracle-data-interface</source>
-		<sourcetype>oracle-data-interface-logs</sourcetype>
+        <source>oracle-data-api</source>
+		<sourcetype>oracle-data-api-logs</sourcetype>
 		<disableCertificateValidation>true</disableCertificateValidation>
 		<batch_size_count>1</batch_size_count>
 		<connectTimeout>5000</connectTimeout>
