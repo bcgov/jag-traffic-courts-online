@@ -8,13 +8,13 @@ After running `docker-compose up` from the project root, these services should b
 
 | Name                  | URL                                          | Notes
 | --------------------- | -------------------------------------------- | --------------------------------------------
-| oracle-data-interface | http://localhost:5010/swagger-ui/index.html  | 
+| oracle-data-api | http://localhost:5010/swagger-ui/index.html  | 
 | TrafficCourts         | http://localhost:5000/swagger/index.html     | 
 | Splunk                | http://localhost:8000                        | login with admin/password
 
 ## Description
 
-### oracle-data-interface
+### oracle-data-api
 An API that acts as an interface between Oracle and the TrafficCourts API 
 
 #### Configuration
@@ -43,7 +43,7 @@ An API that acts as an interface between Oracle and the TrafficCourts API
 | REDIS_SENTINAL_NODES        | When redis is configured in a master-slave-sentinel configuration, a comma-separated list of host:port sentinal nodes. ie "redis-sentinel-1:26379,redis-sentinel-2:26380,redis-sentinel-3:26381"
 | SPLUNK_URL                  | 
 | SPLUNK_TOKEN                | 
-| JAVA_OPTS	                  | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG"
+| JAVA_OPTS	                  | JVM parameters to be passed to the container. ie, "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG"
 
 Note: Redis Standalone and Sentinel modes are mutually exclusive.  Either use host/port variables or master/nodes.
 
@@ -87,6 +87,6 @@ Local object store example. Run `docker-compose up minio createbuckets`
 ### Splunk
 A logging collector tool to capture, index, and correlate logs in a searchable repository.
 
-A sample query might be (to find all logs produced from the Oracle Interface API:
-`source="oracle-data-interface"`
+A sample query might be (to find all logs produced from the Oracle Data API:
+`source="oracle-data-api"`
 

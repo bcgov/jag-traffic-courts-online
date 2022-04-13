@@ -55,12 +55,12 @@ services:
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
   #############################################################################################
-  ###                           Oracle Interface API                                        ###
+  ###                           Oracle Data API                                             ###
   #############################################################################################
-  oraface-api:
-    container_name: oraface-api
+  oracle-data-api:
+    container_name: oracle-data-api
     build:
-      context: ./src/backend/oracle-data-interface
+      context: ./src/backend/oracle-data-api
       args:
         - SKIP_TESTS=true
         - SPLUNK_URL=${SPLUNK_URL:-http://splunk:8088}
@@ -70,7 +70,7 @@ services:
         - REDIS_PASSWORD=password
         - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
         - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
-        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
+        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG}
     depends_on:
       - redis
     ports:
