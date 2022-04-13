@@ -15,9 +15,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<ArcApiConfiguration>(builder.Configuration.GetRequiredSection("ArcApiConfiguration"));
-builder.Services.Configure<OracleInterfaceApiConfiguration>(builder.Configuration.GetRequiredSection("OracleInterfaceApiConfiguration"));
+builder.Services.Configure<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection("OracleDataApiConfiguration"));
 
-builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>();
+builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
 builder.Services.AddTransient<ISubmitDisputeToArcService, SubmitDisputeToArcService>();
 
 builder.Services.AddMassTransit(cfg =>

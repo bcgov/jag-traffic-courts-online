@@ -12,12 +12,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
     public class SubmitDisputeConsumer : IConsumer<SubmitDispute>
     {
         private readonly ILogger<SubmitDisputeConsumer> _logger;
-        private readonly IOracleInterfaceService _oracleInterfaceService;
+        private readonly IOracleDataApiService _oracleDataApiService;
 
-        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleInterfaceService oracleInterfaceService)
+        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleDataApiService oracleDataApiService)
         {
             _logger = logger;
-            _oracleInterfaceService = oracleInterfaceService;
+            _oracleDataApiService = oracleDataApiService;
         }
 
         public async Task Consume(ConsumeContext<SubmitDispute> context)
@@ -64,7 +64,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());
 
-                var disputeId = await _oracleInterfaceService.CreateDisputeAsync(dispute);
+                var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
                 if (disputeId != -1)
                 {

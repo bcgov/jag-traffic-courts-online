@@ -9,11 +9,13 @@ import {MatSort} from '@angular/material/sort';
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
+  public ticketInfo:any;
   displayedColumns: string[] = [
     'RedGreenAlert',
     'DateSubmitted',
     'Ticket',
     'Surname',
+    'GivenName',
     'RequestType',
     'Status',
     'FilingDate',
@@ -159,7 +161,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   todayDate: Date = new Date();
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
-
+  public showTicket = false
   constructor() {}
 
   ngOnInit(): void {
@@ -192,6 +194,14 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  backTicketList(element){
+    this.ticketInfo=element
+    this.showTicket = !this.showTicket;
+  }
+  backTicketpage(){
+    this.showTicket = !this.showTicket;
   }
 }
 export interface disputeData {
