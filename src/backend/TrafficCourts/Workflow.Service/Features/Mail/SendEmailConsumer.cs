@@ -20,23 +20,13 @@ namespace TrafficCourts.Workflow.Service.Features.Mail
 
         public async Task Consume(ConsumeContext<SendEmail> context)
         {
-            CancellationTokenSource _cancellationTokenSource;
             if (context.RequestId != null)
             {
                 _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
 
                 _logger.LogDebug("TRY SENDING EMAIL: {Email}", context.ToString());
-                _cancellationTokenSource = new CancellationTokenSource();
-                var cancellationToken = _cancellationTokenSource.Token;
-                // TODO: Add time-out for email send, and use cancellation token to stop
-                try
-                {
-                    await _emailSenderService.SendEmailAsync(context.Message, cancellationToken);
-                }
-                catch (OperationCanceledException oce)
-                {
 
-                }
+                await _emailSenderService.SendEmailAsync(context.Message);
             }
         }
     }

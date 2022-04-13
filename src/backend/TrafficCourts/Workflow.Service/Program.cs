@@ -17,9 +17,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<ArcApiConfiguration>(builder.Configuration.GetRequiredSection("ArcApiConfiguration"));
 builder.Services.Configure<OracleInterfaceApiConfiguration>(builder.Configuration.GetRequiredSection("OracleInterfaceApiConfiguration"));
+builder.Services.Configure<SmtpConfiguration>(builder.Configuration.GetRequiredSection("SmtpConfiguration"));
+builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetRequiredSection("EmailConfiguration"));
 
 builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>();
 builder.Services.AddTransient<ISubmitDisputeToArcService, SubmitDisputeToArcService>();
+builder.Services.AddTransient<ISmtpClient, SmtpClient>();
+builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
+
 
 builder.Services.AddMassTransit(cfg =>
 {
