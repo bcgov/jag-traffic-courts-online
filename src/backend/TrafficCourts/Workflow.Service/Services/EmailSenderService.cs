@@ -78,7 +78,7 @@ namespace TrafficCourts.Workflow.Service.Services
 
                 // send email asynchronously
                 var smtp = await _smptClientFactory.CreateAsync(cancellationToken);
-                await smtp.SendAsync(email, cancellationToken);
+                await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
             }
             catch (ArgumentNullException ane) {

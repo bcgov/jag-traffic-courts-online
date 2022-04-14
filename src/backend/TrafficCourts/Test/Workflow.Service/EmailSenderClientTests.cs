@@ -19,23 +19,16 @@ namespace TrafficCourts.Test.Workflow.Service
 {
     public class EmailSenderClientTests
     {
-        private readonly MockRepository _mockRepository;
         private readonly Mock<ILogger<EmailSenderService>> _mockLogger;
-        private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
 
         public EmailSenderClientTests()
         {
-            _mockRepository = new MockRepository(MockBehavior.Strict);
 
             _mockLogger = new Mock<ILogger<EmailSenderService>>();
-            _mockMapper = new Mock<IMapper>();
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
-
-            _mockLogger = _mockRepository.Create<ILogger<EmailSenderService>>();
-            _mockSmtpClientFactory = _mockRepository.Create<ISmtpClientFactory>();
-            _mockSmtpClient = _mockRepository.Create<ISmtpClient>();
+            _mockSmtpClient = new Mock<ISmtpClient>();
         }
 
         private EmailSenderService CreateService()
@@ -54,7 +47,7 @@ namespace TrafficCourts.Test.Workflow.Service
                 _mockSmtpClientFactory.Object);
         }
 
-        [Fact(Skip = "Integration Test")]
+        [Fact]
         public async Task SendEmailAsync_WithCorrectParams_ShouldReturnTaskComplete()
         {
             // Arrange
@@ -65,17 +58,10 @@ namespace TrafficCourts.Test.Workflow.Service
                 Subject = "Test message",
                 PlainTextContent = "plain old message"
             };
-            /*
-             *             Headers[HeaderId.From] = string.Empty;
-            Date = DateTimeOffset.Now;
-            Subject = string.Empty;
-            MessageId = MimeUtils.GenerateMessageId();
-
-             * */
-
 
             _mockSmtpClient.Setup(client => client.SendAsync(
                     It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
+
             _mockSmtpClient.Setup(client => client.DisconnectAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()));
 
             _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
@@ -90,7 +76,58 @@ namespace TrafficCourts.Test.Workflow.Service
 
             // Assert
             Assert.True(result.IsCompletedSuccessfully);
-            _mockRepository.VerifyAll();
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_WithMissingParams_ShouldReturnFail()
+        {
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = "test@test.com",
+                To = new string[] { "fail@test.com" },
+                Subject = "Test message",
+                PlainTextContent = "plain old message"
+            };
+
+            _mockSmtpClient.Setup(client => client.SendAsync(
+                    It.Is<MimeMessage>(mailMessage =>
+                    mailMessage.From.ToString() == emailMessage.From &&
+                    mailMessage.To.Count() == 0 &&
+                    mailMessage.Subject == emailMessage.Subject &&
+                    mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.PlainTextContent
+                ), It.IsAny<CancellationToken>(), null))
+                .Throws(new InvalidOperationException());
+
+            _mockSmtpClient.Setup(client => client.SendAsync(
+                    It.Is<MimeMessage>(mailMessage =>
+                    mailMessage.From.ToString() == emailMessage.From &&
+                    mailMessage.To.Count() == 1 &&
+                    mailMessage.Subject == emailMessage.Subject &&
+                    mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.PlainTextContent
+                ), It.IsAny<CancellationToken>(), null));
+
+
+            _mockSmtpClient.Setup(client => client.DisconnectAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>()));
+
+            _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(_mockSmtpClient.Object));
+
+            var service = CreateService();
+
+            // test e-mail send.
+            var result = service.SendEmailAsync(emailMessage);
+
+            try
+            {
+                await result;
+            } catch(Exception ex)
+            {
+                // Assert
+                Assert.True(ex.Message == "Possible missing sender or recipient info");
+            }
+
+            Assert.False(result.IsCompletedSuccessfully);
         }
 
     }
