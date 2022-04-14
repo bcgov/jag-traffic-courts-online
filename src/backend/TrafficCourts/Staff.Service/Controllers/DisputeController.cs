@@ -35,14 +35,32 @@ public class DisputeController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("/dispute/{disputeId}")]
-    [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Dispute), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetDisputeAsync(int disputeId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Retrieving Dispute from oraface-api");
+        _logger.LogDebug("Retrieving Dispute from oracle-data-api");
 
-        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
-
-        return Ok(dispute);
+        try
+        {
+            Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
+            return Ok(dispute);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == (int) HttpStatusCode.NotFound)
+        {
+            return NotFound();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        {
+            _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
 }
