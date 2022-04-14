@@ -27,7 +27,7 @@ namespace TrafficCourts.Workflow.Service.Services
             {
                 // create email message
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(emailMessage.From));
+                email.From.Add(MailboxAddress.Parse(emailMessage.From??_emailConfiguration.Sender));
 
                 if(emailMessage.To != null)
                 {
