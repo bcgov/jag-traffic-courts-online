@@ -29,6 +29,30 @@ public class DisputeController : ControllerBase
     }
 
     /// <summary>
+    /// Returns all Disputes from the Oracle Data Interface API.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet("/disputes")]
+    [ProducesResponseType(typeof(ICollection<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Retrieving all Disputes from oracle-data-api");
+
+        try
+        {
+            ICollection<Dispute> disputes = await _oracleDataApi.GetAllDisputesAsync(cancellationToken);
+            return Ok(disputes);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error retrieving Disputes from oracle-data-api:", e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    /// <summary>
     /// Returns a single Dispute with the given identifier from the Oracle Data Interface API.
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
