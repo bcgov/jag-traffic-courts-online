@@ -1,26 +1,23 @@
 ﻿using Microsoft.Extensions.Options;
-using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Messaging.MessageContracts;
+using System.Runtime.Serialization;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using MimeKit;
-using MimeKit.Text;
-using System.Runtime.Serialization;
+using TrafficCourts.Workflow.Service.Configuration;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
-    public class SmtpClient : ISmtpClient
+    public class SmtpClientFactory : ISmtpClientFactory
     {
-        private readonly ILogger<SmtpClient> _logger;
+        private readonly ILogger<SmtpClientFactory> _logger;
         private readonly SmtpConfiguration _stmpConfiguration;
 
-        public SmtpClient(ILogger<SmtpClient> logger, IOptions<SmtpConfiguration> stmpConfiguration)
+        public SmtpClientFactory(ILogger<SmtpClientFactory> logger, IOptions<SmtpConfiguration> stmpConfiguration)
         {
             _logger = logger;
             _stmpConfiguration = stmpConfiguration.Value;
         }
 
-        public async Task<MailKit.Net.Smtp.SmtpClient> CreateAsync(CancellationToken cancellationToken)
+        public async Task<ISmtpClient> CreateAsync(CancellationToken cancellationToken)
         {
             try
             {

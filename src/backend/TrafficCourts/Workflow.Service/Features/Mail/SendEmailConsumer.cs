@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Services;
 
 namespace TrafficCourts.Workflow.Service.Features.Mail
@@ -26,7 +27,17 @@ namespace TrafficCourts.Workflow.Service.Features.Mail
 
                 _logger.LogDebug("TRY SENDING EMAIL: {Email}", context.ToString());
 
-                await _emailSenderService.SendEmailAsync(context.Message);
+                var emailMessage = new EmailMessage
+                {
+                    From = context.Message.From,
+                    To = context.Message.To,
+                    Cc = context.Message.Cc,
+                    Bcc = context.Message.Bcc,
+                    Subject = context.Message.Subject,
+                    PlainTextContent = context.Message.PlainTextContent,
+                    HtmlContent = context.Message.HtmlContent,
+                };
+                await _emailSenderService.SendEmailAsync(emailMessage);
             }
         }
     }

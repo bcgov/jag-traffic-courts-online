@@ -22,7 +22,7 @@ builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetRequired
 
 builder.Services.AddTransient<IOracleInterfaceService, OracleInterfaceService>();
 builder.Services.AddTransient<ISubmitDisputeToArcService, SubmitDisputeToArcService>();
-builder.Services.AddTransient<ISmtpClient, SmtpClient>();
+builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Workflow.Service.Models;
 using MimeKit;
 using MimeKit.Text;
 using System.Runtime.Serialization;
@@ -12,16 +12,16 @@ namespace TrafficCourts.Workflow.Service.Services
     {
         private readonly ILogger<EmailSenderService> _logger;
         private readonly EmailConfiguration _emailConfiguration;
-        private readonly ISmtpClient _smptClient;
+        private readonly ISmtpClientFactory _smptClientFactory;
 
-        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClient stmpClient)
+        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory)
         {
             _logger = logger;
             _emailConfiguration = emailConfiguration.Value;
-            _smptClient = stmpClient;
+            _smptClientFactory = stmpClientFactory;
         }
 
-        public async Task SendEmailAsync(SendEmail emailMessage)
+        public async Task SendEmailAsync(EmailMessage emailMessage)
         {
             try
             {
@@ -29,25 +29,34 @@ namespace TrafficCourts.Workflow.Service.Services
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(emailMessage.From));
 
-                foreach (var recipient in emailMessage.To)
+                if(emailMessage.To != null)
                 {
-                    if(IsValidEmail(recipient) && IsEmailAllowed(recipient))
+                    foreach (var recipient in emailMessage.To)
                     {
-                      email.To.Add(MailboxAddress.Parse(recipient));
+                        if(IsValidEmail(recipient) && IsEmailAllowed(recipient))
+                        {
+                          email.To.Add(MailboxAddress.Parse(recipient));
+                        }
                     }
                 }
-                foreach (var ccRecipient in emailMessage.Cc)
+                if(emailMessage.Cc != null)
                 {
-                    if (IsValidEmail(ccRecipient) && IsEmailAllowed(ccRecipient))
+                    foreach (var ccRecipient in emailMessage.Cc)
                     {
-                        email.Cc.Add(MailboxAddress.Parse(ccRecipient));
+                        if (IsValidEmail(ccRecipient) && IsEmailAllowed(ccRecipient))
+                        {
+                            email.Cc.Add(MailboxAddress.Parse(ccRecipient));
+                        }
                     }
                 }
-                foreach (var bccRecipient in emailMessage.Bcc)
+                if(emailMessage.Bcc != null)
                 {
-                    if (IsValidEmail(bccRecipient) && IsEmailAllowed(bccRecipient))
+                    foreach (var bccRecipient in emailMessage.Bcc)
                     {
-                        email.Bcc.Add(MailboxAddress.Parse(bccRecipient));
+                        if (IsValidEmail(bccRecipient) && IsEmailAllowed(bccRecipient))
+                        {
+                            email.Bcc.Add(MailboxAddress.Parse(bccRecipient));
+                        }
                     }
                 }
 
@@ -68,9 +77,9 @@ namespace TrafficCourts.Workflow.Service.Services
                 var cancellationToken = cancellationTokenSource.Token;
 
                 // send email asynchronously
-                var smtp = await _smptClient.CreateAsync(cancellationToken);
+                var smtp = await _smptClientFactory.CreateAsync(cancellationToken);
                 await smtp.SendAsync(email, cancellationToken);
-                await smtp.DisconnectAsync(true, cancellationToken);
+                await smtp.DisconnectAsync(true);
             }
             catch (ArgumentNullException ane) {
                 // host or message is null.
