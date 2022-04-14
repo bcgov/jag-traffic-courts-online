@@ -20,6 +20,14 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "200": {
             "description": "OK",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
@@ -34,6 +42,14 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -53,6 +69,14 @@
         "tags": [ "dispute-controller" ],
         "operationId": "getAllDisputes",
         "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -83,6 +107,14 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "200": {
             "description": "OK",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
@@ -103,7 +135,17 @@
             }
           }
         ],
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "OK" }
+        }
       }
     },
     "/api/v1.0/codetable/refresh": {
@@ -112,7 +154,17 @@
         "summary": "An endpoint hook to trigger a redis rebuild of cached codetable data.",
         "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
         "operationId": "codeTableRefresh",
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "OK" }
+        }
       }
     }
   },
