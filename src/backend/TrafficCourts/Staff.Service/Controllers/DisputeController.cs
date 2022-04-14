@@ -34,10 +34,15 @@ public class DisputeController : ControllerBase
     /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <response code="200">The Dispute was found.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">The Dispute was not found.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
     [HttpGet("/dispute/{disputeId}")]
-    [ProducesResponseType(typeof(Dispute), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputeAsync(int disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving Dispute from oracle-data-api");
@@ -47,7 +52,11 @@ public class DisputeController : ControllerBase
             Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
             return Ok(dispute);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == (int) HttpStatusCode.NotFound)
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return BadRequest();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return NotFound();
         }
