@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Staff.Service\TrafficCourts.Staff.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication\" />
+  </ItemGroup>
+
 </Project>
