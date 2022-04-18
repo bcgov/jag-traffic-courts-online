@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -80,7 +81,7 @@ public class Dispute {
     private Date serviceDate;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<TicketCount> ticketCounts;
+    private List<TicketCount> ticketCounts = new ArrayList<TicketCount>();
 
     @Column
     private boolean lawyerRepresentation;

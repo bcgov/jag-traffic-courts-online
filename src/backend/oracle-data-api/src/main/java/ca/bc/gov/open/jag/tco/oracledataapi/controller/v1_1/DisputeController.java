@@ -42,7 +42,7 @@ public class DisputeController {
 	 */
 	@GetMapping("/disputes")
 	public List<Dispute> getAllDisputes() {
-		log.info("Retrieve all disputes endpoint is called." + new Date());
+		log.debug("Retrieve all disputes endpoint is called." + new Date());
 		return disputeService.getAllDisputes();
 	}
 
