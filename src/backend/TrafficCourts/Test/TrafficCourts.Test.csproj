@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Messaging\" />
-    <Folder Include="Workflow.Service\Features\Mail\" />
   </ItemGroup>
 
   <ItemGroup>

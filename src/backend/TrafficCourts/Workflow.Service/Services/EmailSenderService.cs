@@ -70,6 +70,17 @@ namespace TrafficCourts.Workflow.Service.Services
                     email.Body = new TextPart(TextFormat.Html) { Text = emailMessage.HtmlContent };
                 }
 
+                // Should do a check to see if mandatory fields exist.
+                if(String.IsNullOrEmpty(emailMessage.Subject) || email.Body == null /*||
+                    (email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)*/)
+                {
+                    throw new ArgumentNullException();
+                }
+                else if(email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 // TODO: add time-out config for connection? (hard-coded as 5000 ms for now)
 
                 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
