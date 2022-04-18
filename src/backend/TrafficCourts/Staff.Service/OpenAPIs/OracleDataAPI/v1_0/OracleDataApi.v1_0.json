@@ -1,0 +1,228 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5010",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/v1.0/dispute": {
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "update",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Dispute" } } },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          }
+        }
+      },
+      "post": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "saveDispute",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Dispute" } } },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1.0/disputes": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "getAllDisputes",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Dispute" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1.0/dispute/{disputeId}": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "getDispute",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "deleteDispute",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "OK" }
+        }
+      }
+    },
+    "/api/v1.0/codetable/refresh": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "summary": "An endpoint hook to trigger a redis rebuild of cached codetable data.",
+        "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
+        "operationId": "codeTableRefresh",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "OK" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dispute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ticketNumber": { "type": "string" },
+          "courtLocation": { "type": "string" },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantSurname": { "type": "string" },
+          "givenNames": { "type": "string" },
+          "streetAddress": { "type": "string" },
+          "province": { "type": "string" },
+          "postalCode": { "type": "string" },
+          "homePhone": { "type": "string" },
+          "driversLicense": { "type": "string" },
+          "driversLicenseProvince": { "type": "string" },
+          "workPhone": { "type": "string" },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enforcementOrganization": { "type": "string" },
+          "serviceDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketCounts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TicketCount" }
+          },
+          "lawyerRepresentation": { "type": "boolean" },
+          "interpreterLanguage": { "type": "string" },
+          "witnessIntent": { "type": "boolean" }
+        }
+      },
+      "TicketCount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offenceDeclaration": { "type": "string" },
+          "timeToPayRequest": { "type": "boolean" },
+          "fineReductionRequest": { "type": "boolean" },
+          "dispute": { "$ref": "#/components/schemas/Dispute" }
+        }
+      }
+    }
+  }
+}
