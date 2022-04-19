@@ -1,4 +1,4 @@
-package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_1;
+package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0.DisputeController;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
@@ -17,7 +18,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 class DisputeControllerTest extends BaseTestSuite {
 
 	@Autowired
-	@Qualifier("DisputeControllerV1_1")
+	@Qualifier("DisputeControllerV1_0")
 	private DisputeController disputeController;
 
 	@Test

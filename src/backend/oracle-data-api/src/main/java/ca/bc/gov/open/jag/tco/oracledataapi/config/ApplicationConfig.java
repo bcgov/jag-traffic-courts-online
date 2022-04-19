@@ -15,12 +15,4 @@ public class ApplicationConfig {
 		return GroupedOpenApi.builder().group("v1.0").pathsToMatch("/**/api/v1.0/**").build();
 	}
 
-	/**
-	 * Group all APIs with `v1.1` in the path
-	 */
-	@Bean
-	GroupedOpenApi v1_1Apis() {
-		return GroupedOpenApi.builder().group("v1.1").pathsToMatch("/**/api/v1.1/**").build();
-	}
-
 }
