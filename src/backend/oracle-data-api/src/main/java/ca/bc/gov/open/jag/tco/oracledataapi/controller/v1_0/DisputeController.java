@@ -3,9 +3,14 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController(value = "DisputeControllerV1_0")
 @RequestMapping("/api/v1.0")
+@Validated
 public class DisputeController {
 
 	@Autowired
@@ -90,11 +96,11 @@ public class DisputeController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok"),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
-	 //,@ApiResponse(responseCode = "405", description = "Only NEW statuses can be changed to REJECTED. Update failed.") // Not currently a requirement.
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/reject")
-	public void rejectDispute(@PathVariable Integer id, @RequestBody String rejectedReason) {
+	public void rejectDispute(@PathVariable Integer id, @Valid @RequestBody @NotBlank @Size(min=1, max=256) String rejectedReason) {
 		disputeService.setStatus(id, DisputeStatus.REJECTED, rejectedReason);
 	}
 
@@ -109,8 +115,8 @@ public class DisputeController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok"),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
-     //,@ApiResponse(responseCode = "405", description = "Only NEW statuses can be changed to CANCELLED. Update failed.") // Not currently a requirement.
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
 	public void cancelDispute(@PathVariable Integer id) {
@@ -128,8 +134,8 @@ public class DisputeController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok"),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
-	 //,@ApiResponse(responseCode = "405", description = "Only NEW statuses can be changed to PROCESSING. Update failed.") // Not currently a requirement.
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/submit")
 	public void submitDispute(@PathVariable Integer id) {
