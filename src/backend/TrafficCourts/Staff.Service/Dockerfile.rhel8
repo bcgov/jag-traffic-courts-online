@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["Staff.Service/TrafficCourts.Staff.Service.csproj", "Staff.Service/"]
+COPY ["Common/TrafficCourts.Common.csproj", "Common/"]
+RUN dotnet restore "Staff.Service/TrafficCourts.Staff.Service.csproj"
+COPY . .
+WORKDIR "/src/Staff.Service"
+RUN dotnet build "TrafficCourts.Staff.Service.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "TrafficCourts.Staff.Service.csproj" -c Release -o /app/publish
+
+FROM registry.access.redhat.com/ubi8/dotnet-60-runtime AS base
+WORKDIR /opt/app-root/app
+EXPOSE 8080
+COPY --from=publish /app/publish .
+
+ENTRYPOINT ["dotnet", "TrafficCourts.Staff.Service.dll"]
