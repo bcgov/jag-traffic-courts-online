@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
-@RestController()
+@RestController(value = "DisputeControllerV1_0")
 @RequestMapping("/api/v1.0")
 public class DisputeController {
 
@@ -39,19 +42,19 @@ public class DisputeController {
 	 */
 	@GetMapping("/disputes")
 	public List<Dispute> getAllDisputes() {
-		log.info("Retrieve all disputes endpoint is called." + new Date());
+		log.debug("Retrieve all disputes endpoint is called." + new Date());
 		return disputeService.getAllDisputes();
 	}
 
 	/**
 	 * GET endpoint that retrieves the detail of a specific dispute
 	 *
-	 * @param disputeId
+	 * @param id
 	 * @return {@link Dispute}
 	 */
-	@GetMapping("/dispute/{disputeId}")
-	public Dispute getDispute(@PathVariable("disputeId") int disputeId) {
-		return disputeService.getDisputeById(disputeId);
+	@GetMapping("/dispute/{id}")
+	public Dispute getDispute(@PathVariable Integer id) {
+		return disputeService.getDisputeById(id);
 	}
 
 	/**
@@ -59,9 +62,9 @@ public class DisputeController {
 	 *
 	 * @param id of the {@link Dispute} to be deleted
 	 */
-	@DeleteMapping("/dispute/{disputeId}")
-	public void deleteDispute(@PathVariable("disputeId") int disputeId) {
-		disputeService.delete(disputeId);
+	@DeleteMapping("/dispute/{id}")
+	public void deleteDispute(@PathVariable Integer id) {
+		disputeService.delete(id);
 	}
 
 	/**
@@ -71,21 +74,66 @@ public class DisputeController {
 	 * @return id of the saved {@link Dispute}
 	 */
 	@PostMapping("/dispute")
-	public int saveDispute(@RequestBody Dispute dispute) {
-		disputeService.saveOrUpdate(dispute);
+	public Integer saveDispute(@RequestBody Dispute dispute) {
+		disputeService.save(dispute);
 		return dispute.getId();
 	}
 
 	/**
-	 * PUT endpoint that updates the dispute detail
+	 * PUT endpoint that updates the dispute detail, setting the status to REJECTED.
 	 *
 	 * @param dispute to be updated
+	 * @param id of the saved {@link Dispute} to update
 	 * @return {@link Dispute}
 	 */
-	@PutMapping("/dispute")
-	public Dispute update(@RequestBody Dispute dispute) {
-		disputeService.saveOrUpdate(dispute);
-		return dispute;
+	@Operation(summary = "Updates the status of a particular Dispute record to REJECTED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
+	 //,@ApiResponse(responseCode = "405", description = "Only NEW statuses can be changed to REJECTED. Update failed.") // Not currently a requirement.
+	})
+	@PutMapping("/dispute/{id}/reject")
+	public void rejectDispute(@PathVariable Integer id, @RequestBody String rejectedReason) {
+		disputeService.setStatus(id, DisputeStatus.REJECTED, rejectedReason);
+	}
+
+	/**
+	 * PUT endpoint that updates the dispute detail, setting the status to CANCELLED.
+	 *
+	 * @param dispute to be updated
+	 * @param id of the saved {@link Dispute} to update
+	 * @return {@link Dispute}
+	 */
+	@Operation(summary = "Updates the status of a particular Dispute record to CANCELLED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
+     //,@ApiResponse(responseCode = "405", description = "Only NEW statuses can be changed to CANCELLED. Update failed.") // Not currently a requirement.
+	})
+	@PutMapping("/dispute/{id}/cancel")
+	public void cancelDispute(@PathVariable Integer id) {
+		disputeService.setStatus(id, DisputeStatus.CANCELLED);
+	}
+
+	/**
+	 * PUT endpoint that updates the dispute detail, setting the status to PROCESSING.
+	 *
+	 * @param dispute to be updated
+	 * @param id of the saved {@link Dispute} to update
+	 * @return {@link Dispute}
+	 */
+	@Operation(summary = "Updates the status of a particular Dispute record to PROCESSING.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
+	 //,@ApiResponse(responseCode = "405", description = "Only NEW statuses can be changed to PROCESSING. Update failed.") // Not currently a requirement.
+	})
+	@PutMapping("/dispute/{id}/submit")
+	public void submitDispute(@PathVariable Integer id) {
+		disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
 
 	/**

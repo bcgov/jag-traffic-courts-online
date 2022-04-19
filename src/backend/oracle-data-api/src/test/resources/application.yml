@@ -1,0 +1,3 @@
+logging:
+  level:
+    ca.bc.gov.open.jag.tco.oracledataapi: DEBUG

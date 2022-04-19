@@ -15,19 +15,29 @@ public class ControllerAdvisor {
 	/**
 	 * Returns an API HTTP error code of 404 if NoSuchElementException is thrown (typically when trying to GET a Dispute for a non-existent record).
 	 */
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+	@ExceptionHandler(NoSuchElementException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 
 	/**
-	 * Returns an API HTTP error code of 400 if EmptyResultDataAccessException is thrown (typically when trying to DELETE a Dispute for a non-existent record).
+	 * Returns an API HTTP error code of 400 if EmptyResultDataAccessException is thrown (typically when trying to DELETE a Dispute for a non-existent
+	 * record).
 	 */
-    @ExceptionHandler(EmptyResultDataAccessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex) {
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+	@ExceptionHandler(EmptyResultDataAccessException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex) {
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+
+	/**
+	 * Returns an API HTTP error code of 400 if the endpoint has been deprecated.
+	 */
+	@ExceptionHandler(DeprecatedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> handleDeprecatedException(DeprecatedException ex) {
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 
 }

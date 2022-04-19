@@ -14,17 +14,22 @@ import lombok.Setter;
  * A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government.
  */
 @RedisHash("statute")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Statute {
 
 	@Id
 	@CsvBindByPosition(position = 0)
 	private Integer code;
+
 	@CsvBindByPosition(position = 1)
 	private String act;
+
 	@CsvBindByPosition(position = 2)
 	@Indexed
 	private String section;
+
 	@CsvBindByPosition(position = 3)
 	private String description;
 
