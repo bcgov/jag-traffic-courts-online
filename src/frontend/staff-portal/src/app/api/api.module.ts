@@ -2,6 +2,8 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
+import { DisputeService } from './api/dispute.service';
+
 @NgModule({
   imports:      [],
   declarations: [],
