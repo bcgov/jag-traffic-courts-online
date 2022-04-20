@@ -8,7 +8,8 @@ After running `docker-compose up` from the project root, these services should b
 
 | Name                  | URL                                          | Notes
 | --------------------- | -------------------------------------------- | --------------------------------------------
-| oracle-data-api | http://localhost:5010/swagger-ui/index.html  | 
+| oracle-data-api       | http://localhost:5010/swagger-ui/index.html  | 
+| staff-api             | http://localhost:5005/swagger/index.html     | A bearer token is required to access the api
 | TrafficCourts         | http://localhost:5000/swagger/index.html     | 
 | Splunk                | http://localhost:8000                        | login with admin/password
 
