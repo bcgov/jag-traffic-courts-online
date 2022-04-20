@@ -5,9 +5,9 @@
     <div class="container">
       <section>
         <div><br />
-          <h1 class="BC-Gov-32px-blue-text">Welcome, User</h1>
+          <h1 class="BC-Gov-32px-blue-text">Welcome, {{ fullName }}</h1>
           <p class="BC-Gov-15px-black-text">
-            Court Registries Clerk, Abbotsford
+            Court Registries Clerk,  {{ RegionName }}
             <span style="float:right">
               {{todayDate|date:"EEEE, MMMM d"}}{{(todayDate|date:"d")|dateSuffix}}{{todayDate|date:",&nbsp;y"}}
             </span>
@@ -23,17 +23,22 @@
                   <div class="flex-container" style="width: 40%">
                     <table>
                       <tr>
-                        <td><span class="BC-Gov-15px-black-text" style="color:green" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
+                        <td><span class="BC-Gov-15px-black-text" style="color:green; width:40%;" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
                         <td style="width:5px">|</td>
-                        <td>
-                          <select style="border: none;">
-                            <option><span class="BC-Gov-15px-black-bold-text"><b>Fraser Valley Region</b>&nbsp;&nbsp;</span></option>
-                          </select>
+                        <td style="width: 40%">
+                            <select style="border: none;">
+                              <option><span class="BC-Gov-15px-black-bold-text"><b>{{ RegionName }}</b>&nbsp;&nbsp;</span></option>
+                            </select>
                         </td>
                       </tr>
                       <tr>
                         <td><span class="BC-Gov-15px-blue-text" ><b>Ticket number search:</b></span></td>
-                        <td colspan="2"><input matInput type="input" (keyup)="applyFilter($event)"/></td>
+                        <td colspan="2">
+                          <div class="inputContainer">
+                            <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)" autocomplete="off" class="input"/>
+                            <mat-icon class="inputIcon">search</mat-icon>
+                          </div>
+                        </td>
                       </tr>
                     </table>
                   </div>

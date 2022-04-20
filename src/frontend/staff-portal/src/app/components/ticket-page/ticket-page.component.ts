@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { AuthService } from '../../services/auth.service';
+import { User } from '@shared/models/user.model';
 import {MatSort} from '@angular/material/sort';
 
 @Component({
@@ -159,12 +161,23 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
   RegionName: string = "";
   todayDate: Date = new Date();
+  fullName: string = "Loading...";
+  authenticated: boolean = false;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
-  constructor() {}
+  constructor(public authService: AuthService) {
+    if (this.authenticated) {
+      this.authService.getUser$().subscribe((user: User) => {
+        this.fullName = `${user?.firstName} ${user?.lastName}`;
+        this.authenticated = true;
+      });
+    }
+  }
 
   ngOnInit(): void {
+
+
     this.dataSource.data = this.remoteDummyData as disputeData[];
     this.RegionName = "Fraser Valley Region";
 
