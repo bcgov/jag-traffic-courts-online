@@ -12,7 +12,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 public class BaseTestSuite {
 
 	@Autowired
-	DisputeRepository disputeRepository;
+	protected DisputeRepository disputeRepository;
 
     @BeforeEach
     protected void beforeEach() throws Exception {

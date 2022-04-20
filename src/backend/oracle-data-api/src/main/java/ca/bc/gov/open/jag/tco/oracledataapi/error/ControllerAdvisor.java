@@ -32,12 +32,12 @@ public class ControllerAdvisor {
 	}
 
 	/**
-	 * Returns an API HTTP error code of 400 if the endpoint has been deprecated.
+	 * Returns an API HTTP error code of 405 if the endpoint operation is not permitted (due to business rules).
 	 */
-	@ExceptionHandler(DeprecatedException.class)
+	@ExceptionHandler(NotAllowedException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<Object> handleDeprecatedException(DeprecatedException ex) {
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<Object> NotAllowedExceptionException(NotAllowedException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
 }

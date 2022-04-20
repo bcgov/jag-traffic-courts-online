@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
-import ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0.DisputeController;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
@@ -96,7 +95,10 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(disputeId, dispute.getId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
-		// Set the status to CANCELLED
+		// Set the status to PROCESSING
+		disputeController.submitDispute(disputeId);
+
+		// Set the status to CANCELLED (can only be set to Cancelled after it's first been set to PROCESSING.
 		disputeController.cancelDispute(disputeId);
 
 		// Assert status is set, rejected reason is NOT set.
