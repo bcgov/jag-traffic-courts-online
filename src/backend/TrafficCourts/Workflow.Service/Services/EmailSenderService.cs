@@ -3,8 +3,6 @@ using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Models;
 using MimeKit;
 using MimeKit.Text;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -21,46 +19,26 @@ namespace TrafficCourts.Workflow.Service.Services
             _smptClientFactory = stmpClientFactory;
         }
 
-        public async Task SendEmailAsync(EmailMessage emailMessage)
+        /// <summary>
+        /// Task for handling of validating and sending of email message
+        /// </summary>
+        /// <param name="emailMessage"></param>
+        /// <returns></returns>
+        /// <exception cref="EmailSendFailedException"></exception>
+        public async Task SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken)
         {
             try
             {
                 // create email message
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(emailMessage.From??_emailConfiguration.Sender));
+                email.From.Add(MailboxAddress.Parse(emailMessage.From ?? _emailConfiguration.Sender));
 
-                if(emailMessage.To != null)
-                {
-                    foreach (var recipient in emailMessage.To)
-                    {
-                        if(IsValidEmail(recipient) && IsEmailAllowed(recipient))
-                        {
-                          email.To.Add(MailboxAddress.Parse(recipient));
-                        }
-                    }
-                }
-                if(emailMessage.Cc != null)
-                {
-                    foreach (var ccRecipient in emailMessage.Cc)
-                    {
-                        if (IsValidEmail(ccRecipient) && IsEmailAllowed(ccRecipient))
-                        {
-                            email.Cc.Add(MailboxAddress.Parse(ccRecipient));
-                        }
-                    }
-                }
-                if(emailMessage.Bcc != null)
-                {
-                    foreach (var bccRecipient in emailMessage.Bcc)
-                    {
-                        if (IsValidEmail(bccRecipient) && IsEmailAllowed(bccRecipient))
-                        {
-                            email.Bcc.Add(MailboxAddress.Parse(bccRecipient));
-                        }
-                    }
-                }
+                AddRecipients(emailMessage.To, email.To);
+                AddRecipients(emailMessage.Cc, email.Cc);
+                AddRecipients(emailMessage.Bcc, email.Bcc);
 
                 email.Subject = emailMessage.Subject;
+
                 if (!String.IsNullOrEmpty(emailMessage.PlainTextContent))
                 {
                     email.Body = new TextPart(TextFormat.Plain) { Text = emailMessage.PlainTextContent };
@@ -71,28 +49,24 @@ namespace TrafficCourts.Workflow.Service.Services
                 }
 
                 // Should do a check to see if mandatory fields exist.
-                if(String.IsNullOrEmpty(emailMessage.Subject) || email.Body == null /*||
-                    (email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)*/)
+                if (String.IsNullOrEmpty(emailMessage.Subject) || email.Body is null)
                 {
-                    throw new ArgumentNullException();
+                    _logger.LogError("No subject or message body provided.");
+                    throw new InvalidEmailMessageException($"No subject or message body provided");
                 }
-                else if(email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)
+                else if (email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)
                 {
-                    throw new InvalidOperationException();
+                    _logger.LogError("Missing recipient info.  No To, Cc or Bcc provided.");
+                    throw new InvalidEmailMessageException($"Missing recipient info");
                 }
-
-                // TODO: add time-out config for connection? (hard-coded as 5000 ms for now)
-
-                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                cancellationTokenSource.CancelAfter(5000);
-                var cancellationToken = cancellationTokenSource.Token;
 
                 // send email asynchronously
                 var smtp = await _smptClientFactory.CreateAsync(cancellationToken);
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
             }
-            catch (ArgumentNullException ane) {
+            catch (ArgumentNullException ane)
+            {
                 // host or message is null.
                 _logger.LogError(ane, "Host or message is null.");
                 throw new EmailSendFailedException($"Host or message is null", ane);
@@ -144,73 +118,79 @@ namespace TrafficCourts.Workflow.Service.Services
                 // A sender has not been specified.
                 // -or-
                 // No recipients have been specified.
-                _logger.LogError(ioe, "A sender has not been specified or no recipients have been specified.");
-                throw new EmailSendFailedException($"Possible missing sender or recipient info", ioe);
+                _logger.LogError(ioe, "A sender has not been specified.");
+                throw new EmailSendFailedException($"Possible missing sender info", ioe);
             }
-            catch(SmtpConnectFailedException scfe)
+            catch (SmtpConnectFailedException scfe)
             {
                 // An error connecting to the the SMTP Server
                 _logger.LogError(scfe, "An error connecting to the the SMTP Server.");
                 throw new EmailSendFailedException($"An error connecting to the the SMTP Server", scfe);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "General email send exception thrown.");
-                throw new EmailSendFailedException($"General email send exception thrown", ex);
-
-            }
         }
 
-        // Validation to check if the passed-in e-mail is in a valid format.
-        private static bool IsValidEmail(string emailAddress)
+        /// <summary>
+        /// Validate each recipient in the array and add to addressList, if valid.
+        /// </summary>
+        /// <param name="recipients"></param>
+        /// <param name="addressList"></param>
+        private void AddRecipients(string[] recipients, InternetAddressList addressList)
         {
-            try
+            if (recipients is not null)
             {
-                System.Net.Mail.MailAddress m = new System.Net.Mail.MailAddress(emailAddress);
-
-                return true;
-            }
-            catch (ArgumentNullException)
-            {
-                return false;
-            }
-            catch (ArgumentException)
-            {
-                return false;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-        }
-
-        // Go through list of allowed emails, and make sure it matches
-        private bool IsEmailAllowed(string emailAddress)
-        {
-            if(_emailConfiguration.AllowList != null)
-            {
-                foreach (var allowedEmail in _emailConfiguration.AllowList)
+                foreach (var recipient in recipients)
                 {
-
-                    Match m = Regex.Match(emailAddress, allowedEmail, RegexOptions.IgnoreCase);
-                    if (m.Success)
+                    if (MailboxAddress.TryParse(recipient, out MailboxAddress mailboxAddress))
                     {
-                        return true;
+                        if (IsEmailAllowed(mailboxAddress))
+                        {
+                            addressList.Add(mailboxAddress);
+                        }
+                        else
+                        {
+                            // not allowed, metrics? logs?
+                            _logger.LogWarning("Recipient email was blocked from being sent to, due to not matching allowlist:");
+                            _logger.LogWarning(recipient);
+                        }
+
+                    }
+                    else
+                    {
+                        // invalid email address, metrics? logs?
+                        _logger.LogWarning("Recipient email provided was invalid:");
+                        _logger.LogWarning(recipient);
                     }
                 }
             }
-            return false;
+        }
+
+        /// <summary>
+        /// Go through list of allowed emails, and make sure it matches
+        /// </summary>
+        /// <param name="emailAddress"></param>
+        /// <returns>boolean true, if email is allowed, false otherwise</returns>
+        private bool IsEmailAllowed(MailboxAddress mailboxAddress)
+        {
+            if (_emailConfiguration.AllowList is not null && _emailConfiguration.AllowList.Count() > 0)
+            {
+                // configured with an allow list, does the email address end with any of the allowed domains?
+                // Note: assumes the emailAddress is valid.
+                return _emailConfiguration.AllowList.Any(_ => mailboxAddress.Address.EndsWith(_, StringComparison.OrdinalIgnoreCase));
+            }
+            return true; // no allow list, production mode, send to anyone
         }
     }
-
 
     [Serializable]
     internal class EmailSendFailedException : Exception
     {
-        public EmailSendFailedException() { }
-        public EmailSendFailedException(string? message) : base(message) { }
         public EmailSendFailedException(string? message, Exception? innerException) : base(message, innerException) { }
-        protected EmailSendFailedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
+
+    [Serializable]
+    internal class InvalidEmailMessageException : Exception
+    {
+        public InvalidEmailMessageException(string? message) : base(message) { }
     }
 
 }

@@ -1,28 +1,16 @@
-﻿
-using System.Text;
-using System.Text.Json.Serialization;
-using TrafficCourts.Common.Utils;
-
-namespace TrafficCourts.Workflow.Service.Models
+﻿namespace TrafficCourts.Workflow.Service.Models
 {
+    /// <summary>
+    /// SendEmail JSON converted over to an object for validation.
+    /// </summary>
     public class EmailMessage
     {
-        public string From { get; set; }
-        public string[] To { get; set; }
-        public string[] Cc { get; set; }
-        public string[] Bcc { get; set; }
-        public string Subject { get; set; }
-        public string PlainTextContent { get; set; }
-        public string HtmlContent { get; set; }
-
-        public override string ToString()
-        {
-            return GetType().GetProperties()
-                .Select(info => (info.Name, Value: info.GetValue(this, null) ?? "(null)"))
-                .Aggregate(
-                    new StringBuilder(),
-                    (sb, pair) => sb.AppendLine($"{pair.Name}: {pair.Value}"),
-                    sb => sb.ToString());
-        }
+        public string From { get; set; } = null!;
+        public string[] To { get; set; } = null!;
+        public string[] Cc { get; set; } = null!;
+        public string[] Bcc { get; set; } = null!;
+        public string Subject { get; set; } = null!;
+        public string PlainTextContent { get; set; } = null!;
+        public string HtmlContent { get; set; } = null!;
     }
 }

@@ -45,6 +45,22 @@ namespace TrafficCourts.Test.Workflow.Service.Services
                 _mockSmtpClientFactory.Object);
         }
 
+        private EmailSenderService CreateServiceNoAllowList()
+        {
+            var configValues = new EmailConfiguration
+            {
+                Sender = "default@test.com",
+                AllowList = new string[] { }
+            };
+
+            IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);
+
+            return new EmailSenderService(
+                _mockLogger.Object,
+                options,
+                _mockSmtpClientFactory.Object);
+        }
+
         // Scenarios:
         // Happy path
         // stmp client factory failed (simulate cancel token timeout)
@@ -72,8 +88,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             await result;
 
@@ -101,8 +120,12 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             try
             {
@@ -139,8 +162,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             try
             {
@@ -148,10 +174,49 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             } catch(Exception ex)
             {
                 // Assert
-                Assert.True(ex.Message == "Possible missing sender or recipient info");
+                Assert.True(ex.Message == "Missing recipient info");
             }
 
             Assert.False(result.IsCompletedSuccessfully);
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_NoAllowListTo_ShouldReturnTaskComplete()
+        {
+            // Arrange
+            var emailMessage = new EmailMessage
+            {
+                From = "mail@test.com",
+                To = new string[] { "fail@fail.com" },
+                Subject = "Test message",
+                PlainTextContent = "plain old message"
+            };
+
+            _mockSmtpClient.Setup(client => client.SendAsync(
+                    It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
+
+            _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(_mockSmtpClient.Object));
+
+            var service = CreateServiceNoAllowList();
+
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
+            // test e-mail send.
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
+
+            try
+            {
+                await result;
+            }
+            catch (Exception ex)
+            {
+                // Assert
+                Assert.True(ex.Message == "Missing recipient info");
+            }
+
+            Assert.True(result.IsCompletedSuccessfully);
         }
 
         [Fact]
@@ -169,7 +234,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             _mockSmtpClient.Setup(client => client.SendAsync(
                     It.Is<MimeMessage>(mailMessage =>
                     mailMessage.From.ToString() == emailMessage.From &&
-                    mailMessage.To.Count() > 1 &&
+                    mailMessage.To.Count() != 1 &&
                     mailMessage.Subject == emailMessage.Subject &&
                     mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.PlainTextContent
                 ), It.IsAny<CancellationToken>(), null))
@@ -189,8 +254,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             try
             {
@@ -224,8 +292,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             try
             {
@@ -259,8 +330,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             try
             {
@@ -269,7 +343,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             catch (Exception ex)
             {
                 // Assert
-                Assert.True(ex.Message == "Possible missing sender or recipient info");
+                Assert.True(ex.Message == "Missing recipient info");
             }
 
             Assert.False(result.IsCompletedSuccessfully);
@@ -297,8 +371,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             var service = CreateService();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage);
+            var result = service.SendEmailAsync(emailMessage, cancellationToken);
 
             try
             {

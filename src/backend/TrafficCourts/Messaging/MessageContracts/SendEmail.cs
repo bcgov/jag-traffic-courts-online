@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public interface SendEmail: IMessage
+    /// <summary>
+    /// Interface message contract for sending emails
+    /// </summary>
+    public interface SendEmail : IMessage
     {
         string From { get; set; }
         string[] To { get; set; }

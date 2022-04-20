@@ -37,7 +37,7 @@ namespace TrafficCourts.Workflow.Service.Features.Mail
                     PlainTextContent = context.Message.PlainTextContent,
                     HtmlContent = context.Message.HtmlContent,
                 };
-                await _emailSenderService.SendEmailAsync(emailMessage);
+                await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
             }
         }
     }

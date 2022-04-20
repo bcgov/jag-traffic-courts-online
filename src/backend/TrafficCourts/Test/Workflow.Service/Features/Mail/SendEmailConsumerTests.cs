@@ -101,7 +101,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             }
 
         }
-/*
+
         [Fact]
         public async Task EmailConsumerAsync_EmptyMessage_ShouldReturnTaskComplete()
         {
@@ -131,6 +131,6 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             }
 
         }
-*/
+
     }
 }
