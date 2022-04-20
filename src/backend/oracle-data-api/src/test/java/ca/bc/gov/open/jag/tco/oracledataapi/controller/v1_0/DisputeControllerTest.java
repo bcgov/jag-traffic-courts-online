@@ -2,9 +2,13 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,6 +66,26 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = disputeController.getDispute(disputeId);
 		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
 		assertEquals("Just because", dispute.getRejectedReason());
+
+		// try using an empty reason (should fail with 405 error)
+		assertThrows(ConstraintViolationException.class, () -> {
+			disputeController.rejectDispute(disputeId, "");
+		});
+
+		// try using an long reason, > 256 (should fail with 405 error)
+		assertThrows(ConstraintViolationException.class, () -> {
+			disputeController.rejectDispute(disputeId, RandomStringUtils.random(257));
+		});
+
+		String longString = RandomStringUtils.random(256);
+
+		// Set the status to REJECTED
+		disputeController.rejectDispute(disputeId, longString);
+
+		// Assert status and reason are set.
+		dispute = disputeController.getDispute(disputeId);
+		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
+		assertEquals(longString, dispute.getRejectedReason());
 	}
 
 	@Test

@@ -95,7 +95,7 @@ public class Dispute {
     /**
      * A note or reason indicating why this Dispute has a status of REJECTED. This field is blank for other status types.
      */
-    @Column
+    @Column(length = 256)
     private String rejectedReason;
 
 }

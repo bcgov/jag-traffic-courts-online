@@ -40,7 +40,7 @@ public class DisputeService {
 	 * @return
 	 */
 	public Dispute getDisputeById(Integer id) {
-		return disputeRepository.findById(id).get();
+		return disputeRepository.findById(id).orElseThrow();
 	}
 
 	/**
