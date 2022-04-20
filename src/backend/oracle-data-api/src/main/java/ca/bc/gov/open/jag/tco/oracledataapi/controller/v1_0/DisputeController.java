@@ -141,6 +141,24 @@ public class DisputeController {
 	public void submitDispute(@PathVariable Integer id) {
 		disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
+	
+	/**
+	 * PUT endpoint that updates the dispute detail, setting the new value for the fields passed in the body.
+	 *
+	 * @param dispute to be updated
+	 * @param id of the saved {@link Dispute} to update
+	 * @return updated {@link Dispute}
+	 */
+	@Operation(summary = "Updates the properties of a particular Dispute record based on the given values.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
+	})
+	@PutMapping("/dispute/{id}")
+	public Dispute updateDispute(@PathVariable Integer id, @RequestBody Dispute dispute) {
+		return disputeService.update(id, dispute);
+	}
 
 	/**
 	 * GET endpoint that refreshes all codetables cached in redis

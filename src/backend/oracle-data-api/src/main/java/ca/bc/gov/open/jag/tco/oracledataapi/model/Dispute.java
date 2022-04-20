@@ -9,12 +9,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -79,14 +84,17 @@ public class Dispute {
 
     @Column
     private Date serviceDate;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    
+    @JsonManagedReference
+    @OneToMany(targetEntity=TicketCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="dispute_id")
     private List<TicketCount> ticketCounts = new ArrayList<TicketCount>();
 
     @Column
     private boolean lawyerRepresentation;
 
     @Column
+    @Schema(nullable = true)
     private String interpreterLanguage;
 
     @Column
@@ -96,6 +104,14 @@ public class Dispute {
      * A note or reason indicating why this Dispute has a status of REJECTED. This field is blank for other status types.
      */
     @Column(length = 256)
+    @Schema(nullable = true)
     private String rejectedReason;
+    
+    public void addTicketCounts(List<TicketCount> ticketCounts) { 		
+    	for (TicketCount ticketCount : ticketCounts) { 			
+    		ticketCount.setDispute(this); 		
+    	} 		
+    	this.ticketCounts.addAll(ticketCounts); 	
+    }
 
 }

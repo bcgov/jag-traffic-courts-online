@@ -96,4 +96,49 @@ public class DisputeController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Updates a single Dispute through the Oracle Data Interface API based on unique dispute id and the dispute data being passed in the body.
+    /// </summary>
+    /// <param name="disputeId">Unique identifier for a specific Dispute record.</param>
+    /// <param name="dispute"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">The Dispute to update was not found.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("/dispute/{disputeId}")]
+    [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateDisputeAsync(int disputeId, Dispute dispute, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the Dispute in oracle-data-api");
+
+        try
+        {
+            await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
+            return Ok(dispute);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return BadRequest();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return NotFound();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        {
+            _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error updating Dispute in oracle-data-api:", e);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
 }

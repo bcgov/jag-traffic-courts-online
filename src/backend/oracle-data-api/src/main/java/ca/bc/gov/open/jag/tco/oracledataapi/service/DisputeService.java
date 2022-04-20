@@ -56,6 +56,44 @@ public class DisputeService {
 		}
 		disputeRepository.save(dispute);
 	}
+	
+	/**
+	 * Updates the properties of a specific {@link Dispute}
+	 *
+	 * @param id
+	 * @param {@link Dispute}
+	 * @return
+	 */
+	public Dispute update(Integer id, Dispute dispute) {
+		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
+		
+		disputeToUpdate.setTicketNumber(dispute.getTicketNumber());
+		disputeToUpdate.setCourtLocation(dispute.getCourtLocation());
+		disputeToUpdate.setViolationDate(dispute.getViolationDate());
+		disputeToUpdate.setDisputantSurname(dispute.getDisputantSurname());
+		disputeToUpdate.setGivenNames(dispute.getGivenNames());
+		disputeToUpdate.setStreetAddress(dispute.getStreetAddress());
+		disputeToUpdate.setProvince(dispute.getProvince());
+		disputeToUpdate.setPostalCode(dispute.getPostalCode());
+		disputeToUpdate.setHomePhone(dispute.getHomePhone());
+		disputeToUpdate.setDriversLicense(dispute.getDriversLicense());
+		disputeToUpdate.setDriversLicenseProvince(dispute.getDriversLicenseProvince());
+		disputeToUpdate.setWorkPhone(dispute.getWorkPhone());
+		disputeToUpdate.setDateOfBirth(dispute.getDateOfBirth());
+		disputeToUpdate.setEnforcementOrganization(dispute.getEnforcementOrganization());
+		disputeToUpdate.setServiceDate(dispute.getServiceDate());
+		// Remove all existing ticket counts that are associated to this dispute
+		if (disputeToUpdate.getTicketCounts() != null) {
+			disputeToUpdate.getTicketCounts().clear();
+		}
+		// Add updated ticket counts
+		disputeToUpdate.addTicketCounts(dispute.getTicketCounts());
+		disputeToUpdate.setLawyerRepresentation(dispute.isLawyerRepresentation());
+		disputeToUpdate.setInterpreterLanguage(dispute.getInterpreterLanguage());
+		disputeToUpdate.setWitnessIntent(dispute.isWitnessIntent());
+		
+		return disputeRepository.save(disputeToUpdate);
+	}
 
 	/**
 	 * Deletes a specific {@link Dispute} by using the method deleteById() of CrudRepository
