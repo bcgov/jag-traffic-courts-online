@@ -1,0 +1,301 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "VTC Staff API",
+    "description": "Violation Ticket Centre Staff API",
+    "version": "v1"
+  },
+  "paths": {
+    "/disputes": {
+      "get": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Returns all Disputes from the Oracle Data Interface API.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dispute"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dispute"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dispute"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/dispute/{disputeId}": {
+      "get": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Returns a single Dispute with the given identifier from the Oracle Data Interface API.",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific Dispute record.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Dispute was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Dispute was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dispute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "courtLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "streetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "homePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicense": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenseProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "workPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enforcementOrganization": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TicketCount"
+            },
+            "nullable": true
+          },
+          "lawyerRepresentation": {
+            "type": "boolean"
+          },
+          "interpreterLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "witnessIntent": {
+            "type": "boolean"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "TicketCount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offenceDeclaration": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeToPayRequest": {
+            "type": "boolean"
+          },
+          "fineReductionRequest": {
+            "type": "boolean"
+          },
+          "dispute": {
+            "$ref": "#/components/schemas/Dispute"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}
