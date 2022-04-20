@@ -10,5 +10,5 @@ public interface IOracleDataApi_v1_0Client
     Task<ICollection<Dispute>> GetAllDisputesAsync(CancellationToken cancellationToken);
     Task<Dispute> GetDisputeAsync(int disputeId, CancellationToken cancellationToken);
     Task<int> SaveDisputeAsync(Dispute body, CancellationToken cancellationToken);
-    Task<Dispute> UpdateAsync(Dispute body, CancellationToken cancellationToken);
+    Task<Dispute> UpdateDisputeAsync(int disputeId, Dispute body, CancellationToken cancellationToken);
 }

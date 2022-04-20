@@ -9,6 +9,7 @@ import java.util.List;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -129,6 +130,31 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = disputeController.getDispute(disputeId);
 		assertEquals(DisputeStatus.CANCELLED, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
+	}
+	
+	@Test
+	@Transactional
+	public void testUpdateDispute() {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		Integer disputeId = disputeController.saveDispute(dispute);
+
+		// Retrieve it from the controller's endpoint
+		dispute = disputeController.getDispute(disputeId);
+		assertEquals(disputeId, dispute.getId());
+
+		// Create a new dispute with different values and update the existing dispute
+		Dispute updatedDispute = RandomUtil.createDispute();
+		updatedDispute.setDisputantSurname("Doe");
+		updatedDispute.setGivenNames("John");
+		disputeController.updateDispute(disputeId, updatedDispute);
+
+		// Assert db contains only the updated dispute record.
+		dispute = disputeController.getDispute(disputeId);
+		assertEquals("Doe", dispute.getDisputantSurname());
+		assertEquals("John", dispute.getGivenNames());
+		List<Dispute> allDisputes = disputeController.getAllDisputes();
+		assertEquals(1, allDisputes.size());
 	}
 
 }

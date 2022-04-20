@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,28 @@ public class DisputeService {
 			ticketCount.setId(null);
 		}
 		disputeRepository.save(dispute);
+	}
+	
+	/**
+	 * Updates the properties of a specific {@link Dispute}
+	 *
+	 * @param id
+	 * @param {@link Dispute}
+	 * @return
+	 */
+	public Dispute update(Integer id, Dispute dispute) {
+		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
+		
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "ticketCounts");
+
+		// Remove all existing ticket counts that are associated to this dispute
+		if (disputeToUpdate.getTicketCounts() != null) {
+			disputeToUpdate.getTicketCounts().clear();
+		}
+		// Add updated ticket counts
+		disputeToUpdate.addTicketCounts(dispute.getTicketCounts());
+
+		return disputeRepository.save(disputeToUpdate);
 	}
 
 	/**
