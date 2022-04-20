@@ -11,6 +11,7 @@ using System.Reflection;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Logging;
+using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = GetLogger(builder);
@@ -27,11 +28,19 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
 
 builder.Services.AddControllers();
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer();
+Authentication.Initialize(builder.Services, builder.Configuration);
 
-builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
+// Add OracleDataApi service
+builder.Services.AddSingleton<IOracleDataApi_v1_0Client, OracleDataApi_v1_0Client>(services =>
+{
+    string baseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
+    ArgumentNullException.ThrowIfNull(baseUrl);
+
+    return new OracleDataApi_v1_0Client(new HttpClient())
+    {
+        BaseUrl = baseUrl
+    };
+});
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 

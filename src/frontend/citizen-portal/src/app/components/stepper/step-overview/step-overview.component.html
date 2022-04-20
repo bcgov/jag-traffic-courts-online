@@ -22,13 +22,16 @@
       </ng-container>
     </app-alert>
   </div>
-
+  <mat-checkbox [(ngModel)]="declared"
+                      color="primary"
+                      class="w-100 mt-4">I declare all of the information above is correct to the best of my knowledge.</mat-checkbox>
   <!--
     [saveButtonLabel]="nextBtnLabel" -->
   <app-stepper-footer [secondaryActionButtonIcon]="previousButtonIcon"
                       [secondaryActionButtonKey]="previousButtonKey"
                       [saveButtonKey]="saveButtonKey"
                       [hasSecondaryAction]="true"
+                      [disableSave]="!declared"
                       (save)="onSubmit()"
                       (back)="onBack()"></app-stepper-footer>
 </app-stepper-page>

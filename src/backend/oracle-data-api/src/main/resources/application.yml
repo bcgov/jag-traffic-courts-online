@@ -23,12 +23,20 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
 
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
+    # Configure swagger to list by sorted endpoint
+    operations-sorter: alpha
+    # Configure swagger to list the most recent API version first
+    groups-order: DESC
+
 codetable:
   refresh:
-    # If enabled, this refresh will trigger a pull from JUSTIN to populate a cached copy of the lookup data in redis.
+    # If enabled, this refresh will trigger a pull from JUSTIN to populate a cached copy of the lookup data in redis based on the cron schedule.
     enabled: ${CODETABLE_REFRESH_ENABLED:false}
     
-    # If true, will refresh code tables at startup (if enabled is also true)
+    # If true, will refresh code tables at startup.
     atStartup: true
      
     # A cron-like expression (defaulting to once per day at 3am), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week. 
