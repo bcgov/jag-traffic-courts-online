@@ -67,9 +67,8 @@ public class DisputeService {
 	 */
 	public Dispute update(Integer id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
-		
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "ticketCounts");
 
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "ticketCounts");
 		// Remove all existing ticket counts that are associated to this dispute
 		if (disputeToUpdate.getTicketCounts() != null) {
 			disputeToUpdate.getTicketCounts().clear();
