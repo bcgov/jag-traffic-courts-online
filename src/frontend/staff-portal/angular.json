@@ -26,7 +26,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "sourceMap": {
-              "scripts": false,
+              "scripts": true,
               "styles": false,
               "vendor": false
             },

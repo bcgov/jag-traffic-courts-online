@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { User } from '@shared/models/user.model';
 import { KeycloakService } from 'keycloak-angular';
-import Keycloak, { KeycloakLoginOptions } from 'keycloak-js';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { KeycloakLoginOptions } from 'keycloak-js';
+import { from, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 export interface IAuthService {

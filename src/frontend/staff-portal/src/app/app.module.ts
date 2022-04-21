@@ -41,8 +41,8 @@ import { UnauthorizedComponent } from '@components/error/unauthorized/unauthoriz
 import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
 import { initializeKeycloak } from './init/keycloak-init.factory';
 import { DateSuffixPipe } from './services/date.service';
+import { InterceptorService } from './services/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
-
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -113,6 +113,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       multi: true,
       deps: [KeycloakService],
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
+      multi: true
+    }
     // WindowRefService,
   ],
   bootstrap: [AppComponent],

@@ -167,7 +167,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService, public disputeService: DisputeService) {
     if (this.authenticated) {
       this.authService.getUser$().subscribe((user: User) => {
         this.fullName = `${user?.firstName} ${user?.lastName}`;
@@ -194,11 +194,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     }
 
     // when authentication token available, get data
-    // this.authService.getToken().then(
-    //   (authToken) => {
-    //     this.disputeService.disputesGet();
-    //   }
-    // );
+    this.authService.getToken().then(
+      (authToken) => {
+        this.disputeService.disputesGet();
+      }
+    );
     // pass this token to service api to get data in a request header
   }
 
