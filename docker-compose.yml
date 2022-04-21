@@ -45,6 +45,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
       ASPNETCORE_URLS: http://*:8080
+      ORACLEDATAAPI__BASEURL: ${ORACLEDATAAPI__BASEURL:-http://oracle-data-api:8080/}
     ports:
       - "5005:8080"
     restart: always
