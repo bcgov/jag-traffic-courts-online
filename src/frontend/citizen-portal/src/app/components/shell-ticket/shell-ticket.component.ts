@@ -711,7 +711,7 @@ const data2: TicketDisputeView
         ? count1SectionField.value.replace(/\s/g, '')
         : '',
       count1FineAmount: count1TicketAmountField.value
-        ? Number(count1TicketAmountField.value)
+        ? parseFloat(count1TicketAmountField.value.replace(/[^.0-9]/g, ''))
         : 0,
       count2Charge: count2ActRegsField.value
         ? count2ActRegsField.value
@@ -723,7 +723,7 @@ const data2: TicketDisputeView
         ? count2SectionField.value.replace(/\s/g, '')
         : '',
       count2FineAmount: count2TicketAmountField.value
-        ? Number(count2TicketAmountField.value)
+        ? parseFloat(count2TicketAmountField.value.replace(/[^.0-9]/g, ''))
         : 0,
       count3Charge: count3ActRegsField.value
         ? count3ActRegsField.value
@@ -735,7 +735,7 @@ const data2: TicketDisputeView
         ? count3SectionField.value.replace(/\s/g, '')
         : '',
       count3FineAmount: count3TicketAmountField.value
-        ? Number(count3TicketAmountField.value)
+        ? parseFloat(count3TicketAmountField.value.replace(/[^.0-9]/g, ''))
         : 0,
       _chargeCount: chargeCount,
       _amountOwing: 0,
