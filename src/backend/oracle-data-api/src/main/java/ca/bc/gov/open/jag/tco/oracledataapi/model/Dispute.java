@@ -31,10 +31,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Schema
 public class Dispute {
 
-	@Schema(hidden = true)
+	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;

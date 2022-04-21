@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -23,10 +24,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Schema
 public class TicketCount {
 
-	@Schema(hidden = true)
+	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -40,9 +40,9 @@ public class TicketCount {
 	@Column
 	private boolean fineReductionRequest;
 	
-	@Schema(hidden = true)
 	@JsonBackReference
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)
+	@Schema(hidden = true)
 	private Dispute dispute;
 
 }
