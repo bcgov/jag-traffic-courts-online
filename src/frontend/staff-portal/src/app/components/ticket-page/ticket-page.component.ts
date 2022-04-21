@@ -191,6 +191,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.dataSource.filterPredicate = function (record:disputeData ,filter) {
       return record.Ticket.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
+
+    // getAccessToken from keycloak 
+    // pass this token to service api to get data in a request header
   }
 
   countNewTickets(): number {

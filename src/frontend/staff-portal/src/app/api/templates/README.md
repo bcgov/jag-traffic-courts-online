@@ -17,5 +17,6 @@ before committing an altered template, commit the original version so we have th
 
 To avoid having to configure the basePath, we change the generated protected basePath on the API Service to be empty string:
 
-`protected basePath = '';`
 
+`protected basePath = '';`
+/
