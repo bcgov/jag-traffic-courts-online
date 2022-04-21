@@ -12,6 +12,7 @@ export interface IAuthService {
   logout(redirectUri: string): Promise<void>;
   getUser(forceReload?: boolean): Promise<User>;
   getUser$(forceReload?: boolean): Observable<User>;
+  getToken(): Observable<string>;
 }
 
 @Injectable({
@@ -25,6 +26,10 @@ export class AuthService {
 
   public login(options?: any): Promise<void> {
     return this.keycloakService.login(options);
+  }
+
+  public getToken(): Promise<string> {
+    return this.keycloakService.getToken();
   }
 
   public isLoggedIn(): Promise<boolean> {

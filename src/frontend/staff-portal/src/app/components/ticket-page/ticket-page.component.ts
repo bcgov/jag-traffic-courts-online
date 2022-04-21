@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '../../services/auth.service';
 import { User } from '@shared/models/user.model';
-import {MatSort} from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
+import { DisputeService } from 'app/api';
 
 @Component({
   selector: 'app-ticket-page',
@@ -192,7 +193,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       return record.Ticket.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
-    // getAccessToken from keycloak 
+    // when authentication token available, get data
+    // this.authService.getToken().then(
+    //   (authToken) => {
+    //     this.disputeService.disputesGet();
+    //   }
+    // );
     // pass this token to service api to get data in a request header
   }
 
