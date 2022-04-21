@@ -35,6 +35,23 @@ services:
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
   #############################################################################################
+  ### Citizen API                                                                           ###
+  #############################################################################################
+  staff-api:
+    container_name: staff-api
+    build:
+      context: ./src/backend/TrafficCourts
+      dockerfile: ./Staff.Service/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: http://*:8080
+    ports:
+      - "5005:8080"
+    restart: always
+    depends_on:
+      - oracle-data-api    
+  
+  #############################################################################################
   ### Ticket Search API                                                                     ###
   #############################################################################################
   ticket-search:

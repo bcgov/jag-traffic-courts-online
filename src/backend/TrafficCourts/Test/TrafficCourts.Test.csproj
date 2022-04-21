@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Messaging\" />
-    <Folder Include="Workflow.Service\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +39,7 @@
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
     <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj" />
     <ProjectReference Include="..\TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj" />
+	<ProjectReference Include="..\Workflow.Service\TrafficCourts.Workflow.Service.csproj" />
   </ItemGroup>
 
 </Project>

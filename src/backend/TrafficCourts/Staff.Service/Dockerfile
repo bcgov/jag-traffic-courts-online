@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["TrafficCourts.Staff.Service/TrafficCourts.Staff.Service.csproj", "TrafficCourts.Staff.Service/"]
-RUN dotnet restore "TrafficCourts.Staff.Service/TrafficCourts.Staff.Service.csproj"
+COPY ["Staff.Service/TrafficCourts.Staff.Service.csproj", "Staff.Service/"]
+RUN dotnet restore "Staff.Service/TrafficCourts.Staff.Service.csproj"
 COPY . .
-WORKDIR "/src/TrafficCourts.Staff.Service"
+WORKDIR "/src/Staff.Service"
 RUN dotnet build "TrafficCourts.Staff.Service.csproj" -c Release -o /app/build
 
 FROM build AS publish
