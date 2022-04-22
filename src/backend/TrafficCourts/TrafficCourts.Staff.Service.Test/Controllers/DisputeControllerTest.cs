@@ -85,7 +85,7 @@ public class DisputeControllerTest
         IActionResult? result = await disputeController.GetDisputeAsync(1, CancellationToken.None);
 
         // Assert
-        var badRequestResult = Assert.IsType<BadRequestResult>(result);
+        var badRequestResult = Assert.IsType<HttpError>(result);
         Assert.Equal(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
     }
 
@@ -108,7 +108,7 @@ public class DisputeControllerTest
         IActionResult? result = await disputeController.GetDisputeAsync(1, CancellationToken.None);
 
         // Assert
-        var notFoundResult = Assert.IsType<NotFoundResult>(result);
+        var notFoundResult = Assert.IsType<HttpError>(result);
         Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
     }
     
@@ -154,7 +154,7 @@ public class DisputeControllerTest
         IActionResult? result = await disputeController.UpdateDisputeAsync(1, dispute, CancellationToken.None);
 
         // Assert
-        var badRequestResult = Assert.IsType<BadRequestResult>(result);
+        var badRequestResult = Assert.IsType<HttpError>(result);
         Assert.Equal(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
     }
 
@@ -177,7 +177,7 @@ public class DisputeControllerTest
         IActionResult? result = await disputeController.UpdateDisputeAsync(2, dispute, CancellationToken.None);
 
         // Assert
-        var notFoundResult = Assert.IsType<NotFoundResult>(result);
+        var notFoundResult = Assert.IsType<HttpError>(result);
         Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
     }
 }
