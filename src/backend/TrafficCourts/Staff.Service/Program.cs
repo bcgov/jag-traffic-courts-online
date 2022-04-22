@@ -12,6 +12,7 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Logging;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Staff.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = GetLogger(builder);
@@ -30,16 +31,14 @@ builder.Services.AddControllers();
 
 Authentication.Initialize(builder.Services, builder.Configuration);
 
-// Add OracleDataApi service
-builder.Services.AddSingleton<IOracleDataApi_v1_0Client, OracleDataApi_v1_0Client>(services =>
+// Add DisputeService
+builder.Services.AddSingleton<IDisputeService, DisputeService>(service =>
 {
-    string baseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
-    ArgumentNullException.ThrowIfNull(baseUrl);
+    string oracleDataApiBaseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
+    ArgumentNullException.ThrowIfNull(oracleDataApiBaseUrl);
 
-    return new OracleDataApi_v1_0Client(new HttpClient())
-    {
-        BaseUrl = baseUrl
-    };
+    var logger = service.GetRequiredService<ILogger<DisputeService>>();
+    return new DisputeService(oracleDataApiBaseUrl, logger);
 });
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
