@@ -38,18 +38,21 @@ public static class AnalyseHandler
         private readonly IFormRecognizerValidator _formRecognizerValidator;
         private readonly IFilePersistenceService _filePersistenceService;
         private readonly IMemoryStreamManager _memoryStreamManager;
+        private readonly IRedisCacheService _redisCacheService;
 
         public Handler(
             IFormRecognizerService formRegognizerService,
             IFormRecognizerValidator formRecognizerValidator,
             IFilePersistenceService filePersistenceService,
             IMemoryStreamManager memoryStreamManager,
+            IRedisCacheService redisCacheService,
             ILogger<Handler> logger)
         {
             _formRegognizerService = formRegognizerService ?? throw new ArgumentNullException(nameof(logger));
             _formRecognizerValidator = formRecognizerValidator ?? throw new ArgumentNullException(nameof(formRecognizerValidator));
             _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
             _memoryStreamManager = memoryStreamManager ?? throw new ArgumentNullException(nameof(memoryStreamManager));
+            _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -72,6 +75,15 @@ public static class AnalyseHandler
 
             // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
             _formRecognizerValidator.ValidateViolationTicket(violationTicket);
+
+            // Generate a guid for using as OCR Key to save OCR related data into Redis
+            string guid = Guid.NewGuid().ToString("n");
+
+            // Save the violation ticket OCR data into Redis using the generated guid and set it to expire after 1 day from Redis
+            await _redisCacheService.SetRecordAsync<OcrViolationTicket>(guid, violationTicket, TimeSpan.FromDays(1));
+
+            // Change the image filename to use OCR key (guid) in the result
+            violationTicket.ImageFilename = guid;
 
             AnalyseResponse response = new(violationTicket);
             return response;

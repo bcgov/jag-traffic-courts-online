@@ -100,6 +100,10 @@ public class Dispute {
 
     @Column
     private boolean witnessIntent;
+    
+    @Column
+    @Schema(nullable = true)
+    private String ocrViolationTicket;
 
     /**
      * A note or reason indicating why this Dispute has a status of REJECTED. This field is blank for other status types.

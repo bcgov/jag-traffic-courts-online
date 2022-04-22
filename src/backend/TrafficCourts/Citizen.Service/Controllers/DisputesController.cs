@@ -31,16 +31,17 @@ namespace TrafficCourts.Citizen.Service.Controllers
         }
 
         /// <summary>
-        /// 
+        /// An endpoint for creating and saving dispute ticket data
         /// </summary>
-        /// <param name="createDisputeRequest"></param>
+        /// <param name="dispute"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> CreateAsync([FromBody] Create.Request createDisputeRequest, CancellationToken cancellationToken)
-        { 
-            var response = await _mediator.Send(createDisputeRequest, cancellationToken);
+        public async Task<IActionResult> CreateAsync([FromBody] TrafficCourts.Citizen.Service.Models.Dispute.TicketDispute dispute, CancellationToken cancellationToken)
+        {
+            Create.Request request = new Create.Request(dispute);
+            var response = await _mediator.Send(request, cancellationToken);
 
             return Ok(response);
         }

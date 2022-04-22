@@ -26,5 +26,6 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public bool LawyerRepresentation { get; set; }
         public string InterpreterLanguage { get; set; }
         public bool WitnessIntent { get; set; }
+        public string? OcrKey { get; set; }
     }
 }
