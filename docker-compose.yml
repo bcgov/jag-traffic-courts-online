@@ -101,8 +101,8 @@ services:
     ports:
       - "22:22"
     volumes:
-      - ../samples/sample.sftp/sftp.json:/app/config/sample/sftp.json:ro
-      - ../../../sftp-in:/home/demo/sftp
+      - ./.docker/sftp.json:/app/config/sample/sftp.json:ro
+      - ./sftp-in:/home/demo/sftp
       
   # ---------------------------------------------------------------------------------------------
   # Workflow Service
