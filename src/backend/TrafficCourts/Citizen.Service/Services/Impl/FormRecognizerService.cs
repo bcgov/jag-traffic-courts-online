@@ -1,6 +1,7 @@
 using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using System.Diagnostics;
+using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 
@@ -54,12 +55,13 @@ public class FormRecognizerService : IFormRecognizerService
         { "Detachment Location",        OcrViolationTicket.DetachmentLocation }
     };
 
-    public FormRecognizerService(string apiKey, Uri endpoint, string modelId, ILogger<FormRecognizerService> logger)
+    public FormRecognizerService(FormRecognizerOptions options, ILogger<FormRecognizerService> logger)
     {
+        ArgumentNullException.ThrowIfNull(options);
+        _apiKey = options.ApiKey ?? throw new ArgumentException($"{nameof(options.ApiKey)} is required");
+        _endpoint = options.Endpoint ?? throw new ArgumentException($"{nameof(options.Endpoint)} is required");
+        _modelId = options.ModelId ?? throw new ArgumentException($"{nameof(options.ModelId)} is required");
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
-        _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
-        _modelId = modelId ?? throw new ArgumentNullException(nameof(modelId));
     }
 
     public async Task<AnalyzeResult> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken)

@@ -1,11 +1,13 @@
+using Serilog;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using TrafficCourts.Citizen.Service;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Configuration.Validation;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+Serilog.ILogger logger = GetLogger(builder);
 
-builder.ConfigureApplication(); // this can throw ConfigurationErrorsException
+builder.ConfigureApplication(logger); // this can throw ConfigurationErrorsException
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -41,4 +43,32 @@ if (swagger.Enabled)
 
 app.MapControllers();
 
-app.Run();
+
+bool isDevelopment = app.Environment.IsDevelopment();
+try
+{
+    app.Run();
+}
+catch (SettingsValidationException exception)
+{
+    logger.Fatal(exception, "Configuration error");
+
+    if (isDevelopment)
+    {        
+        throw; // see the error in the IDE
+    }
+}
+
+static Serilog.ILogger GetLogger(WebApplicationBuilder app)
+{
+    var configuration = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+    if (app.Environment.IsDevelopment())
+    {
+        configuration.WriteTo.Debug();
+    }
+
+    return configuration.CreateLogger();
+}

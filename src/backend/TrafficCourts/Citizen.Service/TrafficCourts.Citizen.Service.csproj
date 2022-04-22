@@ -11,41 +11,39 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.AI.FormRecognizer" Version="4.0.0-beta.2" />
-    <PackageReference Include="Google.Protobuf" Version="3.19.4" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.44.0" />
-    <PackageReference Include="Grpc.Tools" Version="2.45.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.0" />
-    <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
-    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="NodaTime" Version="3.0.10" />
-    <PackageReference Include="OneOf" Version="3.0.205" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-rc3" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.0.0-rc9" />
-    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9" />
-    <PackageReference Include="StackExchange.Redis" Version="2.5.43" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <None Remove="Services\Tickets\Search\Mock\test-ticket-data.csv" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Protos\" />
+    <EmbeddedResource Include="Services\Tickets\Search\Mock\test-ticket-data.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.AI.FormRecognizer" Version="4.0.0-beta.2" />
+    <PackageReference Include="FlatFiles" Version="5.0.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.0" />
+    <PackageReference Include="NodaTime" Version="3.0.10" />
+    <PackageReference Include="OneOf" Version="3.0.205" />
+    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.3.0-beta.1" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.0.0-rc9.3" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.3" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.5.43" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-	  <Protobuf Include="..\Protos\ticket-service.proto" Link="Protos\ticket-service.proto" GrpcServices="Client" />
   </ItemGroup>
 </Project>
