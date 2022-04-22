@@ -157,14 +157,10 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
       disputeService,
       disputeResource,
       disputeFormStateService
-    );
-
-    // this.languages = this.configService.languages;
-   
+    );   
   }
 
   public ngOnInit() {
-    console.log('languates', this.languages);
     this.form = this.disputeFormStateService.stepAdditionalForm;
     this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
     this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });

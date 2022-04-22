@@ -132,13 +132,6 @@ export class FindTicketComponent implements OnInit {
     }
 
     const mimeType = event.target.files[0].type;
-     
-
-    // if (!((mimeType.match(/image\/png/) != null || mimeType.match(/image\/jpeg/) != null) || mimeType.match(/application\/pdf/) != null)) {
-    //   this.logger.info('Only images and pdf are supported');
-    //   return;
-    // }
-
     const progressRef: NgProgressRef = this.ngProgress.ref();
     progressRef.start();
 
