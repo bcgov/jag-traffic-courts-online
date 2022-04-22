@@ -24,6 +24,7 @@ public class AnalyseHandlerTests
         // Arrange
         var mockValidator = new Mock<IFormRecognizerValidator>();
         var mockLogger = new Mock<ILogger<AnalyseHandler.Handler>>();
+        var mockRedisCacheService = new Mock<IRedisCacheService>();
 
         // calls AnalyzeImageAsync and Map
         AnalyzeResult expectedAnalyzeResult = FormRecognizerHelper.CreateEmptyAnalyzeResult();
@@ -47,6 +48,7 @@ public class AnalyseHandlerTests
             mockValidator.Object, 
             filePersistenceServiceMock.Object,
             new SimpleMemoryStreamManager(),
+            mockRedisCacheService.Object,
             mockLogger.Object);
 
         var bytes = Encoding.UTF8.GetBytes("This is a dummy file");
@@ -60,6 +62,6 @@ public class AnalyseHandlerTests
         // Assert
         Assert.NotNull(response);
         Assert.Equal(expectedOcrViolationTicket, response.OcrViolationTicket);
-        Assert.Equal(expectedFilename, response.OcrViolationTicket.ImageFilename);
+        Assert.NotEqual(expectedFilename, response.OcrViolationTicket.ImageFilename);
     }
 }

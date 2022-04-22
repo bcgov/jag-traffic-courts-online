@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using TrafficCourts.Common.Utils;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
@@ -46,6 +47,12 @@ builder.Services.AddMassTransit(cfg =>
             r.Ignore<ArgumentNullException>();
             r.Ignore<InvalidOperationException>();
             r.Interval(retryConfiguration.RetryTimes, TimeSpan.FromMinutes(retryConfiguration.RetryInterval));
+        });
+        configurator.ConfigureJsonSerializerOptions(settings =>
+        {
+            settings.Converters.Add(new DateOnlyJsonConverter());
+            settings.Converters.Add(new TimeOnlyJsonConverter());
+            return settings;
         });
     });
 

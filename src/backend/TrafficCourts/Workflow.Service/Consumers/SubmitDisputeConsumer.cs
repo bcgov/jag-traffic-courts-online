@@ -53,13 +53,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     DriversLicence = context.Message.DriversLicence,
                     DriversLicenceProvince = context.Message.DriversLicenceProvince,
                     WorkPhone = context.Message.WorkPhone,
-                    DateOfBirth = context.Message.DateOfBirth,
+                    DateOfBirth = context.Message.DateOfBirth.ToDateTime(TimeOnly.MinValue),// Parsing it back to DateTime due to the DateOnly deserialization issues on oracle-data-api
                     EnforcementOrganization = context.Message.EnforcementOrganization,
-                    ServiceDate = context.Message.ServiceDate,
+                    ServiceDate = context.Message.ServiceDate.ToDateTime(TimeOnly.MinValue),// Parsing it back to DateTime due to the DateOnly deserialization issues on oracle-data-api
                     TicketCounts = ticketCounts,
                     LawyerRepresentation = context.Message.LawyerRepresentation,
                     InterpreterLanguage = context.Message.InterpreterLanguage,
-                    WitnessIntent = context.Message.WitnessIntent
+                    WitnessIntent = context.Message.WitnessIntent,
+                    OcrViolationTicket = context.Message.OcrViolationTicket
                 };
 
                 _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());

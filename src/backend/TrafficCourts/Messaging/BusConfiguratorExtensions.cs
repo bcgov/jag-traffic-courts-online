@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Utils;
 using TrafficCourts.Messaging.Configuration;
 
 namespace TrafficCourts.Messaging;
@@ -45,6 +46,13 @@ public static class BusConfiguratorExtensions
             {
                 hostConfig.Username(rabbitMQConfiguration.Username);
                 hostConfig.Password(rabbitMQConfiguration.Password);
+            });
+
+            cfg.ConfigureJsonSerializerOptions(settings =>
+            {
+                settings.Converters.Add(new DateOnlyJsonConverter());
+                settings.Converters.Add(new TimeOnlyJsonConverter());
+                return settings;
             });
         });
     }

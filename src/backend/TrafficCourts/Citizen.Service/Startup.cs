@@ -213,7 +213,7 @@ public static class Startup
     }
 
     /// <summary>
-    /// Configures Lookup Service.
+    /// Configures Lookup Service and Redis Cache Service.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
@@ -235,6 +235,13 @@ public static class Startup
             var redisConnection = service.GetRequiredService<IConnectionMultiplexer>();
             var logger = service.GetRequiredService<ILogger<RedisLookupService>>();
             return new RedisLookupService(redisConnection, logger);
+        });
+
+        builder.Services.AddSingleton<IRedisCacheService>(service =>
+        {
+            var redisConnection = service.GetRequiredService<IConnectionMultiplexer>();
+            var logger = service.GetRequiredService<ILogger<RedisCacheService>>();
+            return new RedisCacheService(redisConnection, logger);
         });
     }
 
