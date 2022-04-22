@@ -15,6 +15,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
+import { ImageTicketNotFoundDialogComponent } from '@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { Configuration, TicketsService } from 'app/api';
@@ -133,10 +134,10 @@ export class FindTicketComponent implements OnInit {
     const mimeType = event.target.files[0].type;
      
 
-    if (!((mimeType.match(/image\/png/) != null || mimeType.match(/image\/jpeg/) != null) || mimeType.match(/application\/pdf/) != null)) {
-      this.logger.info('Only images and pdf are supported');
-      return;
-    }
+    // if (!((mimeType.match(/image\/png/) != null || mimeType.match(/image\/jpeg/) != null) || mimeType.match(/application\/pdf/) != null)) {
+    //   this.logger.info('Only images and pdf are supported');
+    //   return;
+    // }
 
     const progressRef: NgProgressRef = this.ngProgress.ref();
     progressRef.start();
@@ -181,7 +182,6 @@ export class FindTicketComponent implements OnInit {
       
       this.http.post(`${this.configuration.basePath }/api/tickets/analyse`,fd)
       .subscribe(res=>{
-        console.log('image data',res);
         if(res){
           this.ticketService.setImageData(res);
           this.disputeService.shellTicketData$.next(shellTicketData);
@@ -194,16 +194,15 @@ export class FindTicketComponent implements OnInit {
        
       },
       (err)=>{
-        console.log('err',err);
         const data: DialogOptions = {
           titleKey: err.error.title,
           actionType: 'warn',
-          messageKey: err.error.errors.toString(),
+          messageKey: err.error.errors.file?err.error.errors.file[0]:err.error.errors[0],
           actionTextKey: 'Ok',
           cancelHide: true,
         };
         
-        this.dialog.open(ConfirmDialogComponent, { data })
+        this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
       })
         
       

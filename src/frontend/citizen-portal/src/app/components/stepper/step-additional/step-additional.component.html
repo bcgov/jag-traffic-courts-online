@@ -131,8 +131,8 @@
               "stepper.additional.interpreter_language" | translate
               }}</mat-label>
             <mat-select name= "interpreterLanguage"  [(ngModel)]='dispute["interpreterLanguage"]'>
-              <mat-option *ngFor="let language of languages" [value]="language.name">
-                {{ language.name }}
+              <mat-option *ngFor="let language of languages" [value]="language">
+                {{ language }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="interpreterLanguage.hasError('requiredIfTrue')">

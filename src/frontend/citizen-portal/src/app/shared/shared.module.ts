@@ -33,6 +33,7 @@ import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { AddressAutocompleteComponent } from './components/address-autocomplete/address-autocomplete.component';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { ImageTicketNotFoundDialogComponent } from './dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
 @NgModule({
     declarations: [
         CapitalizePipe,
@@ -57,6 +58,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
         TicketExampleDialogComponent,
         ImageRequirementsDialogComponent,
         TicketNotFoundDialogComponent,
+        ImageTicketNotFoundDialogComponent,
         StepperPageComponent,
         ResolutionFooterComponent,
         ResolutionHeaderComponent,
