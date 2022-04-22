@@ -6,6 +6,13 @@ using Statute = TrafficCourts.Citizen.Service.Models.Tickets.Statute;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
+public class LookupsAllApiResultResponse : ApiResultResponse<LookupsAll>
+{
+    public LookupsAllApiResultResponse(LookupsAll result) : base(result)
+    {
+    }
+}
+
 [Route("api/[controller]/[action]")]
 public class LookupController : ControllerBase
 {
@@ -23,7 +30,7 @@ public class LookupController : ControllerBase
     [Obsolete]
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(ApiResultResponse<LookupsAll>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LookupsAllApiResultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get()
     {
@@ -45,7 +52,7 @@ public class LookupController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(List<Statute>), 200)]
+    [ProducesResponseType(typeof(IList<Statute>), 200)]
     public IActionResult Statutes(string? section)
     {
         _logger.LogDebug("Retrieving a Statutes");

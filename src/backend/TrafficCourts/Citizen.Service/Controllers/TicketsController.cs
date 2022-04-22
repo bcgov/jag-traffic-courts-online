@@ -4,11 +4,19 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
 using TrafficCourts.Citizen.Service.Models.Deprecated;
+using TrafficCourts.Citizen.Service.Models.Search;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
+    public class TicketDisputeApiResultResponse : ApiResultResponse<TicketDispute>
+    {
+        public TicketDisputeApiResultResponse(TicketDispute result) : base(result)
+        {
+        }
+    }
+
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class TicketsController : ControllerBase
@@ -34,7 +42,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="404">The violation ticket was not found.</response>
         /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(ViolationTicket), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(TicketSearchResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> SearchAsync(
@@ -55,7 +63,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
             }
 
             var result = response.Result.Match<IActionResult>(
-                ticket => Ok(ticket),
+                ticket => Ok(new TicketSearchResult(ticket)),
                 exception => StatusCode(StatusCodes.Status500InternalServerError));
 
             return result;
@@ -166,7 +174,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         [Obsolete]
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ShellTicket([FromBody] CreateShellTicketCommand createShellTicket)
@@ -177,7 +185,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         [Obsolete]
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Pay([FromQuery] TicketPaymentCommand ticketPayment)
@@ -188,7 +196,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         [Obsolete]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Pay([FromQuery] TicketPaymentConfirmCommand ticketPayConfirm)
@@ -198,7 +206,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         [Obsolete]
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ImageUpload([FromForm] ShellTicketImageCommand shellTicketImage)

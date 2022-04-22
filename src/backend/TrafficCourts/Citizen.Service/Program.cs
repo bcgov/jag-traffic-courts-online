@@ -1,8 +1,10 @@
 using Serilog;
+using System.ComponentModel;
 using System.Reflection;
 using TrafficCourts.Citizen.Service;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Common.Utils;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Serilog.ILogger logger = GetLogger(builder);
@@ -10,7 +12,9 @@ Serilog.ILogger logger = GetLogger(builder);
 builder.ConfigureApplication(logger); // this can throw ConfigurationErrorsException
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
 var swagger = SwaggerConfiguration.Get(builder.Configuration);
 
@@ -27,9 +31,11 @@ if (swagger.Enabled)
             Description = "An API for creating violation ticket disputes",
         });
 
+        options.UseDateOnlyTimeOnlyStringConverters();
+
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-        options.CustomSchemaIds(x => x.FullName);
+        //options.CustomSchemaIds(x => x.FullName);
     });
 }
 var app = builder.Build();

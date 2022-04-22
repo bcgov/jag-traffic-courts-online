@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using TrafficCourts.Citizen.Service.Models.Search;
+using TrafficCourts.Citizen.Service.Models.Tickets;
 
 #pragma warning disable CS8618 // these types are deprecated, ignore nullable warnings
 
@@ -202,12 +204,6 @@ namespace TrafficCourts.Citizen.Service.Models
             public string Name { get; set; }
         }
 
-        public class Statute
-        {
-            public decimal Code { get; set; }
-            public string Name { get; set; }
-        }
-
         public class PoliceLocation
         {
             public string Code { get; set; }
@@ -392,7 +388,8 @@ namespace TrafficCourts.Citizen.Service.Models
         {
             public string ViolationTicketNumber { get; set; }
             public string ViolationTime { get; set; }
-            public string ViolationDate { get; set; }
+            [SwaggerSchema(Format = "date")]
+            public DateOnly ViolationDate { get; set; }
             public string LastName { get; set; }
             public string GivenNames { get; set; }
             public string DriverLicenseNumber { get; set; }

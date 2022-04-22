@@ -1,15 +1,51 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TrafficCourts.Citizen.Service.Models.Search
 {
     /// <summary>
-    /// Represents a violation ticket that is returned from search requests
+    /// Obsolete: Represents a violation ticket that is returned from search requests
     /// </summary>
+    [Obsolete]
     public class TicketSearchResult
     {
-        public TicketSearchResult()
+        public TicketSearchResult(Tickets.ViolationTicket violationTicket)
         {
-            Offences = new List<TicketOffence>();
+            if (violationTicket is null)
+            {
+                throw new ArgumentNullException(nameof(violationTicket));
+            }
+
+            if (string.IsNullOrWhiteSpace(violationTicket.TicketNumber))
+            {
+                throw new ArgumentException("Property TicketNumber cannot be empty", nameof(violationTicket));
+            }
+
+            if (violationTicket.IssuedDate is null)
+            {
+                throw new ArgumentException("Property IssuedDate cannot be null", nameof(violationTicket));
+            }
+
+            var date = DateOnly.FromDateTime(violationTicket.IssuedDate.Value);
+            var time = TimeOnly.FromDateTime(violationTicket.IssuedDate.Value);
+
+            ViolationTicketNumber = violationTicket.TicketNumber!;
+            ViolationDate = new DateTime(date.Year, date.Month, date.Day);
+            ViolationTime = $"{time.Hour:d2}:{time.Minute:d2}";
+
+            Offences = violationTicket
+                .Counts
+                .OrderBy(_ => _.Count)
+                .Select(_ => new TicketOffence
+                {
+                    OffenceNumber = _.Count,
+                    TicketedAmount = _.TicketedAmount.Value,
+                    AmountDue = _.AmountDue ?? _.TicketedAmount.Value,
+                    OffenceDescription = _.Description,
+                    VehicleDescription = string.Empty,
+                    InvoiceType = "Traffic Violation Ticket"
+                })
+                .ToList();
         }
 
         /// <summary>
@@ -19,6 +55,7 @@ namespace TrafficCourts.Citizen.Service.Models.Search
         /// <summary>
         /// The date the violation ticket was issued.
         /// </summary>
+        [SwaggerSchema(Format = "date")]
         public DateTime ViolationDate { get; set; }
         /// <summary>
         /// The time of day the violation ticket was issued. This will match the time searched for.

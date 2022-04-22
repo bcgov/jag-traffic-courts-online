@@ -33,7 +33,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Controllers
         /// <response code="400">The request JSON data is empty or not valid that does not contain the required data to output an ARC file in proper format.</response>
         // POST api/<TcoDisputeTicketController>
         [HttpPost]
-        [ProducesResponseType(typeof(List<ArcFileRecord>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IList<ArcFileRecord>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateArcFile([Required][FromBody] TcoDisputeTicket disputeData, CancellationToken cancellationToken)
         {

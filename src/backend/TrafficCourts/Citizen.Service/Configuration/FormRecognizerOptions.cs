@@ -28,7 +28,7 @@ public class FormRecognizerOptions : IValidatable
     public void Validate()
     {
         if (string.IsNullOrEmpty(ApiKey)) throw new SettingsValidationException(Section, nameof(ApiKey), "is required");
-        if (string.IsNullOrEmpty(ApiKey)) throw new SettingsValidationException(Section, nameof(Endpoint), "is required");
-        if (string.IsNullOrEmpty(ApiKey)) throw new SettingsValidationException(Section, nameof(ModelId), "is required");
+        if (Endpoint is null) throw new SettingsValidationException(Section, nameof(Endpoint), "is required");
+        if (string.IsNullOrEmpty(ModelId)) throw new SettingsValidationException(Section, nameof(ModelId), "is required");
     }
 }
