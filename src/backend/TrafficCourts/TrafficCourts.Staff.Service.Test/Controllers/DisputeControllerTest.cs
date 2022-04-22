@@ -110,4 +110,73 @@ public class DisputeControllerTest
         var notFoundResult = Assert.IsType<NotFoundResult>(result);
         Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
     }
+    
+    [Fact]
+    public async void TestUpdateDispute200Result()
+    {
+        // Mock the OracleDataApi to update a specific Dispute with id (1), confirm controller updates and returns the dispute.
+
+        // Arrange
+        Dispute dispute = new();
+        dispute.Id = 1;
+        var oracleDataApi = new Mock<IOracleDataApi_v1_0Client>();
+        oracleDataApi
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<int>(v => v == 1), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(dispute);
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(oracleDataApi.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.UpdateDisputeAsync(1, dispute, CancellationToken.None);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal(dispute, okResult.Value);
+    }
+
+    [Fact]
+    public async void TestUpdateDispute400Result()
+    {
+        // Mock the OracleDataApi to update a specific Dispute with id (1), confirm controller returns 400 when updating.
+
+        // Arrange
+        Dispute dispute = new();
+        dispute.Id = 1;
+        var oracleDataApi = new Mock<IOracleDataApi_v1_0Client>();
+        oracleDataApi
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<int>(v => v == 1), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(oracleDataApi.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.UpdateDisputeAsync(1, dispute, CancellationToken.None);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestResult>(result);
+        Assert.Equal(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
+    }
+
+    [Fact]
+    public async void TestUpdateDispute404Result()
+    {
+        // Mock the OracleDataApi to update a specific Dispute with id (2), confirm controller returns 404 when updating.
+
+        // Arrange
+        Dispute dispute = new();
+        dispute.Id = 1;
+        var oracleDataApi = new Mock<IOracleDataApi_v1_0Client>();
+        oracleDataApi
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<int>(v => v == 2), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(oracleDataApi.Object, mockLogger.Object);
+
+        // Act
+        IActionResult? result = await disputeController.UpdateDisputeAsync(2, dispute, CancellationToken.None);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundResult>(result);
+        Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
+    }
 }
