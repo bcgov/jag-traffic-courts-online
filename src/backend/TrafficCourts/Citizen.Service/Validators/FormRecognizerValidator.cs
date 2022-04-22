@@ -1,4 +1,5 @@
 using TrafficCourts.Citizen.Service.Models.Tickets;
+using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 
 namespace TrafficCourts.Citizen.Service.Validators;
@@ -8,6 +9,13 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
     private static readonly string _ticketTitleRegex = @"^VIOLATION TICKET$";
     private static readonly string _violationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
+    private readonly ILookupService _lookupService;
+
+    public FormRecognizerValidator(ILookupService lookupService)
+    {
+        ArgumentNullException.ThrowIfNull(lookupService);
+        _lookupService = lookupService;
+    }
 
     public void ValidateViolationTicket(OcrViolationTicket violationTicket)
     {
@@ -60,9 +68,13 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
     }
 
-    private static void ApplyFieldRules(OcrViolationTicket violationTicket)
+    private void ApplyFieldRules(OcrViolationTicket violationTicket)
     {
         List<ValidationRule> rules = new();
+
+        // TCVP-932 Surname and Given Name are required fields
+        rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.GivenName]));
+        rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.Surname]));
 
         // TCVP-1004 Validate Driver's Licence
         rules.Add(new FieldIsRequiredRule(violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince]));
@@ -80,16 +92,19 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count1IsACT]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count1IsREGS]));
         rules.Add(new TicketAmountValidRule(violationTicket.Fields[OcrViolationTicket.Count1TicketAmount]));
+        rules.Add(new CountSectionRule(violationTicket.Fields[OcrViolationTicket.Count1Section], _lookupService));
 
         // Count 2 
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count2IsACT]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count2IsREGS]));
         rules.Add(new TicketAmountValidRule(violationTicket.Fields[OcrViolationTicket.Count2TicketAmount]));
+        rules.Add(new CountSectionRule(violationTicket.Fields[OcrViolationTicket.Count2Section], _lookupService));
 
         // Count 3 
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count3IsACT]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.Count3IsREGS]));
         rules.Add(new TicketAmountValidRule(violationTicket.Fields[OcrViolationTicket.Count3TicketAmount]));
+        rules.Add(new CountSectionRule(violationTicket.Fields[OcrViolationTicket.Count3Section], _lookupService));
 
         rules.ForEach(_ => _.Run());
     }

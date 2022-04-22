@@ -6,47 +6,83 @@
       <section>
         <div>
           <h1 class="mb-1">Welcome, User</h1>
-          <p style="color: black;">Court Registries Clerk, Abbotsford</p>
-          <hr style="opacity: 1; color: #fcba19" />
+          <div class="row">
+           <div class="col">
+            <p style="color: black;">Court Registries Clerk, Abbotsford</p>
+           </div>
+           <div class="col">
+            <p style="color: black;text-align: end;">Wednesday, February 9th, 2021</p>
+           </div>
+          </div>
+          
+         
+          <hr style="opacity: 1; color: #fcba19;margin-top: 0%;" />
         </div>
       </section>
       <section>
-        <div class="flex-6-col ">
+        <div class="flex-6-col">
  
-            <div>
+            <div *ngIf="!showTicket">
               <ng-template mat-tab-label>
                 <h1 class="mb-1 tabHeader">Inbox (1)</h1>
               </ng-template>
-              <div class="step1" style="border: 1px solid black;margin-bottom: 150px" >
+              <div class="step1" >
                 <div class="">
                   <div class="container">
                     <div class="row" >
                       <div class="col-md-2">
-                        <h4 style="color: green;" >5 NEW ticket records</h4> 
+                        <h4 style="color: green;font-weight: 600;" >5 NEW ticket records</h4> 
                       </div>
-                      <div class="col-md-1">|</div>
+                      <div class="col-md-1"style="width: 5px;" >|</div>
                       <div class="col-md-3">
-                       <select style="width: 200px;"><option>Fraser Valley Region</option></select>
+                       <select style="width: 200px;border: none;color: black;font-weight: 600;"><option>Fraser Valley Region</option></select>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-3">
+                      <div class="col-md-3" style="font-weight: 600;">
                         <h2 >Ticket number search: </h2>
                       </div>
-                      <div class="col-md-3">
-                        <input type="input" #fileNumber value="" class="font_bold"/>
+                      <div class="col-md-3" style="width: 25%">
+                        <input type="text" style="width: 100%" #fileNumber value="" class=""/>
+                        <span class="fa fa-search" style="position: absolute;left: 240px;top: 10px;" aria-hidden="true"></span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <hr class="mt-0 mb-4" style="opacity: 0.5">
               
-               <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;">
-              
+               <table mat-table [dataSource]="dataSource" style="border: 1px solid black;margin-bottom: 150px;border-radius: 8px;">
+                <ng-container   matColumnDef="RedGreenAlert">
+                  <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> 
+                    <div style="display: flex;">
+                      <!-- <div style="width: 80%; height: 50px;">
+                        Date Submitted 
+                      </div>
+                      <div  style="width: 10%;">
+                        <span class='table-sort-icon'>
+                          <span
+                          class='sort-icon sort-by-asc'
+                           (click)="sort('asc','DateSubmitted')"
+                          ></span>
+                          <span
+                          class='sort-icon sort-by-desc'
+                          (click)="sort('desc','DateSubmitted')"
+                          ></span>
+                      </span>
+                      </div> -->
+                    </div>
+                      </th>
+                  <td mat-cell  *matCellDef="let element">  
+                    <span *ngIf="element.RedGreenAlert">
+                      <mat-icon [ngStyle]="{'color': element.RedGreenAlert}">info</mat-icon>
+                    </span>
+                    
+                   </td>
+                </ng-container>
                   <ng-container   matColumnDef="DateSubmitted">
                     <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> 
                       <div style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Date Submitted 
                         </div>
                         <div  style="width: 10%;">
@@ -63,13 +99,14 @@
                         </div>
                       </div>
                         </th>
-                    <td mat-cell  *matCellDef="let element"> {{element.DateSubmitted}} </td>
+                    <td mat-cell  *matCellDef="let element">  
+                      {{element.DateSubmitted}} </td>
                   </ng-container>
               
                   <ng-container matColumnDef="Ticket">
                     <th mat-header-cell *matHeaderCellDef> 
                       <div style="display: flex;">
-                        <div  style="width: 80%;">
+                        <div  style="width: 80%; height: 50px;">
                           Ticket #  
                         </div>
                         <div style="width: 10%;">
@@ -86,14 +123,14 @@
                         </div>
                       </div>
                 </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Ticket}}</td>
+                    <td mat-cell *matCellDef="let element"> <a (click)="backTicketList(element)" href="javascript:void()">{{element.Ticket}}</a></td>
                   </ng-container>
               
                   <ng-container matColumnDef="Surname">
                     <th mat-header-cell *matHeaderCellDef>  
                       
                       <div  style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Surname
                         </div>
                       
@@ -117,7 +154,7 @@
                   <ng-container matColumnDef="GivenName">
                     <th mat-header-cell *matHeaderCellDef> 
                       <div  style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Given Name(s)  
                         </div>
                       
@@ -140,7 +177,7 @@
                   <ng-container matColumnDef="RequestType">
                     <th mat-header-cell *matHeaderCellDef> 
                       <div  style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Request Type  
                         </div>
                       
@@ -164,7 +201,7 @@
                   <ng-container matColumnDef="Status">
                     <th mat-header-cell *matHeaderCellDef>   
                       <div  style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Status
                         </div>
                       
@@ -187,7 +224,7 @@
                   <ng-container matColumnDef="FilingDate">
                     <th mat-header-cell *matHeaderCellDef> 
                       <div  style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Filing Date  
                         </div>
                       
@@ -205,24 +242,42 @@
                         </div>
                       </div>
                     </th>
-                    <td mat-cell *matCellDef="let element">  {{element.FilingDate}} </td>
+                    <td mat-cell *matCellDef="let element">  {{element.FilingDate === '(null)' ?'-' : element.FilingDate}} </td>
                   </ng-container>
                   <ng-container matColumnDef="CourtHearing">
                     <th mat-header-cell *matHeaderCellDef> Court Hearing? </th>
-                    <td mat-cell *matCellDef="let element">  {{element.CourtHearing}} </td>
+                    <td mat-cell *matCellDef="let element"> 
+                       <mat-checkbox 
+                       [checked]="element.CourtHearing == 'Y'? true : false"
+                       color="primary"
+                       class="me-4 mb-2">
+                      </mat-checkbox>
+                       </td>
                   </ng-container>
                   <ng-container matColumnDef="CitizenFlag">
                     <th mat-header-cell *matHeaderCellDef> Citizen Flag </th>
-                    <td mat-cell *matCellDef="let element">  {{element.CitizenFlag}} </td>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox 
+                      [checked]="element.CitizenFlag == 'Y'? true : false"
+                      color="primary"
+                      class="me-4 mb-2">
+                     </mat-checkbox>
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="SystemFlag">
                     <th mat-header-cell *matHeaderCellDef> System Flag</th>
-                    <td mat-cell *matCellDef="let element">  {{element.SystemFlag}} </td>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox 
+                      [checked]="element.SystemFlag == 'Y'? true : false"
+                      color="primary"
+                      class="me-4 mb-2">
+                     </mat-checkbox>
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="AssignedTo">
                     <th mat-header-cell *matHeaderCellDef> 
                       <div  style="display: flex;">
-                        <div style="width: 80%;">
+                        <div style="width: 80%; height: 50px;">
                           Assigned to  
                         </div>
                       
@@ -252,7 +307,9 @@
     
           
             </div>
-
+           <div *ngIf="showTicket">
+             <app-ticket-info (backTicketList)="backTicketpage()" [ticketInfo]="ticketInfo"></app-ticket-info>
+           </div>
 
         </div>
       </section>
@@ -262,7 +319,7 @@
     
   </div>
 
-  <!-- <div class="flex-footer">
+  <div class="flex-footer">
     <app-footer></app-footer>
-  </div> -->
+  </div>
 </div>

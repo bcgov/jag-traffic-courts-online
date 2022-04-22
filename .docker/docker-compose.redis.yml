@@ -1,0 +1,104 @@
+version: "3.8"
+
+services:
+
+  #############################################################################################
+  ### Citizen API                                                                           ###
+  #############################################################################################
+  citizen-api:
+    environment:
+      REDIS__CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING:-serviceName=mymaster,redis-sentinel-1:26379,redis-sentinel-2:26380,redis-sentinel-3:26381,password=password}
+    depends_on:
+      - redis-sentinel-1
+      - redis-sentinel-2
+      - redis-sentinel-3
+
+  #############################################################################################
+  ###                           Oracle Interface API                                        ###
+  #############################################################################################
+  oraface-api:
+    container_name: oraface-api
+    build:
+      args:
+        - REDIS_SENTINAL_MASTER=mymaster
+        - REDIS_SENTINAL_NODES=redis-sentinel-1:26379,redis-sentinel-2:26380,redis-sentinel-3:26381
+    depends_on:
+      - redis-sentinel-1
+      - redis-sentinel-2
+      - redis-sentinel-3
+
+  #############################################################################################
+  ###                                 REDIS server and UI                                   ###
+  #############################################################################################
+  redis:
+    container_name: redis-master
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=password
+    ports:
+      - 6379:6379
+      
+  redis-slave:
+    container_name: redis-slave
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PASSWORD=password
+      - REDIS_PASSWORD=password
+    ports:
+      - '6379'
+    depends_on:
+      - redis
+      
+  redis-sentinel-1:
+    container_name: redis-sentinel-1
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=password
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - 26379:26379
+
+  redis-sentinel-2:
+    container_name: redis-sentinel-2
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=password
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - 26380:26379
+      
+  redis-sentinel-3:
+    container_name: redis-sentinel-3
+    image: 'bitnami/redis-sentinel:latest'
+    environment:
+      - REDIS_MASTER_PASSWORD=password
+    depends_on:
+      - redis
+      - redis-slave
+    ports:
+      - 26381:26379
+      
+  redis-ui:
+    container_name: redis-ui
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOST=redis-master
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=password
+    depends_on:
+      - redis
+    ports:
+      - 8082:8081
+
+volumes:
+  data-rabbit:
+  data-redis:

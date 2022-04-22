@@ -1,0 +1,389 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5010",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/v1.0/dispute/{id}": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "getDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          }
+        }
+      },
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "summary": "Updates the properties of a particular Dispute record based on the given values.",
+        "operationId": "updateDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Dispute" } } },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          }
+        }
+      },
+      "delete": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "deleteDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "OK" }
+        }
+      }
+    },
+    "/api/v1.0/dispute/{id}/submit": {
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "summary": "Updates the status of a particular Dispute record to PROCESSING.",
+        "operationId": "submitDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "Ok" }
+        }
+      }
+    },
+    "/api/v1.0/dispute/{id}/reject": {
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "summary": "Updates the status of a particular Dispute record to REJECTED.",
+        "operationId": "rejectDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "maxLength": 256,
+                "minLength": 1,
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "Ok" }
+        }
+      }
+    },
+    "/api/v1.0/dispute/{id}/cancel": {
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "summary": "Updates the status of a particular Dispute record to CANCELLED.",
+        "operationId": "cancelDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "Ok" }
+        }
+      }
+    },
+    "/api/v1.0/dispute": {
+      "post": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "saveDispute",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Dispute" } } },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1.0/disputes": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "getAllDisputes",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Dispute" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1.0/codetable/refresh": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "summary": "An endpoint hook to trigger a redis rebuild of cached codetable data.",
+        "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
+        "operationId": "codeTableRefresh",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "OK" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Dispute": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID",
+            "format": "int32",
+            "readOnly": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [ "NEW", "PROCESSING", "REJECTED", "CANCELLED" ]
+          },
+          "ticketNumber": { "type": "string" },
+          "courtLocation": { "type": "string" },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantSurname": { "type": "string" },
+          "givenNames": { "type": "string" },
+          "streetAddress": { "type": "string" },
+          "province": { "type": "string" },
+          "postalCode": { "type": "string" },
+          "homePhone": { "type": "string" },
+          "driversLicense": { "type": "string" },
+          "driversLicenseProvince": { "type": "string" },
+          "workPhone": { "type": "string" },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enforcementOrganization": { "type": "string" },
+          "serviceDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketCounts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TicketCount" }
+          },
+          "lawyerRepresentation": { "type": "boolean" },
+          "interpreterLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "witnessIntent": { "type": "boolean" },
+          "rejectedReason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TicketCount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID",
+            "format": "int32",
+            "readOnly": true
+          },
+          "offenceDeclaration": { "type": "string" },
+          "timeToPayRequest": { "type": "boolean" },
+          "fineReductionRequest": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

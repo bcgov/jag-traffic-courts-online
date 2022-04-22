@@ -2,9 +2,9 @@
 // MATERIAL THEME
 //
 
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 @import "./material-palette";
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 
 // Define the palettes for your theme using the Material Design palettes available in the material
 // palette.scss (imported above). For each palette, you can optionally specify a default (500),

@@ -18,20 +18,40 @@ services:
       ASPNETCORE_URLS: http://*:8080
       FORMRECOGNIZER__APIKEY: ${FORMRECOGNIZER__APIKEY:-}
       FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-}
+      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-}
       MASSTRANSIT__TRANSPORT: ${MASSTRANSIT__TRANSPORT:-InMemory}
       RABBITMQ__HOST: rabbitmq
       RABBITMQ__PORT: 5672
-      RABBITMQ__USERNAME: ${RABBITMQ__USERNAME}
-      RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD}
+      RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
+      RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
+      REDIS__CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING:-redis:6379,password=password}
       TICKETSEARCHCLIENT__ADDRESS: ${TICKETSEARCHCLIENT__ADDRESS:-http://ticket-search:8080/}
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [rabbitmq, ticket-search]
+    depends_on: [rabbitmq, ticket-search, redis]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
+  #############################################################################################
+  ### Citizen API                                                                           ###
+  #############################################################################################
+  staff-api:
+    container_name: staff-api
+    build:
+      context: ./src/backend/TrafficCourts
+      dockerfile: ./Staff.Service/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: http://*:8080
+      ORACLEDATAAPI__BASEURL: ${ORACLEDATAAPI__BASEURL:-http://oracle-data-api:8080/}
+    ports:
+      - "5005:8080"
+    restart: always
+    depends_on:
+      - oracle-data-api    
+  
   #############################################################################################
   ### Ticket Search API                                                                     ###
   #############################################################################################
@@ -48,7 +68,6 @@ services:
       - "5100:8080"
       - "5110:8088"
     restart: always
-    #depends_on: [splunk]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
@@ -105,12 +124,12 @@ services:
     depends_on: [rabbitmq]
 
   #############################################################################################
-  ###                           Oracle Interface API                                        ###
+  ###                           Oracle Data API                                             ###
   #############################################################################################
-  oraface-api:
-    container_name: oraface-api
+  oracle-data-api:
+    container_name: oracle-data-api
     build:
-      context: ./src/backend/oracle-data-interface
+      context: ./src/backend/oracle-data-api
       args:
         - SKIP_TESTS=true
         - SPLUNK_URL=${SPLUNK_URL:-http://splunk:8088}
@@ -120,29 +139,11 @@ services:
         - REDIS_PASSWORD=password
         - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
         - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
-        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledatainterface=DEBUG}
+        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG}
+    depends_on:
+      - redis
     ports:
       - "5010:8080"
-
-  #############################################################################################
-  ###                           Splunk                                                      ###
-  ###                                                                                       ###
-  ### The default configuration is loaded from file ./.docker/splunk-dev-config.yaml        ###
-  ###                                                                                       ###
-  ### Web: http://localhost:8000   Username: admin, Password: password                      ###
-  ### HEC: http://localhost:8088   Token: token                                             ###
-  #############################################################################################
-  splunk:
-    container_name: splunk
-    image: splunk/splunk:latest
-    ports:
-      - 8000:8000
-      - 8088:8088
-    environment:
-      SPLUNK_START_ARGS: --accept-license
-      TZ: America/Vancouver
-    volumes:
-      - "./.docker/splunk-dev-config.yaml:/tmp/defaults/default.yml"
 
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
@@ -220,36 +221,18 @@ services:
       "
 
   #############################################################################################
-  ###                           Jaeger                                                      ###
-  #############################################################################################
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - "5775:5775/udp"
-      - "6831:6831/udp"
-      - "6832:6832/udp"
-      - "5778:5778"
-      - "16686:16686"
-      - "14250:14250"
-      - "14268:14268"
-      - "14269:14269"
-      - "9411:9411"
-
-  #############################################################################################
   ###                                 REDIS server and UI                                   ###
   #############################################################################################
   redis:
     container_name: redis
-    image: redis
-    command: redis-server --requirepass password
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_PASSWORD=password
     ports:
-      - "6379:6379"
-    volumes:
-      - data-redis:/data
-    restart: always
-
-  redis-commander:
-    container_name: redis-commander
+      - 6379:6379
+      
+  redis-ui:
+    container_name: redis-ui
     hostname: redis-commander
     image: rediscommander/redis-commander:latest
     restart: always
@@ -257,8 +240,10 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=password
+    depends_on:
+      - redis
     ports:
-      - "8082:8081"
+      - 8082:8081
 
 volumes:
   data-rabbit:

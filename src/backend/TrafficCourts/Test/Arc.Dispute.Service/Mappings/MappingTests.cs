@@ -38,7 +38,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             {
                 Assert.Equal(tcoDisputeTicket.TicketIssuanceDate, actualRec.TransactionDate);
                 Assert.Equal(tcoDisputeTicket.TicketFileNumber, actualRec.FileNumber);
-                Assert.Equal(tcoDisputeTicket.DriversLicense, actualRec.MvbClientNumber);
+                Assert.Equal(tcoDisputeTicket.DriversLicence, actualRec.MvbClientNumber);
 
                 if (actualRec is AdnotatedTicket)
                 {

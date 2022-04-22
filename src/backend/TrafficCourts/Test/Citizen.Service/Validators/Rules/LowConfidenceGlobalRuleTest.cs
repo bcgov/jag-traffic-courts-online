@@ -10,101 +10,101 @@ public class LowConfidenceGlobalRuleTest
 {
 
     [Theory]
-    [InlineData(0,  new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(1,  new float[] {0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(2,  new float[] {0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, true)]
-    [InlineData(3,  new float[] {0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, true)]
-    [InlineData(4,  new float[] {0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(5,  new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(6,  new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(7,  new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(8,  new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(9,  new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(10, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(11, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(12, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(13, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(14, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(15, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(16, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(17, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(18, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(19, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(20, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, true)]
-    [InlineData(21, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, true)]
-    [InlineData(22, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(23, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(24, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(25, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(26, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, true)]
-    [InlineData(27, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f}, true)]
-    [InlineData(28, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(29, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(30, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f,0.80f}, false)]
-    [InlineData(31, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f,0.80f}, false)]
-    [InlineData(32, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f,0.80f}, false)]
-    [InlineData(33, new float[] {0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.80f,0.79f,0.79f,0.79f}, false)]
-    public void TestLowConfidence(int testNum, float[] fieldConfidences, bool expectError)
+    [ClassData(typeof(TestData))]
+    public void TestLowConfidence(int testNum, float?[] fieldConfidences, bool expectValid)
     {
-        // TCVP-932 if 3 of a set of specific fields have a low (<80%) confidence, expect to see a global validation error
+        // TCVP-932 if 4, 6, or 8 of a set of specific fields have a low (<80%) confidence, expect to see a global validation error
         // Given
         OcrViolationTicket violationTicket = new();
-        AddField(violationTicket, ViolationTicketTitle, fieldConfidences[0]);
-        AddField(violationTicket, ViolationTicketNumber, fieldConfidences[1]);
-        AddField(violationTicket, Surname, fieldConfidences[2]);
-        AddField(violationTicket, GivenName, fieldConfidences[3]);
-        AddField(violationTicket, DriverLicenceProvince, fieldConfidences[4]);
-        AddField(violationTicket, DriverLicenceNumber, fieldConfidences[5]);
-        AddField(violationTicket, ViolationDate, fieldConfidences[6]);
-        AddField(violationTicket, ViolationTime, fieldConfidences[7]);
-        AddField(violationTicket, OffenceIsMVA, fieldConfidences[8]);
-        AddField(violationTicket, OffenceIsMCA, fieldConfidences[9]);
-        AddField(violationTicket, OffenceIsCTA, fieldConfidences[10]);
-        AddField(violationTicket, OffenceIsWLA, fieldConfidences[11]);
-        AddField(violationTicket, OffenceIsFAA, fieldConfidences[12]);
-        AddField(violationTicket, OffenceIsLCA, fieldConfidences[13]);
-        AddField(violationTicket, OffenceIsTCR, fieldConfidences[14]);
-        AddField(violationTicket, OffenceIsOther, fieldConfidences[15]);
-        AddField(violationTicket, Count1Description, fieldConfidences[16]);
-        AddField(violationTicket, Count1ActRegs, fieldConfidences[17]);
-        AddField(violationTicket, Count1IsACT, fieldConfidences[18]);
-        AddField(violationTicket, Count1IsREGS, fieldConfidences[19]);
-        AddField(violationTicket, Count1Section, fieldConfidences[20]);
-        AddField(violationTicket, Count1TicketAmount, fieldConfidences[21]);
-        AddField(violationTicket, Count2Description, fieldConfidences[22]);
-        AddField(violationTicket, Count2ActRegs, fieldConfidences[23]);
-        AddField(violationTicket, Count2IsACT, fieldConfidences[24]);
-        AddField(violationTicket, Count2IsREGS, fieldConfidences[25]);
-        AddField(violationTicket, Count2Section, fieldConfidences[26]);
-        AddField(violationTicket, Count2TicketAmount, fieldConfidences[27]);
-        AddField(violationTicket, Count3Description, fieldConfidences[28]);
-        AddField(violationTicket, Count3ActRegs, fieldConfidences[29]);
-        AddField(violationTicket, Count3IsACT, fieldConfidences[30]);
-        AddField(violationTicket, Count3IsREGS, fieldConfidences[31]);
-        AddField(violationTicket, Count3Section, fieldConfidences[32]);
-        AddField(violationTicket, Count3TicketAmount, fieldConfidences[33]);
-        AddField(violationTicket, HearingLocation, fieldConfidences[34]);
-        AddField(violationTicket, DetachmentLocation, fieldConfidences[35]);
+        AddField(violationTicket, ViolationTicketTitle, 0.80f);
+        AddField(violationTicket, ViolationTicketNumber, 0.80f);
+        AddField(violationTicket, ViolationDate, 0.80f);
+        AddField(violationTicket, ViolationTime, 0.80f);
+        AddField(violationTicket, OffenceIsMVA, 0.80f);
+        AddField(violationTicket, OffenceIsMCA, 0.80f);
+        AddField(violationTicket, OffenceIsCTA, 0.80f);
+        AddField(violationTicket, OffenceIsWLA, 0.80f);
+        AddField(violationTicket, OffenceIsFAA, 0.80f);
+        AddField(violationTicket, OffenceIsLCA, 0.80f);
+        AddField(violationTicket, OffenceIsTCR, 0.80f);
+        AddField(violationTicket, OffenceIsOther, 0.80f);
+
+        AddField(violationTicket, Surname, fieldConfidences[0]);
+        AddField(violationTicket, GivenName, fieldConfidences[1]);
+        AddField(violationTicket, DriverLicenceProvince, fieldConfidences[2]);
+        AddField(violationTicket, DriverLicenceNumber, fieldConfidences[3]);
+        AddField(violationTicket, Count1Description, fieldConfidences[4]);
+        AddField(violationTicket, Count1ActRegs, fieldConfidences[5]);
+        AddField(violationTicket, Count1Section, fieldConfidences[6]);
+        AddField(violationTicket, Count1TicketAmount, fieldConfidences[7]);
+        AddField(violationTicket, Count2Description, fieldConfidences[8]);
+        AddField(violationTicket, Count2ActRegs, fieldConfidences[9]);
+        AddField(violationTicket, Count2Section, fieldConfidences[10]);
+        AddField(violationTicket, Count2TicketAmount, fieldConfidences[11]);
+        AddField(violationTicket, Count3Description, fieldConfidences[12]);
+        AddField(violationTicket, Count3ActRegs, fieldConfidences[13]);
+        AddField(violationTicket, Count3Section, fieldConfidences[14]);
+        AddField(violationTicket, Count3TicketAmount, fieldConfidences[15]);
 
         // When
         LowConfidenceGlobalRule.Run(violationTicket);
 
         // Then
-        if (expectError)
+        if (expectValid)
+        {
+            Assert.Empty(violationTicket.GlobalValidationErrors);
+        }
+        else
         {
             Assert.True(violationTicket.GlobalValidationErrors.Count == 1, "Test number: " + testNum);
             Assert.Equal(ValidationMessages.LowConfidenceError, violationTicket.GlobalValidationErrors[0]);
         }
-        else
-        {
-            Assert.Empty(violationTicket.GlobalValidationErrors);
-        }
     }
 
-    private static void AddField(OcrViolationTicket violationTicket, string fieldName, float fieldConfidence)
+    private static void AddField(OcrViolationTicket violationTicket, string fieldName, float? fieldConfidence)
     {
         Field field = new();
         field.FieldConfidence = fieldConfidence;
+        if (fieldConfidence is not null)
+        {
+            field.Value = "a";
+        }
         violationTicket.Fields.Add(fieldName, field);
+    }
+
+    public class TestData : TheoryData<int, float?[], bool>
+    {
+        public TestData()
+        {
+            // 1 count, < 4 fields with low confidence
+            Add(1, new float?[] { 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, true);
+            Add(2, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null, null, null }, true);
+
+            // 1 count, >= 4 fields with low confidence
+            Add(3, new float?[] { 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, false);
+            Add(4, new float?[] { 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, false);
+            Add(5, new float?[] { 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, 0.80f, null, null, null, null, null, null, null, null }, false);
+            Add(6, new float?[] { 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.80f, null, null, null, null, null, null, null, null }, false);
+            Add(7, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null, null, null }, false);
+
+            // 2 counts, < 6 fields with low confidence
+            Add(8, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null, null }, true);
+            Add(9, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null, null }, true);
+            Add(10, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, 0.79f, null, null, null }, true);
+            Add(11, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, 0.79f, 0.79f, null, null }, true);
+            // // 2 counts, >= 6 fields with low confidence
+            Add(12, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null, null }, false);
+            Add(13, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, null, null }, false);
+            Add(14, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, null, null, null, null, 0.79f, 0.79f, 0.79f, null }, false);
+            Add(15, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, null, null, null, null, 0.79f, 0.79f, 0.79f, 0.79f }, false);
+
+            // 3 counts, < 8 fields with low confidence
+            Add(16, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, null, 0.79f, 0.79f, null, null }, true);
+            // 3 counts, >= 8 fields with low confidence
+            Add(17, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, 0.79f, null, 0.79f, 0.79f, null, null }, false);
+
+            // 3 counts, all okay
+            Add(18, new float?[] { 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f, 0.80f }, true);
+        }
     }
 }

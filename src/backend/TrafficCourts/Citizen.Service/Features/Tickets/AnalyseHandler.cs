@@ -22,7 +22,7 @@ public static class AnalyseHandler
 
     public class AnalyseResponse
     {
-        public AnalyseResponse(OcrViolationTicket violationTicket) 
+        public AnalyseResponse(OcrViolationTicket violationTicket)
         {
             ArgumentNullException.ThrowIfNull(violationTicket);
             OcrViolationTicket = violationTicket;
@@ -40,7 +40,7 @@ public static class AnalyseHandler
         private readonly IMemoryStreamManager _memoryStreamManager;
 
         public Handler(
-            IFormRecognizerService formRegognizerService, 
+            IFormRecognizerService formRegognizerService,
             IFormRecognizerValidator formRecognizerValidator,
             IFilePersistenceService filePersistenceService,
             IMemoryStreamManager memoryStreamManager,
@@ -59,7 +59,7 @@ public static class AnalyseHandler
 
             var stream = GetStreamForFile(request.Image);
 
-            // TODO: do the save file and analyze in parallel
+            // FIXME: save should only happen iff there are no global validation errors - this needs to move *after* line 74
             var filename = await _filePersistenceService.SaveFileAsync(stream, cancellationToken);
             stream.Position = 0L; // reset file position
 
@@ -79,13 +79,12 @@ public static class AnalyseHandler
 
         private MemoryStream GetStreamForFile(IFormFile formFile)
         {
-            int length = (int)formFile.Length;
-            MemoryStream stream = _memoryStreamManager.GetStream(); ;
+            MemoryStream memoryStream = _memoryStreamManager.GetStream(); ;
 
             using var fileStream = formFile.OpenReadStream();
-            fileStream.CopyTo(stream);
+            fileStream.CopyTo(memoryStream);
 
-            return stream;
+            return memoryStream;
         }
     }
 }

@@ -12,21 +12,21 @@ namespace TrafficCourts.Workflow.Service.Consumers
     public class SubmitDisputeConsumer : IConsumer<SubmitDispute>
     {
         private readonly ILogger<SubmitDisputeConsumer> _logger;
-        private readonly IOracleInterfaceService _oracleInterfaceService;
+        private readonly IOracleDataApiService _oracleDataApiService;
 
-        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleInterfaceService oracleInterfaceService)
+        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleDataApiService oracleDataApiService)
         {
             _logger = logger;
-            _oracleInterfaceService = oracleInterfaceService;
+            _oracleDataApiService = oracleDataApiService;
         }
 
         public async Task Consume(ConsumeContext<SubmitDispute> context)
         {
             if (context.RequestId != null)
             {
-                _logger.LogInformation("SubmitDisputeConsumer is consuming message: " + context.Message.Id);
+                _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
 
-                List<TicketCount> ticketCounts = new List<TicketCount>();
+                List<TicketCount> ticketCounts = new();
 
                 foreach (var ticketCount in context.Message.TicketCounts)
                 {
@@ -50,8 +50,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     Province = context.Message.Province,
                     PostalCode = context.Message.PostalCode,
                     HomePhone = context.Message.HomePhone,
-                    DriversLicense = context.Message.DriversLicense,
-                    DriversLicenseProvince = context.Message.DriversLicenseProvince,
+                    DriversLicence = context.Message.DriversLicence,
+                    DriversLicenceProvince = context.Message.DriversLicenceProvince,
                     WorkPhone = context.Message.WorkPhone,
                     DateOfBirth = context.Message.DateOfBirth,
                     EnforcementOrganization = context.Message.EnforcementOrganization,
@@ -62,28 +62,28 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     WitnessIntent = context.Message.WitnessIntent
                 };
 
-                _logger.LogInformation("TRY CREATING DISPUTE: " + dispute.ToString());
+                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());
 
-                var disputeId = await _oracleInterfaceService.CreateDisputeAsync(dispute);
+                var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
                 if (disputeId != -1)
                 {
-                    _logger.LogInformation("Dispute has been saved with dispute id: " + disputeId);
+                    _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
                     await context.RespondAsync<DisputeSubmitted>(new
                     {
-                        context.Message.Id,
+                        context.MessageId,
                         InVar.Timestamp,
                         DisputeId = disputeId
                     });
                 }
                 else
                 {
-                    _logger.LogInformation("Failed to save the dispute");
+                    _logger.LogDebug("Failed to save the dispute");
 
                     await context.RespondAsync<DisputeRejected>(new
                     {
-                        context.Message.Id,
+                        context.MessageId,
                         InVar.Timestamp,
                         Reason = "Bad request"
                     });

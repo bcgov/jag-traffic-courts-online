@@ -31,6 +31,7 @@ export class StepOverviewComponent
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.submit';
+  public declared = false;
 
   public disputantForm: FormGroup;
   public offence1Form: FormGroup;

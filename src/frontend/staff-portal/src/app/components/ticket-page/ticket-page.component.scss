@@ -92,6 +92,9 @@
   table td {
    padding: 10px;
   }
+  td.mat-cell {
+    border-bottom-width: 0px !important;
+  }
   .message-data{
     background-color: white;
     color: gray;
@@ -241,3 +244,6 @@
       }
   }
 }
+
+
+

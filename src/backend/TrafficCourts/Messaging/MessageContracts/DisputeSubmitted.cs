@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public interface DisputeSubmitted : Message
+    public interface DisputeSubmitted : IMessage
     {
         int DisputeId { get; set; }
     }

@@ -1,0 +1,56 @@
+server:
+  port: ${SERVER_PORT:8080}
+  
+spring:
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:password}
+    sentinel:
+      master: ${REDIS_SENTINAL_MASTER:}
+      nodes: ${REDIS_SENTINAL_NODES:}
+    
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    url: jdbc:h2:mem:dispute_data
+    username: sa
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
+    # Configure swagger to list by sorted endpoint
+    operations-sorter: alpha
+    # Configure swagger to list the most recent API version first
+    groups-order: DESC
+
+codetable:
+  refresh:
+    # If enabled, this refresh will trigger a pull from JUSTIN to populate a cached copy of the lookup data in redis based on the cron schedule.
+    enabled: ${CODETABLE_REFRESH_ENABLED:false}
+    
+    # If true, will refresh code tables at startup.
+    atStartup: true
+     
+    # A cron-like expression (defaulting to once per day at 3am), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week. 
+    # 
+    # For example, "0 * * * * MON-FRI" means once per minute on weekdays(at the top of the minute - the 0th second). 
+    # 
+    # The fields read from left to right are interpreted as follows:
+    #  ┌───────────── second (0-59)
+    #  │ ┌───────────── minute (0 - 59)
+    #  │ │ ┌───────────── hour (0 - 23)
+    #  │ │ │ ┌───────────── day of the month (1 - 31)
+    #  │ │ │ │ ┌───────────── month (1 - 12) (or JAN-DEC)
+    #  │ │ │ │ │ ┌───────────── day of the week (0 - 7)
+    #  │ │ │ │ │ │          (0 or 7 is Sunday, or MON-SUN)
+    #  │ │ │ │ │ │
+    #  * * * * * *
+    cron: ${CODETABLE_REFRESH_CRON:0 0 3 * * *}

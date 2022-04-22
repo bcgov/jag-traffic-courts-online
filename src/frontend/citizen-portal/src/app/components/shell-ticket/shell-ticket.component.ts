@@ -35,6 +35,7 @@ import { DisputeService } from 'app/services/dispute.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import *  as moment from 'moment';
 
 export function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -469,36 +470,6 @@ const data2: TicketDisputeView
     );
   }
 
-  private recognizeContent(imageSource: File): void {
-    const endpoint = 'https://canadacentral.api.cognitive.microsoft.com';
-    const apiKey = '65440468b684497988679b8857f33a36';
-
-    const client = new FormRecognizerClient(
-      endpoint,
-      new AzureKeyCredential(apiKey)
-    );
-
-    const poller = client.beginRecognizeCustomForms(
-      '8b16e3eb-b797-4e1c-a2f6-5891105222dc',
-      imageSource,
-      {
-        onProgress: (state) => {
-          this.logger.info(`analyzing status: ${state.status}`);
-        },
-      }
-    );
-
-    // const poller = client.beginRecognizeInvoices(imageSource, {
-    //   onProgress: (state) => {
-    //     this.logger.info(`analyzing status: ${state.status}`);
-    //   },
-    // });
-
-    this.busy = poller;
-
-    // poller.then(this.onFulfilled(), this.onRejected);
-  }
-
   private onFulfilled() {
     // return (poller: FormPollerLike) => {
       // this.busy = poller.pollUntilDone().then(() => {
@@ -705,7 +676,7 @@ const data2: TicketDisputeView
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-      violationDate: new Date(invoiceDateField.value),
+      violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
 
       lastName: surnameField.value
         ? surnameField.value
@@ -740,7 +711,7 @@ const data2: TicketDisputeView
         ? count1SectionField.value.replace(/\s/g, '')
         : '',
       count1FineAmount: count1TicketAmountField.value
-        ? Number(count1TicketAmountField.value)
+        ? parseFloat(count1TicketAmountField.value.replace(/[^.0-9]/g, ''))
         : 0,
       count2Charge: count2ActRegsField.value
         ? count2ActRegsField.value
@@ -752,7 +723,7 @@ const data2: TicketDisputeView
         ? count2SectionField.value.replace(/\s/g, '')
         : '',
       count2FineAmount: count2TicketAmountField.value
-        ? Number(count2TicketAmountField.value)
+        ? parseFloat(count2TicketAmountField.value.replace(/[^.0-9]/g, ''))
         : 0,
       count3Charge: count3ActRegsField.value
         ? count3ActRegsField.value
@@ -764,7 +735,7 @@ const data2: TicketDisputeView
         ? count3SectionField.value.replace(/\s/g, '')
         : '',
       count3FineAmount: count3TicketAmountField.value
-        ? Number(count3TicketAmountField.value)
+        ? parseFloat(count3TicketAmountField.value.replace(/[^.0-9]/g, ''))
         : 0,
       _chargeCount: chargeCount,
       _amountOwing: 0,

@@ -18,7 +18,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.TransactionDate = source.TicketIssuanceDate;
                 adnotated.TransactionTime = source.TicketIssuanceDate;
                 adnotated.FileNumber = source.TicketFileNumber;
-                adnotated.MvbClientNumber = source.DriversLicense;
+                adnotated.MvbClientNumber = source.DriversLicence;
                 // Mapping adnotated ticket specific data
                 adnotated.Name = source.CitizenName;
                 adnotated.Section = ticket.Section;
@@ -45,7 +45,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                             disputed.TransactionDate = source.TicketIssuanceDate;
                             disputed.TransactionTime = source.TicketIssuanceDate;
                             disputed.FileNumber = source.TicketFileNumber;
-                            disputed.MvbClientNumber = source.DriversLicense;
+                            disputed.MvbClientNumber = source.DriversLicence;
                             // Mapping disputed ticket specific data
                             disputed.Name = source.CitizenName;
                             disputed.DisputeType = disputeValue.DisputeType != null ? disputeValue.DisputeType : "A";

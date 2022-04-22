@@ -48,53 +48,11 @@ Welcome to Traffic Courts Online
 | FormRecognizer:Endpoint         |                                              |                                 |
 | TicketSearchClient:Address      |                                              |                                 |
 
-# Splunk
-
-The default `docker-compose.yaml` file contains a local splunk service. A custom configuration file, `./.docker/splunk-dev-config.yaml`
-is used to adjust the default settings. A key setting is disabling the SSL on the HEC endpoint.
-
-https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec
-
-Example configuring splunk logging using Serilog configuration.
-
-```
-{
-  "Serilog": {
-    "Using": [
-      "Serilog.Sinks.Splunk"
-    ],
-    "MinimumLevel": {
-      "Default": "Debug",
-      "Override": {
-        "Microsoft": "Warning",
-        "System": "Warning"
-      }
-    },
-    "WriteTo": [
-      {
-        "Name": "EventCollector",
-        "Args": {
-          "splunkHost": "http://localhost:8088",
-          "eventCollectorToken": "token"
-        }
-      }
-    ]
-  }
-}
-```
-
-To apply this, save the configuration to a file, and run this command from the project directory (where the .csproj is)
-
-```
-type .\config.json | dotnet user-secrets set
-dotnet user-secrets list
-```
-
-#### Docker
+## Docker
 
 [Download](https://www.docker.com/products/docker-desktop) and install Docker
 
-# Run docker-compose
+## Run docker-compose
 
 Copy the `.env.template` to `.env` and then run docker-compose up.
 Add the configuration for token and password for splunk.
@@ -105,9 +63,103 @@ REDIS__HOST will be `redis` which is the service name.
 docker-compose up
 ```
 
+### Examples
+
+Develop the `citizen-portal`. Run the associated API, `citizen-api`.  This starts the required services:
+
+* citizen-api
+* rabbitmq
+* ticket-search
+
+```
+docker-compose -f docker-compose.yml up -d citizen-api
+```
+
+Run `citizen-api` and have the backend logs go to [local Seq](http://localhost:8001),
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml up -d citizen-api
+```
+
+To stop when running Seq,
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml down
+```
+
+Run `citizen-api` and have the backend logs go to [local Splunk](http://localhost:8000)
+
+Note, this is currently getting an error: "Error response from daemon: network ... not found"
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.splunk.yml up -d citizen-api
+```
+
+To stop when running Splunk,
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.splunk.yml down
+```
+
 The frontend app citizen-portal will be accessible in the browser at http://localhost:8080 
 
 To remove services run (all services and networking)
 ```
 docker-compose down
+```
+
+## Services
+
+| Service                         | URL                                          | Notes |
+| ------------------------------- | -------------------------------------------- | ----- |
+| citizen-portal                  | http://localhost:8080/                       |       |
+| citizen-api                     | http://localhost:5000/swagger/index.html     |       |
+| staff-portal                    | http://localhost:8081/                       |       |
+| ticket-search                   | n/a                                          | grpc  |
+| oraface-api                     | http://localhost:5010/                       |       |
+| rabbitmq                        | localhost:5672, localhost:15672              |       |
+| minio                           | http://localhost:9001/login                  |       |
+| redis                           | localhost:6379                               |       |
+| redis-commander                 | http://localhost:8082                        |       |
+| splunk                          | http://localhost:8000                        |       |
+| seq                             | http://localhost:8001                        |       |
+| jaeger                          | http://localhost:16686                       |       |
+
+### Logging
+
+Developers can choose how logging is configured in the running apps. Developer can choose Splunk or Seq.
+
+#### Splunk
+
+The default `docker-compose.yaml` file does NOT contain Splunk configuration. To use/test with Splunk,
+you can include a docker-compose override to configure Splunk for the requested services, ie,
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.splunk.yml up
+```
+
+Open [Local Splunk](http://localhost:8000) to view logs.  Login with username: admin, password: password.
+
+#### Splunk 
+A custom configuration file, `./.docker/splunk-dev-config.yaml`
+is used to adjust the default settings. A key setting is disabling the SSL on the HEC endpoint.
+
+See [Splunk Docker examples](https://splunk.github.io/docker-splunk/EXAMPLES.html#create-standalone-with-hec) for more information.
+
+#### Seq
+
+[Seq](https://datalust.co/seq) is an alternative logging source that is more developer friendly, especially those unfamilar with Splunk.
+
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.seq.yml up
+```
+
+Open [Local Seq](http://localhost:8001) to view logs.
+
+### Redis
+
+By default, redis runs in Standalone mode (a single container).
+To run the project where redis is configured to run in sentinel mode (a high-availability failover configuration), specify the redis override file and run:
+```
+docker-compose -f docker-compose.yml -f ./.docker/docker-compose.redis.yml up -d
 ```
