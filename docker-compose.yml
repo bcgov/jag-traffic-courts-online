@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
   #############################################################################################
@@ -35,7 +35,7 @@ services:
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
   #############################################################################################
-  ### Citizen API                                                                           ###
+  ### Staff API                                                                             ###
   #############################################################################################
   staff-api:
     container_name: staff-api
@@ -71,6 +71,57 @@ services:
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
+      
+  # ---------------------------------------------------------------------------------------------
+  # ARC Dispute API
+  # ---------------------------------------------------------------------------------------------
+  arc-api:
+    container_name: arc-dispute-api
+    build:
+      context: ./src/backend/TrafficCourts
+      dockerfile: ./TrafficCourts.Arc.Dispute.Service/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      SFTP__HOST: ${SFTP__HOST:-sftp}
+      SFTP__PORT: ${SFTP__PORT:-22}
+      SFTP__USERNAME: ${SFTP__USERNAME:-demo}
+      SFTP__PASSWORD: ${SFTP__PASSWORD:-demo}
+      SFTP__SSHPRIVATEKEYPATH: ${SFTP__SSHPRIVATEKEYPATH-}
+    ports:
+      - "5300:8080"
+    restart: always
+    depends_on: [sftp]
+    volumes:
+      # mount the current users usersecrets folder
+      - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
+      
+  sftp:
+    image: "emberstack/sftp"
+    container_name: sftp
+    ports:
+      - "22:22"
+    volumes:
+      - ../samples/sample.sftp/sftp.json:/app/config/sample/sftp.json:ro
+      - ../../../sftp-in:/home/demo/sftp
+      
+  # ---------------------------------------------------------------------------------------------
+  # Workflow Service
+  # ---------------------------------------------------------------------------------------------
+  workflow-service:
+    container_name: workflow-service
+    build:
+      context: ./src/backend/TrafficCourts
+      dockerfile: ./Workflow.Service/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      RABBITMQCONFIG__HOST: ${RABBITMQCONFIG__HOST:-rabbitmq}
+      RETRYCONFIGURATION__RETRYTIMES: ${RETRYCONFIGURATION__RETRYTIMES:-5}
+      RETRYCONFIGURATION__RETRYINTERVAL: ${RETRYCONFIGURATION__RETRYINTERVAL:-2}
+      RETRYCONFIGURATION__CONCURRENCYLIMIT: ${RETRYCONFIGURATION__CONCURRENCYLIMIT:-2}
+    ports:
+      - "5200:8080"
+    restart: always
+    depends_on: [rabbitmq]
 
   #############################################################################################
   ###                           Oracle Data API                                             ###
