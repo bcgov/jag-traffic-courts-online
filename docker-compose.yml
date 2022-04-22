@@ -35,7 +35,7 @@ services:
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
 
   #############################################################################################
-  ### Citizen API                                                                           ###
+  ### Staff API                                                                             ###
   #############################################################################################
   staff-api:
     container_name: staff-api
