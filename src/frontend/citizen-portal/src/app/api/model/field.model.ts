@@ -18,7 +18,7 @@ export interface Field {
     /**
      * A list of field-specific reasons why the field Confidence may be low
      */
-    fieldValidationErrors?: Array<string> | null;
+    validationErrors?: Array<string> | null;
     type?: string | null;
     boundingBoxes?: Array<BoundingBox> | null;
 }

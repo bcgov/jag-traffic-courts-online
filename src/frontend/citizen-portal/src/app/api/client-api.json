@@ -128,6 +128,26 @@
           "Disputes"
         ],
         "summary": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Request"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Request"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Request"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success"
@@ -358,6 +378,39 @@
         "deprecated": true
       }
     },
+    "/api/lookup/statutes": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Violation Ticket Statutes filtered by given section text (if provided).",
+        "parameters": [
+          {
+            "name": "section",
+            "in": "query",
+            "description": "Motor vehicle act Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Statute"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tickets/search": {
       "get": {
         "tags": [
@@ -441,23 +494,24 @@
         "tags": [
           "Tickets"
         ],
+        "summary": "Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "required": [
-                  "image"
+                  "file"
                 ],
                 "type": "object",
                 "properties": {
-                  "image": {
+                  "file": {
                     "type": "string",
                     "format": "binary"
                   }
                 }
               },
               "encoding": {
-                "image": {
+                "file": {
                   "style": "form"
                 }
               }
@@ -466,7 +520,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The file appears to be a valid Violation Ticket. JSON data is extracted.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -486,7 +540,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "The uploaded file is too large or the Violation Ticket does not appear to be valid. Either \r\n            the ticket title could not be found, the ticket number is invalid, the violation date is invalid or more than \r\n            30 days ago, or MVA is not selected or not the only ACT selected.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1371,7 +1425,7 @@
           },
           "violationDate": {
             "type": "string",
-            "nullable": true
+            "format": "date"
           },
           "lastName": {
             "type": "string",
@@ -1634,7 +1688,7 @@
             "format": "float",
             "nullable": true
           },
-          "fieldValidationErrors": {
+          "validationErrors": {
             "type": "array",
             "items": {
               "type": "string"
@@ -1737,18 +1791,15 @@
       "OcrViolationTicket": {
         "type": "object",
         "properties": {
+          "imageFilename": {
+            "type": "string",
+            "description": "Gets or sets the saved image filename.",
+            "nullable": true
+          },
           "globalConfidence": {
             "type": "number",
             "description": "A global confidence of correctly extracting the document. This value will be low if the title of this \r\nViolation Ticket form is not found (or of low confidence itself) or if the main ticket number is missing or invalid.",
             "format": "float"
-          },
-          "globalValidationErrors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "A list of global reasons why the global Confidence may be low (ie, missing ticket number, not a Violation Ticket, etc.)",
-            "nullable": true
           },
           "fields": {
             "type": "object",
@@ -1933,6 +1984,89 @@
         },
         "additionalProperties": false
       },
+      "Request": {
+        "type": "object",
+        "properties": {
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "courtLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "streetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "homePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicence": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "workPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "enforcementOrganization": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "ticketCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TicketCount"
+            },
+            "nullable": true
+          },
+          "lawyerRepresentation": {
+            "type": "boolean"
+          },
+          "interpreterLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "witnessIntent": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ShellTicket": {
         "type": "object",
         "properties": {
@@ -1946,7 +2080,7 @@
           },
           "violationDate": {
             "type": "string",
-            "nullable": true
+            "format": "date"
           },
           "lastName": {
             "type": "string",
@@ -2054,9 +2188,34 @@
             "type": "number",
             "format": "double"
           },
-          "name": {
+          "act": {
             "type": "string",
             "nullable": true
+          },
+          "section": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government."
+      },
+      "TicketCount": {
+        "type": "object",
+        "properties": {
+          "offenceDeclaration": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeToPayRequest": {
+            "type": "boolean"
+          },
+          "fineReductionRequest": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -2168,12 +2327,12 @@
             "items": {
               "$ref": "#/components/schemas/TicketOffence"
             },
-            "description": "The list of offenses on this violation ticket.",
+            "description": "The list of offences on this violation ticket.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Represents a violation ticket that is returned from search requests"
+        "description": "Obsolete: Represents a violation ticket that is returned from search requests"
       }
     }
   }

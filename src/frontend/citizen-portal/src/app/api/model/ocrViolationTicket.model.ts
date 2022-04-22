@@ -17,13 +17,13 @@ import { Field } from './field.model';
  */
 export interface OcrViolationTicket { 
     /**
+     * Gets or sets the saved image filename.
+     */
+    imageFilename?: string | null;
+    /**
      * A global confidence of correctly extracting the document. This value will be low if the title of this   Violation Ticket form is not found (or of low confidence itself) or if the main ticket number is missing or invalid.
      */
     globalConfidence?: number;
-    /**
-     * A list of global reasons why the global Confidence may be low (ie, missing ticket number, not a Violation Ticket, etc.)
-     */
-    globalValidationErrors?: Array<string> | null;
     /**
      * An enumeration of all fields in this Violation Ticket.
      */

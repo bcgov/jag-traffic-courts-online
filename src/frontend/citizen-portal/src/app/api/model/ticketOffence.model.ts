@@ -24,6 +24,9 @@ export interface TicketOffence {
      * The current amount due.
      */
     amountDue?: number;
+    /**
+     * 
+     */
     invoiceType?: string | null;
     /**
      * The description of the offence.

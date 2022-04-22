@@ -13,19 +13,29 @@
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext 
+        }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ApiMessageResponse } from '../model/models';
-import { CreateShellTicketCommand } from '../model/models';
-import { OcrViolationTicket } from '../model/models';
-import { ProblemDetails } from '../model/models';
-import { ShellTicket } from '../model/models';
-import { TicketDispute } from '../model/models';
-import { TicketDisputeApiResultResponse } from '../model/models';
-import { TicketSearchResult } from '../model/models';
+// @ts-ignore
+import { ApiMessageResponse } from '../model/apiMessageResponse.model';
+// @ts-ignore
+import { CreateShellTicketCommand } from '../model/createShellTicketCommand.model';
+// @ts-ignore
+import { OcrViolationTicket } from '../model/ocrViolationTicket.model';
+// @ts-ignore
+import { ProblemDetails } from '../model/problemDetails.model';
+// @ts-ignore
+import { ShellTicket } from '../model/shellTicket.model';
+// @ts-ignore
+import { TicketDispute } from '../model/ticketDispute.model';
+// @ts-ignore
+import { TicketDisputeApiResultResponse } from '../model/ticketDisputeApiResultResponse.model';
+// @ts-ignore
+import { TicketSearchResult } from '../model/ticketSearchResult.model';
 
+// @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
@@ -36,7 +46,8 @@ import { Configuration }                                     from '../configurat
 })
 export class TicketsService {
 
-    protected basePath = ''; //'http://localhost';
+    //protected basePath = 'http://localhost';
+    protected basePath = '';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -97,8 +108,7 @@ export class TicketsService {
                 (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
             } else if (value instanceof Date) {
                 if (key != null) {
-                    httpParams = httpParams.append(key,
-                        (value as Date).toISOString().substr(0, 10));
+                    httpParams = httpParams.append(key, (value as Date).toISOString().substr(0, 10));
                 } else {
                    throw Error("key may not be null if value is Date");
                 }
@@ -115,16 +125,17 @@ export class TicketsService {
     }
 
     /**
-     * @param image 
+     * Analyses a Traffic Violation Ticket, extracting all hand-written text to a consumable JSON object.
+     * @param file 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiTicketsAnalysePost(image: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<OcrViolationTicket>;
-    public apiTicketsAnalysePost(image: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<OcrViolationTicket>>;
-    public apiTicketsAnalysePost(image: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<OcrViolationTicket>>;
-    public apiTicketsAnalysePost(image: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
-        if (image === null || image === undefined) {
-            throw new Error('Required parameter image was null or undefined when calling apiTicketsAnalysePost.');
+    public apiTicketsAnalysePost(file: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<OcrViolationTicket>;
+    public apiTicketsAnalysePost(file: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<OcrViolationTicket>>;
+    public apiTicketsAnalysePost(file: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<OcrViolationTicket>>;
+    public apiTicketsAnalysePost(file: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (file === null || file === undefined) {
+            throw new Error('Required parameter file was null or undefined when calling apiTicketsAnalysePost.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -143,6 +154,11 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
         // to determine the Content-Type header
         const consumes: string[] = [
             'multipart/form-data'
@@ -153,21 +169,34 @@ export class TicketsService {
         let localVarFormParams: { append(param: string, value: any): any; };
         let localVarUseForm = false;
         let localVarConvertFormParamsToString = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
+        localVarUseForm = canConsumeForm;
         if (localVarUseForm) {
             localVarFormParams = new FormData();
         } else {
             localVarFormParams = new HttpParams({encoder: this.encoder});
         }
 
+        if (file !== undefined) {
+            localVarFormParams = localVarFormParams.append('file', <any>file) as any || localVarFormParams;
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<OcrViolationTicket>(`${this.configuration.basePath}/api/tickets/analyse`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -183,10 +212,10 @@ export class TicketsService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<ShellTicket>;
-    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<ShellTicket>>;
-    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<ShellTicket>>;
-    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<ShellTicket>;
+    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<ShellTicket>>;
+    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<ShellTicket>>;
+    public apiTicketsGetshellticketGet(createShellTicketCommand?: CreateShellTicketCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -204,6 +233,11 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
 
         // to determine the Content-Type header
         const consumes: string[] = [
@@ -216,13 +250,20 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<ShellTicket>(`${this.configuration.basePath}/api/tickets/getshellticket`,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -240,10 +281,10 @@ export class TicketsService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<TicketDisputeApiResultResponse>;
-    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
-    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
-    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TicketDisputeApiResultResponse>;
+    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
+    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
+    public apiTicketsImageuploadPost(violationTicketNumber?: string, violationTime?: string, image?: Blob, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -261,6 +302,11 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
         // to determine the Content-Type header
         const consumes: string[] = [
             'multipart/form-data'
@@ -271,21 +317,40 @@ export class TicketsService {
         let localVarFormParams: { append(param: string, value: any): any; };
         let localVarUseForm = false;
         let localVarConvertFormParamsToString = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        // see https://stackoverflow.com/questions/4007969/application-x-www-form-urlencoded-or-multipart-form-data
+        localVarUseForm = canConsumeForm;
         if (localVarUseForm) {
             localVarFormParams = new FormData();
         } else {
             localVarFormParams = new HttpParams({encoder: this.encoder});
         }
 
+        if (violationTicketNumber !== undefined) {
+            localVarFormParams = localVarFormParams.append('ViolationTicketNumber', <any>violationTicketNumber) as any || localVarFormParams;
+        }
+        if (violationTime !== undefined) {
+            localVarFormParams = localVarFormParams.append('ViolationTime', <any>violationTime) as any || localVarFormParams;
+        }
+        if (image !== undefined) {
+            localVarFormParams = localVarFormParams.append('Image', <any>image) as any || localVarFormParams;
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<TicketDisputeApiResultResponse>(`${this.configuration.basePath}/api/tickets/imageupload`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -304,10 +369,10 @@ export class TicketsService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TicketDisputeApiResultResponse>;
-    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
-    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
-    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TicketDisputeApiResultResponse>;
+    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
+    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
+    public apiTicketsPayGet(ticketNumber: string, time: string, counts: string, amount: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiTicketsPayGet.');
         }
@@ -353,14 +418,26 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<TicketDisputeApiResultResponse>(`${this.configuration.basePath}/api/tickets/pay`,
             {
+                context: localVarHttpContext,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -381,10 +458,10 @@ export class TicketsService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<TicketDisputeApiResultResponse>;
-    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
-    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
-    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TicketDisputeApiResultResponse>;
+    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
+    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
+    public apiTicketsPayPost(id: string, status: string, amount?: string, confNo?: string, transId?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling apiTicketsPayPost.');
         }
@@ -428,15 +505,27 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<TicketDisputeApiResultResponse>(`${this.configuration.basePath}/api/tickets/pay`,
             null,
             {
+                context: localVarHttpContext,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -454,10 +543,10 @@ export class TicketsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiTicketsSearchGet(ticketNumber: string, time: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<TicketSearchResult>;
-    public apiTicketsSearchGet(ticketNumber: string, time: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<TicketSearchResult>>;
-    public apiTicketsSearchGet(ticketNumber: string, time: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<TicketSearchResult>>;
-    public apiTicketsSearchGet(ticketNumber: string, time: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiTicketsSearchGet(ticketNumber: string, time: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TicketSearchResult>;
+    public apiTicketsSearchGet(ticketNumber: string, time: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TicketSearchResult>>;
+    public apiTicketsSearchGet(ticketNumber: string, time: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TicketSearchResult>>;
+    public apiTicketsSearchGet(ticketNumber: string, time: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiTicketsSearchGet.');
         }
@@ -491,14 +580,26 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<TicketSearchResult>(`${this.configuration.basePath}/api/tickets/search`,
             {
+                context: localVarHttpContext,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
@@ -515,10 +616,10 @@ export class TicketsService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<TicketDisputeApiResultResponse>;
-    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
-    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
-    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TicketDisputeApiResultResponse>;
+    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TicketDisputeApiResultResponse>>;
+    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TicketDisputeApiResultResponse>>;
+    public apiTicketsShellticketPost(createShellTicketCommand?: CreateShellTicketCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -536,6 +637,11 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
 
         // to determine the Content-Type header
         const consumes: string[] = [
@@ -548,14 +654,21 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<TicketDisputeApiResultResponse>(`${this.configuration.basePath}/api/tickets/shellticket`,
             createShellTicketCommand,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -573,10 +686,10 @@ export class TicketsService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiTicketsTicketGet(ticketNumber: string, time: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<TicketDispute>;
-    public apiTicketsTicketGet(ticketNumber: string, time: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<TicketDispute>>;
-    public apiTicketsTicketGet(ticketNumber: string, time: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<TicketDispute>>;
-    public apiTicketsTicketGet(ticketNumber: string, time: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiTicketsTicketGet(ticketNumber: string, time: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<TicketDispute>;
+    public apiTicketsTicketGet(ticketNumber: string, time: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<TicketDispute>>;
+    public apiTicketsTicketGet(ticketNumber: string, time: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<TicketDispute>>;
+    public apiTicketsTicketGet(ticketNumber: string, time: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (ticketNumber === null || ticketNumber === undefined) {
             throw new Error('Required parameter ticketNumber was null or undefined when calling apiTicketsTicketGet.');
         }
@@ -610,14 +723,26 @@ export class TicketsService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<TicketDispute>(`${this.configuration.basePath}/api/tickets/ticket`,
             {
+                context: localVarHttpContext,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
