@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "configure": "ts-node setenv.ts",
+    "debug": "yarn run configure --environment=dev && ng serve --configuration debug --proxy-config proxy.conf.json",
     "start": "yarn run configure -- --environment=dev && ng serve --proxy-config proxy.conf.json",
     "build-dev": "yarn run configure -- --environment=dev && ng build --source-map=false",
     "build-prod": "yarn run configure -- --environment=prod && ng build --configuration production --source-map=false",

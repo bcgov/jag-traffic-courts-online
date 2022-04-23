@@ -85,6 +85,33 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "debug": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
             }
           },
           "defaultConfiguration": ""
@@ -98,6 +125,9 @@
           "configurations": {
             "production": {
               "browserTarget": "citizen-portal:build:production"
+            },
+            "debug": {
+              "browserTarget": "citizen-portal:build:debug"
             }
           }
         },
