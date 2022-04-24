@@ -1,6 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
-using TrafficCourts.Common.Utils;
+using TrafficCourts.Common.Converters;
 
 namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
@@ -19,12 +19,12 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string DriversLicenceProvince { get; set; }
         public string WorkPhone { get; set; }
 
-        //[JsonConverter(typeof(DateOnlyJsonConverter))]
-        //[SwaggerSchema(Format = "date")]
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
+        [SwaggerSchema(Format = "date")]
         public DateOnly DateOfBirth { get; set; }
         public string EnforcementOrganization { get; set; }
-        //[JsonConverter(typeof(DateOnlyJsonConverter))]
-        //[SwaggerSchema(Format = "date")]
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
+        [SwaggerSchema(Format = "date")]
         public DateOnly ServiceDate { get; set; }
         public List<TicketCount> TicketCounts { get; set; }
         public bool LawyerRepresentation { get; set; }

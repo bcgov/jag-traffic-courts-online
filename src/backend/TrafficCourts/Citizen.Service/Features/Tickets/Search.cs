@@ -13,7 +13,7 @@ public static class Search
     public class Request : IRequest<Response>
     {
         public const string TicketNumberRegex = "^[A-Z]{2}[0-9]{8}$";
-        public const string TimeRegex = "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$";
+        public const string TimeRegex = "^(2[0-3]|[01][0-9]):([0-5]?[0-9])$";
 
         public string TicketNumber { get; }
 
@@ -37,7 +37,7 @@ public static class Search
 
             if (!Regex.IsMatch(ticketNumber, TicketNumberRegex))
             {
-                throw new ArgumentException("ticketNumber must start with two upper case letters and 6 or more numbers", nameof(ticketNumber));
+                throw new ArgumentException("ticketNumber must start with two upper case letters and 8 or more numbers", nameof(ticketNumber));
             }
 
             if (!Regex.IsMatch(time, TimeRegex))
@@ -102,6 +102,8 @@ public static class Search
             {
                 _logger.LogDebug("Searching for ticket");
                 ViolationTicket? ticket = await _service.SearchAsync(request.TicketNumber, new TimeOnly(request.Hour, request.Minute), cancellationToken);
+
+                activity?.SetStatus(ActivityStatusCode.Ok); // Ok means no Error, not that the search returned a value
                 if (ticket is null)
                 {
                     _logger.LogDebug("Not Found");
@@ -111,7 +113,6 @@ public static class Search
                 using var replyScope = _logger.BeginScope(new Dictionary<string, object> { { "ViolationTicket", ticket } });
                 _logger.LogTrace("Search complete");
 
-                activity?.SetStatus(ActivityStatusCode.Ok);                
                 return new Response(ticket);
             }
             catch (Exception exception)

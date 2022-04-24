@@ -4,7 +4,6 @@ using System.Reflection;
 using TrafficCourts.Citizen.Service;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
-using TrafficCourts.Common.Utils;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Serilog.ILogger logger = GetLogger(builder);
@@ -35,7 +34,7 @@ if (swagger.Enabled)
 
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-        //options.CustomSchemaIds(x => x.FullName);
+        options.CustomSchemaIds(x => x.FullName); // TODO: remove this, causes problems with generated swagger
     });
 }
 var app = builder.Build();

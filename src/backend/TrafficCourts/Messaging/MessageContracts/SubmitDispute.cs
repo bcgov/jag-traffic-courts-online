@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using TrafficCourts.Common.Utils;
+using TrafficCourts.Common.Converters;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
@@ -17,10 +17,10 @@ namespace TrafficCourts.Messaging.MessageContracts
         string DriversLicence { get; set; }
         string DriversLicenceProvince { get; set; }
         string WorkPhone { get; set; }
-        //[JsonConverter(typeof(DateOnlyJsonConverter))]
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
         DateOnly DateOfBirth { get; set; }
         string EnforcementOrganization { get; set; }
-        //[JsonConverter(typeof(DateOnlyJsonConverter))]
+        [JsonConverter(typeof(DateOnlyJsonConverter))]
         DateOnly ServiceDate { get; set; }
         IList<TicketCount> TicketCounts { get; set; }
         bool LawyerRepresentation { get; set; }
