@@ -11,39 +11,22 @@ using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Models
 {
-    public static class DeprecationExtensions
-    {
-        /// <summary>
-        /// Creates deprecated object for backward compatibility.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        public static Deprecated.TicketDispute CreateDeprecated(this TicketSearchResult result)
-        {
-            Deprecated.TicketDispute dispute = new();
-
-            dispute.ViolationTicketNumber = result.ViolationTicketNumber;
-            dispute.ViolationDate = result.ViolationDate.ToString("yyyy-MM-dd");
-            dispute.ViolationTime = result.ViolationTime;
-            dispute.Offences = new List<Deprecated.Offence>();
-
-            foreach (var offence in result.Offences)
-            {
-                dispute.Offences.Add(new Deprecated.Offence
-                {
-                    AmountDue = offence.AmountDue,
-                    OffenceDescription = offence.OffenceDescription,
-                    VehicleDescription = offence.VehicleDescription!,
-                    OffenceNumber = offence.OffenceNumber,
-                });
-            }
-
-            return dispute;
-        }
-    }
-
     namespace Deprecated
     {
+        public class LookupsAllApiResultResponse : ApiResultResponse<LookupsAll>
+        {
+            public LookupsAllApiResultResponse(LookupsAll result) : base(result)
+            {
+            }
+        }
+
+        public class TicketDisputeApiResultResponse : ApiResultResponse<TicketDispute>
+        {
+            public TicketDisputeApiResultResponse(TicketDispute result) : base(result)
+            {
+            }
+        }
+
         public class TicketDispute
         {
             public string ViolationTicketNumber { get; set; }

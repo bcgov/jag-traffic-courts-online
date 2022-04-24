@@ -1,17 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Citizen.Service.Models.Deprecated;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using Statute = TrafficCourts.Citizen.Service.Models.Tickets.Statute;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
-
-public class LookupsAllApiResultResponse : ApiResultResponse<LookupsAll>
-{
-    public LookupsAllApiResultResponse(LookupsAll result) : base(result)
-    {
-    }
-}
 
 [Route("api/[controller]/[action]")]
 public class LookupController : ControllerBase

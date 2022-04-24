@@ -10,13 +10,6 @@ using TrafficCourts.Citizen.Service.Validators;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
-    public class TicketDisputeApiResultResponse : ApiResultResponse<TicketDispute>
-    {
-        public TicketDisputeApiResultResponse(TicketDispute result) : base(result)
-        {
-        }
-    }
-
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class TicketsController : ControllerBase
