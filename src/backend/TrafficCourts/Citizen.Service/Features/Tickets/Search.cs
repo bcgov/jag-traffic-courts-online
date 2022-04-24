@@ -13,7 +13,7 @@ public static class Search
     public class Request : IRequest<Response>
     {
         public const string TicketNumberRegex = "^[A-Z]{2}[0-9]{8}$";
-        public const string TimeRegex = "^(2[0-3]|[01][0-9]):([0-5]?[0-9])$";
+        public const string TimeRegex = "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$";
 
         public string TicketNumber { get; }
 
@@ -40,14 +40,20 @@ public static class Search
                 throw new ArgumentException("ticketNumber must start with two upper case letters and 8 or more numbers", nameof(ticketNumber));
             }
 
+            // use regex as well as TimeOnly.TryParse because we dont want seconds, milliseconds, etc.
             if (!Regex.IsMatch(time, TimeRegex))
             {
-                throw new ArgumentException("time must be properly formatted 24 hour clock", nameof(time));
+                throw new ArgumentException("time must be properly formatted 24 hour clock with only hours and minutes", nameof(time));
+            }
+
+            if (!TimeOnly.TryParse(time, out var timeOnly))
+            {
+                throw new ArgumentException("time must be properly formatted 24 hour clock with only hours and minutes", nameof(time));
             }
 
             TicketNumber = ticketNumber;
-            Hour = int.Parse(time[0..2]);
-            Minute = int.Parse(time[3..5]);
+            Hour = timeOnly.Hour;
+            Minute = timeOnly.Minute;
         }
     }
 

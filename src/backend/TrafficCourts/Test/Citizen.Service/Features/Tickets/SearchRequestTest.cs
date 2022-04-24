@@ -41,25 +41,35 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
             Assert.Throws<ArgumentException>("ticketNumber", () => new Search.Request(ticketNumber, "00:00"));
         }
 
-        [Theory]
-        [MemberData(nameof(SingleDigitTimesOfDay))]
-        public void create_request_with_time_must_be_zero_padded(TimeOnly timeOnly)
-        {
-            string time = $"{timeOnly.Hour}:{timeOnly.Minute}"; // no zero padding (d2)
 
-            Assert.Throws<ArgumentException>("time", () => new Search.Request("AA00000000", time));
-        }
 
         [Theory]
         [MemberData(nameof(EachTimeOfDay))]
         public void create_request_with_valid_times(TimeOnly expected)
         {
-            string time = $"{expected.Hour:d2}:{expected.Minute:d2}";
+            // lpad to length 2
+            string time = expected.ToString(@"HH\:mm");
             var actual = new Search.Request("AA00000000", time);
 
             Assert.Equal(expected.Hour, actual.Hour);
             Assert.Equal(expected.Minute, actual.Minute);
+
+            // no padding
+            time = $"{expected.Hour}:{expected.Minute}";
+            actual = new Search.Request("AA00000000", time);
+
+            Assert.Equal(expected.Hour, actual.Hour);
+            Assert.Equal(expected.Minute, actual.Minute);
         }
+
+        [Theory]
+        [MemberData(nameof(EachTimeOfDay))]
+        public void create_request_with_hour_minute_and_second_throws_ArgumentException(TimeOnly expected)
+        {
+            string time = expected.ToString(@"HH\:mm:ss");
+            Assert.Throws<ArgumentException>("time", () => new Search.Request("AA00000000", time));
+        }
+
 
         [Theory]
         [MemberData(nameof(EachTimeOfDay))]
