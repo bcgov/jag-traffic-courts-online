@@ -48,24 +48,4 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Common
         [JsonPropertyName("attribute4")]
         public string? DiscountAmount { get; set; }
     }
-
-    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
-    public class Item
-    {
-        [JsonPropertyName("selected_invoice")]
-        public SelectedInvoice? SelectedInvoice { get; set; }
-
-        [JsonPropertyName("open_invoices_for_site")]
-        public object? OpenInvoicesForSite { get; set; }
-    }
-
-    [ExcludeFromCodeCoverage(Justification = Justifications.Poco)]
-    public class SelectedInvoice
-    {
-        [JsonPropertyName("$ref")]
-        public string? Reference { get; set; }
-
-        [JsonPropertyName("invoice")]
-        public Invoice? Invoice { get; set; }
-    }
 }
