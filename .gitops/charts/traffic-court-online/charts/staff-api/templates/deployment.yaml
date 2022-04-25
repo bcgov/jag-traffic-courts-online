@@ -28,7 +28,7 @@ spec:
       serviceAccountName: {{ include "staff-api.serviceAccountName" . }}
       containers:
         - env:
-          {{/* JWT */}}
+          # JWT
           - name: Jwt__Authority
             value: "{{ .Values.auth.authority }}"
           - name: Jwt__Audience
@@ -37,32 +37,33 @@ spec:
           - name: Jwt__MetadataAddress
             value: "{{ .Values.auth.metadataAddress }}"
           {{- end }}
+          # Oracle Data API
           - name: OracleDataApi__BaseUrl
             value: "{{ .Values.oracleApi.url }}"
-          {{/* RabbitMQ */}}
+          # RabbitMQ
           - name: RabbitMQ__Host
             value: "{{ .Values.rabbitmq.host }}"
           - name: RabbitMQ__Port
             value: "{{ .Values.rabbitmq.port }}"
-          {{- /* TODO: RabbitMQ__Password from secrets */}}
+          # TODO: RabbitMQ__Password from secrets
           - name: RabbitMQ__Username
             value: "{{ .Values.rabbitmq.username }}"
           - name: RabbitMQ__Password
             value: "{{ .Values.rabbitmq.password }}"
-          {{/* Redis */}}
+          # Redis
           - name: Redis__ConnectionString
             value: "{{ .Values.redis.connectionString }}"
-          {{/* Logging - Splunk */}}
+          # Logging - Splunk
           - name: Serilog__Using__0
             value: "Serilog.Sinks.Splunk"
           - name: Serilog__WriteTo__0__Name
             value: "EventCollector"
           - name: Serilog__WriteTo__0__Args__splunkHost
-            value: "{{ .Values.splunk.host }}"
+            value: "{{ .Values.splunk.endpoint }}"
           - name: Serilog__WriteTo__0__Args__eventCollectorToken
             value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
           {{- if .Values.jaeger.enabled }}
-          {{/* OpenTelemetry jaeger */}}
+          # OpenTelemetry jaeger
           - name: OTEL_EXPORTER_JAEGER_ENDPOINT
             value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
           {{- if .Values.jaeger.exporter.protocol }}

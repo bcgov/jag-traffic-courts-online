@@ -40,7 +40,7 @@ spec:
           - name: SFTP__PASSWORD
             value: "{{ .Values.sftp.password }}"
           {{- end }}
-          {{- if .Values.privateKeyPath)}}
+          {{- if .Values.privateKeyPath }}
           - name: SFTP__SSHPRIVATEKEYPATH
             value: "{{ .Values.sftp.privateKeyPath }}"
           {{- end }}

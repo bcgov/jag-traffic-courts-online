@@ -43,6 +43,8 @@ spec:
             {{- if or .Values.appConfig .Values.existingAppConfigConfigmap }}
             - name: app-config
               mountPath: /usr/share/nginx/html/assets/app.config.json
+              readOnly: true
+              subPath: app.config.json
             {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

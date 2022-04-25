@@ -28,19 +28,21 @@ spec:
       serviceAccountName: {{ include "oracle-data-api.serviceAccountName" . }}
       containers:
         - env:
-          {{/* Logging - Splunk */}}
+          # Logging - Splunk
           - name: SPLUNK_URL
-            value: "{{ .Values.splunk.host }}"
+            value: "{{ .Values.splunk.endpoint }}"
           - name: SPLUNK_TOKEN
             value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
-          {{/* Redis */}}
+          # Redis
           - name: REDIS_HOST
             value: "{{ .Values.redis.host }}"
           - name: REDIS_PORT
             value: "{{ .Values.redis.port }}"
+          {{- if .Values.redis.password }}
           - name: REDIS_PASSWORD
             value: "{{ .Values.redis.password }}"
-          {{/* Code table refresh (todo: will be moved to openshift cron) */}}
+          {{- end }}
+          # Code table refresh (todo: will be moved to openshift cron)
           - name: CODETABLE_REFRESH_ENABLED
             value: "{{ .Values.jobs.codeTables.enabled }}"
           - name: CODETABLE_REFRESH_CRON

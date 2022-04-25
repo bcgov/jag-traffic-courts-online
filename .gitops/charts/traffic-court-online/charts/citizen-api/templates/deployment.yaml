@@ -28,25 +28,27 @@ spec:
       serviceAccountName: {{ include "citizen-api.serviceAccountName" . }}
       containers:
         - env:
-          {{/* Form Recognizer */}}
+          # Form Recognizer
           - name: FormRecognizer__Endpoint
             value: "{{ .Values.formRecognizer.endpoint }}"
           {{- /* TODO: FormRecognizer__ApiKey from secrets */}}
           - name: FormRecognizer__ApiKey
             value: "{{ .Values.formRecognizer.apiKey }}"
+          {{- if .Values.formRecognizer.model }}
           - name: FormRecognizer__ModelId
             value: "{{ .Values.formRecognizer.model }}"
-          {{/* RabbitMQ */}}
+          {{- end }}
+          # RabbitMQ
           - name: RabbitMQ__Host
             value: "{{ .Values.rabbitmq.host }}"
           - name: RabbitMQ__Port
             value: "{{ .Values.rabbitmq.port }}"
-          {{- /* TODO: RabbitMQ__Password from secrets */}}
+          # TODO: RabbitMQ__Password from secrets
           - name: RabbitMQ__Username
             value: "{{ .Values.rabbitmq.username }}"
           - name: RabbitMQ__Password
             value: "{{ .Values.rabbitmq.password }}"
-          {{/* Object Storage */}}
+          # Object Storage
           - name: ObjectStorage__AccessKey
             value: "{{ .Values.objectStorage.accessKey }}"
           - name: ObjectStorage__BucketName
@@ -55,25 +57,20 @@ spec:
             value: "{{ .Values.objectStorage.endpoint }}"
           - name: ObjectStorage__SecretKey
             value: "{{ .Values.objectStorage.secretKey }}"
-          {{/* Redis */}}
+          # Redis
           - name: Redis__ConnectionString
             value: "{{ .Values.redis.connectionString }}"
-          {{/* Logging - Splunk */}}
+          # Logging - Splunk
           - name: Serilog__Using__0
             value: "Serilog.Sinks.Splunk"
           - name: Serilog__WriteTo__0__Name
             value: "EventCollector"
           - name: Serilog__WriteTo__0__Args__splunkHost
-            value: "{{ .Values.splunk.host }}"
+            value: "{{ .Values.splunk.endpoint }}"
           - name: Serilog__WriteTo__0__Args__eventCollectorToken
             value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
-          {{/* Ticket Search */}}
-          - name: TicketSearchClient__Address
-            value: "{{ required "A valid .Values.ticketSearch.address required!" .Values.ticketSearch.address }}"
-          - name: TicketSearchClient__Secure
-            value: "{{ required "A valid .Values.ticketSearch.secure required!" .Values.ticketSearch.secure }}"
           {{- if .Values.jaeger.enabled }}
-          {{/* OpenTelemetry jaeger */}}
+          # OpenTelemetry jaeger
           - name: OTEL_EXPORTER_JAEGER_ENDPOINT
             value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
           {{- if .Values.jaeger.exporter.protocol }}
