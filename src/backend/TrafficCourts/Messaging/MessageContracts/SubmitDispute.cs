@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using TrafficCourts.Common.Utils;
+﻿using System.Text.Json.Serialization;
+using TrafficCourts.Common.Converters;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
@@ -31,5 +26,6 @@ namespace TrafficCourts.Messaging.MessageContracts
         bool LawyerRepresentation { get; set; }
         string InterpreterLanguage { get; set; }
         bool WitnessIntent { get; set; }
+        string OcrViolationTicket { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Ticket.Search.Service.Features.Search.Mock;
+using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
+using TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock;
 using Xunit;
 
 namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
@@ -36,11 +38,10 @@ namespace TrafficCourts.Test.Ticket.Search.Service.Features.Search.Mock
         public async Task can_get_data_from_embedded_data_provider()
         {
             IMockDataProvider mockDataProvider = GetEmbeddedMockDataProvider();
-            Mock<ILogger< MockTicketSearchService >> mockLogger = new();
+            Mock<ILogger<MockTicketSearchService>> mockLogger = new();
 
             MockTicketSearchService sut = new MockTicketSearchService(mockDataProvider, mockLogger.Object);
-
-            var actual = await sut.SearchTicketAsync("EZ02000460", "09:54", CancellationToken.None);
+            IEnumerable<Invoice>? actual = await sut.SearchAsync("EA02000460", new TimeOnly(9, 54), CancellationToken.None);
 
             Assert.NotNull(actual);
             Assert.NotEmpty(actual);

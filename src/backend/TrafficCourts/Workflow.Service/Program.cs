@@ -4,6 +4,7 @@ using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Features.Mail;
+using TrafficCourts.Common.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,12 @@ builder.Services.AddMassTransit(cfg =>
             r.Ignore<ArgumentNullException>();
             r.Ignore<InvalidOperationException>();
             r.Interval(retryConfiguration.RetryTimes, TimeSpan.FromMinutes(retryConfiguration.RetryInterval));
+        });
+        configurator.ConfigureJsonSerializerOptions(settings =>
+        {
+            settings.Converters.Add(new DateOnlyJsonConverter());
+            settings.Converters.Add(new TimeOnlyJsonConverter());
+            return settings;
         });
     });
 

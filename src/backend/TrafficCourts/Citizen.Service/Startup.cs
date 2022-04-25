@@ -1,7 +1,4 @@
-﻿using Grpc.Core;
-using Grpc.Net.Client;
-using Grpc.Net.Client.Configuration;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NodaTime;
@@ -31,7 +28,7 @@ public static class Startup
     /// <param name="builder"></param>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is null.</exception>
     /// <exception cref="ConfigurationErrorsException"></exception>
-    public static void ConfigureApplication(this WebApplicationBuilder builder)
+    public static void ConfigureApplication(this WebApplicationBuilder builder, Serilog.ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
@@ -51,7 +48,8 @@ public static class Startup
         // configure application 
         var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
 
-        var logger = GetLogger(builder);
+        builder.Services.UseConfigurationValidation();
+        builder.UseTicketSearch(logger);
 
         AddOpenTelemetry(builder, logger);
 
@@ -67,9 +65,13 @@ public static class Startup
         }
 
         Configure(builder, configuration?.Redis, logger);
-        Configure(builder, configuration?.FormRecognizer, logger);
-        Configure(builder, configuration?.TicketSearchClient, logger);
 
+        // Form Recognizer
+        builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
+        builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService>();
+        builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
+
+        // MassTransit
         builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
 
         // add MediatR handlers in this program
@@ -116,24 +118,6 @@ public static class Startup
     }
 
     /// <summary>
-    /// Gets a logger for application setup.
-    /// </summary>
-    /// <returns></returns>
-    private static Serilog.ILogger GetLogger(WebApplicationBuilder builder)
-    {
-        var configuration = new LoggerConfiguration()
-            .Enrich.FromLogContext()
-            .WriteTo.Console();
-
-        if (builder.Environment.IsDevelopment())
-        {
-            configuration.WriteTo.Debug();
-        }
-
-        return configuration.CreateLogger();
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     /// <param name="configuration"></param>
@@ -155,9 +139,6 @@ public static class Startup
         // FormRecognizer
         if (string.IsNullOrEmpty(configuration?.FormRecognizer?.ApiKey)) AddError(errors, "FormRecognizer", "ApiKey not specified");
         if (configuration?.FormRecognizer?.Endpoint is null) AddError(errors, "FormRecognizer", "Endpoint not specified");
-
-        // TicketSearchClient
-        if (string.IsNullOrEmpty(configuration?.TicketSearchClient?.Address)) AddError(errors, "TicketSearchClient", "Address not specified");
 
         if (errors.Count > 0)
         {
@@ -184,36 +165,7 @@ public static class Startup
     }
 
     /// <summary>
-    /// Configures Form Recognizer.
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, FormRecognizerConfigurationOptions? configuration, Serilog.ILogger logger)
-    {
-        ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        if (configuration is null)
-        {
-            return;
-        }
-
-        builder.Services.AddSingleton<IFormRecognizerService>(service =>
-        {
-            var logger = service.GetRequiredService<ILogger<FormRecognizerService>>();
-            return new FormRecognizerService(configuration.ApiKey!, configuration.Endpoint!, configuration.ModelId!, logger);
-        });
-
-        builder.Services.AddSingleton<IFormRecognizerValidator>(service =>
-        {
-            var lookupService = service.GetRequiredService<ILookupService>();
-            return new FormRecognizerValidator(lookupService);
-        });
-    }
-
-    /// <summary>
-    /// Configures Lookup Service.
+    /// Configures Lookup Service and Redis Cache Service.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="configuration"></param>
@@ -236,45 +188,12 @@ public static class Startup
             var logger = service.GetRequiredService<ILogger<RedisLookupService>>();
             return new RedisLookupService(redisConnection, logger);
         });
-    }
 
-    /// <summary>
-    /// Configures Ticket Search service.
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, TicketSearchServiceConfigurationProperties? configuration, Serilog.ILogger logger)
-    {
-        ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        if (configuration is null)
+        builder.Services.AddSingleton<IRedisCacheService>(service =>
         {
-            return;
-        }
-
-        string address = configuration.Address;
-
-        if (string.IsNullOrEmpty(address))
-        {
-            throw new ConfigurationErrorsException("TicketSearchClient:Address is not configured");
-        }
-
-        ChannelCredentials credentials = configuration.Secure ? ChannelCredentials.SecureSsl : ChannelCredentials.Insecure;
-
-        logger.Information("Configuring ticket search to use {Address} with {CredentialType}", address, configuration.Secure ? "secure" : "insecure");
-
-        builder.Services.AddSingleton(services =>
-        {
-            var channel = GrpcChannel.ForAddress(address, new GrpcChannelOptions
-            {
-                Credentials = credentials,
-                ServiceConfig = new ServiceConfig { LoadBalancingConfigs = { new RoundRobinConfig() } },
-                ServiceProvider = services
-            });
-
-            return channel;
+            var redisConnection = service.GetRequiredService<IConnectionMultiplexer>();
+            var logger = service.GetRequiredService<ILogger<RedisCacheService>>();
+            return new RedisCacheService(redisConnection, logger);
         });
     }
 }

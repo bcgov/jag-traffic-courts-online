@@ -1,7 +1,6 @@
 ﻿
 using System.Text;
 using System.Text.Json.Serialization;
-using TrafficCourts.Common.Utils;
 
 namespace TrafficCourts.Workflow.Service.Models
 {
@@ -19,15 +18,14 @@ namespace TrafficCourts.Workflow.Service.Models
         public string DriversLicence { get; set; } = null!;
         public string DriversLicenceProvince { get; set; } = null!;
         public string WorkPhone { get; set; } = null!;
-        [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string EnforcementOrganization { get; set; } = null!;
-        [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateOnly ServiceDate { get; set; }
+        public DateTime ServiceDate { get; set; }
         public List<TicketCount> TicketCounts { get; set; } = null!;
         public bool LawyerRepresentation { get; set; }
         public string InterpreterLanguage { get; set; } = null!;
         public bool WitnessIntent { get; set; }
+        public string? OcrViolationTicket { get; set; }
 
         public override string ToString()
         {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TrafficCourts.Citizen.Service.Models.Deprecated;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using Statute = TrafficCourts.Citizen.Service.Models.Tickets.Statute;
 
@@ -23,7 +22,7 @@ public class LookupController : ControllerBase
     [Obsolete]
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(ApiResultResponse<LookupsAll>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(LookupsAllApiResultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get()
     {
@@ -45,7 +44,7 @@ public class LookupController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(List<Statute>), 200)]
+    [ProducesResponseType(typeof(IList<Statute>), 200)]
     public IActionResult Statutes(string? section)
     {
         _logger.LogDebug("Retrieving a Statutes");

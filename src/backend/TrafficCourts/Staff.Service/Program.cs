@@ -8,10 +8,12 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Logging;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Staff.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = GetLogger(builder);
@@ -26,20 +28,19 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
         .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder().WithDefaultDestructurers());
 });
 
-builder.Services.AddControllers();
+// Render enums as strings rather than ints
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 Authentication.Initialize(builder.Services, builder.Configuration);
 
-// Add OracleDataApi service
-builder.Services.AddSingleton<IOracleDataApi_v1_0Client, OracleDataApi_v1_0Client>(services =>
+// Add DisputeService
+builder.Services.AddSingleton<IDisputeService, DisputeService>(service =>
 {
-    string baseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
-    ArgumentNullException.ThrowIfNull(baseUrl);
+    string oracleDataApiBaseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
+    ArgumentNullException.ThrowIfNull(oracleDataApiBaseUrl);
 
-    return new OracleDataApi_v1_0Client(new HttpClient())
-    {
-        BaseUrl = baseUrl
-    };
+    var logger = service.GetRequiredService<ILogger<DisputeService>>();
+    return new DisputeService(oracleDataApiBaseUrl, logger);
 });
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
