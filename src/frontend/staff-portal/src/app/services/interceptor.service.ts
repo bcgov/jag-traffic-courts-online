@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor } from '@angular/common/http';
-import { HttpRequest } from '@angular/common/http';
+import { HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHandler } from '@angular/common/http';
 import { HttpEvent } from '@angular/common/http';
@@ -12,12 +12,21 @@ export class InterceptorService implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    // response headers to add
-    // 'Access-Control-Allow-Origin': '*',
-    // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-    // 'Access-Control-Allow-Headers': ' Origin, Content-Type, Authorization, Content-Length, X-Requested-With',
+    // const corsReq = req.clone({
+    //   withCredentials: true
+    // });
 
-    const corsReq = req.clone({ headers: req.headers.set('withCredentials', 'true') });
-    return next.handle(corsReq);
+    // add header for OIDC Content-Security-Policy: script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src 'self' data:;font-src 'self';frame-ancestors 'self' https://localhost:44318;block-all-mixed-content
+    const OIDCReq = req.clone({
+      headers: req.headers.set(
+        'Content-Security-Policy', "script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src 'self' data:;font-src 'self';frame-ancestors 'self' https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4;block-all-mixed-content"),
+    });
+
+    // add header to pass preflight check
+    const preFlightReq = OIDCReq.clone({
+      headers: OIDCReq.headers.append('Access-Control-Allow-Origin', 'http://localhost:4200')
+    });
+
+    return next.handle(preFlightReq);
   }
 }

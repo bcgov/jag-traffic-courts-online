@@ -10,6 +10,7 @@ import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
+import { Configuration } from './api/configuration';
 // import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import {
@@ -17,6 +18,7 @@ import {
   TranslateLoader,
   TranslateService,
 } from '@ngx-translate/core';
+import { Observable } from "rxjs";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -38,11 +40,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
-import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
-import { initializeKeycloak } from './init/keycloak-init.factory';
 import { DateSuffixPipe } from './services/date.service';
 import { InterceptorService } from './services/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+import { OidcSecurityService, EventTypes, PublicEventsService, AuthModule, LogLevel } from 'angular-auth-oidc-client';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -73,7 +74,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CoreModule,
     SharedModule,
     ConfigModule,
-    KeycloakAngularModule,
     HttpClientModule,
     MatStepperModule,
     MatSortModule,
@@ -108,24 +108,38 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       useValue: { showError: true }
     },
     {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService],
-    },
-    {
       provide: HTTP_INTERCEPTORS,
       useClass: InterceptorService,
       multi: true
-    }
-    // WindowRefService,
+    },
+    {
+      provide: Configuration,
+      useFactory: (authService: OidcSecurityService) => new Configuration(
+        {
+          basePath: '',//environment.apiUrl,
+          accessToken: authService.getAccessToken.bind(authService),
+          credentials: {
+            'Bearer': () => {
+              var token: any = authService.getAccessToken();
+              if (token) {
+                return 'Bearer ' + token;
+              }
+              return undefined;
+            }
+          }
+        }
+      ),
+      deps: [OidcSecurityService],
+      multi: false
+    },
   ],
   bootstrap: [AppComponent],
+  
 })
 export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
-  constructor(private translateService: TranslateService) {
+  constructor(private translateService: TranslateService, private oidcSecurityService: OidcSecurityService) {
     this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);

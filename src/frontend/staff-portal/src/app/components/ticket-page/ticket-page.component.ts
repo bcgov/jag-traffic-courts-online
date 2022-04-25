@@ -1,9 +1,13 @@
 import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { AuthService } from '../../services/auth.service';
-import { User } from '@shared/models/user.model';
+import { OidcSecurityService } from "angular-auth-oidc-client";
+import { LogInOutService } from 'app/services/log-in-out.service';
 import { MatSort } from '@angular/material/sort';
-import { DisputeService } from 'app/api';
+import { DisputesService } from 'app/services/disputes.service';
+import { Dispute } from 'app/api/model/dispute.model';
+import { LoggerService } from '@core/services/logger.service';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-page',
@@ -12,6 +16,7 @@ import { DisputeService } from 'app/api';
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
+  busy: Subscription;
   public ticketInfo:any;
   displayedColumns: string[] = [
     'RedGreenAlert',
@@ -27,6 +32,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'SystemFlag',
     'AssignedTo',
   ];
+  disputes: Dispute[] = [];
   remoteDummyData: disputeData[] = [
     {
       DateSubmitted: new Date('2022/02/08'),
@@ -163,20 +169,43 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   RegionName: string = "";
   todayDate: Date = new Date();
   fullName: string = "Loading...";
-  authenticated: boolean = false;
+  isLoggedIn: boolean = false;
+  accessToken: string = "";
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
-  constructor(public authService: AuthService, public disputeService: DisputeService) {
-    if (this.authenticated) {
-      this.authService.getUser$().subscribe((user: User) => {
-        this.fullName = `${user?.firstName} ${user?.lastName}`;
-        this.authenticated = true;
-      });
-    }
-  }
+  constructor(
+    public oidcSecurityService : OidcSecurityService, 
+    private logInOutService : LogInOutService,
+    public disputesService: DisputesService,  
+    private logger: LoggerService,
+    private router: Router,
+    ) {  }
 
   ngOnInit(): void {
+
+    this.logInOutService.getLogoutStatus.subscribe((data) => {
+      if (data !== null || data !== '')
+      {
+        if(data === 'BCeID Login'){
+          this.login();
+        }
+        else
+          if(data === 'Logout'){
+            this.logout();
+          }
+      }
+    })
+
+    this.oidcSecurityService.checkAuth().subscribe(
+      ({ isAuthenticated, userData, accessToken }) => {
+        if (isAuthenticated !== true)
+        {
+          this.router.navigate(['error/401']);
+        }
+        this.accessToken = accessToken;
+        this.logInOutService.currentUser(isAuthenticated);
+    });
 
 
     this.dataSource.data = this.remoteDummyData as disputeData[];
@@ -194,12 +223,31 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     }
 
     // when authentication token available, get data
-    this.authService.getToken().then(
-      (authToken) => {
-        this.disputeService.disputesGet();
-      }
-    );
-    // pass this token to service api to get data in a request header
+    // this.getAllDisputes();
+  }
+
+  login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens();
+  }
+
+  getAllDisputes(): void {
+      this.logger.log('TicketPageComponent::getAllDisputes');
+  
+      this.busy = this.disputesService.getDisputes().subscribe((response) => {
+        this.logger.info(
+          'TicketPageComponent::getAllDisputes response',
+          response
+        );
+
+        console.log(this.disputes);
+   
+        this.disputesService.disputes$.next(response);
+        this.disputes = response;
+      });
   }
 
   countNewTickets(): number {

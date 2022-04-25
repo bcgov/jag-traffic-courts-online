@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { User } from '@shared/models/user.model';
+import { Router } from '@angular/router';
 import { AppConfigService } from 'app/services/app-config.service';
-import { AuthService } from 'app/services/auth.service';
+import { LogInOutService } from 'app/services/log-in-out.service';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,7 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class HeaderComponent implements OnInit {
   public fullName: string;
+  public isLoggedIn = false;
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
@@ -31,10 +33,12 @@ export class HeaderComponent implements OnInit {
   public version: string;
 
   constructor(
-    protected authService: AuthService,
+    public oidcSecurityService : OidcSecurityService,
+    private logInOutService : LogInOutService,
     protected logger: LoggerService,
     private appConfigService: AppConfigService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
@@ -48,23 +52,46 @@ export class HeaderComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public async ngOnInit() {
-    const authenticated = await this.authService.isLoggedIn();
-    if (authenticated) {
-      this.authService.getUser$().subscribe((user: User) => {
-        this.fullName = `${user?.firstName} ${user?.lastName}`;
-      });
-    }
+    this.logInOutService.getLogoutStatus.subscribe((data) => {
+      if (data !== null || data !== '')
+      {
+        if(data === 'BCeID Login'){
+          this.login();
+        }
+        else
+          if(data === 'Logout'){
+            this.logout();
+          }
+      }
+    })
+
+    this.oidcSecurityService.checkAuth().subscribe(
+      ({ isAuthenticated, userData }) => {
+        console.log(isAuthenticated, userData);
+        this.fullName = userData.firstName + ' ' + userData.lastName;
+        if (isAuthenticated === true)
+        {
+          this.router.navigate(['/ticketpage']);
+        }
+        else
+        {
+          this.router.navigate(['/']);
+        }
+
+        this.logInOutService.currentUser(isAuthenticated);
+    })
+  }
+
+  public login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  public logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens();
   }
 
   public toggleSidenav(): void {
     this.toggle.emit();
-  }
-
-  public onLogout(): Promise<void> {
-    this.authService.logout(
-      `${window.location.protocol}//${window.location.host}`
-    );
-    return Promise.resolve();
   }
 
   private toggleLanguage(lang: string): {

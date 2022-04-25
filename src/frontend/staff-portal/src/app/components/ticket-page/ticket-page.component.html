@@ -1,4 +1,5 @@
-<div class="flex-wrapper">
+<app-page [busy]="busy">
+  <div class="flex-wrapper">
   <div class="flex-header d-print-none mb-40" style="margin-bottom: 100px">
     <app-header></app-header>
 
@@ -43,7 +44,7 @@
                     </table>
                   </div>
                 </div>
-             
+              
               <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort #tickTbSort="matSort">
               
                 <ng-container matColumnDef="RedGreenAlert">
@@ -131,7 +132,7 @@
                       Citizen Flag 
                     </th>
                     <td mat-cell *matCellDef="let element">  
-                     <mat-checkbox [checked]="element.CitizenFlag == 'Y'" [disabled]="true"></mat-checkbox>
+                      <mat-checkbox [checked]="element.CitizenFlag == 'Y'" [disabled]="true"></mat-checkbox>
                     </td>
                   </ng-container>
                   
@@ -155,7 +156,7 @@
           
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-             
+              
               </table> 
               </div>
     
@@ -176,4 +177,5 @@
   <div class="flex-footer">
     <app-footer></app-footer>
   </div>
-</div>
+  </div>
+</app-page>

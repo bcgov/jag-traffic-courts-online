@@ -204,7 +204,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/disputes`,
+        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/disputes`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

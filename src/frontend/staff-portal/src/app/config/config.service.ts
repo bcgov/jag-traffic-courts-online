@@ -22,6 +22,7 @@ export class ConfigService implements IConfigService {
   private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
+  private disputeError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
 
@@ -48,6 +49,14 @@ export class ConfigService implements IConfigService {
 
   public get ticket_error$(): BehaviorSubject<string> {
     return this.ticketError;
+  }
+
+  public get dispute_error(): string {
+    return this.disputeError.value;
+  }
+
+  public get dispute_error$(): BehaviorSubject<string> {
+    return this.disputeError;
   }
 
   public get ticket_error(): string {
