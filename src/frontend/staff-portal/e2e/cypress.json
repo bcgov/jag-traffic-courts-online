@@ -1,6 +1,6 @@
 {
     "baseUrl": "https://dev.violationtickets.gov.bc.ca/",
     "env": {
-        "api_url": "http://citizen-api-0198bb-dev.apps.silver.devops.gov.bc.ca/api/tickets/ticket"
+        "api_url": "http://staff-api-0198bb-dev.apps.silver.devops.gov.bc.ca/api/tickets/ticket"
       }
 }

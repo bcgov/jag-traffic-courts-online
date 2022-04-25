@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { OidcSecurityService } from "angular-auth-oidc-client";
-import { LogInOutService } from 'app/services/log-in-out.service';
 import { MatSort } from '@angular/material/sort';
 import { DisputesService } from 'app/services/disputes.service';
 import { Dispute } from 'app/api/model/dispute.model';
@@ -21,10 +19,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'RedGreenAlert',
     'DateSubmitted',
-    'Ticket',
-    'Surname',
-    'GivenName',
-    'RequestType',
+    'ticketNumber',
+    'disputantSurname',
+    'givenNames',
     'Status',
     'FilingDate',
     'CourtHearing',
@@ -36,10 +33,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   remoteDummyData: disputeData[] = [
     {
       DateSubmitted: new Date('2022/02/08'),
-      Ticket: 'AJ00214578',
-      Surname: 'McGibbons',
-      GivenName: 'Julius Montgommery',
-      RequestType: 'Dispute',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'McGibbons',
+      givenNames: 'Julius Montgommery',
       Status: 'New',
       FilingDate: undefined,
       CourtHearing: 'Y',
@@ -49,10 +45,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/08'),
-      Ticket: 'EZ02000460',
-      Surname: 'Smithe',
-      GivenName: 'Jaxon',
-      RequestType: 'Dispute',
+      ticketNumber: 'EZ02000460',
+      disputantSurname: 'Smithe',
+      givenNames: 'Jaxon',
       Status: 'New',
       FilingDate: undefined,
       CourtHearing: 'N',
@@ -62,10 +57,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/08'),
-      Ticket: 'AJ00214578',
-      Surname: 'Jacklin',
-      GivenName: 'Susanne',
-      RequestType: 'Admin',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Jacklin',
+      givenNames: 'Susanne',
       Status: 'New',
       FilingDate: undefined,
       CourtHearing: 'N',
@@ -75,10 +69,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/08'),
-      Ticket: 'AJ00214578',
-      Surname: 'Morris',
-      GivenName: 'Mark',
-      RequestType: 'Dispute',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Morris',
+      givenNames: 'Mark',
       Status: 'New',
       FilingDate: undefined,
       CourtHearing: 'Y',
@@ -88,10 +81,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/08'),
-      Ticket: 'AJ00214578',
-      Surname: 'Korrin',
-      GivenName: 'Karen',
-      RequestType: 'Dispute',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Korrin',
+      givenNames: 'Karen',
       Status: 'New',
       FilingDate: undefined,
       CourtHearing: 'N',
@@ -101,10 +93,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/06'),
-      Ticket: 'AJ00214578',
-      Surname: 'Aster',
-      GivenName: 'Jack',
-      RequestType: 'Dispute',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Aster',
+      givenNames: 'Jack',
       Status: 'Checked out',
       FilingDate: undefined,
       CourtHearing: 'Y',
@@ -114,10 +105,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/06'),
-      Ticket: 'AJ00214578',
-      Surname: 'Smith',
-      GivenName: 'Portia',
-      RequestType: 'Admin',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Smith',
+      givenNames: 'Portia',
       Status: 'Processing',
       FilingDate: new Date('2022/02/07'),
       CourtHearing: 'Y',
@@ -127,10 +117,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/06'),
-      Ticket: 'AJ00214578',
-      Surname: 'Brown',
-      GivenName: 'Will',
-      RequestType: 'Admin',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Brown',
+      givenNames: 'Will',
       Status: 'Alert',
       FilingDate: new Date('2022/02/07'),
       CourtHearing: 'N',
@@ -140,10 +129,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/05'),
-      Ticket: 'AJ00214578',
-      Surname: 'Jones',
-      GivenName: 'Sharron',
-      RequestType: 'Dispute',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Jones',
+      givenNames: 'Sharron',
       Status: 'Processing',
       FilingDate: new Date('2022/02/06'),
       CourtHearing: 'Y',
@@ -153,10 +141,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
     {
       DateSubmitted: new Date('2022/02/04'),
-      Ticket: 'AJ00214578',
-      Surname: 'Price',
-      GivenName: 'Simone',
-      RequestType: 'Admin',
+      ticketNumber: 'AJ00214578',
+      disputantSurname: 'Price',
+      givenNames: 'Simone',
       Status: 'Processing',
       FilingDate: new Date('2022/02/06'),
       CourtHearing: 'N',
@@ -175,38 +162,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
   constructor(
-    public oidcSecurityService : OidcSecurityService, 
-    private logInOutService : LogInOutService,
     public disputesService: DisputesService,  
     private logger: LoggerService,
-    private router: Router,
     ) {  }
 
   ngOnInit(): void {
-
-    this.logInOutService.getLogoutStatus.subscribe((data) => {
-      if (data !== null || data !== '')
-      {
-        if(data === 'BCeID Login'){
-          this.login();
-        }
-        else
-          if(data === 'Logout'){
-            this.logout();
-          }
-      }
-    })
-
-    this.oidcSecurityService.checkAuth().subscribe(
-      ({ isAuthenticated, userData, accessToken }) => {
-        if (isAuthenticated !== true)
-        {
-          this.router.navigate(['error/401']);
-        }
-        this.accessToken = accessToken;
-        this.logInOutService.currentUser(isAuthenticated);
-    });
-
 
     this.dataSource.data = this.remoteDummyData as disputeData[];
     this.RegionName = "Fraser Valley Region";
@@ -219,19 +179,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
     this.dataSource.filterPredicate = function (record:disputeData ,filter) {
-      return record.Ticket.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
+      return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
     // when authentication token available, get data
-    // this.getAllDisputes();
-  }
-
-  login() {
-    this.oidcSecurityService.authorize();
-  }
-
-  logout() {
-    this.oidcSecurityService.logoffAndRevokeTokens();
+    this.getAllDisputes();
   }
 
   getAllDisputes(): void {
@@ -274,17 +226,13 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.showTicket = !this.showTicket;
   }
 }
-export interface disputeData {
+export interface disputeData extends Dispute {
+  DateSubmitted?: Date, // same as violationDate?
   RedGreenAlert?: string,
-  DateSubmitted: Date,
-  Ticket: string,
-  Surname: string,
-  GivenName: string,
-  RequestType: string,
-  Status: string,
-  FilingDate?: Date,
-  CourtHearing: string,
-  CitizenFlag: string,
-  SystemFlag: string,
-  AssignedTo: string,
+  FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
+  Status: string,  // extends citizen portal set in staff portal, New at first
+  CourtHearing: string, // if at least one count requests court hearing
+  CitizenFlag: string, // comes from citizen portal, citizen has noticed OCR differences
+  SystemFlag: string, // comes from citizen portal, system finds OCR discrepancies
+  AssignedTo: string, // extends citizen portal, set in staff portal, undefined at first
 }

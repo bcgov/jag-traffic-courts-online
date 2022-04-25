@@ -41,9 +41,12 @@ import { TicketPageComponent } from '@components/ticket-page/ticket-page.compone
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
 import { DateSuffixPipe } from './services/date.service';
-import { InterceptorService } from './services/interceptor.service';
+import { InterceptorService } from './core/interceptors/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
 import { OidcSecurityService, EventTypes, PublicEventsService, AuthModule, LogLevel } from 'angular-auth-oidc-client';
+import { AuthConfigModule } from './auth/auth-config.module';
+import { LogInOutService } from 'app/services/log-in-out.service';
+import { AppConfigService } from 'app/services/app-config.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -76,6 +79,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
+    AuthConfigModule,
     MatSortModule,
     MatIconModule,
     MatCheckboxModule,
@@ -107,6 +111,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
+    LogInOutService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: InterceptorService,
@@ -120,7 +125,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
           accessToken: authService.getAccessToken.bind(authService),
           credentials: {
             'Bearer': () => {
-              var token: any = authService.getAccessToken();
+              var token: any =  authService.getAccessToken();
               if (token) {
                 return 'Bearer ' + token;
               }
@@ -139,7 +144,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
-  constructor(private translateService: TranslateService, private oidcSecurityService: OidcSecurityService) {
+  constructor(private translateService: TranslateService) {
     this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);

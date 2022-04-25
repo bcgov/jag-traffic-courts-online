@@ -1,7 +1,7 @@
 # Build image
 FROM node:14.18 as build-deps
 
-ARG API_BASE_PATH=http://citizen-api/api/
+ARG API_BASE_PATH=http://staff-api/api/
 ENV API_BASE_PATH=${API_BASE_PATH}
 
 # set working directory

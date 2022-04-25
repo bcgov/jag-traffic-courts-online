@@ -11,7 +11,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { AppConfigService } from 'app/services/app-config.service';
 import { LogInOutService } from 'app/services/log-in-out.service';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-header',
@@ -28,17 +27,17 @@ export class HeaderComponent implements OnInit {
 
   public languageCode: string;
   public languageDesc: string;
+  public btnLabel: string ='BCeID Login';
+  public btnIcon: string = 'login'; 
 
   public environment: string;
   public version: string;
 
   constructor(
-    public oidcSecurityService : OidcSecurityService,
-    private logInOutService : LogInOutService,
     protected logger: LoggerService,
     private appConfigService: AppConfigService,
     private translateService: TranslateService,
-    private router: Router
+    public logInOutService: LogInOutService
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
@@ -52,42 +51,21 @@ export class HeaderComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public async ngOnInit() {
-    this.logInOutService.getLogoutStatus.subscribe((data) => {
-      if (data !== null || data !== '')
+    this.logInOutService.getCurrentStatus.subscribe((data) => {
+      if (data !== null || data !== undefined)
       {
-        if(data === 'BCeID Login'){
-          this.login();
+        if(data === true){
+
+          this.btnLabel = 'Logout';
+          this.btnIcon = 'logout';
         }
         else
-          if(data === 'Logout'){
-            this.logout();
-          }
+        {
+          this.btnLabel = 'BCeID Login';
+          this.btnIcon = 'login';
+        }
       }
     })
-
-    this.oidcSecurityService.checkAuth().subscribe(
-      ({ isAuthenticated, userData }) => {
-        console.log(isAuthenticated, userData);
-        this.fullName = userData.firstName + ' ' + userData.lastName;
-        if (isAuthenticated === true)
-        {
-          this.router.navigate(['/ticketpage']);
-        }
-        else
-        {
-          this.router.navigate(['/']);
-        }
-
-        this.logInOutService.currentUser(isAuthenticated);
-    })
-  }
-
-  public login() {
-    this.oidcSecurityService.authorize();
-  }
-
-  public logout() {
-    this.oidcSecurityService.logoffAndRevokeTokens();
   }
 
   public toggleSidenav(): void {
@@ -103,6 +81,22 @@ export class HeaderComponent implements OnInit {
       languageCode: toggleLang,
       languageDesc: toggleLang === 'en' ? 'English' : 'Français',
     };
+  }
+
+  public onClickBtn()
+  {
+    this.logInOutService.logoutUser(this.btnLabel);
+    if (this.btnLabel === 'BCeID Login')
+    {
+      this.btnLabel = 'Logout';
+      this.btnIcon = 'logout';
+    }
+    else
+    {
+      this.btnLabel = 'BCeID Login';
+      this.btnIcon = 'login';
+      //this.router.navigate(['/']);
+    }
   }
 
   public onLanguage(): void {

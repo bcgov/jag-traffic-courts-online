@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 // import { AuthGuard } from '@core/guards/auth.guard';
 // import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
@@ -18,13 +17,18 @@ import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 
 const routes: Routes = [
   {
+    path: '',
+    component: LandingComponent,
+  },
+  {
     path: 'ticket',
     component: TicketPageComponent,
     canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
-    path: 'error/401',
-    component: UnauthorizedComponent,
+    path: '**',
+    redirectTo: '/',
+    pathMatch: 'full',
   },
 ];
 

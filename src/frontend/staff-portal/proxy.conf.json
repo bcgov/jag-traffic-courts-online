@@ -1,7 +1,11 @@
 {
   "/api": {
-    "target": "http://staff-api-0198bb-dev.apps.silver.devops.gov.bc.ca",
+    "target": "http://localhost:5005",
     "secure": false,
-    "changeOrigin": true
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api": ""
+    }
   }
 }
