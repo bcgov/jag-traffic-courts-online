@@ -8,6 +8,7 @@ using Serilog;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Logging;
@@ -27,7 +28,8 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
         .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder().WithDefaultDestructurers());
 });
 
-builder.Services.AddControllers();
+// Render enums as strings rather than ints
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 Authentication.Initialize(builder.Services, builder.Configuration);
 
