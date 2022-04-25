@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,8 +36,8 @@ public class Dispute {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     private DisputeStatus status;

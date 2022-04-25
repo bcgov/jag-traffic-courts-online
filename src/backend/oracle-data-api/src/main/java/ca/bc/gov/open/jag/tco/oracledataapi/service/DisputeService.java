@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class DisputeService {
 	 * @param id of the Dispute to be returned
 	 * @return
 	 */
-	public Dispute getDisputeById(Integer id) {
+	public Dispute getDisputeById(UUID id) {
 		return disputeRepository.findById(id).orElseThrow();
 	}
 
@@ -65,7 +66,7 @@ public class DisputeService {
 	 * @param {@link Dispute}
 	 * @return
 	 */
-	public Dispute update(Integer id, Dispute dispute) {
+	public Dispute update(UUID id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
 		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "ticketCounts");
@@ -84,7 +85,7 @@ public class DisputeService {
 	 *
 	 * @param id of the dispute to be deleted
 	 */
-	public void delete(Integer id) {
+	public void delete(UUID id) {
 		disputeRepository.deleteById(id);
 	}
 
@@ -95,7 +96,7 @@ public class DisputeService {
 	 * @param disputeStatus
 	 * @return the saved Dispute
 	 */
-	public Dispute setStatus(Integer id, DisputeStatus disputeStatus) {
+	public Dispute setStatus(UUID id, DisputeStatus disputeStatus) {
 		return setStatus(id, disputeStatus, null);
 	}
 
@@ -107,7 +108,7 @@ public class DisputeService {
 	 * @param rejectedReason the rejected reason if the status is REJECTED.
 	 * @return the saved Dispute
 	 */
-	public Dispute setStatus(Integer id, DisputeStatus disputeStatus, String rejectedReason) {
+	public Dispute setStatus(UUID id, DisputeStatus disputeStatus, String rejectedReason) {
 		if (disputeStatus == null) {
 			logger.error("Attempting to set Dispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set Dispute status to null");

@@ -21,8 +21,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -31,12 +31,12 @@
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -55,8 +55,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -69,12 +69,12 @@
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -92,8 +92,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -102,12 +102,12 @@
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -125,8 +125,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -135,12 +135,12 @@
             "description": "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -161,8 +161,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -183,12 +183,12 @@
             "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -209,8 +209,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -219,12 +219,12 @@
             "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -247,12 +247,12 @@
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -260,8 +260,8 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "type": "string",
+                  "format": "uuid"
                 }
               }
             }
@@ -278,12 +278,12 @@
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -311,12 +311,12 @@
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -330,9 +330,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "description": "ID",
-            "format": "int32",
+            "format": "uuid",
             "readOnly": true
           },
           "status": {
@@ -387,9 +387,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "description": "ID",
-            "format": "int32",
+            "format": "uuid",
             "readOnly": true
           },
           "offenceDeclaration": { "type": "string" },

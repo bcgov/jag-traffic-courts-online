@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.ConstraintViolationException;
 
@@ -33,7 +34,7 @@ class DisputeControllerTest extends BaseTestSuite {
 
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		Integer disputeId = disputeController.saveDispute(dispute);
+		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Assert db contains the single created record
 		allDisputes = disputeController.getAllDisputes();
@@ -53,7 +54,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testRejectDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		Integer disputeId = disputeController.saveDispute(dispute);
+		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
 		dispute = disputeController.getDispute(disputeId);
@@ -93,7 +94,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testSubmitDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		Integer disputeId = disputeController.saveDispute(dispute);
+		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
 		dispute = disputeController.getDispute(disputeId);
@@ -113,7 +114,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testCancelDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		Integer disputeId = disputeController.saveDispute(dispute);
+		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
 		dispute = disputeController.getDispute(disputeId);
@@ -137,7 +138,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testUpdateDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		Integer disputeId = disputeController.saveDispute(dispute);
+		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Retrieve it from the controller's endpoint
 		dispute = disputeController.getDispute(disputeId);

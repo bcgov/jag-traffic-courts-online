@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -59,7 +60,7 @@ public class DisputeController {
 	 * @return {@link Dispute}
 	 */
 	@GetMapping("/dispute/{id}")
-	public Dispute getDispute(@PathVariable Integer id) {
+	public Dispute getDispute(@PathVariable UUID id) {
 		return disputeService.getDisputeById(id);
 	}
 
@@ -69,7 +70,7 @@ public class DisputeController {
 	 * @param id of the {@link Dispute} to be deleted
 	 */
 	@DeleteMapping("/dispute/{id}")
-	public void deleteDispute(@PathVariable Integer id) {
+	public void deleteDispute(@PathVariable UUID id) {
 		disputeService.delete(id);
 	}
 
@@ -80,7 +81,7 @@ public class DisputeController {
 	 * @return id of the saved {@link Dispute}
 	 */
 	@PostMapping("/dispute")
-	public Integer saveDispute(@RequestBody Dispute dispute) {
+	public UUID saveDispute(@RequestBody Dispute dispute) {
 		disputeService.save(dispute);
 		return dispute.getId();
 	}
@@ -101,7 +102,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/reject")
-	public Dispute rejectDispute(@PathVariable Integer id, @Valid @RequestBody @NotBlank @Size(min=1, max=256) String rejectedReason) {
+	public Dispute rejectDispute(@PathVariable UUID id, @Valid @RequestBody @NotBlank @Size(min=1, max=256) String rejectedReason) {
 		return disputeService.setStatus(id, DisputeStatus.REJECTED, rejectedReason);
 	}
 
@@ -120,7 +121,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
-	public Dispute cancelDispute(@PathVariable Integer id) {
+	public Dispute cancelDispute(@PathVariable UUID id) {
 		return disputeService.setStatus(id, DisputeStatus.CANCELLED);
 	}
 
@@ -139,7 +140,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/submit")
-	public Dispute submitDispute(@PathVariable Integer id) {
+	public Dispute submitDispute(@PathVariable UUID id) {
 		return disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
 
@@ -157,7 +158,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed.")
 	})
 	@PutMapping("/dispute/{id}")
-	public Dispute updateDispute(@PathVariable Integer id, @RequestBody Dispute dispute) {
+	public Dispute updateDispute(@PathVariable UUID id, @RequestBody Dispute dispute) {
 		return disputeService.update(id, dispute);
 	}
 
