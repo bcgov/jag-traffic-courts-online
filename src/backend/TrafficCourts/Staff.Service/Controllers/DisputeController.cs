@@ -35,7 +35,7 @@ public class DisputeController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("/disputes")]
-    [ProducesResponseType(typeof(ICollection<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
     {

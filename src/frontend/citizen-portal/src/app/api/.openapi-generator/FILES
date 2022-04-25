@@ -35,9 +35,11 @@ model/point.model.ts
 model/policeLocation.model.ts
 model/problemDetails.model.ts
 model/province.model.ts
+model/request.model.ts
 model/shellTicket.model.ts
 model/status.model.ts
 model/statute.model.ts
+model/ticketCount.model.ts
 model/ticketDispute.model.ts
 model/ticketDisputeApiResultResponse.model.ts
 model/ticketOffence.model.ts

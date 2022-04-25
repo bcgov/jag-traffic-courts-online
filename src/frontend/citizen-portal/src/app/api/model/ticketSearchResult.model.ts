@@ -13,7 +13,7 @@ import { TicketOffence } from './ticketOffence.model';
 
 
 /**
- * Represents a violation ticket that is returned from search requests
+ * Obsolete: Represents a violation ticket that is returned from search requests
  */
 export interface TicketSearchResult { 
     /**
@@ -29,7 +29,7 @@ export interface TicketSearchResult {
      */
     violationTime?: string | null;
     /**
-     * The list of offenses on this violation ticket.
+     * The list of offences on this violation ticket.
      */
     offences?: Array<TicketOffence> | null;
 }

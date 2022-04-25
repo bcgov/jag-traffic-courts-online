@@ -14,7 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="NodaTime.Testing" Version="3.0.10" />
@@ -38,7 +38,6 @@
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
     <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Service\TrafficCourts.Arc.Dispute.Service.csproj" />
-    <ProjectReference Include="..\TrafficCourts.Ticket.Search.Service\TrafficCourts.Ticket.Search.Service.csproj" />
 	<ProjectReference Include="..\Workflow.Service\TrafficCourts.Workflow.Service.csproj" />
   </ItemGroup>
 

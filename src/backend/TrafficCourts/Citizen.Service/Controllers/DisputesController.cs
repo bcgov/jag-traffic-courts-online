@@ -81,7 +81,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         [Obsolete]
         [HttpGet]
-        [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDisputes()
         {
             //var disputes = await _mediator.Send(new GetAllDisputesQuery());
@@ -92,9 +92,11 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         [Obsolete]
         [HttpGet("{disputeId}")]
-        [ProducesResponseType(typeof(IQueryable<Dispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDispute(int disputeId)
         {
+            // Note: the ProducesResponseType if list of dispute would be wrong... but keeping it to maintain backward compatibility with generated front end code 
+
             //var dispute = await _mediator.Send(new GetDisputeQuery { DisputeId = disputeId });
             //return dispute == null ? NoContent() : Ok(ApiResponse.Result(dispute));
             return NoContent();

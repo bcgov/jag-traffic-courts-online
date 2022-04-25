@@ -13,13 +13,19 @@
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext 
+        }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ApiMessageResponse } from '../model/models';
-import { LookupsAllApiResultResponse } from '../model/models';
+// @ts-ignore
+import { ApiMessageResponse } from '../model/apiMessageResponse.model';
+// @ts-ignore
+import { LookupsAllApiResultResponse } from '../model/lookupsAllApiResultResponse.model';
+// @ts-ignore
+import { Statute } from '../model/statute.model';
 
+// @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
@@ -30,7 +36,8 @@ import { Configuration }                                     from '../configurat
 })
 export class LookupService {
 
-    protected basePath = ''; //'http://localhost';
+    //protected basePath = 'http://localhost';
+    protected basePath = '';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -68,8 +75,7 @@ export class LookupService {
                 (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
             } else if (value instanceof Date) {
                 if (key != null) {
-                    httpParams = httpParams.append(key,
-                        (value as Date).toISOString().substr(0, 10));
+                    httpParams = httpParams.append(key, (value as Date).toISOString().substr(0, 10));
                 } else {
                    throw Error("key may not be null if value is Date");
                 }
@@ -90,10 +96,10 @@ export class LookupService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiLookupGetGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<LookupsAllApiResultResponse>;
-    public apiLookupGetGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<LookupsAllApiResultResponse>>;
-    public apiLookupGetGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<LookupsAllApiResultResponse>>;
-    public apiLookupGetGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public apiLookupGetGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<LookupsAllApiResultResponse>;
+    public apiLookupGetGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<LookupsAllApiResultResponse>>;
+    public apiLookupGetGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<LookupsAllApiResultResponse>>;
+    public apiLookupGetGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -109,14 +115,87 @@ export class LookupService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<LookupsAllApiResultResponse>(`${this.configuration.basePath}/api/lookup/get`,
             {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns a list of Violation Ticket Statutes filtered by given section text (if provided).
+     * @param section Motor vehicle act Section text to query by, ie \&quot;13(1)(a)\&quot; returns \&quot;Motor Vehicle or Trailer without Licence\&quot; contravention, or blank for no filter.
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public apiLookupStatutesGet(section?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<Array<Statute>>;
+    public apiLookupStatutesGet(section?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<Array<Statute>>>;
+    public apiLookupStatutesGet(section?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<Array<Statute>>>;
+    public apiLookupStatutesGet(section?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (section !== undefined && section !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>section, 'section');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        return this.httpClient.get<Array<Statute>>(`${this.configuration.basePath}/api/lookup/statutes`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

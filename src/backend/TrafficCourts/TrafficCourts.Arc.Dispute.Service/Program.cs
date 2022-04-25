@@ -1,11 +1,14 @@
 using Microsoft.Extensions.Options;
 using Renci.SshNet;
+using System.Text;
+using System.Text.Json;
 using TrafficCourts.Arc.Dispute.Service;
 using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
 // determine if swagger is enabled or not
@@ -13,7 +16,13 @@ var swagger = SwaggerConfiguration.Get(builder.Configuration);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services
+    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+    .AddJsonOptions(options =>
+    {
+        options.UseDateOnlyTimeOnlyStringConverters();
+        options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
+    });
 
 if (swagger.Enabled)
 {

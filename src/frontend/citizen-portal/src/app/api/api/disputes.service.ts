@@ -13,15 +13,23 @@
 
 import { Inject, Injectable, Optional }                      from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
+         HttpResponse, HttpEvent, HttpParameterCodec, HttpContext 
+        }       from '@angular/common/http';
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { CreateDisputeCommand } from '../model/models';
-import { CreateOffenceDisputeCommand } from '../model/models';
-import { Dispute } from '../model/models';
-import { ProblemDetails } from '../model/models';
+// @ts-ignore
+import { CreateDisputeCommand } from '../model/createDisputeCommand.model';
+// @ts-ignore
+import { CreateOffenceDisputeCommand } from '../model/createOffenceDisputeCommand.model';
+// @ts-ignore
+import { Dispute } from '../model/dispute.model';
+// @ts-ignore
+import { ProblemDetails } from '../model/problemDetails.model';
+// @ts-ignore
+import { Request } from '../model/request.model';
 
+// @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
@@ -32,7 +40,8 @@ import { Configuration }                                     from '../configurat
 })
 export class DisputesService {
 
-    protected basePath = ''; //'http://localhost';
+    //protected basePath = 'http://localhost';
+    protected basePath = '';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -70,8 +79,7 @@ export class DisputesService {
                 (value as any[]).forEach( elem => httpParams = this.addToHttpParamsRecursive(httpParams, elem, key));
             } else if (value instanceof Date) {
                 if (key != null) {
-                    httpParams = httpParams.append(key,
-                        (value as Date).toISOString().substr(0, 10));
+                    httpParams = httpParams.append(key, (value as Date).toISOString().substr(0, 10));
                 } else {
                    throw Error("key may not be null if value is Date");
                 }
@@ -88,13 +96,15 @@ export class DisputesService {
     }
 
     /**
+     * 
+     * @param request 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputesCreatePost(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<any>;
-    public apiDisputesCreatePost(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpResponse<any>>;
-    public apiDisputesCreatePost(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined}): Observable<HttpEvent<any>>;
-    public apiDisputesCreatePost(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined}): Observable<any> {
+    public apiDisputesCreatePost(request?: Request, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public apiDisputesCreatePost(request?: Request, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesCreatePost(request?: Request, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesCreatePost(request?: Request, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -109,15 +119,38 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/_*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/api/disputes/create`,
-            null,
+            request,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -133,10 +166,10 @@ export class DisputesService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<Array<Dispute>>;
-    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<Array<Dispute>>>;
-    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<Array<Dispute>>>;
-    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
+    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
+    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
+    public apiDisputesGetdisputeDisputeIdGet(disputeId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputesGetdisputeDisputeIdGet.');
         }
@@ -157,14 +190,26 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/disputes/getdispute/${encodeURIComponent(String(disputeId))}`,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -179,10 +224,10 @@ export class DisputesService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiDisputesGetdisputesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<Array<Dispute>>;
-    public apiDisputesGetdisputesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<Array<Dispute>>>;
-    public apiDisputesGetdisputesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<Array<Dispute>>>;
-    public apiDisputesGetdisputesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiDisputesGetdisputesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
+    public apiDisputesGetdisputesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
+    public apiDisputesGetdisputesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
+    public apiDisputesGetdisputesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -200,14 +245,26 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/disputes/getdisputes`,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -223,10 +280,10 @@ export class DisputesService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any>;
-    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<any>>;
-    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<any>>;
-    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesOffencedisputePost(createOffenceDisputeCommand?: CreateOffenceDisputeCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -244,6 +301,11 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
 
         // to determine the Content-Type header
         const consumes: string[] = [
@@ -256,14 +318,21 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/api/disputes/offencedispute`,
             createOffenceDisputeCommand,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -279,10 +348,10 @@ export class DisputesService {
      * @param reportProgress flag to report request and response progress.
      * @deprecated
      */
-    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any>;
-    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpResponse<any>>;
-    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<HttpEvent<any>>;
-    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json'}): Observable<any> {
+    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesTicketdisputePost(createDisputeCommand?: CreateDisputeCommand, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -300,6 +369,11 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
         }
 
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
 
         // to determine the Content-Type header
         const consumes: string[] = [
@@ -312,14 +386,21 @@ export class DisputesService {
             localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
         }
 
-        let responseType_: 'text' | 'json' = 'json';
-        if(localVarHttpHeaderAcceptSelected && localVarHttpHeaderAcceptSelected.startsWith('text')) {
-            responseType_ = 'text';
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/api/disputes/ticketdispute`,
             createDisputeCommand,
             {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

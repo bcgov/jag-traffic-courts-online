@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using TrafficCourts.Common.Utils;
+using TrafficCourts.Common.Converters;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {

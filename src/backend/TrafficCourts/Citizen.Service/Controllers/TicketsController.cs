@@ -1,10 +1,8 @@
-﻿using System.IO;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
-using TrafficCourts.Citizen.Service.Models;
 using TrafficCourts.Citizen.Service.Models.Deprecated;
 using TrafficCourts.Citizen.Service.Models.Search;
 using TrafficCourts.Citizen.Service.Models.Tickets;
@@ -12,7 +10,6 @@ using TrafficCourts.Citizen.Service.Validators;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class TicketsController : ControllerBase
@@ -22,11 +19,8 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         public TicketsController(IMediator mediator, ILogger<TicketsController> logger)
         {
-            ArgumentNullException.ThrowIfNull(mediator);
-            ArgumentNullException.ThrowIfNull(logger);
-
-            _mediator = mediator;
-            _logger = logger;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -62,8 +56,8 @@ namespace TrafficCourts.Citizen.Service.Controllers
             }
 
             var result = response.Result.Match<IActionResult>(
-                ticket => { return Ok(ticket); },
-                exception => { return StatusCode(StatusCodes.Status500InternalServerError); });
+                ticket => Ok(new TicketSearchResult(ticket)),
+                exception => StatusCode(StatusCodes.Status500InternalServerError));
 
             return result;
         }
@@ -158,19 +152,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
             [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
             CancellationToken cancellationToken)
         {
-            Search.Request request = new(ticketNumber, time);
-            Search.Response response = await _mediator.Send(request, cancellationToken);
-
-            if (response == Search.Response.Empty)
-            {
-                return NotFound();
-            }
-
-            var result = response.Result.Match<IActionResult>(
-                ticket => { return Ok(ticket.CreateDeprecated()); },
-                exception => { return StatusCode(StatusCodes.Status500InternalServerError); });
-
-            return result;
+            return NoContent();
         }
 
         [Obsolete]
@@ -185,104 +167,43 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
         [Obsolete]
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ShellTicket([FromBody] CreateShellTicketCommand createShellTicket)
         {
-            //using (LogContext.PushProperty("TicketNumber", createShellTicket.ViolationTicketNumber))
-            //{
-            //    try
-            //    {
-            //        _logger.LogInformation("get create shell ticket request.");
-            //        var response = await _mediator.Send(createShellTicket);
-            //        if (response.Id == 0)
-            //        {
-            //            ModelState.AddModelError("TicketNumber", "This ticket already exists.");
-            //            return BadRequest(ApiResponse.BadRequest(ModelState));
-            //        }
-            //        return RedirectToAction("Ticket", new { ticketNumber = createShellTicket.ViolationTicketNumber, time = createShellTicket.ViolationTime });
-            //        //return Ok();
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        _logger.LogError(e, "create shell ticket failed");
-            //        return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
-            //    }
-            //}
-
             return NoContent();
         }
 
         [Obsolete]
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Pay([FromQuery] TicketPaymentCommand ticketPayment)
         {
-            //using (LogContext.PushProperty("TicketNumber", ticketPayment.TicketNumber))
-            //{
-            //    try
-            //    {
-            //        _logger.LogInformation("get create ticket payment request.");
-            //        var response = await _mediator.Send(ticketPayment);
-            //        return Ok(ApiResponse.Result(response));
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        _logger.LogError(e, "Create ticket payment request failed");
-            //        return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
-            //    }
-            //}
             return NoContent();
         }
 
         [Obsolete]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Pay([FromQuery] TicketPaymentConfirmCommand ticketPayConfirm)
         {
-            //using (LogContext.PushProperty("TransactionId", ticketPayConfirm.TransactionId))
-            //{
-            //    try
-            //    {
-            //        _logger.LogInformation("get ticket payment confirmation");
-            //        var response = await _mediator.Send(ticketPayConfirm);
-            //        return RedirectToAction("Ticket", new { ticketNumber = response.TicketNumber, time = response.Time });
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        _logger.LogError(e, "Update ticket payment failed");
-            //        return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
-            //    }
-            //}
             return NoContent();
         }
 
         [Obsolete]
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResultResponse<TicketDispute>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ImageUpload([FromForm] ShellTicketImageCommand shellTicketImage)
         {
-            //try
-            //{
-            //    _logger.LogInformation("get shell ticket image");
-            //    var response = await _mediator.Send(shellTicketImage);
-            //    return Ok();
-            //    //return RedirectToAction("Ticket", new { ticketNumber = response.TicketNumber, time = response.Time });
-            //}
-            //catch (Exception e)
-            //{
-            //    _logger.LogError(e, "save shell ticket image failed");
-            //    return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse.Message(e.Message));
-            //}
             return NoContent();
         }
     }
