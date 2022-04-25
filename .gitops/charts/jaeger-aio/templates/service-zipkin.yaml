@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "jaeger-aio.fullname" . }}-zipkin
+  labels:
+    app: jaeger
+    {{- include "jaeger-aio.labels" . | nindent 4 }}
+spec:
+  ports:
+  - name: jaeger-zipkin-http
+    port: 9411
+    protocol: TCP
+    targetPort: 9411
+  selector:
+    {{- include "jaeger-aio.selectorLabels" . | nindent 4 }}
+  type: ClusterIP

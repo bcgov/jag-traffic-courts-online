@@ -1,0 +1,98 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "staff-api.fullname" . }}
+  labels:
+    {{- include "staff-api.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "staff-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "staff-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "staff-api.serviceAccountName" . }}
+      containers:
+        - env:
+          {{/* JWT */}}
+          - name: Jwt__Authority
+            value: "{{ .Values.auth.authority }}"
+          - name: Jwt__Audience
+            value: "{{ .Values.auth.audience }}"
+          {{- if .Values.auth.metadataAddress }}
+          - name: Jwt__MetadataAddress
+            value: "{{ .Values.auth.metadataAddress }}"
+          {{- end }}
+          - name: OracleDataApi__BaseUrl
+            value: "{{ .Values.oracleApi.url }}"
+          {{/* RabbitMQ */}}
+          - name: RabbitMQ__Host
+            value: "{{ .Values.rabbitmq.host }}"
+          - name: RabbitMQ__Port
+            value: "{{ .Values.rabbitmq.port }}"
+          {{- /* TODO: RabbitMQ__Password from secrets */}}
+          - name: RabbitMQ__Username
+            value: "{{ .Values.rabbitmq.username }}"
+          - name: RabbitMQ__Password
+            value: "{{ .Values.rabbitmq.password }}"
+          {{/* Redis */}}
+          - name: Redis__ConnectionString
+            value: "{{ .Values.redis.connectionString }}"
+          {{/* Logging - Splunk */}}
+          - name: Serilog__Using__0
+            value: "Serilog.Sinks.Splunk"
+          - name: Serilog__WriteTo__0__Name
+            value: "EventCollector"
+          - name: Serilog__WriteTo__0__Args__splunkHost
+            value: "{{ .Values.splunk.host }}"
+          - name: Serilog__WriteTo__0__Args__eventCollectorToken
+            value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          {{- if .Values.jaeger.enabled }}
+          {{/* OpenTelemetry jaeger */}}
+          - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+            value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
+          {{- if .Values.jaeger.exporter.protocol }}
+          - name: OTEL_EXPORTER_JAEGER_PROTOCOL
+            value: "{{ .Values.jaeger.exporter.protocol }}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.swagger.enabled }}
+          - name: Swagger__Enabled
+            value: "true"
+          {{- end }}
+          name: {{ .Chart.Name }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
