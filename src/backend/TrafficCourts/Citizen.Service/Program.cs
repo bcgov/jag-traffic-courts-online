@@ -1,14 +1,19 @@
+using Serilog;
+using System.ComponentModel;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using TrafficCourts.Citizen.Service;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Configuration.Validation;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+Serilog.ILogger logger = GetLogger(builder);
 
-builder.ConfigureApplication(); // this can throw ConfigurationErrorsException
+builder.ConfigureApplication(logger); // this can throw ConfigurationErrorsException
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+    .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
 var swagger = SwaggerConfiguration.Get(builder.Configuration);
 
@@ -25,9 +30,11 @@ if (swagger.Enabled)
             Description = "An API for creating violation ticket disputes",
         });
 
+        options.UseDateOnlyTimeOnlyStringConverters();
+
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-        options.CustomSchemaIds(x => x.FullName);
+        options.CustomSchemaIds(x => x.FullName); // TODO: remove this, causes problems with generated swagger
     });
 }
 var app = builder.Build();
@@ -41,4 +48,32 @@ if (swagger.Enabled)
 
 app.MapControllers();
 
-app.Run();
+
+bool isDevelopment = app.Environment.IsDevelopment();
+try
+{
+    app.Run();
+}
+catch (SettingsValidationException exception)
+{
+    logger.Fatal(exception, "Configuration error");
+
+    if (isDevelopment)
+    {        
+        throw; // see the error in the IDE
+    }
+}
+
+static Serilog.ILogger GetLogger(WebApplicationBuilder app)
+{
+    var configuration = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+    if (app.Environment.IsDevelopment())
+    {
+        configuration.WriteTo.Debug();
+    }
+
+    return configuration.CreateLogger();
+}

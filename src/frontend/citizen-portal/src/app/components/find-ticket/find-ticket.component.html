@@ -189,6 +189,7 @@
                   mat-flat-button
                   color="primary"
                   class="find-large"
+                  
                   (click)="fileInput.click()">
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
             Upload ticket image
@@ -203,7 +204,6 @@
                  (change)="onFileChange($event)"
                  #fileInput
                  type="file"
-                 accept="image/x-png,image/jpeg, application/pdf"
                  id="file" />
         </div>
       </div>

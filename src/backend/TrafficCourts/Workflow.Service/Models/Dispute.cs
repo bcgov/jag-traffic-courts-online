@@ -1,7 +1,6 @@
 ﻿
 using System.Text;
 using System.Text.Json.Serialization;
-using TrafficCourts.Common.Utils;
 
 namespace TrafficCourts.Workflow.Service.Models
 {

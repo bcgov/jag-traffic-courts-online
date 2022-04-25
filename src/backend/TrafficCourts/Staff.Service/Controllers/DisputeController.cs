@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
@@ -35,7 +36,7 @@ public class DisputeController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("/disputes")]
-    [ProducesResponseType(typeof(ICollection<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
     {
@@ -49,7 +50,7 @@ public class DisputeController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError("Error retrieving Disputes from oracle-data-api:", e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
 
@@ -79,21 +80,21 @@ public class DisputeController : ControllerBase
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
-            return BadRequest();
+            return new HttpError(e.StatusCode, e.Message);
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
-            return NotFound();
+            return new HttpError(e.StatusCode, e.Message);
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
         {
             _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
             _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
 
@@ -124,21 +125,172 @@ public class DisputeController : ControllerBase
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
-            return BadRequest();
+            return new HttpError(e.StatusCode, e.Message);
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
-            return NotFound();
+            return new HttpError(e.StatusCode, e.Message);
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
         {
             _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
             _logger.LogError("Error updating Dispute in oracle-data-api:", e);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Updates the status of a particular Dispute record to REJECTED.
+    /// </summary>
+    /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
+    /// <param name="rejectedReason">The reason or note (max 256 characters) the Dispute was cancelled.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">Dispute record not found. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("/dispute/{disputeId}/reject")]
+    public async Task<IActionResult> RejectDisputeAsync(
+        int disputeId, 
+        [FromForm] 
+        [Required]
+        [StringLength(256, ErrorMessage = "Rejected reason cannot exceed 256 characters.")] string rejectedReason, 
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the Dispute status");
+
+        try
+        {
+            await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
+            return Ok();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Updates the status of a particular Dispute record to CANCELLED.
+    /// </summary>
+    /// <param name="disputeId">Unique identifier for a specific Dispute record to cancel.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">Dispute record not found. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("/dispute/{disputeId}/cancel")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CancelDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the Dispute status");
+
+        try
+        {
+            await _disputeService.CancelDisputeAsync(disputeId, cancellationToken);
+            return Ok();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Submits a Dispute record, setting it's status to PROCESSING
+    /// </summary>
+    /// <param name="disputeId">Unique identifier for a specific Dispute record to submit.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">Dispute record not found. Update failed.</response>
+    /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("/dispute/{disputeId}/submit")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> SubmitDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the Dispute status");
+
+        try
+        {
+            await _disputeService.SubmitDisputeAsync(disputeId, cancellationToken);
+            return Ok();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
 

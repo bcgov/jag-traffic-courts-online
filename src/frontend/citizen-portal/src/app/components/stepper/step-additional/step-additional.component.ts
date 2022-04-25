@@ -37,7 +37,90 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.next';
 
-  public languages: Config<string>[];
+  public languages = [
+    "American Sign Language (ASL)",
+    "Communication Realtime Translation (CART)",
+    "Afghani-Dari",
+    "Albanian",
+    "Amharic",
+    "Arabic",
+    "Azerbaijani",
+    "Azerbaijan-Turkish",
+    "Bengali",
+    "Bosnian",
+    "Bulgarian",
+    "Burmese",
+    "Cambodian (Khmer)",
+    "Cantonese",
+    "Cebuano",
+    "Chiu Chow (Swatow)",
+    "Croatian",
+    "Czech",
+    "Dari",
+    "Dinka",
+    "Dutch",
+    "Farsi",
+    "Farsi-Persian",
+    "Fiji-Hindi",
+    "Filipino",
+    "French",
+    "Fukien",
+    "Fuqing",
+    "Fuzhou",
+    "German",
+    "Greek",
+    "Gujarati",
+    "Hakha Chin",
+    "Hakka",
+    "Hebrew",
+    "Hindi",
+    "Hungarian",
+    "Igbo",
+    "Ilocano",
+    "Indonesian",
+    "Italian",
+    "Japanese",
+    "Karen",
+    "Kinyarwanda",
+    "Kirundi",
+    "Korean",
+    "Kurdish",
+    "Kurdish (Kurmanji)",
+    "Kurdish (Sorani)",
+    "Laotian",
+    "Lithuanian",
+    "Malay",
+    "Malayalam",
+    "Mandarin",
+    "Mongolian",
+    "Nepali",
+    "Oromo",
+    "Pashto",
+    "Polish",
+    "Portuguese",
+    "Punjabi",
+    "Romanian",
+    "Russian",
+    "Serbian",
+    "Shanghainese",
+    "Sinhalese",
+    "Slovak",
+    "Somali",
+    "Spanish",
+    "Sudanese",
+    "Swahili",
+    "Tagalog",
+    "Tamil",
+    "Teochew",
+    "Thai",
+    "Thai",
+    "Tigri(gna) (yna)",
+    "Turkish",
+    "Ukrainian",
+    "Urdu",
+    "Vietnamese",
+    "Xinhui"
+  ];
   public countFormList:any;
   public countFormList2:any;
   public dispute={
@@ -74,10 +157,7 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
       disputeService,
       disputeResource,
       disputeFormStateService
-    );
-
-    this.languages = this.configService.languages;
-    this.languages = [{name:'French',code:'fr'},{name:'Spanish',code:'sp'},{name:'Arabic',code:'Ar'}];
+    );   
   }
 
   public ngOnInit() {

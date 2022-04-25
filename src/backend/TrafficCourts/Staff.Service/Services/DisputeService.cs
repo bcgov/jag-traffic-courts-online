@@ -45,9 +45,24 @@ public class DisputeService : IDisputeService
         return await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
     }
 
-    public async Task<Dispute> UpdateDisputeAsync(int id, Dispute dispute, System.Threading.CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(int disputeId, Dispute dispute, System.Threading.CancellationToken cancellationToken)
     {
-        return await GetOracleDataApi().UpdateDisputeAsync(id, dispute, cancellationToken);
+        return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
+    }
+
+    public async Task CancelDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    {
+        await GetOracleDataApi().CancelDisputeAsync(disputeId, cancellationToken);
+    }
+
+    public async Task RejectDisputeAsync(int disputeId, string rejectedReason, CancellationToken cancellationToken)
+    {
+        await GetOracleDataApi().RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
+    }
+
+    public async Task SubmitDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    {
+        await GetOracleDataApi().SubmitDisputeAsync(disputeId, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(int disputeId, CancellationToken cancellationToken)
