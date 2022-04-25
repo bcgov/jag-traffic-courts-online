@@ -75,13 +75,14 @@ services:
   # ---------------------------------------------------------------------------------------------
   # ARC Dispute API
   # ---------------------------------------------------------------------------------------------
-  arc-api:
+  arc-dispute-api:
     container_name: arc-dispute-api
     build:
       context: ./src/backend/TrafficCourts
       dockerfile: ./TrafficCourts.Arc.Dispute.Service/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_URLS: http://+:8080
       SFTP__HOST: ${SFTP__HOST:-sftp}
       SFTP__PORT: ${SFTP__PORT:-22}
       SFTP__USERNAME: ${SFTP__USERNAME:-demo}
