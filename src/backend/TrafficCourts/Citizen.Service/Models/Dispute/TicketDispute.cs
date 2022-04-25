@@ -15,6 +15,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string Province { get; set; }
         public string PostalCode { get; set; }
         public string HomePhone { get; set; }
+        public string EmailAddress { get; set; }
         public string DriversLicence { get; set; }
         public string DriversLicenceProvince { get; set; }
         public string WorkPhone { get; set; }
