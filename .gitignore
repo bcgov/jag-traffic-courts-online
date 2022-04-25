@@ -60,3 +60,6 @@ artifacts/
 !/tools/form-recognizer/logs/.keep
 /tools/form-recognizer/shared*
 !/tools/form-recognizer/shared/.keep
+
+# SFTP file location that contains generated ARC files 
+/sftp-in
