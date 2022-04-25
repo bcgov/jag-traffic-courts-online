@@ -57,7 +57,7 @@ public class DisputeService {
 		}
 		disputeRepository.save(dispute);
 	}
-	
+
 	/**
 	 * Updates the properties of a specific {@link Dispute}
 	 *
@@ -93,9 +93,10 @@ public class DisputeService {
 	 *
 	 * @param id
 	 * @param disputeStatus
+	 * @return the saved Dispute
 	 */
-	public void setStatus(Integer id, DisputeStatus disputeStatus) {
-		setStatus(id, disputeStatus, null);
+	public Dispute setStatus(Integer id, DisputeStatus disputeStatus) {
+		return setStatus(id, disputeStatus, null);
 	}
 
 	/**
@@ -104,8 +105,9 @@ public class DisputeService {
 	 * @param id
 	 * @param disputeStatus
 	 * @param rejectedReason the rejected reason if the status is REJECTED.
+	 * @return the saved Dispute
 	 */
-	public void setStatus(Integer id, DisputeStatus disputeStatus, String rejectedReason) {
+	public Dispute setStatus(Integer id, DisputeStatus disputeStatus, String rejectedReason) {
 		if (disputeStatus == null) {
 			logger.error("Attempting to set Dispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set Dispute status to null");
@@ -146,7 +148,7 @@ public class DisputeService {
 
 		dispute.setStatus(disputeStatus);
 		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
-		disputeRepository.save(dispute);
+		return disputeRepository.save(dispute);
 	}
 
 }

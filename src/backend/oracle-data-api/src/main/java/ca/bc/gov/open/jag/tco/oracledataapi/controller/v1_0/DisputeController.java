@@ -90,18 +90,19 @@ public class DisputeController {
 	 *
 	 * @param dispute to be updated
 	 * @param id of the saved {@link Dispute} to update
+	 * @return
 	 * @return {@link Dispute}
 	 */
 	@Operation(summary = "Updates the status of a particular Dispute record to REJECTED.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/reject")
-	public void rejectDispute(@PathVariable Integer id, @Valid @RequestBody @NotBlank @Size(min=1, max=256) String rejectedReason) {
-		disputeService.setStatus(id, DisputeStatus.REJECTED, rejectedReason);
+	public Dispute rejectDispute(@PathVariable Integer id, @Valid @RequestBody @NotBlank @Size(min=1, max=256) String rejectedReason) {
+		return disputeService.setStatus(id, DisputeStatus.REJECTED, rejectedReason);
 	}
 
 	/**
@@ -113,14 +114,14 @@ public class DisputeController {
 	 */
 	@Operation(summary = "Updates the status of a particular Dispute record to CANCELLED.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
-	public void cancelDispute(@PathVariable Integer id) {
-		disputeService.setStatus(id, DisputeStatus.CANCELLED);
+	public Dispute cancelDispute(@PathVariable Integer id) {
+		return disputeService.setStatus(id, DisputeStatus.CANCELLED);
 	}
 
 	/**
@@ -132,16 +133,16 @@ public class DisputeController {
 	 */
 	@Operation(summary = "Updates the status of a particular Dispute record to PROCESSING.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/submit")
-	public void submitDispute(@PathVariable Integer id) {
-		disputeService.setStatus(id, DisputeStatus.PROCESSING);
+	public Dispute submitDispute(@PathVariable Integer id) {
+		return disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
-	
+
 	/**
 	 * PUT endpoint that updates the dispute detail, setting the new value for the fields passed in the body.
 	 *
