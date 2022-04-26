@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputesService } from 'app/services/disputes.service';
-import { Dispute } from 'app/api/model/dispute.model';
+import { Dispute } from 'app/api';
+import { DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,6 +16,17 @@ import { Router } from '@angular/router';
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   busy: Subscription;
+  newDispute: disputeData = {
+    DateSubmitted: undefined,
+    ticketNumber: undefined,
+    disputantSurname: undefined,
+    givenNames: undefined,
+    moreDisputeStatus: undefined,
+    FilingDate: undefined,
+    CourtHearing: undefined,
+    CitizenFlag: undefined,
+    SystemFlag: undefined,
+    AssignedTo: undefined};
   public ticketInfo:any;
   displayedColumns: string[] = [
     'RedGreenAlert',
@@ -22,21 +34,21 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'ticketNumber',
     'disputantSurname',
     'givenNames',
-    'Status',
+    'moreDisputeStatus',
     'FilingDate',
     'CourtHearing',
     'CitizenFlag',
     'SystemFlag',
     'AssignedTo',
   ];
-  disputes: Dispute[] = [];
+  disputes: disputeData[] = [];
   remoteDummyData: disputeData[] = [
     {
       DateSubmitted: new Date('2022/02/08'),
       ticketNumber: 'AJ00214578',
       disputantSurname: 'McGibbons',
       givenNames: 'Julius Montgommery',
-      Status: 'New',
+      moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: 'Y',
       CitizenFlag: 'Y',
@@ -48,7 +60,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'EZ02000460',
       disputantSurname: 'Smithe',
       givenNames: 'Jaxon',
-      Status: 'New',
+      moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: 'N',
       CitizenFlag: 'N',
@@ -60,7 +72,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Jacklin',
       givenNames: 'Susanne',
-      Status: 'New',
+      moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: 'N',
       CitizenFlag: 'N',
@@ -72,7 +84,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Morris',
       givenNames: 'Mark',
-      Status: 'New',
+      moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: 'Y',
       CitizenFlag: 'Y',
@@ -84,7 +96,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Korrin',
       givenNames: 'Karen',
-      Status: 'New',
+      moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: 'N',
       CitizenFlag: 'N',
@@ -96,7 +108,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Aster',
       givenNames: 'Jack',
-      Status: 'Checked out',
+      moreDisputeStatus: MoreDisputeStatus.CheckedOut,
       FilingDate: undefined,
       CourtHearing: 'Y',
       CitizenFlag: 'Y',
@@ -108,7 +120,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Smith',
       givenNames: 'Portia',
-      Status: 'Processing',
+      moreDisputeStatus: MoreDisputeStatus.Processing,
       FilingDate: new Date('2022/02/07'),
       CourtHearing: 'Y',
       CitizenFlag: 'Y',
@@ -120,7 +132,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Brown',
       givenNames: 'Will',
-      Status: 'Alert',
+      status: DisputeStatus.Cancelled,
+      moreDisputeStatus: MoreDisputeStatus.Alert,
       FilingDate: new Date('2022/02/07'),
       CourtHearing: 'N',
       CitizenFlag: 'N',
@@ -132,7 +145,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Jones',
       givenNames: 'Sharron',
-      Status: 'Processing',
+      moreDisputeStatus: MoreDisputeStatus.Processing,
       FilingDate: new Date('2022/02/06'),
       CourtHearing: 'Y',
       CitizenFlag: 'N',
@@ -144,7 +157,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       ticketNumber: 'AJ00214578',
       disputantSurname: 'Price',
       givenNames: 'Simone',
-      Status: 'Processing',
+      moreDisputeStatus: MoreDisputeStatus.Processing,
       FilingDate: new Date('2022/02/06'),
       CourtHearing: 'N',
       CitizenFlag: 'N',
@@ -168,26 +181,29 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-    this.dataSource.data = this.remoteDummyData as disputeData[];
+    // set red green alert and status
+    this.remoteDummyData.forEach(x => {
+      x.RedGreenAlert = x.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (x.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '' );
+    });
+
     this.RegionName = "Fraser Valley Region";
-
-    // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
-
-    // set red green alert
-    this.remoteDummyData.forEach(x => {x.RedGreenAlert = x.Status == 'New' ? 'Green' : (x.Status == 'Alert' ? 'Red' : '' )});
-
-    // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record:disputeData ,filter) {
-      return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-    }
 
     // when authentication token available, get data
     this.getAllDisputes();
   }
 
+  isNew(d: disputeData): boolean {
+    return d.moreDisputeStatus == MoreDisputeStatus.New;
+  }
+
   getAllDisputes(): void {
       this.logger.log('TicketPageComponent::getAllDisputes');
+
+      // concatenate all dummy data to this.disputes
+      this.disputes = [];
+      this.remoteDummyData.forEach(d => {
+        this.disputes = this.disputes.concat(d);
+      });
   
       this.busy = this.disputesService.getDisputes().subscribe((response) => {
         this.logger.info(
@@ -195,16 +211,51 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
           response
         );
 
-        console.log(this.disputes);
-   
         this.disputesService.disputes$.next(response);
-        this.disputes = response;
+        response.forEach(d => {
+          this.newDispute.AssignedTo = '';
+          this.newDispute.CitizenFlag = 'N';
+          this.newDispute.CourtHearing = 'N';
+          this.newDispute.DateSubmitted = new Date(d.violationDate);
+          this.newDispute.FilingDate = undefined;
+          switch (d.status) 
+          { 
+            case DisputeStatus.Cancelled: 
+              this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
+              break; 
+            case DisputeStatus.Processing:
+              this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
+              break;
+            case DisputeStatus.Rejected:
+              this.newDispute.moreDisputeStatus = MoreDisputeStatus.Rejected;
+              break;
+            default:
+              this.newDispute.moreDisputeStatus = MoreDisputeStatus.New;
+              break;
+          };
+          this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '' );
+          this.newDispute.SystemFlag = 'N';
+          this.newDispute.additionalProperties = d.additionalProperties;
+          this.newDispute.courtLocation = d.courtLocation;
+          this.disputes = this.disputes.concat(this.newDispute);
+        })
+        this.dataSource.data = this.disputes;
+
+        // initially sort data by Date Submitted
+        this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
+
+        // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
+        this.dataSource.filterPredicate = function (record:disputeData ,filter) {
+          return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
+        }
+
+
       });
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter((x:disputeData) => x.Status == 'New'))
-     return this.dataSource.data.filter((x:disputeData) => x.Status == 'New').length;
+    if (this.dataSource.data.filter((x:disputeData) => x.moreDisputeStatus == MoreDisputeStatus.New))
+     return this.dataSource.data.filter((x:disputeData) => x.moreDisputeStatus == MoreDisputeStatus.New).length;
     else return 0;
   }
 
@@ -226,11 +277,21 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.showTicket = !this.showTicket;
   }
 }
+
+type MoreDisputeStatus = 'New' | 'Processing' | 'Rejected' | 'Cancelled' | 'Alert' | 'Checked Out';
+const MoreDisputeStatus = {
+  New: 'New' as MoreDisputeStatus,
+  Processing: 'Processing' as MoreDisputeStatus,
+  Rejected: 'Rejected' as MoreDisputeStatus,
+  Cancelled: 'Cancelled' as MoreDisputeStatus,
+  Alert: 'Alert' as MoreDisputeStatus,
+  CheckedOut: 'Checked Out' as MoreDisputeStatus
+}
 export interface disputeData extends Dispute {
-  DateSubmitted?: Date, // same as violationDate?
+  DateSubmitted?: Date, 
   RedGreenAlert?: string,
+  moreDisputeStatus : MoreDisputeStatus;
   FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
-  Status: string,  // extends citizen portal set in staff portal, New at first
   CourtHearing: string, // if at least one count requests court hearing
   CitizenFlag: string, // comes from citizen portal, citizen has noticed OCR differences
   SystemFlag: string, // comes from citizen portal, system finds OCR discrepancies
