@@ -21,28 +21,3 @@
     <div class="text">{{ count._amountDue | currency }}</div>
   </div>
 </div>
-<hr />
-
-<div class="row mb-2">
-  <div class="offset-lg-2 col-lg-4">
-    <small class="d-block">Status</small>
-    <span [ngClass]="{
-        'text-danger':
-          count._offenceStatus === 'Owe' ||
-          count._offenceStatus === 'InProgress',
-        'text-primary':
-          count._offenceStatus === 'New' ||
-          count._offenceStatus === 'Submitted' ||
-          count._offenceStatus === 'Rejected' ||
-          count._offenceStatus === 'Unknown',
-        'text-success':
-          count._offenceStatus === 'Paid' || count._offenceStatus === 'Complete'
-      }">
-      <div class="text">{{ count._offenceStatusDesc }}</div>
-    </span>
-  </div>
-  <!-- <div class="col-lg-4" *ngIf="count.ticketedAmount !== count.amountDue">
-    <small class="d-block">Offence amount</small>
-    <div class="text">{{ count.ticketedAmount | currency }}</div>
-  </div> -->
-</div>
