@@ -2,7 +2,7 @@ import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
 import { Dispute } from 'app/api/model/dispute.model';
-import { DisputeService } from 'app/api';
+import { DisputeService } from 'app/api/api/dispute.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
