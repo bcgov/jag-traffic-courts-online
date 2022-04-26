@@ -6,6 +6,12 @@
     "logLevel": "debug",
     "pathRewrite": {
       "^/api": ""
+    },
+  "/disputes": {
+    "target": "http://localhost:5005",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
     }
   }
 }

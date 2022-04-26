@@ -8,6 +8,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/dispute.model.ts
+model/disputeStatus.model.ts
 model/models.ts
 model/problemDetails.model.ts
 model/ticketCount.model.ts

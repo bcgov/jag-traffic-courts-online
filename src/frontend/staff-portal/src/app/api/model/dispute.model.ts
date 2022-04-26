@@ -9,11 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DisputeStatus } from './disputeStatus.model';
 import { TicketCount } from './ticketCount.model';
 
 
 export interface Dispute { 
+    /**
+     * ID
+     */
     id?: number;
+    status?: DisputeStatus;
     ticketNumber?: string | null;
     courtLocation?: string | null;
     violationDate?: string;
@@ -33,6 +38,8 @@ export interface Dispute {
     lawyerRepresentation?: boolean;
     interpreterLanguage?: string | null;
     witnessIntent?: boolean;
+    ocrViolationTicket?: string | null;
+    rejectedReason?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

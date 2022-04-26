@@ -16,22 +16,6 @@ export class InterceptorService implements HttpInterceptor {
       withCredentials: true
     });
 
-    // add header for OIDC Content-Security-Policy: script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src 'self' data:;font-src 'self';frame-ancestors 'self' https://localhost:44318;block-all-mixed-content
-    // const OIDCReq = corsReq.clone({
-    //   headers: corsReq.headers.set(
-    //     'Content-Security-Policy', "script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src 'self' data:;font-src 'self';frame-ancestors 'self' https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4;block-all-mixed-content"),
-    // });
-
-    // add header to pass preflight check
-    // const preFlightReq = corsReq.clone({
-    //   headers: corsReq.headers.append('Access-Control-Allow-Methods', '*')
-    // });
-
-    // add header to pass preflight check
-    // const preFlightReq = OIDCReq.clone({
-    //   headers: OIDCReq.headers.append('Access-Control-Allow-Origin', '*')
-    // });
-
     return next.handle(corsReq);
   }
 }

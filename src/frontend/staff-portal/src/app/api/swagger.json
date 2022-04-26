@@ -11,7 +11,7 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Returns all Disputes from the Oracle Data Interface API.",
+        "summary": "Returns all Disputes from the Oracle Data API.",
         "responses": {
           "200": {
             "description": "Success",
@@ -53,7 +53,7 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Returns a single Dispute with the given identifier from the Oracle Data Interface API.",
+        "summary": "Returns a single Dispute with the given identifier from the Oracle Data API.",
         "parameters": [
           {
             "name": "disputeId",
@@ -131,6 +131,346 @@
             "description": "There was a server error that prevented the search from completing successfully."
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Updates a single Dispute through the Oracle Data Interface API based on unique dispute id and the dispute data being passed in the body.",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific Dispute record.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispute"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispute"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Dispute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dispute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Dispute to update was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
+    "/dispute/{disputeId}/reject": {
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Updates the status of a particular Dispute record to REJECTED.",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific Dispute record to cancel.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "rejectedReason"
+                ],
+                "type": "object",
+                "properties": {
+                  "rejectedReason": {
+                    "maxLength": 256,
+                    "minLength": 0,
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "rejectedReason": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters."
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed."
+          },
+          "405": {
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed."
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
+    "/dispute/{disputeId}/cancel": {
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Updates the status of a particular Dispute record to CANCELLED.",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific Dispute record to cancel.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
+    "/dispute/{disputeId}/submit": {
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Submits a Dispute record, setting it's status to PROCESSING",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific Dispute record to submit.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
       }
     }
   },
@@ -141,7 +481,11 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "ID",
             "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DisputeStatus"
           },
           "ticketNumber": {
             "type": "string",
@@ -220,6 +564,14 @@
           "witnessIntent": {
             "type": "boolean"
           },
+          "ocrViolationTicket": {
+            "type": "string",
+            "nullable": true
+          },
+          "rejectedReason": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
@@ -227,6 +579,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "DisputeStatus": {
+        "enum": [
+          "NEW",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED"
+        ],
+        "type": "string"
       },
       "ProblemDetails": {
         "type": "object",
@@ -260,6 +621,7 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "ID",
             "format": "int32"
           },
           "offenceDeclaration": {
@@ -271,9 +633,6 @@
           },
           "fineReductionRequest": {
             "type": "boolean"
-          },
-          "dispute": {
-            "$ref": "#/components/schemas/Dispute"
           },
           "additionalProperties": {
             "type": "object",

@@ -9,15 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Dispute } from './dispute.model';
 
 
 export interface TicketCount { 
+    /**
+     * ID
+     */
     id?: number;
     offenceDeclaration?: string | null;
     timeToPayRequest?: boolean;
     fineReductionRequest?: boolean;
-    dispute?: Dispute;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

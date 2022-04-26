@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
-// import { AuthGuard } from '@core/guards/auth.guard';
 // import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 // import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 // import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
@@ -21,7 +20,7 @@ const routes: Routes = [
     component: LandingComponent,
   },
   {
-    path: 'ticket',
+    path: AppRoutes.TICKET,
     component: TicketPageComponent,
     canActivate: [AutoLoginPartialRoutesGuard],
   },
