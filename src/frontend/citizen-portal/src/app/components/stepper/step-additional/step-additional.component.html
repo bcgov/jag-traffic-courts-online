@@ -60,7 +60,11 @@
       
     </div> -->
     <section *ngIf="isShowCheckbox && isShowCheckbox['disputeAppearInCourt'] && isShowCheckbox['disputeAppearInCourt'].length ">
-      <div>Count: {{ isShowCheckbox['disputeAppearInCourt'].toString()}} </div>
+      <div>
+        <ng-container *ngFor="let i of isShowCheckbox['disputeAppearInCourt']; let inx = index">
+          {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+        </ng-container>
+      </div>
       <h3 class="mt-4 mb-2 reduction-text">
       </h3>
       <div class="row">

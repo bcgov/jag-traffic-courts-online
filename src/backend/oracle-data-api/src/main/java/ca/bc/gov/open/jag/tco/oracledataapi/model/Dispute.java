@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,11 +12,11 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -35,8 +36,8 @@ public class Dispute {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue
+    private UUID id;
 
     @Enumerated(EnumType.STRING)
     private DisputeStatus status;
@@ -67,6 +68,10 @@ public class Dispute {
 
     @Column
     private String homePhone;
+    
+    @Column
+    @Email(regexp = ".+@.+\\..+")
+    private String emailAddress;
 
     @Column
     private String driversLicense;
