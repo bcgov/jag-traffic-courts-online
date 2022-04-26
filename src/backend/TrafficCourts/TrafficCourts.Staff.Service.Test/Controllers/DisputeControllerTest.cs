@@ -23,7 +23,9 @@ public class DisputeControllerTest
         // Arrange
         Guid id = Guid.NewGuid();
         Dispute dispute1 = new();
-        dispute1.Id = id;
+        dispute1.Id = Guid.NewGuid();
+        Dispute dispute2 = new();
+        dispute2.Id = Guid.NewGuid();
         Dispute dispute2 = new();
         dispute2.Id = id;
         List<Dispute> disputes = new() { dispute1, dispute2 };
