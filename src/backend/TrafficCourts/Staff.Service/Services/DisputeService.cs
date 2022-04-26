@@ -34,40 +34,40 @@ public class DisputeService : IDisputeService
         return await GetOracleDataApi().GetAllDisputesAsync(cancellationToken);
     }
 
-    public async Task<int> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
+    public async Task<Guid> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().SaveDisputeAsync(dispute, cancellationToken);
     }
 
-    public async Task<Dispute> GetDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
     }
 
-    public async Task<Dispute> UpdateDisputeAsync(int disputeId, Dispute dispute, System.Threading.CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(Guid disputeId, Dispute dispute, System.Threading.CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
-    public async Task CancelDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    public async Task CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         Dispute dispute = await GetOracleDataApi().CancelDisputeAsync(disputeId, cancellationToken);
         // TODO: push dispute to RabbitMQ message queue to be consumed by the email notification worker and ARC worker
     }
 
-    public async Task RejectDisputeAsync(int disputeId, string rejectedReason, CancellationToken cancellationToken)
+    public async Task RejectDisputeAsync(Guid disputeId, string rejectedReason, CancellationToken cancellationToken)
     {
         Dispute dispute = await GetOracleDataApi().RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
         // TODO: push dispute to RabbitMQ message queue to be consumed by the email notification worker
     }
 
-    public async Task SubmitDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    public async Task SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         Dispute dispute = await GetOracleDataApi().SubmitDisputeAsync(disputeId, cancellationToken);
         // TODO: push dispute to RabbitMQ message queue to be consumed by the email notification worker and ARC worker
     }
 
-    public async Task DeleteDisputeAsync(int disputeId, CancellationToken cancellationToken)
+    public async Task DeleteDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
     }

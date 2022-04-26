@@ -15,14 +15,14 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The identifier of the saved Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<int> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken);
+    Task<Guid> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken);
 
     /// <summary>Returns a specific dispute from the database.</summary>
     /// <param name="id">Unique identifier of a Dispute record.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>OK</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> GetDisputeAsync(int id, CancellationToken cancellationToken);
+    Task<Dispute> GetDisputeAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>Updates the properties of a particular Dispute record based on the given values.</summary>
     /// <param name="id">Unique identifier of a Dispute record to modify.</param>
@@ -30,14 +30,14 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The modified Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<Dispute> UpdateDisputeAsync(int id, Dispute dispute, System.Threading.CancellationToken cancellationToken);
+    Task<Dispute> UpdateDisputeAsync(Guid id, Dispute dispute, System.Threading.CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to CANCELLED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task CancelDisputeAsync(int id, CancellationToken cancellationToken);
+    Task CancelDisputeAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular Dispute record to REJECTED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
@@ -45,19 +45,19 @@ public interface IDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task RejectDisputeAsync(int id, string rejectedReason, CancellationToken cancellationToken);
+    Task RejectDisputeAsync(Guid id, string rejectedReason, CancellationToken cancellationToken);
 
     /// <summary>Submits a Dispute, setting it's status to PROCESSING.</summary>
     /// <param name="id">Unique identifier of a Dispute record to submit.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task SubmitDisputeAsync(int id, CancellationToken cancellationToken);
+    Task SubmitDisputeAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>An endpoint to delete a specific dispute in the database.</summary>
     /// <param name="id">Unique identifier of a Dispute record to delete.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task DeleteDisputeAsync(int id, CancellationToken cancellationToken);
+    Task DeleteDisputeAsync(Guid id, CancellationToken cancellationToken);
 }
