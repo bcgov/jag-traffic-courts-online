@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public class DisputeRejected: IMessage
+    public class DisputeCancelled : IMessage
     {
-        public string Reason { get; set; } = String.Empty;
+        public Guid Id { get; set; } = Guid.Empty;
+        public string? Email { get; set; }
     }
 }
