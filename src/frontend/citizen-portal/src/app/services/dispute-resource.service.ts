@@ -8,7 +8,7 @@ import { ToastService } from '@core/services/toast.service';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 import { TicketSearchResult } from 'app/api/model/ticketSearchResult.model';
-import { DisputesService, ShellTicket, TicketsService, TicketDispute, OcrViolationTicket } from 'app/api';
+import { DisputesService, TicketsService } from 'app/api';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -36,10 +36,7 @@ export class DisputeResourceService {
 
     return this.ticketAPIService.apiTicketsSearchGet(params.ticketNumber, params.time)
       .pipe(
-        map((response: TicketSearchResult) =>
-          response ? response : null
-        ),
-        map((ticket: TicketDisputeView) => {
+        map((ticket: any) => {
           if (ticket) {
             this.updateTicketViewModel(ticket);
           }
@@ -62,7 +59,7 @@ export class DisputeResourceService {
 
   	public postTicket(
 	  image: any
-  	): Observable<OcrViolationTicket> {
+  	): Observable<any> {
       const formData = new FormData();
       formData.append('image',image)
 	  return this.ticketAPIService.apiTicketsAnalysePost(image)
@@ -133,52 +130,6 @@ export class DisputeResourceService {
   //     })
   //   );
   // }
-
-  /**
-   * Create the shell ticket
-   *
-   * @param ticket The ticket to be created
-   */
-  public createShellTicket(ticket: ShellTicketView): Observable<TicketDisputeView> {
-    const ticketToCreate = this.cleanShellTicket(ticket);
-    this.logger.info('DisputeResourceService::createShellTicket', ticketToCreate);
-
-    return this.ticketAPIService.apiTicketsShellticketPost(ticket)
-      .pipe(
-        map((response: ApiHttpResponse<TicketDisputeView>) =>
-          response ? response.result : null
-        ),
-        map((savedTicket: TicketDisputeView) => {
-          if (savedTicket) {
-            this.updateTicketViewModel(savedTicket);
-          }
-          return savedTicket;
-        }),
-        tap((updatedTicket) => {
-          this.toastService.openSuccessToast(
-            'The ticket has been successfully created'
-          );
-
-          this.logger.info(
-            'DisputeResourceService:: NEW_SHELL_TICKET',
-            updatedTicket
-          );
-        }),
-        catchError((error: ApiHttpErrorResponse) => {
-          if (Array.isArray(error.errors) && error.errors.length > 0) {
-            const msg = error.errors.join(' ');
-            this.toastService.openErrorToast(msg);
-          } else {
-            this.toastService.openErrorToast('Ticket could not be created');
-          }
-          this.logger.error(
-            'DisputeResourceService::createShellTicket error has occurred: ',
-            error
-          );
-          throw error;
-        })
-      );
-  }
 
   /**
    * @description
@@ -343,7 +294,7 @@ export class DisputeResourceService {
    * @description
    * strip the calculated fields from the object
    */
-  private cleanTicketDispute(ticket: TicketDisputeView): TicketDispute {
+  private cleanTicketDispute(ticket: TicketDisputeView): any {
     const ticketDispute = { ...ticket };
     for (const property in ticket) {
       if (property.charAt(0) === '_') {
@@ -357,7 +308,7 @@ export class DisputeResourceService {
    * @description
    * strip the calculated fields from the object
    */
-  private cleanShellTicket(ticket: ShellTicketView): ShellTicket {
+  private cleanShellTicket(ticket: ShellTicketView): ShellTicketView {
     const shellTicket = { ...ticket };
 
     // cleanup payload data

@@ -127,23 +127,23 @@
         "tags": [
           "Disputes"
         ],
-        "summary": "",
+        "summary": "An endpoint for creating and saving dispute ticket data",
         "requestBody": {
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Request"
+                "$ref": "#/components/schemas/TicketDispute"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Request"
+                "$ref": "#/components/schemas/TicketDispute"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Request"
+                "$ref": "#/components/schemas/TicketDispute"
               }
             }
           }
@@ -445,6 +445,84 @@
             "content": {
               "text/plain": {
                 "schema": {
+                  "$ref": "#/components/schemas/ViolationTicket"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViolationTicket"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ViolationTicket"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The violation ticket was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters."
+          }
+        }
+      }
+    },
+    "/api/tickets/legacysearch": {
+      "get": {
+        "tags": [
+          "Tickets"
+        ],
+        "summary": "Searches for a violation ticket that exists on file.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "query",
+            "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Z]{2}[0-9]{8}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "in": "query",
+            "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
+            "required": true,
+            "schema": {
+              "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The violation ticket was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
                   "$ref": "#/components/schemas/TicketSearchResult"
                 }
               },
@@ -560,517 +638,6 @@
             }
           }
         }
-      }
-    },
-    "/api/tickets/ticket": {
-      "get": {
-        "tags": [
-          "Tickets"
-        ],
-        "summary": "This API is depricated. Use /api/tickets/search instead.",
-        "parameters": [
-          {
-            "name": "ticketNumber",
-            "in": "query",
-            "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
-            "required": true,
-            "schema": {
-              "pattern": "^[A-Z]{2}[0-9]{8}$",
-              "type": "string"
-            }
-          },
-          {
-            "name": "time",
-            "in": "query",
-            "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
-            "required": true,
-            "schema": {
-              "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDispute"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDispute"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDispute"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/tickets/getshellticket": {
-      "get": {
-        "tags": [
-          "Tickets"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShellTicketCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShellTicketCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShellTicketCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ShellTicket"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ShellTicket"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ShellTicket"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/tickets/shellticket": {
-      "post": {
-        "tags": [
-          "Tickets"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShellTicketCommand"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShellTicketCommand"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShellTicketCommand"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/tickets/pay": {
-      "get": {
-        "tags": [
-          "Tickets"
-        ],
-        "parameters": [
-          {
-            "name": "ticketNumber",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "pattern": "^[A-Z]{2}[0-9]{6,}$",
-              "type": "string"
-            }
-          },
-          {
-            "name": "time",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
-              "type": "string"
-            }
-          },
-          {
-            "name": "counts",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "pattern": "^[1-3]+(,[1-3]+)*$",
-              "type": "string"
-            }
-          },
-          {
-            "name": "amount",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "pattern": "^\\d*\\.?\\d*$",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      },
-      "post": {
-        "tags": [
-          "Tickets"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "amount",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "confNo",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "transId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/api/tickets/imageupload": {
-      "post": {
-        "tags": [
-          "Tickets"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "ViolationTicketNumber": {
-                    "type": "string"
-                  },
-                  "ViolationTime": {
-                    "type": "string"
-                  },
-                  "Image": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "ViolationTicketNumber": {
-                  "style": "form"
-                },
-                "ViolationTime": {
-                  "style": "form"
-                },
-                "Image": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TicketDisputeApiResultResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiMessageResponse"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     }
   },
@@ -1408,106 +975,6 @@
           },
           "offenceDisputeDetail": {
             "$ref": "#/components/schemas/OffenceDisputeDetail"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateShellTicketCommand": {
-        "type": "object",
-        "properties": {
-          "violationTicketNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationTime": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
-          "driverLicenseNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "birthdate": {
-            "type": "string",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "nullable": true
-          },
-          "courtHearingLocation": {
-            "type": "string",
-            "nullable": true
-          },
-          "detachmentLocation": {
-            "type": "string",
-            "nullable": true
-          },
-          "count1Charge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count1FineAmount": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count2Charge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count2FineAmount": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count3Charge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count3FineAmount": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "photo": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "province": {
-            "type": "string",
-            "nullable": true
-          },
-          "postalCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "driverLicenseProvince": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1984,189 +1451,6 @@
         },
         "additionalProperties": false
       },
-      "Request": {
-        "type": "object",
-        "properties": {
-          "ticketNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "courtLocation": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "disputantSurname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
-          "streetAddress": {
-            "type": "string",
-            "nullable": true
-          },
-          "province": {
-            "type": "string",
-            "nullable": true
-          },
-          "postalCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "homePhone": {
-            "type": "string",
-            "nullable": true
-          },
-          "driversLicence": {
-            "type": "string",
-            "nullable": true
-          },
-          "driversLicenceProvince": {
-            "type": "string",
-            "nullable": true
-          },
-          "workPhone": {
-            "type": "string",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "format": "date"
-          },
-          "enforcementOrganization": {
-            "type": "string",
-            "nullable": true
-          },
-          "serviceDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "ticketCounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TicketCount"
-            },
-            "nullable": true
-          },
-          "lawyerRepresentation": {
-            "type": "boolean"
-          },
-          "interpreterLanguage": {
-            "type": "string",
-            "nullable": true
-          },
-          "witnessIntent": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ShellTicket": {
-        "type": "object",
-        "properties": {
-          "violationTicketNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationTime": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
-          "driverLicenseNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "birthdate": {
-            "type": "string",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "nullable": true
-          },
-          "courtHearingLocation": {
-            "type": "string",
-            "nullable": true
-          },
-          "detachmentLocation": {
-            "type": "string",
-            "nullable": true
-          },
-          "count1Charge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count1FineAmount": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count2Charge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count2FineAmount": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count3Charge": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "count3FineAmount": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "photo": {
-            "type": "string",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "province": {
-            "type": "string",
-            "nullable": true
-          },
-          "postalCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "driverLicenseProvince": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Status": {
         "type": "object",
         "properties": {
@@ -2223,47 +1507,90 @@
       "TicketDispute": {
         "type": "object",
         "properties": {
-          "violationTicketNumber": {
+          "ticketNumber": {
             "type": "string",
             "nullable": true
           },
-          "violationTime": {
+          "courtLocation": {
             "type": "string",
             "nullable": true
           },
           "violationDate": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
           },
-          "disputant": {
-            "$ref": "#/components/schemas/Disputant"
-          },
-          "additional": {
-            "$ref": "#/components/schemas/Additional"
-          },
-          "offences": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Offence"
-            },
-            "nullable": true
-          },
-          "discountDueDate": {
+          "disputantSurname": {
             "type": "string",
             "nullable": true
           },
-          "discountAmount": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TicketDisputeApiResultResponse": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "$ref": "#/components/schemas/TicketDispute"
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "streetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "homePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicence": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "workPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date"
+          },
+          "enforcementOrganization": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "ticketCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TicketCount"
+            },
+            "nullable": true
+          },
+          "lawyerRepresentation": {
+            "type": "boolean"
+          },
+          "interpreterLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "witnessIntent": {
+            "type": "boolean"
+          },
+          "ocrKey": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2333,6 +1660,281 @@
         },
         "additionalProperties": false,
         "description": "Obsolete: Represents a violation ticket that is returned from search requests"
+      },
+      "ViolationTicket": {
+        "required": [
+          "counts"
+        ],
+        "type": "object",
+        "properties": {
+          "ticket_number": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "The violation ticket number.",
+            "nullable": true
+          },
+          "surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "given_names": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The given names or corporate name continued.",
+            "nullable": true
+          },
+          "is_young_person": {
+            "type": "boolean",
+            "description": "The person issued the ticket has been identified as a young person.",
+            "nullable": true
+          },
+          "drivers_licence_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "drivers_licence_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state the drivers licence was issued by.",
+            "nullable": true
+          },
+          "drivers_licence_produced_year": {
+            "maximum": 2100,
+            "minimum": 1900,
+            "type": "integer",
+            "description": "The year the drivers licence was produced.",
+            "format": "int32",
+            "nullable": true
+          },
+          "drivers_licence_expiry_year": {
+            "maximum": 2100,
+            "minimum": 1900,
+            "type": "integer",
+            "description": "The year the drivers licence expires.",
+            "format": "int32",
+            "nullable": true
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "The birthdate of the individual the violation ticket was issued to.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "address": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The address of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The city of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "The postal code or zip code.",
+            "nullable": true
+          },
+          "is_change_of_address": {
+            "type": "boolean",
+            "description": "The address represents a change of address. The address on the violation would be different from the address \r\non the drivers licence or provided identification.",
+            "nullable": true
+          },
+          "is_driver": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle driver.",
+            "nullable": true
+          },
+          "is_cyclist": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the cyclist.",
+            "nullable": true
+          },
+          "is_owner": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle owner.",
+            "nullable": true
+          },
+          "is_pedestrain": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a pedestrain.",
+            "nullable": true
+          },
+          "is_passenger": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a passenger.",
+            "nullable": true
+          },
+          "is_other": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a other designation.",
+            "nullable": true
+          },
+          "other_description": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "If TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket.IssuedToOther is true, the other designation description.",
+            "nullable": true
+          },
+          "issued_date": {
+            "type": "string",
+            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issued_on_road_or_highway": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The violation ticket was issued on this road or highway.",
+            "nullable": true
+          },
+          "issued_at_or_near_city": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The violation ticket was issued at or near this city or town.",
+            "nullable": true
+          },
+          "is_mva_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Motor Vehicle Act (MVA).",
+            "nullable": true
+          },
+          "is_wla_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Wildlife Act (WLA).",
+            "nullable": true
+          },
+          "is_lca_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Liquor Control and Licencing Act (LCA).",
+            "nullable": true
+          },
+          "is_mca_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Motor Carrier Act (MCA).",
+            "nullable": true
+          },
+          "is_faa_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Firearm Act (FAA).",
+            "nullable": true
+          },
+          "is_tcr_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Transit Conduct and Safety Regs (TCR).",
+            "nullable": true
+          },
+          "is_cta_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Commercial Transport Act (CTA).",
+            "nullable": true
+          },
+          "is_other_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for other.",
+            "nullable": true
+          },
+          "other_offence_description": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The violation ticket was issued for other.",
+            "nullable": true
+          },
+          "counts": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ViolationTicketCount"
+            },
+            "description": "Represents the counts identified. Must have at least one and at most three counts."
+          },
+          "provincial_court_hearing_location": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The designated provincial court hearing location. For example, Richmond, BC.",
+            "nullable": true
+          },
+          "organization_location": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The organization or detatchment location. For example, Delta Police.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents the data contained on a BC violation ticket"
+      },
+      "ViolationTicketCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The count number. Must be unique within an individual violation ticket.",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The description of the offence.",
+            "nullable": true
+          },
+          "act_or_regulation": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc",
+            "nullable": true
+          },
+          "section": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "ticketed_amount": {
+            "maximum": 999999,
+            "minimum": 1,
+            "type": "number",
+            "description": "The ticketed amount.",
+            "format": "double",
+            "nullable": true
+          },
+          "amount_due": {
+            "maximum": 999999,
+            "minimum": 1,
+            "type": "number",
+            "description": "The amount due. Will be the same as ticketed_amount if no payments have been made on the ticket. May or may not have discount computed.",
+            "format": "double",
+            "nullable": true
+          },
+          "is_act": {
+            "type": "boolean",
+            "description": "The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.",
+            "nullable": true
+          },
+          "is_regulation": {
+            "type": "boolean",
+            "description": "The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a violation ticket count."
       }
     }
   }

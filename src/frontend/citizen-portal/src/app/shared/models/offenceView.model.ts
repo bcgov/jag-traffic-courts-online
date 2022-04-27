@@ -1,4 +1,4 @@
-import { Offence } from 'app/api';
+import { Offence } from 'app/api/model/offence.model';
 
 export interface OffenceView extends Offence {
   _applyToAllCounts: boolean;

@@ -1,9 +1,13 @@
-import { TicketDispute } from 'app/api';
 import { AdditionalView } from './additionalView.model';
 import { DisputantView } from './disputantView.model';
 import { OffenceView } from './offenceView.model';
 
-export interface TicketDisputeView extends Omit<TicketDispute, 'disputant' | 'offences' | 'additional'> {
+export class TicketDisputeView {
+  violationTicketNumber?: string | null;
+  violationTime?: string | null;
+  violationDate?: Date | null;
+  discountDueDate?: string | null;
+  discountAmount?: number;
   disputant?: DisputantView;
   offences: OffenceView[];
   additional?: AdditionalView;
@@ -12,5 +16,5 @@ export interface TicketDisputeView extends Omit<TicketDispute, 'disputant' | 'of
   _outstandingBalanceDue?: number;
   _totalBalanceDue?: number;
   _requestSubmitted?: boolean;
-  countList?:any;
+  countList?: any;
 }
