@@ -119,15 +119,14 @@
                        placeholder="XX00000000"
                        matInput
                        type="text"
-                       oninput="this.value =
-                    this.value.toUpperCase()"
+                       oninput="this.value = this.value.toUpperCase()"
                        mask="SS00000000"
                        autocomplete="off" />
                 <button mat-button
                         matSuffix
                         mat-icon-button
                         aria-label="Clear"
-                        (click)="ticketNumber.setValue('')">
+                        (click)="form.controls.ticketNumber.setValue('')">
                   <mat-icon>close</mat-icon>
                 </button>
                 <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -188,7 +187,6 @@
                   mat-flat-button
                   color="primary"
                   class="find-large"
-                  
                   (click)="fileInput.click()">
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
             Upload ticket image

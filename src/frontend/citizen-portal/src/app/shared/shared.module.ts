@@ -19,7 +19,7 @@ import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
 import { TicketExampleDialogComponent } from './dialogs/ticket-example-dialog/ticket-example-dialog.component';
 import { ImageRequirementsDialogComponent } from './dialogs/image-requirements-dialog/image-requirements-dialog.component';
-import {TicketNotFoundDialogComponent} from './dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
+import { TicketNotFoundDialogComponent } from './dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { NgxBusyModule } from './modules/ngx-busy/ngx-busy.module';
 import { NgxMaterialModule } from './modules/ngx-material/ngx-material.module';
@@ -34,6 +34,7 @@ import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { AddressAutocompleteComponent } from './components/address-autocomplete/address-autocomplete.component';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { ImageTicketNotFoundDialogComponent } from './dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
+
 @NgModule({
     declarations: [
         CapitalizePipe,

@@ -1,57 +1,35 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import {
-  AzureKeyCredential,
-  FormPollerLike,
-  FormRecognizerClient
-} from '@azure/ai-form-recognizer';
-import { Config } from '@config/config.model';
-import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { FormControlValidators } from '@core/validators/form-control.validators';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { FileUtilsService } from '@shared/services/file-utils.service';
 import { TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
-import { AppConfigService } from 'app/services/app-config.service';
-import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
-import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import *  as moment from 'moment';
 
-export function autocompleteObjectValidator(): ValidatorFn {
-  return (control: AbstractControl): { [key: string]: any } | null => {
-    if (typeof control.value === 'string') {
-      return { invalidAutocompleteObject: { value: control.value } };
-    }
-    return null; /* valid option selected */
-  };
-}
-
 @Component({
-  selector: 'app-shell-ticket',
-  templateUrl: './shell-ticket.component.html',
-  styleUrls: ['./shell-ticket.component.scss'],
+  selector: 'app-scan-ticket',
+  templateUrl: './scan-ticket.component.html',
+  styleUrls: ['./scan-ticket.component.scss'],
 })
-export class ShellTicketComponent implements OnInit {
+export class ScanTicketComponent implements OnInit {
   public busy: Subscription | Promise<any>;
   public ticketImageSrc: string;
   public ticketFilename: string;
@@ -65,9 +43,6 @@ export class ShellTicketComponent implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
-  public courtLocations: Config<string>[];
-  public policeLocations: Config<string>[];
-
   private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
   public fieldsData;
@@ -75,15 +50,13 @@ export class ShellTicketComponent implements OnInit {
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
-    private disputeResource: DisputeResourceService,
     private utilsService: UtilsService,
+    private fileUtilsService: FileUtilsService,
     private dialog: MatDialog,
     private router: Router,
     private ngProgress: NgProgress,
-    private appConfigService: AppConfigService,
     private logger: LoggerService,
     public ticketService: TicketsService,
-    private http: HttpClient,
   ) {
     this.progressRef = this.ngProgress.ref();
     this.maxDateOfBirth = new Date();
@@ -142,35 +115,13 @@ export class ShellTicketComponent implements OnInit {
 
       this.ticketImageSrc = shellTicketData.ticketImage;
       this.ticketFilename = shellTicketData.filename;
-      // if (this.appConfigService.useMockServices) {
-      //   this.progressRef.complete();
-      // } else {
-      //   this.recognizeContent(shellTicketData.ticketFile);
-      // }
     });
   }
 
   public ngOnInit(): void {
     this.form.disable();
-
-    // this.firstFormGroup = this.formBuilder.group({
-    //   firstCtrl: ['', Validators.required],
-    // });
-    // this.secondFormGroup = this.formBuilder.group({
-    //   secondCtrl: ['', Validators.required],
-    // });
-    // Listen for typeahead changes in the statute fields
-
-    // Set the enabled/disabled of the count fields depending upon visibility
-    this._chargeCount.valueChanges.subscribe((selectedValue) => {
-      this.onChargeCountChange(selectedValue);
-    });
-    this.onChargeCountChange(this._chargeCount.value);
   }
 
-  public onClearBirthdate(): void {
-    this.birthdate.setValue(null);
-  }
   public toggle() {
     this.isHidden = !this.isHidden;
   }
@@ -273,9 +224,7 @@ export class ShellTicketComponent implements OnInit {
         }
       ]
     }
-    // this.disputeService.setTicketData({value:data2});
 
-    // this.disputeResource.updateTicketViewModel(data2)
     this.dialog
       .open(ConfirmDialogComponent, { data })
       .afterClosed()
@@ -297,91 +246,37 @@ export class ShellTicketComponent implements OnInit {
 
   public onFileChange(event: any) {
     let filename: string;
-    let ticketImage: string;
-
     this.ticketImageSrc = null;
     this.ticketFilename = null;
     this.form.reset();
 
-    if (!event.target.files[0] || event.target.files[0].length === 0) {
-      this.logger.info('You must select an image');
-      return;
-    }
-
-    const mimeType = event.target.files[0].type;
-
-    if (mimeType.match(/image\/*/) == null) {
-      this.logger.info('Only images are supported');
+    const ticketFile: File = event.target.files[0];
+    this.logger.info('file target', ticketFile);
+    if (!ticketFile) {
+      this.logger.info('You must select a file');
       return;
     }
 
     this.progressRef.start();
-
-    const reader = new FileReader();
-    const ticketFile: File = event.target.files[0];
-    this.logger.info('file target', event.target.files[0]);
-
-    filename = ticketFile.name;
-    reader.readAsDataURL(ticketFile);
-    this.logger.info('file', ticketFile.name, ticketFile.lastModified);
-
-    reader.onload = () => {
-      ticketImage = reader.result as string;
-
+    this.fileUtilsService.readFileAsDataURL(ticketFile).subscribe(ticketImage => {
       const shellTicketData: ShellTicketData = {
-        filename,
-        ticketImage,
+        filename: ticketFile.name,
         ticketFile,
+        ticketImage
       };
-      const fd = new FormData();
-      fd.append('file', ticketFile);
-
       this.ticketService.apiTicketsAnalysePost(ticketFile)
         .subscribe(res => {
           console.log('image data 2', res);
           this.fieldsData = res;
           this.ticketService.setImageData(res);
-          this.onFulfilled()
+          this.onFulfilled();
           this.disputeService.shellTicketData$.next(shellTicketData);
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
-
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
         })
-    };
-  }
-
-  private findMatchingCharge(
-    chargeDesc: string,
-    chargeStatute: string
-  ): number {
-    let chargeId = null;
-
-    return chargeId ? chargeId : null;
-  }
-
-  private onChargeCountChange(selectedValue): void {
-    this.logger.info('chargeCount.valueChanges', selectedValue);
-
-    if (selectedValue < 3) {
-      this.count3Charge.disable();
-      this.count3FineAmount.disable();
-    } else {
-      this.count3Charge.enable();
-      this.count3FineAmount.enable();
-    }
-
-    if (selectedValue < 2) {
-      this.count2Charge.disable();
-      this.count2FineAmount.disable();
-    } else {
-      this.count2Charge.enable();
-      this.count2FineAmount.enable();
-    }
+      })
   }
 
   private onFulfilled() {
-    // return (poller: FormPollerLike) => {
-    // this.busy = poller.pollUntilDone().then(() => {
-    // this.logger.info('result', poller.getResult());
     const invoices = this.fieldsData
 
     if (!invoices || invoices.length <= 0) {
@@ -584,7 +479,7 @@ export class ShellTicketComponent implements OnInit {
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-        violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
+      violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
 
       lastName: surnameField.value
         ? surnameField.value
@@ -650,35 +545,12 @@ export class ShellTicketComponent implements OnInit {
     };
 
     this.logger.info('before', { ...shellTicket });
-
-    // shellTicket.count1Charge = this.findMatchingCharge(
-    //   shellTicket._count1ChargeDesc,
-    //   shellTicket._count1ChargeSection
-    // );
-    // shellTicket.count2Charge = this.findMatchingCharge(
-    //   shellTicket._count2ChargeDesc,
-    //   shellTicket._count2ChargeSection
-    // );
-    // shellTicket.count3Charge = this.findMatchingCharge(
-    //   shellTicket._count3ChargeDesc,
-    //   shellTicket._count3ChargeSection
-    // );
-
-    // console.log('after', { ...shellTicket });
-
-    // delete shellTicket._count1ChargeDesc;
-    // delete shellTicket._count2ChargeDesc;
-    // delete shellTicket._count3ChargeDesc;
     delete shellTicket._count1ChargeSection;
     delete shellTicket._count2ChargeSection;
     delete shellTicket._count3ChargeSection;
 
     this.form.setValue(shellTicket);
-    // this.disputeService.shellTicket$.next(shellTicket);
-
     this.progressRef.complete();
-    // });
-    // };
   }
 
   private onRejected(info) {
@@ -696,37 +568,5 @@ export class ShellTicketComponent implements OnInit {
 
   public get violationDate(): FormControl {
     return this.form.get('violationDate') as FormControl;
-  }
-
-  public get birthdate(): FormControl {
-    return this.form.get('birthdate') as FormControl;
-  }
-
-  public get _chargeCount(): FormControl {
-    return this.form.get('_chargeCount') as FormControl;
-  }
-
-  public get count1Charge(): FormControl {
-    return this.form.get('count1Charge') as FormControl;
-  }
-
-  public get count1FineAmount(): FormControl {
-    return this.form.get('count1FineAmount') as FormControl;
-  }
-
-  public get count2Charge(): FormControl {
-    return this.form.get('count2Charge') as FormControl;
-  }
-
-  public get count2FineAmount(): FormControl {
-    return this.form.get('count2FineAmount') as FormControl;
-  }
-
-  public get count3Charge(): FormControl {
-    return this.form.get('count3Charge') as FormControl;
-  }
-
-  public get count3FineAmount(): FormControl {
-    return this.form.get('count3FineAmount') as FormControl;
   }
 }

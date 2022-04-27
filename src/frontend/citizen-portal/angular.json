@@ -32,7 +32,6 @@
             },
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/keycloak.json",
               "src/snowplow.js",
               "src/favicon.ico",
               "src/assets",
@@ -48,7 +47,6 @@
               ]
             },
             "allowedCommonJsDependencies": [
-              "keycloak-js",
               "faker"
             ],
             "scripts": [],
