@@ -128,7 +128,7 @@ export class FindTicketComponent implements OnInit {
           if (res) {
             this.ticketService.setImageData(res);
             this.disputeService.shellTicketData$.next(shellTicketData);
-            this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
+            this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
           }
           else {
             this.notFound = true;
