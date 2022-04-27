@@ -19,31 +19,31 @@ export class AddressAutocompleteResource {
     private logger: LoggerService
   ) { }
 
-  public findAddress(searchTerm: string): Observable<AddressAutocompleteFindResponse[]> {
-    return this.apiResource.get<AddressAutocompleteFindResponse[]>(`AddressAutocomplete/Find?searchTerm=${searchTerm}`)
-      .pipe(
-        map((response: ApiHttpResponse<AddressAutocompleteFindResponse[]>) => response.result),
-        tap((response: AddressAutocompleteFindResponse[]) => this.logger.info('AUTOCOMPLETE_FIND', response)),
-        catchError((error: any) => {
-          this.toastService.openErrorToast('Autocomplete could not be retrieved');
-          this.logger.error('[Shared] AddressAutocompleteResource::find error has occurred: ', error);
+  // public findAddress(searchTerm: string): Observable<AddressAutocompleteFindResponse[]> {
+  //   return this.apiResource.get<AddressAutocompleteFindResponse[]>(`AddressAutocomplete/Find?searchTerm=${searchTerm}`)
+  //     .pipe(
+  //       map((response: ApiHttpResponse<AddressAutocompleteFindResponse[]>) => response.result),
+  //       tap((response: AddressAutocompleteFindResponse[]) => this.logger.info('AUTOCOMPLETE_FIND', response)),
+  //       catchError((error: any) => {
+  //         this.toastService.openErrorToast('Autocomplete could not be retrieved');
+  //         this.logger.error('[Shared] AddressAutocompleteResource::find error has occurred: ', error);
 
-          throw error;
-        })
-      );
-  }
+  //         throw error;
+  //       })
+  //     );
+  // }
 
-  public retrieveAddress(id: string): Observable<AddressAutocompleteRetrieveResponse[]> {
-    return this.apiResource.get<AddressAutocompleteRetrieveResponse[]>(`AddressAutocomplete/Retrieve?id=${id}`)
-      .pipe(
-        map((response: ApiHttpResponse<AddressAutocompleteRetrieveResponse[]>) => response.result),
-        tap((response: AddressAutocompleteRetrieveResponse[]) => this.logger.info('AUTOCOMPLETE_RETRIEVE', response)),
-        catchError((error: any) => {
-          this.toastService.openErrorToast('Autocomplete could not be retrieved');
-          this.logger.error('[Shared] AddressAutocompleteResource::find error has occurred: ', error);
+  // public retrieveAddress(id: string): Observable<AddressAutocompleteRetrieveResponse[]> {
+  //   return this.apiResource.get<AddressAutocompleteRetrieveResponse[]>(`AddressAutocomplete/Retrieve?id=${id}`)
+  //     .pipe(
+  //       map((response: ApiHttpResponse<AddressAutocompleteRetrieveResponse[]>) => response.result),
+  //       tap((response: AddressAutocompleteRetrieveResponse[]) => this.logger.info('AUTOCOMPLETE_RETRIEVE', response)),
+  //       catchError((error: any) => {
+  //         this.toastService.openErrorToast('Autocomplete could not be retrieved');
+  //         this.logger.error('[Shared] AddressAutocompleteResource::find error has occurred: ', error);
 
-          throw error;
-        })
-      );
-  }
+  //         throw error;
+  //       })
+  //     );
+  // }
 }

@@ -1,0 +1,12 @@
+{{- if .Values.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "citizen-web.fullname" . }}-configuration
+  labels: {{- include "citizen-web.labels" . | nindent 4 }}
+data:
+{{- if and .Values.appConfig (not .Values.existingAppConfigConfigmap) }}
+  app.config.json: |-
+{{ include "citizen-web.tplvalues.render" ( dict "value" .Values.appConfig "context" $ ) | indent 4 }}
+{{- end }}
+{{- end }}

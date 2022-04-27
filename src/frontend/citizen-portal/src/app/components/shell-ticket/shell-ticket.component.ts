@@ -27,7 +27,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
-import { Configuration, TicketSearchResult, TicketsService } from 'app/api';
+import { Configuration, TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';

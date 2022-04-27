@@ -1,6 +1,26 @@
-import { ShellTicket } from 'app/api';
-
-export interface ShellTicketView extends ShellTicket {
+export class ShellTicketView {
+  violationTicketNumber?: string | null;
+  violationTime?: string | null;
+  violationDate?: Date | null;
+  lastName?: string | null;
+  givenNames?: string | null;
+  driverLicenseNumber?: string | null;
+  birthdate?: string | null;
+  gender?: string | null;
+  courtHearingLocation?: string | null;
+  detachmentLocation?: string | null;
+  count1Charge?: number | null;
+  count1FineAmount?: number | null;
+  count2Charge?: number | null;
+  count2FineAmount?: number | null;
+  count3Charge?: number | null;
+  count3FineAmount?: number | null;
+  photo?: string | null;
+  address?: string | null;
+  city?: string | null;
+  province?: string | null;
+  postalCode?: string | null;
+  driverLicenseProvince?: string | null;
   _chargeCount: number;
   _amountOwing: number;
   _count1ChargeDesc: string;
