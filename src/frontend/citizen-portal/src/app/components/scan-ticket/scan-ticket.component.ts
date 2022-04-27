@@ -22,7 +22,6 @@ import { AppRoutes } from 'app/app.routes';
 import { DisputeService } from 'app/services/dispute.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';
-import *  as moment from 'moment';
 
 @Component({
   selector: 'app-scan-ticket',
@@ -479,7 +478,7 @@ export class ScanTicketComponent implements OnInit {
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-      violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
+      violationDate: invoiceDateField.value,
 
       lastName: surnameField.value
         ? surnameField.value

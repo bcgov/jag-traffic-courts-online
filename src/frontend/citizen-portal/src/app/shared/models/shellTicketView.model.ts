@@ -1,7 +1,7 @@
 export class ShellTicketView {
   violationTicketNumber?: string | null;
   violationTime?: string | null;
-  violationDate?: Date | null;
+  violationDate?: string | null;
   lastName?: string | null;
   givenNames?: string | null;
   driverLicenseNumber?: string | null;
