@@ -1,0 +1,71 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "oracle-data-api.fullname" . }}
+  labels:
+    {{- include "oracle-data-api.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "oracle-data-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "oracle-data-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "oracle-data-api.serviceAccountName" . }}
+      containers:
+        - env:
+          # Logging - Splunk
+          - name: SPLUNK_URL
+            value: "{{ .Values.splunk.endpoint }}"
+          - name: SPLUNK_TOKEN
+            value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          # Redis
+          - name: REDIS_HOST
+            value: "{{ .Values.redis.host }}"
+          - name: REDIS_PORT
+            value: "{{ .Values.redis.port }}"
+          {{- if .Values.redis.password }}
+          - name: REDIS_PASSWORD
+            value: "{{ .Values.redis.password }}"
+          {{- end }}
+          # Code table refresh (todo: will be moved to openshift cron)
+          - name: CODETABLE_REFRESH_ENABLED
+            value: "{{ .Values.jobs.codeTables.enabled }}"
+          - name: CODETABLE_REFRESH_CRON
+            value: "{{ .Values.jobs.codeTables.cronExpression }}"
+          name: "{{ .Chart.Name }}"
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

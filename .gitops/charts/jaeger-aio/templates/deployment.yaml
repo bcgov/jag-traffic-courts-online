@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jaeger-aio.fullname" . }}
+  labels:
+    {{- include "jaeger-aio.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "jaeger-aio.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "jaeger-aio.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - env:
+          - name: COLLECTOR_ZIPKIN_HTTP_PORT
+            value: "9411"
+          image: {{ template "jaeger.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: jaeger
+          {{- if .Values.storage.memory.enabled }}
+          args: ["--memory.max-traces={{ (int .Values.storage.memory.maxTraces) | default 50000 }}"]
+          {{- end }}
+          ports:
+            - containerPort: 5775   # agent - accept zipkin.thrift over compact thrift protocol (deprecated)
+              protocol: UDP
+            - containerPort: 6831   # agent - accept jaeger.thrift over compact thrift protocol
+              protocol: UDP
+            - containerPort: 6832   # agent - accept jaeger.thrift over binary thrift protocol
+              protocol: UDP
+            - containerPort: 16686  # query - serve frontend
+              protocol: TCP
+            - containerPort: 9411   # collector - Zipkin compatible endpoint (optional)
+              protocol: TCP
+            - containerPort: 5778   # agent - serve configs
+              protocol: TCP          
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 14269
+            initialDelaySeconds: 5
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

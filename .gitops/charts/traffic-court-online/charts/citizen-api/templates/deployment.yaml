@@ -1,0 +1,106 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "citizen-api.fullname" . }}
+  labels:
+    {{- include "citizen-api.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "citizen-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "citizen-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "citizen-api.serviceAccountName" . }}
+      containers:
+        - env:
+          # Form Recognizer
+          - name: FormRecognizer__Endpoint
+            value: "{{ .Values.formRecognizer.endpoint }}"
+          {{- /* TODO: FormRecognizer__ApiKey from secrets */}}
+          - name: FormRecognizer__ApiKey
+            value: "{{ .Values.formRecognizer.apiKey }}"
+          {{- if .Values.formRecognizer.model }}
+          - name: FormRecognizer__ModelId
+            value: "{{ .Values.formRecognizer.model }}"
+          {{- end }}
+          # RabbitMQ
+          - name: RabbitMQ__Host
+            value: "{{ .Values.rabbitmq.host }}"
+          - name: RabbitMQ__Port
+            value: "{{ .Values.rabbitmq.port }}"
+          # TODO: RabbitMQ__Password from secrets
+          - name: RabbitMQ__Username
+            value: "{{ .Values.rabbitmq.username }}"
+          - name: RabbitMQ__Password
+            value: "{{ .Values.rabbitmq.password }}"
+          # Object Storage
+          - name: ObjectStorage__AccessKey
+            value: "{{ .Values.objectStorage.accessKey }}"
+          - name: ObjectStorage__BucketName
+            value: "{{ .Values.objectStorage.bucketName }}"
+          - name: ObjectStorage__Endpoint
+            value: "{{ .Values.objectStorage.endpoint }}"
+          - name: ObjectStorage__SecretKey
+            value: "{{ .Values.objectStorage.secretKey }}"
+          # Redis
+          - name: Redis__ConnectionString
+            value: "{{ .Values.redis.connectionString }}"
+          # Logging - Splunk
+          - name: Serilog__Using__0
+            value: "Serilog.Sinks.Splunk"
+          - name: Serilog__WriteTo__0__Name
+            value: "EventCollector"
+          - name: Serilog__WriteTo__0__Args__splunkHost
+            value: "{{ .Values.splunk.endpoint }}"
+          - name: Serilog__WriteTo__0__Args__eventCollectorToken
+            value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          {{- if .Values.jaeger.enabled }}
+          # OpenTelemetry jaeger
+          - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+            value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
+          {{- if .Values.jaeger.exporter.protocol }}
+          - name: OTEL_EXPORTER_JAEGER_PROTOCOL
+            value: "{{ .Values.jaeger.exporter.protocol }}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.swagger.enabled }}
+          - name: Swagger__Enabled
+            value: "true"
+          {{- end }}
+          name: {{ .Chart.Name }}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
