@@ -35,7 +35,6 @@ import { DisputeService } from 'app/services/dispute.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import *  as moment from 'moment';
 
 export function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -56,8 +55,6 @@ export class ShellTicketComponent implements OnInit {
   public ticketImageSrc: string;
   public ticketFilename: string;
   public form: FormGroup;
-  public todayDate: Date = new Date();
-  public maxDateOfBirth: Date;
   public isMobile: boolean;
   protected basePath = '';
   isHidden = true;
@@ -86,10 +83,6 @@ export class ShellTicketComponent implements OnInit {
     private http: HttpClient,
   ) {
     this.progressRef = this.ngProgress.ref();
-    this.maxDateOfBirth = new Date();
-    this.maxDateOfBirth.setFullYear(
-      this.todayDate.getFullYear() - this.MINIMUM_AGE
-    );
     this.isMobile = this.utilsService.isMobile();
     this.fieldsData = this.ticketService.getImageData()
     this.form = this.formBuilder.group({
@@ -584,7 +577,7 @@ export class ShellTicketComponent implements OnInit {
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-        violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
+      violationDate: invoiceDateField.value,
 
       lastName: surnameField.value
         ? surnameField.value
@@ -651,34 +644,12 @@ export class ShellTicketComponent implements OnInit {
 
     this.logger.info('before', { ...shellTicket });
 
-    // shellTicket.count1Charge = this.findMatchingCharge(
-    //   shellTicket._count1ChargeDesc,
-    //   shellTicket._count1ChargeSection
-    // );
-    // shellTicket.count2Charge = this.findMatchingCharge(
-    //   shellTicket._count2ChargeDesc,
-    //   shellTicket._count2ChargeSection
-    // );
-    // shellTicket.count3Charge = this.findMatchingCharge(
-    //   shellTicket._count3ChargeDesc,
-    //   shellTicket._count3ChargeSection
-    // );
-
-    // console.log('after', { ...shellTicket });
-
-    // delete shellTicket._count1ChargeDesc;
-    // delete shellTicket._count2ChargeDesc;
-    // delete shellTicket._count3ChargeDesc;
     delete shellTicket._count1ChargeSection;
     delete shellTicket._count2ChargeSection;
     delete shellTicket._count3ChargeSection;
 
     this.form.setValue(shellTicket);
-    // this.disputeService.shellTicket$.next(shellTicket);
-
     this.progressRef.complete();
-    // });
-    // };
   }
 
   private onRejected(info) {
