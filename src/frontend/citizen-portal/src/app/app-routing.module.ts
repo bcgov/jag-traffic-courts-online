@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
+import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { TicketPaymentCompleteComponent } from '@components/ticket-payment-complete/ticket-payment-complete.component';
@@ -26,6 +27,10 @@ const routes: Routes = [
       {
         path: AppRoutes.SHELL,
         component: ShellTicketComponent,
+      },
+      {
+        path: AppRoutes.SCAN,
+        component: ScanTicketComponent,
       },
       {
         path: AppRoutes.SUBMIT_SUCCESS,

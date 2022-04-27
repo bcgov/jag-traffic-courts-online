@@ -36,11 +36,11 @@ import { AppConfigService } from './services/app-config.service';
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
-import { KeycloakService } from 'keycloak-angular';
 import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
+import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
@@ -81,6 +81,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ShellTicketComponent,
+    ScanTicketComponent,
     TicketPaymentComponent,
     CountSummaryComponent,
     TicketPaymentCompleteComponent,

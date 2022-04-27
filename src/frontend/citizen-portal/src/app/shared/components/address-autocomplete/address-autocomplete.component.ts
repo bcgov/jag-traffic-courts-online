@@ -6,8 +6,8 @@ import { debounceTime, exhaustMap, switchMap } from 'rxjs/operators';
 
 import { ToastService } from '@core/services/toast.service';
 import { Address } from '@shared/models/address.model';
-import { AddressAutocompleteFindResponse, AddressAutocompleteRetrieveResponse } from '@shared/models/address-autocomplete.model';
-import { AddressAutocompleteResource } from '@shared/services/address-autocomplete-resource.service';
+// import { AddressAutocompleteFindResponse, AddressAutocompleteRetrieveResponse } from '@shared/models/address-autocomplete.model';
+// import { AddressAutocompleteResource } from '@shared/services/address-autocomplete-resource.service';
 
 @Component({
   selector: 'app-address-form-autocomplete',
@@ -19,11 +19,12 @@ export class AddressAutocompleteComponent implements OnInit {
   @Output() autocompleteAddress: EventEmitter<Address>;
 
   public form: FormGroup;
-  public addressAutocompleteFields: AddressAutocompleteFindResponse[];
+  public addressAutocompleteFields: any[];
+  // public addressAutocompleteFields: AddressAutocompleteFindResponse[];
 
   constructor(
     private fb: FormBuilder,
-    private addressAutocompleteResource: AddressAutocompleteResource,
+    // private addressAutocompleteResource: AddressAutocompleteResource,
     private toastService: ToastService
   ) {
     this.autocompleteAddress = new EventEmitter<Address>();

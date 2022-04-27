@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Config, Configuration, ProvinceConfig } from '@config/config.model';
 import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
-import { LookupService } from 'app/api';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -29,8 +28,7 @@ export class ConfigService implements IConfigService {
 
   constructor(
     protected utilsService: UtilsService,
-    protected appConfigService: AppConfigService,
-    protected lookupAPIService: LookupService
+    protected appConfigService: AppConfigService
   ) { }
 
   public get dispute_submitted$(): BehaviorSubject<string> {
@@ -101,24 +99,10 @@ export class ConfigService implements IConfigService {
    */
   public load(): Observable<Configuration> {
     if (!this.configuration) {
-      return this.appConfigService.loadAppConfig().pipe(
-        switchMap(() => {
-          return this.getConfiguration().pipe(
-            map((config: Configuration) => (this.configuration = config))
-          );
-        })
-      );
+      return this.appConfigService.loadAppConfig()
     }
 
     return of({ ...this.configuration });
-  }
-
-  /**
-   * @description
-   * Get the configuration for bootstrapping the application.
-   */
-  private getConfiguration(): Observable<Configuration> {
-    return this.lookupAPIService.apiLookupGetGet().pipe(map((response: ApiHttpResponse<Configuration>) => response.result));
   }
 
   /**
