@@ -234,7 +234,7 @@ export class MockDisputeService {
 
     ticket.disputant = this.createDisputant();
 
-    ticket.additional = {
+    ticket.additional = <any>{
       lawyerPresent: true,
       interpreterRequired: true,
       interpreterLanguage: 'SPA',
@@ -334,7 +334,7 @@ export class MockDisputeService {
     return ticket;
   }
 
-  private createDisputant(): DisputantView {
+  private createDisputant(): any {
     const mailingAddress = new Address('CA', 'BC', faker.address.streetAddress(), faker.address.secondaryAddress(), faker.address.city(), 'V8R3E3', 0);
     return {
       lastName: faker.name.lastName(),
@@ -352,7 +352,7 @@ export class MockDisputeService {
     };
   }
 
-  private createEmptyDisputant(): DisputantView {
+  private createEmptyDisputant(): any {
     return {
       lastName: null,
       givenNames: null,

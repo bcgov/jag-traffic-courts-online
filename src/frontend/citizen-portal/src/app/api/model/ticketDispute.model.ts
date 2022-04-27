@@ -9,19 +9,30 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Additional } from './additional.model';
-import { Disputant } from './disputant.model';
-import { Offence } from './offence.model';
+import { TicketCount } from './ticketCount.model';
 
 
 export interface TicketDispute { 
-    violationTicketNumber?: string | null;
-    violationTime?: string | null;
-    violationDate?: Date | null;
-    disputant?: Disputant;
-    additional?: Additional;
-    offences?: Array<Offence> | null;
-    discountDueDate?: string | null;
-    discountAmount?: number;
+    ticketNumber?: string | null;
+    courtLocation?: string | null;
+    violationDate?: string;
+    disputantSurname?: string | null;
+    givenNames?: string | null;
+    streetAddress?: string | null;
+    province?: string | null;
+    postalCode?: string | null;
+    homePhone?: string | null;
+    emailAddress?: string | null;
+    driversLicence?: string | null;
+    driversLicenceProvince?: string | null;
+    workPhone?: string | null;
+    dateOfBirth?: string;
+    enforcementOrganization?: string | null;
+    serviceDate?: string;
+    ticketCounts?: Array<TicketCount> | null;
+    lawyerRepresentation?: boolean;
+    interpreterLanguage?: string | null;
+    witnessIntent?: boolean;
+    ocrKey?: string | null;
 }
 

@@ -6,6 +6,7 @@ src/frontend/citizen-portal/debug.log
 *.user
 *.userosscache
 *.sln.docstates
+.DS_Store
 
 # Build results
 [Dd]ebug/
