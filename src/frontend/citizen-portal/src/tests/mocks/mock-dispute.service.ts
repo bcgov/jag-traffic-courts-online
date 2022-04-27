@@ -1,4 +1,3 @@
-import { AddressAutocompleteFindResponse, AddressAutocompleteRetrieveResponse } from '@shared/models/address-autocomplete.model';
 import { Address } from '@shared/models/address.model';
 import { DisputantView } from '@shared/models/disputantView.model';
 import { OffenceView } from '@shared/models/offenceView.model';
@@ -22,72 +21,6 @@ export class MockDisputeService {
 
   public get ticket(): TicketDisputeView {
     return this._ticket.value;
-  }
-
-  public get addressAutocompleteFindResponse(): AddressAutocompleteFindResponse[] {
-    const resp: AddressAutocompleteFindResponse[] = [
-      {
-        id: '001',
-        text: '1235 Douglas Street',
-        highlight: '0',
-        cursor: 1,
-        description: 'Victoria, BC, V8D 8E8',
-        next: 'Retrieve'
-      }, {
-        id: '002',
-        text: '1244 Douglas Street',
-        highlight: '0',
-        cursor: 1,
-        description: 'Victoria, BC, V8D 8E8',
-        next: 'Retrieve'
-      }
-    ];
-    return resp;
-  }
-
-  public get addressAutocompleteRetrieveResponse(): AddressAutocompleteRetrieveResponse[] {
-    const resp: AddressAutocompleteRetrieveResponse[] = [
-      {
-        id: '',
-        domesticId: '',
-        language: 'ENG',
-        languageAlternatives: '',
-        department: '',
-        company: '',
-        subBuilding: '',
-        buildingNumber: '',
-        buildingName: '',
-        secondaryStreet: '',
-        street: '',
-        block: '',
-        neighbourhood: '',
-        district: '',
-        city: faker.address.city(),
-        line1: faker.address.streetAddress(),
-        line2: faker.address.secondaryAddress(),
-        line3: '',
-        line4: '',
-        line5: '',
-        adminAreaName: '',
-        adminAreaCode: '',
-        province: '',
-        provinceName: '',
-        provinceCode: 'BC',
-        postalCode: 'V9D 9S9',
-        countryName: '',
-        countryIso2: 'CA',
-        countryIso3: '',
-        countryIsoNumber: 0,
-        sortingNumber1: '',
-        sortingNumber2: '',
-        barcode: '',
-        poBoxNumber: '',
-        label: '',
-        dataLevel: '',
-      }
-    ];
-
-    return resp;
   }
 
   private createTicketWithoutDisputes(): TicketDisputeView {

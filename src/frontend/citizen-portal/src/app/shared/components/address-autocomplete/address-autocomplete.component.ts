@@ -6,8 +6,6 @@ import { debounceTime, exhaustMap, switchMap } from 'rxjs/operators';
 
 import { ToastService } from '@core/services/toast.service';
 import { Address } from '@shared/models/address.model';
-import { AddressAutocompleteFindResponse, AddressAutocompleteRetrieveResponse } from '@shared/models/address-autocomplete.model';
-import { AddressAutocompleteResource } from '@shared/services/address-autocomplete-resource.service';
 
 @Component({
   selector: 'app-address-form-autocomplete',
@@ -19,12 +17,10 @@ export class AddressAutocompleteComponent implements OnInit {
   @Output() autocompleteAddress: EventEmitter<Address>;
 
   public form: FormGroup;
-  public addressAutocompleteFields: AddressAutocompleteFindResponse[];
+  public addressAutocompleteFields: any[];
 
   constructor(
     private fb: FormBuilder,
-    private addressAutocompleteResource: AddressAutocompleteResource,
-    private toastService: ToastService
   ) {
     this.autocompleteAddress = new EventEmitter<Address>();
     this.inBc = false;
@@ -35,42 +31,9 @@ export class AddressAutocompleteComponent implements OnInit {
   }
 
   public onAutocomplete(id: string) {
-    // this.addressAutocompleteResource.retrieveAddress(id)
-    //   .subscribe((results: AddressAutocompleteRetrieveResponse[]) => {
-    //     const addressRetrieved = results.find(result => result.language === 'ENG') ?? null;
-
-    //     if (addressRetrieved) {
-    //       const address = new Address(
-    //         addressRetrieved.countryIso2,
-    //         addressRetrieved.provinceCode,
-    //         addressRetrieved.line1,
-    //         addressRetrieved.line2,
-    //         addressRetrieved.city,
-    //         addressRetrieved.postalCode
-    //       );
-    //       this.autocompleteAddress.emit(address);
-
-    //     } else {
-    //       this.toastService.openErrorToast('Address could not be retrieved');
-    //     }
-    //   });
   }
 
   public ngOnInit(): void {
     this.form = this.fb.group({ autocomplete: [''] });
-
-    // this.autocomplete.valueChanges
-    //   .pipe(
-    //     debounceTime(400),
-    //     switchMap((value: string) => {
-    //       this.addressAutocompleteFields = [];
-    //       return (value)
-    //         ? this.addressAutocompleteResource.findAddress(value)
-    //         : EMPTY;
-    //     })
-    //   )
-    //   .subscribe((response: AddressAutocompleteFindResponse[]) =>
-    //     this.addressAutocompleteFields = response
-    //   );
   }
 }

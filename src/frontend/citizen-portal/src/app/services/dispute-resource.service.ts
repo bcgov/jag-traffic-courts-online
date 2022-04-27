@@ -35,6 +35,7 @@ export class DisputeResourceService {
   }): Observable<TicketDisputeView> {
 
     return this.ticketAPIService.apiTicketsSearchGet(params.ticketNumber, params.time)
+    // return this.ticketAPIService.apiTicketsLegacysearchGet(params.ticketNumber, params.time)
       .pipe(
         map((ticket: any) => {
           if (ticket) {
@@ -57,36 +58,36 @@ export class DisputeResourceService {
       );
   }
 
-  	public postTicket(
-	  image: any
-  	): Observable<any> {
-      const formData = new FormData();
-      formData.append('image',image)
-	  return this.ticketAPIService.apiTicketsAnalysePost(image)
-	    .pipe(
-	      map((response: any) =>
-	        response ? response : null
-	      ),
-	      map((ticket: any) => {
-	        if (ticket) {
-	        console.log('service',ticket)
-	        }
+  // 	public postTicket(
+	//   image: any
+  // 	): Observable<any> {
+  //     const formData = new FormData();
+  //     formData.append('image',image)
+	//   return this.ticketAPIService.apiTicketsAnalysePost(image)
+	//     .pipe(
+	//       map((response: any) =>
+	//         response ? response : null
+	//       ),
+	//       map((ticket: any) => {
+	//         if (ticket) {
+	//         console.log('service',ticket)
+	//         }
 
-	        return ticket;
-	      }),
-	      tap((updatedTicket) =>
-	        this.logger.info('DisputeResourceService::getTicket', updatedTicket)
-	      ),
-	      catchError((error: any) => {
-	        this.toastService.openErrorToast(this.configService.ticket_error);
-	        this.logger.error(
-	          'DisputeResourceService::getTicket error has occurred: ',
-	          error
-	        );
-	        throw error;
-	      })
-	    );
-	}
+	//         return ticket;
+	//       }),
+	//       tap((updatedTicket) =>
+	//         this.logger.info('DisputeResourceService::getTicket', updatedTicket)
+	//       ),
+	//       catchError((error: any) => {
+	//         this.toastService.openErrorToast(this.configService.ticket_error);
+	//         this.logger.error(
+	//           'DisputeResourceService::getTicket error has occurred: ',
+	//           error
+	//         );
+	//         throw error;
+	//       })
+	//     );
+	// }
 
   /**
    * Create the ticket dispute
