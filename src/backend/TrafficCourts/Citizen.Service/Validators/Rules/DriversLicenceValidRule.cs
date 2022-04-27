@@ -12,7 +12,7 @@ public class DriversLicenceValidRule : ValidationRule
 
     private readonly OcrViolationTicket _violationTicket;
 
-    public DriversLicenceValidRule(OcrViolationTicket.Field field, OcrViolationTicket violationTicket) : base(field)
+    public DriversLicenceValidRule(Field field, OcrViolationTicket violationTicket) : base(field)
     {
         this._violationTicket = violationTicket;
     }
@@ -24,7 +24,7 @@ public class DriversLicenceValidRule : ValidationRule
         // - if Driver's Licence province/state != BC flag for staff review
         // - if Driver's Licence province/state is blank flag for staff review
         // - if Driver's Licence Number is blank flag for staff review
-        OcrViolationTicket.Field province = _violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince];
+        Field province = _violationTicket.Fields[OcrViolationTicket.DriverLicenceProvince];
         bool provMatches = true;
         if (province.Value is not null && !Regex.IsMatch(province.Value, DriverLicenceProvinceRegex))
         {

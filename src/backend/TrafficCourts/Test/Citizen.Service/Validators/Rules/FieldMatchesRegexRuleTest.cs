@@ -1,3 +1,4 @@
+using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using Xunit;
 using static TrafficCourts.Citizen.Service.Models.Tickets.OcrViolationTicket;
