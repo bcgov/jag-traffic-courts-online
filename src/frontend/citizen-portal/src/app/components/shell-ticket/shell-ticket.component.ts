@@ -676,7 +676,7 @@ const data2: TicketDisputeView
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-      violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
+      violationDate: new Date(invoiceDateField.value),
 
       lastName: surnameField.value
         ? surnameField.value
