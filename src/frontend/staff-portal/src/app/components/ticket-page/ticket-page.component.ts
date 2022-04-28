@@ -204,53 +204,64 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       this.remoteDummyData.forEach(d => {
         this.disputes = this.disputes.concat(d);
       });
+
+      this.dataSource.data = this.disputes;
+
+      // initially sort data by Date Submitted
+      this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
+
+      // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
+      this.dataSource.filterPredicate = function (record:disputeData ,filter) {
+        return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
+      }
+
   
-      this.busy = this.disputesService.getDisputes().subscribe((response) => {
-        this.logger.info(
-          'TicketPageComponent::getAllDisputes response',
-          response
-        );
+      // this.busy = this.disputesService.getDisputes().subscribe((response) => {
+      //   this.logger.info(
+      //     'TicketPageComponent::getAllDisputes response',
+      //     response
+      //   );
 
-        this.disputesService.disputes$.next(response);
-        response.forEach(d => {
-          this.newDispute.AssignedTo = '';
-          this.newDispute.CitizenFlag = 'N';
-          this.newDispute.CourtHearing = 'N';
-          this.newDispute.DateSubmitted = new Date(d.violationDate);
-          this.newDispute.FilingDate = undefined;
-          switch (d.status) 
-          { 
-            case DisputeStatus.Cancelled: 
-              this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
-              break; 
-            case DisputeStatus.Processing:
-              this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
-              break;
-            case DisputeStatus.Rejected:
-              this.newDispute.moreDisputeStatus = MoreDisputeStatus.Rejected;
-              break;
-            default:
-              this.newDispute.moreDisputeStatus = MoreDisputeStatus.New;
-              break;
-          };
-          this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '' );
-          this.newDispute.SystemFlag = 'N';
-          this.newDispute.additionalProperties = d.additionalProperties;
-          this.newDispute.courtLocation = d.courtLocation;
-          this.disputes = this.disputes.concat(this.newDispute);
-        })
-        this.dataSource.data = this.disputes;
+      //   this.disputesService.disputes$.next(response);
+      //   response.forEach(d => {
+      //     this.newDispute.AssignedTo = '';
+      //     this.newDispute.CitizenFlag = 'N';
+      //     this.newDispute.CourtHearing = 'N';
+      //     this.newDispute.DateSubmitted = new Date(d.violationDate);
+      //     this.newDispute.FilingDate = undefined;
+      //     switch (d.status) 
+      //     { 
+      //       case DisputeStatus.Cancelled: 
+      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
+      //         break; 
+      //       case DisputeStatus.Processing:
+      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
+      //         break;
+      //       case DisputeStatus.Rejected:
+      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.Rejected;
+      //         break;
+      //       default:
+      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.New;
+      //         break;
+      //     };
+      //     this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '' );
+      //     this.newDispute.SystemFlag = 'N';
+      //     this.newDispute.additionalProperties = d.additionalProperties;
+      //     this.newDispute.courtLocation = d.courtLocation;
+      //     this.disputes = this.disputes.concat(this.newDispute);
+      //   })
+      //   this.dataSource.data = this.disputes;
 
-        // initially sort data by Date Submitted
-        this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
+      //   // initially sort data by Date Submitted
+      //   this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
 
-        // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-        this.dataSource.filterPredicate = function (record:disputeData ,filter) {
-          return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-        }
+      //   // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
+      //   this.dataSource.filterPredicate = function (record:disputeData ,filter) {
+      //     return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
+      //  }
 
 
-      });
+      // });
   }
 
   countNewTickets(): number {

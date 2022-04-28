@@ -8,5 +8,5 @@
     "scope": "openid profile",
     "responseType": "code",
     "prompt": "consent",
-    "kc_idp_hint": "bceid-basic"
+    "kc_idp_hint": "idir-basic"
   }  

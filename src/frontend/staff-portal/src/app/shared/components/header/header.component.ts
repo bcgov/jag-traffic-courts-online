@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
 
   public languageCode: string;
   public languageDesc: string;
-  public btnLabel: string ='BCeID Login';
+  public btnLabel: string ='IDIR Login';
   public btnIcon: string = 'login'; 
 
   public environment: string;
@@ -61,7 +61,7 @@ export class HeaderComponent implements OnInit {
         }
         else
         {
-          this.btnLabel = 'BCeID Login';
+          this.btnLabel = 'IDIR Login';
           this.btnIcon = 'login';
         }
       }
@@ -86,14 +86,14 @@ export class HeaderComponent implements OnInit {
   public onClickBtn()
   {
     this.logInOutService.logoutUser(this.btnLabel);
-    if (this.btnLabel === 'BCeID Login')
+    if (this.btnLabel === 'IDIR Login')
     {
       this.btnLabel = 'Logout';
       this.btnIcon = 'logout';
     }
     else
     {
-      this.btnLabel = 'BCeID Login';
+      this.btnLabel = 'IDIR Login';
       this.btnIcon = 'login';
       //this.router.navigate(['/']);
     }
