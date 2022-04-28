@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputesService } from 'app/services/disputes.service';
 import { Dispute } from 'app/api';
-import { DisputeStatus } from 'app/api';
+import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
