@@ -7,7 +7,7 @@ public class FieldIsRequiredRule : ValidationRule
 {
 
     /// <summary>Validates a field is not blank.</summary>
-    public FieldIsRequiredRule(OcrViolationTicket.Field field) : base(field)
+    public FieldIsRequiredRule(Field field) : base(field)
     {
     }
 
