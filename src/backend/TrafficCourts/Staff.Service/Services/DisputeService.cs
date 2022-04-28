@@ -1,4 +1,9 @@
-﻿using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+﻿using MassTransit;
+using Microsoft.Extensions.Options;
+using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Staff.Service.Configuration;
+using TrafficCourts.Staff.Service.Mappers;
+using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -7,15 +12,15 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public class DisputeService : IDisputeService
 {
-    private readonly string _oracleDataApiBaseUrl;
+    private readonly OracleDataApiConfiguration _oracleDataApiConfiguration;
     private readonly ILogger<DisputeService> _logger;
+    private readonly IBus _bus;
 
-    public DisputeService(String oracleDataApiBaseUrl, ILogger<DisputeService> logger)
+    public DisputeService(OracleDataApiConfiguration oracleDataApiConfiguration, IBus bus, ILogger<DisputeService> logger)
     {
-        ArgumentNullException.ThrowIfNull(oracleDataApiBaseUrl);
-        ArgumentNullException.ThrowIfNull(logger);
-        _oracleDataApiBaseUrl = oracleDataApiBaseUrl;
-        _logger = logger;
+        _oracleDataApiConfiguration = oracleDataApiConfiguration ?? throw new ArgumentNullException(nameof(oracleDataApiConfiguration));
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary>
@@ -25,7 +30,7 @@ public class DisputeService : IDisputeService
     private OracleDataApi_v1_0Client GetOracleDataApi()
     {
         OracleDataApi_v1_0Client client = new(new HttpClient());
-        client.BaseUrl = _oracleDataApiBaseUrl;
+        client.BaseUrl = _oracleDataApiConfiguration.BaseUrl;
         return client;
     }
 
@@ -51,20 +56,36 @@ public class DisputeService : IDisputeService
 
     public async Task CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Dispute cancelled");
+
         Dispute dispute = await GetOracleDataApi().CancelDisputeAsync(disputeId, cancellationToken);
-        // TODO: push dispute to RabbitMQ message queue to be consumed by the email notification worker and ARC worker
+
+        // Publish submit event (consumer(s) will generate email, etc)
+        DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
+        await _bus.Publish(cancelledEvent, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(Guid disputeId, string rejectedReason, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Dispute rejected");
+
         Dispute dispute = await GetOracleDataApi().RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
-        // TODO: push dispute to RabbitMQ message queue to be consumed by the email notification worker
+
+        // Publish submit event (consumer(s) will generate email, etc)
+        DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
+        await _bus.Publish(rejectedEvent, cancellationToken);
     }
 
     public async Task SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Dispute submitted for approval processing");
+
+        // Save and status to PROCESSING
         Dispute dispute = await GetOracleDataApi().SubmitDisputeAsync(disputeId, cancellationToken);
-        // TODO: push dispute to RabbitMQ message queue to be consumed by the email notification worker and ARC worker
+
+        // Publish submit event (consumer(s) will push event to ARC and generate email)
+        DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
+        await _bus.Publish(approvedEvent, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(Guid disputeId, CancellationToken cancellationToken)

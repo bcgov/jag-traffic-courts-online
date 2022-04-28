@@ -34,7 +34,7 @@ if (swagger.Enabled)
 
         var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-        options.CustomSchemaIds(x => x.FullName); // TODO: remove this, causes problems with generated swagger
+        //options.CustomSchemaIds(x => x.FullName); // TODO: remove this, causes problems with generated swagger
     });
 }
 var app = builder.Build();

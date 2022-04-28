@@ -65,6 +65,7 @@ export class FindTicketComponent implements OnInit {
   public onSearch(): void {
     this.logger.log('FindTicketComponent::onSearch');
 
+    this.notFound = false;
     const validity = this.formUtilsService.checkValidity(this.form);
     const errors = this.formUtilsService.getFormErrors(this.form);
 
@@ -76,22 +77,19 @@ export class FindTicketComponent implements OnInit {
       return;
     }
 
-    this.notFound = false;
-
     const formParams = { ...this.form.value };
     this.busy = this.disputeResource
-    .getTicket(formParams)
-    .subscribe((response) => {
-      this.disputeService.ticket$.next(response);
-      if (response) {
-        this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-          queryParams: formParams,
-        });
-      } else {
-        this.notFound = true;
-        this.onTicketNotFound();
-      }
-    });
+      .getTicket(formParams)
+      .subscribe((response) => {
+        this.disputeService.ticket$.next(response);
+        if (response) {
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
+            queryParams: formParams,
+          });
+        } else {
+          this.onTicketNotFound();
+        }
+      });
     // this.busy = this.ticketService.apiTicketsSearchGet(formParams.ticketNumber, formParams.time)
     //   .subscribe((response) => {
     //     this.violationTicketService.ticket$.next(response);
@@ -100,7 +98,6 @@ export class FindTicketComponent implements OnInit {
     //         queryParams: formParams,
     //       });
     //     } else {
-    //       this.notFound = true;
     //       this.onTicketNotFound();
     //     }
     //   });
@@ -141,6 +138,7 @@ export class FindTicketComponent implements OnInit {
   }
 
   public onTicketNotFound(): void {
+    this.notFound = true;
     this.dialog.open(TicketNotFoundDialogComponent);
   }
 

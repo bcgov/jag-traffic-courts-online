@@ -1,6 +1,5 @@
+using MassTransit;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -10,9 +9,10 @@ using Serilog.Exceptions.Core;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Logging;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,20 +28,16 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
         .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder().WithDefaultDestructurers());
 });
 
+builder.Services.AddMassTransit(builder.Configuration, logger);
+
 // Render enums as strings rather than ints
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 Authentication.Initialize(builder.Services, builder.Configuration);
 
 // Add DisputeService
-builder.Services.AddSingleton<IDisputeService, DisputeService>(service =>
-{
-    string oracleDataApiBaseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
-    ArgumentNullException.ThrowIfNull(oracleDataApiBaseUrl);
-
-    var logger = service.GetRequiredService<ILogger<DisputeService>>();
-    return new DisputeService(oracleDataApiBaseUrl, logger);
-});
+builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
+builder.Services.AddSingleton<IDisputeService, DisputeService>();
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -99,8 +95,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers()
-    .RequireAuthorization(); // This will set a default policy that says a user has to be authenticated
+app.MapControllers();
+    // .RequireAuthorization(); // This will set a default policy that says a user has to be authenticated
 
 app.Run();
 

@@ -1,315 +1,161 @@
-<div class="flex-wrapper">
+<app-page [busy]="busy">
+  <div class="flex-wrapper">
   <div class="flex-header d-print-none mb-40" style="margin-bottom: 100px">
     <app-header></app-header>
 
     <div class="container">
       <section>
-        <div>
-          <h1 class="mb-1">Welcome, User</h1>
-          <div class="row">
-           <div class="col">
-            <p style="color: black;">Court Registries Clerk, Abbotsford</p>
-           </div>
-           <div class="col">
-            <p style="color: black;text-align: end;">Wednesday, February 9th, 2021</p>
-           </div>
-          </div>
-          
-         
-          <hr style="opacity: 1; color: #fcba19;margin-top: 0%;" />
+        <div><br />
+          <h1 class="BC-Gov-32px-blue-text">Welcome, {{ fullName }}</h1>
+          <p class="BC-Gov-15px-black-text">
+            Court Registries Clerk,  {{ RegionName }}
+            <span style="float:right">
+              {{todayDate|date:"EEEE, MMMM d"}}{{(todayDate|date:"d")|dateSuffix}}{{todayDate|date:",&nbsp;y"}}
+            </span>
+          </p>
+          <hr style="opacity: 1; color: #fcba19" />
         </div>
       </section>
       <section>
         <div class="flex-6-col">
- 
             <div *ngIf="!showTicket">
-              <ng-template mat-tab-label>
-                <h1 class="mb-1 tabHeader">Inbox (1)</h1>
-              </ng-template>
               <div class="step1" >
-                <div class="">
-                  <div class="container">
-                    <div class="row" >
-                      <div class="col-md-2">
-                        <h4 style="color: green;font-weight: 600;" >5 NEW ticket records</h4> 
-                      </div>
-                      <div class="col-md-1"style="width: 5px;" >|</div>
-                      <div class="col-md-3">
-                       <select style="width: 200px;border: none;color: black;font-weight: 600;"><option>Fraser Valley Region</option></select>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-3" style="font-weight: 600;">
-                        <h2 >Ticket number search: </h2>
-                      </div>
-                      <div class="col-md-3" style="width: 25%">
-                        <input type="text" style="width: 100%" #fileNumber value="" class=""/>
-                        <span class="fa fa-search" style="position: absolute;left: 240px;top: 10px;" aria-hidden="true"></span>
-                      </div>
-                    </div>
+                <div>
+                  <div class="flex-container" style="width: 40%">
+                    <table>
+                      <tr>
+                        <td><span class="BC-Gov-15px-black-text" style="color:green; width:40%;" ><b>{{ countNewTickets() }} NEW ticket records</b></span> </td>
+                        <td style="width:5px">|</td>
+                        <td style="width: 40%">
+                            <select style="border: none;">
+                              <option><span class="BC-Gov-15px-black-bold-text"><b>{{ RegionName }}</b>&nbsp;&nbsp;</span></option>
+                            </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><span class="BC-Gov-15px-blue-text" ><b>Ticket number search:</b></span></td>
+                        <td colspan="2">
+                          <div class="inputContainer">
+                            <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)" autocomplete="off" class="input"/>
+                            <mat-icon class="inputIcon">search</mat-icon>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
-                <hr class="mt-0 mb-4" style="opacity: 0.5">
               
-               <table mat-table [dataSource]="dataSource" style="border: 1px solid black;margin-bottom: 150px;border-radius: 8px;">
-                <ng-container   matColumnDef="RedGreenAlert">
-                  <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> 
-                    <div style="display: flex;">
-                      <!-- <div style="width: 80%; height: 50px;">
-                        Date Submitted 
-                      </div>
-                      <div  style="width: 10%;">
-                        <span class='table-sort-icon'>
-                          <span
-                          class='sort-icon sort-by-asc'
-                           (click)="sort('asc','DateSubmitted')"
-                          ></span>
-                          <span
-                          class='sort-icon sort-by-desc'
-                          (click)="sort('desc','DateSubmitted')"
-                          ></span>
-                      </span>
-                      </div> -->
-                    </div>
-                      </th>
-                  <td mat-cell  *matCellDef="let element">  
-                    <span *ngIf="element.RedGreenAlert">
-                      <mat-icon [ngStyle]="{'color': element.RedGreenAlert}">info</mat-icon>
-                    </span>
-                    
-                   </td>
+              <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort #tickTbSort="matSort">
+              
+                <ng-container matColumnDef="RedGreenAlert">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell  *matCellDef="let element">
+                    <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="element.RedGreenAlert =='Red'">cancel</mat-icon>
+                    <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="element.RedGreenAlert =='Green'">check_circle</mat-icon>
+                  </td>
                 </ng-container>
-                  <ng-container   matColumnDef="DateSubmitted">
-                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> 
-                      <div style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Date Submitted 
-                        </div>
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','DateSubmitted')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','DateSubmitted')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>
-                        </th>
-                    <td mat-cell  *matCellDef="let element">  
-                      {{element.DateSubmitted}} </td>
+
+                <ng-container matColumnDef="DateSubmitted">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Date Submitted 
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.DateSubmitted ? (element.DateSubmitted | date: "yyyy/MM/dd") : "" }}</span>
+                    </td>
                   </ng-container>
               
-                  <ng-container matColumnDef="Ticket">
-                    <th mat-header-cell *matHeaderCellDef> 
-                      <div style="display: flex;">
-                        <div  style="width: 80%; height: 50px;">
-                          Ticket #  
-                        </div>
-                        <div style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','Ticket')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','Ticket')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>
-                </th>
-                    <td mat-cell *matCellDef="let element"> <a (click)="backTicketList(element)" href="javascript:void()">{{element.Ticket}}</a></td>
-                  </ng-container>
-              
-                  <ng-container matColumnDef="Surname">
-                    <th mat-header-cell *matHeaderCellDef>  
-                      
-                      <div  style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Surname
-                        </div>
-                      
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','Surname')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','Surname')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>
+                  <ng-container matColumnDef="ticketNumber">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Ticket
                     </th>
-                    <td mat-cell *matCellDef="let element"> {{element.Surname}}</td>
-                  </ng-container>
-              
-                  <ng-container matColumnDef="GivenName">
-                    <th mat-header-cell *matHeaderCellDef> 
-                      <div  style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Given Name(s)  
-                        </div>
-                      
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','GivenName')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','GivenName')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>  
-                    </th>
-                    <td mat-cell *matCellDef="let element">  {{element.GivenName}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="RequestType">
-                    <th mat-header-cell *matHeaderCellDef> 
-                      <div  style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Request Type  
-                        </div>
-                      
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','RequestType')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','RequestType')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>
-                    
-                    </th>
-                    <td mat-cell *matCellDef="let element">  {{element.RequestType}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="Status">
-                    <th mat-header-cell *matHeaderCellDef>   
-                      <div  style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Status
-                        </div>
-                      
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','Status')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','Status')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let element">  {{element.Status}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="FilingDate">
-                    <th mat-header-cell *matHeaderCellDef> 
-                      <div  style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Filing Date  
-                        </div>
-                      
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','FilingDate')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','FilingDate')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>
-                    </th>
-                    <td mat-cell *matCellDef="let element">  {{element.FilingDate === '(null)' ?'-' : element.FilingDate}} </td>
-                  </ng-container>
-                  <ng-container matColumnDef="CourtHearing">
-                    <th mat-header-cell *matHeaderCellDef> Court Hearing? </th>
                     <td mat-cell *matCellDef="let element"> 
-                       <mat-checkbox 
-                       [checked]="element.CourtHearing == 'Y'? true : false"
-                       color="primary"
-                       class="me-4 mb-2">
-                      </mat-checkbox>
-                       </td>
-                  </ng-container>
-                  <ng-container matColumnDef="CitizenFlag">
-                    <th mat-header-cell *matHeaderCellDef> Citizen Flag </th>
-                    <td mat-cell *matCellDef="let element">  
-                      <mat-checkbox 
-                      [checked]="element.CitizenFlag == 'Y'? true : false"
-                      color="primary"
-                      class="me-4 mb-2">
-                     </mat-checkbox>
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"><a (click)="backTicketList(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
                     </td>
-                  </ng-container>
-                  <ng-container matColumnDef="SystemFlag">
-                    <th mat-header-cell *matHeaderCellDef> System Flag</th>
-                    <td mat-cell *matCellDef="let element">  
-                      <mat-checkbox 
-                      [checked]="element.SystemFlag == 'Y'? true : false"
-                      color="primary"
-                      class="me-4 mb-2">
-                     </mat-checkbox>
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="AssignedTo">
-                    <th mat-header-cell *matHeaderCellDef> 
-                      <div  style="display: flex;">
-                        <div style="width: 80%; height: 50px;">
-                          Assigned to  
-                        </div>
-                      
-                        <div  style="width: 10%;">
-                          <span class='table-sort-icon'>
-                            <span
-                            class='sort-icon sort-by-asc'
-                             (click)="sort('asc','AssignedTo')"
-                            ></span>
-                            <span
-                            class='sort-icon sort-by-desc'
-                            (click)="sort('desc','AssignedTo')"
-                            ></span>
-                        </span>
-                        </div>
-                      </div>  
-                    </th>
-                    <td mat-cell *matCellDef="let element">  {{element.AssignedTo}} </td>
                   </ng-container>
               
+                  <ng-container matColumnDef="disputantSurname">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>  
+                      Surname
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.disputantSurname }}</span>
+                    </td>
+                  </ng-container>
+              
+                  <ng-container matColumnDef="givenNames">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Given Name
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.givenNames}} </span>
+                    </td>
+                  </ng-container>
+                                    
+                  <ng-container matColumnDef="moreDisputeStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>   
+                      Status
+                    </th>
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.moreDisputeStatus }}</span>
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="FilingDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Filing Date  
+                    </th>
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.FilingDate ? (element.FilingDate | date: "yyyy/MM/dd") : "" }}</span>
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="CourtHearing">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Court Hearing
+                    </th>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox [checked]="element.CourtHearing == 'Y'" [disabled]="true"></mat-checkbox>
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="CitizenFlag">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Citizen Flag 
+                    </th>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox [checked]="element.CitizenFlag == 'Y'" [disabled]="true"></mat-checkbox>
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="SystemFlag">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      System Flag
+                    </th>
+                    <td mat-cell *matCellDef="let element">  
+                      <mat-checkbox [checked]="element.SystemFlag == 'Y'" [disabled]="true"></mat-checkbox>
+                    </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="AssignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                      Assigned
+                    </th>
+                    <td mat-cell *matCellDef="let element">  
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.AssignedTo ? element.AssignedTo : "Unassigned" }}</span>
+                    </td>
+                  </ng-container>
           
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
               
-                </table> 
+              </table> 
               </div>
     
           
             </div>
-           <div *ngIf="showTicket">
-             <app-ticket-info (backTicketList)="backTicketpage()" [ticketInfo]="ticketInfo"></app-ticket-info>
-           </div>
+            <div *ngIf="showTicket">
+              <app-ticket-info (backTicketList)="backTicketpage()" [ticketInfo]="ticketInfo"></app-ticket-info>
+            </div>
 
         </div>
       </section>
@@ -322,4 +168,5 @@
   <div class="flex-footer">
     <app-footer></app-footer>
   </div>
-</div>
+  </div>
+</app-page>

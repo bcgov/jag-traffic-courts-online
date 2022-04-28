@@ -6,35 +6,36 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public interface DisputeApproved: IMessage
+    [EndpointConvention("dispute-approved")]
+    public class DisputeApproved: IMessage
     {
-        string CitizenName { get; set; }
-        DateTime TicketIssuanceDate { get; set; }
-        string TicketFileNumber { get; set; }
-        string IssuingOrganization { get; set; }
-        string IssuingLocation { get; set; }
-        string DriversLicence { get; set; }
-        IList<TicketDetails> TicketDetails { get; set; }
-        string? StreetAddress { get; set; }
-        string? City { get; set; }
-        string? Province { get; set; }
-        string? PostalCode { get; set; }
-        string? Email { get; set; }
-        IDictionary<string, DisputeDetails>[]? DisputeDetails { get; set; }
+        public string CitizenName { get; set; } = String.Empty;
+        public DateTime TicketIssuanceDate { get; set; }
+        public string TicketFileNumber { get; set; } = String.Empty;
+        public string IssuingOrganization { get; set; } = String.Empty;
+        public string IssuingLocation { get; set; } = String.Empty;
+        public string DriversLicence { get; set; } = String.Empty;
+        public IList<TicketDetails> TicketDetails { get; set; } = new List<TicketDetails>();
+        public string? StreetAddress { get; set; }
+        public string? City { get; set; }
+        public string? Province { get; set; }
+        public string? PostalCode { get; set; }
+        public string? Email { get; set; }
+        public IDictionary<string, DisputeDetails>[]? DisputeDetails { get; set; }
     }
 
-    public interface TicketDetails
+    public class TicketDetails
     {
-        string Section { get; set; }
-        string Subsection { get; set; }
-        string Paragraph { get; set; }
-        string Act { get; set; }
-        double Amount { get; set; }
+        public string Section { get; set; } = String.Empty;
+        public string Subsection { get; set; } = String.Empty;
+        public string Paragraph { get; set; } = String.Empty;
+        public string Act { get; set; } = String.Empty;
+        public double Amount { get; set; } = Double.NaN;
     }
 
-    public interface DisputeDetails
+    public class DisputeDetails
     {
-        string? DisputeType { get; set; }
-        string? DisputeReason { get; set; }
+        public string? DisputeType { get; set; } 
+        public string? DisputeReason { get; set; }
     }
 }

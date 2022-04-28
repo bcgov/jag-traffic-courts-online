@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     private metaTagService: Meta,
     private router: Router,
     private utilsService: UtilsService,
-    private snowplow: SnowplowService
+    private snowplow: SnowplowService,
   ) {
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
@@ -60,6 +60,7 @@ export class AppComponent implements OnInit {
         'toaster.dispute_validation_error',
         'toaster.ticket_error',
         'toaster.dispute_create_error',
+        'toaster.dispute_error'
       ])
       .subscribe((translations) => {
         this.titleService.setTitle(
@@ -74,6 +75,9 @@ export class AppComponent implements OnInit {
         );
         this.configService.ticket_error$.next(
           this.translateService.instant('toaster.ticket_error')
+        );
+        this.configService.dispute_error$.next(
+          this.translateService.instant('toaster.dispute_error')
         );
         this.configService.dispute_create_error$.next(
           this.translateService.instant('toaster.dispute_create_error')

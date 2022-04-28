@@ -55,6 +55,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
+    <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
   </ItemGroup>
 
   <ItemGroup>
