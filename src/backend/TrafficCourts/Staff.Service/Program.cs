@@ -1,3 +1,4 @@
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -10,7 +11,10 @@ using Serilog.Exceptions.Core;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Messaging.Configuration;
+using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Authentication;
+using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Logging;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
@@ -21,6 +25,7 @@ var logger = GetLogger(builder);
 // Add services to the container.
 
 AddOpenTelemetry(builder, logger);
+ConfigureServiceBus(builder.Services, builder.Configuration);
 
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
     loggerConfiguration
@@ -34,14 +39,8 @@ builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializ
 Authentication.Initialize(builder.Services, builder.Configuration);
 
 // Add DisputeService
-builder.Services.AddSingleton<IDisputeService, DisputeService>(service =>
-{
-    string oracleDataApiBaseUrl = builder.Configuration.GetValue<string>("OracleDataApi:BaseUrl");
-    ArgumentNullException.ThrowIfNull(oracleDataApiBaseUrl);
-
-    var logger = service.GetRequiredService<ILogger<DisputeService>>();
-    return new DisputeService(oracleDataApiBaseUrl, logger);
-});
+builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
+builder.Services.AddSingleton<IDisputeService, DisputeService>();
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
@@ -148,4 +147,31 @@ static void AddOpenTelemetry(WebApplicationBuilder builder, Serilog.ILogger logg
             .AddSource(Diagnostics.Source.Name)
             .AddJaegerExporter();
     });
+}
+
+// copied from old TrafficCourtsApi code base
+static void ConfigureServiceBus(IServiceCollection services, IConfiguration configuration)
+{
+    services.Configure<IRabbitMQConfiguration>(configuration.GetSection("RabbitMq"));
+
+    var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMQConfigurationProperties>();
+    if (rabbitMqSettings == null)
+    {
+        rabbitMqSettings = new RabbitMQConfigurationProperties();
+    }
+
+    var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
+    services.AddMassTransit(config =>
+    {
+        config.UsingRabbitMq((ctx, cfg) =>
+        {
+            cfg.Host(new Uri(rabbitBaseUri), hostConfig =>
+            {
+                hostConfig.Username(rabbitMqSettings.Username);
+                hostConfig.Password(rabbitMqSettings.Password);
+            });
+        });
+    });
+    //services.AddMassTransitHostedService(); // deprecated per CS0618
+    EndpointConvention.Map<DisputeApproved>(new Uri($"{rabbitBaseUri}/dispute-approved"));
 }
