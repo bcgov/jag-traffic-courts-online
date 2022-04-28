@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
-    public interface DisputeRejected: IMessage
+    public class DisputeRejected: IMessage
     {
-        string Reason { get; set; }
+        public string Reason { get; set; } = String.Empty;
     }
 }

@@ -27,7 +27,7 @@ import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ShellTicketData } from '@shared/models/shellTicketData.model';
 import { ShellTicketView } from '@shared/models/shellTicketView.model';
 import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
-import { Configuration, TicketsService } from 'app/api';
+import { TicketsService } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
@@ -35,7 +35,6 @@ import { DisputeService } from 'app/services/dispute.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import *  as moment from 'moment';
 
 export function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -56,22 +55,15 @@ export class ShellTicketComponent implements OnInit {
   public ticketImageSrc: string;
   public ticketFilename: string;
   public form: FormGroup;
-  public todayDate: Date = new Date();
-  public maxDateOfBirth: Date;
   public isMobile: boolean;
-  protected basePath = ''; 
-  public configuration = new Configuration();
-  isHidden= true;
+  protected basePath = '';
+  isHidden = true;
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
-  public statutes: Config<number>[];
   public courtLocations: Config<string>[];
   public policeLocations: Config<string>[];
-  public filteredStatutes1: Observable<Config<number>[]>;
-  public filteredStatutes2: Observable<Config<number>[]>;
-  public filteredStatutes3: Observable<Config<number>[]>;
 
   private progressRef: NgProgressRef;
   private MINIMUM_AGE = 18;
@@ -81,28 +73,16 @@ export class ShellTicketComponent implements OnInit {
     private formUtilsService: FormUtilsService,
     private disputeService: DisputeService,
     private disputeResource: DisputeResourceService,
-    private configService: ConfigService,
     private utilsService: UtilsService,
     private dialog: MatDialog,
     private router: Router,
     private ngProgress: NgProgress,
     private appConfigService: AppConfigService,
     private logger: LoggerService,
-    public ticketService:TicketsService,
+    public ticketService: TicketsService,
     private http: HttpClient,
   ) {
-    if (typeof this.configuration.basePath !== 'string') {
-      this.configuration.basePath = this.basePath;
-  }
     this.progressRef = this.ngProgress.ref();
-    this.statutes = this.configService.statutes;
-    this.courtLocations = this.configService.courtLocations;
-    this.policeLocations = this.configService.policeLocations;
-
-    this.maxDateOfBirth = new Date();
-    this.maxDateOfBirth.setFullYear(
-      this.todayDate.getFullYear() - this.MINIMUM_AGE
-    );
     this.isMobile = this.utilsService.isMobile();
     this.fieldsData = this.ticketService.getImageData()
     this.form = this.formBuilder.group({
@@ -173,29 +153,6 @@ export class ShellTicketComponent implements OnInit {
     //   secondCtrl: ['', Validators.required],
     // });
     // Listen for typeahead changes in the statute fields
-    this.filteredStatutes1 = this.count1Charge.valueChanges.pipe(
-      startWith(''),
-      map((value) =>
-        value ? (typeof value === 'string' ? value : value.name) : null
-      ),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
-    );
-
-    this.filteredStatutes2 = this.count2Charge.valueChanges.pipe(
-      startWith(''),
-      map((value) =>
-        value ? (typeof value === 'string' ? value : value.name) : null
-      ),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
-    );
-
-    this.filteredStatutes3 = this.count3Charge.valueChanges.pipe(
-      startWith(''),
-      map((value) =>
-        value ? (typeof value === 'string' ? value : value.name) : null
-      ),
-      map((name) => (name ? this.filterStatutes(name) : this.statutes.slice()))
-    );
 
     // Set the enabled/disabled of the count fields depending upon visibility
     this._chargeCount.valueChanges.subscribe((selectedValue) => {
@@ -207,7 +164,7 @@ export class ShellTicketComponent implements OnInit {
   public onClearBirthdate(): void {
     this.birthdate.setValue(null);
   }
-  public toggle(){
+  public toggle() {
     this.isHidden = !this.isHidden;
   }
 
@@ -233,85 +190,85 @@ export class ShellTicketComponent implements OnInit {
     };
     const payload: ShellTicketView = this.form.getRawValue();
 
-const data2: TicketDisputeView
- = 
-  {
-    violationTicketNumber: payload.violationTicketNumber,
-    violationDate: new Date(payload.violationDate),
-    violationTime: payload.violationTime? payload.violationTime.replace(' ',':'): '',
-    offences: [
-      {
-        offenceNumber: 1,
-        ticketedAmount:payload.count1FineAmount,
-        amountDue: payload.count1FineAmount,
-        violationDateTime: '2020-09-18T00:00:00',
-        offenceDescription:payload._count1ChargeDesc,
-        invoiceType: 'Traffic Violation Ticket',
-        vehicleDescription: null,
-        discountAmount: 25,
-        status: 'New',
-        offenceAgreementStatus: null,
-        requestReduction: false,
-        requestMoreTime: false,
-        reductionAppearInCourt: false,
-        _applyToAllCounts: false,
-        _allowApplyToAllCounts: false,
-        _firstOffence: false,
-        _within30days: false,
-        _amountDue:  payload.count1FineAmount,
-        _offenceStatusDesc:'Active',
-        _offenceStatus:'New'
-      },
-      {
-        offenceNumber: 2,
-        ticketedAmount: payload.count2FineAmount,
-        amountDue: payload.count2FineAmount,
-        violationDateTime: '2020-09-18T00:00:00',
-        offenceDescription:payload._count2ChargeDesc,
-        invoiceType: 'Traffic Violation Ticket',
-        vehicleDescription: null,
-        discountAmount: null,
-        status: 'New',
-        offenceAgreementStatus: null,
-        requestReduction: false,
-        requestMoreTime: false,
-        reductionAppearInCourt: false,
-        _applyToAllCounts: false,
-        _allowApplyToAllCounts: false,
-        _firstOffence: false,
-        _within30days: false,
-        _amountDue: payload.count2FineAmount,
-        _offenceStatusDesc:'Active',
-        _offenceStatus:'New'
-      },
-      {
-        offenceNumber: 3,
-        ticketedAmount: payload.count3FineAmount,
-        amountDue: payload.count3FineAmount,
-        violationDateTime: '2020-09-18T00:00:00',
-        offenceDescription:
-          payload._count3ChargeDesc,
-        invoiceType: 'Traffic Violation Ticket',
-        vehicleDescription: null,
-        discountAmount: 25,
-        status: 'New',
-        offenceAgreementStatus: null,
-        requestReduction: false,
-        requestMoreTime: false,
-        reductionAppearInCourt: false,
-        _applyToAllCounts: false,
-        _allowApplyToAllCounts: false,
-        _firstOffence: false,
-        _within30days: false,
-        _amountDue: payload.count3FineAmount,
-        _offenceStatusDesc:'Active',
-        _offenceStatus:'New'
-      }
-    ]
-}
-// this.disputeService.setTicketData({value:data2});
+    const data2: TicketDisputeView
+      =
+    {
+      violationTicketNumber: payload.violationTicketNumber,
+      violationDate: new Date(payload.violationDate),
+      violationTime: payload.violationTime ? payload.violationTime.replace(' ', ':') : '',
+      offences: [
+        {
+          offenceNumber: 1,
+          ticketedAmount: payload.count1FineAmount,
+          amountDue: payload.count1FineAmount,
+          violationDateTime: '2020-09-18T00:00:00',
+          offenceDescription: payload._count1ChargeDesc,
+          invoiceType: 'Traffic Violation Ticket',
+          vehicleDescription: null,
+          discountAmount: 25,
+          status: 'New',
+          offenceAgreementStatus: null,
+          requestReduction: false,
+          requestMoreTime: false,
+          reductionAppearInCourt: false,
+          _applyToAllCounts: false,
+          _allowApplyToAllCounts: false,
+          _firstOffence: false,
+          _within30days: false,
+          _amountDue: payload.count1FineAmount,
+          _offenceStatusDesc: 'Active',
+          _offenceStatus: 'New'
+        },
+        {
+          offenceNumber: 2,
+          ticketedAmount: payload.count2FineAmount,
+          amountDue: payload.count2FineAmount,
+          violationDateTime: '2020-09-18T00:00:00',
+          offenceDescription: payload._count2ChargeDesc,
+          invoiceType: 'Traffic Violation Ticket',
+          vehicleDescription: null,
+          discountAmount: null,
+          status: 'New',
+          offenceAgreementStatus: null,
+          requestReduction: false,
+          requestMoreTime: false,
+          reductionAppearInCourt: false,
+          _applyToAllCounts: false,
+          _allowApplyToAllCounts: false,
+          _firstOffence: false,
+          _within30days: false,
+          _amountDue: payload.count2FineAmount,
+          _offenceStatusDesc: 'Active',
+          _offenceStatus: 'New'
+        },
+        {
+          offenceNumber: 3,
+          ticketedAmount: payload.count3FineAmount,
+          amountDue: payload.count3FineAmount,
+          violationDateTime: '2020-09-18T00:00:00',
+          offenceDescription:
+            payload._count3ChargeDesc,
+          invoiceType: 'Traffic Violation Ticket',
+          vehicleDescription: null,
+          discountAmount: 25,
+          status: 'New',
+          offenceAgreementStatus: null,
+          requestReduction: false,
+          requestMoreTime: false,
+          reductionAppearInCourt: false,
+          _applyToAllCounts: false,
+          _allowApplyToAllCounts: false,
+          _firstOffence: false,
+          _within30days: false,
+          _amountDue: payload.count3FineAmount,
+          _offenceStatusDesc: 'Active',
+          _offenceStatus: 'New'
+        }
+      ]
+    }
+    // this.disputeService.setTicketData({value:data2});
 
-// this.disputeResource.updateTicketViewModel(data2)
+    // this.disputeResource.updateTicketViewModel(data2)
     this.dialog
       .open(ConfirmDialogComponent, { data })
       .afterClosed()
@@ -324,30 +281,11 @@ const data2: TicketDisputeView
           this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
             queryParams: {
               ticketNumber: payload.violationTicketNumber,
-              time: payload.violationTime? payload.violationTime.replace(' ',':'): '' ,
+              time: payload.violationTime ? payload.violationTime.replace(' ', ':') : '',
             },
           });
-
-          // this.busy = this.disputeResource
-          //   .createShellTicket(payload)
-          //   .subscribe((newShellTicket: TicketDisputeView) => {
-          //     this.disputeService.ticket$.next(newShellTicket);
-
-          //     this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-          //       queryParams: {
-          //         ticketNumber: payload.violationTicketNumber,
-          //         time: payload.violationTime,
-          //       },
-          //     });
-          //   });
         }
       });
-  }
-
-  public onDisplayWithStatute(code?: number): string | undefined {
-    return code
-      ? this.statutes.find((statute) => statute.code === code)?.name
-      : undefined;
   }
 
   public onFileChange(event: any) {
@@ -389,18 +327,18 @@ const data2: TicketDisputeView
         ticketFile,
       };
       const fd = new FormData();
-      fd.append('file',ticketFile);
+      fd.append('file', ticketFile);
 
-      this.http.post(`${this.configuration.basePath }/api/tickets/analyse`,fd)
-      .subscribe(res=>{
-        console.log('image data 2',res);
-        this.fieldsData = res;
-        this.ticketService.setImageData(res);
-        this.onFulfilled()
-        this.disputeService.shellTicketData$.next(shellTicketData);
-        this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
+      this.ticketService.apiTicketsAnalysePost(ticketFile)
+        .subscribe(res => {
+          console.log('image data 2', res);
+          this.fieldsData = res;
+          this.ticketService.setImageData(res);
+          this.onFulfilled()
+          this.disputeService.shellTicketData$.next(shellTicketData);
+          this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
 
-      })
+        })
     };
   }
 
@@ -409,24 +347,6 @@ const data2: TicketDisputeView
     chargeStatute: string
   ): number {
     let chargeId = null;
-
-    if (chargeDesc) {
-      chargeId = this.statutes.find((statute) =>
-        statute.name
-          .trim()
-          .toUpperCase()
-          .includes(chargeDesc.trim().toUpperCase())
-      )?.code;
-
-      if (!chargeId) {
-        chargeId = this.statutes.find((statute) =>
-          statute.name
-            .trim()
-            .toUpperCase()
-            .includes(chargeStatute.trim().toUpperCase())
-        )?.code;
-      }
-    }
 
     return chargeId ? chargeId : null;
   }
@@ -451,223 +371,204 @@ const data2: TicketDisputeView
     }
   }
 
-  private filterStatutes(value: string): Config<number>[] {
-    const trimValue = value.toLowerCase().replace(/\s+/g, ''); // Get rid of whitespace
-    const noBracketValue = trimValue.replace(/[\(\)']+/g, ''); // Get rid of brackets
+  private onFulfilled() {
+    // return (poller: FormPollerLike) => {
+    // this.busy = poller.pollUntilDone().then(() => {
+    // this.logger.info('result', poller.getResult());
+    const invoices = this.fieldsData
 
-    if (trimValue === noBracketValue) {
-      return this.statutes.filter((option) =>
-        option.name
-          .toLowerCase()
-          .replace(/\s+/g, '') // Get rid of whitespace
-          .replace(/[\(\)']+/g, '') // Get rid of brackets
-          .includes(noBracketValue)
+    if (!invoices || invoices.length <= 0) {
+      throw new Error('Expecting at least one invoice in analysis result');
+    }
+
+    const invoice = invoices;
+    this.logger.info('First invoice:', invoice);
+    if (!invoice.fields) {
+      return true
+    }
+
+    const invoiceIdFieldIndex = 'violationTicketNumber';
+    const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
+    if (invoiceIdField.type === 'String') {
+      this.logger.info(
+        `  violationTicketNumber: '${invoiceIdField.value || '<missing>'
+        }', with confidence of ${invoiceIdField.confidence}`
+      );
+    }
+    const invoiceDateFieldIndex = 'violationDate';
+    const invoiceDateField = invoice.fields[invoiceDateFieldIndex];
+    if (invoiceIdField.type === 'Date') {
+      this.logger.info(
+        `  violationTicketNumber: '${invoiceDateField.value || '<missing>'
+        }', with confidence of ${invoiceDateField.confidence}`
+      );
+    }
+    const invoiceTimeFieldIndex = 'violationTime';
+    const invoiceTimeField = invoice.fields[invoiceTimeFieldIndex];
+    if (invoiceTimeField.type === 'Time') {
+      this.logger.info(
+        `  violationTicketNumber: '${invoiceTimeField.value || '<missing>'
+        }', with confidence of ${invoiceTimeField.confidence}`
+      );
+    }
+    const surnameFieldIndex = 'surname';
+    const surnameField = invoice.fields[surnameFieldIndex];
+    if (surnameField.type === 'String') {
+      this.logger.info(
+        `  surname: '${surnameField.value || '<missing>'
+        }', with confidence of ${surnameField.fieldConfidence}`
+      );
+    }
+    const givenNameFieldIndex = 'givenName';
+    const givenNameField = invoice.fields[givenNameFieldIndex];
+    if (givenNameField.type === 'String') {
+      this.logger.info(
+        `  given name: '${givenNameField.value || '<missing>'
+        }', with confidence of ${givenNameField.confidence}`
+      );
+    }
+    const driverLicenceFieldIndex = 'driverLicenceNumber';
+    const driverLicenceField = invoice.fields[driverLicenceFieldIndex];
+    if (driverLicenceField.type === 'String') {
+      this.logger.info(
+        `  given name: '${driverLicenceField.value || '<missing>'
+        }', with confidence of ${driverLicenceField.confidence}`
+      );
+    }
+    const detachmentLocationFieldIndex = 'detachmentLocation';
+    const detachmentLocationField = invoice.fields[detachmentLocationFieldIndex];
+    if (detachmentLocationField.type === 'String') {
+      this.logger.info(
+        `  given name: '${detachmentLocationField.value || '<missing>'
+        }', with confidence of ${detachmentLocationField.confidence}`
+      );
+    }
+    const count1DescFieldIndex = 'count1Description';
+    const count1DescField = invoice.fields[count1DescFieldIndex];
+    if (count1DescField.type === 'String') {
+      this.logger.info(
+        `  count 1 description: '${count1DescField.value || '<missing>'
+        }', with confidence of ${count1DescField.confidence}`
+      );
+    }
+    const count1SectionFieldIndex = 'count1Section';
+    const count1SectionField = invoice.fields[count1SectionFieldIndex];
+    if (count1SectionField.valueType === 'String') {
+      this.logger.info(
+        `  count 1 section: '${count1SectionField.value || '<missing>'
+        }', with confidence of ${count1SectionField.confidence}`
+      );
+    }
+    const count1TicketAmountFieldIndex = 'count1TicketAmount';
+    const count1TicketAmountField =
+      invoice.fields[count1TicketAmountFieldIndex];
+    if (count1TicketAmountField.type === 'Double') {
+      this.logger.info(
+        `  count 1 ticket amount: '${count1TicketAmountField.value || '<missing>'
+        }', with confidence of ${count1TicketAmountField.confidence}`
+      );
+    }
+    const driverLicenseProvinceIndex = 'driverLicenceProvince';
+    const driverLicenceProvinceField = invoice.fields[driverLicenseProvinceIndex];
+
+    const count1ActRegsFieldIndex = 'count1ActRegs';
+    const count1ActRegsField = invoice.fields[count1ActRegsFieldIndex];
+    if (count1ActRegsField.type === 'String') {
+      this.logger.info(
+        `  count 1 ticket amount: '${count1ActRegsField.value || '<missing>'
+        }', with confidence of ${count1ActRegsField.confidence}`
+      );
+    }
+    const count2DescFieldIndex = 'count2Description';
+    const count2DescField = invoice.fields[count2DescFieldIndex];
+    if (count2DescField.type === 'String') {
+      this.logger.info(
+        `  count 2 description: '${count2DescField.value || '<missing>'
+        }', with confidence of ${count2DescField.confidence}`
+      );
+    }
+    const count2SectionFieldIndex = 'count2Section';
+    const count2SectionField = invoice.fields[count2SectionFieldIndex];
+    if (count2SectionField.type === 'String') {
+      this.logger.info(
+        `  count 2 section: '${count2SectionField.value || '<missing>'
+        }', with confidence of ${count2SectionField.confidence}`
+      );
+    }
+    const count2TicketAmountFieldIndex = 'count2TicketAmount';
+    const count2TicketAmountField =
+      invoice.fields[count2TicketAmountFieldIndex];
+    if (count2TicketAmountField.type === 'Double') {
+      this.logger.info(
+        `  count 2 ticket amount: '${count2TicketAmountField.value || '<missing>'
+        }', with confidence of ${count2TicketAmountField.confidence}`
+      );
+    }
+    const count2ActRegsFieldIndex = 'count2ActRegs';
+    const count2ActRegsField = invoice.fields[count2ActRegsFieldIndex];
+    if (count2ActRegsField.type === 'String') {
+      this.logger.info(
+        `  count 2 ticket amount: '${count2ActRegsField.value || '<missing>'
+        }', with confidence of ${count2ActRegsField.confidence}`
+      );
+    }
+    const count3DescFieldIndex = 'count3Description';
+    const count3DescField = invoice.fields[count3DescFieldIndex];
+    if (count3DescField.type === 'String') {
+      this.logger.info(
+        `  count 3 description: '${count3DescField.value || '<missing>'
+        }', with confidence of ${count3DescField.confidence}`
+      );
+    }
+    const count3SectionFieldIndex = 'count3Section';
+    const count3SectionField = invoice.fields[count3SectionFieldIndex];
+    if (count3SectionField.type === 'String') {
+      this.logger.info(
+        `  count 3 section: '${count3SectionField.value || '<missing>'
+        }', with confidence of ${count3SectionField.confidence}`
+      );
+    }
+    const count3TicketAmountFieldIndex = 'count3TicketAmount';
+    const count3TicketAmountField =
+      invoice.fields[count3TicketAmountFieldIndex];
+    if (count3TicketAmountField.type === 'Double') {
+      this.logger.info(
+        `  count 3 ticket amount: '${count3TicketAmountField.value || '<missing>'
+        }', with confidence of ${count3TicketAmountField.confidence}`
+      );
+    }
+    const count3ActRegsFieldIndex = 'count3ActRegs';
+    const count3ActRegsField = invoice.fields[count3ActRegsFieldIndex];
+    if (count3ActRegsField.type === 'String') {
+      this.logger.info(
+        `  count 3 ticket amount: '${count3ActRegsField.value || '<missing>'
+        }', with confidence of ${count3ActRegsField.confidence}`
       );
     }
 
-    return this.statutes.filter((option) =>
-      option.name.toLowerCase().replace(/\s+/g, '').includes(trimValue)
-    );
-  }
-
-  private onFulfilled() {
-    // return (poller: FormPollerLike) => {
-      // this.busy = poller.pollUntilDone().then(() => {
-        // this.logger.info('result', poller.getResult());
-        const invoices = this.fieldsData
-
-        if (!invoices || invoices.length <= 0) {
-          throw new Error('Expecting at least one invoice in analysis result');
-        }
-
-        const invoice = invoices;
-        this.logger.info('First invoice:', invoice);
-        if(!invoice.fields){
-          return  true
-        }
-
-        const invoiceIdFieldIndex = 'violationTicketNumber';
-        const invoiceIdField = invoice.fields[invoiceIdFieldIndex];
-        if (invoiceIdField.type === 'String') {
-          this.logger.info(
-            `  violationTicketNumber: '${invoiceIdField.value || '<missing>'
-            }', with confidence of ${invoiceIdField.confidence}`
-          );
-        }
-        const invoiceDateFieldIndex = 'violationDate';
-        const invoiceDateField = invoice.fields[invoiceDateFieldIndex];
-        if (invoiceIdField.type === 'Date') {
-          this.logger.info(
-            `  violationTicketNumber: '${invoiceDateField.value || '<missing>'
-            }', with confidence of ${invoiceDateField.confidence}`
-          );
-        }
-        const invoiceTimeFieldIndex = 'violationTime';
-        const invoiceTimeField = invoice.fields[invoiceTimeFieldIndex];
-        if (invoiceTimeField.type === 'Time') {
-          this.logger.info(
-            `  violationTicketNumber: '${invoiceTimeField.value || '<missing>'
-            }', with confidence of ${invoiceTimeField.confidence}`
-          );
-        }
-        const surnameFieldIndex = 'surname';
-        const surnameField = invoice.fields[surnameFieldIndex];
-        if (surnameField.type === 'String') {
-          this.logger.info(
-            `  surname: '${surnameField.value || '<missing>'
-            }', with confidence of ${surnameField.fieldConfidence}`
-          );
-        }
-        const givenNameFieldIndex = 'givenName';
-        const givenNameField = invoice.fields[givenNameFieldIndex];
-        if (givenNameField.type === 'String') {
-          this.logger.info(
-            `  given name: '${givenNameField.value || '<missing>'
-            }', with confidence of ${givenNameField.confidence}`
-          );
-        }
-        const driverLicenceFieldIndex = 'driverLicenceNumber';
-        const driverLicenceField = invoice.fields[driverLicenceFieldIndex];
-        if (driverLicenceField.type === 'String') {
-          this.logger.info(
-            `  given name: '${driverLicenceField.value || '<missing>'
-            }', with confidence of ${driverLicenceField.confidence}`
-          );
-        }
-        const detachmentLocationFieldIndex = 'detachmentLocation';
-        const detachmentLocationField = invoice.fields[detachmentLocationFieldIndex];
-        if (detachmentLocationField.type === 'String') {
-          this.logger.info(
-            `  given name: '${detachmentLocationField.value || '<missing>'
-            }', with confidence of ${detachmentLocationField.confidence}`
-          );
-        }
-        const count1DescFieldIndex = 'count1Description';
-        const count1DescField = invoice.fields[count1DescFieldIndex];
-        if (count1DescField.type === 'String') {
-          this.logger.info(
-            `  count 1 description: '${count1DescField.value || '<missing>'
-            }', with confidence of ${count1DescField.confidence}`
-          );
-        }
-        const count1SectionFieldIndex = 'count1Section';
-        const count1SectionField = invoice.fields[count1SectionFieldIndex];
-        if (count1SectionField.valueType === 'String') {
-          this.logger.info(
-            `  count 1 section: '${count1SectionField.value || '<missing>'
-            }', with confidence of ${count1SectionField.confidence}`
-          );
-        }
-        const count1TicketAmountFieldIndex = 'count1TicketAmount';
-        const count1TicketAmountField =
-          invoice.fields[count1TicketAmountFieldIndex];
-        if (count1TicketAmountField.type === 'Double') {
-          this.logger.info(
-            `  count 1 ticket amount: '${count1TicketAmountField.value || '<missing>'
-            }', with confidence of ${count1TicketAmountField.confidence}`
-          );
-        }
-        const driverLicenseProvinceIndex = 'driverLicenceProvince';
-        const driverLicenceProvinceField = invoice.fields[driverLicenseProvinceIndex];
-        
-        const count1ActRegsFieldIndex = 'count1ActRegs';
-        const count1ActRegsField = invoice.fields[count1ActRegsFieldIndex];
-        if (count1ActRegsField.type === 'String') {
-          this.logger.info(
-            `  count 1 ticket amount: '${count1ActRegsField.value || '<missing>'
-            }', with confidence of ${count1ActRegsField.confidence}`
-          );
-        }
-        const count2DescFieldIndex = 'count2Description';
-        const count2DescField = invoice.fields[count2DescFieldIndex];
-        if (count2DescField.type === 'String') {
-          this.logger.info(
-            `  count 2 description: '${count2DescField.value || '<missing>'
-            }', with confidence of ${count2DescField.confidence}`
-          );
-        }
-        const count2SectionFieldIndex = 'count2Section';
-        const count2SectionField = invoice.fields[count2SectionFieldIndex];
-        if (count2SectionField.type === 'String') {
-          this.logger.info(
-            `  count 2 section: '${count2SectionField.value || '<missing>'
-            }', with confidence of ${count2SectionField.confidence}`
-          );
-        }
-        const count2TicketAmountFieldIndex = 'count2TicketAmount';
-        const count2TicketAmountField =
-          invoice.fields[count2TicketAmountFieldIndex];
-        if (count2TicketAmountField.type === 'Double') {
-          this.logger.info(
-            `  count 2 ticket amount: '${count2TicketAmountField.value || '<missing>'
-            }', with confidence of ${count2TicketAmountField.confidence}`
-          );
-        }
-        const count2ActRegsFieldIndex = 'count2ActRegs';
-        const count2ActRegsField = invoice.fields[count2ActRegsFieldIndex];
-        if (count2ActRegsField.type === 'String') {
-          this.logger.info(
-            `  count 2 ticket amount: '${count2ActRegsField.value || '<missing>'
-            }', with confidence of ${count2ActRegsField.confidence}`
-          );
-        }
-        const count3DescFieldIndex = 'count3Description';
-        const count3DescField = invoice.fields[count3DescFieldIndex];
-        if (count3DescField.type === 'String') {
-          this.logger.info(
-            `  count 3 description: '${count3DescField.value || '<missing>'
-            }', with confidence of ${count3DescField.confidence}`
-          );
-        }
-        const count3SectionFieldIndex = 'count3Section';
-        const count3SectionField = invoice.fields[count3SectionFieldIndex];
-        if (count3SectionField.type === 'String') {
-          this.logger.info(
-            `  count 3 section: '${count3SectionField.value || '<missing>'
-            }', with confidence of ${count3SectionField.confidence}`
-          );
-        }
-        const count3TicketAmountFieldIndex = 'count3TicketAmount';
-        const count3TicketAmountField =
-          invoice.fields[count3TicketAmountFieldIndex];
-        if (count3TicketAmountField.type === 'Double') {
-          this.logger.info(
-            `  count 3 ticket amount: '${count3TicketAmountField.value || '<missing>'
-            }', with confidence of ${count3TicketAmountField.confidence}`
-          );
-        }
-        const count3ActRegsFieldIndex = 'count3ActRegs';
-        const count3ActRegsField = invoice.fields[count3ActRegsFieldIndex];
-        if (count3ActRegsField.type === 'String') {
-          this.logger.info(
-            `  count 3 ticket amount: '${count3ActRegsField.value || '<missing>'
-            }', with confidence of ${count3ActRegsField.confidence}`
-          );
-        }
-
-        let chargeCount = 0;
-        if (
-          count1DescField.value ||
-          count1SectionField.value ||
-          count1TicketAmountField.value
-        ) {
-          chargeCount++;
-        }
-        if (
-          count2DescField.value ||
-          count2SectionField.value ||
-          count2TicketAmountField.value
-        ) {
-          chargeCount++;
-        }
-        if (
-          count3DescField.value ||
-          count3SectionField.valuet ||
-          count3TicketAmountField.value
-        ) {
-          chargeCount++;
-        }
-        this.logger.info('chargeCount', chargeCount);
+    let chargeCount = 0;
+    if (
+      count1DescField.value ||
+      count1SectionField.value ||
+      count1TicketAmountField.value
+    ) {
+      chargeCount++;
+    }
+    if (
+      count2DescField.value ||
+      count2SectionField.value ||
+      count2TicketAmountField.value
+    ) {
+      chargeCount++;
+    }
+    if (
+      count3DescField.value ||
+      count3SectionField.valuet ||
+      count3TicketAmountField.value
+    ) {
+      chargeCount++;
+    }
+    this.logger.info('chargeCount', chargeCount);
 
     const shellTicket: ShellTicketView = {
       violationTicketNumber: invoiceIdField.value
@@ -676,7 +577,7 @@ const data2: TicketDisputeView
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-      violationDate: new Date(moment(invoiceDateField.value).utc().format('L')),
+      violationDate: invoiceDateField.value,
 
       lastName: surnameField.value
         ? surnameField.value
@@ -741,36 +642,14 @@ const data2: TicketDisputeView
       _amountOwing: 0,
     };
 
-        this.logger.info('before', { ...shellTicket });
+    this.logger.info('before', { ...shellTicket });
 
-        // shellTicket.count1Charge = this.findMatchingCharge(
-        //   shellTicket._count1ChargeDesc,
-        //   shellTicket._count1ChargeSection
-        // );
-        // shellTicket.count2Charge = this.findMatchingCharge(
-        //   shellTicket._count2ChargeDesc,
-        //   shellTicket._count2ChargeSection
-        // );
-        // shellTicket.count3Charge = this.findMatchingCharge(
-        //   shellTicket._count3ChargeDesc,
-        //   shellTicket._count3ChargeSection
-        // );
+    delete shellTicket._count1ChargeSection;
+    delete shellTicket._count2ChargeSection;
+    delete shellTicket._count3ChargeSection;
 
-        // console.log('after', { ...shellTicket });
-
-        // delete shellTicket._count1ChargeDesc;
-        // delete shellTicket._count2ChargeDesc;
-        // delete shellTicket._count3ChargeDesc;
-        delete shellTicket._count1ChargeSection;
-        delete shellTicket._count2ChargeSection;
-        delete shellTicket._count3ChargeSection;
-
-        this.form.setValue(shellTicket);
-        // this.disputeService.shellTicket$.next(shellTicket);
-
-        this.progressRef.complete();
-      // });
-    // };
+    this.form.setValue(shellTicket);
+    this.progressRef.complete();
   }
 
   private onRejected(info) {

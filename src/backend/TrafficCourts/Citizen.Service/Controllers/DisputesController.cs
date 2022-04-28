@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Disputes;
-using TrafficCourts.Citizen.Service.Models.Deprecated;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
@@ -45,62 +44,5 @@ namespace TrafficCourts.Citizen.Service.Controllers
 
             return Ok(response);
         }
-
-
-        [Obsolete]
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> TicketDispute([FromBody] CreateDisputeCommand createDisputeCommand)
-        {
-            //var response = await _mediator.Send(createDisputeCommand);
-            //if (response.Id == 0)
-            //{
-            //    ModelState.AddModelError("TicketNumber", "the dispute already exists for this ticket.");
-            //    return BadRequest(ApiResponse.BadRequest(ModelState));
-            //}
-            //return RedirectToAction("Ticket", "Tickets", new { ticketNumber = createDisputeCommand.ViolationTicketNumber, time = createDisputeCommand.ViolationTime });
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> OffenceDispute([FromBody] CreateOffenceDisputeCommand createOffenceDisputeCommand)
-        {
-            //var response = await _mediator.Send(createOffenceDisputeCommand);
-            //if (response.Id == 0)
-            //{
-            //    ModelState.AddModelError("DisputeOffenceNumber", "Cannot find the offence.");
-            //    return BadRequest(ApiResponse.BadRequest(ModelState));
-            //}
-            //return Ok();
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpGet]
-        [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetDisputes()
-        {
-            //var disputes = await _mediator.Send(new GetAllDisputesQuery());
-
-            //return disputes == null ? NoContent() : Ok(ApiResponse.Result(disputes));
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpGet("{disputeId}")]
-        [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetDispute(int disputeId)
-        {
-            // Note: the ProducesResponseType if list of dispute would be wrong... but keeping it to maintain backward compatibility with generated front end code 
-
-            //var dispute = await _mediator.Send(new GetDisputeQuery { DisputeId = disputeId });
-            //return dispute == null ? NoContent() : Ok(ApiResponse.Result(dispute));
-            return NoContent();
-        }
-
     }
 }

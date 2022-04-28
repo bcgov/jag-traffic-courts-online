@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TrafficCourts.Citizen.Service.Models.Deprecated;
 using TrafficCourts.Citizen.Service.Services;
 using Statute = TrafficCourts.Citizen.Service.Models.Tickets.Statute;
 
@@ -17,24 +16,6 @@ public class LookupController : ControllerBase
         ArgumentNullException.ThrowIfNull(logger);
         _lookupService = lookupService;
         _logger = logger;
-    }
-
-    [Obsolete]
-    [HttpGet]
-    [Produces("application/json")]
-    [ProducesResponseType(typeof(LookupsAllApiResultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Get()
-    {
-        //_logger.LogDebug("Getting lookup tables");
-        //LookupsAll lookUpsAll = await _lookupsService.GetAllLookUpsAsync();
-        //if (lookUpsAll == null)
-        //    return NoContent();
-        //return Ok(new ApiResultResponse<LookupsAll>(lookUpsAll));
-
-        var response = new ApiResultResponse<LookupsAll>(new LookupsAll());
-
-        return Ok(response);
     }
 
     /// <summary> 

@@ -16,7 +16,7 @@ export class MockConfigService extends ConfigService implements IConfigService {
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService
   ) {
-    super(utilsService, appConfigService, lookupAPIService);
+    super(utilsService, appConfigService);
 
     // Load the runtime configuration
     this.load().subscribe();

@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Config, Configuration, ProvinceConfig } from '@config/config.model';
-import { ApiHttpResponse } from '@core/models/api-http-response.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
-import { LookupService } from 'app/api';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -24,13 +22,13 @@ export class ConfigService implements IConfigService {
   private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>(
     ''
   );
+  private disputeError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
 
   constructor(
     protected utilsService: UtilsService,
     protected appConfigService: AppConfigService,
-    protected lookupAPIService: LookupService
   ) { }
 
   public get dispute_submitted$(): BehaviorSubject<string> {
@@ -51,6 +49,14 @@ export class ConfigService implements IConfigService {
 
   public get ticket_error$(): BehaviorSubject<string> {
     return this.ticketError;
+  }
+
+  public get dispute_error(): string {
+    return this.disputeError.value;
+  }
+
+  public get dispute_error$(): BehaviorSubject<string> {
+    return this.disputeError;
   }
 
   public get ticket_error(): string {
@@ -118,7 +124,7 @@ export class ConfigService implements IConfigService {
    * Get the configuration for bootstrapping the application.
    */
   private getConfiguration(): Observable<Configuration> {
-    return this.lookupAPIService.apiLookupGetGet().pipe(map((response: ApiHttpResponse<Configuration>) => response.result));
+    return null;
   }
 
   /**

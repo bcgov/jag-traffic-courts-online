@@ -28,12 +28,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
     // handle translations
     if (currentRoutePath.includes('json')) {
       return next.handle(request);
-
-      // TODO: remove later
-      // for now, lookups always use mock
-    } else if (currentRoutePath === 'lookup') {
-      return this.handleLookupsRequests(request.method);
-    }
+    } 
 
     if (this.appConfigService.useMockServices) {
       if (
@@ -59,19 +54,7 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         // Handle 'dispute' requests
       } else if (currentRoutePath.includes('dispute')) {
         return this.handleDisputesRequests(request.method);
-
-        // Handle 'addressAutocomplete' requests
-      } else if (currentRoutePath.includes('find')) {
-        return this.handleAddressAutocompleteFindRequests(request.method);
-
-        // Handle 'addressAutocomplete' requests
-      } else if (currentRoutePath.includes('retrieve')) {
-        return this.handleAddressAutocompleteRetrieveRequests(request.method);
-
-        // Handle 'lookup' requests
-      } else if (currentRoutePath === 'lookup') {
-        return this.handleLookupsRequests(request.method);
-      }
+      } 
     }
     return next.handle(request);
   }
@@ -135,66 +118,6 @@ export class BackendHttpInterceptor implements HttpInterceptor {
         break;
       case 'GET':
       case 'PUT':
-      default:
-        throw new HttpErrorResponse({
-          error: 'Mock Bad Request',
-          status: 400,
-        });
-    }
-  }
-
-  private handleAddressAutocompleteFindRequests(
-    requestMethod: string
-  ): Observable<HttpEvent<unknown>> {
-    switch (requestMethod) {
-      case 'GET':
-        return of(
-          new HttpResponse({
-            status: 200,
-            body: this.mockDisputeService.addressAutocompleteFindResponse,
-          })
-        );
-        break;
-      default:
-        throw new HttpErrorResponse({
-          error: 'Mock Bad Request',
-          status: 400,
-        });
-    }
-  }
-
-  private handleAddressAutocompleteRetrieveRequests(
-    requestMethod: string
-  ): Observable<HttpEvent<unknown>> {
-    switch (requestMethod) {
-      case 'GET':
-        return of(
-          new HttpResponse({
-            status: 200,
-            body: this.mockDisputeService.addressAutocompleteRetrieveResponse,
-          })
-        );
-        break;
-      default:
-        throw new HttpErrorResponse({
-          error: 'Mock Bad Request',
-          status: 400,
-        });
-    }
-  }
-
-  private handleLookupsRequests(
-    requestMethod: string
-  ): Observable<HttpEvent<unknown>> {
-    switch (requestMethod) {
-      case 'GET':
-        return of(
-          new HttpResponse({
-            status: 200,
-            body: { result: MockConfig.get() },
-          })
-        );
-        break;
       default:
         throw new HttpErrorResponse({
           error: 'Mock Bad Request',

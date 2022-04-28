@@ -10,7 +10,7 @@ public class OnlyMVAIsSelectedRule : ValidationRule
 {
     private readonly OcrViolationTicket _violationTicket;
 
-    public OnlyMVAIsSelectedRule(OcrViolationTicket.Field field, OcrViolationTicket violationTicket) : base(field)
+    public OnlyMVAIsSelectedRule(Field field, OcrViolationTicket violationTicket) : base(field)
     {
         this._violationTicket = violationTicket;
     }

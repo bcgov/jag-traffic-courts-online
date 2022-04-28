@@ -8,6 +8,7 @@
     "start": "yarn run configure -- --environment=dev && ng serve --proxy-config proxy.conf.json",
     "build-dev": "yarn run configure -- --environment=dev && ng build --source-map=false",
     "build-prod": "yarn run configure -- --environment=prod && ng build --configuration production --source-map=false",
+    "api:generate": "docker pull openapitools/openapi-generator-cli:latest && docker run --rm -v \"$(pwd)\"/src/app/api:/local openapitools/openapi-generator-cli generate -i /local/client-api.json -g typescript-angular -t /local/templates --additional-properties=modelFileSuffix=.model -o /local",
     "test": "ng test",
     "lint": "ng lint",
     "audit": "yarn-audit-fix --dry-run",
@@ -36,9 +37,6 @@
     "bootstrap": "^5.1.0",
     "colors": "^1.4.0",
     "dotenv": "^10.0.0",
-    "keycloak-angular": "^8.3.0",
-    "keycloak-js": "^15.0.0",
-    "moment": "^2.29.2",
     "ng-busy": "^12.0.1",
     "ngx-mask": "^12.0.0",
     "ngx-material-timepicker": "^5.5.3",
@@ -46,7 +44,6 @@
     "rxjs": "~7.5.5",
     "tslib": "^2.3.0",
     "yargs": "^17.1.0",
-    "yarn": "^1.22.11",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -77,6 +74,7 @@
     "protractor": "~7.0.0",
     "ts-node": "~10.1.0",
     "typescript": "~4.6.3",
+    "yarn": "^1.22.11",
     "yarn-audit-fix": "^7.0.4"
   }
 }
