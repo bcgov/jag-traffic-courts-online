@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
-using TrafficCourts.Citizen.Service.Models.Deprecated;
 using TrafficCourts.Citizen.Service.Models.Search;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
@@ -125,86 +124,6 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 return new ObjectResult(problemDetails);
             }
             return Ok(response.OcrViolationTicket);
-        }
-
-        // ---------------------------------------------------------------------------
-        // Obsolete actions
-        // ---------------------------------------------------------------------------
-
-        /// <summary>
-        /// This API is depricated. Use /api/tickets/search instead.
-        /// </summary>
-        /// <param name="ticketNumber">The violation ticket number. Must start with two upper case letters and end with eight digits.</param>
-        /// <param name="time">The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
-        [Obsolete($"Use {nameof(SearchAsync)}")]
-        [HttpGet]
-        [ProducesResponseType(typeof(Models.Deprecated.TicketDispute), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> TicketAsync(
-            [FromQuery]
-            [Required]
-            [RegularExpression(Search.Request.TicketNumberRegex, ErrorMessage = "ticketNumber must start with two upper case letters and 6 or more numbers")] string ticketNumber,
-            [FromQuery]
-            [Required]
-            [RegularExpression(Search.Request.TimeRegex, ErrorMessage = "time must be properly formatted 24 hour clock")] string time,
-            CancellationToken cancellationToken)
-        {
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpGet]
-        [ProducesResponseType(typeof(ShellTicket), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetShellTicket([FromBody] CreateShellTicketCommand createShellTicket)
-        {
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpPost]
-        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ShellTicket([FromBody] CreateShellTicketCommand createShellTicket)
-        {
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpGet]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Pay([FromQuery] TicketPaymentCommand ticketPayment)
-        {
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpPost]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Pay([FromQuery] TicketPaymentConfirmCommand ticketPayConfirm)
-        {
-            return NoContent();
-        }
-
-        [Obsolete]
-        [HttpPost]
-        [ProducesResponseType(typeof(TicketDisputeApiResultResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiMessageResponse), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ImageUpload([FromForm] ShellTicketImageCommand shellTicketImage)
-        {
-            return NoContent();
         }
     }
 }

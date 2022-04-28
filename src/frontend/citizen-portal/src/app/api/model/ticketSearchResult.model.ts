@@ -23,7 +23,7 @@ export interface TicketSearchResult {
     /**
      * The date the violation ticket was issued.
      */
-    violationDate?: Date;
+    violationDate?: string;
     /**
      * The time of day the violation ticket was issued. This will match the time searched for.
      */
