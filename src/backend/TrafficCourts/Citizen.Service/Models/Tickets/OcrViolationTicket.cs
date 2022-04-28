@@ -100,172 +100,170 @@ public class OcrViolationTicket
             || Fields[Count3Section].IsPopulated()
             || Fields[Count3TicketAmount].IsPopulated();
     }
+}
 
-    public class Field
+public class Field
+{
+    private static readonly string _dateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
+    private static readonly string _timeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
+    private static readonly string _currencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
+
+    public Field() { }
+
+    public Field(string? value)
     {
+        Value = value;
+    }
 
-        private static readonly string _dateRegex = @"^(\d{2}|\d{4})\D+(\d{1,2})\D+(\d{1,2})$";
-        private static readonly string _timeRegex = @"^(\d{1,2})\D*(\d{1,2})$";
-        private static readonly string _currencyRegex = @"^\$?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$";
+    [JsonIgnore]
+    public string? TagName { get; set; }
 
-        public Field() { }
+    [JsonIgnore]
+    public string? JsonName { get; set; }
 
-        public Field(string? value)
+    public string? Value { get; set; }
+
+    public float? FieldConfidence { get; set; }
+
+    /// <summary>
+    /// A list of field-specific reasons why the field Confidence may be low
+    /// </summary>
+    public List<string> ValidationErrors { get; set; } = new List<string>();
+
+    public string? Type { get; set; }
+
+    public List<BoundingBox> BoundingBoxes { get; set; } = new List<BoundingBox>();
+
+    /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
+    public bool? IsCheckboxSelected()
+    {
+        if (Value?.Equals("selected") ?? false)
         {
-            Value = value;
+            return true;
         }
-
-        [JsonIgnore]
-        public string? TagName { get; set; }
-
-        [JsonIgnore]
-        public string? JsonName { get; set; }
-
-        public string? Value { get; set; }
-
-        public float? FieldConfidence { get; set; }
-
-        /// <summary>
-        /// A list of field-specific reasons why the field Confidence may be low
-        /// </summary>
-        public List<string> ValidationErrors { get; set; } = new List<string>();
-
-        public string? Type { get; set; }
-
-        public List<BoundingBox> BoundingBoxes { get; set; } = new List<BoundingBox>();
-
-        /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
-        public bool? IsCheckboxSelected()
+        if (Value?.Equals("unselected") ?? false)
         {
-            if (Value?.Equals("selected") ?? false)
-            {
-                return true;
-            }
-            if (Value?.Equals("unselected") ?? false)
-            {
-                return false;
-            }
-            return null;
+            return false;
         }
+        return null;
+    }
 
-        /// <summary>Returns a valid DateTime object if the Value string represents a date and is of the form 'yyyy MM dd', null otherwise.</summary>
-        public DateTime? GetDate()
+    /// <summary>Returns a valid DateTime object if the Value string represents a date and is of the form 'yyyy MM dd', null otherwise.</summary>
+    public DateTime? GetDate()
+    {
+        if (Value is not null)
         {
-            if (Value is not null)
+            try
             {
-                try
+                Regex rg = new(_dateRegex);
+                Match match = rg.Match(Value);
+                if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
                 {
-                    Regex rg = new(_dateRegex);
-                    Match match = rg.Match(Value);
-                    if (match.Groups.Count == 4) // 3 + index 0 (the Value itself)
+                    int year = int.Parse(match.Groups[1].Value);
+                    if (year < 100)
                     {
-                        int year = int.Parse(match.Groups[1].Value);
-                        if (year < 100)
-                        {
-                            year += 2000;
-                        }
-                        int month = int.Parse(match.Groups[2].Value);
-                        int day = int.Parse(match.Groups[3].Value);
+                        year += 2000;
+                    }
+                    int month = int.Parse(match.Groups[2].Value);
+                    int day = int.Parse(match.Groups[3].Value);
+                    return new DateTime(year, month, day);
+                }
+                else
+                {
+                    // pattern didn't match.  Try extracting all digits. If there are 8, convert to a date.
+                    string newValue = Regex.Replace(Value, @"\D", "");
+                    if (newValue.Length == 8)
+                    {
+                        int year = int.Parse(newValue[..4]);
+                        int month = int.Parse(newValue.Substring(4, 2));
+                        int day = int.Parse(newValue.Substring(6, 2));
                         return new DateTime(year, month, day);
                     }
-                    else
-                    {
-                        // pattern didn't match.  Try extracting all digits. If there are 8, convert to a date.
-                        string newValue = Regex.Replace(Value, @"\D", "");
-                        if (newValue.Length == 8)
-                        {
-                            int year = int.Parse(newValue[..4]);
-                            int month = int.Parse(newValue.Substring(4, 2));
-                            int day = int.Parse(newValue.Substring(6, 2));
-                            return new DateTime(year, month, day);
-                        }
-                    }
-                }
-                catch (System.Exception)
-                {
-                    // No-op.  Will return null.
                 }
             }
-            return null;
-        }
-
-        /// <summary>Returns a valid DateTime object if the Value string represents a date and is of the form 'HH mm', null otherwise.</summary>
-        public TimeSpan? GetTime()
-        {
-            if (Value is not null)
+            catch (System.Exception)
             {
-                try
+                // No-op.  Will return null.
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Returns a valid DateTime object if the Value string represents a date and is of the form 'HH mm', null otherwise.</summary>
+    public TimeSpan? GetTime()
+    {
+        if (Value is not null)
+        {
+            try
+            {
+                Regex rg = new(_timeRegex);
+                Match match = rg.Match(Value);
+                if (match.Groups.Count == 3 && Value.Length > 2) // 2 + index 0 (the Value itself)
                 {
-                    Regex rg = new(_timeRegex);
-                    Match match = rg.Match(Value);
-                    if (match.Groups.Count == 3 && Value.Length > 2) // 2 + index 0 (the Value itself)
+                    int hour = int.Parse(match.Groups[1].Value);
+                    int minute = int.Parse(match.Groups[2].Value);
+                    return new(hour, minute, 0);
+                }
+                else
+                {
+                    // pattern didn't match.  Try extracting all digits. If there are 4, convert to a time.
+                    string newValue = Regex.Replace(Value, @"\D", "");
+                    if (newValue.Length == 4)
                     {
-                        int hour = int.Parse(match.Groups[1].Value);
-                        int minute = int.Parse(match.Groups[2].Value);
+                        int hour = int.Parse(newValue[..2]);
+                        int minute = int.Parse(newValue.Substring(2, 2));
                         return new(hour, minute, 0);
                     }
-                    else
-                    {
-                        // pattern didn't match.  Try extracting all digits. If there are 4, convert to a time.
-                        string newValue = Regex.Replace(Value, @"\D", "");
-                        if (newValue.Length == 4)
-                        {
-                            int hour = int.Parse(newValue[..2]);
-                            int minute = int.Parse(newValue.Substring(2, 2));
-                            return new(hour, minute, 0);
-                        }
-                    }
-                }
-                catch (System.Exception)
-                {
-                    // No-op.  Will return null.
                 }
             }
-            return null;
-        }
-
-        /// <summary>Returns a valid float if the Value string represents a currency and is of the form '$xx.xx' (or similar), null otherwise.</summary>
-        public float? GetCurrency()
-        {
-            if (Value is not null)
+            catch (System.Exception)
             {
-                try
+                // No-op.  Will return null.
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Returns a valid float if the Value string represents a currency and is of the form '$xx.xx' (or similar), null otherwise.</summary>
+    public float? GetCurrency()
+    {
+        if (Value is not null)
+        {
+            try
+            {
+                Regex rg = new(_currencyRegex);
+                if (Regex.IsMatch(Value, _currencyRegex))
                 {
-                    Regex rg = new(_currencyRegex);
-                    if (Regex.IsMatch(Value, _currencyRegex))
-                    {
-                        return float.Parse(Value.Replace("$", "").Replace(",", ""));
-                    }
-                }
-                catch (System.Exception)
-                {
-                    // No-op.  Will return null.
+                    return float.Parse(Value.Replace("$", "").Replace(",", ""));
                 }
             }
-            return null;
+            catch (System.Exception)
+            {
+                // No-op.  Will return null.
+            }
         }
-
-        public bool IsPopulated()
-        {
-            return !String.IsNullOrEmpty(Value);
-        }
+        return null;
     }
 
-    public class BoundingBox
+    public bool IsPopulated()
     {
-        public List<Point> Points { get; set; } = new List<Point>();
+        return !String.IsNullOrEmpty(Value);
     }
+}
 
-    public class Point
+public class BoundingBox
+{
+    public List<Point> Points { get; set; } = new List<Point>();
+}
+
+public class Point
+{
+    public Point(float x, float y)
     {
-        public Point(float x, float y)
-        {
-            this.X = x;
-            this.Y = y;
-        }
-
-        public float X { get; set; }
-        public float Y { get; set; }
+        this.X = x;
+        this.Y = y;
     }
 
+    public float X { get; set; }
+    public float Y { get; set; }
 }

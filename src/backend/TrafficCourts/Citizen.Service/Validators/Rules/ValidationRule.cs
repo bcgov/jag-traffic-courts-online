@@ -5,12 +5,12 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 public abstract class ValidationRule
 {
 
-    public ValidationRule(Field field)
+    public ValidationRule(Models.Tickets.Field field)
     {
         Field = field;
     }
 
-    public Field Field { get; }
+    public Models.Tickets.Field Field { get; }
 
     public bool IsValid()
     {

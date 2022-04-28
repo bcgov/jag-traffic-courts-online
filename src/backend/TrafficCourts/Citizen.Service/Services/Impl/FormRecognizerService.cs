@@ -90,7 +90,7 @@ public class FormRecognizerService : IFormRecognizerService
 
         foreach (var fieldLabel in _fieldLabels)
         {
-            OcrViolationTicket.Field field = new();
+            Field field = new();
             field.TagName = fieldLabel.Key;
             field.JsonName = fieldLabel.Value;
 
@@ -102,11 +102,11 @@ public class FormRecognizerService : IFormRecognizerService
                 field.Type = Enum.GetName(extractedField.ValueType);
                 foreach (BoundingRegion region in extractedField.BoundingRegions)
                 {
-                    OcrViolationTicket.BoundingBox boundingBox = new();
-                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                    boundingBox.Points.Add(new OcrViolationTicket.Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                    Models.Tickets.BoundingBox boundingBox = new();
+                    boundingBox.Points.Add(new Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
+                    boundingBox.Points.Add(new Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
                     field.BoundingBoxes.Add(boundingBox);
                 }
             }

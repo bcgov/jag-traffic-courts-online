@@ -8,7 +8,7 @@ public class TicketAmountValidRule : ValidationRule
 {
 
     /// <summary>Validates a Ticket Amount field - should be a parsable currency field, ie. '$120.00' or simply '120'.</summary>
-    public TicketAmountValidRule(OcrViolationTicket.Field field) : base(field)
+    public TicketAmountValidRule(Field field) : base(field)
     {
     }
 

@@ -4,7 +4,7 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 
 public class CheckboxIsValidRule : ValidationRule
 {
-    public CheckboxIsValidRule(OcrViolationTicket.Field field) : base(field)
+    public CheckboxIsValidRule(Field field) : base(field)
     {
     }
 
