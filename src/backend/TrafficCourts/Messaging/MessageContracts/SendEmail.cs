@@ -9,14 +9,14 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// <summary>
     /// Interface message contract for sending emails
     /// </summary>
-    public interface SendEmail : IMessage
+    public class SendEmail : IMessage
     {
-        string From { get; set; }
-        string[] To { get; set; }
-        string[] Cc { get; set; }
-        string[] Bcc { get; set; }
-        string Subject { get; set; }
-        string PlainTextContent { get; set; }
-        string HtmlContent { get; set; }
+        public string From { get; set; } = String.Empty;
+        public IList<string> To { get; set; } = new List<string>();
+        public IList<string> Cc { get; set; } = new List<string>();
+        public IList<string> Bcc { get; set; } = new List<string>();
+        public string Subject { get; set; } = String.Empty;
+        public string? PlainTextContent { get; set; }
+        public string? HtmlContent { get; set; }
     }
 }

@@ -134,7 +134,7 @@ namespace TrafficCourts.Workflow.Service.Services
         /// </summary>
         /// <param name="recipients"></param>
         /// <param name="addressList"></param>
-        private void AddRecipients(string[] recipients, InternetAddressList addressList)
+        private void AddRecipients(IList<string> recipients, InternetAddressList addressList)
         {
             if (recipients is not null)
             {

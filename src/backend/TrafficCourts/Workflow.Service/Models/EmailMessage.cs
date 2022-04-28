@@ -6,9 +6,9 @@
     public class EmailMessage
     {
         public string From { get; set; } = null!;
-        public string[] To { get; set; } = null!;
-        public string[] Cc { get; set; } = null!;
-        public string[] Bcc { get; set; } = null!;
+        public IList<string> To { get; set; }
+        public IList<string> Cc { get; set; }
+        public IList<string> Bcc { get; set; }
         public string Subject { get; set; } = null!;
         public string PlainTextContent { get; set; } = null!;
         public string HtmlContent { get; set; } = null!;
