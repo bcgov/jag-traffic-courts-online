@@ -1,41 +1,31 @@
-import { AfterViewInit, Component } from '@angular/core';
-// import { SnowplowService } from '@core/services/snowplow.service';
-// import { AppConfigService } from 'app/services/app-config.service';
+import { OnInit, Component, ViewEncapsulation, Inject } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { LogInOutService } from 'app/services/log-in-out.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class LandingComponent implements AfterViewInit {
-  // Urls for the various links
-  public understandYourTicketLink: string;
-  public paymentOptionsLink: string;
-  public resolutionOptionsLink: string;
-  public roadSafetyBCVisitUsLink: string;
-  public icbcVisitUsLink: string;
-  public provincialCourtOfBCVisitUsLink: string;
-  public courthouseServicesOfBCVisitUsLink: string;
+export class LandingComponent implements OnInit {
+  public isLoggedIn = false;
 
   constructor(
-    // private appConfigService: AppConfigService,
-    // private snowplow: SnowplowService
-  ) {
-    // this.understandYourTicketLink =
-    //   this.appConfigService.understandYourTicketLink;
-    // this.paymentOptionsLink = this.appConfigService.paymentOptionsLink;
-    // this.resolutionOptionsLink = this.appConfigService.resolutionOptionsLink;
-    // this.roadSafetyBCVisitUsLink =
-    //   this.appConfigService.roadSafetyBCVisitUsLink;
-    // this.icbcVisitUsLink = this.appConfigService.icbcVisitUsLink;
-    // this.provincialCourtOfBCVisitUsLink =
-    //   this.appConfigService.provincialCourtOfBCVisitUsLink;
-    // this.courthouseServicesOfBCVisitUsLink =
-    //   this.appConfigService.courthouseServicesOfBCVisitUsLink;
-  }
+    public oidcSecurityService : OidcSecurityService,
+    private logInOutService : LogInOutService,
+    @Inject(Router) private router,
 
-  public ngAfterViewInit(): void {
-    // refresh link urls now that we set the links
-    // this.snowplow.refreshLinkClickTracking();
+  ) {   }
+
+  public async ngOnInit() {
+
+    this.oidcSecurityService.checkAuth().subscribe(
+      ({ isAuthenticated, userData, accessToken}) => {
+        console.log(userData, accessToken, isAuthenticated);
+        this.router.navigate(['/ticket']);
+        this.logInOutService.currentUser(isAuthenticated);
+    });
   }
 }

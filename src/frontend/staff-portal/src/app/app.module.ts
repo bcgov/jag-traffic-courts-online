@@ -10,6 +10,7 @@ import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
+import { Configuration } from './api/configuration';
 // import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import {
@@ -17,11 +18,14 @@ import {
   TranslateLoader,
   TranslateService,
 } from '@ngx-translate/core';
+import { Observable } from "rxjs";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { AppConfigService } from 'app/services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -36,10 +40,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
-import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
-import { initializeKeycloak } from './init/keycloak-init.factory';
+import { DateSuffixPipe } from './services/date.service';
+import { InterceptorService } from './core/interceptors/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
-
+import { OidcSecurityService, EventTypes, PublicEventsService, AuthModule, LogLevel } from 'angular-auth-oidc-client';
+import { AuthConfigModule } from './auth/auth-config.module';
+import { LogInOutService } from 'app/services/log-in-out.service';
+import { AppConfigService } from 'app/services/app-config.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -60,6 +67,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     LandingComponent,
     TicketPageComponent,
     UnauthorizedComponent,
+    DateSuffixPipe,
     TicketInfoComponent
   ],
   imports: [
@@ -69,9 +77,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CoreModule,
     SharedModule,
     ConfigModule,
-    KeycloakAngularModule,
     HttpClientModule,
     MatStepperModule,
+    AuthConfigModule,
+    MatSortModule,
+    MatIconModule,
+    MatCheckboxModule,
     CdkAccordionModule,
     BrowserAnimationsModule,
     NgxMaterialTimepickerModule,
@@ -100,15 +111,35 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
+    LogInOutService,
     {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService],
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
+      multi: true
     },
-    // WindowRefService,
+    {
+      provide: Configuration,
+      useFactory: (authService: OidcSecurityService) => new Configuration(
+        {
+          basePath: '',//environment.apiUrl,
+          accessToken: authService.getAccessToken.bind(authService),
+          credentials: {
+            'Bearer': () => {
+              var token: any =  authService.getAccessToken();
+              if (token) {
+                return 'Bearer ' + token;
+              }
+              return undefined;
+            }
+          }
+        }
+      ),
+      deps: [OidcSecurityService],
+      multi: false
+    },
   ],
   bootstrap: [AppComponent],
+  
 })
 export class AppModule {
   private availableLanguages = ['en', 'fr'];

@@ -1,8 +1,0 @@
-{
-  "realm": "ezb8kej4",
-  "auth-server-url": "https://dev.oidc.gov.bc.ca/auth/",
-  "ssl-required": "external",
-  "resource": "tco-staff-portal",
-  "public-client": true,
-  "confidential-port": 0
-}

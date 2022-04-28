@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { User } from '@shared/models/user.model';
+import { Router } from '@angular/router';
 import { AppConfigService } from 'app/services/app-config.service';
-import { AuthService } from 'app/services/auth.service';
+import { LogInOutService } from 'app/services/log-in-out.service';
 
 @Component({
   selector: 'app-header',
@@ -20,21 +20,24 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class HeaderComponent implements OnInit {
   public fullName: string;
+  public isLoggedIn = false;
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
 
   public languageCode: string;
   public languageDesc: string;
+  public btnLabel: string ='IDIR Login';
+  public btnIcon: string = 'login'; 
 
   public environment: string;
   public version: string;
 
   constructor(
-    protected authService: AuthService,
     protected logger: LoggerService,
     private appConfigService: AppConfigService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    public logInOutService: LogInOutService
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
@@ -48,23 +51,25 @@ export class HeaderComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public async ngOnInit() {
-    const authenticated = await this.authService.isLoggedIn();
-    if (authenticated) {
-      this.authService.getUser$().subscribe((user: User) => {
-        this.fullName = `${user?.firstName} ${user?.lastName}`;
-      });
-    }
+    this.logInOutService.getCurrentStatus.subscribe((data) => {
+      if (data !== null || data !== undefined)
+      {
+        if(data === true){
+
+          this.btnLabel = 'Logout';
+          this.btnIcon = 'logout';
+        }
+        else
+        {
+          this.btnLabel = 'IDIR Login';
+          this.btnIcon = 'login';
+        }
+      }
+    })
   }
 
   public toggleSidenav(): void {
     this.toggle.emit();
-  }
-
-  public onLogout(): Promise<void> {
-    this.authService.logout(
-      `${window.location.protocol}//${window.location.host}`
-    );
-    return Promise.resolve();
   }
 
   private toggleLanguage(lang: string): {
@@ -76,6 +81,22 @@ export class HeaderComponent implements OnInit {
       languageCode: toggleLang,
       languageDesc: toggleLang === 'en' ? 'English' : 'Français',
     };
+  }
+
+  public onClickBtn()
+  {
+    this.logInOutService.logoutUser(this.btnLabel);
+    if (this.btnLabel === 'IDIR Login')
+    {
+      this.btnLabel = 'Logout';
+      this.btnIcon = 'logout';
+    }
+    else
+    {
+      this.btnLabel = 'IDIR Login';
+      this.btnIcon = 'login';
+      //this.router.navigate(['/']);
+    }
   }
 
   public onLanguage(): void {
