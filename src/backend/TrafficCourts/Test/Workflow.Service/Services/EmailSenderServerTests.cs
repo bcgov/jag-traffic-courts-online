@@ -264,7 +264,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             {
                 await result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

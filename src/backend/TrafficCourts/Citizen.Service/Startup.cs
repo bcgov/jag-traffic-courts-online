@@ -26,6 +26,7 @@ public static class Startup
     /// 
     /// </summary>
     /// <param name="builder"></param>
+    /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is null.</exception>
     /// <exception cref="ConfigurationErrorsException"></exception>
     public static void ConfigureApplication(this WebApplicationBuilder builder, Serilog.ILogger logger)
