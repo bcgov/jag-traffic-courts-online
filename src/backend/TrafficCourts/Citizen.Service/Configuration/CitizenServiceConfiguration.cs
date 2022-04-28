@@ -7,11 +7,8 @@ namespace TrafficCourts.Citizen.Service.Configuration;
 /// The citizen service configuration.
 /// </summary>
 public class CitizenServiceConfiguration : 
-    IRabbitMQConfiguration, 
     IRedisConfiguration
 {
-    public RabbitMQConfigurationProperties? RabbitMQ { get; set; }
-    public FormRecognizerOptions? FormRecognizer { get; set; }
     public TicketStorageType TicketStorage { get; set; } = TicketStorageType.InMemory;
     public RedisConfigurationProperties? Redis { get; set; }
 }

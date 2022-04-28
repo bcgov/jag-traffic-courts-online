@@ -53,8 +53,6 @@ public static class Startup
 
         AddOpenTelemetry(builder, logger);
 
-        ValidateConfiguration(configuration, logger); // throws ConfigurationErrorsException if configuration has issues
-
         if (configuration.TicketStorage == TicketStorageType.InMemory)
         {
             builder.AddInMemoryFilePersistence();
@@ -72,7 +70,7 @@ public static class Startup
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
 
         // MassTransit
-        builder.Services.AddMassTransit<CitizenServiceConfiguration>(builder);
+        builder.Services.AddMassTransit(builder.Configuration, logger);
 
         // add MediatR handlers in this program
         builder.Services.AddMediatR(typeof(Startup).Assembly);
@@ -115,53 +113,6 @@ public static class Startup
                 .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddJaegerExporter();
         });
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    /// <exception cref="ConfigurationErrorsException">Configuration is not correct.</exception>
-    private static void ValidateConfiguration(CitizenServiceConfiguration configuration, Serilog.ILogger logger)
-    {
-        ArgumentNullException.ThrowIfNull(configuration);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        Dictionary<string, List<string>> errors = new();
-
-        // MassTransit
-        // RabbitMQ
-        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Host)) AddError(errors, "RabbitMQ", "Host is not configured");
-        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Username)) AddError(errors, "RabbitMQ", "Username is not configured");
-        if (string.IsNullOrEmpty(configuration?.RabbitMQ?.Password)) AddError(errors, "RabbitMQ", "Password is not configured");
-
-        // FormRecognizer
-        if (string.IsNullOrEmpty(configuration?.FormRecognizer?.ApiKey)) AddError(errors, "FormRecognizer", "ApiKey not specified");
-        if (configuration?.FormRecognizer?.Endpoint is null) AddError(errors, "FormRecognizer", "Endpoint not specified");
-
-        if (errors.Count > 0)
-        {
-            foreach (var error in errors)
-            {
-                logger.Error("{Group} has configuration errors {Errors}", error.Key, error.Value);
-            }
-
-            Log.CloseAndFlush(); // force the writting of logs
-
-            throw new ConfigurationErrorsException($"{errors.Count} configuration error(s), check previous log messages for details.");
-        }
-    }
-
-    private static void AddError(Dictionary<string, List<string>> errors, string group, string error)
-    {
-        if (!errors.TryGetValue(group, out var items))
-        {
-            items = new List<string>();
-            errors.Add(group, items);
-        }
-
-        items.Add(error);
     }
 
     /// <summary>
