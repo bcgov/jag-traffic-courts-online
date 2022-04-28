@@ -100,7 +100,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers()
-    .RequireAuthorization(); // This will set a default policy that says a user has to be authenticated
+    //.RequireAuthorization()
+    ; // This will set a default policy that says a user has to be authenticated
 
 app.Run();
 

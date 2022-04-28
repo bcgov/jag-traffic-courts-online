@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.TicketCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @Service
@@ -53,8 +53,8 @@ public class DisputeService {
 	public void save(Dispute dispute) {
 		// Ensure a new record is created, not updating an existing record. Updates are controlled by specific endpoints.
 		dispute.setId(null);
-		for (TicketCount ticketCount : dispute.getTicketCounts()) {
-			ticketCount.setId(null);
+		for (DisputedCount disputedCount : dispute.getDisputedCounts()) {
+			disputedCount.setId(null);
 		}
 		disputeRepository.save(dispute);
 	}
@@ -69,13 +69,13 @@ public class DisputeService {
 	public Dispute update(UUID id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "ticketCounts");
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "disputedCounts");
 		// Remove all existing ticket counts that are associated to this dispute
-		if (disputeToUpdate.getTicketCounts() != null) {
-			disputeToUpdate.getTicketCounts().clear();
+		if (disputeToUpdate.getDisputedCounts() != null) {
+			disputeToUpdate.getDisputedCounts().clear();
 		}
 		// Add updated ticket counts
-		disputeToUpdate.addTicketCounts(dispute.getTicketCounts());
+		disputeToUpdate.addDisputedCounts(dispute.getDisputedCounts());
 
 		return disputeRepository.save(disputeToUpdate);
 	}
