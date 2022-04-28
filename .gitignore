@@ -53,7 +53,6 @@ artifacts/
 # dependencies
 /node_modules
 package-lock.json
-yarn.lock
 
 # paybc mock
 /src/mock_paybc/
