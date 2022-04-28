@@ -103,10 +103,21 @@ public static class BusConfiguratorExtensions
             RegisterEndpointConventions(options);
 
             configure.UseConcurrencyLimit(options.Retry.ConcurrencyLimit);
+            
+            // sets the global message try policy
             configure.UseMessageRetry(r =>
             {
                 r.Ignore<ArgumentNullException>();
                 r.Ignore<InvalidOperationException>();
+
+                // other retry options are:
+                //   Exponential - int retryLimit, TimeSpan minInterval, TimeSpan maxInterval, TimeSpan intervalDelta
+                //   Incremental - int retryLimit, TimeSpan initialInterval, TimeSpan intervalIncrement
+                //   Interval    - int retryCount, TimeSpan interval
+                //   Intervals   - TimeSpan[] intervals
+                //   Intervals   - int[] intervals
+                //   Immediate   - int retryLimit
+                //   None        -
                 r.Interval(options.Retry.Times, TimeSpan.FromMinutes(options.Retry.Interval));
             });
 
