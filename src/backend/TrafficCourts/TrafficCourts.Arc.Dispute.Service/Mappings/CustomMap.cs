@@ -11,7 +11,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
 
             List<ArcFileRecord> arcFileRecordList = new List<ArcFileRecord>();
 
-            foreach (TicketDetails ticket in source.TicketDetails)
+            foreach (TicketCount ticket in source.TicketDetails)
             {
                 AdnotatedTicket adnotated = new AdnotatedTicket();
                 // Adnotated ticket's Master File Data mapping
@@ -28,17 +28,15 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.OriginalAmount = ticket.Amount;
                 adnotated.Organization = source.IssuingOrganization;
                 adnotated.OrganizationLocation = source.IssuingLocation;
-                // Create a dispute key to check if the corresponding dispute data is in the dictionary
-                var disputeKey = CreateDisputeKey(ticket.Section, ticket.Subsection, ticket.Paragraph, ticket.Act);
 
                 arcFileRecordList.Add(adnotated);
                 // Check if there are data required to encapsulate citizen dispute information
-                if (source.DisputeDetails != null && source.DisputeDetails.Length > 0)
+                if (source.DisputeCounts != null && source.DisputeCounts.Any())
                 {
-                    foreach (var disputeDet in source.DisputeDetails)
+                    foreach (var disputeCount in source.DisputeCounts)
                     {
-                        // If citizen dispute data has been found, then create arc file disputed row for each disputed ticket count
-                        if (disputeDet.TryGetValue(disputeKey, out var disputeValue))
+                        // If citizen dispute data count matches violation ticket count, then create arc file disputed row for each disputed ticket count
+                        if (ticket.Count == disputeCount.Count)
                         {
                             DisputedTicket disputed = new DisputedTicket();
                             // Dispited ticket's Master File Data mapping
@@ -48,7 +46,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                             disputed.MvbClientNumber = source.DriversLicence;
                             // Mapping disputed ticket specific data
                             disputed.Name = source.CitizenName;
-                            disputed.DisputeType = disputeValue.DisputeType != null ? disputeValue.DisputeType : "A";
+                            disputed.DisputeType = disputeCount.DisputeType != null ? disputeCount.DisputeType : "A"; //TODO: Find out what dispute type actually means
                             disputed.StreetAddress = source.StreetAddress != null ? source.StreetAddress : "";
                             disputed.City = source.City != null ? source.City : "";
                             disputed.Province = source.Province != null ? source.Province : "";
@@ -62,11 +60,5 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             return arcFileRecordList;
         }
 
-        public string CreateDisputeKey (string section, string subsection, string paragraph, string act)
-        {
-            var disputeKey = $"{section}.{subsection}.{paragraph}.{act}";
-            
-            return disputeKey;
-        }
     }
 }

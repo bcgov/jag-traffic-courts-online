@@ -18,7 +18,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         [JsonProperty("drivers_licence"), JsonRequired]
         public string DriversLicence { get; set; }
         [JsonProperty("ticket_counts"), JsonRequired]
-        public List<TicketDetails> TicketDetails { set; get; }
+        public IList<TicketCount> TicketDetails { set; get; }
         [JsonProperty("street_address")]
         public string? StreetAddress { get; set; }
         [JsonProperty("city")]
@@ -30,11 +30,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         [JsonProperty("email")]
         public string? Email { get; set; }
         [JsonProperty("dispute_counts")]
-        public Dictionary<string, DisputeDetails>[]? DisputeDetails { get; set; }
+        public IList<DisputeCount>? DisputeCounts { get; set; }
     }
 
-    public class TicketDetails
+    public class TicketCount
     {
+        [JsonRequired]
+        public int Count { get; set; }
         [JsonRequired]
         public string Section { get; set; }
         [JsonRequired]
@@ -47,13 +49,12 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public double Amount { get; set; }
     }
 
-    public partial class DisputeDetails
+    public partial class DisputeCount
     {
+        [JsonRequired]
+        public int Count { get; set; }
         [JsonProperty("dispute_type")]
         public string? DisputeType { get; set; }
-
-        [JsonProperty("dispute_reason")]
-        public string? DisputeReason { get; set; }
     }
 
 }

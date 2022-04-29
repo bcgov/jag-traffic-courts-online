@@ -2,7 +2,7 @@
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Services;
-using TicketCount = TrafficCourts.Workflow.Service.Models.TicketCount;
+using ViolationTicketCount = TrafficCourts.Workflow.Service.Models.ViolationTicketCount;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -26,11 +26,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
 
-                List<TicketCount> ticketCounts = new();
+                List<ViolationTicketCount> ticketCounts = new();
 
                 foreach (var ticketCount in context.Message.TicketCounts)
                 {
-                    var ticket = new TicketCount
+                    var ticket = new ViolationTicketCount
                     {
                         FineReductionRequest = ticketCount.FineReductionRequest,
                         OffenceDeclaration = ticketCount.OffenceDeclaration,

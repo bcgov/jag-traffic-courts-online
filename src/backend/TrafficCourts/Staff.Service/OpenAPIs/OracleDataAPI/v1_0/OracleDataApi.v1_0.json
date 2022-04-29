@@ -27,12 +27,12 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -65,12 +65,12 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -98,12 +98,12 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -131,12 +131,12 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -179,12 +179,12 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -215,12 +215,12 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -243,12 +243,12 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -274,12 +274,12 @@
         "tags": [ "dispute-controller" ],
         "operationId": "getAllDisputes",
         "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -307,12 +307,12 @@
         "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
         "operationId": "codeTableRefresh",
         "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "405": {
             "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -339,52 +339,102 @@
             "type": "string",
             "enum": [ "NEW", "PROCESSING", "REJECTED", "CANCELLED" ]
           },
-          "ticketNumber": { "type": "string" },
-          "courtLocation": { "type": "string" },
-          "violationDate": {
+          "ticketNumber": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
-          "disputantSurname": { "type": "string" },
-          "givenNames": { "type": "string" },
-          "streetAddress": { "type": "string" },
-          "province": { "type": "string" },
-          "postalCode": { "type": "string" },
-          "homePhone": { "type": "string" },
-          "emailAddress": { "type": "string" },
-          "driversLicense": { "type": "string" },
-          "driversLicenseProvince": { "type": "string" },
-          "workPhone": { "type": "string" },
-          "dateOfBirth": {
+          "provincialCourtHearingLocation": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           },
-          "enforcementOrganization": { "type": "string" },
-          "serviceDate": {
+          "issuedDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
-          "ticketCounts": {
+          "citizenSubmittedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "homePhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "workPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "filingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputedCounts": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/TicketCount" }
+            "items": { "$ref": "#/components/schemas/DisputedCount" }
           },
-          "lawyerRepresentation": { "type": "boolean" },
+          "representedByLawyer": { "type": "boolean" },
+          "legalRepresentation": { "$ref": "#/components/schemas/LegalRepresentation" },
           "interpreterLanguage": {
             "type": "string",
             "nullable": true
           },
-          "witnessIntent": { "type": "boolean" },
-          "ocrViolationTicket": {
+          "numberOfWitness": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "fineReductionReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeToPayReason": {
             "type": "string",
             "nullable": true
           },
           "rejectedReason": {
             "type": "string",
             "nullable": true
-          }
+          },
+          "citizenDetectedOcrIssues": { "type": "boolean" },
+          "systemDetectedOcrIssues": { "type": "boolean" },
+          "jjAssigned": {
+            "type": "string",
+            "nullable": true
+          },
+          "violationTicket": { "$ref": "#/components/schemas/ViolationTicket" }
         }
       },
-      "TicketCount": {
+      "DisputedCount": {
         "type": "object",
         "properties": {
           "id": {
@@ -393,9 +443,234 @@
             "format": "uuid",
             "readOnly": true
           },
-          "offenceDeclaration": { "type": "string" },
-          "timeToPayRequest": { "type": "boolean" },
-          "fineReductionRequest": { "type": "boolean" }
+          "plea": {
+            "type": "string",
+            "enum": [ "GUILTY", "NOT_GUILTY" ]
+          },
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestTimeToPay": { "type": "boolean" },
+          "requestReduction": { "type": "boolean" },
+          "appearInCourt": { "type": "boolean" }
+        }
+      },
+      "LegalRepresentation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "lawFirmName": { "type": "string" },
+          "lawyerName": { "type": "string" },
+          "lawyerSurname": { "type": "string" },
+          "lawyerEmail": { "type": "string" },
+          "lawyerAddress": { "type": "string" }
+        },
+        "nullable": true
+      },
+      "ViolationTicket": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "ocrViolationTicket": {
+            "type": "string",
+            "nullable": true
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "isYoungPerson": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "driversLicenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceProducedYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "driversLicenceExpiryYear": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "type": "string",
+            "nullable": true
+          },
+          "postalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isChangeOfAddress": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isDriver": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isCyclist": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isOwner": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isPedestrian": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isPassenger": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isOther": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "otherDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "issuedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issuedOnRoadOrHighway": {
+            "type": "string",
+            "nullable": true
+          },
+          "issuedAtOrNearCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "isMvaOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isWlaOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isLcaOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isMcaOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isFaaOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isTcrOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isCtaOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isOtherOffence": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "otherOffenceDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "enforcementOrganization": {
+            "type": "string",
+            "nullable": true
+          },
+          "violationTicketCounts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ViolationTicketCount" }
+          }
+        },
+        "nullable": true
+      },
+      "ViolationTicketCount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "actOrRegulation": {
+            "type": "string",
+            "nullable": true
+          },
+          "section": { "type": "string" },
+          "ticketedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "isAct": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isRegulation": {
+            "type": "boolean",
+            "nullable": true
+          }
         }
       }
     }

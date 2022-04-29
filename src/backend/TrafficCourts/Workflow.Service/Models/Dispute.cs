@@ -22,7 +22,7 @@ namespace TrafficCourts.Workflow.Service.Models
         public DateTime DateOfBirth { get; set; }
         public string EnforcementOrganization { get; set; } = null!;
         public DateTime ServiceDate { get; set; }
-        public List<TicketCount> TicketCounts { get; set; } = null!;
+        public List<ViolationTicketCount> TicketCounts { get; set; } = null!;
         public bool LawyerRepresentation { get; set; }
         public string InterpreterLanguage { get; set; } = null!;
         public bool WitnessIntent { get; set; }

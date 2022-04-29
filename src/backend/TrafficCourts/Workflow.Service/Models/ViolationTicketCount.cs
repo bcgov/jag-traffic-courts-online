@@ -1,7 +1,7 @@
 ﻿
 namespace TrafficCourts.Workflow.Service.Models
 {
-    public class TicketCount
+    public class ViolationTicketCount
     {
         public string OffenceDeclaration { get; set; } = null!;
         public bool TimeToPayRequest { get; set; }

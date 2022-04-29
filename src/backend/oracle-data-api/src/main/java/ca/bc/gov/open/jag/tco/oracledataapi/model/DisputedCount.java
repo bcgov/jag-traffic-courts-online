@@ -33,7 +33,7 @@ public class DisputedCount {
     private UUID id;
 
 	/**
-	 * Represents the dispuant plea on count.
+	 * Represents the disputant plea on count.
 	 */
 	@Column
 	private Plea plea;
