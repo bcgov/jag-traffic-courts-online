@@ -18,6 +18,6 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<T> GetRecordAsync<T>(string key);
+        Task<T?> GetRecordAsync<T>(string key);
     }
 }

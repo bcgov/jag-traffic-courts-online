@@ -5,9 +5,11 @@ using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Features.Mail;
 using TrafficCourts.Common.Converters;
+using TrafficCourts.Messaging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var logger = GetLogger(builder);
 
 // Add services to the container.
 
@@ -26,37 +28,15 @@ builder.Services.AddTransient<ISubmitDisputeToArcService, SubmitDisputeToArcServ
 builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
 builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 
-
-builder.Services.AddMassTransit(cfg =>
+void AddConsumers(IBusRegistrationConfigurator cfg)
 {
+    // TODO: use cfg.AddConsumers(params Type[] types) or cfg.AddConsumers(params Assembly[] assemblies)
     cfg.AddConsumer<SubmitDisputeConsumer>();
     cfg.AddConsumer<DisputeApprovedConsumer>();
     cfg.AddConsumer<SendEmailConsumer>();
+}
 
-    cfg.UsingRabbitMq((context, configurator) =>
-    {
-        var configuration = context.GetService<IConfiguration>();
-        var rabbitMqConfig = configuration.GetSection(nameof(RabbitMqConfig)).Get<RabbitMqConfig>();
-        var retryConfiguration = configuration.GetSection(nameof(RetryConfiguration)).Get<RetryConfiguration>();
-
-        configurator.Host(rabbitMqConfig.Host);
-        configurator.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(false));
-        configurator.UseConcurrencyLimit(retryConfiguration.ConcurrencyLimit);
-        configurator.UseMessageRetry(r =>
-        {
-            r.Ignore<ArgumentNullException>();
-            r.Ignore<InvalidOperationException>();
-            r.Interval(retryConfiguration.RetryTimes, TimeSpan.FromMinutes(retryConfiguration.RetryInterval));
-        });
-        configurator.ConfigureJsonSerializerOptions(settings =>
-        {
-            settings.Converters.Add(new DateOnlyJsonConverter());
-            settings.Converters.Add(new TimeOnlyJsonConverter());
-            return settings;
-        });
-    });
-
-});
+builder.Services.AddMassTransit(builder.Configuration, logger, AddConsumers);
 
 var app = builder.Build();
 
@@ -79,3 +59,18 @@ app.UseHealthChecks("/health/ready", new HealthCheckOptions()
 });
 
 app.Run();
+
+
+static Serilog.ILogger GetLogger(WebApplicationBuilder app)
+{
+    var configuration = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+    if (app.Environment.IsDevelopment())
+    {
+        configuration.WriteTo.Debug();
+    }
+
+    return configuration.CreateLogger();
+}

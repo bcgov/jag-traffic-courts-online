@@ -1,7 +1,5 @@
 using MassTransit;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -11,12 +9,10 @@ using Serilog.Exceptions.Core;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
-using TrafficCourts.Messaging.Configuration;
-using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Logging;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,13 +21,14 @@ var logger = GetLogger(builder);
 // Add services to the container.
 
 AddOpenTelemetry(builder, logger);
-ConfigureServiceBus(builder.Services, builder.Configuration);
 
 builder.Host.UseSerilog((hostingContext, loggerConfiguration) => {
     loggerConfiguration
         .ReadFrom.Configuration(builder.Configuration)
         .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder().WithDefaultDestructurers());
 });
+
+builder.Services.AddMassTransit(builder.Configuration, logger);
 
 // Render enums as strings rather than ints
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -103,10 +100,6 @@ app.MapControllers();
 
 app.Run();
 
-/// <summary>
-/// Gets a logger for application setup.
-/// </summary>
-/// <returns></returns>
 static Serilog.ILogger GetLogger(WebApplicationBuilder builder)
 {
     var configuration = new LoggerConfiguration()
@@ -147,31 +140,4 @@ static void AddOpenTelemetry(WebApplicationBuilder builder, Serilog.ILogger logg
             .AddSource(Diagnostics.Source.Name)
             .AddJaegerExporter();
     });
-}
-
-// copied from old TrafficCourtsApi code base
-static void ConfigureServiceBus(IServiceCollection services, IConfiguration configuration)
-{
-    services.Configure<IRabbitMQConfiguration>(configuration.GetSection("RabbitMq"));
-
-    var rabbitMqSettings = configuration.GetSection("RabbitMq").Get<RabbitMQConfigurationProperties>();
-    if (rabbitMqSettings == null)
-    {
-        rabbitMqSettings = new RabbitMQConfigurationProperties();
-    }
-
-    var rabbitBaseUri = $"amqp://{rabbitMqSettings.Host}:{rabbitMqSettings.Port}";
-    services.AddMassTransit(config =>
-    {
-        config.UsingRabbitMq((ctx, cfg) =>
-        {
-            cfg.Host(new Uri(rabbitBaseUri), hostConfig =>
-            {
-                hostConfig.Username(rabbitMqSettings.Username);
-                hostConfig.Password(rabbitMqSettings.Password);
-            });
-        });
-    });
-    //services.AddMassTransitHostedService(); // deprecated per CS0618
-    EndpointConvention.Map<DisputeApproved>(new Uri($"{rabbitBaseUri}/dispute-approved"));
 }

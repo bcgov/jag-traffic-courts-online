@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrafficCourts.Messaging.MessageContracts
 {
+    [EndpointConvention("dispute-approved")]
     public class DisputeApproved: IMessage
     {
         public string CitizenName { get; set; } = String.Empty;
