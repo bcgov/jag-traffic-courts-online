@@ -1,9 +1,9 @@
-﻿using TrafficCourts.Workflow.Service.Models;
+﻿using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
     public interface IEmailSenderService
     {
-        Task SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken);
+        Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken);
     }
 }

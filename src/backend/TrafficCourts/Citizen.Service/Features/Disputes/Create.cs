@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using MediatR;
 using System.Text.Json;
+using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
@@ -41,12 +42,14 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
         {
             private readonly ILogger _logger;
             public readonly IRequestClient<SubmitDispute> _submitDisputeRequestClient;
+            public readonly IRequestClient<SendEmail> _sendEmailRequestClient;
             private readonly IRedisCacheService _redisCacheService;
 
-            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IRequestClient<SubmitDispute> submitDisputeRequestClient, IRedisCacheService redisCacheService)
+            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IRequestClient<SubmitDispute> submitDisputeRequestClient, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _submitDisputeRequestClient = submitDisputeRequestClient ?? throw new ArgumentNullException(nameof(submitDisputeRequestClient));
+                _sendEmailRequestClient = sendEmailRequestClient ?? throw new ArgumentNullException(nameof(sendEmailRequestClient));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
             }
 
@@ -75,6 +78,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     Province = createDisputeRequest.Province,
                     PostalCode = createDisputeRequest.PostalCode,
                     HomePhone = createDisputeRequest.HomePhone,
+                    EmailAddress = createDisputeRequest.EmailAddress,
                     DriversLicence = createDisputeRequest.DriversLicence,
                     DriversLicenceProvince = createDisputeRequest.DriversLicenceProvince,
                     WorkPhone = createDisputeRequest.WorkPhone,
@@ -87,6 +91,19 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     WitnessIntent = createDisputeRequest.WitnessIntent,
                     OcrViolationTicket = ocrViolationTicketJson
                 });
+
+                // Send email message to the submitter's entered email
+                var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
+                if (template is not null)
+                {
+                    _sendEmailRequestClient.Create(new SendEmail()
+                    {
+                        From = template.Sender,
+                        To = { createDisputeRequest.EmailAddress },
+                        Subject = template.SubjectTemplate,
+                        PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", createDisputeRequest.TicketNumber)
+                    }, cancellationToken);
+                }
 
                 return new Response(response.Message.DisputeId);
             }
