@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Workflow.Service.Models;
+using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Configuration;
 using MailKit.Net.Smtp;
@@ -72,7 +72,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_WithCorrectParams_ShouldReturnTaskComplete()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 From = "mail@test.com",
                 To = new string[] { "something@test.com" },
@@ -104,7 +104,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_SmtpCancelled_ShouldReturnTaskFail()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 From = "mail@test.com",
                 To = new string[] { "something@test.com" },
@@ -146,7 +146,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_AllowListNoTo_ShouldReturnFail()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 From = "mail@test.com",
                 To = new string[] { "fail@fail.com" },
@@ -184,7 +184,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_NoAllowListTo_ShouldReturnTaskComplete()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 From = "mail@test.com",
                 To = new string[] { "fail@fail.com" },
@@ -223,7 +223,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_TestAllowList_ShouldReturnSuccess()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 From = "mail@test.com",
                 To = new string[] { "works@test.com", "fake@fake.com" },
@@ -275,7 +275,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_TestDefaultSender_ShouldReturnSuccess()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 To = new string[] { "works@test.com", "test@test.com" },
                 Subject = "Test message",
@@ -314,7 +314,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_WithBadToEmail_ShouldReturnFail()
         {
             // Arrange
-            var emailMessage = new EmailMessage
+            var emailMessage = new SendEmail
             {
                 From = "mail@test.com",
                 To = new string[] { "just junk mail" },

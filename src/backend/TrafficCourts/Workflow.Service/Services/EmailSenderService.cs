@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
+using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Workflow.Service.Models;
 using MimeKit;
 using MimeKit.Text;
 
@@ -25,7 +25,7 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <param name="emailMessage"></param>
         /// <returns></returns>
         /// <exception cref="EmailSendFailedException"></exception>
-        public async Task SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken)
+        public async Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace TrafficCourts.Workflow.Service.Services
         /// </summary>
         /// <param name="recipients"></param>
         /// <param name="addressList"></param>
-        private void AddRecipients(string[] recipients, InternetAddressList addressList)
+        private void AddRecipients(IList<string> recipients, InternetAddressList addressList)
         {
             if (recipients is not null)
             {
