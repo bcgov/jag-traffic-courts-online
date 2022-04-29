@@ -2,7 +2,7 @@
 {
     public class TicketCount
     {
-        public string OffenceDeclaration { get; set; }
+        public string OffenceDeclaration { get; set; } = String.Empty;
         public bool TimeToPayRequest { get; set; }
         public bool FineReductionRequest { get; set; }
     }

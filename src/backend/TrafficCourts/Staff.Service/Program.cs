@@ -100,10 +100,6 @@ app.MapControllers();
 
 app.Run();
 
-/// <summary>
-/// Gets a logger for application setup.
-/// </summary>
-/// <returns></returns>
 static Serilog.ILogger GetLogger(WebApplicationBuilder builder)
 {
     var configuration = new LoggerConfiguration()

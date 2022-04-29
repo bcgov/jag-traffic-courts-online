@@ -19,7 +19,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<T> GetRecordAsync<T>(string key)
+        public async Task<T?> GetRecordAsync<T>(string key)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
 
                 if (jsonData.IsNull)
                 {
-                    return default(T);
+                    return default;
                 }
 
                 return JsonSerializer.Deserialize<T>(jsonData);
