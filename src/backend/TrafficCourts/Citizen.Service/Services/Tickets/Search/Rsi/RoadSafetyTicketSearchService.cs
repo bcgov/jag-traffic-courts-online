@@ -38,6 +38,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
                 var innerException = ex.InnerException;
                 _logger.LogError(ex, "Error searching for RSI ticket");
+                throw new TicketSearchErrorException("Error searching for RSI ticket", ex);
             }
 
             if (response.Items is null && !string.IsNullOrEmpty(response.Error))
