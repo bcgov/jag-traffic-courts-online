@@ -23,6 +23,7 @@ const routes: Routes = [
     path: AppRoutes.TICKET,
     component: TicketPageComponent,
     canActivate: [AutoLoginPartialRoutesGuard],
+    data: { roles: ["vtc-user"]}
   },
   {
     path: '**',
