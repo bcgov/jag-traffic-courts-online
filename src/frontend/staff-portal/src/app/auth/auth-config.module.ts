@@ -14,7 +14,7 @@ export const httpLoaderFactory = (httpClient: HttpClient) => {
         logLevel: environment.production ? LogLevel.None : LogLevel.Debug,
         eagerLoadAuthWellKnownEndpoints: false,
         authority: customConfig.authority,
-        redirectUrl: customConfig.redirectUrl,
+        redirectUrl: window.location.origin,
         postLogoutRedirectUri: window.location.origin,
         clientId: customConfig.clientId,
         scope: customConfig.scope,
