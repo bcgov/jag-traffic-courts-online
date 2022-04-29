@@ -36,7 +36,9 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         [InlineData("aA123456", "mix case letters")]
         [InlineData("AA1234567", "too few numbers")]
         [InlineData("AA12345a", "extra non-numeric values")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters - describes the use case
         public void create_request_requires_ticket_number_that_starts_with_2_uppercase_letters_and_eight_or_more_numbers(string ticketNumber, string useCase)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             Assert.Throws<ArgumentException>("ticketNumber", () => new Search.Request(ticketNumber, "00:00"));
         }
@@ -83,7 +85,11 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Tickets
         [InlineData(24, 0, "hour more than 23")]
         [InlineData(0, -1, "minute less than zero")]
         [InlineData(0, 60, "minute more than 59")]
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters - describes the use case
         public void create_request_with_invalid_time_throws_ArgumentException(int hour, int minute, string useCase)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+#pragma warning restore IDE1006 // Naming Styles
         {
             Assert.Throws<ArgumentException>("time", () => new Search.Request("AA00000000", $"{hour:d2}:{minute:d2}"));
         }
