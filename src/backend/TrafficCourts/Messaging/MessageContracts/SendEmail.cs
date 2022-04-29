@@ -11,7 +11,7 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// </summary>
     public class SendEmail : IMessage
     {
-        public string From { get; set; } = String.Empty;
+        public string? From { get; set; }
         public IList<string> To { get; set; } = new List<string>();
         public IList<string> Cc { get; set; } = new List<string>();
         public IList<string> Bcc { get; set; } = new List<string>();

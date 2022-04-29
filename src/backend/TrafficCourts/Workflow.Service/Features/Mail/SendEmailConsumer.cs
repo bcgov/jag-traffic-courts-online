@@ -27,17 +27,7 @@ namespace TrafficCourts.Workflow.Service.Features.Mail
 
                 _logger.LogDebug("TRY SENDING EMAIL: {Email}", context.ToString());
 
-                var emailMessage = new EmailMessage
-                {
-                    From = context.Message.From,
-                    To = context.Message.To,
-                    Cc = context.Message.Cc,
-                    Bcc = context.Message.Bcc,
-                    Subject = context.Message.Subject,
-                    PlainTextContent = context.Message.PlainTextContent,
-                    HtmlContent = context.Message.HtmlContent,
-                };
-                await _emailSenderService.SendEmailAsync(emailMessage, context.CancellationToken);
+                await _emailSenderService.SendEmailAsync(context.Message, context.CancellationToken);
             }
         }
     }
