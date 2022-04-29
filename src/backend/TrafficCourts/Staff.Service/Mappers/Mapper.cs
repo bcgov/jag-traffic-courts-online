@@ -60,7 +60,7 @@ public class Mapper
     {
         SendEmail sendEmail = new();
         // Send email message to the submitter's entered email
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.Where(t => t.TemplateName == messageTemplateName).First();
+        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == messageTemplateName);
         if (template is not null)
         {
 

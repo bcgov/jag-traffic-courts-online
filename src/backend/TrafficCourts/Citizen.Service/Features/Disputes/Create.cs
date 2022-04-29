@@ -93,7 +93,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 });
 
                 // Send email message to the submitter's entered email
-                var template = MailTemplateCollection.DefaultMailTemplateCollection.Where(t => t.TemplateName == "SubmitDisputeTemplate").First();
+                var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
                 if (template is not null)
                 {
                     _sendEmailRequestClient.Create(new SendEmail()
