@@ -23,9 +23,10 @@ export const httpLoaderFactory = (httpClient: HttpClient) => {
         silentRenewUrl: `${window.location.origin}/silent-renew.html`, //option 1 - with CORS issue
         useRefreshToken: true,
         renewTimeBeforeTokenExpiresInSeconds: 60,
-        autoUserInfo: true,
+        autoUserInfo: false,
         unauthorizedRoute: '/',
         ignoreNonceAfterRefresh: true,
+        secureRoutes: ['/api'],
         customParamsAuthRequest: {
           prompt: customConfig.prompt,
           kc_idp_hint: customConfig.kc_idp_hint,

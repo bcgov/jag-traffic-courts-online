@@ -17,7 +17,7 @@ export interface Dispute {
     /**
      * ID
      */
-    id?: number;
+    id?: string;
     status?: DisputeStatus;
     ticketNumber?: string | null;
     courtLocation?: string | null;
@@ -28,6 +28,7 @@ export interface Dispute {
     province?: string | null;
     postalCode?: string | null;
     homePhone?: string | null;
+    emailAddress?: string | null;
     driversLicense?: string | null;
     driversLicenseProvince?: string | null;
     workPhone?: string | null;

@@ -18,7 +18,6 @@ import {
   TranslateLoader,
   TranslateService,
 } from '@ngx-translate/core';
-import { Observable } from "rxjs";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -43,10 +42,9 @@ import { UnauthorizedComponent } from '@components/error/unauthorized/unauthoriz
 import { DateSuffixPipe } from './services/date.service';
 import { InterceptorService } from './core/interceptors/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
-import { OidcSecurityService, EventTypes, PublicEventsService, AuthModule, LogLevel } from 'angular-auth-oidc-client';
+import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
-import { AppConfigService } from 'app/services/app-config.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -118,6 +116,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       multi: true
     },
     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
       provide: Configuration,
       useFactory: (authService: OidcSecurityService) => new Configuration(
         {
@@ -125,7 +128,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
           accessToken: authService.getAccessToken.bind(authService),
           credentials: {
             'Bearer': () => {
-              var token: any =  authService.getAccessToken();
+              var token: string = authService.getAccessToken.bind(authService);
               if (token) {
                 return 'Bearer ' + token;
               }
