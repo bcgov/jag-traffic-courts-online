@@ -11,6 +11,7 @@ namespace TrafficCourts.Staff.Service.Controllers;
 
 [ApiController]
 [Route("api")]
+// [Authorize(Roles = "vtc-user")]
 public class DisputeController : ControllerBase
 {
     private readonly IDisputeService _disputeService;
@@ -36,7 +37,7 @@ public class DisputeController : ControllerBase
     /// <param name="cancellationToken"></param>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("/disputes")]
-    [Authorize]
+    [Authorize(Roles="vtc-user")]
     [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
