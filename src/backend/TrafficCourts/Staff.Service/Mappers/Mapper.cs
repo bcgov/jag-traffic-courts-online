@@ -22,6 +22,9 @@ public class Mapper
             {
                 Count = violationTicketCount.Count,
                 Section = violationTicketCount.Section,
+                Subsection = violationTicketCount.Subsection,
+                Paragraph = violationTicketCount.Paragraph,
+                Act = violationTicketCount.Act,
                 Amount = violationTicketCount.TicketedAmount
             };
 

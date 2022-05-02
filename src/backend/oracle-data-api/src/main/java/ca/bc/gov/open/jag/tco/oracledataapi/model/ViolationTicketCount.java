@@ -61,10 +61,39 @@ public class ViolationTicketCount {
     private String actOrRegulation;
 	
 	/**
-	 * The section of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+	 * The full section of the act or regulation represented in a single string. For example, "147(1).A.MVA" which means "Speed in school zone"
 	 */
 	@Column
+	@Schema(nullable = true)
+    private String fullSection;
+	
+	/**
+	 * The section part of the full section. For example, "147"
+	 */
+	@Column
+	@Schema(nullable = true)
     private String section;
+	
+	/**
+	 * The subsection part of the full section. For example, "(1)"
+	 */
+	@Column
+	@Schema(nullable = true)
+    private String subsection;
+	
+	/**
+	 * The paragraph part of the full section. For example, "A"
+	 */
+	@Column
+	@Schema(nullable = true)
+    private String paragraph;
+	
+	/**
+	 * The act part of the full section. For example, "MVA"
+	 */
+	@Column
+	@Schema(nullable = true)
+    private String act;
 	
 	/**
 	 * The ticketed amount.
