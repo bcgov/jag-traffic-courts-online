@@ -23,7 +23,6 @@ export class LandingComponent implements OnInit {
 
     this.oidcSecurityService.checkAuth().subscribe(
       ({ isAuthenticated, userData, accessToken}) => {
-        console.log(userData, accessToken, isAuthenticated);
         this.router.navigate(['/ticket']);
         this.logInOutService.currentUser(isAuthenticated);
     });

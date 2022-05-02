@@ -56,6 +56,7 @@ public static class Authentication
         if (resourceAccessClaim != null)
         {
             var realmAccess = JsonSerializer.Deserialize<ResourceAccess>(resourceAccessClaim);
+            identity.AddClaim(new Claim(ClaimTypes.Role, "vtc-user"));
             if (realmAccess?.Roles is not null)
             {
                 identity.AddClaims(realmAccess.Roles.Select(role => new Claim(ClaimTypes.Role, role)));

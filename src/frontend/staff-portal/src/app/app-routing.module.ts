@@ -13,6 +13,7 @@ import { AppRoutes } from './app.routes';
 // import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
+import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,11 @@ const routes: Routes = [
     path: AppRoutes.TICKET,
     component: TicketPageComponent,
     canActivate: [AutoLoginPartialRoutesGuard],
-    // data: { roles: ["vtc-user"]}
+    data: { roles: ["vtc-user"]}
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
   },
   {
     path: '**',

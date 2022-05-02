@@ -87,6 +87,7 @@ if (swagger.Enabled)
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
