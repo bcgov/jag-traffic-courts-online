@@ -1,8 +1,6 @@
 {
     "postLoginRoute": "/ticket",
     "authority": "https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4",
-    "redirectUrl": "http://localhost:4200",
-    "postLogoutRedirectUri": "http://localhost:4200",
     "autoUserInfo": false,
     "clientId": "tco-staff-portal",
     "scope": "openid profile",
