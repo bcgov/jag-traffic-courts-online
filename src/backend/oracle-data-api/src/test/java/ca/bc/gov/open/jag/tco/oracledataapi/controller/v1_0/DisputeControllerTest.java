@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 import java.util.UUID;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,7 +51,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
-	public void testRejectDispute() {
+	public void testRejectDisputeSuccess() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		UUID disputeId = disputeController.saveDispute(dispute);
@@ -68,6 +68,18 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = disputeController.getDispute(disputeId);
 		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
 		assertEquals("Just because", dispute.getRejectedReason());
+	}
+
+	@Test
+	public void testRejectDisputeFail() {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		UUID disputeId = disputeController.saveDispute(dispute);
+
+		// Retrieve it from the controller's endpoint
+		dispute = disputeController.getDispute(disputeId);
+		assertEquals(disputeId, dispute.getId());
+		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
 		// try using an empty reason (should fail with 405 error)
 		assertThrows(ConstraintViolationException.class, () -> {
@@ -132,7 +144,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		assertEquals(DisputeStatus.CANCELLED, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
-	
+
 	@Test
 	@Transactional
 	public void testUpdateDispute() {
