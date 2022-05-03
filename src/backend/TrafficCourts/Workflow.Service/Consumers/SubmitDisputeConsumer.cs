@@ -26,47 +26,9 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
 
-                List<ViolationTicketCount> ticketCounts = new();
+                //_logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());
 
-                foreach (var ticketCount in context.Message.TicketCounts)
-                {
-                    var ticket = new ViolationTicketCount
-                    {
-                        FineReductionRequest = ticketCount.FineReductionRequest,
-                        OffenceDeclaration = ticketCount.OffenceDeclaration,
-                        TimeToPayRequest = ticketCount.TimeToPayRequest,
-                    };
-                    ticketCounts.Add(ticket);
-                }
-
-                var dispute = new Dispute
-                {
-                    TicketNumber = context.Message.TicketNumber,
-                    CourtLocation = context.Message.CourtLocation,
-                    ViolationDate = context.Message.ViolationDate,
-                    DisputantSurname = context.Message.DisputantSurname,
-                    GivenNames = context.Message.GivenNames,
-                    StreetAddress = context.Message.StreetAddress,
-                    Province = context.Message.Province,
-                    PostalCode = context.Message.PostalCode,
-                    HomePhone = context.Message.HomePhone,
-                    DriversLicence = context.Message.DriversLicence,
-                    DriversLicenceProvince = context.Message.DriversLicenceProvince,
-                    WorkPhone = context.Message.WorkPhone,
-                    EmailAddress = context.Message.EmailAddress,
-                    DateOfBirth = context.Message.DateOfBirth.ToDateTime(TimeOnly.MinValue),// Parsing it back to DateTime due to the DateOnly deserialization issues on oracle-data-api
-                    EnforcementOrganization = context.Message.EnforcementOrganization,
-                    ServiceDate = context.Message.ServiceDate.ToDateTime(TimeOnly.MinValue),// Parsing it back to DateTime due to the DateOnly deserialization issues on oracle-data-api
-                    TicketCounts = ticketCounts,
-                    LawyerRepresentation = context.Message.LawyerRepresentation,
-                    InterpreterLanguage = context.Message.InterpreterLanguage,
-                    WitnessIntent = context.Message.WitnessIntent,
-                    OcrViolationTicket = context.Message.OcrViolationTicket
-                };
-
-                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());
-
-                var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
+                var disputeId = await _oracleDataApiService.CreateDisputeAsync(context.Message);
 
                 if (disputeId != Guid.Empty)
                 {

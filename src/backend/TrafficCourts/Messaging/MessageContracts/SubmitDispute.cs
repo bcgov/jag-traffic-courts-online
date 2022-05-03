@@ -5,28 +5,76 @@ namespace TrafficCourts.Messaging.MessageContracts
 {
     public class SubmitDispute : IMessage
     {
-        public string TicketNumber { get; set; }
-        public string CourtLocation { get; set; }
-        public DateTime ViolationDate { get; set; }
-        public string DisputantSurname { get; set; }
-        public string GivenNames { get; set; }
-        public string StreetAddress { get; set; }
-        public string Province { get; set; }
-        public string PostalCode { get; set; }
-        public string HomePhone { get; set; }
-        public string EmailAddress { get; set; }
-        public string DriversLicence { get; set; }
-        public string DriversLicenceProvince { get; set; }
-        public string WorkPhone { get; set; }
-        [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateOnly DateOfBirth { get; set; }
-        public string EnforcementOrganization { get; set; }
-        [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateOnly ServiceDate { get; set; }
-        public IList<TicketCount> TicketCounts { get; set; }
-        public bool LawyerRepresentation { get; set; }
-        public string InterpreterLanguage { get; set; }
-        public bool WitnessIntent { get; set; }
-        public string OcrViolationTicket { get; set; }
+        public DisputeStatus Status { get; set; }
+        public string? TicketNumber { get; set; }
+        public string? ProvincialCourtHearingLocation { get; set; }
+        public DateTime? IssuedDate { get; set; }
+        public DateTime? CitizenSubmittedDate { get; set; }
+        public string? Surname { get; set; }
+        public string? GivenNames { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? Province { get; set; }
+        public string? PostalCode { get; set; }
+        public string? HomePhoneNumber { get; set; }
+        public string? WorkPhoneNumber { get; set; }
+        public string? EmailAddress { get; set; }
+        public DateTime? FilingDate { get; set; }
+        public IList<DisputedCount> DisputeCounts { get; set; } = new List<DisputedCount>();
+        public bool RepresentedByLawyer { get; set; }
+        public LegalRepresentation? legalRepresentation { get; set; }
+        public string? InterpreterLanguage { get; set; }
+        public int NumberOfWitness { get; set; }
+        public string? FineReductionReason { get; set; }
+        public string? TimeToPayReason { get; set; }
+        public bool CitizenDetectedOcrIssues { get; set; }
+        public bool SystemDetectedOcrIssues { get; set; }
+        public string? JjAssigned { get; set; }
+        public ViolationTicket ViolationTicket { get; set; } = new();
+    }
+
+    public class DisputedCount
+    {
+        public Plea Plea { get; set; }
+        public int Count { get; set; }
+        public bool RequestTimeToPay { get; set; }
+        public bool RequestReduction { get; set; }
+        public bool AppearInCourt { get; set; }
+    }
+
+    public class LegalRepresentation
+    {
+        public string LawFirmName { get; set; } = String.Empty;
+        public string LawyerName { get; set; } = String.Empty;
+        public string LawyerSurname { get; set; } = String.Empty;
+        public string LawyerEmail { get; set; } = String.Empty;
+        public string LawyerAddress { get; set; } = String.Empty;
+    }
+
+    /// <summary>
+    /// An enumeration of Plea Type on a DisputedCount record.
+    /// </summary>
+    public enum Plea
+    {
+        /// <summary>
+        /// If the dispuant is pleads guilty, plea will always be Guilty. The dispuant has choice to attend court or not.
+        /// </summary>
+        GUILTY,
+
+        /// <summary>
+        /// If the dispuant is pleads not guilty, the dispuant will have to attend court.
+        /// </summary>
+        NOT_GUILTY
+    }
+
+    /// <summary>
+    /// An enumeration of available Statuses on a Dispute record.
+    /// </summary>
+    public enum DisputeStatus
+    {
+        NEW,
+        PROCESSING,
+        REJECTED,
+        CANCELLED
     }
 }
