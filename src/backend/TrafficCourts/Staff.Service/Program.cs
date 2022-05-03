@@ -17,6 +17,7 @@ using TrafficCourts.Staff.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = GetLogger(builder);
+builder.Configuration.AddVaultSecrets(logger);
 
 // Add services to the container.
 
