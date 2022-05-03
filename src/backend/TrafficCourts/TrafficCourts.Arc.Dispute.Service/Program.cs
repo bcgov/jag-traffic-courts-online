@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Renci.SshNet;
+using Serilog;
 using System.Text;
 using System.Text.Json;
 using TrafficCourts.Arc.Dispute.Service;
@@ -11,6 +12,10 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Converters;
 
 var builder = WebApplication.CreateBuilder(args);
+Serilog.ILogger logger = GetLogger(builder);
+
+builder.Configuration.AddVaultSecrets(logger);
+
 // determine if swagger is enabled or not
 var swagger = SwaggerConfiguration.Get(builder.Configuration);
 
@@ -41,13 +46,6 @@ builder.Services.Configure<SftpConfig>(builder.Configuration.GetRequiredSection(
 
 builder.Services.AddTransient<ISftpService, SftpService>();
 
-var loggerFactory = LoggerFactory.Create(builder =>
-{
-    builder.AddConsole();
-});
-
-ILogger logger = loggerFactory.CreateLogger<Startup>();
-
 builder.Services.AddTransient<SftpClient>(services =>
 {
     var configurationOptions = services.GetRequiredService<IOptions<SftpConfig>>();
@@ -66,7 +64,7 @@ builder.Services.AddTransient<SftpClient>(services =>
     }
     catch (System.IO.DirectoryNotFoundException exception)
     {
-        logger.LogInformation(exception, "SSH key for the provided path has not been found. Using default password authentication.");
+        logger.Information(exception, "SSH key for the provided path has not been found. Using default password authentication.");
         return new SftpClient(configuration.Host, configuration.Port, configuration.Username, configuration.Password);
     }    
 });
@@ -92,3 +90,18 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+static Serilog.ILogger GetLogger(WebApplicationBuilder app)
+{
+    var configuration = new LoggerConfiguration()
+        .Enrich.FromLogContext()
+        .WriteTo.Console();
+
+    if (app.Environment.IsDevelopment())
+    {
+        configuration.WriteTo.Debug();
+    }
+
+    return configuration.CreateLogger();
+}
