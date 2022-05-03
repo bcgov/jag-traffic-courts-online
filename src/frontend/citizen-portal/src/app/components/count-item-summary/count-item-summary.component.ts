@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { OffenceView } from '@shared/models/offenceView.model';
+import { ViolationTicketCount } from 'app/api';
 
 @Component({
   selector: 'app-count-item-summary',
@@ -7,7 +7,7 @@ import { OffenceView } from '@shared/models/offenceView.model';
   styleUrls: ['./count-item-summary.component.scss'],
 })
 export class CountItemSummaryComponent implements OnInit {
-  @Input() public count: OffenceView;
+  @Input() public count: ViolationTicketCount;
   @Input() public selectView = false;
 
   public selectCount: boolean;
@@ -33,13 +33,13 @@ export class CountItemSummaryComponent implements OnInit {
     }
 
     return {
-      offenceNumber: this.count.offenceNumber,
-      amount: this.count._amountDue,
+      offenceNumber: this.count.count,
+      amount: this.count.amount_due,
       selected,
     };
   }
 
   public get showCheckbox(): boolean {
-    return this.selectView && this.count._amountDue > 0;
+    return this.selectView && this.count.amount_due > 0;
   }
 }

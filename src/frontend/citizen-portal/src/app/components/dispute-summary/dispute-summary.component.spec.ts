@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,7 +38,6 @@ describe('DisputeSummaryComponent', () => {
       declarations: [DisputeSummaryComponent, BlankComponent],
       providers: [
         FormatDatePipe,
-        CurrencyPipe,
         TicketTypePipe,
         {
           provide: ActivatedRoute,

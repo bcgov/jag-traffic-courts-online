@@ -1,10 +1,9 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray,AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DisputeSubmitSuccessComponent } from '@components/dispute-submit-success/dispute-submit-success.component';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
@@ -14,6 +13,7 @@ import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage'
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -54,6 +54,7 @@ export class DisputeStepperComponent
     protected disputeService: DisputeService,
     protected disputeResource: DisputeResourceService,
     protected disputeFormStateService: DisputeFormStateService,
+    protected violationTicketService: ViolationTicketService,
     private dialog: MatDialog,
     private logger: LoggerService
   ) {
@@ -79,7 +80,7 @@ export class DisputeStepperComponent
       disputeAppearInCourt:[]
 
     };
-    this.disputeService.ticket$.subscribe((ticket) => {
+    this.violationTicketService.ticket$.subscribe((ticket) => {
       if (!ticket) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
         return;
@@ -98,11 +99,11 @@ export class DisputeStepperComponent
         this.overviewForm,
       ] = formsList as FormGroup[];
 
-      const currentTicket = this.disputeService.ticket;
+      const currentTicket = this.violationTicketService.ticket;
       this.offenceCount =0
       if (currentTicket) {
-        this.disputantForm.patchValue(currentTicket.disputant);
-        this.additionalForm.patchValue(currentTicket.additional);
+        // this.disputantForm.patchValue(currentTicket.);
+        // this.additionalForm.patchValue(currentTicket.additional);
 
         this.disputeService.ticket.offences.forEach((offence) => {
           if (offence.offenceNumber === 1) {

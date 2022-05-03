@@ -92,7 +92,7 @@
           </ng-template>
         </ng-container>
 
-        <hr *ngIf="ticket.additional._isCourtRequired" />
+        <hr *ngIf="ticket.additional.__isCourtRequired" />
       </section>
 
       <section *ngIf="ticket.additional && (ticket.additional.lawyerPresent || ticket.additional.interpreterRequired || ticket.additional.witnessPresent)">

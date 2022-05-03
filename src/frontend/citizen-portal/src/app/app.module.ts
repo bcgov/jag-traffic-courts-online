@@ -23,7 +23,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { StepCountComponent } from './components/stepper/step-count/step-count.component';
 import { StepOverviewComponent } from './components/stepper/step-overview/step-overview.component';
@@ -42,15 +42,16 @@ import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summa
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
+import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
 import { TicketPaymentCompleteComponent } from './components/ticket-payment-complete/ticket-payment-complete.component';
 import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { CdkAccordionModule} from '@angular/cdk/accordion';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
-import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 
 registerLocaleData(localeEn, 'en');
@@ -77,6 +78,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DisputeSubmitSuccessComponent,
     DisputeSummaryComponent,
     DisputeStepperComponent,
+    DisputeTicketStepperComponent,
     StepDisputantComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
@@ -111,8 +113,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       extend: true,
     }),
   ],
-  exports: [NgBusyModule, NgxMaterialModule, TranslateModule],
+  exports: [
+    NgBusyModule,
+    NgxMaterialModule,
+    TranslateModule
+  ],
   providers: [
+    DatePipe,
     CurrencyPipe,
     AppConfigService,
     MockDisputeService,
@@ -143,7 +150,6 @@ export class AppModule {
     this.translateService.addLangs(['en', 'fr']);
 
     const currentLanguage = window.navigator.language.substring(0, 2);
-    // console.log('Current Browser Language', currentLanguage);
 
     let defaultLanguage = 'en';
     if (this.availableLanguages.includes(currentLanguage)) {

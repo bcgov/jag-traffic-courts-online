@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
+import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
@@ -42,7 +43,7 @@ const routes: Routes = [
       },
       {
         path: AppRoutes.STEPPER,
-        component: DisputeStepperComponent,
+        component: DisputeTicketStepperComponent,
       },
       {
         path: '',
@@ -63,7 +64,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

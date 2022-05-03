@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -32,6 +33,7 @@ import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
+import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -79,12 +81,14 @@ export class ShellTicketComponent implements OnInit {
     private ngProgress: NgProgress,
     private appConfigService: AppConfigService,
     private logger: LoggerService,
-    public ticketService: TicketsService,
+    private ticketService: TicketsService,
+    private violationTicketService: ViolationTicketService,
     private http: HttpClient,
+    private datePipe: DatePipe,
   ) {
     this.progressRef = this.ngProgress.ref();
     this.isMobile = this.utilsService.isMobile();
-    this.fieldsData = this.ticketService.getImageData()
+    // this.fieldsData = this.violationTicketService.tempTicket;
     this.form = this.formBuilder.group({
       violationTicketNumber: [null, [Validators.required]],
       violationDate: [null, [Validators.required]],
@@ -333,7 +337,7 @@ export class ShellTicketComponent implements OnInit {
         .subscribe(res => {
           console.log('image data 2', res);
           this.fieldsData = res;
-          this.ticketService.setImageData(res);
+          // this.violationTicketService.tempTicket = res;
           this.onFulfilled()
           this.disputeService.shellTicketData$.next(shellTicketData);
           this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
@@ -577,7 +581,7 @@ export class ShellTicketComponent implements OnInit {
       violationTime: invoiceTimeField.value
         ? invoiceTimeField.value.replace(' ', ':')
         : '',
-      violationDate: invoiceDateField.value,
+      violationDate: this.datePipe.transform(invoiceDateField.value, "MMM dd, YYYY"),
 
       lastName: surnameField.value
         ? surnameField.value

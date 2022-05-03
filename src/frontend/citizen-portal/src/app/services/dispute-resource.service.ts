@@ -33,8 +33,8 @@ export class DisputeResourceService {
     time: string;
   }): Observable<TicketDisputeView> {
 
-    return this.ticketAPIService.apiTicketsSearchGet(params.ticketNumber, params.time)
-    // return this.ticketAPIService.apiTicketsLegacysearchGet(params.ticketNumber, params.time)
+    // return this.ticketAPIService.apiTicketsSearchGet(params.ticketNumber, params.time)
+    return this.ticketAPIService.apiTicketsLegacysearchGet(params.ticketNumber, params.time)
       .pipe(
         map((ticket: any) => {
           if (ticket) {

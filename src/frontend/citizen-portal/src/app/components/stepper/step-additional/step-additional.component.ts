@@ -1,22 +1,13 @@
-import { Component,
-   EventEmitter,
-   Input,
-  OnInit,
-   Output,
-   OnChanges,
-   SimpleChanges,
-   ChangeDetectionStrategy,
- } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges, } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Config } from '@config/config.model';
 import { ConfigService } from '@config/config.service';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { BaseDisputeFormPage } from 'app/components/classes/BaseDisputeFormPage';
+import { ViolationTicket } from 'app/api';
 import { DisputeFormStateService } from 'app/services/dispute-form-state.service';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
@@ -26,112 +17,23 @@ import { DisputeService } from 'app/services/dispute.service';
   templateUrl: './step-additional.component.html',
   styleUrls: ['./step-additional.component.scss'],
 })
-export class StepAdditionalComponent extends BaseDisputeFormPage implements OnInit,OnChanges {
+export class StepAdditionalComponent implements OnInit {
+  @Input() public input: any;
   @Input() public stepper: MatStepper;
-  @Input() public isShowCheckbox: any;
   @Output() public stepSave: EventEmitter<MatStepper> = new EventEmitter();
-  @Output() public countEmit: EventEmitter<any> = new EventEmitter();
-  
 
+  // should be passed from parent
+  public form: FormGroup;
+  public legalRepresentationForm: FormGroup;
+  public ticket: ViolationTicket;
+  public isShowCheckbox: any;
+
+  // configs
+  public languages = this.configService.languages;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.back';
   public saveButtonKey = 'stepper.next';
 
-  public languages = [
-    "American Sign Language (ASL)",
-    "Communication Realtime Translation (CART)",
-    "Afghani-Dari",
-    "Albanian",
-    "Amharic",
-    "Arabic",
-    "Azerbaijani",
-    "Azerbaijan-Turkish",
-    "Bengali",
-    "Bosnian",
-    "Bulgarian",
-    "Burmese",
-    "Cambodian (Khmer)",
-    "Cantonese",
-    "Cebuano",
-    "Chiu Chow (Swatow)",
-    "Croatian",
-    "Czech",
-    "Dari",
-    "Dinka",
-    "Dutch",
-    "Farsi",
-    "Farsi-Persian",
-    "Fiji-Hindi",
-    "Filipino",
-    "French",
-    "Fukien",
-    "Fuqing",
-    "Fuzhou",
-    "German",
-    "Greek",
-    "Gujarati",
-    "Hakha Chin",
-    "Hakka",
-    "Hebrew",
-    "Hindi",
-    "Hungarian",
-    "Igbo",
-    "Ilocano",
-    "Indonesian",
-    "Italian",
-    "Japanese",
-    "Karen",
-    "Kinyarwanda",
-    "Kirundi",
-    "Korean",
-    "Kurdish",
-    "Kurdish (Kurmanji)",
-    "Kurdish (Sorani)",
-    "Laotian",
-    "Lithuanian",
-    "Malay",
-    "Malayalam",
-    "Mandarin",
-    "Mongolian",
-    "Nepali",
-    "Oromo",
-    "Pashto",
-    "Polish",
-    "Portuguese",
-    "Punjabi",
-    "Romanian",
-    "Russian",
-    "Serbian",
-    "Shanghainese",
-    "Sinhalese",
-    "Slovak",
-    "Somali",
-    "Spanish",
-    "Sudanese",
-    "Swahili",
-    "Tagalog",
-    "Tamil",
-    "Teochew",
-    "Thai",
-    "Thai",
-    "Tigri(gna) (yna)",
-    "Turkish",
-    "Ukrainian",
-    "Urdu",
-    "Vietnamese",
-    "Xinhui"
-  ];
-  public countFormList:any;
-  public countFormList2:any;
-  public dispute={
-
-  };
-  public newObj={
-      count1:'',
-      count: null,
-      reductionAppearInCourt :'',
-      reductionAppearInCourtDoNot:''
-  };
   /**
    * Form field behaviour, customWitnessOption == true shows number input
    * and allows user to type, otherwise use original select options 1 through 5
@@ -150,58 +52,14 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
     private configService: ConfigService,
     private logger: LoggerService
   ) {
-    super(
-      route,
-      router,
-      formBuilder,
-      disputeService,
-      disputeResource,
-      disputeFormStateService
-    );   
   }
 
   public ngOnInit() {
-    this.form = this.disputeFormStateService.stepAdditionalForm;
-    this.customWitnessOption = this.form.getRawValue().numberOfWitnesses >= 6;
-    this.form.patchValue({ numberOfWitnesses: this.form.getRawValue().numberOfWitnesses });
-    this.patchForm();
+    Object.assign(this, this.input); // copy from input directly and keep the object linkage
   }
-  ngOnChanges(changes: SimpleChanges) {
-    let array = [...this.isShowCheckbox.reductionAppearInCourt,...this.isShowCheckbox.reductionAppearInCourtDoNot]
-    this.newObj.count = [...new Set(array)]
-    this.newObj.count1 = this.isShowCheckbox.disputeAppearInCourt
-   
-    // if(changes.isShowCheckbox && changes.isShowCheckbox.currentValue && changes.isShowCheckbox.currentValue[2]){
-    //   this.countFormList = this.form.get('countData') as FormArray;
-    //  if(!this.countFormList){
-    //   this.countFormList =[];
-     
-    //  }
-    //  this.countFormList.push(this.createItem());
-     
-    // }
-    // if(changes.isShowCheckbox && changes.isShowCheckbox.currentValue && changes.isShowCheckbox.currentValue[3]){
-    //   this.countFormList2 = this.form.get('countData2') as FormArray;
-    //   if(!this.countFormList2){
-    //     this.countFormList2 =[];
-    //   }
-    //   this.countFormList2.push(this.createItem());
-    // }
-   
-  }
-  createItem(): FormGroup {
-    return this.formBuilder.group({
-      name:''
-    });
-  }
+
   public onSubmit(): void {
     if (this.formUtilsService.checkValidity(this.form)) {
-      debugger 
-      let obj = {
-        newObj : this.newObj,
-        dispute:this.dispute
-      }
-      this.countEmit.emit(obj);
       this.stepSave.emit(this.stepper);
     } else {
       this.utilsService.scrollToErrorSection();
@@ -219,64 +77,5 @@ export class StepAdditionalComponent extends BaseDisputeFormPage implements OnIn
       this.form.controls.numberOfWitnesses.clearValidators();
       this.form.controls.numberOfWitnesses.updateValueAndValidity();
     }
-  }
-
-  public get interpreterLanguage(): FormControl {
-    return this.form.get('interpreterLanguage') as FormControl;
-  }
-
-  public get interpreterRequired(): FormControl {
-    return this.form.get('interpreterRequired') as FormControl;
-  }
-
-  public get witnessPresent(): FormControl {
-    return this.form.get('witnessPresent') as FormControl;
-  }
-
-  public get isCourtRequired(): FormControl {
-    return this.form.get('_isCourtRequired') as FormControl;
-  }
-
-  public get isReductionRequired(): FormControl {
-    return this.form.get('_isReductionRequired') as FormControl;
-  }
-
-  public get isReductionNotInCourt(): FormControl {
-    return this.form.get('_isReductionNotInCourt') as FormControl;
-  }
-
-  public get numberOfWitnesses(): FormControl {
-    return this.form.get('numberOfWitnesses') as FormControl;
-  }
-
-  public get requestReduction(): FormControl {
-    return this.form.get('requestReduction') as FormControl;
-  }
-
-  public get requestMoreTime(): FormControl {
-    return this.form.get('requestMoreTime') as FormControl;
-  }
-
-  public get reductionReason(): FormControl {
-    return this.form.get('reductionReason') as FormControl;
-  }
-
-  public get moreTimeReason(): FormControl {
-    return this.form.get('moreTimeReason') as FormControl;
-  }
-  public get lawyerPresent(): FormControl {
-    return this.form.get('lawyerPresent') as FormControl;
-  }
-  public get countData() : FormArray {
-    return this.form.get('countData') as FormArray;
-  }
-  public get countData2() : FormArray {
-    return this.form.get('countData2') as FormArray;
-  }
-  newSkill(value1, value2): FormGroup {
-    return this.formBuilder.group({
-      reductionAppearInCourt: value1,
-      reductionAppearInCourtDoNot: value2,
-    });
   }
 }

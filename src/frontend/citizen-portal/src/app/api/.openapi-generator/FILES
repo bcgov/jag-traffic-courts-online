@@ -20,4 +20,6 @@ model/ticketCount.model.ts
 model/ticketDispute.model.ts
 model/ticketOffence.model.ts
 model/ticketSearchResult.model.ts
+model/violationTicket.model.ts
+model/violationTicketCount.model.ts
 variables.ts
