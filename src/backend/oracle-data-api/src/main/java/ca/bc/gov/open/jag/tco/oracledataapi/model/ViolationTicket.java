@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -81,8 +82,9 @@ public class ViolationTicket {
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
      */
-    @Column
-    @Schema(nullable = true)
+    @Size(min = 7, max = 30)
+    @Column(length = 30)
+    @Schema(nullable = true, minLength = 7, maxLength = 30)
     private String driversLicenceNumber;
 
     /**
