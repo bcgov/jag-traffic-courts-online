@@ -25,12 +25,8 @@ import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
-import { StepCountComponent } from './components/stepper/step-count/step-count.component';
-import { StepOverviewComponent } from './components/stepper/step-overview/step-overview.component';
-import { StepAdditionalComponent } from './components/stepper/step-additional/step-additional.component';
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
-import { StepDisputantComponent } from './components/stepper/step-disputant/step-disputant.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -39,9 +35,7 @@ import { registerLocaleData } from '@angular/common';
 import { WindowRefService } from '@core/services/window-ref.service';
 import { TicketPageComponent } from './components/ticket-page/ticket-page.component';
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
-import { ShellTicketComponent } from '@components/shell-ticket/shell-ticket.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
-import { DisputeStepperComponent } from '@components/dispute-stepper/dispute-stepper.component';
 import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
 import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
@@ -72,17 +66,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AppComponent,
     LandingComponent,
     FindTicketComponent,
-    StepCountComponent,
-    StepOverviewComponent,
-    StepAdditionalComponent,
     DisputeSubmitSuccessComponent,
     DisputeSummaryComponent,
-    DisputeStepperComponent,
     DisputeTicketStepperComponent,
-    StepDisputantComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
-    ShellTicketComponent,
     ScanTicketComponent,
     TicketPaymentComponent,
     CountSummaryComponent,

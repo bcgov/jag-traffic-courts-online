@@ -58,33 +58,17 @@ export class DisputeTicketStepperComponent implements OnInit {
   // Overview
   public declared = false;
 
-  // private ticketFormFields = {
-  //   disputantSurname: [null, [Validators.required]],
-  //   givenNames: [null, [Validators.required]],
-  //   streetAddress: [null, [Validators.required]],
-  //   postalCode: [null],
-  //   city: [null],
-  //   country: [null],
-  //   province: [null],
-  //   driversLicence: [null],
-  //   driversLicenceProvince: [null],
-  //   emailAddress: [null, [Validators.required, Validators.email]],
-  //   homePhone: [null, [FormControlValidators.phone]],
-  //   dateOfBirth: [null, []],
-  //   ticketCounts: []
-  // }
-
   private ticketFormFields = {
-    disputantSurname: ["null", [Validators.required]],
-    givenNames: ["null", [Validators.required]],
-    streetAddress: ["null", [Validators.required]],
+    disputantSurname: [null, [Validators.required]],
+    givenNames: [null, [Validators.required]],
+    streetAddress: [null, [Validators.required]],
     postalCode: [null],
     city: [null],
     country: [null],
     province: [null],
     driversLicence: [null],
     driversLicenceProvince: [null],
-    emailAddress: ["null@x", [Validators.required, Validators.email]],
+    emailAddress: [null, [Validators.required, Validators.email]],
     homePhone: [null, [FormControlValidators.phone]],
     dateOfBirth: [null, []],
     ticketCounts: []

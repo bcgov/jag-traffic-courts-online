@@ -13,7 +13,7 @@
         <app-resolution-header [ticket]="ticket"></app-resolution-header>
       </section>
 
-      <mat-vertical-stepper #disputeStepper linear>
+      <mat-vertical-stepper #disputeStepper linear *ngIf="form">
         <ng-template matStepperIcon="edit">
           <mat-icon>done</mat-icon>
         </ng-template>
