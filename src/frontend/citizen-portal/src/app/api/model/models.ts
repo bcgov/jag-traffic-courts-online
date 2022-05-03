@@ -6,7 +6,5 @@ export * from './problemDetails.model';
 export * from './statute.model';
 export * from './ticketCount.model';
 export * from './ticketDispute.model';
-export * from './ticketOffence.model';
-export * from './ticketSearchResult.model';
 export * from './violationTicket.model';
 export * from './violationTicketCount.model';
