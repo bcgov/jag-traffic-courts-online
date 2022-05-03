@@ -17,26 +17,10 @@
 
   <div class="mb-2">
     <section class="px-4 py-2 mb-3 card-section"
-             *ngFor="let row of ticket.offences; let i = index">
+             *ngFor="let row of ticket.counts; let i = index">
       <app-count-item-summary #countitem
                               [count]="row"
                               [selectView]="selectView"></app-count-item-summary>
     </section>
-
-    <ng-template #notWithin30days>
-      <section class="px-4 py-2 mb-3 card-section">
-        <div class="row mt-2">
-          <div class="offset-lg-6 col-lg-4 text-success">
-            <strong>Balance due</strong>
-          </div>
-          <div class="col-lg-2 text-success">
-            <strong>{{
-              ticket._outstandingBalanceDue
-                | currency: "CAD":"symbol-narrow":"1.2-2":defaultLanguage
-            }}</strong>
-          </div>
-        </div>
-      </section>
-    </ng-template>
   </div>
 </div>

@@ -1,26 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { FormUtilsService } from '@core/services/form-utils.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ImageRequirementsDialogComponent } from '@shared/dialogs/image-requirements-dialog/image-requirements-dialog.component';
 import { TicketExampleDialogComponent } from '@shared/dialogs/ticket-example-dialog/ticket-example-dialog.component';
-import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
-import { ShellTicketData } from '@shared/models/shellTicketData.model';
-import { Configuration, TicketsService } from 'app/api';
-import { AppRoutes } from 'app/app.routes';
-import { DisputeResourceService } from 'app/services/dispute-resource.service';
-import { DisputeService } from 'app/services/dispute.service';
+import { Configuration } from 'app/api';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';
-import { FileUtilsService } from '@shared/services/file-utils.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -39,17 +26,12 @@ export class FindTicketComponent implements OnInit {
   public configuration = new Configuration();
 
   constructor(
-    private router: Router,
     private formBuilder: FormBuilder,
     private formUtilsService: FormUtilsService,
-    private disputeService: DisputeService,
-    private disputeResource: DisputeResourceService,
-    private fileUtilsService: FileUtilsService,
     private dialog: MatDialog,
     private ngProgress: NgProgress,
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
-    private ticketService: TicketsService
   ) {
   }
 
@@ -76,70 +58,17 @@ export class FindTicketComponent implements OnInit {
     if (!validity) {
       return;
     }
-
-    const formParams = { ...this.form.value };
-    this.busy = this.disputeResource
-      .getTicket(formParams)
-      .subscribe((response) => {
-        this.disputeService.ticket$.next(response);
-        if (response) {
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-            queryParams: formParams,
-          });
-        } else {
-          this.onTicketNotFound();
-        }
-      });
-    // this.busy = this.ticketService.apiTicketsSearchGet(formParams.ticketNumber, formParams.time)
-    //   .subscribe((response) => {
-    //     this.violationTicketService.ticket$.next(response);
-    //     if (response) {
-    //       this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
-    //         queryParams: formParams,
-    //       });
-    //     } else {
-    //       this.onTicketNotFound();
-    //     }
-    //   });
+    this.busy = this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
   }
+  public dateDiff(givenDate){
+    var diffYear =(new Date().getTime() - new Date(givenDate).getTime()) / 1000;
+     diffYear /= (60 * 60 * 24);
+    return Math.abs(Math.round(diffYear)); 
+}
 
   public onFileChange(event: any) {
-    // reset
-    this.disputeService.shellTicketData$.next(null);
-    const ticketFile: File = event.target.files[0];
-    this.logger.info('file target', ticketFile);
-    if (!ticketFile) {
-      this.logger.info('You must select a file');
-      return;
-    }
-    this.progressRef.start();
-    this.fileUtilsService.readFileAsDataURL(ticketFile).subscribe(ticketImage => {
-      const shellTicketData: ShellTicketData = {
-        filename: ticketFile.name,
-        ticketFile,
-        ticketImage
-      };
-
-      this.ticketService.apiTicketsAnalysePost(ticketFile)
-        .subscribe(res => {
-          if (res) {
-            this.ticketService.setImageData(res);
-            this.disputeService.shellTicketData$.next(shellTicketData);
-            this.router.navigate([AppRoutes.disputePath(AppRoutes.SHELL)]);
-          }
-          else {
-            this.notFound = true;
-            this.onTicketNotFound();
-          }
-        }, (err) => {
-          this.violationTicketService.openImageTicketNotFoundDialog(err);
-        })
-    })
-  }
-
-  public onTicketNotFound(): void {
-    this.notFound = true;
-    this.dialog.open(TicketNotFoundDialogComponent);
+    this.logger.log('FindTicketComponent::onFileChange');
+    this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef);
   }
 
   public onViewTicketExample(): void {

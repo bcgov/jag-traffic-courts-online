@@ -1,0 +1,101 @@
+@import "palette";
+@import "variables";
+
+h3 {
+  color: theme-palette(blue);
+  font-size: 18px;
+}
+
+.reduction-text {
+  color: #333333;
+}
+
+.mat-select-panel {
+  min-width: fit-content !important;
+}
+
+label {
+  line-height: 1.3em;
+  font-size: 1.2em;
+  font-weight: 700;
+  margin: 0 0 .5em;
+
+  &.inactive {
+    color: theme-palette(grey);
+  }
+}
+
+.flex-last-info-content {
+  padding: 2px;
+  background-color: lightgray;
+}
+
+.wrap-mat-radio-label {
+  white-space: normal;
+}
+
+.text-right,
+.text-left {
+  font-weight: bold;
+}
+
+.my-chip .mat-chip-selected {
+  background-color: rgb(112, 11, 11) !important;
+  color: #fff;
+}
+
+mat-icon {
+  cursor: pointer;
+  color: theme-palette(blue, link);
+  vertical-align: middle;
+  font-size: 18px;
+}
+
+small {
+  color: theme-palette(grey, dark);
+  line-height: 1.3em;
+}
+
+.mat-radio-button {
+  vertical-align: top;
+}
+
+.text-right,
+.text-left {
+  font-weight: bold;
+}
+
+.page-subheader {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+
+  .title {
+    color: $h2-colour;
+    display: flex;
+    margin-bottom: 0.05rem;
+  }
+}
+
+.offence-header-section {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+.card-section {
+  background-color: #ededed !important;
+  border-left: 3px solid theme-palette(blue);
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+}
+
+hr {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+::ng-deep .alert-info-text-color .alert-warning {
+  color: rgb(255, 136, 0) !important;
+  border-left: 2px solid rgb(255, 136, 0) !important;
+}

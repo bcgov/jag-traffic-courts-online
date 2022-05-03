@@ -33,7 +33,7 @@ export class AuthorizationGuard implements CanActivate {
                      this.passAuthGuard = true;
                   }
                 });
-            }
+              }
 
             if (this.passAuthGuard == true) return true;
             else return this.router.parseUrl('/unauthorized');

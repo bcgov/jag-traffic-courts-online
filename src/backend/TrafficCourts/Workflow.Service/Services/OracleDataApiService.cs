@@ -18,7 +18,7 @@ namespace TrafficCourts.Workflow.Service.Services
             _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
         }
 
-        public async Task<int> CreateDisputeAsync(Dispute disputeToSubmit)
+        public async Task<Guid> CreateDisputeAsync(Dispute disputeToSubmit)
         {
             // Formatting all dispute class properties to camel case since oracle data api
             // accepts camel case only after serialization
@@ -31,17 +31,17 @@ namespace TrafficCourts.Workflow.Service.Services
 
             using (var httpClient = new HttpClient())
             {
-                var oracleDataApiBaseUri = $"http://{_oracleDataApiConfiguration.Host}:{_oracleDataApiConfiguration.Port}";
+                var oracleDataApiBaseUri = $"http://{_oracleDataApiConfiguration.Host}:{_oracleDataApiConfiguration.Port}/api/v1.0/";
                 httpClient.BaseAddress = new Uri(oracleDataApiBaseUri);
                 using (var response = await httpClient.PostAsync("dispute", disputeToSubmit, formatter))
                 {
                     if (response.IsSuccessStatusCode)
                     {
-                        var apiResponse = await response.Content.ReadAsAsync<int>();
+                        var apiResponse = await response.Content.ReadAsAsync<Guid>();
                         return apiResponse;
                     }
 
-                    return -1; 
+                    return Guid.Empty; 
                 }
             }
         }

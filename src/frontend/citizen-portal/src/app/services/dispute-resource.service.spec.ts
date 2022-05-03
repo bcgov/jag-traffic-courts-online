@@ -27,9 +27,4 @@ describe('DisputeResourceService', () => {
   it('should create', () => {
     expect(service).toBeTruthy();
   });
-
-  it('should get ticket', () => {
-    const ticket = service.getTicket({ ticketNumber: '', time: '' });
-    expect(ticket).toBeDefined();
-  });
 });

@@ -6,25 +6,156 @@ import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-export interface IConfigService extends Configuration {
-  load(): Observable<Configuration>;
-}
-
 @Injectable({
   providedIn: 'root',
 })
-export class ConfigService implements IConfigService {
+export class ConfigService {
   protected configuration: Configuration;
 
-  private disputeSubmitted: BehaviorSubject<string> =
-    new BehaviorSubject<string>('');
-  private disputeValidationError: BehaviorSubject<string> =
-    new BehaviorSubject<string>('');
-  private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>(
-    ''
-  );
-  private disputeCreateError: BehaviorSubject<string> =
-    new BehaviorSubject<string>('');
+  private disputeSubmitted: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private disputeValidationError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private ticketError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private disputeCreateError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  private _provinces = [
+    {
+      "name": "Alberta",
+      "abbreviation": "AB"
+    },
+    {
+      "name": "British Columbia",
+      "abbreviation": "BC"
+    },
+    {
+      "name": "Manitoba",
+      "abbreviation": "MB"
+    },
+    {
+      "name": "New Brunswick",
+      "abbreviation": "NB"
+    },
+    {
+      "name": "Newfoundland and Labrador",
+      "abbreviation": "NL"
+    },
+    {
+      "name": "Northwest Territories",
+      "abbreviation": "NT"
+    },
+    {
+      "name": "Nova Scotia",
+      "abbreviation": "NS"
+    },
+    {
+      "name": "Nunavut",
+      "abbreviation": "NU"
+    },
+    {
+      "name": "Ontario",
+      "abbreviation": "ON"
+    },
+    {
+      "name": "Prince Edward Island",
+      "abbreviation": "PE"
+    },
+    {
+      "name": "Quebec",
+      "abbreviation": "QC"
+    },
+    {
+      "name": "Saskatchewan",
+      "abbreviation": "SK"
+    },
+    {
+      "name": "Yukon Territory",
+      "abbreviation": "YT"
+    }
+  ]
+
+  private _languages = [
+    "American Sign Language (ASL)",
+    "Communication Realtime Translation (CART)",
+    "Afghani-Dari",
+    "Albanian",
+    "Amharic",
+    "Arabic",
+    "Azerbaijani",
+    "Azerbaijan-Turkish",
+    "Bengali",
+    "Bosnian",
+    "Bulgarian",
+    "Burmese",
+    "Cambodian (Khmer)",
+    "Cantonese",
+    "Cebuano",
+    "Chiu Chow (Swatow)",
+    "Croatian",
+    "Czech",
+    "Dari",
+    "Dinka",
+    "Dutch",
+    "Farsi",
+    "Farsi-Persian",
+    "Fiji-Hindi",
+    "Filipino",
+    "French",
+    "Fukien",
+    "Fuqing",
+    "Fuzhou",
+    "German",
+    "Greek",
+    "Gujarati",
+    "Hakha Chin",
+    "Hakka",
+    "Hebrew",
+    "Hindi",
+    "Hungarian",
+    "Igbo",
+    "Ilocano",
+    "Indonesian",
+    "Italian",
+    "Japanese",
+    "Karen",
+    "Kinyarwanda",
+    "Kirundi",
+    "Korean",
+    "Kurdish",
+    "Kurdish (Kurmanji)",
+    "Kurdish (Sorani)",
+    "Laotian",
+    "Lithuanian",
+    "Malay",
+    "Malayalam",
+    "Mandarin",
+    "Mongolian",
+    "Nepali",
+    "Oromo",
+    "Pashto",
+    "Polish",
+    "Portuguese",
+    "Punjabi",
+    "Romanian",
+    "Russian",
+    "Serbian",
+    "Shanghainese",
+    "Sinhalese",
+    "Slovak",
+    "Somali",
+    "Spanish",
+    "Sudanese",
+    "Swahili",
+    "Tagalog",
+    "Tamil",
+    "Teochew",
+    "Thai",
+    "Thai",
+    "Tigri(gna) (yna)",
+    "Turkish",
+    "Ukrainian",
+    "Urdu",
+    "Vietnamese",
+    "Xinhui"
+  ];
 
   constructor(
     protected utilsService: UtilsService,
@@ -63,8 +194,8 @@ export class ConfigService implements IConfigService {
     return this.disputeCreateError.value;
   }
 
-  public get provinces(): ProvinceConfig[] {
-    return [...this.configuration.provinces].sort(this.sortConfigByName());
+  public get provinces() {
+    return this._provinces;
   }
 
   public get courtLocations(): Config<string>[] {
@@ -77,8 +208,8 @@ export class ConfigService implements IConfigService {
     );
   }
 
-  public get languages(): Config<string>[] {
-    return [...this.configuration.languages].sort(this.sortConfigByName());
+  public get languages() {
+    return this._languages;
   }
 
   public get countries(): Config<string>[] {

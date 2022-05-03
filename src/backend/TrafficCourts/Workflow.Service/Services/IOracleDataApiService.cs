@@ -4,6 +4,6 @@ namespace TrafficCourts.Workflow.Service.Services
 {
     public interface IOracleDataApiService
     {
-        Task<int> CreateDisputeAsync(Dispute disputeToSubmit);
+        Task<Guid> CreateDisputeAsync(Dispute disputeToSubmit);
     }
 }

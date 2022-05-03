@@ -8,16 +8,16 @@
                     color="primary"
                     class="me-4 mb-2"></mat-checkbox>
         <span class="h2">
-          <strong>Count {{ count.offenceNumber }}</strong>
+          <strong>Count {{ count.count }}</strong>
         </span>
     </div>
   </div>
   <div class="col-lg-8">
     <small class="d-block"> Description of offence </small>
-    <div class="text">{{ count.offenceDescription | titlecase }}</div>
+    <div class="text">{{ count.description | titlecase }}</div>
   </div>
   <div class="col-lg-2">
     <small class="d-block">Offence amount</small>
-    <div class="text">{{ count._amountDue | currency }}</div>
+    <div class="text">{{ count.ticketed_amount | currency }}</div>
   </div>
 </div>

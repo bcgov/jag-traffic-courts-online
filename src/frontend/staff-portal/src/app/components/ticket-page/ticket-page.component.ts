@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
+  public decidePopup= '';
+  public ticketInfo:any;
   busy: Subscription;
   newDispute: disputeData = {
     DateSubmitted: undefined,
@@ -27,7 +29,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     CitizenFlag: undefined,
     SystemFlag: undefined,
     AssignedTo: undefined};
-  public ticketInfo:any;
   displayedColumns: string[] = [
     'RedGreenAlert',
     'DateSubmitted',
@@ -281,6 +282,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   backTicketList(element){
+    if(element.ticketNumber[0] == 'A'){
+      this.decidePopup = 'E'
+    } else {
+      this.decidePopup = "A"
+    }
     this.ticketInfo=element
     this.showTicket = !this.showTicket;
   }
