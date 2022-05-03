@@ -12,6 +12,7 @@ import { Component } from '@angular/core';
 
 import { DisputeSummaryComponent } from './dispute-summary.component';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
+import { DatePipe } from '@angular/common';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
@@ -37,7 +38,7 @@ describe('DisputeSummaryComponent', () => {
       ],
       declarations: [DisputeSummaryComponent, BlankComponent],
       providers: [
-        FormatDatePipe,
+        DatePipe,
         TicketTypePipe,
         {
           provide: ActivatedRoute,

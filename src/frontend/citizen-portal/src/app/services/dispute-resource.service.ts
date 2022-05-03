@@ -23,40 +23,6 @@ export class DisputeResourceService {
     private disputeAPIService: DisputesService
   ) { }
 
-  /**
-   * Get the ticket from RSI.
-   *
-   * @param params containing the ticketNumber and time
-   */
-  public getTicket(params: {
-    ticketNumber: string;
-    time: string;
-  }): Observable<TicketDisputeView> {
-
-    // return this.ticketAPIService.apiTicketsSearchGet(params.ticketNumber, params.time)
-    return this.ticketAPIService.apiTicketsLegacysearchGet(params.ticketNumber, params.time)
-      .pipe(
-        map((ticket: any) => {
-          if (ticket) {
-            this.updateTicketViewModel(ticket);
-          }
-
-          return ticket;
-        }),
-        tap((updatedTicket) =>
-          this.logger.info('DisputeResourceService::getTicket', updatedTicket)
-        ),
-        catchError((error: any) => {
-          this.toastService.openErrorToast(this.configService.ticket_error);
-          this.logger.error(
-            'DisputeResourceService::getTicket error has occurred: ',
-            error
-          );
-          throw error;
-        })
-      );
-  }
-
   // 	public postTicket(
 	//   image: any
   // 	): Observable<any> {

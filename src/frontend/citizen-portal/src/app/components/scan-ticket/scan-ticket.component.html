@@ -29,7 +29,7 @@
     <div class="col-lg-6 col-md-12 feild-border">
       <h1 class="mb-4" style="margin-left: 30px;"><strong>Ticket details</strong></h1>
       <mat-stepper orientation="vertical" #stepper>
-        <mat-step [stepControl]="form">
+        <mat-step *ngIf="form" [stepControl]="form">
           <form [formGroup]="form">
             <ng-template matStepLabel>Please review the details below and ensure they match the information on the
               ticket</ng-template>
