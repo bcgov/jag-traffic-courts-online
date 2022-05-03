@@ -34,6 +34,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         {
                             Count = vtc.Count,
                             Section = vtc.Section,
+                            Act = vtc.Act,
                             Amount = vtc.Amount
                         };
                         ticketDetails.Add(ticketDetail);

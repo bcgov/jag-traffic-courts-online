@@ -28,8 +28,6 @@ namespace TrafficCourts.Messaging.MessageContracts
     {
         public int Count { get; set; } = 0;
         public string Section { get; set; } = String.Empty;
-        public string Subsection { get; set; } = String.Empty;
-        public string Paragraph { get; set; } = String.Empty;
         public string Act { get; set; } = String.Empty;
         public double Amount { get; set; } = Double.NaN;
     }

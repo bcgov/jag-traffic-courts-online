@@ -61,35 +61,35 @@ public class ViolationTicketCount {
     private String actOrRegulation;
 	
 	/**
-	 * The full section of the act or regulation represented in a single string. For example, "147(1).A.MVA" which means "Speed in school zone"
+	 * The full section of the act or regulation represented in a single string. For example, "127(1)(a)(ii)" which means "fail to yield to pedestrian"
 	 */
 	@Column
 	@Schema(nullable = true)
     private String fullSection;
 	
 	/**
-	 * The section part of the full section. For example, "147"
+	 * The section part of the full section. For example, "127"
 	 */
 	@Column
-	@Schema(nullable = true)
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String section;
 	
 	/**
 	 * The subsection part of the full section. For example, "(1)"
 	 */
 	@Column
-	@Schema(nullable = true)
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String subsection;
 	
 	/**
-	 * The paragraph part of the full section. For example, "A"
+	 * The paragraph part of the full section. For example, "(a)"
 	 */
 	@Column
-	@Schema(nullable = true)
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String paragraph;
 	
 	/**
-	 * The act part of the full section. For example, "MVA"
+	 * The act of the offence. For example, "MVA"
 	 */
 	@Column
 	@Schema(nullable = true)
