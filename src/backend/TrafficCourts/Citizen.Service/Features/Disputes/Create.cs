@@ -23,17 +23,17 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
         public class Response
         {
-            public int Id { get; init; }
+            public Guid Id { get; init; }
             public Exception? Exception { get; init; }
 
-            public Response(int id)
+            public Response(Guid id)
             {
                 Id = id;
             }
 
             public Response(Exception exception)
             {
-                Id = -1;
+                Id = Guid.Empty;
                 Exception = exception;
             }
         }

@@ -99,7 +99,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed.")
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW and the rejected reason must be <= 256 characters. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/reject")
 	public Dispute rejectDispute(@PathVariable UUID id, @Valid @RequestBody @NotBlank @Size(min=1, max=256) String rejectedReason) {
@@ -118,7 +118,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING. Update failed.")
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
 	public Dispute cancelDispute(@PathVariable UUID id) {
@@ -137,7 +137,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to PROCESSING iff status is NEW or PROCESSING. Update failed.")
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.")
 	})
 	@PutMapping("/dispute/{id}/submit")
 	public Dispute submitDispute(@PathVariable UUID id) {

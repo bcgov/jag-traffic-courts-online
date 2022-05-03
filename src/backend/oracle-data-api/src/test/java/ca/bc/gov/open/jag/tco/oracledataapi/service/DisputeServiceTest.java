@@ -20,14 +20,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	private DisputeService disputeService;
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED" })
 	void testSetStatusToPROCESSING_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "REJECTED", "CANCELLED" })
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING" })
 	void testSetStatusToPROCESSING_405(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
@@ -36,14 +36,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED", "CANCELLED" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW" })
 	void testSetStatusToREJECTED_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.REJECTED);
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "PROCESSING" })
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED" })
 	void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
@@ -52,14 +52,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "REJECTED", "PROCESSING" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING", "REJECTED" })
 	void testSetStatusToCANCELLED_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.CANCELLED);
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "CANCELLED" })
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED" })
 	void testSetStatusToCANCELLED_405(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
