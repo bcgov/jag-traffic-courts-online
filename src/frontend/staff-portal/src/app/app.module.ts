@@ -43,6 +43,7 @@ import { UnauthorizedComponent } from '@components/error/unauthorized/unauthoriz
 import { DateSuffixPipe } from './services/date.service';
 import { InterceptorService } from './core/interceptors/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+import { ContactInfoComponent } from './components/contact-info/contact-info.component';
 import { OidcSecurityService, EventTypes, PublicEventsService, AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
@@ -68,7 +69,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPageComponent,
     UnauthorizedComponent,
     DateSuffixPipe,
-    TicketInfoComponent
+    TicketInfoComponent,
+    ContactInfoComponent
   ],
   imports: [
     CommonModule,

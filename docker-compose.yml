@@ -28,7 +28,7 @@ services:
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [rabbitmq, ticket-search, redis]
+    depends_on: [rabbitmq, redis]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"

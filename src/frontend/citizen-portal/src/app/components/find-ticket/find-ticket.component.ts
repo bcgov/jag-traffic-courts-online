@@ -60,6 +60,11 @@ export class FindTicketComponent implements OnInit {
     }
     this.busy = this.violationTicketService.searchTicket(this.form.value).subscribe(res => res);
   }
+  public dateDiff(givenDate){
+    var diffYear =(new Date().getTime() - new Date(givenDate).getTime()) / 1000;
+     diffYear /= (60 * 60 * 24);
+    return Math.abs(Math.round(diffYear)); 
+}
 
   public onFileChange(event: any) {
     this.logger.log('FindTicketComponent::onFileChange');

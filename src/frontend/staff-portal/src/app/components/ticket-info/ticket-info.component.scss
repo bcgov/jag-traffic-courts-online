@@ -1,14 +1,24 @@
 .ticket-info{
     margin-bottom: 12%;
-    .contact-info{
+    .img-section{
+        button {
+            width: 200%;
+            border: none;
+            background: none;
+            color: #009cde;
+        }
+    }
+    .ticket-info-section{
         // margin-bottom: 60px;
         .subheader{
             font-weight: 600;
             color: #003366;
         }
-        button{
-            width: 167px;
+        .dangerButton{
+            background-color: #df3e13;
+            color: white !important;
             border-radius: inherit;
+            font-size: large;
         }
     }
 }
