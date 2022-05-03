@@ -117,22 +117,22 @@ public class DisputeService {
 		Dispute dispute = disputeRepository.findById(id).orElseThrow();
 
 		// TCVP-1058 - business rules
-		// - current status must be NEW,PROCESSING to change to PROCESSING
-		// - current status must be REJECTED,PROCESSING to change to CANCELLED
-		// - current status must be NEW,CANCELLED,REJECTED to change to REJECTED
+		// - current status must be NEW,REJECTED to change to PROCESSING
+		// - current status must be NEW to change to REJECTED
+		// - current status must be NEW,PROCESSING,REJECTED to change to CANCELLED
 		switch (disputeStatus) {
 		case PROCESSING:
-			if (!List.of(DisputeStatus.NEW, DisputeStatus.PROCESSING).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.PROCESSING);
 			}
 			break;
 		case CANCELLED:
-			if (!List.of(DisputeStatus.REJECTED, DisputeStatus.PROCESSING).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.PROCESSING, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.CANCELLED);
 			}
 			break;
 		case REJECTED:
-			if (!List.of(DisputeStatus.NEW, DisputeStatus.CANCELLED, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.REJECTED);
 			}
 			break;

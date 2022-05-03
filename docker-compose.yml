@@ -200,6 +200,7 @@ services:
   ###                           Minio                                                       ###
   #############################################################################################
   minio:
+    container_name: minio
     image: minio/minio
     ports:
       - 9000:9000
@@ -214,6 +215,7 @@ services:
     command: server /data --console-address ":9001"
 
   createbuckets:
+    container_name: minio-init
     image: minio/mc
     depends_on:
       - minio
