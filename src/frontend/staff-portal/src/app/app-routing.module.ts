@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: AppRoutes.TICKET,
     component: TicketPageComponent,
-    canActivate: [AutoLoginPartialRoutesGuard],
+    // canActivate: [AutoLoginPartialRoutesGuard],
   },
   {
     path: '**',
