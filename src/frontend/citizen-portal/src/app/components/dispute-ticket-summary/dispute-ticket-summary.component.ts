@@ -7,7 +7,7 @@ import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
   styleUrls: ['./dispute-ticket-summary.component.scss'],
 })
 export class DisputeTicketSummaryComponent implements OnInit {
-  @Input() public ticket: TicketDisputeView;
+  @Input() public ticket: any;
   @Input() public countDataList:any;
   public defaultLanguage: string;
 

@@ -7,7 +7,7 @@ import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-import { truncate } from 'fs';
+// import { truncate } from 'fs';
 import { Subscription } from 'rxjs';
 
 @Component({
