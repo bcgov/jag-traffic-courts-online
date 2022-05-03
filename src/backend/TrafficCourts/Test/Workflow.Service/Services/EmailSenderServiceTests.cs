@@ -15,13 +15,13 @@ using Xunit;
 
 namespace TrafficCourts.Test.Workflow.Service.Services
 {
-    public class EmailSenderServerTests
+    public class EmailSenderServiceTests
     {
         private readonly Mock<ILogger<EmailSenderService>> _mockLogger;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
 
-        public EmailSenderServerTests()
+        public EmailSenderServiceTests()
         {
 
             _mockLogger = new Mock<ILogger<EmailSenderService>>();

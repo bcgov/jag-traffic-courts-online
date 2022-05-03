@@ -40,14 +40,14 @@ namespace TrafficCourts.Common.Features.Mail.Model
             }
         };
 
-        public List<MailTemplate> MailTemplates { get; set; }
+        public List<MailTemplate> MailTemplates { get; set; } = new List<MailTemplate>();
     }
 
     public class MailTemplate
     {
-        public string TemplateName { get; set; }
+        public string TemplateName { get; set; } = String.Empty;
         public string? Sender { get; set; }
-        public string SubjectTemplate { get; set; }
+        public string SubjectTemplate { get; set; } = String.Empty;
         public string? PlainContentTemplate { get; set; }
         public string? HtmlContentTemplate { get; set; }
     }
