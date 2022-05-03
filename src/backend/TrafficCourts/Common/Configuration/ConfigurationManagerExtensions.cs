@@ -1,21 +1,28 @@
 ﻿using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
 
 namespace TrafficCourts.Common.Configuration;
 
 public static class ConfigurationManagerExtensions
 {
     /// <summary>
-    /// Adds the specified <see cref="ConfigurationProvider"/> as a configuration source.
+    /// Adds ini formatted Vault Secrets to the configuration
     /// </summary>
-    /// <typeparam name="TConfigurationProvider">Type of the configuration provider</typeparam>
     /// <param name="configurationManager"></param>
-    public static void Add<TConfigurationProvider>(this ConfigurationManager configurationManager) 
-        where TConfigurationProvider : TrafficCourtsConfigurationProvider, new()
+    public static void AddVaultSecrets(this ConfigurationManager configurationManager, Serilog.ILogger logger)
     {
-        ArgumentNullException.ThrowIfNull(configurationManager);
-        Debug.Assert(configurationManager is IConfigurationBuilder);
+        // standard directory Vault stores secrets
+        const string vaultSecrets = "/vault/secrets";
 
-        ((IConfigurationBuilder)configurationManager).Add(new TrafficCourtsConfigurationSource<TConfigurationProvider>());
+        if (!Directory.Exists(vaultSecrets))
+        {
+            logger.Information("Vault {Directory} does not exist, will not load Vault secrets", vaultSecrets);
+            return;
+        }
+
+        foreach (var file in Directory.EnumerateFiles(vaultSecrets, "*.ini", SearchOption.TopDirectoryOnly))
+        {
+            logger.Debug("Loading secrets from {File}", file);
+            configurationManager.AddIniFile(file, optional: false, reloadOnChange: false); // assume we can read
+        }
     }
 }

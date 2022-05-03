@@ -33,6 +33,8 @@ public static class Startup
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        builder.Configuration.AddVaultSecrets(logger);
+
         // setup the mapping for friendly environment variables
         ((IConfigurationBuilder)builder.Configuration).Add(new EnvironmentVariablesConfigurationSource());
 
