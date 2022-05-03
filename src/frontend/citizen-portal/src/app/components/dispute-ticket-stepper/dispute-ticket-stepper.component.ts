@@ -18,8 +18,6 @@ import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { FormGroupValidators } from '@core/validators/form-group.validators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormUtilsService } from '@core/services/form-utils.service';
-import { LoggerService } from '@core/services/logger.service';
-import { ToastService } from '@core/services/toast.service';
 
 @Component({
   selector: 'app-dispute-ticket-stepper',
@@ -125,8 +123,6 @@ export class DisputeTicketStepperComponent implements OnInit {
     private config: ConfigService,
     private ticketTypePipe: TicketTypePipe,
     private dialog: MatDialog,
-    private logger: LoggerService,
-    private toastService: ToastService,
   ) {
     // config or static
     this.maxDateOfBirth = new Date();
