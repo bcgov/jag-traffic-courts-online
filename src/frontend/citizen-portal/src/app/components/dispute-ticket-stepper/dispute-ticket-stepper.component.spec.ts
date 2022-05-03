@@ -6,40 +6,43 @@ import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
-import { CdkAccordionModule } from '@angular/cdk/accordion';
-
-import { StepDisputantComponent } from './step-disputant.component';
+import { DisputeTicketStepperComponent } from './dispute-ticket-stepper.component';
 import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
-describe('StepDisputantComponent', () => {
-  let component: StepDisputantComponent;
-  let fixture: ComponentFixture<StepDisputantComponent>;
+describe('DisputeTicketStepperComponent', () => {
+  let component: DisputeTicketStepperComponent;
+  let fixture: ComponentFixture<DisputeTicketStepperComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        ReactiveFormsModule,
         RouterModule.forRoot([]),
+        ReactiveFormsModule,
 
         RouterTestingModule.withRoutes([
           { path: 'ticket/find', component: BlankComponent },
         ]),
         BrowserAnimationsModule,
         NgxMaterialModule,
-        CdkAccordionModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [StepDisputantComponent, BlankComponent],
+      providers: [
+        DatePipe,
+        TicketTypePipe
+      ],
+      declarations: [DisputeTicketStepperComponent, BlankComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StepDisputantComponent);
+    fixture = TestBed.createComponent(DisputeTicketStepperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

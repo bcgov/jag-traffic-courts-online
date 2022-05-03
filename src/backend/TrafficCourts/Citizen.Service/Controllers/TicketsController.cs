@@ -34,7 +34,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="404">The violation ticket was not found.</response>
         /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(TicketSearchResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ViolationTicket), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> SearchAsync(
@@ -55,7 +55,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
             }
 
             var result = response.Result.Match<IActionResult>(
-                ticket => Ok(new TicketSearchResult(ticket)),
+                ticket => Ok(ticket),
                 exception => StatusCode(StatusCodes.Status500InternalServerError));
 
             return result;

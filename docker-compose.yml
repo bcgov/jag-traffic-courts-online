@@ -28,7 +28,7 @@ services:
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [rabbitmq, ticket-search, redis]
+    depends_on: [rabbitmq, redis]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
@@ -54,27 +54,7 @@ services:
     restart: always
     depends_on:
       - oracle-data-api    
-  
-  #############################################################################################
-  ### Ticket Search API                                                                     ###
-  #############################################################################################
-  ticket-search:
-    container_name: ticket-search
-    build:
-      context: ./src/backend/TrafficCourts
-      dockerfile: ./TrafficCourts.Ticket.Search.Service/Dockerfile
-    environment:
-      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
-      ASPNETCORE_URLS: http://*:8080
-      TICKETSEARCH__SEARCHTYPE: ${TICKETSEARCH__SEARCHTYPE:-Mock}
-    ports:
-      - "5100:8080"
-      - "5110:8088"
-    restart: always
-    volumes:
-      # mount the current users usersecrets folder
-      - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
-      
+        
   # ---------------------------------------------------------------------------------------------
   # ARC Dispute API
   # ---------------------------------------------------------------------------------------------
@@ -102,7 +82,6 @@ services:
   sftp:
     container_name: sftp
     image: "emberstack/sftp"
-    container_name: sftp
     ports:
       - "22:22"
     volumes:
@@ -200,6 +179,7 @@ services:
   ###                           Minio                                                       ###
   #############################################################################################
   minio:
+    container_name: minio
     image: minio/minio
     ports:
       - 9000:9000
@@ -214,6 +194,7 @@ services:
     command: server /data --console-address ":9001"
 
   createbuckets:
+    container_name: minio-init
     image: minio/mc
     depends_on:
       - minio

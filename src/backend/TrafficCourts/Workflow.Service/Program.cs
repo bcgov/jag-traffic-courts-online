@@ -4,12 +4,13 @@ using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Consumers;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Features.Mail;
-using TrafficCourts.Common.Converters;
 using TrafficCourts.Messaging;
 using Serilog;
+using TrafficCourts.Common.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = GetLogger(builder);
+builder.Configuration.AddVaultSecrets(logger);
 
 // Add services to the container.
 

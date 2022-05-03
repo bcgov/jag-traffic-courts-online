@@ -24,7 +24,7 @@ describe('ConfigService', () => {
   it('should get provinces code', inject(
     [ConfigService],
     (service: ConfigService) => {
-      const code = service.provinces[0].code;
+      const code = service.provinces[0];
       expect(code).toBeDefined();
     }
   ));
