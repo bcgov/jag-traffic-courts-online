@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace TrafficCourts.Common.Configuration;
 
@@ -24,5 +27,24 @@ public static class ConfigurationManagerExtensions
             logger.Debug("Loading secrets from {File}", file);
             configurationManager.AddIniFile(file, optional: false, reloadOnChange: false); // assume we can read
         }
+    }
+
+
+    /// <summary>
+    /// Adds Redis connection.
+    /// </summary>
+    /// <param name="builder"></param>
+    public static void AddRedis(this WebApplicationBuilder builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.Services.ConfigureValidatableSetting<RedisOptions>(builder.Configuration.GetSection(RedisOptions.Section));
+
+        builder.Services.AddSingleton<IConnectionMultiplexer>(serviceProvider =>
+        {
+            var configuration = serviceProvider.GetRequiredService<RedisOptions>();
+            ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration.ConnectionString);
+            return connectionMultiplexer;
+        });
     }
 }

@@ -65,12 +65,16 @@ public static class Startup
             builder.AddObjectStorageFilePersistence();
         }
 
-        Configure(builder, configuration?.Redis, logger);
 
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
         builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService>();
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
+
+        // Redis
+        builder.AddRedis();
+        builder.Services.AddSingleton<ILookupService, RedisLookupService>();
+        builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
         // MassTransit
         builder.Services.AddMassTransit(builder.Configuration, logger);
@@ -115,39 +119,6 @@ public static class Startup
                 .AddSource(Diagnostics.Source.Name)
                 .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddJaegerExporter();
-        });
-    }
-
-    /// <summary>
-    /// Configures Lookup Service and Redis Cache Service.
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="configuration"></param>
-    /// <param name="logger"></param>
-    private static void Configure(WebApplicationBuilder builder, RedisConfigurationProperties? configuration, ILogger logger)
-    {
-        ArgumentNullException.ThrowIfNull(builder);
-        ArgumentNullException.ThrowIfNull(logger);
-
-        if (configuration is null)
-        {
-            configuration = new RedisConfigurationProperties();
-        }
-        ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration.ConnectionString);
-        builder.Services.AddSingleton<IConnectionMultiplexer>(connectionMultiplexer);
-
-        builder.Services.AddSingleton<ILookupService>(service =>
-        {
-            var redisConnection = service.GetRequiredService<IConnectionMultiplexer>();
-            var logger = service.GetRequiredService<ILogger<RedisLookupService>>();
-            return new RedisLookupService(redisConnection, logger);
-        });
-
-        builder.Services.AddSingleton<IRedisCacheService>(service =>
-        {
-            var redisConnection = service.GetRequiredService<IConnectionMultiplexer>();
-            var logger = service.GetRequiredService<ILogger<RedisCacheService>>();
-            return new RedisCacheService(redisConnection, logger);
         });
     }
 }
