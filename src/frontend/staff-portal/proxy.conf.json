@@ -3,15 +3,6 @@
     "target": "https://localhost:7136",
     "secure": false,
     "changeOrigin": true,
-    "logLevel": "debug",
-    "pathRewrite": {
-      "^/api": ""
-    },
-  "/disputes": {
-    "target": "https://localhost:7136",
-    "secure": false,
-    "changeOrigin": true,
     "logLevel": "debug"
-    }
   }
 }

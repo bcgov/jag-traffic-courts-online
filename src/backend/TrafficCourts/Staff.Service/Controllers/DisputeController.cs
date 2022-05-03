@@ -1,21 +1,13 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-[ApiController]
-[Route("api")]
-// [Authorize(Roles = "vtc-user")]
-public class DisputeController : ControllerBase
+public class DisputeController : TCOControllerBase<DisputeController>
 {
     private readonly IDisputeService _disputeService;
-    private readonly ILogger<DisputeController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -23,12 +15,10 @@ public class DisputeController : ControllerBase
     /// <param name="disputeService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger)
+    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger) : base(logger)
     {
         ArgumentNullException.ThrowIfNull(disputeService);
-        ArgumentNullException.ThrowIfNull(logger);
         _disputeService = disputeService;
-        _logger = logger;
     }
 
     /// <summary>
@@ -36,8 +26,7 @@ public class DisputeController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns>A collection of Dispute records</returns>
-    [HttpGet("/disputes")]
-    [Authorize(Roles="vtc-user")]
+    [HttpGet("Disputes")]
     [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
@@ -66,7 +55,7 @@ public class DisputeController : ControllerBase
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="404">The Dispute was not found.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
-    [HttpGet("/dispute/{disputeId}")]
+    [HttpGet("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -111,7 +100,7 @@ public class DisputeController : ControllerBase
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="404">The Dispute to update was not found.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}")]
+    [HttpPut("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -157,7 +146,7 @@ public class DisputeController : ControllerBase
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}/reject")]
+    [HttpPut("{disputeId}/reject")]
     public async Task<IActionResult> RejectDisputeAsync(
         Guid disputeId, 
         [FromForm] 
@@ -207,7 +196,7 @@ public class DisputeController : ControllerBase
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}/cancel")]
+    [HttpPut("{disputeId}/cancel")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -257,7 +246,7 @@ public class DisputeController : ControllerBase
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}/submit")]
+    [HttpPut("{disputeId}/submit")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

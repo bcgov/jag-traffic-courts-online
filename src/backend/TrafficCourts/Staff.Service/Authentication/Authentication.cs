@@ -55,17 +55,22 @@ public static class Authentication
 
         if (resourceAccessClaim != null)
         {
-            var realmAccess = JsonSerializer.Deserialize<ResourceAccess>(resourceAccessClaim);
-            identity.AddClaim(new Claim(ClaimTypes.Role, "vtc-user"));
-            if (realmAccess?.Roles is not null)
+            var audiencesRoles = JsonSerializer.Deserialize<Dictionary<string, ResourceAccess>>(resourceAccessClaim);
+            foreach(var audienceRole in audiencesRoles)
             {
-                identity.AddClaims(realmAccess.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                if (audienceRole.Key == audience)
+                {
+                    foreach(var role in audienceRole.Value.roles)
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
+                }
             }
         }
     }
 
     internal class ResourceAccess
     {
-        public string[]? Roles { get; set; }
+        public string[]? roles { get; set; }
     }
 }

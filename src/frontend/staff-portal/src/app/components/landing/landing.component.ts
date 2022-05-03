@@ -20,11 +20,6 @@ export class LandingComponent implements OnInit {
   ) {   }
 
   public async ngOnInit() {
-
-    this.oidcSecurityService.checkAuth().subscribe(
-      ({ isAuthenticated, userData, accessToken}) => {
-        this.router.navigate(['/ticket']);
-        this.logInOutService.currentUser(isAuthenticated);
-    });
+    this.router.navigate(['/ticket']);
   }
 }

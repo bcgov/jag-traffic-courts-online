@@ -13,6 +13,7 @@ import { ConfigModule } from './config/config.module';
 import { Configuration } from './api/configuration';
 // import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import {
   TranslateModule,
   TranslateLoader,
@@ -99,6 +100,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   exports: [NgBusyModule, TranslateModule],
   providers: [
     CurrencyPipe,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
     // AppConfigService,
     // {
     //   provide: HTTP_INTERCEPTORS,

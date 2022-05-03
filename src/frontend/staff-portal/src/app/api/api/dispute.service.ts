@@ -107,12 +107,12 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public disputeDisputeIdCancelPut(disputeId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public disputeDisputeIdCancelPut(disputeId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public disputeDisputeIdCancelPut(disputeId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public disputeDisputeIdCancelPut(disputeId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdCancelPut(disputeId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdCancelPut(disputeId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdCancelPut(disputeId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdCancelPut(disputeId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
-            throw new Error('Required parameter disputeId was null or undefined when calling disputeDisputeIdCancelPut.');
+            throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdCancelPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -155,7 +155,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/dispute/${encodeURIComponent(String(disputeId))}/cancel`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}/cancel`,
             null,
             {
                 context: localVarHttpContext,
@@ -174,12 +174,12 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public disputeDisputeIdGet(disputeId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
-    public disputeDisputeIdGet(disputeId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
-    public disputeDisputeIdGet(disputeId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
-    public disputeDisputeIdGet(disputeId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdGet(disputeId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
+    public apiDisputeDisputeIdGet(disputeId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
+    public apiDisputeDisputeIdGet(disputeId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
+    public apiDisputeDisputeIdGet(disputeId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
-            throw new Error('Required parameter disputeId was null or undefined when calling disputeDisputeIdGet.');
+            throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -222,7 +222,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Dispute>(`${this.configuration.basePath}/dispute/${encodeURIComponent(String(disputeId))}`,
+        return this.httpClient.get<Dispute>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -241,12 +241,12 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public disputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
-    public disputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
-    public disputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
-    public disputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Dispute>;
+    public apiDisputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Dispute>>;
+    public apiDisputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Dispute>>;
+    public apiDisputeDisputeIdPut(disputeId: string, dispute?: Dispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
-            throw new Error('Required parameter disputeId was null or undefined when calling disputeDisputeIdPut.');
+            throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -300,7 +300,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<Dispute>(`${this.configuration.basePath}/dispute/${encodeURIComponent(String(disputeId))}`,
+        return this.httpClient.put<Dispute>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}`,
             dispute,
             {
                 context: localVarHttpContext,
@@ -320,15 +320,15 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public disputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public disputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public disputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public disputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdRejectPut(disputeId: string, rejectedReason: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
-            throw new Error('Required parameter disputeId was null or undefined when calling disputeDisputeIdRejectPut.');
+            throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdRejectPut.');
         }
         if (rejectedReason === null || rejectedReason === undefined) {
-            throw new Error('Required parameter rejectedReason was null or undefined when calling disputeDisputeIdRejectPut.');
+            throw new Error('Required parameter rejectedReason was null or undefined when calling apiDisputeDisputeIdRejectPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -387,7 +387,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/dispute/${encodeURIComponent(String(disputeId))}/reject`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}/reject`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
@@ -406,12 +406,12 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public disputeDisputeIdSubmitPut(disputeId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public disputeDisputeIdSubmitPut(disputeId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public disputeDisputeIdSubmitPut(disputeId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public disputeDisputeIdSubmitPut(disputeId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdSubmitPut(disputeId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdSubmitPut(disputeId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdSubmitPut(disputeId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdSubmitPut(disputeId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
-            throw new Error('Required parameter disputeId was null or undefined when calling disputeDisputeIdSubmitPut.');
+            throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdSubmitPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -454,7 +454,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/dispute/${encodeURIComponent(String(disputeId))}/submit`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}/submit`,
             null,
             {
                 context: localVarHttpContext,
@@ -472,10 +472,10 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public disputesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
-    public disputesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
-    public disputesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
-    public disputesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
+    public apiDisputeDisputesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
+    public apiDisputeDisputesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
+    public apiDisputeDisputesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -517,7 +517,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/disputes`,
+        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/Dispute/Disputes`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

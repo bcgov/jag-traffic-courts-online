@@ -6,7 +6,7 @@
     "version": "v1"
   },
   "paths": {
-    "/disputes": {
+    "/api/Dispute/Disputes": {
       "get": {
         "tags": [
           "Dispute"
@@ -48,7 +48,7 @@
         }
       }
     },
-    "/dispute/{disputeId}": {
+    "/api/Dispute/{disputeId}": {
       "get": {
         "tags": [
           "Dispute"
@@ -236,7 +236,7 @@
         }
       }
     },
-    "/dispute/{disputeId}/reject": {
+    "/api/Dispute/{disputeId}/reject": {
       "put": {
         "tags": [
           "Dispute"
@@ -297,7 +297,7 @@
         }
       }
     },
-    "/dispute/{disputeId}/cancel": {
+    "/api/Dispute/{disputeId}/cancel": {
       "put": {
         "tags": [
           "Dispute"
@@ -385,7 +385,7 @@
         }
       }
     },
-    "/dispute/{disputeId}/submit": {
+    "/api/Dispute/{disputeId}/submit": {
       "put": {
         "tags": [
           "Dispute"

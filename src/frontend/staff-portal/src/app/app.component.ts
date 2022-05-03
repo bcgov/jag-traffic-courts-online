@@ -7,6 +7,8 @@ import { SnowplowService } from '@core/services/snowplow.service';
 import { UtilsService } from '@core/services/utils.service';
 import { RouteStateService } from '@core/services/route-state.service';
 import { Observable } from 'rxjs';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { LogInOutService } from 'app/services/log-in-out.service';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +26,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private utilsService: UtilsService,
     private snowplow: SnowplowService,
+    public oidcSecurityService: OidcSecurityService,
+    public logInOutService: LogInOutService
   ) {
     this.router.events.subscribe((evt) => {
       if (evt instanceof NavigationEnd) {
@@ -83,6 +87,20 @@ export class AppComponent implements OnInit {
           this.translateService.instant('toaster.dispute_create_error')
         );
       });
+
+      // begin logging in
+      this.oidcSecurityService.checkAuth().subscribe(
+        ({ isAuthenticated, userData, accessToken}) => {
+          this.logInOutService.currentUser(isAuthenticated);
+      });
+  }
+
+  login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout() {
+    this.oidcSecurityService.logoff();
   }
 
   /**
