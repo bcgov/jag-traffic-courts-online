@@ -35,12 +35,13 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
         public async void TestHandleReturnsResponse()
         {
             var mockTicketDispute = new Mock<TicketDispute>();
+            Guid mockGuid = Guid.NewGuid();
 
             var mockDisputeRequestClient = new Mock<IRequestClient<SubmitDispute>>();
             mockDisputeRequestClient.Setup(x => x.GetResponse<DisputeSubmitted>(It.IsAny<Object>(), default, default)
             .Result.Message).Returns(new DisputeSubmitted
             {
-                DisputeId = 100
+                DisputeId = mockGuid,
             });
             var mockEmailRequestClient = new Mock<IRequestClient<SendEmail>>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
@@ -52,7 +53,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);
 
 
-            Assert.Equal(100, response.Id);
+            Assert.Equal(mockGuid, response.Id);
         }
 
 
