@@ -106,17 +106,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TicketSearchResult"
+                  "$ref": "#/components/schemas/ViolationTicket"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TicketSearchResult"
+                  "$ref": "#/components/schemas/ViolationTicket"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TicketSearchResult"
+                  "$ref": "#/components/schemas/ViolationTicket"
                 }
               }
             }
@@ -469,71 +469,280 @@
         },
         "additionalProperties": false
       },
-      "TicketOffence": {
+      "ViolationTicket": {
+        "required": [
+          "counts"
+        ],
         "type": "object",
         "properties": {
-          "offenceNumber": {
+          "ticket_number": {
+            "maxLength": 12,
+            "type": "string",
+            "description": "The violation ticket number.",
+            "nullable": true
+          },
+          "surname": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The surname or corporate name.",
+            "nullable": true
+          },
+          "given_names": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The given names or corporate name continued.",
+            "nullable": true
+          },
+          "is_young_person": {
+            "type": "boolean",
+            "description": "The person issued the ticket has been identified as a young person.",
+            "nullable": true
+          },
+          "drivers_licence_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "drivers_licence_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state the drivers licence was issued by.",
+            "nullable": true
+          },
+          "drivers_licence_produced_year": {
+            "maximum": 2100,
+            "minimum": 1900,
             "type": "integer",
-            "description": "The offence or count number.",
-            "format": "int32"
-          },
-          "ticketedAmount": {
-            "type": "number",
-            "description": "The ticketed amount for this offence.",
-            "format": "double"
-          },
-          "amountDue": {
-            "type": "number",
-            "description": "The current amount due.",
-            "format": "double"
-          },
-          "invoiceType": {
-            "type": "string",
-            "description": "",
+            "description": "The year the drivers licence was produced.",
+            "format": "int32",
             "nullable": true
           },
-          "offenceDescription": {
-            "type": "string",
-            "description": "The description of the offence.",
+          "drivers_licence_expiry_year": {
+            "maximum": 2100,
+            "minimum": 1900,
+            "type": "integer",
+            "description": "The year the drivers licence expires.",
+            "format": "int32",
             "nullable": true
           },
-          "vehicleDescription": {
+          "birthdate": {
             "type": "string",
-            "description": "The description of vehicle.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TicketSearchResult": {
-        "type": "object",
-        "properties": {
-          "violationTicketNumber": {
-            "type": "string",
-            "description": "The violation ticket number. This will match the ticket number searched for.",
+            "description": "The birthdate of the individual the violation ticket was issued to.",
+            "format": "date-time",
             "nullable": true
           },
-          "violationDate": {
+          "address": {
+            "maxLength": 30,
             "type": "string",
-            "description": "The date the violation ticket was issued.",
-            "format": "date-time"
-          },
-          "violationTime": {
-            "type": "string",
-            "description": "The time of day the violation ticket was issued. This will match the time searched for.",
+            "description": "The address of the individual the violation ticket was issued to.",
             "nullable": true
           },
-          "offences": {
+          "city": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The city of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state of the individual the violation ticket was issued to.",
+            "nullable": true
+          },
+          "postal_code": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "The postal code or zip code.",
+            "nullable": true
+          },
+          "is_change_of_address": {
+            "type": "boolean",
+            "description": "The address represents a change of address. The address on the violation would be different from the address \r\non the drivers licence or provided identification.",
+            "nullable": true
+          },
+          "is_driver": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle driver.",
+            "nullable": true
+          },
+          "is_cyclist": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the cyclist.",
+            "nullable": true
+          },
+          "is_owner": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle owner.",
+            "nullable": true
+          },
+          "is_pedestrain": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a pedestrain.",
+            "nullable": true
+          },
+          "is_passenger": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a passenger.",
+            "nullable": true
+          },
+          "is_other": {
+            "type": "boolean",
+            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a other designation.",
+            "nullable": true
+          },
+          "other_description": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "If TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket.IssuedToOther is true, the other designation description.",
+            "nullable": true
+          },
+          "issued_date": {
+            "type": "string",
+            "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "issued_on_road_or_highway": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The violation ticket was issued on this road or highway.",
+            "nullable": true
+          },
+          "issued_at_or_near_city": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The violation ticket was issued at or near this city or town.",
+            "nullable": true
+          },
+          "is_mva_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Motor Vehicle Act (MVA).",
+            "nullable": true
+          },
+          "is_wla_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Wildlife Act (WLA).",
+            "nullable": true
+          },
+          "is_lca_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Liquor Control and Licencing Act (LCA).",
+            "nullable": true
+          },
+          "is_mca_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Motor Carrier Act (MCA).",
+            "nullable": true
+          },
+          "is_faa_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Firearm Act (FAA).",
+            "nullable": true
+          },
+          "is_tcr_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Transit Conduct and Safety Regs (TCR).",
+            "nullable": true
+          },
+          "is_cta_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for offence under the Commercial Transport Act (CTA).",
+            "nullable": true
+          },
+          "is_other_offence": {
+            "type": "boolean",
+            "description": "The violation ticket was issued for other.",
+            "nullable": true
+          },
+          "other_offence_description": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The violation ticket was issued for other.",
+            "nullable": true
+          },
+          "counts": {
+            "maximum": 3,
+            "minimum": 1,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TicketOffence"
+              "$ref": "#/components/schemas/ViolationTicketCount"
             },
-            "description": "The list of offences on this violation ticket.",
+            "description": "Represents the counts identified. Must have at least one and at most three counts."
+          },
+          "provincial_court_hearing_location": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The designated provincial court hearing location. For example, Richmond, BC.",
+            "nullable": true
+          },
+          "organization_location": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The organization or detatchment location. For example, Delta Police.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "Obsolete: Represents a violation ticket that is returned from search requests"
+        "description": "Represents the data contained on a BC violation ticket"
+      },
+      "ViolationTicketCount": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "description": "The count number. Must be unique within an individual violation ticket.",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The description of the offence.",
+            "nullable": true
+          },
+          "act_or_regulation": {
+            "maxLength": 3,
+            "type": "string",
+            "description": "The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc",
+            "nullable": true
+          },
+          "section": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "ticketed_amount": {
+            "maximum": 999999,
+            "minimum": 1,
+            "type": "number",
+            "description": "The ticketed amount.",
+            "format": "double",
+            "nullable": true
+          },
+          "amount_due": {
+            "maximum": 999999,
+            "minimum": 1,
+            "type": "number",
+            "description": "The amount due. Will be the same as ticketed_amount if no payments have been made on the ticket. May or may not have discount computed.",
+            "format": "double",
+            "nullable": true
+          },
+          "is_act": {
+            "type": "boolean",
+            "description": "The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.",
+            "nullable": true
+          },
+          "is_regulation": {
+            "type": "boolean",
+            "description": "The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Represents a violation ticket count."
       }
     }
   }

@@ -2,7 +2,7 @@
   <div class="col-lg-2">
     <div style="display: flex">
       <span class="h2">
-        <strong>Count {{ count.offenceNumber }}</strong>
+        <strong>Count {{ count.count }}</strong>
       </span>
     </div>
   </div>
@@ -10,33 +10,25 @@
   <div class="col-lg-7">
     <small class="d-block">For this count I would like to</small>
     <strong>
-      <div *ngIf="count.offenceAgreementStatus === 'NOTHING'">
+      <div *ngIf="count.__skip">
         No action at this time
       </div>
-      <div *ngIf="count.offenceAgreementStatus === 'PAY'">
+      <div *ngIf="count.offenceDeclaration === 'Plea'">
         Pay for this count
       </div>
-      <div *ngIf="count.offenceAgreementStatus === 'REDUCTION'">
+      <div *ngIf="count.timeToPayRequest || count.fineReductionRequest">
         Request a fine reduction and/or more time to pay
       </div>
-      <div *ngIf="count.offenceAgreementStatus === 'DISPUTE'">
+      <div *ngIf="count.offenceDeclaration === 'NotPlea'">
         Dispute the charge
       </div>
     </strong>
   </div>
-  <div class="col-lg-3"
-       *ngIf="count.offenceAgreementStatus === 'REDUCTION'">
+  <div class="col-lg-3">
     <small class="d-block">I will appear in court</small>
-    <strong>
-        No
-    </strong>
+    <strong *ngIf="count.appearInCourt"> Yes </strong>
+    <strong *ngIf="!count.appearInCourt"> No </strong>
   </div>
-  <div class="col-lg-3"
-       *ngIf="count.offenceAgreementStatus === 'DISPUTE'">
-    <small class="d-block">I will appear in court</small>
-    <strong> Yes </strong>
-  </div>
-
 </div>
 
 <div class="row mb-2 justify-content-end">
@@ -46,10 +38,10 @@
 <div class="row mb-2">
   <div class="offset-lg-2 col-lg-7">
     <small class="d-block">Description of offence</small>
-    <div class="text">{{ count.offenceDescription | titlecase }}</div>
+    <div class="text">{{ count.description | titlecase }}</div>
   </div>
   <div class="col-lg-3">
     <small class="d-block">Offence amount</small>
-    <div class="text">{{ count._amountDue | currency }}</div>
+    <div class="text">{{ count.ticketed_amount | currency }}</div>
   </div>
 </div>

@@ -46,24 +46,11 @@ export class HeaderComponent implements OnInit {
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public async ngOnInit() {
-    // const authenticated = await this.authService.isLoggedIn();
-    // if (authenticated) {
-    //   this.authService.getUser$().subscribe((user: User) => {
-    //     this.fullName = `${user?.firstName} ${user?.lastName}`;
-    //   });
-    // }
   }
 
   public toggleSidenav(): void {
     this.toggle.emit();
   }
-
-  // public onLogout(): Promise<void> {
-  //   this.authService.logout(
-  //     `${window.location.protocol}//${window.location.host}`
-  //   );
-  //   return Promise.resolve();
-  // }
 
   private toggleLanguage(lang: string): {
     languageCode: string;

@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CountItemSummaryComponent } from '@components/count-item-summary/count-item-summary.component';
-import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { ViolationTicket } from 'app/api';
 
 @Component({
   selector: 'app-count-summary',
@@ -17,7 +17,7 @@ import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
 export class CountSummaryComponent implements OnInit {
   @ViewChildren('countitem')
   countComponents: QueryList<CountItemSummaryComponent>;
-  @Input() public ticket: TicketDisputeView;
+  @Input() public ticket: ViolationTicket;
   @Input() public selectView = false;
 
   public defaultLanguage: string;

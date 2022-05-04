@@ -6,8 +6,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Features.Mail;
 using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Configuration;
@@ -132,5 +132,99 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
 
         }
 
+        // Test retrieve mail template found
+        // Test mail template not found.
+
+        [Fact]
+        public async Task EmailConsumerAsync_MailTemplate_ShouldReturnTaskComplete()
+        {
+            _mockSmtpClient.Setup(client => client.SendAsync(
+                    It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
+
+            _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(_mockSmtpClient.Object));
+
+            var service = CreateService();
+            var consumer = CreateConsumer(service);
+            var harness = new InMemoryTestHarness();
+
+            var emailConsumer = harness.Consumer(() => consumer);
+
+            await harness.Start();
+
+            try
+            {
+                SendEmail sendEmail = new();
+                // Send email message to the submitter's entered email
+                var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
+                if (template is not null)
+                {
+                    sendEmail = new SendEmail()
+                    {
+                        From = template.Sender,
+                        To = { "mail@test.com" },
+                        Subject = template.SubjectTemplate,
+                        PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01")
+                    };
+                    Assert.NotNull(sendEmail);
+                }
+
+                Assert.NotNull(template);
+
+
+                await harness.InputQueueSendEndpoint.Send<SendEmail>(sendEmail);
+
+                Assert.True(emailConsumer.Consumed.Select<SendEmail>().Any());
+            }
+            finally
+            {
+                await harness.Stop();
+            }
+
+        }
+
+        [Fact]
+        public async Task EmailConsumerAsync_MissingMailTemplate()
+        {
+            _mockSmtpClient.Setup(client => client.SendAsync(
+                    It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
+
+            _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(_mockSmtpClient.Object));
+
+            var service = CreateService();
+            var consumer = CreateConsumer(service);
+            var harness = new InMemoryTestHarness();
+
+            var emailConsumer = harness.Consumer(() => consumer);
+
+            await harness.Start();
+
+            try
+            {
+                SendEmail sendEmail = new();
+                // Send email message to the submitter's entered email
+                var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "UnknownTemplate");
+                if (template is not null)
+                {
+                    sendEmail.From = template.Sender;
+                    sendEmail.To.Add("mail@test.com");
+                    sendEmail.Subject = template.SubjectTemplate;
+                    sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01");
+
+                    await harness.InputQueueSendEndpoint.Send<SendEmail>(sendEmail);
+
+                }
+
+                Assert.Null(template);
+
+                Assert.False(emailConsumer.Consumed.Select<SendEmail>().Any());
+            }
+            finally
+            {
+                await harness.Stop();
+            }
+
+        }
     }
 }

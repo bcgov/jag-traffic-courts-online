@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,12 +11,13 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 
 import { ScanTicketComponent } from './scan-ticket.component';
 import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
-describe('ShellTicketComponent', () => {
+describe('ScanTicketComponent', () => {
   let component: ScanTicketComponent;
   let fixture: ComponentFixture<ScanTicketComponent>;
 
@@ -36,7 +36,7 @@ describe('ShellTicketComponent', () => {
       ],
       declarations: [ScanTicketComponent, BlankComponent],
       providers: [
-        CurrencyPipe,
+        DatePipe,
         {
           provide: ConfigService,
           useClass: MockConfigService,

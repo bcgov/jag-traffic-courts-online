@@ -1,4 +1,0 @@
-﻿invoice_number,pbc_ref_number,party_number,party_name,account_number,site_number,cust_trx_type,term_due_date,total,amount_due,attribute1,attribute2,attribute3,attribute4
-EZ020004601,10006,n/a,n/a,n/a,0,Traffic Violation Ticket,2020-09-18T09:54,139,83,Speed against area sign,,2020-09-18,n/a
-EZ020004602,10006,n/a,n/a,n/a,0,Traffic Violation Ticket,2020-09-18T09:54,109,96,Permit passenger without seatbelt,,2020-09-18,n/a
-EZ020004603,10006,n/a,n/a,n/a,,Traffic Violation Ticket,2020-09-18T09:54,368,320,Using electronic device while driving,,2020-09-18,n/a

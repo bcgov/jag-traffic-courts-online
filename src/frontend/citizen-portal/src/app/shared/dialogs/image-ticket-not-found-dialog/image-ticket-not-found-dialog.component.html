@@ -1,30 +1,43 @@
-    <div style="height: 300px;">
-          <mat-icon class="icon-error" aria-hidden="false" color="error" aria-label="Example icon">error</mat-icon>
-        <span class="ticket-error"><strong>Ticket not found</strong></span>
-        <button mat-icon-button mat-dialog-close color="primary">
-            <mat-icon class="close-icon">close</mat-icon>
-          </button>
+<div mat-dialog-title class="d-flex justify-content-between">
+  <span>
+    <mat-icon class="icon-error" aria-hidden="false" color="error" aria-label="Example icon">error</mat-icon>
+    <span class="ticket-error"><strong>{{ options.titleKey }}</strong></span>
+  </span>
+  <button mat-icon-button mat-dialog-close color="primary">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<mat-dialog-content>
+  <div *ngIf="options.messageKey === 'error1'">
+    <p class="my-2 text-bold">For best ticket photo scanning results, follow these instructions:</p>
+    <ul>
+      <li>Use a brightly lit area</li>
+      <li>Take your photo on a plain, untextured background</li>
+      <li>Crop your image as close to the edges as possible</li>
+      <li>Ensure image is legible (no blurry text)</li>
+    </ul>
 
-
-          <p><strong>Your ticket image could not be read. Please try again.</strong> </p>          
-          <mat-dialog-content>
-            <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
-            <ng-template appDialogContent></ng-template>
-          </mat-dialog-content>          
-            <span class="flex-grow-1"></span>
-            <p>If your ticket could not be scanned successfully, please <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket] for more options" target="blank">click here</a> for more options.</p>
-          <div class="row">
-            <div class="col-6">
-              <a class="view-link" (click)="onViewImageRequirements()">
-                <img class="me-2" src="/assets/image-requirements-icon.svg" />
-                <span class="view-link-text">View image requirements</span>
-              </a>
-            </div>
-            <div class="col-6">
-              <button class="close-button" type="submit" mat-flat-button mat-dialog-close color="primary">
-                Close
-              </button>
-            </div>
-          </div>
-          
-        </div>
+    <p class="my-2 text-bold">Image specifications</p>
+    <ul>
+      <li>Acceptable formats: JPG, PNG or PDF</li>
+      <li>Maximum size: 10 MB</li>
+    </ul>
+  </div>
+  <ng-template appDialogContent></ng-template>
+  <div *ngIf="options.messageKey === 'error3'">
+    <p class="my-2 text-bold">
+      It appears that your ticket is not a Motor Vehicle Act violation ticket.
+    </p>
+  </div>
+</mat-dialog-content>
+<span class="flex-grow-1"></span>
+<p>If your ticket could not be scanned successfully, please
+  <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+    target="blank">click here</a> for more options.
+</p>
+<mat-dialog-actions>
+  <span class="flex-grow-1"></span>
+  <button type="submit" mat-flat-button mat-dialog-close color="primary">
+    Close
+  </button>
+</mat-dialog-actions>
