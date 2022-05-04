@@ -20,6 +20,43 @@ export class LandingComponent implements OnInit {
   ) {   }
 
   public async ngOnInit() {
-    this.router.navigate(['/ticket']);
+
+      this.logInOutService.getLogoutStatus.subscribe((data) => {
+        if (data !== null || data !== '')
+        {
+          if(data === 'IDIR Login'){
+            this.login();
+          }
+          else
+            if(data === 'Logout'){
+              this.logout();
+            }
+        }
+      })
+
+      this.oidcSecurityService.checkAuth().subscribe(
+        ({ isAuthenticated}) => {
+          console.log("landing page", isAuthenticated);
+          if (isAuthenticated === true)
+          {
+            this.router.navigate(['/ticket']);
+          }
+          else
+          {
+            this.login();
+          }
+
+          this.logInOutService.currentUser(isAuthenticated);
+      });
+
   }
+
+  login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens();
+  }
+
 }
