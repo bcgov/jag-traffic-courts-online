@@ -63,6 +63,9 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving Dispute from oracle-data-api");
@@ -107,6 +110,9 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateDisputeAsync(Guid disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute in oracle-data-api");
@@ -151,13 +157,6 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/reject")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RejectDisputeAsync(
         Guid disputeId, 
         [FromForm] 
@@ -212,8 +211,6 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [HttpPut("{disputeId}/cancel")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
