@@ -20,12 +20,12 @@ export const httpLoaderFactory = (httpClient: HttpClient) => {
         scope: customConfig.scope,
         responseType: customConfig.responseType,
         silentRenew: true,
-        silentRenewUrl: `${window.location.origin}/silent-renew.html`, //option 1 - with CORS issue
+        // silentRenewUrl: `${window.location.origin}/silent-renew.html`, //option 1 - with CORS issue
         useRefreshToken: true,
         renewTimeBeforeTokenExpiresInSeconds: 60,
-        autoUserInfo: false,
-        unauthorizedRoute: '/',
-        forbiddenRoute: '/',
+        autoUserInfo: true,
+        unauthorizedRoute: '/unauthorized',
+        forbiddenRoute: '/unauthorized',
         ignoreNonceAfterRefresh: true,
         secureRoutes: ['/api'],
         customParamsAuthRequest: {
