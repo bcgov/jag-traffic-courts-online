@@ -1,27 +1,34 @@
 html {
-    scroll-behavior: smooth;
-  }
-
-.icon-error{
-    display:inline;
-    vertical-align: middle;
-    font-size: 30px;
+  scroll-behavior: smooth;
 }
+
+.icon-error {
+  display: inline;
+  vertical-align: middle;
+  font-size: 30px;
+}
+
 .ticket-error {
-    margin-left:10px;
-    vertical-align: middle;
-    color:#f44336;
-    font-size: 18px;;
-}
-.close-icon{
-    padding-bottom: 70px;
-    padding-left: 250px;
-}
-.close-button{
-    margin-left: 120px;
+  margin-left: 10px;
+  vertical-align: middle;
+  color: #f44336;
+  font-size: 18px;
+  ;
 }
 
-::ng-deep .mat-dialog-container{
-    width: 800px !important;
+.close-icon {
+  padding-bottom: 70px;
+  padding-left: 250px;
 }
 
+.close-button {
+  margin-left: 120px;
+}
+
+.action-row {
+  padding-bottom: 24px;
+}
+
+::ng-deep .mat-dialog-container {
+  width: 800px !important;
+}
