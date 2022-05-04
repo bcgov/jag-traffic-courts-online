@@ -208,7 +208,7 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm"),
       }
-      if (this.dateDiff(this.ticket.issued_date) < 30) {
+      if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
@@ -287,16 +287,6 @@ export class ViolationTicketService {
   }
 
   private checkSize(fileSize: number) {
-    var _size = fileSize;
-    let i = 0;
-    while (_size > 900) {
-      _size /= 1024; i++;
-    }
-    var exactSize = Math.round(_size * 100) / 100;
-    if (i === 2 && exactSize > 10 || i === 3 && exactSize > 1) {
-      return false
-    } else {
-      return true
-    }
+    return fileSize > 0 && fileSize <= (10 * 1024 * 1024); // less or equal to 10MB
   }
 }
