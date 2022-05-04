@@ -119,7 +119,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       multi: true
     },
     {
-      provide: Configuration,
+      provide: Configuration, // this configuration together with oidc configuration parameter secureroutes adds the bearer token to /api calls
       useFactory: (authService: OidcSecurityService) => new Configuration(
         {
           basePath: '',//environment.apiUrl,

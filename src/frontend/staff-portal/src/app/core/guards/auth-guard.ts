@@ -13,6 +13,10 @@ export class AuthorizationGuard implements CanActivate {
 
   }
 
+  // this guard decodes the access token into the obj tokenPayload
+  // under resource_access in tokenPayload looks for audience tco-staff-portal
+  // under that it searches through roles to see if the expected role (whatever was passed in as data in app.routing) is found
+  // only allows access (returns true) if correct role was found
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     return this.oidcSecurityService.isAuthenticated$.pipe(
       map(({ isAuthenticated }) => {

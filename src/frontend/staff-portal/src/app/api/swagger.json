@@ -6,7 +6,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Dispute/Disputes": {
+    "/api/Dispute/disputes": {
       "get": {
         "tags": [
           "Dispute"

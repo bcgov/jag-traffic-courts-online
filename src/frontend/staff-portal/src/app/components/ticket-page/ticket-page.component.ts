@@ -201,6 +201,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   getAllDisputes(): void {
     this.logger.log('TicketPageComponent::getAllDisputes');
 
+    // for now this will show dummy data plus new records
+    // jira ticket 1311 will be for adding the correct retrieval and setting of several of these fields after 1310 completed
+
     // concatenate all dummy data to this.disputes
     this.disputes = [];
     this.remoteDummyData.forEach(d => {

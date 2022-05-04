@@ -6,7 +6,6 @@ import { AppRoutes } from './app.routes';
 import { LandingComponent } from './components/landing/landing.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { AuthorizationGuard } from '@core/guards/auth-guard';
-import { AutoLoginPartialRoutesGuard } from 'angular-auth-oidc-client';
 
 const routes: Routes = [
   {

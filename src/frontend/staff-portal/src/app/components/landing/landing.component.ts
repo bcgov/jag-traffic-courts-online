@@ -21,6 +21,8 @@ export class LandingComponent implements OnInit {
 
   public async ngOnInit() {
 
+      // initial component not protected by route guarding for keycloak
+      // mimicking csrs project works ok except logs back in after logging out
       this.logInOutService.getLogoutStatus.subscribe((data) => {
         if (data !== null || data !== '')
         {
