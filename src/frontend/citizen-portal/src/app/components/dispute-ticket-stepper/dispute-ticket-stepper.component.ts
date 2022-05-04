@@ -245,10 +245,8 @@ export class DisputeTicketStepperComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          // const payload = this.disputeFormStateService.jsonTicketDispute;
-          // payload.violationTicketNumber = this.ticket.violationTicketNumber;
-          // payload.violationTime = this.ticket.violationTime;
-
+          const payload = this.form.value;
+          let test = "";
           // this.busy = this.disputeResource
           //   .createTicketDispute(payload)
           //   .subscribe((newDisputeTicket: TicketDisputeView) => {

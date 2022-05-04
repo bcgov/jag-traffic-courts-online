@@ -82,39 +82,44 @@ export class ViolationTicketService {
   }
 
   public analyseTicket(ticketFile: File, progressRef: NgProgressRef): void {
-    this.reset();
-    this.logger.info('file target', ticketFile);
-    if (!this.checkSize(ticketFile?.size)) {
-      this.logger.info('You must select a file');
-      this.openErrorScenarioOneDialog();
-      return;
-    }
-    progressRef.start();
-    this.fileUtilsService.readFileAsDataURL(ticketFile).subscribe(ticketImage => {
-      const input = {
-        filename: ticketFile.name,
-        ticketFile,
-        ticketImage
-      };
+    // this.reset();
+    this.openErrorScenarioOneDialog();
+    this.openErrorScenarioTwoDialog();
+    this.openErrorScenarioThreeDialog();
+    this.openInValidTicketDateDialog();
 
-      this.ticketService.apiTicketsAnalysePost(ticketFile)
-        .subscribe({
-          next: res => {
-            if (res) {
-              this.ocrTicket$.next(res);
-              this.ticket$.next(this.fromOCR(res));
-              this.inputTicketData$.next(input);
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
-            }
-            else {
-              this.onError();
-            }
-          },
-          error: err => {
-            this.onError(err);
-          }
-        })
-    })
+    // this.logger.info('file target', ticketFile);
+    // if (!this.checkSize(ticketFile?.size)) {
+    //   this.logger.info('You must select a file');
+    //   this.openErrorScenarioOneDialog();
+    //   return;
+    // }
+    // progressRef.start();
+    // this.fileUtilsService.readFileAsDataURL(ticketFile).subscribe(ticketImage => {
+    //   const input = {
+    //     filename: ticketFile.name,
+    //     ticketFile,
+    //     ticketImage
+    //   };
+
+    //   this.ticketService.apiTicketsAnalysePost(ticketFile)
+    //     .subscribe({
+    //       next: res => {
+    //         if (res) {
+    //           this.ocrTicket$.next(res);
+    //           this.ticket$.next(this.fromOCR(res));
+    //           this.inputTicketData$.next(input);
+    //           this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
+    //         }
+    //         else {
+    //           this.onError();
+    //         }
+    //       },
+    //       error: err => {
+    //         this.onError(err);
+    //       }
+    //     })
+    // })
   }
 
   private fromOCR(source: OcrViolationTicket): ViolationTicket {
@@ -236,7 +241,8 @@ export class ViolationTicketService {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
       if (err.error.errors.file || this.isErrorMatch(err, 'Violation Ticket Number is blank')
-        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")) {
+        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")
+        || this.isErrorMatch(err, "low confidence", false )) {
         this.openErrorScenarioOneDialog();
       }
       else if (this.isErrorMatch(err, "more than 30 days ago.", false )) {
