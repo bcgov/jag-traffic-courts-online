@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -229,7 +230,7 @@ export class ViolationTicketService {
     this.ticket$.next(null);
   }
 
-  private onError(err?: any): void {
+  private onError(err?: HttpErrorResponse): void {
     this.reset();
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
@@ -238,7 +239,7 @@ export class ViolationTicketService {
         || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")) {
         this.openErrorScenarioOneDialog();
       }
-      else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {
+      else if (this.isErrorMatch(err, "more than 30 days ago.", false )) {
         this.openErrorScenarioTwoDialog();
       }
       else if (this.isErrorMatch(err, "MVA must be selected under the 'Did commit the offence(s) indicated' section.")) {
@@ -248,11 +249,11 @@ export class ViolationTicketService {
     this.goToFind();
   }
 
-  private isErrorMatch(err, msg, exactMatch = true) {
+  private isErrorMatch(err: HttpErrorResponse, msg: string, exactMatch: boolean = true) {
     return exactMatch ? err.error.errors?.includes(msg) : err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0;
   }
 
-  private openImageTicketNotFoundDialog(title, key) {
+  private openImageTicketNotFoundDialog(title: string, key: string) {
     const data: DialogOptions = {
       titleKey: title,
       actionType: 'warn',
@@ -279,13 +280,13 @@ export class ViolationTicketService {
     return this.openImageTicketNotFoundDialog("more than 30 days old", "error2");
   }
 
-  private dateDiff(givenDate) {
+  private dateDiff(givenDate: string) {
     var diffYear = (new Date().getTime() - new Date(givenDate).getTime()) / 1000;
     diffYear /= (60 * 60 * 24);
     return Math.abs(Math.round(diffYear));
   }
 
-  private checkSize(fileSize) {
+  private checkSize(fileSize: number) {
     var _size = fileSize;
     let i = 0;
     while (_size > 900) {
