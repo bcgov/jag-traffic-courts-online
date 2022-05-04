@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using TrafficCourts.Common.Converters;
 
-namespace TrafficCourts.Messaging.MessageContracts
+namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
     public class ViolationTicket
     {
-        public string? OcrViolationTicket { get; set; }
         public string? TicketNumber { get; set; }
         public string? Surname { get; set; }
         public string? GivenNames { get; set; }
         public string? DriversLicenceNumber { get; set; }
         public string? DriversLicenceProvince { get; set; }
         [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateOnly Birthdate { get; set; }
+        [SwaggerSchema(Format = "date")]
+        public DateOnly? Birthdate { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? Province { get; set; }
@@ -29,12 +25,12 @@ namespace TrafficCourts.Messaging.MessageContracts
 
     public class TicketCount
     {
-        public int Count { get; set; }
-        public string Description { get; set; } = null!;
-        public string FullSection { get; set; } = null!;
-        public string Act { get; set; } = null!;
-        public double TicketedAmount { get; set; }
-        public bool IsAct { get; set; }
+        public int Count { get; set; } = 0;
+        public string Description { get; set; } = String.Empty;
+        public string FullSection { get; set; } = String.Empty;
+        public string Act { get; set; } = "MVA";
+        public double TicketedAmount { get; set; } = Double.NaN;
+        public bool IsAct { get; set; } = true;
         public bool IsRegulation { get; set; }
     }
 }

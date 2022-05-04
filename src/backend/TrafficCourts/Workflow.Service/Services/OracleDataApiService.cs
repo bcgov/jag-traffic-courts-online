@@ -19,7 +19,7 @@ namespace TrafficCourts.Workflow.Service.Services
             _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
         }
 
-        public async Task<Guid> CreateDisputeAsync(SubmitDispute disputeToSubmit)
+        public async Task<Guid> CreateDisputeAsync(NoticeOfDispute disputeToSubmit)
         {
             // Formatting all dispute class properties to camel case since oracle data api
             // accepts camel case only after serialization

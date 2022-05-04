@@ -1,15 +1,14 @@
-﻿using System.Text.Json.Serialization;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json.Serialization;
 using TrafficCourts.Common.Converters;
 
-namespace TrafficCourts.Messaging.MessageContracts
+namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
-    public class SubmitDispute : IMessage
+    public class NoticeOfDispute
     {
-        public DisputeStatus Status { get; set; }
         public string? TicketNumber { get; set; }
         public string? ProvincialCourtHearingLocation { get; set; }
         public DateTime? IssuedDate { get; set; }
-        public DateTime? CitizenSubmittedDate { get; set; }
         public string? Surname { get; set; }
         public string? GivenNames { get; set; }
         public string? Address { get; set; }
@@ -19,8 +18,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? HomePhoneNumber { get; set; }
         public string? WorkPhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
-        public DateTime? FilingDate { get; set; }
-        public IList<DisputedCount> DisputeCounts { get; set; } = new List<DisputedCount>();
+        public IList<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
         public bool RepresentedByLawyer { get; set; }
         public LegalRepresentation? legalRepresentation { get; set; }
         public string? InterpreterLanguage { get; set; }
@@ -28,9 +26,8 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? FineReductionReason { get; set; }
         public string? TimeToPayReason { get; set; }
         public bool CitizenDetectedOcrIssues { get; set; }
-        public bool SystemDetectedOcrIssues { get; set; }
-        public string? JjAssigned { get; set; }
         public ViolationTicket ViolationTicket { get; set; } = new();
+        public string? OcrKey { get; set; }
     }
 
     public class DisputedCount
@@ -67,14 +64,4 @@ namespace TrafficCourts.Messaging.MessageContracts
         NOT_GUILTY
     }
 
-    /// <summary>
-    /// An enumeration of available Statuses on a Dispute record.
-    /// </summary>
-    public enum DisputeStatus
-    {
-        NEW,
-        PROCESSING,
-        REJECTED,
-        CANCELLED
-    }
 }

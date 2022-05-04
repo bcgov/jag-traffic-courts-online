@@ -2,6 +2,7 @@ using Serilog;
 using System.ComponentModel;
 using System.Reflection;
 using TrafficCourts.Citizen.Service;
+using TrafficCourts.Citizen.Service.Mappings;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
 
@@ -9,6 +10,9 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Serilog.ILogger logger = GetLogger(builder);
 
 builder.ConfigureApplication(logger); // this can throw ConfigurationErrorsException
+
+// Registering and Initializing AutoMapper
+builder.Services.AddAutoMapper(typeof(NoticeOfDisputeToMessageContractMappingProfile));
 
 // Add services to the container.
 builder.Services

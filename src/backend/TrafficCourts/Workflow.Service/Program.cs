@@ -7,6 +7,7 @@ using TrafficCourts.Workflow.Service.Features.Mail;
 using TrafficCourts.Messaging;
 using Serilog;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Workflow.Service.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = GetLogger(builder);
@@ -38,6 +39,9 @@ void AddConsumers(IBusRegistrationConfigurator cfg)
 }
 
 builder.Services.AddMassTransit(builder.Configuration, logger, AddConsumers);
+
+// Registering and Initializing AutoMapper
+builder.Services.AddAutoMapper(typeof(MessageContractToNoticeOfDisputeMappingProfile));
 
 var app = builder.Build();
 

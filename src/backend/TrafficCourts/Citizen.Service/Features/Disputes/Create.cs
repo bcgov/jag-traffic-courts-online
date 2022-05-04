@@ -6,6 +6,7 @@ using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
+using AutoMapper;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -13,9 +14,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
     {
         public class Request : IRequest<Response>
         {
-            public TicketDispute Dispute { get; init; }
+            public Models.Dispute.NoticeOfDispute Dispute { get; init; }
 
-            public Request(TicketDispute dispute)
+            public Request(Models.Dispute.NoticeOfDispute dispute)
             {
                 Dispute = dispute ?? throw new ArgumentNullException(nameof(dispute));
             }
@@ -41,21 +42,23 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
         public class CreateDisputeHandler : IRequestHandler<Request, Response>
         {
             private readonly ILogger _logger;
-            public readonly IRequestClient<SubmitDispute> _submitDisputeRequestClient;
+            public readonly IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> _submitDisputeRequestClient;
             public readonly IRequestClient<SendEmail> _sendEmailRequestClient;
             private readonly IRedisCacheService _redisCacheService;
+            private readonly IMapper _mapper;
 
-            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IRequestClient<SubmitDispute> submitDisputeRequestClient, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService)
+            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> submitDisputeRequestClient, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService, IMapper mapper)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _submitDisputeRequestClient = submitDisputeRequestClient ?? throw new ArgumentNullException(nameof(submitDisputeRequestClient));
                 _sendEmailRequestClient = sendEmailRequestClient ?? throw new ArgumentNullException(nameof(sendEmailRequestClient));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
+                _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                TicketDispute createDisputeRequest = request.Dispute;
+                Models.Dispute.NoticeOfDispute createDisputeRequest = request.Dispute;
                 string? ocrKey = createDisputeRequest.OcrKey;
                 string? ocrViolationTicketJson = null;
 
@@ -66,31 +69,12 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     OcrViolationTicket violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ocrKey);
                     ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
                 }
+
+                SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(createDisputeRequest);
+                submitNoticeOfDispute.ViolationTicket.OcrViolationTicket = ocrViolationTicketJson;
+                submitNoticeOfDispute.CitizenSubmittedDate = DateTime.UtcNow;
                 
-                var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(new
-                {
-                    TicketNumber = createDisputeRequest.TicketNumber,
-                    CourtLocation = createDisputeRequest.CourtLocation,
-                    ViolationDate = createDisputeRequest.ViolationDate,
-                    GivenNames = createDisputeRequest.GivenNames,
-                    DisputantSurname = createDisputeRequest.DisputantSurname,
-                    StreetAddress = createDisputeRequest.StreetAddress,
-                    Province = createDisputeRequest.Province,
-                    PostalCode = createDisputeRequest.PostalCode,
-                    HomePhone = createDisputeRequest.HomePhone,
-                    EmailAddress = createDisputeRequest.EmailAddress,
-                    DriversLicence = createDisputeRequest.DriversLicence,
-                    DriversLicenceProvince = createDisputeRequest.DriversLicenceProvince,
-                    WorkPhone = createDisputeRequest.WorkPhone,
-                    DateOfBirth = createDisputeRequest.DateOfBirth,
-                    EnforcementOrganization = createDisputeRequest.EnforcementOrganization,
-                    ServiceDate = createDisputeRequest.ServiceDate,
-                    TicketCounts = createDisputeRequest.TicketCounts,
-                    LawyerRepresentation = createDisputeRequest.LawyerRepresentation,
-                    InterpreterLanguage = createDisputeRequest.InterpreterLanguage,
-                    WitnessIntent = createDisputeRequest.WitnessIntent,
-                    OcrViolationTicket = ocrViolationTicketJson
-                });
+                var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(submitNoticeOfDispute);
 
                 // Send email message to the submitter's entered email
                 var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
