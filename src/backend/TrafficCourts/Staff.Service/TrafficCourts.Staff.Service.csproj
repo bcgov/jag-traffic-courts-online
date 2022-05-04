@@ -62,4 +62,8 @@
     <OpenApiReference Include="OpenAPIs\OracleDataAPI\v1_0\OracleDataApi.v1_0.json" CodeGenerator="NSwagCSharp" Namespace="TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
