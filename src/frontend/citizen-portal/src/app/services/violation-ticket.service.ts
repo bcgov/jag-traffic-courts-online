@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Injectable, KeyValueDiffers } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
@@ -21,7 +22,6 @@ export class ViolationTicketService {
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
-  public notFound = false;
 
   constructor(
     private router: Router,
@@ -57,7 +57,7 @@ export class ViolationTicketService {
     return this._inputTicketData.value;
   }
 
-  public searchTicket(params, redirect: boolean = true): Observable<ViolationTicket> {
+  public searchTicket(params): Observable<ViolationTicket> {
     this.reset();
     this.logger.info('ViolationTicketService:: Search for ticket');
     return this.ticketService.apiTicketsSearchGet(params.ticketNumber, params.time)
@@ -65,20 +65,17 @@ export class ViolationTicketService {
         map((response: ViolationTicket) => {
           if (response) {
             this.ticket$.next(response);
-            if (redirect) {
-              this.goToDisputeSummary(params);
-            }
+            this.goToDisputeSummary(params);
           }
           else {
             this.logger.error('ViolationTicketService::searchTicket ticket not found');
-            this.notFound = true;
-            this.onTicketNotFound();
+            this.onError();
           }
           return response;
         }),
         catchError((error: any) => {
           this.logger.error('ViolationTicketService::searchTicket error has occurred: ', error);
-          this.inValidTicketDateDialog();
+          this.onError();
           throw error;
         })
       );
@@ -89,7 +86,7 @@ export class ViolationTicketService {
     this.logger.info('file target', ticketFile);
     if (!this.checkSize(ticketFile?.size)) {
       this.logger.info('You must select a file');
-      this.errorSeenarioOne()
+      this.openErrorScenarioOneDialog();
       return;
     }
     progressRef.start();
@@ -101,32 +98,21 @@ export class ViolationTicketService {
       };
 
       this.ticketService.apiTicketsAnalysePost(ticketFile)
-        .subscribe(res => {
-          if (res) {
-            this.ocrTicket$.next(res);
-            this.ticket$.next(this.fromOCR(res));
-            this.inputTicketData$.next(input);
-            this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
-          }
-          else {
-            this.onError();
-          }
-        }, (err) => {
-          if (err.error.errors.file || err.error.errors?.includes('Violation Ticket Number is blank') || err.error.errors?.includes(`Violation ticket number must start with an A and be of the form 'AX00000000'.`)) {
-            this.errorSeenarioOne();
-          }
-          else if (
-            err.error.errors.find(err => {
-              if (err.includes('more than 30 days ago.')) {
-                return true;
-              }
+        .subscribe({
+          next: res => {
+            if (res) {
+              this.ocrTicket$.next(res);
+              this.ticket$.next(this.fromOCR(res));
+              this.inputTicketData$.next(input);
+              this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
             }
-            )) {
-            this.errorSeenarioTwo();
+            else {
+              this.onError();
+            }
+          },
+          error: err => {
+            this.onError(err);
           }
-         else if ( err.error.errors?.includes(`MVA must be selected under the 'Did commit the offence(s) indicated' section.`)){
-          this.errorSeenarioThree();
-         }
         })
     })
   }
@@ -206,6 +192,7 @@ export class ViolationTicketService {
         case "time":
           result = value.replace(' ', ':');
           break;
+        case "date":
         case "string":
         default:
           result = value;
@@ -221,10 +208,12 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm"),
       }
-      if(this.dateDiff(this.ticket.issued_date)<30){
+      if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
+      } else {
+        this.openInValidTicketDateDialog();
       }
     } else {
       this.goToFind();
@@ -241,92 +230,63 @@ export class ViolationTicketService {
     this.ticket$.next(null);
   }
 
-  private onError(err?: any): void {
+  private onError(err?: HttpErrorResponse): void {
     this.reset();
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
-      this.openImageTicketNotFoundDialog(err);
+      if (err.error.errors.file || this.isErrorMatch(err, 'Violation Ticket Number is blank')
+        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")) {
+        this.openErrorScenarioOneDialog();
+      }
+      else if (this.isErrorMatch(err, "more than 30 days ago.", false )) {
+        this.openErrorScenarioTwoDialog();
+      }
+      else if (this.isErrorMatch(err, "MVA must be selected under the 'Did commit the offence(s) indicated' section.")) {
+        this.openErrorScenarioThreeDialog();
+      }
     }
     this.goToFind();
   }
 
-  private openImageTicketNotFoundDialog(err) {
+  private isErrorMatch(err: HttpErrorResponse, msg: string, exactMatch: boolean = true) {
+    return exactMatch ? err.error.errors?.includes(msg) : err.error.errors?.filter(i => i.indexOf(msg) > -1).length > 0;
+  }
+
+  private openImageTicketNotFoundDialog(title: string, key: string) {
     const data: DialogOptions = {
-      titleKey: err.error.title,
+      titleKey: title,
       actionType: 'warn',
-      messageKey: 'error1',
-      // err.error.errors.file ? err.error.errors.file[0] : err.error.errors[0],
+      messageKey: key,
       actionTextKey: 'Ok',
       cancelHide: true,
     };
     return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
   }
-  errorSeenarioOne() {
-    const data: DialogOptions = {
-      titleKey: "Your ticket image could not be read",
-      actionType: 'warn',
-      messageKey: 'error1',
-      // err.error.errors.file ? err.error.errors.file[0] : err.error.errors[0],
-      actionTextKey: 'Ok',
-      cancelHide: true,
-    };
-    return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
+
+  private openErrorScenarioOneDialog() {
+    return this.openImageTicketNotFoundDialog("Your ticket image could not be read", "error1");
   }
-  errorSeenarioTwo() {
-    const data: DialogOptions = {
-      titleKey: "Your ticket is over 30 days old",
-      actionType: 'warn',
-      messageKey: 'error2',
-      // err.error.errors.file ? err.error.errors.file[0] : err.error.errors[0],
-      actionTextKey: 'Ok',
-      cancelHide: true,
-    };
-    return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
+
+  private openErrorScenarioTwoDialog() {
+    return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
   }
-  errorSeenarioThree() {
-    const data: DialogOptions = {
-      titleKey: "Invalid ticket type",
-      actionType: 'warn',
-      messageKey: 'error3',
-      // err.error.errors.file ? err.error.errors.file[0] : err.error.errors[0],
-      actionTextKey: 'Ok',
-      cancelHide: true,
-    };
-    return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
+
+  private openErrorScenarioThreeDialog() {
+    return this.openImageTicketNotFoundDialog("Invalid ticket type", "error3");
   }
-  inValidTicketDateDialog() {
-    const data: DialogOptions = {
-      titleKey: 'more than 30 days old',
-      actionType: 'warn',
-      messageKey: "error2",
-      actionTextKey: 'Ok',
-      cancelHide: true,
-    };
-    return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })
+
+  private openInValidTicketDateDialog() {
+    return this.openImageTicketNotFoundDialog("more than 30 days old", "error2");
   }
-  public onTicketNotFound(): void {
-    this.notFound = true;
-    this.dialog.open(TicketNotFoundDialogComponent);
+
+  private dateDiff(givenDate: string) {
+    var diffYear = (new Date().getTime() - new Date(givenDate).getTime()) / 1000;
+    diffYear /= (60 * 60 * 24);
+    return Math.abs(Math.round(diffYear));
   }
-  public dateDiff(givenDate){
-    var diffYear =(new Date().getTime() - new Date(givenDate).getTime()) / 1000;
-     diffYear /= (60 * 60 * 24);
-    return Math.abs(Math.round(diffYear)); 
-}
-public checkSize(fileSize){
-  var _size = fileSize;
-             let i=0;
-            while(_size>900){
-               _size/=1024;i++;
-             }
-             var exactSize = Math.round(_size*100)/100;
-                 
-   if(i ===  2 && exactSize > 10 || i ===  3 && exactSize > 1 ){
-     return false
-   } else {
-     return true
-   }
-      
- }
+
+  private checkSize(fileSize: number) {
+    return fileSize > 0 && fileSize <= (10 * 1024 * 1024); // less or equal to 10MB
+  }
 }
