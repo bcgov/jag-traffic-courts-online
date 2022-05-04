@@ -66,8 +66,11 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 if (ocrKey != null && Guid.TryParseExact(ocrKey, "n", out _))
                 {
                     // Get the OCR violation ticket data from Redis cache using the OCR key and serialize it to a JSON string
-                    OcrViolationTicket violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ocrKey);
-                    ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
+                    OcrViolationTicket? violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ocrKey);
+                    if (violationTicket != null)
+                    {
+                        ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
+                    }
                 }
 
                 SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(createDisputeRequest);
