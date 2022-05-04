@@ -13,6 +13,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DisputedCount {
+public class DisputedCount extends Auditable<String> {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
@@ -37,7 +38,7 @@ public class DisputedCount {
 	 */
 	@Column
 	private Plea plea;
-	
+
 	/**
 	 * The count number.
 	 */
@@ -56,13 +57,13 @@ public class DisputedCount {
 	 */
 	@Column
 	private boolean requestReduction;
-	
+
 	/**
 	 * Does the want to appear in court?
 	 */
 	@Column
 	private boolean appearInCourt;
-	
+
 	@JsonBackReference
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
