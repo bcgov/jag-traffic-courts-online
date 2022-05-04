@@ -236,7 +236,8 @@ export class ViolationTicketService {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
       if (err.error.errors.file || this.isErrorMatch(err, 'Violation Ticket Number is blank')
-        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")) {
+        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")
+        || this.isErrorMatch(err, "low confidence", false )) {
         this.openErrorScenarioOneDialog();
       }
       else if (this.isErrorMatch(err, "more than 30 days ago.", false )) {
