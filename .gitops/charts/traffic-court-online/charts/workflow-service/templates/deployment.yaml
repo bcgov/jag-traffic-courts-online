@@ -28,14 +28,65 @@ spec:
       serviceAccountName: {{ include "workflow-service.serviceAccountName" . }}
       containers:
         - env:
-          - name: RABBITMQCONFIG__HOST
+          - name: ASPNETCORE_URLS
+            value: http://*:8080
+          - name: RABBITMQ__HOST
             value: "{{ .Values.rabbitmq.host }}"
+          - name: RABBITMQ__PORT
+            value: "{{ .Values.rabbitmq.port }}"
+          - name: RABBITMQ__USERNAME
+            value: "{{ .Values.rabbitmq.username }}"
+          - name: RABBITMQ__PASSWORD
+            value: "{{ .Values.rabbitmq.password }}"
           - name: RETRYCONFIGURATION__RETRYTIMES
             value: "{{ .Values.retry.times }}"
           - name: RETRYCONFIGURATION__RETRYINTERVAL
             value: "{{ .Values.retry.interval }}"
           - name: RETRYCONFIGURATION__CONCURRENCYLIMIT
             value: "{{ .Values.retry.concurrencyLimit }}"
+          # arc-dispute-api
+          - name: ArcApiConfiguration__Host
+            value: "{{ .Values.arc.host }}"
+          - name: ArcApiConfiguration__Port
+            value: "{{ .Values.arc.port }}"
+          # oracle-data-api
+          - name: OracleDataApiConfiguration__Host
+            value: "{{ .Values.oracle.host }}"
+          - name: OracleDataApiConfiguration__Port
+            value: "{{ .Values.oracle.port }}"
+          # smtp
+          - name: SmtpConfiguration__Host
+            value: "{{ .Values.smtp.host }}"
+          - name: SmtpConfiguration__Port
+            value: "{{ .Values.smtp.port }}"
+          # email
+          - name: EmailConfiguration__Sender
+            value: "{{ .Values.email.sender }}"
+          - name: EmailConfiguration__AllowList_0
+            value: "@nttdata.com"
+          - name: EmailConfiguration__AllowList_1
+            value: "@gov.bc.ca"
+          {{- if .Values.splunk.enabled }}
+          # Logging - Splunk
+          - name: Serilog__Using__0
+            value: "Serilog.Sinks.Splunk"
+          - name: Serilog__WriteTo__0__Name
+            value: "EventCollector"
+          - name: Serilog__WriteTo__0__Args__splunkHost
+            value: "{{ required "A valid .Values.splunk.endpoint required!" .Values.splunk.endpoint }}"
+          - name: Serilog__WriteTo__0__Args__eventCollectorToken
+            value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          {{- end }}
+          {{- if .Values.jaeger.enabled }}
+          # OpenTelemetry jaeger
+          - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+            value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
+          {{- if .Values.jaeger.exporter.protocol }}
+          - name: OTEL_EXPORTER_JAEGER_PROTOCOL
+            value: "{{ .Values.jaeger.exporter.protocol }}"
+          {{- end }}
+          {{- end }}
+
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}

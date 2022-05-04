@@ -53,15 +53,17 @@ spec:
           # Redis
           - name: Redis__ConnectionString
             value: "{{ .Values.redis.connectionString }}"
+          {{- if .Values.splunk.enabled }}
           # Logging - Splunk
           - name: Serilog__Using__0
             value: "Serilog.Sinks.Splunk"
           - name: Serilog__WriteTo__0__Name
             value: "EventCollector"
           - name: Serilog__WriteTo__0__Args__splunkHost
-            value: "{{ .Values.splunk.endpoint }}"
+            value: "{{ required "A valid .Values.splunk.endpoint required!" .Values.splunk.endpoint }}"
           - name: Serilog__WriteTo__0__Args__eventCollectorToken
             value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          {{- end }}
           {{- if .Values.jaeger.enabled }}
           # OpenTelemetry jaeger
           - name: OTEL_EXPORTER_JAEGER_ENDPOINT
