@@ -38,7 +38,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
         public async void TestHandleReturnsResponse()
         {
             var mockTicketDispute = new Mock<NoticeOfDispute>();
-            var mockViolationTicket = new Mock<TrafficCourts.Citizen.Service.Models.Dispute.ViolationTicket>();
+            var mockViolationTicket = new Mock<TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket>();
             Guid mockGuid = Guid.NewGuid();
 
             
