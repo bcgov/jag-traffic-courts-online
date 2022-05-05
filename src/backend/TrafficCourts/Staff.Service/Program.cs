@@ -94,10 +94,11 @@ if (swagger.Enabled)
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-    // .RequireAuthorization(); // This will set a default policy that says a user has to be authenticated
+app.MapControllers()
+    .RequireAuthorization(); // This will set a default policy that says a user has to be authenticated
 
 app.Run();
 

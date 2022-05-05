@@ -21,11 +21,44 @@ export class LandingComponent implements OnInit {
 
   public async ngOnInit() {
 
-    this.oidcSecurityService.checkAuth().subscribe(
-      ({ isAuthenticated, userData, accessToken}) => {
-        console.log(userData, accessToken, isAuthenticated);
-        this.router.navigate(['/ticket']);
-        this.logInOutService.currentUser(isAuthenticated);
-    });
+      // initial component not protected by route guarding for keycloak
+      // mimicking csrs project works ok except logs back in after logging out
+      this.logInOutService.getLogoutStatus.subscribe((data) => {
+        if (data !== null || data !== '')
+        {
+          if(data === 'IDIR Login'){
+            this.login();
+          }
+          else
+            if(data === 'Logout'){
+              this.logout();
+            }
+        }
+      })
+
+      this.oidcSecurityService.checkAuth().subscribe(
+        ({ isAuthenticated}) => {
+          console.log("landing page", isAuthenticated);
+          if (isAuthenticated === true)
+          {
+            this.router.navigate(['/ticket']);
+          }
+          else
+          {
+            this.login();
+          }
+
+          this.logInOutService.currentUser(isAuthenticated);
+      });
+
   }
+
+  login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens();
+  }
+
 }

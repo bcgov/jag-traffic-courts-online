@@ -1,20 +1,14 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-[ApiController]
-[Route("api")]
-public class DisputeController : ControllerBase
+// implement role authorization by using TCOControllerBase class as in csrs project
+public class DisputeController : TCOControllerBase<DisputeController>
 {
     private readonly IDisputeService _disputeService;
-    private readonly ILogger<DisputeController> _logger;
 
     /// <summary>
     /// Default Constructor
@@ -22,20 +16,22 @@ public class DisputeController : ControllerBase
     /// <param name="disputeService"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
-    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger)
+    public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger) : base(logger)
     {
         ArgumentNullException.ThrowIfNull(disputeService);
-        ArgumentNullException.ThrowIfNull(logger);
         _disputeService = disputeService;
-        _logger = logger;
     }
 
     /// <summary>
     /// Returns all Disputes from the Oracle Data API.
     /// </summary>
     /// <param name="cancellationToken"></param>
+    /// <response code="200">The Disputes were found.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
-    [HttpGet("/disputes")]
+    [HttpGet("disputes")]
     [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
@@ -62,9 +58,10 @@ public class DisputeController : ControllerBase
     /// <returns>A single Dispute record</returns>
     /// <response code="200">The Dispute was found.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="404">The Dispute was not found.</response>
-    /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
-    [HttpGet("/dispute/{disputeId}")]
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
+    [HttpGet("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -107,9 +104,11 @@ public class DisputeController : ControllerBase
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
     /// <response code="404">The Dispute to update was not found.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}")]
+    [HttpPut("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -152,10 +151,12 @@ public class DisputeController : ControllerBase
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}/reject")]
+    [HttpPut("{disputeId}/reject")]
     public async Task<IActionResult> RejectDisputeAsync(
         Guid disputeId, 
         [FromForm] 
@@ -202,10 +203,12 @@ public class DisputeController : ControllerBase
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}/cancel")]
+    [HttpPut("{disputeId}/cancel")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -252,12 +255,16 @@ public class DisputeController : ControllerBase
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
-    [HttpPut("/dispute/{disputeId}/submit")]
+    [HttpPut("{disputeId}/submit")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

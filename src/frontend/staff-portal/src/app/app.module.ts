@@ -13,12 +13,12 @@ import { ConfigModule } from './config/config.module';
 import { Configuration } from './api/configuration';
 // import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import {
   TranslateModule,
   TranslateLoader,
   TranslateService,
 } from '@ngx-translate/core';
-import { Observable } from "rxjs";
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -41,13 +41,11 @@ import { TicketPageComponent } from '@components/ticket-page/ticket-page.compone
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
 import { DateSuffixPipe } from './services/date.service';
-import { InterceptorService } from './core/interceptors/interceptor.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
-import { OidcSecurityService, EventTypes, PublicEventsService, AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
-import { AppConfigService } from 'app/services/app-config.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -103,6 +101,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   exports: [NgBusyModule, TranslateModule],
   providers: [
     CurrencyPipe,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
     // AppConfigService,
     // {
     //   provide: HTTP_INTERCEPTORS,
@@ -116,18 +115,18 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     LogInOutService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: InterceptorService,
+      useClass: AuthInterceptor,
       multi: true
     },
     {
-      provide: Configuration,
+      provide: Configuration, // this configuration together with oidc configuration parameter secureroutes adds the bearer token to /api calls
       useFactory: (authService: OidcSecurityService) => new Configuration(
         {
           basePath: '',//environment.apiUrl,
           accessToken: authService.getAccessToken.bind(authService),
           credentials: {
             'Bearer': () => {
-              var token: any =  authService.getAccessToken();
+              var token: string = authService.getAccessToken.bind(authService);
               if (token) {
                 return 'Bearer ' + token;
               }
