@@ -99,6 +99,29 @@ retry:
   interval: 2
   concurrencyLimit: 2
 
+smtp:
+  host: apps.smtp.gov.bc.ca
+  port: 25
+
+email:
+  sender:
+  allowed:
+
+arc:
+  host: arc-dispute-api
+  port: 8080
+
+oracle:
+  host: oracle-data-api
+  port: 8080
+
+## @param
+##
+splunk:
+  enabled: false
+  endpoint:
+  token:
+
 ## @param jaeger
 ##
 jaeger:
@@ -106,3 +129,6 @@ jaeger:
   exporter:
     endpoint: jaeger
     protocol: "http/thrift.binary"
+
+vault:
+  enabled: false

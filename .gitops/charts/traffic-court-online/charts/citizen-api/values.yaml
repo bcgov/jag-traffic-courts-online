@@ -124,18 +124,11 @@ objectStorage:
   secretKey: ""
 
 ## @param
-## Todo: move splunk.token to secret
 ##
 splunk:
-  enabled: true
-  host: ""
-  token: ""
-
-## @param
-##
-ticketSearch:
-  address: ""
-  secure: false
+  enabled: false
+  endpoint:
+  token:
 
 ## @param
 ##
@@ -146,4 +139,7 @@ jaeger:
     protocol: "http/thrift.binary"
 
 swagger:
+  enabled: false
+
+vault:
   enabled: false
