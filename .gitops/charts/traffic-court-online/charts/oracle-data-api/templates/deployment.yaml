@@ -28,11 +28,13 @@ spec:
       serviceAccountName: {{ include "oracle-data-api.serviceAccountName" . }}
       containers:
         - env:
+          {{- if .Values.splunk.enabled }}
           # Logging - Splunk
           - name: SPLUNK_URL
-            value: "{{ .Values.splunk.endpoint }}"
+            value: "{{ required "A valid .Values.splunk.endpoint required!" .Values.splunk.endpoint }}"
           - name: SPLUNK_TOKEN
             value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          {{- end }}
           # Redis
           - name: REDIS_HOST
             value: "{{ .Values.redis.host }}"
