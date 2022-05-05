@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.Converters;
 
 namespace TrafficCourts.Citizen.Service.Models.Tickets;
 
@@ -73,7 +74,8 @@ public class ViolationTicket
     /// </summary>
     [JsonPropertyName("birthdate")]
     [SwaggerSchema(Format = "date")]
-    public DateTime? Birthdate { get; set; }
+    [JsonConverter(typeof(DateOnlyJsonConverter))]
+    public DateOnly? Birthdate { get; set; }
 
     /// <summary>
     /// The address of the individual the violation ticket was issued to.
@@ -236,7 +238,6 @@ public class ViolationTicket
     /// </summary>
     [JsonPropertyName("counts")]
     [Required]
-    [Range(1, 3)]
     public List<ViolationTicketCount> Counts { get; set; } = new List<ViolationTicketCount>();
     #endregion
 

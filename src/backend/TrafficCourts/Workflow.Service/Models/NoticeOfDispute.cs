@@ -22,7 +22,7 @@ namespace TrafficCourts.Workflow.Service.Models
         public string? EmailAddress { get; set; }
         public IList<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
         public bool RepresentedByLawyer { get; set; }
-        public LegalRepresentation? legalRepresentation { get; set; }
+        public LegalRepresentation? LegalRepresentation { get; set; }
         public string? InterpreterLanguage { get; set; }
         public int NumberOfWitness { get; set; }
         public string? FineReductionReason { get; set; }
@@ -67,12 +67,12 @@ namespace TrafficCourts.Workflow.Service.Models
         /// <summary>
         /// If the dispuant is pleads guilty, plea will always be Guilty. The dispuant has choice to attend court or not.
         /// </summary>
-        GUILTY,
+        Guily,
 
         /// <summary>
         /// If the dispuant is pleads not guilty, the dispuant will have to attend court.
         /// </summary>
-        NOT_GUILTY
+        NotGuilty
     }
 
     /// <summary>
@@ -80,10 +80,10 @@ namespace TrafficCourts.Workflow.Service.Models
     /// </summary>
     public enum DisputeStatus
     {
-        NEW,
-        PROCESSING,
-        REJECTED,
-        CANCELLED
+        New,
+        Processing,
+        Rejected,
+        Cancelled
     }
 
 }

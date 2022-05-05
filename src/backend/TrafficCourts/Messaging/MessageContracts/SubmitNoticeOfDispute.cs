@@ -5,7 +5,7 @@ namespace TrafficCourts.Messaging.MessageContracts
 {
     public class SubmitNoticeOfDispute : IMessage
     {
-        public DisputeStatus Status { get; set; } = DisputeStatus.NEW;
+        public DisputeStatus Status { get; set; } = DisputeStatus.New;
         public string? TicketNumber { get; set; }
         public string? ProvincialCourtHearingLocation { get; set; }
         public DateTime? IssuedDate { get; set; }
@@ -21,7 +21,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? EmailAddress { get; set; }
         public IList<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
         public bool RepresentedByLawyer { get; set; }
-        public LegalRepresentation? legalRepresentation { get; set; }
+        public LegalRepresentation? LegalRepresentation { get; set; }
         public string? InterpreterLanguage { get; set; }
         public int NumberOfWitness { get; set; }
         public string? FineReductionReason { get; set; }
@@ -56,12 +56,12 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// If the dispuant is pleads guilty, plea will always be Guilty. The dispuant has choice to attend court or not.
         /// </summary>
-        GUILTY,
+        Guilty,
 
         /// <summary>
         /// If the dispuant is pleads not guilty, the dispuant will have to attend court.
         /// </summary>
-        NOT_GUILTY
+        NotGuilty
     }
 
     /// <summary>
@@ -69,9 +69,9 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// </summary>
     public enum DisputeStatus
     {
-        NEW,
-        PROCESSING,
-        REJECTED,
-        CANCELLED
+        New,
+        Processing,
+        Rejected,
+        Cancelled
     }
 }

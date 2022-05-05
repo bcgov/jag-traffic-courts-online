@@ -285,7 +285,7 @@ public class ViolationTicket {
      */
     @Column
     @Schema(nullable = true)
-    private String enforcementOrganization;
+    private String organizationLocation;
     
     @JsonManagedReference
     @OneToMany(targetEntity=ViolationTicketCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

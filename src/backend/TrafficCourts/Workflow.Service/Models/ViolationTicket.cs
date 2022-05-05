@@ -18,18 +18,18 @@ namespace TrafficCourts.Workflow.Service.Models
         public string? Province { get; set; }
         public string? PostalCode { get; set; }
         public DateTime? IssuedDate { get; set; }
-        public string? EnforcementOrganization { get; set; }
+        public string? OrganizationLocation { get; set; }
         public IList<ViolationTicketCount> ViolationTicketCounts { get; set; } = new List<ViolationTicketCount>();
     }
 
     public class ViolationTicketCount
     {
-        public int Count { get; set; }
-        public string Description { get; set; } = null!;
-        public string FullSection { get; set; } = null!;
-        public string Act { get; set; } = null!;
-        public double TicketedAmount { get; set; } = Double.NaN;
-        public bool IsAct { get; set; }
-        public bool IsRegulation { get; set; }
+        public short Count { get; set; }
+        public string? Description { get; set; }
+        public string? FullSection { get; set; }
+        public string? ActRegulation { get; set; }
+        public float? TicketedAmount { get; set; }
+        public bool? IsAct { get; set; }
+        public bool? IsRegulation { get; set; }
     }
 }

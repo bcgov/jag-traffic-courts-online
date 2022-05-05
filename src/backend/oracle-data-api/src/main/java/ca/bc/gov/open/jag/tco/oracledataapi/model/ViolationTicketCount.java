@@ -58,7 +58,7 @@ public class ViolationTicketCount {
 	 */
 	@Column
 	@Schema(nullable = true)
-    private String actOrRegulation;
+    private String actRegulation;
 	
 	/**
 	 * The full section of the act or regulation represented in a single string. For example, "127(1)(a)(ii)" which means "fail to yield to pedestrian"
@@ -89,17 +89,11 @@ public class ViolationTicketCount {
     private String paragraph;
 	
 	/**
-	 * The act of the offence. For example, "MVA"
-	 */
-	@Column
-	@Schema(nullable = true)
-    private String act;
-	
-	/**
 	 * The ticketed amount.
 	 */
 	@Column
-    private double ticketedAmount;
+	@Schema(nullable = true)
+    private Float ticketedAmount;
 	
 	/**
 	 * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
