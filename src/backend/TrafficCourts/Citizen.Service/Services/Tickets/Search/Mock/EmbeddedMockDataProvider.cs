@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using System.Reflection;
-using TrafficCourts.Citizen.Service.Logging;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 {

@@ -1,5 +1,4 @@
 ﻿using System.Net.Sockets;
-using TrafficCourts.Citizen.Service.Logging;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi.Authentication;
 
