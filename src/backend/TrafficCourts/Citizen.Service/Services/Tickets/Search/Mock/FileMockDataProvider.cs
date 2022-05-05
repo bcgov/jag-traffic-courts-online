@@ -1,5 +1,4 @@
-﻿using TrafficCourts.Citizen.Service.Logging;
-using TrafficCourts.Common.Configuration.Validation;
+﻿using TrafficCourts.Common.Configuration.Validation;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 {

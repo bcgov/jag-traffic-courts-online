@@ -5,9 +5,9 @@ using System.Text.Json;
 
 namespace TrafficCourts.Staff.Service.Authentication;
 
-public static class Authentication
+public static class AuthenticationExtensions
 {
-    public static void Initialize(IServiceCollection services, IConfiguration configuration)
+    public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         // Note: AddJwtBearer does not use IConfigureOptions<JwtBearerOptions>
         services

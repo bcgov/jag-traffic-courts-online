@@ -2,7 +2,6 @@ using Azure;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Services;

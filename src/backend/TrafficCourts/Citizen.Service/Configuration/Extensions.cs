@@ -1,4 +1,5 @@
-﻿using TrafficCourts.Common.Features.FilePersistence;
+﻿using Serilog;
+using TrafficCourts.Common.Features.FilePersistence;
 
 namespace TrafficCourts.Citizen.Service.Configuration;
 
