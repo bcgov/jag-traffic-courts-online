@@ -1,7 +1,6 @@
 {
     "postLoginRoute": "/ticket",
     "authority": "https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4",
-    "autoUserInfo": false,
     "clientId": "tco-staff-portal",
     "scope": "openid profile",
     "responseType": "code",

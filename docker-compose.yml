@@ -155,7 +155,7 @@ services:
     build:
       context: ./src/frontend/staff-portal
       args:
-        - API_BASE_PATH=${API_BASE_PATH:-http://citizen-api:8080/api/}
+        - API_BASE_PATH=${API_BASE_PATH:-http://staff-api:8080/api/}
     restart: always
     ports:
       - "8081:8080"

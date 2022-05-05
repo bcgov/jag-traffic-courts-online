@@ -257,7 +257,7 @@
     "symbol-observable" "4.0.0"
     "uuid" "8.3.2"
 
-"@angular/common@^11 || ^12 || ^13", "@angular/common@^13.0.0", "@angular/common@^13.0.0 || ^14.0.0-0", "@angular/common@>=10.0.0", "@angular/common@>=8.0.0", "@angular/common@~13.3.2", "@angular/common@13.3.2":
+"@angular/common@^13.0.0", "@angular/common@^13.0.0 || ^14.0.0-0", "@angular/common@>=10.0.0", "@angular/common@>=8.0.0", "@angular/common@>=9.0.0", "@angular/common@~13.3.2", "@angular/common@13.3.2":
   "integrity" "sha512-tQ2dKh5v/a0Nz6EXguw/vyms8VeRhcZO0F2xd9C+UdS3DVBftC1milluWGpjXdkLijTlJBCr114aXyZsyjNf3g=="
   "resolved" "https://registry.npmjs.org/@angular/common/-/common-13.3.2.tgz"
   "version" "13.3.2"
@@ -287,7 +287,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/core@^11 || ^12 || ^13", "@angular/core@^13.0.0", "@angular/core@^13.0.0 || ^14.0.0-0", "@angular/core@>=10.0.0", "@angular/core@>=8.0.0", "@angular/core@~13.3.2", "@angular/core@13.3.2":
+"@angular/core@^13.0.0", "@angular/core@^13.0.0 || ^14.0.0-0", "@angular/core@>=10.0.0", "@angular/core@>=8.0.0", "@angular/core@~13.3.2", "@angular/core@13.3.2":
   "integrity" "sha512-e+3eyV1AaiiP/3L82BKi5WowAYzsOmSfzYdT4utQScuTjbtNhIo4NvlpSRwk51QRYR9XsqinHO3SfEX2eMPSGA=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-13.3.2.tgz"
   "version" "13.3.2"
@@ -322,7 +322,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/router@^11 || ^12 || ^13", "@angular/router@^13.0.0", "@angular/router@>=8.0.0", "@angular/router@~13.3.2":
+"@angular/router@^13.0.0", "@angular/router@>=8.0.0", "@angular/router@~13.3.2":
   "integrity" "sha512-SJGGib9eA22QEbzMy7b7IUQDDrRBMaQ51FEqyCpBsOZ5xM2VhdnVnix0HT0fVRF/I63xUBgiDSVgPn6QPNv1kw=="
   "resolved" "https://registry.npmjs.org/@angular/router/-/router-13.3.2.tgz"
   "version" "13.3.2"
@@ -333,6 +333,13 @@
   "integrity" "sha512-H71nDOOL8Y7kWRLqf6Sums+01Q5msqBW2KhDUTemh1tvY04eSkSXrK0uj/4mmY0Xr16/3zyZmsrxN7CKuRbNRg=="
   "resolved" "https://registry.npmjs.org/@assemblyscript/loader/-/loader-0.10.1.tgz"
   "version" "0.10.1"
+
+"@auth0/angular-jwt@^5.0.2":
+  "integrity" "sha512-rSamC9mu+gUxoR86AXcIo+KD7xRIro+/iu1F2Ld85YAZEVKlpB5vYG+g0yGaEOqjtQWP/i0H6fi6XMGPVHSYYQ=="
+  "resolved" "https://registry.npmjs.org/@auth0/angular-jwt/-/angular-jwt-5.0.2.tgz"
+  "version" "5.0.2"
+  dependencies:
+    "tslib" "^2.0.0"
 
 "@azure/abort-controller@^1.0.0":
   "integrity" "sha512-lNUmDRVGpanCsiUN3NWxFTdwmdFI53xwhkTFfHDGTYk46ca7Ind3nanJc+U6Zj9Tv+9nTCWRBscWEW1DyKOpTw=="
@@ -2784,10 +2791,10 @@
     "require-from-string" "^2.0.2"
     "uri-js" "^4.2.2"
 
-"angular-auth-oidc-client@^14.0.0":
-  "integrity" "sha512-jkfVhw1bSffQUC2zLH6inaD+oM3RNMT6GWyZ98ZqE4s0RxlUiOYq2RxNCHT0CY1Fb81Mq6IMBb1GC26BjuFJWA=="
-  "resolved" "https://registry.npmjs.org/angular-auth-oidc-client/-/angular-auth-oidc-client-14.0.0.tgz"
-  "version" "14.0.0"
+"angular-auth-oidc-client@^13.1.0":
+  "integrity" "sha512-52RgjL0ScoRdM+QM9bYW7Qd0NMjK8GfxHPsqyVJw4KLcpyIdOT6SW3ThQ63oFvxPAGmvFBmXhdB0AqCab9xVuA=="
+  "resolved" "https://registry.npmjs.org/angular-auth-oidc-client/-/angular-auth-oidc-client-13.1.0.tgz"
+  "version" "13.1.0"
   dependencies:
     "rfc4648" "^1.5.0"
     "tslib" "^2.3.0"
@@ -6281,7 +6288,7 @@
     "ua-parser-js" "^0.7.30"
     "yargs" "^16.1.1"
 
-"keycloak-js@^10 || ^11 || ^12 || ^13 || ^14 || ^15 || ^16", "keycloak-js@^15.1.1":
+"keycloak-js@^15.0.0":
   "integrity" "sha512-PPu70WfSI2CWX7GoF5AQ4HkqYJLTAOV/25wDG//9S5SUOhqIDxKjAv6P54hy8nKt2+rIZF2kqpv7FNEmBN2W4g=="
   "resolved" "https://registry.npmjs.org/keycloak-js/-/keycloak-js-15.1.1.tgz"
   "version" "15.1.1"

@@ -24,10 +24,10 @@
         <span class="fullName d-none d-md-block">
           {{ fullName }}
         </span>
-        <span class="logout" title="Logout">
-          <mat-icon (click)="onClickBtn()">{{btnIcon}}</mat-icon>
-        </span>
       </ng-container>
+      <button mat-button (click)="onClickBtn()">
+        <mat-icon class="logout" inline="true">{{btnIcon}}</mat-icon>&nbsp;&nbsp;{{btnLabel}}
+      </button>
     </mat-toolbar>
   </div>
 </div>

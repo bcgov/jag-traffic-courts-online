@@ -15,7 +15,7 @@ export interface TicketCount {
     /**
      * ID
      */
-    id?: number;
+    id?: string;
     offenceDeclaration?: string | null;
     timeToPayRequest?: boolean;
     fineReductionRequest?: boolean;

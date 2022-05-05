@@ -85,13 +85,21 @@ redis:
   port: 6379
   password:
 
+jaeger:
+  enabled: false
+  exporter:
+    endpoint: jaeger
+    protocol: "http/thrift.binary"
+
 ## @param
-## Todo: move splunk.token to secret
 ##
 splunk:
-  enabled: true
-  endpoint: ""
-  token: ""
+  enabled: false
+  endpoint:
+  token:
+
+vault:
+  enabled: false
 
 jobs:
   codeTables:

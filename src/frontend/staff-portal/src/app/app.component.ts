@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
       });
   }
 
-  /**
+    /**
    * @description
    * Scroll the page to the top on route event.
    */
