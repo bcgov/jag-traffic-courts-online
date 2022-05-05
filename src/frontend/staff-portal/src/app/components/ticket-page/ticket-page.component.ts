@@ -6,7 +6,6 @@ import { Dispute } from 'app/api';
 import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-page',
@@ -168,12 +167,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  RegionName: string = "";
-  todayDate: Date = new Date();
-  fullName: string = "Loading...";
-  isLoggedIn: boolean = false;
-  accessToken: string = "";
-
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
   constructor(
@@ -187,8 +180,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.remoteDummyData.forEach(x => {
       x.RedGreenAlert = x.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (x.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '');
     });
-
-    this.RegionName = "Fraser Valley Region";
 
     // when authentication token available, get data
     this.getAllDisputes();

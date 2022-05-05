@@ -19,12 +19,7 @@
       <span style="vertical-align: 5px">{{ languageDesc }}</span>
     </a>
   -->
-
-      <ng-container *ngIf="fullName">
-        <span class="fullName d-none d-md-block">
-          {{ fullName }}
-        </span>
-      </ng-container>
+  
       <button mat-button (click)="onClickBtn()">
         <mat-icon class="logout" inline="true">{{btnIcon}}</mat-icon>&nbsp;&nbsp;{{btnLabel}}
       </button>

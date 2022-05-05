@@ -1,5 +1,28 @@
 <app-header></app-header>
 
-Authorizing...
+<div class="header d-print-none" *ngIf="isLoggedIn==false">
+    <div class="container">
+        <div>
+            <span>
+                <br />
+                <h1 class="BC-Gov-32px-blue-text">Click on the IDIR Sign In button above to continue to Ticket Resolution Management</h1>
+                <hr style="opacity: 1; color: #fcba19" />
+            </span>
+        </div>
+    </div>
+</div>
+<div *ngIf="isLoggedIn==true || isLoggedIn==undefined">
+    <div class="header d-print-none">
+        <div class="container">
+            <div>
+                <span>
+                    <br />
+                    <h1 class="BC-Gov-32px-blue-text">Authorizing...</h1>
+                    <hr style="opacity: 1; color: #fcba19" />
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <app-footer></app-footer>

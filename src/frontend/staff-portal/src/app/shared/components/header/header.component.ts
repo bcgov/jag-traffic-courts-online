@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
 import { AppConfigService } from 'app/services/app-config.service';
 import { LogInOutService } from 'app/services/log-in-out.service';
 
@@ -20,7 +19,6 @@ import { LogInOutService } from 'app/services/log-in-out.service';
 })
 export class HeaderComponent implements OnInit {
   public fullName: string;
-  public isLoggedIn = false;
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
@@ -49,19 +47,18 @@ export class HeaderComponent implements OnInit {
     this.version = this.appConfigService.version;
   }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   public async ngOnInit() {
     this.logInOutService.getCurrentStatus.subscribe((data) => {
       if (data !== null || data !== undefined)
       {
         if(data === true){
 
-          this.btnLabel = 'Logout';
+          this.btnLabel = 'Sign out';
           this.btnIcon = 'logout';
         }
         else
         {
-          this.btnLabel = 'IDIR Login';
+          this.btnLabel = 'IDIR Sign in';
           this.btnIcon = 'login';
         }
       }
@@ -88,14 +85,13 @@ export class HeaderComponent implements OnInit {
     this.logInOutService.logoutUser(this.btnLabel);
     if (this.btnLabel === 'IDIR Login')
     {
-      this.btnLabel = 'Logout';
+      this.btnLabel = 'Sign out';
       this.btnIcon = 'logout';
     }
     else
     {
-      this.btnLabel = 'IDIR Login';
+      this.btnLabel = 'IDIR Sign in';
       this.btnIcon = 'login';
-      //this.router.navigate(['/']);
     }
   }
 

@@ -31,12 +31,14 @@ import { PostalPipe } from './pipes/postal.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { DateSuffixPipe } from './pipes/datesuffix.pipe';
 @NgModule({
     declarations: [
         CapitalizePipe,
         DefaultPipe,
         FormatDatePipe,
         PhonePipe,
+        DateSuffixPipe,
         ReplacePipe,
         SafeHtmlPipe,
         YesNoPipe,
@@ -81,6 +83,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
         DefaultPipe,
         FormatDatePipe,
         PhonePipe,
+        DateSuffixPipe,
         ReplacePipe,
         SafeHtmlPipe,
         YesNoPipe,

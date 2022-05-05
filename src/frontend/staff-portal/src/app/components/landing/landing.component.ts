@@ -26,11 +26,11 @@ export class LandingComponent implements OnInit {
       this.logInOutService.getLogoutStatus.subscribe((data) => {
         if (data !== null || data !== '')
         {
-          if(data === 'IDIR Login'){
+          if(data === 'IDIR Sign in'){
             this.login();
           }
           else
-            if(data === 'Logout'){
+            if(data === 'Sign out'){
               this.logout();
             }
         }
@@ -38,14 +38,14 @@ export class LandingComponent implements OnInit {
 
       this.oidcSecurityService.checkAuth().subscribe(
         ({ isAuthenticated}) => {
-          console.log("landing page", isAuthenticated);
           if (isAuthenticated === true)
           {
             this.router.navigate(['/ticket']);
+            this.isLoggedIn = true;
           }
           else
           {
-            this.login();
+            this.isLoggedIn = false;
           }
 
           this.logInOutService.currentUser(isAuthenticated);
@@ -59,6 +59,7 @@ export class LandingComponent implements OnInit {
 
   logout() {
     this.oidcSecurityService.logoffAndRevokeTokens();
+    this.isLoggedIn = false;
   }
 
 }

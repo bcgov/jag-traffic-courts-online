@@ -40,7 +40,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
-import { DateSuffixPipe } from './services/date.service';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
 import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
@@ -66,7 +65,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     LandingComponent,
     TicketPageComponent,
     UnauthorizedComponent,
-    DateSuffixPipe,
     TicketInfoComponent,
     ContactInfoComponent
   ],
