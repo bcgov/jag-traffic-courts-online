@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit {
 
   public languageCode: string;
   public languageDesc: string;
-  public btnLabel: string ='IDIR Login';
+  public btnLabel: string ='IDIR Sign in';
   public btnIcon: string = 'login'; 
 
   public environment: string;
@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit {
   public onClickBtn()
   {
     this.logInOutService.logoutUser(this.btnLabel);
-    if (this.btnLabel === 'IDIR Login')
+    if (this.btnLabel === 'IDIR Sign in')
     {
       this.btnLabel = 'Sign out';
       this.btnIcon = 'logout';
