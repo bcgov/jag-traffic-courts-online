@@ -36,10 +36,7 @@ public class LegalRepresentation {
 	private String lawFirmName;
 	
 	@Column
-	private String lawyerName;
-	
-	@Column
-	private String lawyerSurname;
+	private String lawyerFullName;
 	
 	@Column
 	@Email(regexp = ".+@.+\\..+")

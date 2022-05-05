@@ -19,7 +19,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string? HomePhoneNumber { get; set; }
         public string? WorkPhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
-        public IList<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
+        public List<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
         public bool RepresentedByLawyer { get; set; }
         public LegalRepresentation? LegalRepresentation { get; set; }
         public string? InterpreterLanguage { get; set; }
@@ -43,8 +43,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
     public class LegalRepresentation
     {
         public string LawFirmName { get; set; } = String.Empty;
-        public string LawyerName { get; set; } = String.Empty;
-        public string LawyerSurname { get; set; } = String.Empty;
+        public string LawyerFullName { get; set; } = String.Empty;
         public string LawyerEmail { get; set; } = String.Empty;
         public string LawyerAddress { get; set; } = String.Empty;
     }
