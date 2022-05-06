@@ -11,9 +11,12 @@ namespace TrafficCourts.Workflow.Service.Mappings
             CreateMap<SubmitNoticeOfDispute, NoticeOfDispute>()
                 .ForMember(dest => dest.DisputedCounts, opt => opt.MapFrom(src => src.DisputedCounts))
                 .ForMember(dest => dest.ViolationTicket, opt => opt.MapFrom(src => src.ViolationTicket))
-                .ForPath(dest => dest.ViolationTicket.ViolationTicketCounts, opt => opt.MapFrom(src => src.ViolationTicket.ViolationTicketCounts))
                 // Parsing DateOfBirth to DateTime due to the DateOnly deserialization issues on oracle-data-api
-                .ForPath(dest => dest.ViolationTicket.Birthdate, opt => opt.MapFrom(src => src.ViolationTicket.Birthdate));
+                .ForPath(dest => dest.ViolationTicket.Birthdate, 
+                        opt => { 
+                            opt.Condition(src => src.Source.ViolationTicket != null); 
+                            opt.MapFrom(src => src.ViolationTicket.Birthdate);
+                        });
             CreateMap<Messaging.MessageContracts.DisputedCount, Models.DisputedCount>();
             CreateMap<Messaging.MessageContracts.ViolationTicket, Models.ViolationTicket>();
             CreateMap<Messaging.MessageContracts.TicketCount, Models.ViolationTicketCount>();

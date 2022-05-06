@@ -10,7 +10,6 @@ namespace TrafficCourts.Messaging.MessageContracts
 {
     public class ViolationTicket
     {
-        public string? OcrViolationTicket { get; set; }
         public string? TicketNumber { get; set; }
         public string? Surname { get; set; }
         public string? GivenNames { get; set; }

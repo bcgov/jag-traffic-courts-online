@@ -86,16 +86,16 @@ public static class AnalyseHandler
             // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
             _formRecognizerValidator.ValidateViolationTicket(violationTicket);
 
-            // Generate a guid for using as OCR Key to save OCR related data into Redis
-            string guid = Guid.NewGuid().ToString("n");
+            // Generate a guid for using as Violation Ticket Key to save OCR related data into Redis
+            string ticketId = Guid.NewGuid().ToString("n");
 
             // Save the violation ticket OCR data into Redis using the generated guid and set it to expire after 1 day from Redis
             // FIXME: JIRA-1295 - File storage leak: The image is saved in object storage and the filename is recored on the violationTicket. 
             //        If redis automatically removes a ticket after 1 day, is the associated image that is stored in storage also removed? Or is it left there indefinitely? 
-            await _redisCacheService.SetRecordAsync<OcrViolationTicket>(guid, violationTicket, TimeSpan.FromDays(1));
+            await _redisCacheService.SetRecordAsync<OcrViolationTicket>(ticketId, violationTicket, TimeSpan.FromDays(1));
 
-            // Change the image filename to use OCR key (guid) in the result
-            violationTicket.ImageFilename = guid;
+            // Change the image filename to use Violation Ticket Key (guid) in the result
+            violationTicket.ImageFilename = ticketId;
 
             AnalyseResponse response = new(violationTicket);
             return response;

@@ -27,8 +27,8 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string? FineReductionReason { get; set; }
         public string? TimeToPayReason { get; set; }
         public bool CitizenDetectedOcrIssues { get; set; }
-        public ViolationTicket ViolationTicket { get; set; } = new();
-        public string? OcrKey { get; set; }
+        public string? CitizenOcrIssuesDescription { get; set; }
+        public string? TicketId { get; set; }
     }
 
     public class DisputedCount

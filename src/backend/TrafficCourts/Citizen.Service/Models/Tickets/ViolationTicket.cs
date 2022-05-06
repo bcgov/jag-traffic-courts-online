@@ -256,4 +256,9 @@ public class ViolationTicket
     [MaxLength(100)]
     public string? OrganizationLocation { get; set; }
     #endregion
+
+    /// <summary>
+    /// A unique generated ID set by the system that is used as Redis key for retrieving the ViolationTicket from Redis cache.
+    /// </summary>
+    public string? TicketId { get; set; }
 }

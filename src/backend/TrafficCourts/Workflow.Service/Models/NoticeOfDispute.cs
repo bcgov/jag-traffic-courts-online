@@ -28,7 +28,9 @@ namespace TrafficCourts.Workflow.Service.Models
         public string? FineReductionReason { get; set; }
         public string? TimeToPayReason { get; set; }
         public bool CitizenDetectedOcrIssues { get; set; }
-        public ViolationTicket ViolationTicket { get; set; } = new();
+        public string? CitizenOcrIssuesDescription { get; set; }
+        public ViolationTicket? ViolationTicket { get; set; }
+        public string? OcrViolationTicket { get; set; }
 
         public override string ToString()
         {

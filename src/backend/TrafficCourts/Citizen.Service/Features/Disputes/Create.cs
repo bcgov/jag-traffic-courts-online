@@ -59,22 +59,37 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 Models.Dispute.NoticeOfDispute createDisputeRequest = request.Dispute;
-                string? ocrKey = createDisputeRequest.OcrKey;
+                string? ticketId = createDisputeRequest.TicketId;
                 string? ocrViolationTicketJson = null;
+                OcrViolationTicket? violationTicket = null;
+                Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
 
-                // Check if the request contains OCR key and it's a valid format guid
-                if (ocrKey != null && Guid.TryParseExact(ocrKey, "n", out _))
+                // Check if the request contains ticket id and it's a valid format guid
+                if (ticketId != null && Guid.TryParseExact(ticketId, "n", out _))
                 {
-                    // Get the OCR violation ticket data from Redis cache using the OCR key and serialize it to a JSON string
-                    OcrViolationTicket? violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ocrKey);
-                    if (violationTicket != null)
+                    // Get the OCR violation ticket data from Redis cache using the ticket id key
+                    violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ticketId);
+
+                    // TODO: This check works for now to determine which type of object is returned from redis cache
+                    // and assign null or populate the object in SubmitNoticeOfDispute message. However, a better check/method can be implemented
+                    if (violationTicket != null && violationTicket.ImageFilename != null)
                     {
+                        // Serialize OCR violation ticket to a JSON string
                         ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
+                    }
+                    else
+                    {
+                        // Get the looked up violation ticket data from Redis cache using the ticket id key
+                        lookedUpViolationTicket = await _redisCacheService.GetRecordAsync<Models.Tickets.ViolationTicket>(ticketId);
                     }
                 }
 
                 SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(createDisputeRequest);
-                submitNoticeOfDispute.ViolationTicket.OcrViolationTicket = ocrViolationTicketJson;
+                submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
+                if (lookedUpViolationTicket != null)
+                {
+                    submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
+                }
                 submitNoticeOfDispute.CitizenSubmittedDate = DateTime.UtcNow;
                 
                 var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(submitNoticeOfDispute);

@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -200,11 +201,23 @@ public class Dispute {
     private boolean citizenDetectedOcrIssues;
     
     @Column
+    @Schema(nullable = true)
+    private String citizenOcrIssuesDescription;
+    
+    @Column
     private boolean systemDetectedOcrIssues;
     
     @Column
     @Schema(nullable = true)
     private String jjAssigned;
+    
+    /**
+	 * All OCR Violation ticket data serialized into a JSON string.
+	 */
+	@Column
+	@Lob
+    @Schema(nullable = true)
+    private String ocrViolationTicket;
     
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
