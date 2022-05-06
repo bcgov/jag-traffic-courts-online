@@ -1,7 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -11,6 +10,7 @@ import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
@@ -26,6 +27,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -44,13 +46,16 @@ public class DisputeController {
 
 	/**
 	 * GET endpoint that retrieves all the dispute detail from the database
-	 *
+	 * @param olderThan if specified, will filter the result set to those older than this date.
 	 * @return list of all dispute tickets
 	 */
 	@GetMapping("/disputes")
-	public List<Dispute> getAllDisputes() {
-		log.debug("Retrieve all disputes endpoint is called." + new Date());
-		return disputeService.getAllDisputes();
+	public Iterable<Dispute> getAllDisputes(
+			@RequestParam(required = false)
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
+			Date olderThan) {
+		return disputeService.getAllDisputes(olderThan);
 	}
 
 	/**
