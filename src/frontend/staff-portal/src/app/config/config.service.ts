@@ -107,13 +107,7 @@ export class ConfigService implements IConfigService {
    */
   public load(): Observable<Configuration> {
     if (!this.configuration) {
-      return this.appConfigService.loadAppConfig().pipe(
-        switchMap(() => {
-          return this.getConfiguration().pipe(
-            map((config: Configuration) => (this.configuration = config))
-          );
-        })
-      );
+      return this.appConfigService.loadAppConfig()
     }
 
     return of({ ...this.configuration });

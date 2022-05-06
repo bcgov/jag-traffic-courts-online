@@ -7,7 +7,7 @@ import { ErrorHandlerService } from './services/error-handler.service';
 
 export function initConfig(config: ConfigService) {
   return () => {
-    // return config.load();
+    return config.load();
   };
 }
 
