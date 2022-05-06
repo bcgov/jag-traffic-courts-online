@@ -11,7 +11,8 @@ import { FileUtilsService } from '@shared/services/file-utils.service';
 import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { NgProgressRef } from 'ngx-progressbar';
-import { BehaviorSubject, catchError, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',

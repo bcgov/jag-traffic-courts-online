@@ -8,7 +8,11 @@
            rel="noopener">
           <img src="/assets/gov_bc_logo.jpg"
                alt="Government of BC Logo" />
-        </a>| Ticket Resolution  Management
+        </a>| Ticket Resolution  Management 
+        <span class="badge badge-pill badge-light header"
+            *ngIf="environment !== 'prod'">
+        {{ environment }} v{{ version }}
+      </span>
       </span>
 
       <span class="flex-fill"></span>
