@@ -26,6 +26,11 @@ public static class Startup
         // Render enums as strings rather than ints
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
+        // Ensure routes (api endpoints) are lowercase
+        //   The RFC 3986 specifications denote that URIs care case-sensitive. Per best practices for rest apis, route endpoints
+        //   should be lowercase to avoid confusion about inconsistent capitalisation.
+        builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
         builder.Services.AddAuthentication(builder.Configuration);
 
         // Add DisputeService
