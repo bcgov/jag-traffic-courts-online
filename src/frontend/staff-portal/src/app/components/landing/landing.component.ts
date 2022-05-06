@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss'],
+  styleUrls: ['./landing.component.scss', '../../app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class LandingComponent implements OnInit {
@@ -26,11 +26,11 @@ export class LandingComponent implements OnInit {
       this.logInOutService.getLogoutStatus.subscribe((data) => {
         if (data !== null || data !== '')
         {
-          if(data === 'IDIR Login'){
+          if(data === 'IDIR Sign in'){
             this.login();
           }
           else
-            if(data === 'Logout'){
+            if(data === 'Sign out'){
               this.logout();
             }
         }
@@ -38,14 +38,14 @@ export class LandingComponent implements OnInit {
 
       this.oidcSecurityService.checkAuth().subscribe(
         ({ isAuthenticated}) => {
-          console.log("landing page", isAuthenticated);
           if (isAuthenticated === true)
           {
             this.router.navigate(['/ticket']);
+            this.isLoggedIn = true;
           }
           else
           {
-            this.login();
+            this.isLoggedIn = false;
           }
 
           this.logInOutService.currentUser(isAuthenticated);
@@ -59,6 +59,12 @@ export class LandingComponent implements OnInit {
 
   logout() {
     this.oidcSecurityService.logoffAndRevokeTokens();
+    this.isLoggedIn = false;
   }
+
+   public onClickBtn()
+   {
+    this.logInOutService.logoutUser('IDIR Sign in');
+   }
 
 }
