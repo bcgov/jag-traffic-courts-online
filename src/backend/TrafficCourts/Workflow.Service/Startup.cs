@@ -5,6 +5,7 @@ using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Workflow.Service.Features.Mail;
 using TrafficCourts.Messaging;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Workflow.Service.Mappings;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -48,6 +49,9 @@ public static class Startup
         }
 
         builder.Services.AddMassTransit(builder.Configuration, logger, AddConsumers);
+
+        // Registering and Initializing AutoMapper
+        builder.Services.AddAutoMapper(typeof(MessageContractToNoticeOfDisputeMappingProfile));
 
     }
 }

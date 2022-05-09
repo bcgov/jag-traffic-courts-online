@@ -37,7 +37,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> CreateAsync([FromBody] TrafficCourts.Citizen.Service.Models.Dispute.TicketDispute dispute, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] TrafficCourts.Citizen.Service.Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
         {
             Create.Request request = new Create.Request(dispute);
             var response = await _mediator.Send(request, cancellationToken);

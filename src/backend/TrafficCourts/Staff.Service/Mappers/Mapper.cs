@@ -9,19 +9,43 @@ public class Mapper
     public static DisputeApproved ToDisputeApproved(Dispute dispute)
     {
         DisputeApproved target = new();
-        target.CitizenName = dispute.GivenNames + " " + dispute.DisputantSurname;
-        target.TicketIssuanceDate = dispute.ViolationDate.DateTime;
+        target.CitizenName = dispute.GivenNames + " " + dispute.Surname;
+        target.TicketIssuanceDate = dispute.IssuedDate.HasValue ? dispute.IssuedDate.Value.DateTime : (DateTime?)null;
         target.TicketFileNumber = dispute.TicketNumber;
-        target.IssuingOrganization = dispute.EnforcementOrganization;
-        target.IssuingLocation = dispute.CourtLocation;
-        target.DriversLicence = dispute.DriversLicense;
-        target.TicketDetails = new List<TicketDetails>(); // FIXME: Dispute model missing details
-        target.StreetAddress = dispute.StreetAddress;
-        target.City = ""; // FIXME: no City field in Dispute model
+        target.IssuingOrganization = dispute.ViolationTicket.EnforcementOrganization;
+        target.IssuingLocation = dispute.ProvincialCourtHearingLocation;
+        target.DriversLicence = dispute.ViolationTicket.DriversLicenceNumber;
+        List <Messaging.MessageContracts.ViolationTicketCount> violationTicketCounts = new();
+        foreach (var violationTicketCount in dispute.ViolationTicket.ViolationTicketCounts)
+        {
+            Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
+            {
+                Count = violationTicketCount.Count,
+                Section = violationTicketCount.FullSection,
+                Act = violationTicketCount.Act,
+                Amount = violationTicketCount.TicketedAmount
+            };
+
+            violationTicketCounts.Add(ticketCount);
+        }
+        target.ViolationTicketCounts = violationTicketCounts;
+        target.StreetAddress = dispute.Address;
+        target.City = dispute.City;
         target.Province = dispute.Province;
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
-        target.DisputeDetails = Array.Empty<Dictionary<string, DisputeDetails>>(); // TODO: populate from model
+        List<Messaging.MessageContracts.DisputeCount> disputeCounts = new();
+        foreach (var dc in dispute.DisputedCounts)
+        {
+            Messaging.MessageContracts.DisputeCount disputeCount = new()
+            {
+                Count = dc.Count,
+                DisputeType = nameof(dc.Plea)
+            };
+
+            disputeCounts.Add(disputeCount);
+        }
+        target.DisputeCounts = disputeCounts;
 
         return target;
     }

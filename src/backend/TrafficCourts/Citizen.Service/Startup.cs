@@ -13,6 +13,7 @@ using TrafficCourts.Messaging;
 using TrafficCourts.Citizen.Service.Services.Impl;
 using System.Reflection;
 using OpenTelemetry.Trace;
+using TrafficCourts.Citizen.Service.Mappings;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -78,6 +79,9 @@ public static class Startup
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 
         builder.Services.AddRecyclableMemoryStreams();
+
+        // Registering and Initializing AutoMapper
+        builder.Services.AddAutoMapper(typeof(NoticeOfDisputeToMessageContractMappingProfile));
 
         // Add services to the container.
         builder.Services

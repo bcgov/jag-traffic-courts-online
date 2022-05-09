@@ -14,7 +14,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
@@ -25,6 +27,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/**
+ * @author 237563
+ * Represents a violation ticket notice of dispute.
+ *
+ */
 //mark class as an Entity
 @Entity
 //defining class name as Table name
@@ -42,73 +50,145 @@ public class Dispute {
     @Enumerated(EnumType.STRING)
     private DisputeStatus status;
 
+    /**
+     * The violation ticket number.
+     */
     @Column
+    @Schema(nullable = true)
     private String ticketNumber;
 
+    /**
+     * The provincial court hearing location named on the violation ticket.
+     */
     @Column
-    private String courtLocation;
+    @Schema(nullable = true)
+    private String provincialCourtHearingLocation;
 
+    /**
+     * The date and time the violation ticket was issue. Time must only be hours and minutes.
+     */
     @Column
-    private Date violationDate;
+    @Schema(nullable = true)
+    private Date issuedDate;
+    
+    /**
+     * The date and time the citizen was submitted the notice of dispute.
+     */
+    @Column
+    @Schema(nullable = true)
+    private Date citizenSubmittedDate;
 
+    /**
+     * The surname or corporate name.
+     */
     @Column
-    private String disputantSurname;
+    @Schema(nullable = true)
+    private String surname;
 
+    /**
+     * The given names or corporate name continued.
+     */
     @Column
+    @Schema(nullable = true)
     private String givenNames;
 
+    /**
+     * The mailing address of the disputant.
+     */
     @Column
-    private String streetAddress;
+    @Schema(nullable = true)
+    private String address;
+    
+    /**
+     * The mailing address city of the disputant.
+     */
+    @Column
+    @Schema(nullable = true)
+    private String city;
 
+    /**
+     * The mailing address province of the disputant.
+     */
     @Column
+    @Schema(nullable = true)
     private String province;
 
+    /**
+     * The mailing address postal code or zip code of the disputant.
+     */
     @Column
+    @Schema(nullable = true)
     private String postalCode;
 
+    /**
+     * The disputant's home phone number.
+     */
     @Column
-    private String homePhone;
+    @Schema(nullable = true)
+    private String homePhoneNumber;
     
+    /**
+     * The disputant's work phone number.
+     */
+    @Column
+    @Schema(nullable = true)
+    private String workPhoneNumber;
+    
+    /**
+     * The disputant's email address.
+     */
     @Column
     @Email(regexp = ".+@.+\\..+")
+    @Schema(nullable = true)
     private String emailAddress;
-
+    
     @Column
-    private String driversLicense;
-
-    @Column
-    private String driversLicenseProvince;
-
-    @Column
-    private String workPhone;
-
-    @Column
-    private Date dateOfBirth;
-
-    @Column
-    private String enforcementOrganization;
-
-    @Column
-    private Date serviceDate;
+    @Schema(nullable = true)
+    private Date filingDate;
     
     @JsonManagedReference
-    @OneToMany(targetEntity=TicketCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(targetEntity=DisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="dispute_id")
-    private List<TicketCount> ticketCounts = new ArrayList<TicketCount>();
+    private List<DisputedCount> disputedCounts = new ArrayList<DisputedCount>();
 
+    /**
+     * The disputant intends to be represented by a lawyer at the hearing.
+     */
     @Column
-    private boolean lawyerRepresentation;
+    private boolean representedByLawyer;
+    
+    @JsonManagedReference
+    @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
+    @Schema(nullable = true)
+    private LegalRepresentation legalRepresentation;
 
+    /**
+     * The disputant requires spoken language interpreter. The language name is indicated in this field.
+     */
     @Column
     @Schema(nullable = true)
     private String interpreterLanguage;
 
-    @Column
-    private boolean witnessIntent;
-    
+    /**
+     * Number of witness that the disputant intends to call.
+     */
     @Column
     @Schema(nullable = true)
-    private String ocrViolationTicket;
+    private Integer numberOfWitness;
+    
+    /**
+     * Reason indicating why the fine reduction requested for the ticket.
+     */
+    @Column(length = 256)
+    @Schema(nullable = true)
+    private String fineReductionReason;
+    
+    /**
+     * Reason indicating why the disputant needs more time in order to make payment for the ticket.
+     */
+    @Column(length = 256)
+    @Schema(nullable = true)
+    private String timeToPayReason;
 
     /**
      * A note or reason indicating why this Dispute has a status of REJECTED. This field is blank for other status types.
@@ -117,11 +197,62 @@ public class Dispute {
     @Schema(nullable = true)
     private String rejectedReason;
     
-    public void addTicketCounts(List<TicketCount> ticketCounts) { 		
-    	for (TicketCount ticketCount : ticketCounts) { 			
-    		ticketCount.setDispute(this); 		
+    @Column
+    private boolean citizenDetectedOcrIssues;
+    
+    @Column
+    @Schema(nullable = true)
+    private String citizenOcrIssuesDescription;
+    
+    @Column
+    private boolean systemDetectedOcrIssues;
+    
+    @Column
+    @Schema(nullable = true)
+    private String jjAssigned;
+    
+    /**
+	 * All OCR Violation ticket data serialized into a JSON string.
+	 */
+	@Column
+	@Lob
+    @Schema(nullable = true)
+    private String ocrViolationTicket;
+    
+    @JsonManagedReference
+    @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
+    @Schema(nullable = true)
+    private ViolationTicket violationTicket;
+    
+    public void addDisputedCounts(List<DisputedCount> disputedCounts) { 		
+    	for (DisputedCount disputedCount : disputedCounts) { 			
+    		disputedCount.setDispute(this); 		
     	} 		
-    	this.ticketCounts.addAll(ticketCounts); 	
+    	this.disputedCounts.addAll(disputedCounts); 	
+    }
+    
+    public void setLegalRepresentation(LegalRepresentation legal) {
+        if (legal == null) {
+            if (this.legalRepresentation != null) {
+                this.legalRepresentation.setDispute(null);
+            }
+        }
+        else {
+            legal.setDispute(this);
+        }
+        this.legalRepresentation = legal;
+    }
+    
+    public void setViolationTicket(ViolationTicket ticket) {
+        if (ticket == null) {
+            if (this.violationTicket != null) {
+                this.violationTicket.setDispute(null);
+            }
+        }
+        else {
+        	ticket.setDispute(this);
+        }
+        this.violationTicket = ticket;
     }
 
 }

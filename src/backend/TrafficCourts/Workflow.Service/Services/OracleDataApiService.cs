@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
+using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Models;
 
@@ -18,7 +19,7 @@ namespace TrafficCourts.Workflow.Service.Services
             _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
         }
 
-        public async Task<Guid> CreateDisputeAsync(Dispute disputeToSubmit)
+        public async Task<Guid> CreateDisputeAsync(NoticeOfDispute disputeToSubmit)
         {
             // Formatting all dispute class properties to camel case since oracle data api
             // accepts camel case only after serialization

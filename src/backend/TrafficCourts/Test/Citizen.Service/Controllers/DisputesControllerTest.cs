@@ -21,7 +21,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
         public async void TestCreateDisputeOkResult()
         {
             // Arrange
-            var mockTicketDispute = new Mock<TicketDispute>();
+            var mockTicketDispute = new Mock<NoticeOfDispute>();
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var disputeController = new DisputesController(mockMediator.Object, mockLogger.Object);

@@ -40,7 +40,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		allDisputes = disputeController.getAllDisputes();
 		assertEquals(1, allDisputes.size());
 		assertEquals(disputeId, allDisputes.get(0).getId());
-		assertEquals(dispute.getDisputantSurname(), allDisputes.get(0).getDisputantSurname());
+		assertEquals(dispute.getSurname(), allDisputes.get(0).getSurname());
 
 		// Delete record
 		disputeController.deleteDispute(disputeId);
@@ -158,13 +158,13 @@ class DisputeControllerTest extends BaseTestSuite {
 
 		// Create a new dispute with different values and update the existing dispute
 		Dispute updatedDispute = RandomUtil.createDispute();
-		updatedDispute.setDisputantSurname("Doe");
+		updatedDispute.setSurname("Doe");
 		updatedDispute.setGivenNames("John");
 		disputeController.updateDispute(disputeId, updatedDispute);
 
 		// Assert db contains only the updated dispute record.
 		dispute = disputeController.getDispute(disputeId);
-		assertEquals("Doe", dispute.getDisputantSurname());
+		assertEquals("Doe", dispute.getSurname());
 		assertEquals("John", dispute.getGivenNames());
 		List<Dispute> allDisputes = disputeController.getAllDisputes();
 		assertEquals(1, allDisputes.size());

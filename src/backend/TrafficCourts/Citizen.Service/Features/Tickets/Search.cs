@@ -3,6 +3,7 @@ using OneOf;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using TrafficCourts.Citizen.Service.Models.Tickets;
+using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;
 
 namespace TrafficCourts.Citizen.Service.Features.Tickets;
@@ -87,11 +88,13 @@ public static class Search
     {
         private readonly ITicketSearchService _service;
         private readonly ILogger<Handler> _logger;
+        private readonly IRedisCacheService _redisCacheService;
 
-        public Handler(ITicketSearchService service, ILogger<Handler> logger)
+        public Handler(ITicketSearchService service, ILogger<Handler> logger, IRedisCacheService redisCacheService)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
         }
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -117,6 +120,14 @@ public static class Search
 
                 using var replyScope = _logger.BeginScope(new Dictionary<string, object> { { "ViolationTicket", ticket } });
                 _logger.LogTrace("Search complete");
+
+                // Generate a guid for using as Violation Ticket Key to save looked up ticket data into Redis
+                string ticketId = Guid.NewGuid().ToString("n");
+
+                // Save the violation ticket data into Redis using the generated guid and set it to expire after 1 day from Redis 
+                await _redisCacheService.SetRecordAsync<ViolationTicket>(ticketId, ticket, TimeSpan.FromDays(1));
+
+                ticket.TicketId = ticketId;
 
                 return new Response(ticket);
             }

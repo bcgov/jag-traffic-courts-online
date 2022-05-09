@@ -9,7 +9,7 @@ public class RandomUtil {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setGivenNames("Steven");
-		dispute.setDisputantSurname("Strange");
+		dispute.setSurname("Strange");
 		return dispute;
 	}
 

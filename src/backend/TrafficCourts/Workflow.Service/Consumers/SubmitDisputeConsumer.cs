@@ -1,72 +1,39 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Services;
-using TicketCount = TrafficCourts.Workflow.Service.Models.TicketCount;
+using ViolationTicketCount = TrafficCourts.Workflow.Service.Models.ViolationTicket;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
     /// <summary>
     ///     Consumer for SubmitDispute message.
     /// </summary>
-    public class SubmitDisputeConsumer : IConsumer<SubmitDispute>
+    public class SubmitDisputeConsumer : IConsumer<SubmitNoticeOfDispute>
     {
         private readonly ILogger<SubmitDisputeConsumer> _logger;
         private readonly IOracleDataApiService _oracleDataApiService;
+        private readonly IMapper _mapper;
 
-        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleDataApiService oracleDataApiService)
+        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
         {
             _logger = logger;
             _oracleDataApiService = oracleDataApiService;
+            _mapper = mapper;
         }
 
-        public async Task Consume(ConsumeContext<SubmitDispute> context)
+        public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
             if (context.RequestId != null)
             {
                 _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
 
-                List<TicketCount> ticketCounts = new();
+                NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
-                foreach (var ticketCount in context.Message.TicketCounts)
-                {
-                    var ticket = new TicketCount
-                    {
-                        FineReductionRequest = ticketCount.FineReductionRequest,
-                        OffenceDeclaration = ticketCount.OffenceDeclaration,
-                        TimeToPayRequest = ticketCount.TimeToPayRequest,
-                    };
-                    ticketCounts.Add(ticket);
-                }
+                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", noticeOfDispute.ToString());
 
-                var dispute = new Dispute
-                {
-                    TicketNumber = context.Message.TicketNumber,
-                    CourtLocation = context.Message.CourtLocation,
-                    ViolationDate = context.Message.ViolationDate,
-                    DisputantSurname = context.Message.DisputantSurname,
-                    GivenNames = context.Message.GivenNames,
-                    StreetAddress = context.Message.StreetAddress,
-                    Province = context.Message.Province,
-                    PostalCode = context.Message.PostalCode,
-                    HomePhone = context.Message.HomePhone,
-                    DriversLicence = context.Message.DriversLicence,
-                    DriversLicenceProvince = context.Message.DriversLicenceProvince,
-                    WorkPhone = context.Message.WorkPhone,
-                    EmailAddress = context.Message.EmailAddress,
-                    DateOfBirth = context.Message.DateOfBirth.ToDateTime(TimeOnly.MinValue),// Parsing it back to DateTime due to the DateOnly deserialization issues on oracle-data-api
-                    EnforcementOrganization = context.Message.EnforcementOrganization,
-                    ServiceDate = context.Message.ServiceDate.ToDateTime(TimeOnly.MinValue),// Parsing it back to DateTime due to the DateOnly deserialization issues on oracle-data-api
-                    TicketCounts = ticketCounts,
-                    LawyerRepresentation = context.Message.LawyerRepresentation,
-                    InterpreterLanguage = context.Message.InterpreterLanguage,
-                    WitnessIntent = context.Message.WitnessIntent,
-                    OcrViolationTicket = context.Message.OcrViolationTicket
-                };
-
-                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", dispute.ToString());
-
-                var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
+                var disputeId = await _oracleDataApiService.CreateDisputeAsync(noticeOfDispute);
 
                 if (disputeId != Guid.Empty)
                 {

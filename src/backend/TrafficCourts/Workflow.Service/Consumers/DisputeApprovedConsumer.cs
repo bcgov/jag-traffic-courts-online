@@ -26,42 +26,34 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogDebug("Consuming message: {MessageId} ", context.MessageId);
 
-                    List<Models.TicketDetails> ticketDetails = new();
+                    List<Models.TicketCount> ticketDetails = new();
 
-                    foreach (var td in context.Message.TicketDetails)
+                    foreach (var vtc in context.Message.ViolationTicketCounts)
                     {
-                        var ticketDetail = new Models.TicketDetails
+                        var ticketDetail = new Models.TicketCount
                         {
-                            Section = td.Section,
-                            Subsection = td.Subsection,
-                            Paragraph = td.Paragraph,
-                            Act = td.Act,
-                            Amount = td.Amount
+                            Count = vtc.Count,
+                            Section = vtc.Section,
+                            Act = vtc.Act,
+                            Amount = vtc.Amount
                         };
                         ticketDetails.Add(ticketDetail);
                     }
 
                     // Add dispute details model as part of TcoDisputeTicket model if defined in the message
-                    Dictionary<string, Models.DisputeDetails>[] disputeDetailsArray = new Dictionary<string, Models.DisputeDetails>[3];
+                    List<DisputeDetail> disputeDetails = new();
 
-                    if (context.Message.DisputeDetails != null && context.Message.DisputeDetails.Length > 0 && context.Message.DisputeDetails.Length < 4)
+                    if (context.Message.DisputeCounts != null && context.Message.DisputeCounts.Any())
                     {
-                        for (int i = 0; i < context.Message.DisputeDetails.Length; i++)
+                        foreach (Messaging.MessageContracts.DisputeCount dc in context.Message.DisputeCounts)
                         {
-                            Dictionary<string, Models.DisputeDetails> disputeDetailsDictionary = new();
-
-                            foreach (KeyValuePair<string, Messaging.MessageContracts.DisputeDetails> kvp in context.Message.DisputeDetails[i])
+                            Models.DisputeDetail disputeDetail = new Models.DisputeDetail
                             {
-                                Models.DisputeDetails disputeDetail = new Models.DisputeDetails
-                                {
-                                    DisputeType = kvp.Value.DisputeType,
-                                    DisputeReason = kvp.Value.DisputeReason
-                                };
+                                Count = dc.Count,
+                                DisputeType = dc.DisputeType
+                            };
 
-                                disputeDetailsDictionary.Add(kvp.Key, disputeDetail);
-                            }
-
-                            disputeDetailsArray[i] = disputeDetailsDictionary;
+                            disputeDetails.Add(disputeDetail);
                         }
                     }
 
@@ -79,7 +71,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         Province = context.Message.Province,
                         PostalCode = context.Message.PostalCode,
                         Email = context.Message.Email,
-                        DisputeDetails = disputeDetailsArray
+                        DisputeDetails = disputeDetails
                     };
 
                     _logger.LogDebug("TRY SENDING APPROVED DISPUTE TO ARC: {ApprovedDisputeTicket} ", tcoDisputeTicket.ToString());
