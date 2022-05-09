@@ -1,9 +1,8 @@
 ﻿using TrafficCourts.Arc.Dispute.Service.Models;
 
-namespace TrafficCourts.Arc.Dispute.Service.Services
+namespace TrafficCourts.Arc.Dispute.Service.Services;
+
+public interface IArcFileService
 {
-    public interface IArcFileService
-    {
-        Task CreateArcFile(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken);
-    }
+    Task CreateArcFile(List<ArcFileRecord> arcFileData, CancellationToken cancellationToken);
 }
