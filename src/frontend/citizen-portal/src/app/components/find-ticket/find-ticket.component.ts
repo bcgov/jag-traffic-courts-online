@@ -64,6 +64,7 @@ export class FindTicketComponent implements OnInit {
   public onFileChange(event: any) {
     this.logger.log('FindTicketComponent::onFileChange');
     this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef);
+    event.target.value = null; // reset file input
   }
 
   public onViewTicketExample(): void {

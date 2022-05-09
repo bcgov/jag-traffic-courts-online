@@ -238,14 +238,16 @@ export class ViolationTicketService {
     } else {
       if (err.error.errors.file || this.isErrorMatch(err, 'Violation Ticket Number is blank')
         || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")
-        || this.isErrorMatch(err, "low confidence", false )) {
+        || this.isErrorMatch(err, "low confidence", false)) {
         this.openErrorScenarioOneDialog();
       }
-      else if (this.isErrorMatch(err, "more than 30 days ago.", false )) {
+      else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {
         this.openErrorScenarioTwoDialog();
       }
       else if (this.isErrorMatch(err, "MVA must be selected under the 'Did commit the offence(s) indicated' section.")) {
         this.openErrorScenarioThreeDialog();
+      } else { // fall back option
+        this.openErrorScenarioOneDialog();
       }
     }
     this.goToFind();
