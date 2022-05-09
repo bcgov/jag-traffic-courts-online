@@ -175,6 +175,7 @@
   "error": {
     "required": "Required",
     "positive_number": "Enter positive number",
+    "max_number": "must be a number less than 10",
     "email_address": "Must be a valid email address"
   },
   "shell_ticket_confirmation": {
