@@ -10,7 +10,9 @@
   <div class="col-lg-7">
     <small class="d-block">For this count I would like to</small>
     <strong>
-      <div *ngIf="count.__skip">
+      <div *ngIf="count.__skip 
+      || !(count.offenceDeclaration === 'Plea' || count.timeToPayRequest 
+        || count.fineReductionRequest || count.offenceDeclaration === 'NotPlea')">
         No action at this time
       </div>
       <div *ngIf="count.offenceDeclaration === 'Plea'">

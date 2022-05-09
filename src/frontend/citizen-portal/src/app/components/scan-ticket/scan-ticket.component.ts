@@ -81,6 +81,7 @@ export class ScanTicketComponent implements OnInit {
 
   public onFileChange(event: any) {
     this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef);
+    event.target.value = null; // reset file input
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {

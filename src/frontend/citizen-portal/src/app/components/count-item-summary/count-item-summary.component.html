@@ -1,15 +1,11 @@
 <div class="row mt-2">
   <div class="col-lg-2 pe-0">
-    <div style="display: flex">
-      <mat-checkbox #selectCountCheckbox
-                    *ngIf="showCheckbox"
-                    [checked]="selectCount"
-                    (change)="onSelectCountChanged(selectCountCheckbox.checked)"
-                    color="primary"
-                    class="me-4 mb-2"></mat-checkbox>
-        <span class="h2">
-          <strong>Count {{ count.count }}</strong>
-        </span>
+    <div class="count-text-container">
+      <mat-checkbox #selectCountCheckbox *ngIf="showCheckbox" [checked]="selectCount"
+        (change)="onSelectCountChanged(selectCountCheckbox.checked)" color="primary" class="me-4 mb-2"></mat-checkbox>
+      <span class="h2 count-text">
+        <strong>Count {{ count.count }}</strong>
+      </span>
     </div>
   </div>
   <div class="col-lg-8">
