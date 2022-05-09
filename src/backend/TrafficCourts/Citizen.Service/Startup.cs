@@ -2,21 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NodaTime;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Serilog;
 using System.Configuration;
-using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
-using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
-using ILogger = Serilog.ILogger;
 using TrafficCourts.Citizen.Service.Services.Impl;
-using StackExchange.Redis;
+using System.Reflection;
+using OpenTelemetry.Trace;
+using TrafficCourts.Citizen.Service.Mappings;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -33,28 +30,23 @@ public static class Startup
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.Configuration.AddVaultSecrets(logger);
-
-        // setup the mapping for friendly environment variables
-        ((IConfigurationBuilder)builder.Configuration).Add(new EnvironmentVariablesConfigurationSource());
-
-        if (builder.Environment.IsDevelopment())
+        builder.AddSerilog();
+        builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            Serilog.Debugging.SelfLog.Enable(msg => Debug.WriteLine(msg));
-        }
-
-        builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
-        {
-            loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+            // add MassTransit source
+            options
+            .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+            .AddRedisInstrumentation();
         });
+
+        // Redis
+        builder.AddRedis();
 
         // configure application 
         var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
 
         builder.Services.UseConfigurationValidation();
         builder.UseTicketSearch(logger);
-
-        AddOpenTelemetry(builder, logger);
 
         if (configuration.TicketStorage == TicketStorageType.InMemory)
         {
@@ -65,14 +57,11 @@ public static class Startup
             builder.AddObjectStorageFilePersistence();
         }
 
-
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
         builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService>();
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
 
-        // Redis
-        builder.AddRedis();
         builder.Services.AddSingleton<ILookupService, RedisLookupService>();
         builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
@@ -90,35 +79,35 @@ public static class Startup
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 
         builder.Services.AddRecyclableMemoryStreams();
-    }
 
-    private static void AddOpenTelemetry(WebApplicationBuilder builder, Serilog.ILogger logger)
-    {
-        string? endpoint = builder.Configuration["OTEL_EXPORTER_JAEGER_ENDPOINT"];
+        // Registering and Initializing AutoMapper
+        builder.Services.AddAutoMapper(typeof(NoticeOfDisputeToMessageContractMappingProfile));
 
-        if (string.IsNullOrEmpty(endpoint))
+        // Add services to the container.
+        builder.Services
+            .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
+            .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
+
+        var swagger = SwaggerConfiguration.Get(builder.Configuration);
+
+        if (swagger.Enabled)
         {
-            logger.Information("Jaeger endpoint is not configured, no telemetry will be collected.");
-            return;
-        }
-
-        var resourceBuilder = ResourceBuilder.CreateDefault().AddService(Diagnostics.ServiceName, serviceInstanceId: Environment.MachineName);
-
-        builder.Services.AddOpenTelemetryTracing(options =>
-        {
-            options
-                .SetResourceBuilder(resourceBuilder)
-                .AddGrpcClientInstrumentation()
-                .AddHttpClientInstrumentation(options =>
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-                    // do not trace calls to splunk
-                    options.Filter = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
+                    Version = "v1",
+                    Title = "Traffic Court Online Citizen Api",
+                    Description = "An API for creating violation ticket disputes",
+                });
 
-                })
-                .AddAspNetCoreInstrumentation()
-                .AddSource(Diagnostics.Source.Name)
-                .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
-                .AddJaegerExporter();
-        });
+                options.UseDateOnlyTimeOnlyStringConverters();
+
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+        }
     }
 }

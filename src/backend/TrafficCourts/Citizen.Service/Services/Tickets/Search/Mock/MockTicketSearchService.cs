@@ -1,6 +1,5 @@
 ﻿using FlatFiles;
 using FlatFiles.TypeMapping;
-using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss'],
+  styleUrls: ['./landing.component.scss', '../../app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class LandingComponent implements OnInit {
@@ -21,11 +21,50 @@ export class LandingComponent implements OnInit {
 
   public async ngOnInit() {
 
-    this.oidcSecurityService.checkAuth().subscribe(
-      ({ isAuthenticated, userData, accessToken}) => {
-        console.log(userData, accessToken, isAuthenticated);
-        this.router.navigate(['/ticket']);
-        this.logInOutService.currentUser(isAuthenticated);
-    });
+      // initial component not protected by route guarding for keycloak
+      // mimicking csrs project works ok except logs back in after logging out
+      this.logInOutService.getLogoutStatus.subscribe((data) => {
+        if (data !== null || data !== '')
+        {
+          if(data === 'IDIR Sign in'){
+            this.login();
+          }
+          else
+            if(data === 'Sign out'){
+              this.logout();
+            }
+        }
+      })
+
+      this.oidcSecurityService.checkAuth().subscribe(
+        ({ isAuthenticated}) => {
+          if (isAuthenticated === true)
+          {
+            this.router.navigate(['/ticket']);
+            this.isLoggedIn = true;
+          }
+          else
+          {
+            this.isLoggedIn = false;
+          }
+
+          this.logInOutService.currentUser(isAuthenticated);
+      });
+
   }
+
+  login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens();
+    this.isLoggedIn = false;
+  }
+
+   public onClickBtn()
+   {
+    this.logInOutService.logoutUser('IDIR Sign in');
+   }
+
 }

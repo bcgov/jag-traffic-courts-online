@@ -5,9 +5,9 @@ using System.Text.Json;
 
 namespace TrafficCourts.Staff.Service.Authentication;
 
-public static class Authentication
+public static class AuthenticationExtensions
 {
-    public static void Initialize(IServiceCollection services, IConfiguration configuration)
+    public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         // Note: AddJwtBearer does not use IConfigureOptions<JwtBearerOptions>
         services
@@ -31,7 +31,7 @@ public static class Authentication
         {
             identity.AddClaim(new Claim(ClaimTypes.Name, accessToken.Subject));
             
-            FlattenRealmAccessRoles(identity, context?.Options?.Audience);
+            FlattenResourceAccessRoles(identity, context?.Options?.Audience);
         }
 
         return Task.CompletedTask;
@@ -40,31 +40,37 @@ public static class Authentication
     /// <summary>
     /// Flattens the Realm Access claim, as Microsoft Identity Model doesn't support nested claims
     /// </summary>
-    private static void FlattenRealmAccessRoles(ClaimsIdentity identity, string? audience)
+    private static void FlattenResourceAccessRoles(ClaimsIdentity identity, string? audience)
     {
         if (string.IsNullOrWhiteSpace(audience))
         {
             return;
         }
 
-        // TODO: extract role from resource_access.audience: { "roles": [ ] }
-
+        // JSON is e.g. "resource_access" : { "tco-staff-portal" : { "roles" : [ "vtc-user" ] }, "account" : { "roles" : [ "guest", "admin" ] } }
+        // look for audience tco-staff-portal under resource_access (line 62), then add those roles which are listed uder tco-staff-portal as claims to identity (line 66)
         var resourceAccessClaim = identity.Claims
             .SingleOrDefault(claim => claim.Type == Claims.ResourceAccess)
             ?.Value;
 
         if (resourceAccessClaim != null)
         {
-            var realmAccess = JsonSerializer.Deserialize<ResourceAccess>(resourceAccessClaim);
-            if (realmAccess?.Roles is not null)
+            var audiencesRoles = JsonSerializer.Deserialize<Dictionary<string, ResourceAccess>>(resourceAccessClaim);
+            foreach(var audienceRole in audiencesRoles)
             {
-                identity.AddClaims(realmAccess.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                if (audienceRole.Key == audience)
+                {
+                    foreach(var role in audienceRole.Value.roles)
+                    {
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
+                }
             }
         }
     }
 
     internal class ResourceAccess
     {
-        public string[]? Roles { get; set; }
+        public string[]? roles { get; set; }
     }
 }

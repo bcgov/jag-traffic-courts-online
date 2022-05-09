@@ -8,7 +8,11 @@
            rel="noopener">
           <img src="/assets/gov_bc_logo.jpg"
                alt="Government of BC Logo" />
-        </a>| Ticket Resolution  Management
+        </a>| Ticket Resolution  Management 
+        <span class="badge badge-pill badge-light header"
+            *ngIf="environment !== 'prod'">
+        {{ environment }} v{{ version }}
+      </span>
       </span>
 
       <span class="flex-fill"></span>
@@ -19,15 +23,10 @@
       <span style="vertical-align: 5px">{{ languageDesc }}</span>
     </a>
   -->
-
-      <ng-container *ngIf="fullName">
-        <span class="fullName d-none d-md-block">
-          {{ fullName }}
-        </span>
-        <span class="logout" title="Logout">
-          <mat-icon (click)="onClickBtn()">{{btnIcon}}</mat-icon>
-        </span>
-      </ng-container>
+  
+      <button mat-button (click)="onClickBtn()">
+        <mat-icon class="logout" inline="true">{{btnIcon}}</mat-icon>&nbsp;&nbsp;{{btnLabel}}
+      </button>
     </mat-toolbar>
   </div>
 </div>

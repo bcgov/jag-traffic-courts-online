@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputesService } from 'app/services/disputes.service';
@@ -6,7 +6,6 @@ import { Dispute } from 'app/api';
 import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-page',
@@ -15,8 +14,8 @@ import { Router } from '@angular/router';
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
-  public decidePopup= '';
-  public ticketInfo:any;
+  public decidePopup = '';
+  public ticketInfo: any;
   busy: Subscription;
   newDispute: disputeData = {
     DateSubmitted: undefined,
@@ -28,7 +27,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     CourtHearing: undefined,
     CitizenFlag: undefined,
     SystemFlag: undefined,
-    AssignedTo: undefined};
+    AssignedTo: undefined
+  };
   displayedColumns: string[] = [
     'RedGreenAlert',
     'DateSubmitted',
@@ -167,27 +167,19 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     },
   ];
 
-  RegionName: string = "";
-  todayDate: Date = new Date();
-  fullName: string = "Loading...";
-  isLoggedIn: boolean = false;
-  accessToken: string = "";
-
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
   constructor(
-    public disputesService: DisputesService,  
+    public disputesService: DisputesService,
     private logger: LoggerService,
-    ) {  }
+  ) { }
 
   ngOnInit(): void {
 
     // set red green alert and status
     this.remoteDummyData.forEach(x => {
-      x.RedGreenAlert = x.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (x.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '' );
+      x.RedGreenAlert = x.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (x.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '');
     });
-
-    this.RegionName = "Fraser Valley Region";
 
     // when authentication token available, get data
     this.getAllDisputes();
@@ -198,76 +190,76 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   getAllDisputes(): void {
-      this.logger.log('TicketPageComponent::getAllDisputes');
+    this.logger.log('TicketPageComponent::getAllDisputes');
 
-      // concatenate all dummy data to this.disputes
-      this.disputes = [];
-      this.remoteDummyData.forEach(d => {
-        this.disputes = this.disputes.concat(d);
-      });
+    // for now this will show dummy data plus new records
+    // jira ticket 1311 will be for adding the correct retrieval and setting of several of these fields after 1310 completed
 
+    // concatenate all dummy data to this.disputes
+    this.disputes = [];
+    this.remoteDummyData.forEach(d => {
+      this.disputes = this.disputes.concat(d);
+    });
+
+    this.dataSource.data = this.disputes;
+
+    // initially sort data by Date Submitted
+    this.dataSource.data = this.dataSource.data.sort((a: disputeData, b: disputeData) => { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } });
+
+    // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
+    this.dataSource.filterPredicate = function (record: disputeData, filter) {
+      return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
+    }
+
+
+    this.busy = this.disputesService.getDisputes().subscribe((response) => {
+      this.logger.info(
+        'TicketPageComponent::getAllDisputes response',
+        response
+      );
+
+      this.disputesService.disputes$.next(response);
+      response.forEach(d => {
+        this.newDispute.AssignedTo = '';
+        this.newDispute.CitizenFlag = 'N';
+        this.newDispute.CourtHearing = 'N';
+        this.newDispute.DateSubmitted = new Date(d.violationDate);
+        this.newDispute.FilingDate = undefined;
+        switch (d.status) {
+          case DisputeStatus.Cancelled:
+            this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
+            break;
+          case DisputeStatus.Processing:
+            this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
+            break;
+          case DisputeStatus.Rejected:
+            this.newDispute.moreDisputeStatus = MoreDisputeStatus.Rejected;
+            break;
+          default:
+            this.newDispute.moreDisputeStatus = MoreDisputeStatus.New;
+            break;
+        };
+        this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '');
+        this.newDispute.SystemFlag = 'N';
+        this.newDispute.additionalProperties = d.additionalProperties;
+        this.newDispute.courtLocation = d.courtLocation;
+        this.disputes = this.disputes.concat(this.newDispute);
+      })
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
+      this.dataSource.data = this.dataSource.data.sort((a: disputeData, b: disputeData) => { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record:disputeData ,filter) {
+      this.dataSource.filterPredicate = function (record: disputeData, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
-
-  
-      // this.busy = this.disputesService.getDisputes().subscribe((response) => {
-      //   this.logger.info(
-      //     'TicketPageComponent::getAllDisputes response',
-      //     response
-      //   );
-
-      //   this.disputesService.disputes$.next(response);
-      //   response.forEach(d => {
-      //     this.newDispute.AssignedTo = '';
-      //     this.newDispute.CitizenFlag = 'N';
-      //     this.newDispute.CourtHearing = 'N';
-      //     this.newDispute.DateSubmitted = new Date(d.violationDate);
-      //     this.newDispute.FilingDate = undefined;
-      //     switch (d.status) 
-      //     { 
-      //       case DisputeStatus.Cancelled: 
-      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
-      //         break; 
-      //       case DisputeStatus.Processing:
-      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
-      //         break;
-      //       case DisputeStatus.Rejected:
-      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.Rejected;
-      //         break;
-      //       default:
-      //         this.newDispute.moreDisputeStatus = MoreDisputeStatus.New;
-      //         break;
-      //     };
-      //     this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '' );
-      //     this.newDispute.SystemFlag = 'N';
-      //     this.newDispute.additionalProperties = d.additionalProperties;
-      //     this.newDispute.courtLocation = d.courtLocation;
-      //     this.disputes = this.disputes.concat(this.newDispute);
-      //   })
-      //   this.dataSource.data = this.disputes;
-
-      //   // initially sort data by Date Submitted
-      //   this.dataSource.data = this.dataSource.data.sort((a:disputeData,b:disputeData)=> { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } } );
-
-      //   // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      //   this.dataSource.filterPredicate = function (record:disputeData ,filter) {
-      //     return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-      //  }
-
-
-      // });
+    });
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter((x:disputeData) => x.moreDisputeStatus == MoreDisputeStatus.New))
-     return this.dataSource.data.filter((x:disputeData) => x.moreDisputeStatus == MoreDisputeStatus.New).length;
+    if (this.dataSource.data.filter((x: disputeData) => x.moreDisputeStatus == MoreDisputeStatus.New))
+      return this.dataSource.data.filter((x: disputeData) => x.moreDisputeStatus == MoreDisputeStatus.New).length;
     else return 0;
   }
 
@@ -281,16 +273,16 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  backTicketList(element){
-    if(element.ticketNumber[0] == 'A'){
+  backTicketList(element) {
+    if (element.ticketNumber[0] == 'A') {
       this.decidePopup = 'E'
     } else {
       this.decidePopup = "A"
     }
-    this.ticketInfo=element
+    this.ticketInfo = element
     this.showTicket = !this.showTicket;
   }
-  backTicketpage(){
+  backTicketpage() {
     this.showTicket = !this.showTicket;
   }
 }
@@ -305,9 +297,9 @@ const MoreDisputeStatus = {
   CheckedOut: 'Checked Out' as MoreDisputeStatus
 }
 export interface disputeData extends Dispute {
-  DateSubmitted?: Date, 
+  DateSubmitted?: Date,
   RedGreenAlert?: string,
-  moreDisputeStatus : MoreDisputeStatus;
+  moreDisputeStatus: MoreDisputeStatus;
   FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   CourtHearing: string, // if at least one count requests court hearing
   CitizenFlag: string, // comes from citizen portal, citizen has noticed OCR differences

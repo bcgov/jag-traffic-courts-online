@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi

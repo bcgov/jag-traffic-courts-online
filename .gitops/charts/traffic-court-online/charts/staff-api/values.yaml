@@ -118,5 +118,15 @@ oracleApi:
 
 ## @param
 ##
+splunk:
+  enabled: false
+  endpoint:
+  token:
+
+## @param
+##
 swagger:
+  enabled: false
+
+vault:
   enabled: false

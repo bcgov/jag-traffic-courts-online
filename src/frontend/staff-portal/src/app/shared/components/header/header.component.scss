@@ -23,18 +23,16 @@
     cursor: pointer;
   }
 
-  .fullName {
-    font-size: 0.8rem;
-  }
-
   .mat-icon {
     cursor: pointer;
     margin-top: 0.4em;
+    margin-bottom: 0.2em;
     user-select: none;
   }
 
   .logout {
     margin-left: 10px;
     margin-right: 0px;
+    vertical-align: middle;
   }
 }

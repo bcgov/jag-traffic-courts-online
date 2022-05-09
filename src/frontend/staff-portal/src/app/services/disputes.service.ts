@@ -36,7 +36,7 @@ export class DisputesService implements IDisputesService {
    */
  public getDisputes(): Observable<Dispute[]> {
 
-    return this.disputeService.disputesGet()
+    return this.disputeService.apiDisputeDisputesGet()
       .pipe(
         map((response: Dispute[]) =>
           response ? response : null

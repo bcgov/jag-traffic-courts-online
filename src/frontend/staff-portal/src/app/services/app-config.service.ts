@@ -9,13 +9,6 @@ export interface IAppConfig {
   version: string;
   useMockServices: boolean;
   apiBaseUrl: string;
-  understandYourTicketLink: string;
-  paymentOptionsLink: string;
-  resolutionOptionsLink: string;
-  roadSafetyBCVisitUsLink: string;
-  icbcVisitUsLink: string;
-  provincialCourtOfBCVisitUsLink: string;
-  courthouseServicesOfBCVisitUsLink: string;
   features: {
     [name: string]: boolean;
   };
@@ -27,13 +20,6 @@ export class AppConfig implements IAppConfig {
   version: string;
   useMockServices: boolean;
   apiBaseUrl: string;
-  understandYourTicketLink: string;
-  paymentOptionsLink: string;
-  resolutionOptionsLink: string;
-  roadSafetyBCVisitUsLink: string;
-  icbcVisitUsLink: string;
-  provincialCourtOfBCVisitUsLink: string;
-  courthouseServicesOfBCVisitUsLink: string;
   features: {
     dispute: boolean;
   };
@@ -44,24 +30,6 @@ export class AppConfig implements IAppConfig {
 })
 export class AppConfigService {
   private appConfig: AppConfig;
-
-  private UNDERSTAND_YOUR_TICKET_DEFAULT =
-    'https://understandmyticket.gov.bc.ca/' as const;
-  private PAYMENT_OPTIONS_DEFAULT =
-    // eslint-disable-next-line max-len
-    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket' as const;
-  private RESOLUTION_OPTIONS_DEFAULT =
-    // eslint-disable-next-line max-len
-    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket' as const;
-
-  private RSBC_VISIT_US_DEFAULT =
-    'https://www2.gov.bc.ca/gov/content/transportation/driving-and-cycling/roadsafetybc/intersection-safety-cameras' as const;
-  private ICBC_VISIT_US_DEFAULT =
-    'https://www.icbc.com/driver-licensing/tickets/Pages/default.aspx' as const;
-  private PROV_CRT_VISIT_US_DEFAULT =
-    'https://www.provincialcourt.bc.ca/types-of-cases/traffic-and-bylaw-matters' as const;
-  private CTH_SERV_VISIT_US_DEFAULT =
-    'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments' as const;
 
   constructor(private http: HttpClient) { }
 
@@ -91,41 +59,6 @@ export class AppConfigService {
 
   get apiBaseUrl(): string {
     return this.appConfig?.apiBaseUrl;
-  }
-
-  get understandYourTicketLink(): string {
-    const link = this.appConfig?.understandYourTicketLink;
-    return link ? link : this.UNDERSTAND_YOUR_TICKET_DEFAULT;
-  }
-
-  get paymentOptionsLink(): string {
-    const link = this.appConfig?.paymentOptionsLink;
-    return link ? link : this.PAYMENT_OPTIONS_DEFAULT;
-  }
-
-  get resolutionOptionsLink(): string {
-    const link = this.appConfig?.resolutionOptionsLink;
-    return link ? link : this.RESOLUTION_OPTIONS_DEFAULT;
-  }
-
-  get roadSafetyBCVisitUsLink(): string {
-    const link = this.appConfig?.roadSafetyBCVisitUsLink;
-    return link ? link : this.RSBC_VISIT_US_DEFAULT;
-  }
-
-  get icbcVisitUsLink(): string {
-    const link = this.appConfig?.icbcVisitUsLink;
-    return link ? link : this.ICBC_VISIT_US_DEFAULT;
-  }
-
-  get provincialCourtOfBCVisitUsLink(): string {
-    const link = this.appConfig?.provincialCourtOfBCVisitUsLink;
-    return link ? link : this.PROV_CRT_VISIT_US_DEFAULT;
-  }
-
-  get courthouseServicesOfBCVisitUsLink(): string {
-    const link = this.appConfig?.courthouseServicesOfBCVisitUsLink;
-    return link ? link : this.CTH_SERV_VISIT_US_DEFAULT;
   }
 
   get featureFlagDispute(): boolean {

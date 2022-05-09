@@ -6,7 +6,7 @@
     "version": "v1"
   },
   "paths": {
-    "/disputes": {
+    "/api/Dispute/disputes": {
       "get": {
         "tags": [
           "Dispute"
@@ -48,7 +48,7 @@
         }
       }
     },
-    "/dispute/{disputeId}": {
+    "/api/Dispute/{disputeId}": {
       "get": {
         "tags": [
           "Dispute"
@@ -61,8 +61,8 @@
             "description": "Unique identifier for a specific Dispute record.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -144,8 +144,8 @@
             "description": "Unique identifier for a specific Dispute record.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -236,7 +236,7 @@
         }
       }
     },
-    "/dispute/{disputeId}/reject": {
+    "/api/Dispute/{disputeId}/reject": {
       "put": {
         "tags": [
           "Dispute"
@@ -249,8 +249,8 @@
             "description": "Unique identifier for a specific Dispute record to cancel.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -297,7 +297,7 @@
         }
       }
     },
-    "/dispute/{disputeId}/cancel": {
+    "/api/Dispute/{disputeId}/cancel": {
       "put": {
         "tags": [
           "Dispute"
@@ -310,8 +310,8 @@
             "description": "Unique identifier for a specific Dispute record to cancel.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -385,7 +385,7 @@
         }
       }
     },
-    "/dispute/{disputeId}/submit": {
+    "/api/Dispute/{disputeId}/submit": {
       "put": {
         "tags": [
           "Dispute"
@@ -398,8 +398,8 @@
             "description": "Unique identifier for a specific Dispute record to submit.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -480,9 +480,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "description": "ID",
-            "format": "int32"
+            "format": "uuid"
           },
           "status": {
             "$ref": "#/components/schemas/DisputeStatus"
@@ -520,6 +520,10 @@
             "nullable": true
           },
           "homePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
             "type": "string",
             "nullable": true
           },
@@ -620,9 +624,9 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
+            "type": "string",
             "description": "ID",
-            "format": "int32"
+            "format": "uuid"
           },
           "offenceDeclaration": {
             "type": "string",

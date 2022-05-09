@@ -2,7 +2,6 @@
 using OneOf;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using TrafficCourts.Citizen.Service.Logging;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search;

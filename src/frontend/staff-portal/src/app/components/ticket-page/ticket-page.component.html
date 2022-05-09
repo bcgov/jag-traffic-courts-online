@@ -2,20 +2,9 @@
   <div class="flex-wrapper">
   <div class="flex-header d-print-none mb-40" style="margin-bottom: 100px">
     <app-header></app-header>
+    <app-tco-page-header></app-tco-page-header>
 
     <div class="container">
-      <section>
-        <div><br />
-          <h1 class="BC-Gov-32px-blue-text">Welcome, {{ fullName }}</h1>
-          <p class="BC-Gov-15px-black-text">
-            Court Registries Clerk,  {{ RegionName }}
-            <span style="float:right">
-              {{todayDate|date:"EEEE, MMMM d"}}{{(todayDate|date:"d")|dateSuffix}}{{todayDate|date:",&nbsp;y"}}
-            </span>
-          </p>
-          <hr style="opacity: 1; color: #fcba19" />
-        </div>
-      </section>
       <section>
         <div class="flex-6-col">
             <div *ngIf="!showTicket">
@@ -28,7 +17,7 @@
                         <td style="width:5px">|</td>
                         <td style="width: 40%">
                             <select style="border: none;">
-                              <option><span class="BC-Gov-15px-black-bold-text"><b>{{ RegionName }}</b>&nbsp;&nbsp;</span></option>
+                              <option><span class="BC-Gov-15px-black-bold-text"><b>Fraser Valley Region</b>&nbsp;&nbsp;</span></option>
                             </select>
                         </td>
                       </tr>

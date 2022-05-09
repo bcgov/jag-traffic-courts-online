@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace TrafficCourts.Staff.Service.Logging;
+namespace TrafficCourts.Staff.Service;
 
 public static class Diagnostics
 {
