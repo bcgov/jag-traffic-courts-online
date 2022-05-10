@@ -74,13 +74,12 @@ public class DisputeService : IDisputeService
     /// <returns></returns>
     public string? GetViolationTicketImageFilename(Dispute dispute)
     {
-        ViolationTicket violationTicket = dispute.ViolationTicket;
-        if (violationTicket.OcrViolationTicket is not null)
+        if (dispute.OcrViolationTicket is not null)
         {
             try
             {
                 // deserialize json string to a dictionary
-                var keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(violationTicket.OcrViolationTicket);
+                var keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(dispute.OcrViolationTicket);
                 string? imageFilename = keys?["ImageFilename"];
 
                 return imageFilename;

@@ -128,12 +128,12 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
         /// </summary>
-        public bool CitizenDetectedOcrIssues { get; set; }
+        public bool DisputantDetectedOcrIssues { get; set; }
 
         /// <summary>
         /// The description of the issue with OCR ticket if the citizen has detected any.
         /// </summary>
-        public string? CitizenOcrIssuesDescription { get; set; }
+        public string? DisputantOcrIssuesDescription { get; set; }
 
         /// <summary>
         /// Violation Ticket details

@@ -12,7 +12,7 @@ public class Mapper
         target.CitizenName = dispute.GivenNames + " " + dispute.Surname;
         target.TicketIssuanceDate = dispute.IssuedDate.HasValue ? dispute.IssuedDate.Value.DateTime : (DateTime?)null;
         target.TicketFileNumber = dispute.TicketNumber;
-        target.IssuingOrganization = dispute.ViolationTicket.EnforcementOrganization;
+        target.IssuingOrganization = dispute.ViolationTicket.OrganizationLocation;
         target.IssuingLocation = dispute.ProvincialCourtHearingLocation;
         target.DriversLicence = dispute.ViolationTicket.DriversLicenceNumber;
         List <Messaging.MessageContracts.ViolationTicketCount> violationTicketCounts = new();
@@ -22,7 +22,7 @@ public class Mapper
             {
                 Count = violationTicketCount.Count,
                 Section = violationTicketCount.FullSection,
-                Act = violationTicketCount.Act,
+                Act = violationTicketCount.ActRegulation,
                 Amount = violationTicketCount.TicketedAmount
             };
 

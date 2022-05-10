@@ -29,7 +29,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         public int Count { get; set; } = 0;
         public string Section { get; set; } = String.Empty;
         public string Act { get; set; } = String.Empty;
-        public double Amount { get; set; } = Double.NaN;
+        public double? Amount { get; set; }
     }
 
     public class DisputeCount

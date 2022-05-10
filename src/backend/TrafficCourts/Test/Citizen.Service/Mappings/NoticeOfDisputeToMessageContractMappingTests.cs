@@ -44,8 +44,8 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.NumberOfWitness, actual.NumberOfWitness);
             Assert.Equal(noticeOfDispute.FineReductionReason, actual.FineReductionReason);
             Assert.Equal(noticeOfDispute.TimeToPayReason, actual.TimeToPayReason);
-            Assert.Equal(noticeOfDispute.CitizenDetectedOcrIssues, actual.CitizenDetectedOcrIssues);
-            Assert.Equal(noticeOfDispute.CitizenOcrIssuesDescription, actual.CitizenOcrIssuesDescription);
+            Assert.Equal(noticeOfDispute.DisputantDetectedOcrIssues, actual.DisputantDetectedOcrIssues);
+            Assert.Equal(noticeOfDispute.DisputantOcrIssuesDescription, actual.DisputantOcrIssuesDescription);
 
             foreach (var count in actual.DisputedCounts)
             {

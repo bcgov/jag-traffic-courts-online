@@ -29,7 +29,7 @@ public class DisputeServiceTest
         Dispute dispute = new();
         dispute.Id = Guid.NewGuid();
         dispute.ViolationTicket = new();
-        dispute.ViolationTicket.OcrViolationTicket = json;
+        dispute.OcrViolationTicket = json;
 
         //When
         string? filename = service.GetViolationTicketImageFilename(dispute);

@@ -43,13 +43,6 @@ public class ViolationTicket {
     @Id
     @GeneratedValue
     private UUID id;
-	
-	/**
-	 * All OCR Violation ticket data serialized into a JSON string.
-	 */
-	@Column
-    @Schema(nullable = true)
-    private String ocrViolationTicket;
 
     /**
      * The violation ticket number.
