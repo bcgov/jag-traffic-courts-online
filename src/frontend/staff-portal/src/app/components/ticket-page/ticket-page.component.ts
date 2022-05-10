@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   public decidePopup = '';
-  public ticketInfo: any;
+  public ticketInfo: any; // FIXME: this should be a specific type, not "any"
   busy: Subscription;
   newDispute: disputeData = {
     DateSubmitted: undefined,
