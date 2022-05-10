@@ -2,14 +2,36 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Minio;
+using NodaTime;
+using TrafficCourts.Common.Configuration;
 
 namespace TrafficCourts.Common.Features.FilePersistence
 {
     public static class Extensions
     {
+        public static IServiceCollection AddFilePersistence(this IServiceCollection services, IConfiguration configuration)
+        {
+            TicketStorageConfiguration ticketStorageConfiguration = new();
+            configuration.GetSection(TicketStorageConfiguration.Section).Bind(ticketStorageConfiguration);
+
+            if (ticketStorageConfiguration.Type == TicketStorageType.ObjectStore)
+            {
+                // These appear to be pre-requisites.
+                services.AddSingleton<IClock>(SystemClock.Instance); 
+                services.AddRecyclableMemoryStreams();
+
+                return AddObjectStorageFilePersistence(services, configuration.GetSection("ObjectStorage"));
+            }
+            else
+            {
+                return AddInMemoryFilePersistence(services);
+            }
+        }
+
         public static IServiceCollection AddInMemoryFilePersistence(this IServiceCollection services)
         {
             ArgumentNullException.ThrowIfNull(services);
+            services.AddMemoryCache();
             services.AddTransient<IFilePersistenceService, InMemoryFilePersistenceService>();
             return services;
         }

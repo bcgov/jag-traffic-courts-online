@@ -25,6 +25,11 @@ services:
       RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
       REDIS__CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING:-redis:6379,password=password}
+      TICKETSTORAGE: ${TICKETSTORAGE:-ObjectStore}
+      OBJECTSTORAGE__ENDPOINT: ${OBJECTSTORAGE__ENDPOINT:-minio:9000}
+      OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}
+      OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
+      OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
     ports:
       - "5000:8080"
     restart: always
@@ -193,7 +198,7 @@ services:
       MINIO_ROOT_PASSWORD: "password"
     command: server /data --console-address ":9001"
 
-  createbuckets:
+  minio-init:
     container_name: minio-init
     image: minio/mc
     depends_on:

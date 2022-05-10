@@ -2,18 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using NodaTime;
+using OpenTelemetry.Trace;
 using Serilog;
 using System.Configuration;
+using System.Reflection;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
+using TrafficCourts.Citizen.Service.Mappings;
+using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
-using TrafficCourts.Citizen.Service.Services.Impl;
-using System.Reflection;
-using OpenTelemetry.Trace;
-using TrafficCourts.Citizen.Service.Mappings;
+using TicketStorageType = TrafficCourts.Citizen.Service.Configuration.TicketStorageType;
 
 namespace TrafficCourts.Citizen.Service;
 

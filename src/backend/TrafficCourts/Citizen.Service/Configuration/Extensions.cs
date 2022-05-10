@@ -6,7 +6,7 @@ namespace TrafficCourts.Citizen.Service.Configuration;
 public static class Extensions
 {
     /// <summary>
-    /// Adds <see cref="IFilePersistenceService"/> that uses S3 Object Storage.s
+    /// Adds <see cref="IFilePersistenceService"/> that uses S3 Object Storage.
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
