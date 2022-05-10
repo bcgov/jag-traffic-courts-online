@@ -115,8 +115,8 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
         catch (MinioException exception)
         {
-            _logger.LogError(exception, "Failed up upload file");
-            throw new MinioFilePersistenceException("Failed up upload file", exception);
+            _logger.LogError(exception, "Failed to upload file to object storage");
+            throw new MinioFilePersistenceException("Failed to upload file to object storage", exception);
         }
     }
 }

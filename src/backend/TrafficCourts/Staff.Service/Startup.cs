@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common.Configuration;
+using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Configuration;
@@ -32,6 +33,8 @@ public static class Startup
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         builder.Services.AddAuthentication(builder.Configuration);
+
+        builder.Services.AddFilePersistence(builder.Configuration);
 
         // Add DisputeService
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
