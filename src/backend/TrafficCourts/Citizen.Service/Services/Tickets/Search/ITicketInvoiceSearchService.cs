@@ -14,5 +14,5 @@ public interface ITicketInvoiceSearchService
     /// <param name="issuedTime">The time the violation ticket was issued at.</param>
     /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
     /// <returns>The matching violation ticket invoices (counts).</returns>
-    Task<IEnumerable<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken);
+    Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken);
 }
