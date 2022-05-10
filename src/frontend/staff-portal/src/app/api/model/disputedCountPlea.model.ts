@@ -11,14 +11,10 @@
  */
 
 
-export interface TicketCount { 
-    /**
-     * ID
-     */
-    id?: string;
-    offenceDeclaration?: string | null;
-    timeToPayRequest?: boolean;
-    fineReductionRequest?: boolean;
-    additionalProperties?: { [key: string]: any; } | null;
-}
+export type DisputedCountPlea = 'GUILTY' | 'NOT_GUILTY';
+
+export const DisputedCountPlea = {
+    Guilty: 'GUILTY' as DisputedCountPlea,
+    NotGuilty: 'NOT_GUILTY' as DisputedCountPlea
+};
 
