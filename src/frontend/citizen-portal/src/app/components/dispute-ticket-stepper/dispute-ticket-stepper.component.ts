@@ -60,37 +60,37 @@ export class DisputeTicketStepperComponent implements OnInit {
   // Overview
   public declared = false;
 
-  private ticketFormFields = {
-    disputantSurname: ["null", [Validators.required]],
-    givenNames: ["null", [Validators.required]],
-    streetAddress: ["null", [Validators.required]],
-    postalCode: ["null"],
-    city: ["null"],
-    country: ["null"],
-    province: ["null"],
-    driversLicence: ["null"],
-    driversLicenceProvince: ["null"],
-    emailAddress: ["null@t.ca", [Validators.required, FormControlValidators.email]],
-    homePhone: [null, [FormControlValidators.phone]],
-    dateOfBirth: ["null", []],
-    ticketCounts: []
-  }
-
   // private ticketFormFields = {
-  //   disputantSurname: [null, [Validators.required]],
-  //   givenNames: [null, [Validators.required]],
-  //   streetAddress: [null, [Validators.required]],
-  //   postalCode: [null],
-  //   city: [null],
-  //   country: [null],
-  //   province: [null],
-  //   driversLicence: [null],
-  //   driversLicenceProvince: [null],
-  //   emailAddress: [null, [Validators.required, FormControlValidators.email]],
+  //   disputantSurname: ["null", [Validators.required]],
+  //   givenNames: ["null", [Validators.required]],
+  //   streetAddress: ["null", [Validators.required]],
+  //   postalCode: ["null"],
+  //   city: ["null"],
+  //   country: ["null"],
+  //   province: ["null"],
+  //   driversLicence: ["null"],
+  //   driversLicenceProvince: ["null"],
+  //   emailAddress: ["null@t.ca", [Validators.required, FormControlValidators.email]],
   //   homePhone: [null, [FormControlValidators.phone]],
-  //   dateOfBirth: [null, []],
+  //   dateOfBirth: ["null", []],
   //   ticketCounts: []
   // }
+
+  private ticketFormFields = {
+    disputantSurname: [null, [Validators.required]],
+    givenNames: [null, [Validators.required]],
+    streetAddress: [null, [Validators.required]],
+    postalCode: [null],
+    city: [null],
+    country: [null],
+    province: [null],
+    driversLicence: [null],
+    driversLicenceProvince: [null],
+    emailAddress: [null, [Validators.required, FormControlValidators.email]],
+    homePhone: [null, [FormControlValidators.phone]],
+    dateOfBirth: [null, []],
+    ticketCounts: []
+  }
 
   private countFormFields = {
     offenceDeclaration: null,
@@ -124,21 +124,21 @@ export class DisputeTicketStepperComponent implements OnInit {
     FormGroupValidators.requiredIfTrue("__witnessPresent", "numberOfWitnesses"),
   ]
 
-  private legalRepresentationFields = {
-    lawFirmName: ["null", [Validators.required]],
-    lawyerName: ["null", [Validators.required]],
-    lawyerEmail: ["null@t.ca", [Validators.required, FormControlValidators.email]],
-    lawyerPhone: ["null", [Validators.required]],
-    lawyerAddress: ["null", [Validators.required]],
-  }
-
   // private legalRepresentationFields = {
-  //   lawFirmName: [null, [Validators.required]],
-  //   lawyerName: [null, [Validators.required]],
-  //   lawyerEmail: [null, [Validators.required, FormControlValidators.email]],
-  //   lawyerPhone: [null, [Validators.required]],
-  //   lawyerAddress: [null, [Validators.required]],
+  //   lawFirmName: ["null", [Validators.required]],
+  //   lawyerName: ["null", [Validators.required]],
+  //   lawyerEmail: ["null@t.ca", [Validators.required, FormControlValidators.email]],
+  //   lawyerPhone: ["null", [Validators.required]],
+  //   lawyerAddress: ["null", [Validators.required]],
   // }
+
+  private legalRepresentationFields = {
+    lawFirmName: [null, [Validators.required]],
+    lawyerName: [null, [Validators.required]],
+    lawyerEmail: [null, [Validators.required, FormControlValidators.email]],
+    lawyerPhone: [null, [Validators.required]],
+    lawyerAddress: [null, [Validators.required]],
+  }
 
   constructor(
     protected route: ActivatedRoute,
