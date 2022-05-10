@@ -91,9 +91,11 @@ mat-expansion-panel {
       padding-right: 2px;
       color: #1d4a77 !important;
     }
-    .ng-valid .mat-form-field-wrapper .mat-form-field-flex {
-        border: 2px #62809d solid;
-        border-radius: 0;
-    }
+
+    // border around input mat field
+    // .ng-valid .mat-form-field-wrapper .mat-form-field-flex {
+    //     border: 2px #62809d solid;
+    //     border-radius: 0;
+    // }
   }
   
