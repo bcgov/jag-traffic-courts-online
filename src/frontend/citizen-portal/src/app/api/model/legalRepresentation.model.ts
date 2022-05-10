@@ -28,5 +28,9 @@ export interface LegalRepresentation {
      * Address of the lawyer who will represent the disputant at the hearing.
      */
     lawyer_address?: string | null;
+    /**
+     * Address of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_phone_number?: string | null;
 }
 

@@ -323,6 +323,11 @@
             "type": "string",
             "description": "Address of the lawyer who will represent the disputant at the hearing.",
             "nullable": true
+          },
+          "lawyer_phone_number": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -355,6 +360,24 @@
           "given_names": {
             "type": "string",
             "description": "The given names or corporate name continued.",
+            "nullable": true
+          },
+          "birthdate": {
+            "type": "string",
+            "description": "The disputant's birthdate.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "drivers_licence_number": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "drivers_licence_province": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "The province or state the drivers licence was issued by.",
             "nullable": true
           },
           "address": {

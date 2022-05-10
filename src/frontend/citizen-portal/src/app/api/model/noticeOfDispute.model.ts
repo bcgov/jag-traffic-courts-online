@@ -38,6 +38,18 @@ export interface NoticeOfDispute {
      */
     given_names?: string | null;
     /**
+     * The disputant\'s birthdate.
+     */
+    birthdate?: string | null;
+    /**
+     * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
+     */
+    drivers_licence_number?: string | null;
+    /**
+     * The province or state the drivers licence was issued by.
+     */
+    drivers_licence_province?: string | null;
+    /**
      * The mailing address of the disputant.
      */
     address?: string | null;

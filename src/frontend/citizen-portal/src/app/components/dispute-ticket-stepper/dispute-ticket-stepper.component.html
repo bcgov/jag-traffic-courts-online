@@ -103,7 +103,7 @@
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
-                    <!-- <div class="col-md-6">
+                    <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Birthdate</mat-label>
                         <input matInput [max]="maxDateOfBirth" [matDatepicker]="picker" formControlName="dateOfBirth"
@@ -113,14 +113,16 @@
                         <mat-error *ngIf="form.get('dateOfBirth')?.hasError('required')">{{"error.required" |
                           translate}}</mat-error>
                       </mat-form-field>
-                    </div> -->
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Phone number</mat-label>
-                        <input matInput formControlName="home_phone_number" mask="(000) 000-0000" [showMaskTyped]="true" />
-                        <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" | translate}}
+                        <input matInput formControlName="home_phone_number" mask="(000) 000-0000"
+                          [showMaskTyped]="true" />
+                        <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
+                          translate}}
                         </mat-error>
                         <mat-error *ngIf="form.get('home_phone_number')?.hasError('phone')">Must be a valid phone number
                         </mat-error>
@@ -137,18 +139,19 @@
                       </mat-form-field>
                     </div>
                   </div>
-                  <!-- <div class="row">
+                  <div class="row">
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Driver's licence number</mat-label>
-                        <input matInput formControlName="driversLicence" mask="0000000" [showMaskTyped]="false" />
+                        <input matInput formControlName="drivers_licence_number" mask="0000000"
+                          [showMaskTyped]="false" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Province or state of driver's licence</mat-label>
-                        <mat-select formControlName="driversLicenceProvince">
+                        <mat-select formControlName="drivers_licence_province">
                           <mat-option *ngFor="let province of provinces" [value]="province.name">
                             {{ province.name }}
                           </mat-option>
@@ -156,7 +159,7 @@
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
-                  </div> -->
+                  </div>
                 </section>
               </form>
             </div>
@@ -260,11 +263,13 @@
                         Please provide additional selections below:
                       </label>
                       <mat-radio-group formControlName="plea">
-                        <mat-radio-button [value]="Plea.Guilty" color="primary" class="w-100"> I agree I committed this offence
+                        <mat-radio-button [value]="Plea.Guilty" color="primary" class="w-100"> I agree I committed this
+                          offence
                           and would like to request a fine reduction and/or time to pay on this count.
                         </mat-radio-button>
                         <p> and/or</p>
-                        <mat-radio-button [value]="Plea.NotGuilty" color="primary" class="w-100"> I do not agree I committed this
+                        <mat-radio-button [value]="Plea.NotGuilty" color="primary" class="w-100"> I do not agree I
+                          committed this
                           offence and would like to dispute this count</mat-radio-button>
                       </mat-radio-group>
                     </div>
@@ -273,11 +278,11 @@
                   <div class="row">
                     <mat-checkbox
                       *ngIf="countForm.value.count === 1 && form?.controls?.disputed_counts?.controls.length > 1"
-                      formControlName="__applyToRemainingCounts" color="primary" class="w-100 mt-4">Apply this selection
+                      formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this selection
                       to all counts on this violation ticket.</mat-checkbox>
                     <mat-checkbox
                       *ngIf="countForm.value.count === 2 && form?.controls?.disputed_counts?.controls.length > 2"
-                      formControlName="__applyToRemainingCounts" color="primary" class="w-100 mt-4">Apply this selection
+                      formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this selection
                       to remaining counts on ticket.
                     </mat-checkbox>
                     <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4">Skip this count, no action
@@ -286,7 +291,7 @@
                 </section>
               </form>
 
-              <!-- <div class="col mt-4" *ngIf="countForm.value.appear_in_court && countForm.value.request_reduction===false">
+              <div class="col mt-4" *ngIf="countForm.value.request_reduction || countForm.value.request_time_to_pay">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span>
@@ -299,7 +304,7 @@
                     </span>
                   </ng-container>
                 </app-alert>
-              </div> -->
+              </div>
 
               <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appear_in_court === false">
                 <app-alert type="warning" icon="info">
@@ -338,7 +343,7 @@
                 </app-alert>
               </div>
 
-              <app-stepper-footer (save)="onStepSave(i, countForm.value.__applyToRemainingCounts)"
+              <app-stepper-footer (save)="onStepSave(i, countForm.value.__apply_to_remaining_counts)"
                 (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
                 [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'"
                 [hasSecondaryAction]="true">
@@ -450,13 +455,13 @@
                       </div>
                     </div>
                     <div class="row">
-                      <!-- <div class="col-md-6">
+                      <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact phone number</mat-label>
-                          <input matInput formControlName="lawyerPhone" />
+                          <input matInput formControlName="lawyer_phone" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
-                      </div> -->
+                      </div>
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact email</mat-label>
@@ -471,19 +476,18 @@
                   </div>
                 </ng-container>
 
-
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreterRequired">
+                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreter_required">
                       I require a language interpreter at the hearing.
                     </mat-checkbox>
-                    <mat-error *ngIf="form.get('__interpreterRequired')?.hasError('requiredIfTrue')">
+                    <mat-error *ngIf="form.get('__interpreter_required')?.hasError('requiredIfTrue')">
                       {{ 'error.required' | translate }}
                     </mat-error>
                   </div>
                 </div>
 
-                <div class="row" *ngIf="form.get('__interpreterRequired')?.value">
+                <div class="row" *ngIf="form.get('__interpreter_required')?.value">
                   <div class="col">
                     <mat-form-field>
                       <mat-label>{{
@@ -503,14 +507,14 @@
 
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witnessPresent"
+                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witness_present"
                       (change)="onChangeWitnessPresent($event)">
                       I intend to call a witness(es).
                     </mat-checkbox>
                   </div>
                 </div>
 
-                <div class="row" *ngIf="form.get('__witnessPresent')?.value">
+                <div class="row" *ngIf="form.get('__witness_present')?.value">
                   <div class="col">
                     <mat-form-field class="pe-4">
                       <mat-label>Number of witnesses</mat-label>
@@ -543,7 +547,7 @@
                   </div>
                 </div>
 
-                <div class="col" *ngIf="form.get('__witnessPresent')?.value">
+                <div class="col" *ngIf="form.get('__witness_present')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>If you are calling a witness please keep the following information in mind:</strong><br />
@@ -564,7 +568,7 @@
                     </ng-container>
                   </app-alert>
                 </div>
-                <div class="col" *ngIf="form.get('__interpreterRequired')?.value">
+                <div class="col" *ngIf="form.get('__interpreter_required')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>The court also provides visual language interpreters (American Sign Language) and CART
@@ -573,7 +577,7 @@
                     </ng-container>
                   </app-alert>
                 </div>
-                <div class="col" *ngIf="form.get('__witnessPresent')?.value">
+                <div class="col" *ngIf="form.get('__witness_present')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing
@@ -583,16 +587,6 @@
                 </div>
               </section>
             </form>
-
-            <section *ngIf="!form.get('__isReductionRequired')?.value && !form?.get('__isCourtRequired')?.value">
-              <div class="col">
-                <app-alert type="warning" icon="warning">
-                  <ng-container #alertContent class="alert-content">
-                    Todo: information will be displayed here.
-                  </ng-container>
-                </app-alert>
-              </div>
-            </section>
 
             <app-stepper-footer (save)="onStepSave()" (back)="disputeStepper.previous()"
               [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
@@ -618,7 +612,8 @@
             </section>
 
             <div class="mb-2">
-              <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of form?.value.disputed_counts; let i = index">
+              <section class="px-4 py-2 mb-3 card-section"
+                *ngFor="let row of form?.value.disputed_counts; let i = index">
                 <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
               </section>
 

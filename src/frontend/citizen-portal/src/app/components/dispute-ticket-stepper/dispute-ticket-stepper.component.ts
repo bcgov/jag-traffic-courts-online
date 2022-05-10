@@ -46,8 +46,8 @@ export class DisputeTicketStepperComponent implements OnInit {
   public provinces = this.config.provinces;
   private MINIMUM_AGE = 18;
   public maxDateOfBirth: Date;
-  public showManualButton: boolean = true;
-  public showAddressFields: boolean = false;
+  public showManualButton: boolean = false; // temporary preset for testing
+  public showAddressFields: boolean = true; // temporary preset for testing
 
   // Additional
   public languages = this.config.languages;
@@ -67,10 +67,14 @@ export class DisputeTicketStepperComponent implements OnInit {
     address: [null, [Validators.required]],
     city: [null],
     province: [null],
+    country: [{ value: "Canada", disabled: true }],
     postal_code: [null],
     home_phone_number: [null, [FormControlValidators.phone]],
     work_phone_number: [null, [FormControlValidators.phone]],
-    email_address: [null, [Validators.required, FormControlValidators.email]],
+    email_address: [null, [Validators.required, Validators.email]],
+    birthdate: [null],
+    drivers_licence_number: [null],
+    drivers_licence_province: [null],
     disputed_counts: [],
     legal_representation: []
   }
@@ -84,7 +88,7 @@ export class DisputeTicketStepperComponent implements OnInit {
 
   private countFormSetting = {
     __skip: false,
-    __applyToRemainingCounts: false,
+    __apply_to_remaining_counts: false,
   };
 
   private additionFormFields = {
@@ -94,28 +98,28 @@ export class DisputeTicketStepperComponent implements OnInit {
     fine_reduction_reason: null,
     time_to_pay_reason: null,
 
-    __witnessPresent: false,
-    __isCourtRequired: false,
-    __isReductionRequired: false,
-    __interpreterRequired: false,
+    __witness_present: false,
+    __interpreter_required: false,
   }
 
   private additionFormValidators = [
-    FormGroupValidators.requiredIfTrue("__interpreterRequired", "interpreter_language"),
-    FormGroupValidators.requiredIfTrue("__witnessPresent", "number_of_witness"),
+    FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language"),
+    FormGroupValidators.requiredIfTrue("__witness_present", "number_of_witness"),
   ]
 
   // private legalRepresentationFields = {
   //   law_firm_name: ["null", [Validators.required]],
   //   lawyer_full_name: ["null", [Validators.required]],
-  //   lawyer_email: ["null@t.ca", [Validators.required, FormControlValidators.email]],
+  //   lawyer_email: ["null@t.ca", [Validators.required, Validators.email]],
+  //   lawyer_phone: [null, [Validators.required]],
   //   lawyer_address: ["null", [Validators.required]],
   // }
 
   private legalRepresentationFields = {
     law_firm_name: [null, [Validators.required]],
     lawyer_full_name: [null, [Validators.required]],
-    lawyer_email: [null, [Validators.required, FormControlValidators.email]],
+    lawyer_email: [null, [Validators.required, Validators.email]],
+    lawyer_phone: [null, [Validators.required]],
     lawyer_address: [null, [Validators.required]],
   }
 
@@ -213,7 +217,7 @@ export class DisputeTicketStepperComponent implements OnInit {
       if (applyToRemaining && countInx + 1 < this.countForms.length) {
         let value = this.countForms.controls[countInx].value;
         for (let i = countInx; i < this.countForms.length; i++) {
-          this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __applyToRemainingCounts: false })
+          this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
         }
       }
       this.setAdditional();
