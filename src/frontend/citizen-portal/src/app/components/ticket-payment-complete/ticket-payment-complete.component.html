@@ -19,9 +19,9 @@
 
 
       <div class="d-flex justify-content-between d-print-none">
-        <div class="conf-email text-dark" *ngIf="ticket?.disputant?.emailAddress">
+        <div class="conf-email text-dark" *ngIf="ticket?.disputant?.email_address">
           A confirmation email of the request information has been sent to: <br />
-          <strong>{{ ticket?.disputant?.emailAddress }}</strong>
+          <strong>{{ ticket?.disputant?.email_address }}</strong>
         </div>
         <div class="d-print-none">
           <a class="print-link"

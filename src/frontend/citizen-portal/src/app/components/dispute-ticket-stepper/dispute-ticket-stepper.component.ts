@@ -10,7 +10,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { Address } from "@shared/models/address.model";
-import { DisputesService, TicketDispute, ViolationTicket } from "app/api";
+import { DisputesService, NoticeOfDispute, ViolationTicket, Plea } from "app/api";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { Subscription } from "rxjs";
@@ -34,6 +34,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   public previousButtonIcon = "keyboard_arrow_left";
   public defaultLanguage: string;
   public ticketTypesEnum = ticketTypes;
+  public Plea = Plea;
 
   public form: FormGroup;
   public legalRepresentationForm: FormGroup;
@@ -60,43 +61,25 @@ export class DisputeTicketStepperComponent implements OnInit {
   // Overview
   public declared = false;
 
-  // private ticketFormFields = {
-  //   disputantSurname: ["null", [Validators.required]],
-  //   givenNames: ["null", [Validators.required]],
-  //   streetAddress: ["null", [Validators.required]],
-  //   postalCode: ["null"],
-  //   city: ["null"],
-  //   country: ["null"],
-  //   province: ["null"],
-  //   driversLicence: ["null"],
-  //   driversLicenceProvince: ["null"],
-  //   emailAddress: ["null@t.ca", [Validators.required, FormControlValidators.email]],
-  //   homePhone: [null, [FormControlValidators.phone]],
-  //   dateOfBirth: ["null", []],
-  //   ticketCounts: []
-  // }
-
   private ticketFormFields = {
-    disputantSurname: [null, [Validators.required]],
-    givenNames: [null, [Validators.required]],
-    streetAddress: [null, [Validators.required]],
-    postalCode: [null],
+    surname: [null, [Validators.required]],
+    given_names: [null, [Validators.required]],
+    address: [null, [Validators.required]],
     city: [null],
-    country: [null],
     province: [null],
-    driversLicence: [null],
-    driversLicenceProvince: [null],
-    emailAddress: [null, [Validators.required, FormControlValidators.email]],
-    homePhone: [null, [FormControlValidators.phone]],
-    dateOfBirth: [null, []],
-    ticketCounts: []
+    postal_code: [null],
+    home_phone_number: [null, [FormControlValidators.phone]],
+    work_phone_number: [null, [FormControlValidators.phone]],
+    email_address: [null, [Validators.required, FormControlValidators.email]],
+    disputed_counts: [],
+    legal_representation: []
   }
 
   private countFormFields = {
-    offenceDeclaration: null,
-    timeToPayRequest: false,
-    fineReductionRequest: false,
-    appearInCourt: null,
+    plea: null,
+    request_time_to_pay: false,
+    request_reduction: false,
+    appear_in_court: null,
   }
 
   private countFormSetting = {
@@ -105,13 +88,11 @@ export class DisputeTicketStepperComponent implements OnInit {
   };
 
   private additionFormFields = {
-    representedByLawyer: false,
-    interpreterLanguage: null,
-    numberOfWitnesses: null,
-    // requestReduction: false,
-    // requestMoreTime: false,
-    reductionReason: null,
-    moreTimeReason: null,
+    represented_by_lawyer: false,
+    interpreter_language: null,
+    number_of_witness: null,
+    fine_reduction_reason: null,
+    time_to_pay_reason: null,
 
     __witnessPresent: false,
     __isCourtRequired: false,
@@ -120,24 +101,22 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   private additionFormValidators = [
-    FormGroupValidators.requiredIfTrue("__interpreterRequired", "interpreterLanguage"),
-    FormGroupValidators.requiredIfTrue("__witnessPresent", "numberOfWitnesses"),
+    FormGroupValidators.requiredIfTrue("__interpreterRequired", "interpreter_language"),
+    FormGroupValidators.requiredIfTrue("__witnessPresent", "number_of_witness"),
   ]
 
   // private legalRepresentationFields = {
-  //   lawFirmName: ["null", [Validators.required]],
-  //   lawyerName: ["null", [Validators.required]],
-  //   lawyerEmail: ["null@t.ca", [Validators.required, FormControlValidators.email]],
-  //   lawyerPhone: ["null", [Validators.required]],
-  //   lawyerAddress: ["null", [Validators.required]],
+  //   law_firm_name: ["null", [Validators.required]],
+  //   lawyer_full_name: ["null", [Validators.required]],
+  //   lawyer_email: ["null@t.ca", [Validators.required, FormControlValidators.email]],
+  //   lawyer_address: ["null", [Validators.required]],
   // }
 
   private legalRepresentationFields = {
-    lawFirmName: [null, [Validators.required]],
-    lawyerName: [null, [Validators.required]],
-    lawyerEmail: [null, [Validators.required, FormControlValidators.email]],
-    lawyerPhone: [null, [Validators.required]],
-    lawyerAddress: [null, [Validators.required]],
+    law_firm_name: [null, [Validators.required]],
+    lawyer_full_name: [null, [Validators.required]],
+    lawyer_email: [null, [Validators.required, FormControlValidators.email]],
+    lawyer_address: [null, [Validators.required]],
   }
 
   constructor(
@@ -181,7 +160,7 @@ export class DisputeTicketStepperComponent implements OnInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
       ...this.additionFormFields,
-      ticketCounts: this.countForms
+      disputed_counts: this.countForms
     }, {
       validators: [...this.additionFormValidators]
     });
@@ -203,11 +182,10 @@ export class DisputeTicketStepperComponent implements OnInit {
         this.isShowCheckbox[field] = [];
       }
     });
-    this.isShowCheckbox.requestCounts =
-      [...this.isShowCheckbox.timeToPayRequest, ...this.isShowCheckbox.fineReductionRequest]
+    this.isShowCheckbox.request_counts =
+      [...this.isShowCheckbox.request_time_to_pay, ...this.isShowCheckbox.request_reduction]
         .filter((value, index, self) => { return self.indexOf(value) === index; }).sort();
-    this.isShowCheckbox.Plea = this.countForms.value.filter(i => i.offenceDeclaration === "Plea").map(i => i.count);
-    this.isShowCheckbox.NotPlea = this.countForms.value.filter(i => i.offenceDeclaration === "NotPlea").map(i => i.count);
+    this.isShowCheckbox.not_guilty = this.countForms.value.filter(i => i.plea === Plea.NotGuilty).map(i => i.count);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -219,7 +197,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   public onAttendHearingChange(form: FormGroup, event): void {
-    form.patchValue({ ...this.countFormFields, appearInCourt: event.value, __skip: false });
+    form.patchValue({ ...this.countFormFields, appear_in_court: event.value, __skip: false });
   }
 
   public onStepSave(countInx?, applyToRemaining?): void {
@@ -269,10 +247,10 @@ export class DisputeTicketStepperComponent implements OnInit {
 
   public onChangeWitnessPresent(event: MatCheckboxChange) {
     if (event.checked) {
-      this.form.controls.numberOfWitnesses.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
+      this.form.controls.number_of_witness.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
-      this.form.controls.numberOfWitnesses.clearValidators();
-      this.form.controls.numberOfWitnesses.updateValueAndValidity();
+      this.form.controls.number_of_witness.clearValidators();
+      this.form.controls.number_of_witness.updateValueAndValidity();
     }
   }
 
@@ -292,12 +270,10 @@ export class DisputeTicketStepperComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          this.busy = this.disputesService.apiDisputesCreatePost(<TicketDispute>{
-            ticketNumber: this.ticket.ticket_number,
-            violationDate: this.ticket.issued_date,
-            serviceDate: this.ticket.issued_date,
-            dateOfBirth: this.ticket.issued_date,
-            ...this.form.value
+          this.busy = this.disputesService.apiDisputesCreatePost(<NoticeOfDispute>{
+            ...this.ticket,
+            ...this.form.value,
+            legal_representation: this.legalRepresentationForm.value
           }).subscribe(res => {
             let test;
             // this.router.navigate([

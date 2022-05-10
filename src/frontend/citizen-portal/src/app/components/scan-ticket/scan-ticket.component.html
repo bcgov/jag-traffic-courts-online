@@ -90,13 +90,13 @@
                       style="color: red;">do not match </span></strong>
                   the scanned ticket details, please check the box below and describe the difference</p>
                 <p class="text-dark"><strong>Example: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
-                <mat-checkbox color="primary" class="w-100" (click)='toggle()'> Yes, there are differences between the
-                  information on the ticket
-                  and the information scanned above.
+                <mat-checkbox color="primary" class="w-100" formControlName="citizen_detected_ocr_issues"
+                  [value]="true">
+                  Yes, there are differences between the information on the ticket and the information scanned above.
                 </mat-checkbox> <br>
-                <mat-form-field [hidden]="isHidden">
+                <mat-form-field *ngIf="form.get('citizen_detected_ocr_issues')?.value">
                   <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
-                  <textarea class="text-dark" matInput #input value="" rows="4">
+                  <textarea class="text-dark" matInput #input formControlName="citizen_ocr_issues_description" rows="4">
                   </textarea>
                 </mat-form-field>
               </div>

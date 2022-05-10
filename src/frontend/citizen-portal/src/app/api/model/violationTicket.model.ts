@@ -160,5 +160,9 @@ export interface ViolationTicket {
      * The organization or detatchment location. For example, Delta Police.
      */
     organization_location?: string | null;
+    /**
+     * A unique generated ID set by the system that is used as Redis key for retrieving the ViolationTicket from Redis cache.
+     */
+    ticketId?: string | null;
 }
 
