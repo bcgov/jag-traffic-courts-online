@@ -1,8 +1,8 @@
-﻿using MassTransit;
+using MassTransit;
 using MediatR;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Model;
-using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
@@ -42,17 +42,24 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
         public class CreateDisputeHandler : IRequestHandler<Request, Response>
         {
             private readonly ILogger _logger;
-            public readonly IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> _submitDisputeRequestClient;
+            public readonly IRequestClient<SubmitNoticeOfDispute> _submitDisputeRequestClient;
             public readonly IRequestClient<SendEmail> _sendEmailRequestClient;
             private readonly IRedisCacheService _redisCacheService;
+            private readonly IFilePersistenceService _filePersistenceService;
             private readonly IMapper _mapper;
 
-            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> submitDisputeRequestClient, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService, IMapper mapper)
+            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, 
+                IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> submitDisputeRequestClient, 
+                IRequestClient<SendEmail> sendEmailRequestClient, 
+                IRedisCacheService redisCacheService,
+                IFilePersistenceService filePersistenceService,
+                IMapper mapper)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _submitDisputeRequestClient = submitDisputeRequestClient ?? throw new ArgumentNullException(nameof(submitDisputeRequestClient));
                 _sendEmailRequestClient = sendEmailRequestClient ?? throw new ArgumentNullException(nameof(sendEmailRequestClient));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
+                _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             }
 
@@ -63,6 +70,8 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 string? ocrViolationTicketJson = null;
                 OcrViolationTicket? violationTicket = null;
                 Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
+                MemoryStream? ticketImageStream = null;
+                _logger.LogError("Handle creation of dispute.");
 
                 // Check if the request contains ticket id and it's a valid format guid
                 if (ticketId != null && Guid.TryParseExact(ticketId, "n", out _))
@@ -74,8 +83,22 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     // and assign null or populate the object in SubmitNoticeOfDispute message. However, a better check/method can be implemented
                     if (violationTicket != null && violationTicket.ImageFilename != null)
                     {
+                        // Since the ImageFilename exists, it should be in the redis db.
+                        // grab it and save to the file persistence service.
+                        ticketImageStream = await _redisCacheService.GetFileRecordAsync<MemoryStream>(violationTicket.ImageFilename);
+
+                        if (ticketImageStream is not null)
+                        {
+                            _logger.LogError("Save image to the file persistence.");
+                            var filename = await _filePersistenceService.SaveFileAsync(ticketImageStream, cancellationToken);
+
+                            // re-set the imagefilename, as it may have potentially changed.
+                            violationTicket.ImageFilename = filename;
+                        }
+
                         // Serialize OCR violation ticket to a JSON string
                         ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
+
                     }
                     else
                     {
@@ -91,21 +114,22 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
                 }
                 submitNoticeOfDispute.CitizenSubmittedDate = DateTime.UtcNow;
-                
-                var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(submitNoticeOfDispute);
 
                 // Send email message to the submitter's entered email
                 var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
                 if (template is not null)
                 {
-                    _sendEmailRequestClient.Create(new SendEmail()
+                    var emailMessage = new SendEmail()
                     {
                         From = template.Sender,
                         To = { createDisputeRequest.EmailAddress },
-                        Subject = template.SubjectTemplate,
+                        Subject = template.SubjectTemplate.Replace("<ticketid>", createDisputeRequest.TicketNumber),
                         PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", createDisputeRequest.TicketNumber)
-                    }, cancellationToken);
+                    };
+                    _sendEmailRequestClient.Create(emailMessage, cancellationToken);
                 }
+                
+                var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(submitNoticeOfDispute);
 
                 return new Response(response.Message.DisputeId);
             }

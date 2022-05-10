@@ -19,5 +19,20 @@
         /// <param name="key"></param>
         /// <returns></returns>
         Task<T?> GetRecordAsync<T>(string key);
+        /// <summary>
+        /// Set method that saves or writes an image file stream to Redis Cache.  The key is the image file name, which is returned.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="expireTime"></param>
+        /// <returns>Key of the saved file</returns>
+        Task<string> SetFileRecordAsync(MemoryStream data, TimeSpan? expireTime);
+
+        /// <summary>
+        /// Generic Get method that returns deserialized json data for the provided key from Redis Cache.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task<MemoryStream> GetFileRecordAsync<T>(string key);
     }
 }

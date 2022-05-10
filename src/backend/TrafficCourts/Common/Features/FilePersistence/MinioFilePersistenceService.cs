@@ -119,4 +119,26 @@ public class MinioFilePersistenceService : FilePersistenceService
             throw new MinioFilePersistenceException("Failed up upload file", exception);
         }
     }
+    public override async Task DeleteFileAsync(string filename, CancellationToken cancellationToken)
+    {
+        try
+        {
+            RemoveObjectArgs removeObjectArgs = new RemoveObjectArgs()
+                    .WithBucket(_bucketName)
+                    .WithObject(filename);
+            await _objectOperations.RemoveObjectAsync(removeObjectArgs, cancellationToken);
+        }
+        catch (BucketNotFoundException exception)
+        {
+            using var scope = _logger.BeginScope(new Dictionary<string, object> { { "BucketName", _bucketName } });
+            _logger.LogWarning("Object Store bucket not found");
+
+            throw new FileNotFoundException("File not found", filename, exception);
+        }
+        catch (MinioException exception)
+        {
+            _logger.LogError(exception, "Failed to remove file");
+            throw new MinioFilePersistenceException("Failed to remove file", exception);
+        }
+    }
 }

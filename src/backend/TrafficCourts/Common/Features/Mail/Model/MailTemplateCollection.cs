@@ -8,6 +8,9 @@ namespace TrafficCourts.Common.Features.Mail.Model
 {
     public class MailTemplateCollection
     {
+        /// <summary>
+        /// Default template email messages, for notifications on dispute state changes
+        /// </summary>
         public static readonly List<MailTemplate> DefaultMailTemplateCollection = new List<MailTemplate>
         {
         new MailTemplate()
@@ -45,10 +48,30 @@ namespace TrafficCourts.Common.Features.Mail.Model
 
     public class MailTemplate
     {
+        /// <summary>
+        /// The template name of the message
+        /// </summary>
         public string TemplateName { get; set; } = String.Empty;
+
+        /// <summary>
+        /// The sender(from) of the e-mail message
+        /// </summary>
         public string? Sender { get; set; }
+        
+        /// <summary>
+        /// The subject text in the notification message
+        /// </summary>
         public string SubjectTemplate { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Plain content text of the email message.
+        /// The code using the message, should know what keys to replace.
+        /// </summary>
         public string? PlainContentTemplate { get; set; }
+
+        /// <summary>
+        /// HTML content text of the email message.
+        /// </summary>
         public string? HtmlContentTemplate { get; set; }
     }
 }
