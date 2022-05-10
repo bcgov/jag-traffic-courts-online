@@ -70,9 +70,7 @@ public static class AnalyseHandler
             AnalyzeResult result;
             try
             {
-                _logger.LogError("Analyzing the image");
                 result = await _formRegognizerService.AnalyzeImageAsync(stream, cancellationToken);
-                _logger.LogError("Completed analysis");
             }
             catch (Exception)
             {

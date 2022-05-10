@@ -71,7 +71,6 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 OcrViolationTicket? violationTicket = null;
                 Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
                 MemoryStream? ticketImageStream = null;
-                _logger.LogError("Handle creation of dispute.");
 
                 // Check if the request contains ticket id and it's a valid format guid
                 if (ticketId != null && Guid.TryParseExact(ticketId, "n", out _))
@@ -89,7 +88,6 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                         if (ticketImageStream is not null)
                         {
-                            _logger.LogError("Save image to the file persistence.");
                             var filename = await _filePersistenceService.SaveFileAsync(ticketImageStream, cancellationToken);
 
                             // re-set the imagefilename, as it may have potentially changed.

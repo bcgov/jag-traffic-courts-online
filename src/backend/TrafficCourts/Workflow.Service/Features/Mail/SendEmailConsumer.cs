@@ -21,6 +21,7 @@ namespace TrafficCourts.Workflow.Service.Features.Mail
 
         public async Task Consume(ConsumeContext<SendEmail> context)
         {
+            _logger.LogError("Consume send email message");
             if (context.RequestId != null)
             {
                 _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
