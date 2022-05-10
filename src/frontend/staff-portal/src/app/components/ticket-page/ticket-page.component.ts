@@ -251,7 +251,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
         this.newDispute.additionalProperties = d.additionalProperties;
         this.newDispute.provincialCourtHearingLocation = d.provincialCourtHearingLocation;
         this.disputes = this.disputes.concat(this.newDispute);
-      })
+      });
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
