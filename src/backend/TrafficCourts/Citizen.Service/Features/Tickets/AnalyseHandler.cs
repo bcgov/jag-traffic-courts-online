@@ -62,10 +62,10 @@ public static class AnalyseHandler
 
             var stream = GetStreamForFile(request.Image);
 
-            // Save the image to redis cache, which will expire after 1 day.
-            var filename = await _redisCacheService.SetFileRecordAsync(stream, TimeSpan.FromDays(1));
+            // FIXME: JIRA-1295 - File storage leak - save should only happen iff there are no global validation errors
+            //    Either move this call after the Azure API call or delete the saved image object if there are validation errors or an Azure exception is thrown.
+            var filename = await _filePersistenceService.SaveFileAsync(stream, cancellationToken);
             stream.Position = 0L; // reset file position
-            _logger.LogDebug("Saved to redis cache {FileName}", filename);
 
             AnalyzeResult result;
             try
@@ -74,10 +74,8 @@ public static class AnalyseHandler
             }
             catch (Exception)
             {
-                // redis will hold the image for 1 day, afterwards, it is removed automatically,
-                // so no need to delete from the system.
-
-                _logger.LogError("Exception thrown during analysis");
+                // FIXME: JIRA-1295 - Add missing operation to  
+                // _filePersistenceService.DeleteFileAsync(filename); 
                 throw;
             }
             // Create a custom mapping of DocumentFields to a structured object for validation and serialization.
@@ -92,6 +90,8 @@ public static class AnalyseHandler
             string ticketId = Guid.NewGuid().ToString("n");
 
             // Save the violation ticket OCR data into Redis using the generated guid and set it to expire after 1 day from Redis
+            // FIXME: JIRA-1295 - File storage leak: The image is saved in object storage and the filename is recored on the violationTicket. 
+            //        If redis automatically removes a ticket after 1 day, is the associated image that is stored in storage also removed? Or is it left there indefinitely? 
             await _redisCacheService.SetRecordAsync<OcrViolationTicket>(ticketId, violationTicket, TimeSpan.FromDays(1));
 
             // Change the image filename to use Violation Ticket Key (guid) in the result
@@ -103,7 +103,7 @@ public static class AnalyseHandler
 
         private MemoryStream GetStreamForFile(IFormFile formFile)
         {
-            MemoryStream memoryStream = _memoryStreamManager.GetStream();
+            MemoryStream memoryStream = _memoryStreamManager.GetStream(); ;
 
             using var fileStream = formFile.OpenReadStream();
             fileStream.CopyTo(memoryStream);

@@ -1,4 +1,4 @@
-using TrafficCourts.Common.Features.Mail.Model;
+﻿using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 
@@ -90,7 +90,7 @@ public class Mapper
 
             sendEmail.From = template.Sender;
             sendEmail.To.Add(dispute.EmailAddress);
-            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.Subject = template.SubjectTemplate;
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             
         }

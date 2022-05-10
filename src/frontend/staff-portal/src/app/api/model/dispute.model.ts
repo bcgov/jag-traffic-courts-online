@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 import { DisputeStatus } from './disputeStatus.model';
-import { TicketCount } from './ticketCount.model';
+import { DisputedCount } from './disputedCount.model';
+import { ViolationTicket } from './violationTicket.model';
+import { LegalRepresentation } from './legalRepresentation.model';
 
 
 export interface Dispute { 
@@ -20,27 +22,31 @@ export interface Dispute {
     id?: string;
     status?: DisputeStatus;
     ticketNumber?: string | null;
-    courtLocation?: string | null;
-    violationDate?: string;
-    disputantSurname?: string | null;
+    provincialCourtHearingLocation?: string | null;
+    issuedDate?: string | null;
+    citizenSubmittedDate?: string | null;
+    surname?: string | null;
     givenNames?: string | null;
-    streetAddress?: string | null;
+    address?: string | null;
+    city?: string | null;
     province?: string | null;
     postalCode?: string | null;
-    homePhone?: string | null;
+    homePhoneNumber?: string | null;
+    workPhoneNumber?: string | null;
     emailAddress?: string | null;
-    driversLicense?: string | null;
-    driversLicenseProvince?: string | null;
-    workPhone?: string | null;
-    dateOfBirth?: string;
-    enforcementOrganization?: string | null;
-    serviceDate?: string;
-    ticketCounts?: Array<TicketCount> | null;
-    lawyerRepresentation?: boolean;
+    filingDate?: string | null;
+    disputedCounts?: Array<DisputedCount> | null;
+    representedByLawyer?: boolean;
+    legalRepresentation?: LegalRepresentation;
     interpreterLanguage?: string | null;
-    witnessIntent?: boolean;
-    ocrViolationTicket?: string | null;
+    numberOfWitness?: number | null;
+    fineReductionReason?: string | null;
+    timeToPayReason?: string | null;
     rejectedReason?: string | null;
+    citizenDetectedOcrIssues?: boolean;
+    systemDetectedOcrIssues?: boolean;
+    jjAssigned?: string | null;
+    violationTicket?: ViolationTicket;
     additionalProperties?: { [key: string]: any; } | null;
 }
 
