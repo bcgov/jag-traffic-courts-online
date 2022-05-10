@@ -409,6 +409,51 @@
               <strong>Edit Fields</strong>
   
             </button>
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Postal code</mat-label>
+                <input matInput [readonly]="disableForm" mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
+                  formControlName="postalCode" [showMaskTyped]="true" />
+                <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Birthdate</mat-label>
+                <input matInput [readonly]="disableForm" [max]="maxDateOfBirth" [matDatepicker]="picker1"
+                  formControlName="birthdate" readonly (click)="picker1.open()" />
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1 [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
+                <!-- <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
+                      "error.required" | translate
+                      }}</mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Phone number</mat-label>
+                <input matInput [readonly]="disableForm" formControlName="phoneNumber" mask="(000) 000-0000"
+                  [showMaskTyped]="true" />
+                <!-- <mat-error *ngIf="phoneNumber.hasError('required')">{{
+                      "error.required" | translate
+                      }}</mat-error>
+                    <mat-error *ngIf="phoneNumber.hasError('phone')">Must be a valid phone number</mat-error> -->
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Email address</mat-label>
+                <input matInput [readonly]="disableForm" formControlName="emailAddress" autocomplete="off" />
+                <!-- <mat-error *ngIf="emailAddress.hasError('required')">{{
+                      "error.required" | translate
+                      }}</mat-error>
+                    <mat-error *ngIf="emailAddress.hasError('email')">{{
+                      "error.email_address" | translate -->
+                <!-- }}</mat-error> -->
+              </mat-form-field>
+            </div>
           </div>
         </div>
       </mat-expansion-panel>

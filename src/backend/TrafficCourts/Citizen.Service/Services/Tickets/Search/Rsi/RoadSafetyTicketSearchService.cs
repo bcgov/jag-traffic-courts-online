@@ -15,7 +15,7 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
         }
 
 
-        public async Task<IEnumerable<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
+        public async Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
             using var activity = Diagnostics.Source.StartActivity("RSI Ticket Search");
 
@@ -54,16 +54,16 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Rsi
                 }
 
                 activity?.SetStatus(System.Diagnostics.ActivityStatusCode.Error);
-                return Enumerable.Empty<Invoice>();
+                return Array.Empty<Invoice>();
             }
 
             if (response is not null && response.Items is not null)
             {
                 IEnumerable<Invoice> invoices = await GetInvoicesAsync(response.Items);
-                return invoices;
+                return invoices.ToList();
             }
 
-            return Enumerable.Empty<Invoice>();
+            return Array.Empty<Invoice>();
         }
 
         private async Task<IEnumerable<Invoice>> GetInvoicesAsync(IEnumerable<Item> items)

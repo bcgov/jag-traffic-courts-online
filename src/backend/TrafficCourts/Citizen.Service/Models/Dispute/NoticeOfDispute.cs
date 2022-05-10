@@ -1,8 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using TrafficCourts.Citizen.Service.Models.Tickets;
-using TrafficCourts.Common.Converters;
 
 namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
@@ -41,6 +39,27 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// </summary>
         [JsonPropertyName("given_names")]
         public string? GivenNames { get; set; }
+
+        /// <summary>
+        /// The disputant's birthdate.
+        /// </summary>
+        [JsonPropertyName("birthdate")]
+        [SwaggerSchema(Format = "date")]
+        public DateTime? Birthdate { get; set; }
+
+        /// <summary>
+        /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
+        /// </summary>
+        [JsonPropertyName("drivers_licence_number")]
+        [MaxLength(20)]
+        public string? DriversLicenceNumber { get; set; }
+
+        /// <summary>
+        /// The province or state the drivers licence was issued by.
+        /// </summary>
+        [JsonPropertyName("drivers_licence_province")]
+        [MaxLength(30)]
+        public string? DriversLicenceProvince { get; set; }
 
         /// <summary>
         /// The mailing address of the disputant.
@@ -144,83 +163,6 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// </summary>
         [JsonPropertyName("ticket_id")]
         public string? TicketId { get; set; }
-    }
-
-    public class DisputedCount
-    {
-        /// <summary>
-        /// Represents the dispuant plea on count.
-        /// </summary>
-        [JsonPropertyName("plea")]
-        public Plea Plea { get; set; }
-
-        /// <summary>
-        /// The count number. Must be unique within an individual dispute.
-        /// </summary>
-        [JsonPropertyName("count")]
-        [Range(1, 3)]
-        public int Count { get; set; }
-
-        /// <summary>
-        /// The disputant is requesting time to pay the ticketed amount.
-        /// </summary>
-        [JsonPropertyName("request_time_to_pay")]
-        public bool RequestTimeToPay { get; set; }
-
-        /// <summary>
-        /// The disputant is requesting a reduction of the ticketed amount.
-        /// </summary>
-        [JsonPropertyName("request_reduction")]
-        public bool RequestReduction { get; set; }
-
-        /// <summary>
-        /// Does the want to appear in court?
-        /// </summary>
-        [JsonPropertyName("appear_in_court")]
-        public bool AppearInCourt { get; set; }
-    }
-
-    public class LegalRepresentation
-    {
-        /// <summary>
-        /// Name of the law firm that will represent the disputant at the hearing.
-        /// </summary>
-        [JsonPropertyName("law_firm_name")]
-        public string LawFirmName { get; set; } = String.Empty;
-
-        /// <summary>
-        /// Full name of the lawyer who will represent the disputant at the hearing.
-        /// </summary>
-        [JsonPropertyName("lawyer_full_name")]
-        public string LawyerFullName { get; set; } = String.Empty;
-
-        /// <summary>
-        /// Email address of the lawyer who will represent the disputant at the hearing.
-        /// </summary>
-        [JsonPropertyName("lawyer_email")]
-        public string LawyerEmail { get; set; } = String.Empty;
-
-        /// <summary>
-        /// Address of the lawyer who will represent the disputant at the hearing.
-        /// </summary>
-        [JsonPropertyName("lawyer_address")]
-        public string LawyerAddress { get; set; } = String.Empty;
-    }
-
-    /// <summary>
-    /// An enumeration of Plea Type on a DisputedCount record.
-    /// </summary>
-    public enum Plea
-    {
-        /// <summary>
-        /// If the dispuant is pleads guilty, plea will always be Guilty. The dispuant has choice to attend court or not.
-        /// </summary>
-        Guilty,
-
-        /// <summary>
-        /// If the dispuant is pleads not guilty, the dispuant will have to attend court.
-        /// </summary>
-        NotGuilty
     }
 
 }

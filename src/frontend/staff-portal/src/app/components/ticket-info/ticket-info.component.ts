@@ -53,10 +53,14 @@ export class TicketInfoComponent implements OnInit {
   public ngOnInit() {
     this.form = this.formBuilder.group({
       violationTicketNumber: [null, [Validators.required]],
+      phoneNumber: [null],
+      emailAddress: [null],
       violationDate: [null, [Validators.required]],
       violationTime: [null, [Validators.required]],
       surname: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
+      mailingAddress: [null],
+      country: [null],
       birthdate: [null], // Optional
       gender: [null, [Validators.required]],
       address: [null, [Validators.required]],
@@ -94,7 +98,7 @@ export class TicketInfoComponent implements OnInit {
       _chargeCount: [1],
       _amountOwing: [null],
     });
-console.log(">",this.form.get('violationTicketNumber'))
+console.log(">",this.form.get('violationTicketNumber'));
     this.form.patchValue({
       violationTicketNumber: "",
       violationDate: "",
@@ -109,7 +113,7 @@ console.log(">",this.form.get('violationTicketNumber'))
       postalCode: "",
       driverLicenseNumber: "",
       driverLicenseProvince: "",
-    })
+    });
   }
 
   public onBack() {
@@ -139,39 +143,5 @@ console.log(">",this.form.get('violationTicketNumber'))
     return this.form.get('violationDate') as FormControl;
   }
 
-  public get birthdate(): FormControl {
-    return this.form.get('birthdate') as FormControl;
-  }
-
-  public get surname(): FormControl {
-    return this.form.get('surname') as FormControl;
-  }
-
-  public get _chargeCount(): FormControl {
-    return this.form.get('_chargeCount') as FormControl;
-  }
-
-  public get count1Charge(): FormControl {
-    return this.form.get('count1Charge') as FormControl;
-  }
-
-  public get count1FineAmount(): FormControl {
-    return this.form.get('count1FineAmount') as FormControl;
-  }
-
-  public get count2Charge(): FormControl {
-    return this.form.get('count2Charge') as FormControl;
-  }
-
-  public get count2FineAmount(): FormControl {
-    return this.form.get('count2FineAmount') as FormControl;
-  }
-
-  public get count3Charge(): FormControl {
-    return this.form.get('count3Charge') as FormControl;
-  }
-
-  public get count3FineAmount(): FormControl {
-    return this.form.get('count3FineAmount') as FormControl;
-  }
+  
 }
