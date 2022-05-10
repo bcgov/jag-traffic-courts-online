@@ -20,7 +20,9 @@ export class ContactInfoComponent implements OnInit {
   
     public maxDateOfBirth: Date;
     public form: FormGroup;
-  
+    public collapseObj: any = {
+       contactInformation: true
+    }
     private MINIMUM_AGE = 18;
   
     /**
@@ -86,6 +88,10 @@ export class ContactInfoComponent implements OnInit {
   
     public onBack() {
       this.backTicketList.emit();
+    }
+
+    public handleCollapse(name: string) {
+      this.collapseObj[name]= !this.collapseObj[name]
     }
   
     public onSubmit(): void {

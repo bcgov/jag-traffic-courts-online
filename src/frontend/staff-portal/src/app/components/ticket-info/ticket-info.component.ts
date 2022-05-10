@@ -32,7 +32,9 @@ export class TicketInfoComponent implements OnInit {
    public showManualButton: boolean;
    public showAddressFields: boolean;
    public disableForm:boolean = true 
-
+   public collapseObj: any = {
+    ticketInformation: true
+  }
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
@@ -121,7 +123,10 @@ console.log(">",this.form.get('violationTicketNumber'));
   public onSubmit(): void {
   }
 
-
+  public handleCollapse(name: string) {
+    this.collapseObj[name]= !this.collapseObj[name]
+  }
+  
   public showManualAddress(): void {
     this.showAddressFields = true;
   }
