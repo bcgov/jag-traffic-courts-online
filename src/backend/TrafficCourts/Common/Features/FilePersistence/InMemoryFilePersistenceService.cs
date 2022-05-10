@@ -49,4 +49,10 @@ public class InMemoryFilePersistenceService : FilePersistenceService
 
         return filename;
     }
+
+    public override Task DeleteFileAsync(string filename, CancellationToken cancellationToken)
+    {
+        _cache.Remove(filename);
+        return Task.CompletedTask;
+    }
 }

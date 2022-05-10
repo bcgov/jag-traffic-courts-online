@@ -9,11 +9,7 @@ git_push.sh
 index.ts
 model/dispute.model.ts
 model/disputeStatus.model.ts
-model/disputedCount.model.ts
-model/disputedCountPlea.model.ts
-model/legalRepresentation.model.ts
 model/models.ts
 model/problemDetails.model.ts
-model/violationTicket.model.ts
-model/violationTicketCount.model.ts
+model/ticketCount.model.ts
 variables.ts

@@ -323,10 +323,10 @@
             <div class="col-md-6">
               <mat-form-field class="w-100">
                 <mat-label>Birthdate</mat-label>
-                <input matInput [readonly]="disableForm" [max]="maxDateOfBirth" [matDatepicker]="picker1"
-                  formControlName="birthdate" readonly (click)="picker1.open()" />
-                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                <mat-datepicker #picker1 [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
+                <input matInput [readonly]="disableForm" [max]="maxDateOfBirth" [matDatepicker]="picker"
+                  formControlName="birthdate" readonly (click)="picker.open()" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
                 <!-- <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
                       "error.required" | translate
                       }}</mat-error> -->

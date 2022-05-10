@@ -1,9 +1,6 @@
 ﻿using FlatFiles;
 using FlatFiles.TypeMapping;
-using NodaTime;
-using System.Globalization;
 using TrafficCourts.Citizen.Service.Services.Tickets.Search.Common;
-using TrafficCourts.Common;
 
 namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
 {
@@ -11,26 +8,18 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
     {
         private readonly IMockDataProvider _mockDataProvider;
         private readonly ILogger<MockTicketSearchService> _logger;
-        private readonly IClock _clock;
 
-        public MockTicketSearchService(IMockDataProvider mockDataProvider, ILogger<MockTicketSearchService> logger, IClock clock)
+        public MockTicketSearchService(IMockDataProvider mockDataProvider, ILogger<MockTicketSearchService> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
             _mockDataProvider = mockDataProvider ?? throw new ArgumentNullException(nameof(mockDataProvider));
         }
 
-        public Task<IList<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
+        public Task<IEnumerable<Invoice>> SearchAsync(string ticketNumber, TimeOnly issuedTime, CancellationToken cancellationToken)
         {
             using var activity = Diagnostics.Source.StartActivity("Mock Ticket Search");
 
-            IList<Invoice> invoices = Array.Empty<Invoice>();
-
-            IList<Invoice> database = GetMockData();
-            if (database.Count == 0)
-            {
-                return Task.FromResult(invoices);
-            }
+            IEnumerable<Invoice> database = GetMockData();
 
             // find all the records where the invoice number starts with ticket number, and ends with a valid count(1..3)
             Func<Invoice, bool> predicate = record =>
@@ -39,64 +28,21 @@ namespace TrafficCourts.Citizen.Service.Services.Tickets.Search.Mock
                 record.InvoiceNumber.Length - 1 == ticketNumber.Length &&
                 (record.InvoiceNumber[^1] == '1' || record.InvoiceNumber[^1] == '2' || record.InvoiceNumber[^1] == '3');
 
-            invoices = database
+            IEnumerable<Invoice> invoices = database
                 .Where(predicate)
-                .OrderBy(_ => _.InvoiceNumber)
-                .ToList();
-
-            AdjustTicketDate(database, invoices);
+                .OrderBy(_ => _.InvoiceNumber);
 
             return Task.FromResult(invoices);
         }
 
-        private void AdjustTicketDate(IList<Invoice> database, IList<Invoice> invoices)
-        {
-            if (!TryParse(database[0].ViolationDateTime!, out DateTime baseViolationDateTime))
-            {
-                return;
-            }
-
-            // On May 9th, the first ticket date was May 8th. We want
-            // the first ticket to be on the previous date based on today's
-            // date
-
-            baseViolationDateTime = baseViolationDateTime.Date.AddDays(1);  // May 8 -> May 9
-            var today = _clock.GetCurrentPacificTime().DateTime.Date;       // May 9
-
-            var daysToAdjust = (today - baseViolationDateTime).Days;        // this will be >= 0, bring dates forward
-
-            foreach (var invoice in invoices)
-            {
-                AddDays(invoice, daysToAdjust);
-            }
-        }
-
-        private const string ViolationDateTimeFormat = "yyyy-MM-ddTHH:mm";
-        private const string ViolationDateFormat = "yyyy-MM-dd";
-
-        private bool TryParse(string value, out DateTime result)
-        {
-            return DateTime.TryParseExact(value, ViolationDateTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out result);
-        }
-
-        private void AddDays(Invoice invoice, int days)
-        {
-            if (TryParse(invoice.ViolationDateTime!, out DateTime violationDateTime))
-            {
-                DateTime datetime = violationDateTime.AddDays(days);
-                invoice.ViolationDateTime = datetime.ToString(ViolationDateTimeFormat);
-                invoice.ViolationDate = datetime.ToString(ViolationDateFormat);
-            }
-        }
-
-        private IList<Invoice> GetMockData()
+        private IEnumerable<Invoice> GetMockData()
         {
             IDelimitedTypeMapper<Invoice> mapper = GetTypeMapper();
 
             using Stream? stream = _mockDataProvider.GetDataStream();
             if (stream is null)
             {
-                return Array.Empty<Invoice>();
+                return Enumerable.Empty<Invoice>();
             }
 
             using var reader = new StreamReader(stream);

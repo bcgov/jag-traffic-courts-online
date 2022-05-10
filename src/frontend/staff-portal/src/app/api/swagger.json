@@ -6,7 +6,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/dispute/disputes": {
+    "/api/Dispute/disputes": {
       "get": {
         "tags": [
           "Dispute"
@@ -14,7 +14,7 @@
         "summary": "Returns all Disputes from the Oracle Data API.",
         "responses": {
           "200": {
-            "description": "The Disputes were found.",
+            "description": "Success",
             "content": {
               "text/plain": {
                 "schema": {
@@ -43,18 +43,12 @@
             }
           },
           "500": {
-            "description": "There was a server error that prevented the search from completing successfully or no data found."
-          },
-          "401": {
-            "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
+            "description": "Server Error"
           }
         }
       }
     },
-    "/api/dispute/{disputeId}": {
+    "/api/Dispute/{disputeId}": {
       "get": {
         "tags": [
           "Dispute"
@@ -114,7 +108,7 @@
             }
           },
           "404": {
-            "description": "Not Found",
+            "description": "The Dispute was not found.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -134,13 +128,7 @@
             }
           },
           "500": {
-            "description": "There was a server error that prevented the search from completing successfully or no data found."
-          },
-          "401": {
-            "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
+            "description": "There was a server error that prevented the search from completing successfully."
           }
         }
       },
@@ -244,17 +232,11 @@
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
-          },
-          "401": {
-            "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
     },
-    "/api/dispute/{disputeId}/reject": {
+    "/api/Dispute/{disputeId}/reject": {
       "put": {
         "tags": [
           "Dispute"
@@ -303,12 +285,6 @@
           "400": {
             "description": "The request was not well formed. Check the parameters."
           },
-          "401": {
-            "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
-          },
           "404": {
             "description": "Dispute record not found. Update failed."
           },
@@ -321,7 +297,7 @@
         }
       }
     },
-    "/api/dispute/{disputeId}/cancel": {
+    "/api/Dispute/{disputeId}/cancel": {
       "put": {
         "tags": [
           "Dispute"
@@ -405,17 +381,11 @@
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
-          },
-          "401": {
-            "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
     },
-    "/api/dispute/{disputeId}/submit": {
+    "/api/Dispute/{disputeId}/submit": {
       "put": {
         "tags": [
           "Dispute"
@@ -439,46 +409,6 @@
           },
           "400": {
             "description": "The request was not well formed. Check the parameters.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -561,21 +491,15 @@
             "type": "string",
             "nullable": true
           },
-          "provincialCourtHearingLocation": {
+          "courtLocation": {
             "type": "string",
             "nullable": true
           },
-          "issuedDate": {
+          "violationDate": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
-          "citizenSubmittedDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "surname": {
+          "disputantSurname": {
             "type": "string",
             "nullable": true
           },
@@ -583,11 +507,7 @@
             "type": "string",
             "nullable": true
           },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
+          "streetAddress": {
             "type": "string",
             "nullable": true
           },
@@ -599,11 +519,7 @@
             "type": "string",
             "nullable": true
           },
-          "homePhoneNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "workPhoneNumber": {
+          "homePhone": {
             "type": "string",
             "nullable": true
           },
@@ -611,57 +527,54 @@
             "type": "string",
             "nullable": true
           },
-          "filingDate": {
+          "driversLicense": {
             "type": "string",
-            "format": "date-time",
             "nullable": true
           },
-          "disputedCounts": {
+          "driversLicenseProvince": {
+            "type": "string",
+            "nullable": true
+          },
+          "workPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "enforcementOrganization": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketCounts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DisputedCount"
+              "$ref": "#/components/schemas/TicketCount"
             },
             "nullable": true
           },
-          "representedByLawyer": {
+          "lawyerRepresentation": {
             "type": "boolean"
-          },
-          "legalRepresentation": {
-            "$ref": "#/components/schemas/LegalRepresentation"
           },
           "interpreterLanguage": {
             "type": "string",
             "nullable": true
           },
-          "numberOfWitness": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+          "witnessIntent": {
+            "type": "boolean"
           },
-          "fineReductionReason": {
-            "type": "string",
-            "nullable": true
-          },
-          "timeToPayReason": {
+          "ocrViolationTicket": {
             "type": "string",
             "nullable": true
           },
           "rejectedReason": {
             "type": "string",
             "nullable": true
-          },
-          "citizenDetectedOcrIssues": {
-            "type": "boolean"
-          },
-          "systemDetectedOcrIssues": {
-            "type": "boolean"
-          },
-          "jjAssigned": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationTicket": {
-            "$ref": "#/components/schemas/ViolationTicket"
           },
           "additionalProperties": {
             "type": "object",
@@ -679,83 +592,6 @@
           "CANCELLED"
         ],
         "type": "string"
-      },
-      "DisputedCount": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "ID",
-            "format": "uuid"
-          },
-          "plea": {
-            "$ref": "#/components/schemas/DisputedCountPlea"
-          },
-          "count": {
-            "maximum": 3,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "requestTimeToPay": {
-            "type": "boolean"
-          },
-          "requestReduction": {
-            "type": "boolean"
-          },
-          "appearInCourt": {
-            "type": "boolean"
-          },
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DisputedCountPlea": {
-        "enum": [
-          "GUILTY",
-          "NOT_GUILTY"
-        ],
-        "type": "string"
-      },
-      "LegalRepresentation": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "ID",
-            "format": "uuid"
-          },
-          "lawFirmName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerSurname": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerEmail": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerAddress": {
-            "type": "string",
-            "nullable": true
-          },
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "ProblemDetails": {
         "type": "object",
@@ -784,7 +620,7 @@
         },
         "additionalProperties": { }
       },
-      "ViolationTicket": {
+      "TicketCount": {
         "type": "object",
         "properties": {
           "id": {
@@ -792,218 +628,15 @@
             "description": "ID",
             "format": "uuid"
           },
-          "ocrViolationTicket": {
+          "offenceDeclaration": {
             "type": "string",
             "nullable": true
           },
-          "ticketNumber": {
-            "type": "string",
-            "nullable": true
+          "timeToPayRequest": {
+            "type": "boolean"
           },
-          "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
-          "isYoungPerson": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "driversLicenceNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "driversLicenceProvince": {
-            "type": "string",
-            "nullable": true
-          },
-          "driversLicenceProducedYear": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "driversLicenceExpiryYear": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "birthdate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "province": {
-            "type": "string",
-            "nullable": true
-          },
-          "postalCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "isChangeOfAddress": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isDriver": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isCyclist": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isOwner": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isPedestrian": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isPassenger": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isOther": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "otherDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "issuedDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "issuedOnRoadOrHighway": {
-            "type": "string",
-            "nullable": true
-          },
-          "issuedAtOrNearCity": {
-            "type": "string",
-            "nullable": true
-          },
-          "isMvaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isWlaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isLcaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isMcaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isFaaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isTcrOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isCtaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isOtherOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "otherOffenceDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "enforcementOrganization": {
-            "type": "string",
-            "nullable": true
-          },
-          "violationTicketCounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ViolationTicketCount"
-            },
-            "nullable": true
-          },
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ViolationTicketCount": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "ID",
-            "format": "uuid"
-          },
-          "count": {
-            "maximum": 3,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "actOrRegulation": {
-            "type": "string",
-            "nullable": true
-          },
-          "fullSection": {
-            "type": "string",
-            "nullable": true
-          },
-          "section": {
-            "type": "string",
-            "nullable": true
-          },
-          "subsection": {
-            "type": "string",
-            "nullable": true
-          },
-          "paragraph": {
-            "type": "string",
-            "nullable": true
-          },
-          "act": {
-            "type": "string",
-            "nullable": true
-          },
-          "ticketedAmount": {
-            "type": "number",
-            "format": "double"
-          },
-          "isAct": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isRegulation": {
-            "type": "boolean",
-            "nullable": true
+          "fineReductionRequest": {
+            "type": "boolean"
           },
           "additionalProperties": {
             "type": "object",

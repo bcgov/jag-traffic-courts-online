@@ -1,6 +1,6 @@
 /**
- * VTC Staff API
- * Violation Ticket Centre Staff API
+ * Traffic Court Online Citizen Api
+ * An API for creating violation ticket disputes
  *
  * The version of the OpenAPI document: v1
  * 
@@ -9,16 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DisputeStatus } from './disputeStatus.model';
 import { TicketCount } from './ticketCount.model';
 
 
-export interface Dispute { 
-    /**
-     * ID
-     */
-    id?: string;
-    status?: DisputeStatus;
+export interface TicketDispute { 
     ticketNumber?: string | null;
     courtLocation?: string | null;
     violationDate?: string;
@@ -29,8 +23,8 @@ export interface Dispute {
     postalCode?: string | null;
     homePhone?: string | null;
     emailAddress?: string | null;
-    driversLicense?: string | null;
-    driversLicenseProvince?: string | null;
+    driversLicence?: string | null;
+    driversLicenceProvince?: string | null;
     workPhone?: string | null;
     dateOfBirth?: string;
     enforcementOrganization?: string | null;
@@ -39,8 +33,6 @@ export interface Dispute {
     lawyerRepresentation?: boolean;
     interpreterLanguage?: string | null;
     witnessIntent?: boolean;
-    ocrViolationTicket?: string | null;
-    rejectedReason?: string | null;
-    additionalProperties?: { [key: string]: any; } | null;
+    ocrKey?: string | null;
 }
 

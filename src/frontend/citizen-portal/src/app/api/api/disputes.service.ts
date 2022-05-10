@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { NoticeOfDispute } from '../model/noticeOfDispute.model';
+import { TicketDispute } from '../model/ticketDispute.model';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -89,14 +89,14 @@ export class DisputesService {
 
     /**
      * An endpoint for creating and saving dispute ticket data
-     * @param noticeOfDispute 
+     * @param ticketDispute 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputesCreatePost(noticeOfDispute?: NoticeOfDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public apiDisputesCreatePost(noticeOfDispute?: NoticeOfDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputesCreatePost(noticeOfDispute?: NoticeOfDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputesCreatePost(noticeOfDispute?: NoticeOfDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public apiDisputesCreatePost(ticketDispute?: TicketDispute, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public apiDisputesCreatePost(ticketDispute?: TicketDispute, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesCreatePost(ticketDispute?: TicketDispute, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesCreatePost(ticketDispute?: TicketDispute, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -140,7 +140,7 @@ export class DisputesService {
         }
 
         return this.httpClient.post<any>(`${this.configuration.basePath}/api/disputes/create`,
-            noticeOfDispute,
+            ticketDispute,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

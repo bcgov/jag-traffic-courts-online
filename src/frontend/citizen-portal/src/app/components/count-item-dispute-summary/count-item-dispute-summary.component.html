@@ -11,25 +11,25 @@
     <small class="d-block">For this count I would like to</small>
     <strong>
       <div *ngIf="count.__skip 
-      || !(count.plea === Plea.Guilty || count.request_time_to_pay 
-        || count.request_reduction || count.plea === Plea.NotGuilty)">
+      || !(count.offenceDeclaration === 'Plea' || count.timeToPayRequest 
+        || count.fineReductionRequest || count.offenceDeclaration === 'NotPlea')">
         No action at this time
       </div>
-      <div *ngIf="count.plea === Plea.Guilty">
+      <div *ngIf="count.offenceDeclaration === 'Plea'">
         Pay for this count
       </div>
-      <div *ngIf="count.request_time_to_pay || count.request_reduction">
+      <div *ngIf="count.timeToPayRequest || count.fineReductionRequest">
         Request a fine reduction and/or more time to pay
       </div>
-      <div *ngIf="count.plea === Plea.NotGuilty">
+      <div *ngIf="count.offenceDeclaration === 'NotPlea'">
         Dispute the charge
       </div>
     </strong>
   </div>
   <div class="col-lg-3">
     <small class="d-block">I will appear in court</small>
-    <strong *ngIf="count.appear_in_court"> Yes </strong>
-    <strong *ngIf="!count.appear_in_court"> No </strong>
+    <strong *ngIf="count.appearInCourt"> Yes </strong>
+    <strong *ngIf="!count.appearInCourt"> No </strong>
   </div>
 </div>
 

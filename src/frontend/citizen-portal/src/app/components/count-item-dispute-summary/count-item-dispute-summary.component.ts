@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Plea } from 'app/api';
 
 @Component({
   selector: 'app-count-item-dispute-summary',
@@ -8,7 +7,6 @@ import { Plea } from 'app/api';
 })
 export class CountItemDisputeSummaryComponent implements OnInit {
   @Input() public count: any;
-  public Plea = Plea;
 
   constructor() { // do nothing.
   }

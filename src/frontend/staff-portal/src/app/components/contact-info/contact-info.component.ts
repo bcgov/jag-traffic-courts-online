@@ -49,10 +49,6 @@ export class ContactInfoComponent implements OnInit {
     public ngOnInit() {
       this.form = this.formBuilder.group({
         violationTicketNumber: [null, [Validators.required]],
-        mailingAddress: [null],
-        country: [null],
-        phoneNumber: [null],
-        emailAddress: [null],
         violationDate: [null, [Validators.required]],
         violationTime: [null, [Validators.required]],
         surname: [null, [Validators.required]],
