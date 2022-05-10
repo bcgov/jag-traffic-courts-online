@@ -9,6 +9,8 @@ public class ViolationTicketImage
 {
     public ViolationTicketImage(byte[] Image, MimeType MimeType)
     {
+        ArgumentNullException.ThrowIfNull(Image);
+        ArgumentNullException.ThrowIfNull(MimeType);
         this.Image = Image;
         this.MimeType = MimeType;
     }

@@ -1,16 +1,18 @@
-﻿using System;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Buffers;
 using Winista.Mime;
 
 namespace System.IO;
 
 public static class StreamExtensions
 {
-
+    /// <summary>
+    /// Scans the first 1K of a data stream looking for the MimeType.
+    /// 
+    /// Logic copied from TrafficCourts.Common.Features.FilePersistence.FilePersistenceService#GetMimeTypeAsync(Stream data) 
+    /// since that method is protected and not accessible.
+    /// </summary>
+    /// <param name="data">A stream to scan for a MimeType</param>
+    /// <returns></returns>
     public static async Task<MimeType> GetMimeTypeAsync(this Stream data)
     {
         ArgumentNullException.ThrowIfNull(data);
