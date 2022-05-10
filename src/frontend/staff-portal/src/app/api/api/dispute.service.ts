@@ -155,7 +155,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}/cancel`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/cancel`,
             null,
             {
                 context: localVarHttpContext,
@@ -222,7 +222,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Dispute>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}`,
+        return this.httpClient.get<Dispute>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -300,7 +300,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<Dispute>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}`,
+        return this.httpClient.put<Dispute>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}`,
             dispute,
             {
                 context: localVarHttpContext,
@@ -387,7 +387,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}/reject`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/reject`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
@@ -454,7 +454,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/Dispute/${encodeURIComponent(String(disputeId))}/submit`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/submit`,
             null,
             {
                 context: localVarHttpContext,
@@ -517,7 +517,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/Dispute/disputes`,
+        return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/dispute/disputes`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
