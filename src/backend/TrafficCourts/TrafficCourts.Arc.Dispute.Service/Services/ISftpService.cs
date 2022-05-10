@@ -1,7 +1,6 @@
-﻿namespace TrafficCourts.Arc.Dispute.Service.Services
+﻿namespace TrafficCourts.Arc.Dispute.Service.Services;
+
+public interface ISftpService : IDisposable
 {
-    public interface ISftpService : IDisposable
-    {
-        void UploadFile(MemoryStream file, string remoteFilePath);
-    }
+    void UploadFile(MemoryStream file, string path, string filename);
 }

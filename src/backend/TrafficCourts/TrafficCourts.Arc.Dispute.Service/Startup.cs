@@ -26,31 +26,26 @@ namespace TrafficCourts.Arc.Dispute.Service
 
             builder.Services.AddTransient<IArcFileService, ArcFileService>();
 
-            builder.Services.Configure<SftpConfig>(builder.Configuration.GetRequiredSection(SftpConfig.Section));
+            builder.Services.UseConfigurationValidation();
+
+            builder.Services.ConfigureValidatableSetting<SftpConnectionOptions>(builder.Configuration.GetRequiredSection(SftpConnectionOptions.Section));
+            builder.Services.ConfigureValidatableSetting<SftpOptions>(builder.Configuration.GetRequiredSection(SftpOptions.Section));
 
             builder.Services.AddTransient<ISftpService, SftpService>();
 
             builder.Services.AddTransient<SftpClient>(services =>
             {
-                var configurationOptions = services.GetRequiredService<IOptions<SftpConfig>>();
-                var configuration = configurationOptions.Value;
-                try
-                {
-                    var sshPrivateKeyPath = configuration.SshPrivateKeyPath;
+                var connectionOptions = services.GetRequiredService<SftpConnectionOptions>();
+                var sshPrivateKeyPath = connectionOptions.SshPrivateKeyPath;
 
-                    if (!string.IsNullOrEmpty(sshPrivateKeyPath) && File.Exists(sshPrivateKeyPath))
-                    {
-                        var privateKey = new PrivateKeyFile(sshPrivateKeyPath);
-                        return new SftpClient(configuration.Host, configuration.Port, configuration.Username, new[] { privateKey });
-                    }
-
-                    return new SftpClient(configuration.Host, configuration.Port, configuration.Username, configuration.Password);
-                }
-                catch (System.IO.DirectoryNotFoundException exception)
+                // configuration validates that if SshPrivateKeyPath is not null or empty, then the file must exist
+                if (!string.IsNullOrEmpty(sshPrivateKeyPath))
                 {
-                    logger.Information(exception, "SSH key for the provided path has not been found. Using default password authentication.");
-                    return new SftpClient(configuration.Host, configuration.Port, configuration.Username, configuration.Password);
+                    var privateKey = new PrivateKeyFile(sshPrivateKeyPath);
+                    return new SftpClient(connectionOptions.Host, connectionOptions.Port, connectionOptions.Username, new[] { privateKey });
                 }
+
+                return new SftpClient(connectionOptions.Host, connectionOptions.Port, connectionOptions.Username, connectionOptions.Password);
             });
 
 
