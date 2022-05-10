@@ -3,14 +3,12 @@ using Moq;
 using MassTransit;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Dispute;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
-using Xunit.Abstractions;
 using AutoMapper;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
@@ -25,13 +23,15 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockDisputeRequestClient = new Mock<IRequestClient<SubmitNoticeOfDispute>>();
             var mockEmailRequestClient = new Mock<IRequestClient<SendEmail>>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
+            var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
 
-            Assert.Throws<ArgumentNullException>("submitDisputeRequestClient", () => new Create.CreateDisputeHandler(_loggerMock.Object, null, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("sendEmailRequestClient", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, null, mockRedisCacheService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, null, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("logger", () => new Create.CreateDisputeHandler(null, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("mapper", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, null));
+            Assert.Throws<ArgumentNullException>("submitDisputeRequestClient", () => new Create.CreateDisputeHandler(_loggerMock.Object, null, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object));
+            Assert.Throws<ArgumentNullException>("sendEmailRequestClient", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, null, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object));
+            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, null, mockFilePersistenceService.Object, mockAutoMapper.Object));
+            Assert.Throws<ArgumentNullException>("filePersistenceService", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, null, mockAutoMapper.Object));
+            Assert.Throws<ArgumentNullException>("logger", () => new Create.CreateDisputeHandler(null, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object));
+            Assert.Throws<ArgumentNullException>("mapper", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, null));
         }
 
         [Fact]
@@ -44,6 +44,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             
             var mockEmailRequestClient = new Mock<IRequestClient<SendEmail>>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
+            var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
             mockAutoMapper.Setup(_ => _.Map<SubmitNoticeOfDispute>(It.IsAny<NoticeOfDispute>())).Returns(new SubmitNoticeOfDispute());
 
@@ -54,7 +55,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
                 DisputeId = mockGuid,
             });
 
-            var disputeHandler = new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockAutoMapper.Object);
+            var disputeHandler = new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
             var request = new Create.Request(dispute);
