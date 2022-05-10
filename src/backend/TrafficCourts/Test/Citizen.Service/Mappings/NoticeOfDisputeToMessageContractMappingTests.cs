@@ -1,10 +1,5 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Mappings;
 using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Messaging.MessageContracts;
@@ -19,13 +14,8 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
         {
             // Arrange
             var fixture = new Fixture();
+            var mapper = CreateMapper();
             var noticeOfDispute = fixture.Create<NoticeOfDispute>();
-
-            var mockMapper = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile(new NoticeOfDisputeToMessageContractMappingProfile());
-            });
-            var mapper = mockMapper.CreateMapper();
 
             // Act
             var actual = mapper.Map<SubmitNoticeOfDispute>(noticeOfDispute);
@@ -39,6 +29,9 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.IssuedDate, actual.IssuedDate);
             Assert.Equal(noticeOfDispute.Surname, actual.Surname);
             Assert.Equal(noticeOfDispute.GivenNames, actual.GivenNames);
+            Assert.Equal(noticeOfDispute.Birthdate, actual.Birthdate);
+            Assert.Equal(noticeOfDispute.DriversLicenceNumber, actual.DriversLicenceNumber);
+            Assert.Equal(noticeOfDispute.DriversLicenceProvince, actual.DriversLicenceProvince);
             Assert.Equal(noticeOfDispute.Address, actual.Address);
             Assert.Equal(noticeOfDispute.City, actual.City);
             Assert.Equal(noticeOfDispute.Province, actual.Province);
@@ -64,6 +57,61 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             }
 
             Assert.NotNull(actual.LegalRepresentation);
+        }
+
+
+        /// <summary>
+        /// Checks to ensure each field is mapped correctly on <see cref="LegalRepresentation"/>
+        /// </summary>
+        [Fact]
+        public void LegalRepresentation_is_mapped_correctly()
+        {
+            var fixture = new Fixture();
+            var mapper = CreateMapper();
+
+            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Dispute.LegalRepresentation>();
+
+            var actual = mapper.Map<Messaging.MessageContracts.LegalRepresentation>(expected);
+
+            Assert.Equal(expected.LawFirmName, actual.LawFirmName);
+            Assert.Equal(expected.LawyerAddress, actual.LawyerAddress);
+            Assert.Equal(expected.LawyerEmail, actual.LawyerEmail);
+            Assert.Equal(expected.LawyerFullName, actual.LawyerFullName);
+            Assert.Equal(expected.LawyerPhoneNumber, actual.LawyerPhoneNumber);
+        }
+
+        /// <summary>
+        /// Checks to ensure each field is mapped correctly on <see cref="DisputedCount"/>
+        /// </summary>
+        [Fact]
+        public void DisputedCount_is_mapped_correctly()
+        {
+            var fixture = new Fixture();
+            var mapper = CreateMapper();
+
+            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Dispute.DisputedCount>();
+
+            var actual = mapper.Map<Messaging.MessageContracts.DisputedCount>(expected);
+
+            Assert.Equal(expected.Plea.ToString(), actual.Plea.ToString());
+            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected.RequestTimeToPay, actual.RequestTimeToPay);
+            Assert.Equal(expected.RequestReduction, actual.RequestReduction);
+            Assert.Equal(expected.AppearInCourt, actual.AppearInCourt);
+        }
+
+        /// <summary>
+        /// Creates mapping with profile <see cref="NoticeOfDisputeToMessageContractMappingProfile"/>.
+        /// </summary>
+        private static IMapper CreateMapper()
+        {
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new NoticeOfDisputeToMessageContractMappingProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            return mapper;
         }
     }
 }
