@@ -2,6 +2,6 @@
 
 public enum TicketStorageType
 {
-    InMemory,
-    ObjectStore
+    ObjectStore,
+    InMemory
 }
