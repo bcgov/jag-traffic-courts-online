@@ -9,10 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { LookupsAll } from './lookupsAll.model';
 
 
-export interface LookupsAllApiResultResponse { 
-    result?: LookupsAll;
-}
+/**
+ * An enumeration of Plea Type on a DisputedCount record.
+ */
+export type Plea = 'Guilty' | 'NotGuilty';
+
+export const Plea = {
+    Guilty: 'Guilty' as Plea,
+    NotGuilty: 'NotGuilty' as Plea
+};
 

@@ -16,7 +16,6 @@ public abstract class FilePersistenceService : IFilePersistenceService
 
     public abstract Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken);
     public abstract Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken);
-    public abstract Task DeleteFileAsync(string filename, CancellationToken cancellationToken);
 
     protected async Task<MimeType> GetMimeTypeAsync(Stream data)
     {

@@ -18,6 +18,7 @@
           <mat-icon>done</mat-icon>
         </ng-template>
 
+        <!-- disputant -->
         <mat-step>
           <ng-template matStepLabel>Contact information</ng-template>
           <app-stepper-page>
@@ -34,14 +35,14 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Surname</mat-label>
-                        <input matInput formControlName="disputantSurname" />
+                        <input matInput formControlName="surname" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Given names</mat-label>
-                        <input matInput formControlName="givenNames" />
+                        <input matInput formControlName="given_names" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
@@ -62,7 +63,7 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Mailing address</mat-label>
-                          <input matInput formControlName="streetAddress" />
+                          <input matInput formControlName="address" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -98,7 +99,7 @@
                       <mat-form-field class="w-100">
                         <mat-label>Postal code</mat-label>
                         <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postalCode" [showMaskTyped]="true" />
+                          formControlName="postal_code" [showMaskTyped]="true" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
@@ -118,20 +119,22 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Phone number</mat-label>
-                        <input matInput formControlName="homePhone" mask="(000) 000-0000" [showMaskTyped]="true" />
-                        <mat-error *ngIf="form.get('homePhone')?.hasError('required')">{{"error.required" | translate}}
+                        <input matInput formControlName="home_phone_number" mask="(000) 000-0000"
+                          [showMaskTyped]="true" />
+                        <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
+                          translate}}
                         </mat-error>
-                        <mat-error *ngIf="form.get('homePhone')?.hasError('phone')">Must be a valid phone number
+                        <mat-error *ngIf="form.get('home_phone_number')?.hasError('phone')">Must be a valid phone number
                         </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Email address</mat-label>
-                        <input matInput formControlName="emailAddress" autocomplete="off" />
-                        <mat-error *ngIf="form.get('emailAddress')?.hasError('required')">{{"error.required" |
+                        <input matInput formControlName="email_address" autocomplete="off" />
+                        <mat-error *ngIf="form.get('email_address')?.hasError('required')">{{"error.required" |
                           translate}}</mat-error>
-                        <mat-error *ngIf="form.get('emailAddress')?.hasError('email')">{{"error.email_address" |
+                        <mat-error *ngIf="form.get('email_address')?.hasError('email')">{{"error.email_address" |
                           translate }}</mat-error>
                       </mat-form-field>
                     </div>
@@ -140,14 +143,15 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Driver's licence number</mat-label>
-                        <input matInput formControlName="driversLicence" mask="0000000" [showMaskTyped]="false" />
+                        <input matInput formControlName="drivers_licence_number" mask="0000000"
+                          [showMaskTyped]="false" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Province or state of driver's licence</mat-label>
-                        <mat-select formControlName="driversLicenceProvince">
+                        <mat-select formControlName="drivers_licence_province">
                           <mat-option *ngFor="let province of provinces" [value]="province.name">
                             {{ province.name }}
                           </mat-option>
@@ -170,6 +174,7 @@
           </app-stepper-page>
         </mat-step>
 
+        <!-- count -->
         <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
           <mat-step [stepControl]="countForm">
             <ng-template matStepLabel>Count {{ countForm.value.count }}: Review</ng-template>
@@ -202,7 +207,7 @@
                           court hearing.
                         </ng-container>
                       </app-alert>
-                      <mat-radio-group formControlName="appearInCourt"
+                      <mat-radio-group formControlName="appear_in_court"
                         (change)="onAttendHearingChange(countForm, $event)">
                         <div>
                           <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
@@ -233,36 +238,38 @@
                             judicial justice.
                           </span>
                         </mat-radio-button>
-                        <mat-error *ngIf="countForm.controls.appearInCourt.touched 
-                          && countForm.controls.appearInCourt.invalid 
-                          && countForm.controls.appearInCourt.errors.required">
+                        <mat-error *ngIf="countForm.controls.appear_in_court.touched 
+                          && countForm.controls.appear_in_court.invalid 
+                          && countForm.controls.appear_in_court.errors.required">
                           {{ "error.required" | translate }}
                         </mat-error>
                       </mat-radio-group>
                     </div>
                   </div>
                   <div class="row mt-4">
-                    <div *ngIf="countForm.value.appearInCourt === false">
+                    <div *ngIf="countForm.value.appear_in_court === false">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
-                      <mat-checkbox formControlName="fineReductionRequest" color="primary" class="w-100"> I would like
+                      <mat-checkbox formControlName="request_reduction" color="primary" class="w-100"> I would like
                         to request a fine reduction on this count.</mat-checkbox>
                       <p> and/or</p>
-                      <mat-checkbox formControlName="timeToPayRequest" color="primary" class="w-100"> I would
+                      <mat-checkbox formControlName="request_time_to_pay" color="primary" class="w-100"> I would
                         like to request more time to pay on this count.</mat-checkbox>
                     </div>
 
-                    <div *ngIf="countForm.value.appearInCourt">
+                    <div *ngIf="countForm.value.appear_in_court">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
-                      <mat-radio-group formControlName="offenceDeclaration">
-                        <mat-radio-button value="Plea" color="primary" class="w-100"> I agree I committed this offence
-                          and
-                          would like to request a fine reduction and/or time to pay on this count.</mat-radio-button>
+                      <mat-radio-group formControlName="plea">
+                        <mat-radio-button [value]="Plea.Guilty" color="primary" class="w-100"> I agree I committed this
+                          offence
+                          and would like to request a fine reduction and/or time to pay on this count.
+                        </mat-radio-button>
                         <p> and/or</p>
-                        <mat-radio-button value="NotPlea" color="primary" class="w-100"> I do not agree I committed this
+                        <mat-radio-button [value]="Plea.NotGuilty" color="primary" class="w-100"> I do not agree I
+                          committed this
                           offence and would like to dispute this count</mat-radio-button>
                       </mat-radio-group>
                     </div>
@@ -270,14 +277,13 @@
                   <hr />
                   <div class="row">
                     <mat-checkbox
-                      *ngIf="countForm.value.count === 1 && form?.controls?.ticketCounts?.controls.length > 1"
-                      formControlName="__applyToRemainingCounts" color="primary" class="w-100 mt-4">Apply this selection
+                      *ngIf="countForm.value.count === 1 && form?.controls?.disputed_counts?.controls.length > 1"
+                      formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this selection
                       to all counts on this violation ticket.</mat-checkbox>
                     <mat-checkbox
-                      *ngIf="countForm.value.count === 2 && form?.controls?.ticketCounts?.controls.length > 2"
-                      formControlName="__applyToRemainingCounts" color="primary" class="w-100 mt-4">Apply this selection
-                      to
-                      remaining counts on ticket.
+                      *ngIf="countForm.value.count === 2 && form?.controls?.disputed_counts?.controls.length > 2"
+                      formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this selection
+                      to remaining counts on ticket.
                     </mat-checkbox>
                     <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4">Skip this count, no action
                       required.</mat-checkbox>
@@ -285,7 +291,7 @@
                 </section>
               </form>
 
-              <!-- <div class="col mt-4" *ngIf="countForm.value.appearInCourt && countForm.value.fineReductionRequest===false">
+              <div class="col mt-4" *ngIf="countForm.value.request_reduction || countForm.value.request_time_to_pay">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span>
@@ -296,12 +302,11 @@
                         If you provide written reasons, you will be notified in writing by the Court if your application
                         was successful.</strong>
                     </span>
-
                   </ng-container>
                 </app-alert>
-              </div> -->
+              </div>
 
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appearInCourt === false">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appear_in_court === false">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -314,7 +319,7 @@
                   </ng-container>
                 </app-alert>
               </div>
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appearInCourt">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appear_in_court">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -329,16 +334,16 @@
               </div>
 
               <div class="col mt-4"
-                *ngIf="countForm.value.appearInCourt && ticketType === ticketTypesEnum.CAMERA_TICKET">
+                *ngIf="countForm.value.appear_in_court && ticketType === ticketTypesEnum.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
                       to explain the offence and provide evidence.</strong>
                   </ng-container>
-                </app-alert>Î
+                </app-alert>
               </div>
 
-              <app-stepper-footer (save)="onStepSave(i, countForm.value.__applyToRemainingCounts)"
+              <app-stepper-footer (save)="onStepSave(i, countForm.value.__apply_to_remaining_counts)"
                 (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
                 [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'"
                 [hasSecondaryAction]="true">
@@ -347,6 +352,7 @@
           </mat-step>
         </ng-container>
 
+        <!-- additional -->
         <mat-step>
           <ng-template matStepLabel>Additional information</ng-template>
           <app-stepper-page>
@@ -358,8 +364,8 @@
             </app-page-header>
 
             <form [formGroup]="form" novalidate>
-              <div *ngIf="isShowCheckbox?.fineReductionRequest?.length > 0">
-                <ng-container *ngFor="let i of isShowCheckbox.fineReductionRequest let inx = index">
+              <div *ngIf="isShowCheckbox?.request_reduction?.length > 0">
+                <ng-container *ngFor="let i of isShowCheckbox.request_reduction let inx = index">
                   {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                 </ng-container>
                 <div class="row">
@@ -368,11 +374,11 @@
                       <mat-label>
                         Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
                       </mat-label>
-                      <input matInput formControlName="reductionReason" />
-                      <mat-error *ngIf="(form.get('reductionReason')?.dirty 
-                        || form.get('reductionReason')?.touched)
-                        && form.get('reductionReason')?.invalid
-                        && form.get('reductionReason')?.hasError('requiredIfFlags')">
+                      <input matInput formControlName="fine_reduction_reason" />
+                      <mat-error *ngIf="(form.get('fine_reduction_reason')?.dirty 
+                        || form.get('fine_reduction_reason')?.touched)
+                        && form.get('fine_reduction_reason')?.invalid
+                        && form.get('fine_reduction_reason')?.hasError('requiredIfFlags')">
                         {{ "error.required" | translate }}
                       </mat-error>
                     </mat-form-field>
@@ -380,8 +386,8 @@
                 </div>
               </div>
 
-              <div *ngIf="isShowCheckbox?.timeToPayRequest?.length > 0">
-                <ng-container *ngFor="let i of isShowCheckbox.timeToPayRequest let inx = index">
+              <div *ngIf="isShowCheckbox?.request_time_to_pay?.length > 0">
+                <ng-container *ngFor="let i of isShowCheckbox.request_time_to_pay let inx = index">
                   {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                 </ng-container>
                 <div class="row">
@@ -390,11 +396,11 @@
                       <mat-label>
                         Please enter your reasons for why you are requesting <strong>time to pay</strong>
                       </mat-label>
-                      <input matInput formControlName="moreTimeReason" />
-                      <mat-error *ngIf="(form.get('moreTimeReason')?.dirty
-                        || form.get('moreTimeReason')?.touched)
-                        && form.get('moreTimeReason')?.invalid
-                        && form.get('moreTimeReason')?.hasError('requiredIfFlags')">
+                      <input matInput formControlName="time_to_pay_reason" />
+                      <mat-error *ngIf="(form.get('time_to_pay_reason')?.dirty
+                        || form.get('time_to_pay_reason')?.touched)
+                        && form.get('time_to_pay_reason')?.invalid
+                        && form.get('time_to_pay_reason')?.hasError('requiredIfFlags')">
                         {{ "error.required" | translate }}
                       </mat-error>
                     </mat-form-field>
@@ -402,9 +408,9 @@
                 </div>
               </div>
 
-              <section *ngIf="isShowCheckbox?.appearInCourt?.length > 0">
+              <section *ngIf="isShowCheckbox?.not_guilty?.length > 0">
                 <div>
-                  <ng-container *ngFor="let i of isShowCheckbox?.appearInCourt; let inx = index">
+                  <ng-container *ngFor="let i of isShowCheckbox?.not_guilty; let inx = index">
                     {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                   </ng-container>
                 </div>
@@ -412,27 +418,29 @@
                 </h3>
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="representedByLawyer">
-                      I intend to be represented by a lawyer in court. <span
-                        *ngIf="form.get('representedByLawyer')?.value" style="font-weight: lighter;">Enter lawyer
-                        contact details below.</span>
+                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="represented_by_lawyer"
+                      (change)="onChangeRepresentedByLawyer($event)">
+                      I intend to be represented by a lawyer in court.
+                      <span *ngIf="form.get('represented_by_lawyer')?.value" style="font-weight: lighter;">
+                        Enter lawyer contact details below.
+                      </span>
                     </mat-checkbox>
                   </div>
                 </div>
-                <ng-container *ngIf="form.get('representedByLawyer')?.value">
+                <ng-container *ngIf="legalRepresentationForm">
                   <div [formGroup]="legalRepresentationForm">
                     <div class="row">
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Name of law firm</mat-label>
-                          <input matInput formControlName="lawFirmName" />
+                          <input matInput formControlName="law_firm_name" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Full name of lawyer</mat-label>
-                          <input matInput formControlName="lawyerName" />
+                          <input matInput formControlName="lawyer_full_name" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -441,7 +449,7 @@
                       <div class="col-md-12">
                         <mat-form-field class="w-100">
                           <mat-label>Address of law firm</mat-label>
-                          <input matInput formControlName="lawyerAddress" />
+                          <input matInput formControlName="lawyer_address" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -450,45 +458,47 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact phone number</mat-label>
-                          <input matInput formControlName="lawyerPhone" />
+                          <input matInput formControlName="lawyer_phone" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact email</mat-label>
-                          <input matInput formControlName="lawyerEmail" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <input matInput formControlName="lawyer_email" autocomplete="off" />
+                          <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('required')">
+                            {{"error.required" | translate}}</mat-error>
+                          <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('email')">
+                            {{"error.email_address" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
                     </div>
                   </div>
                 </ng-container>
 
-
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreterRequired">
+                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__interpreter_required">
                       I require a language interpreter at the hearing.
                     </mat-checkbox>
-                    <mat-error *ngIf="form.get('__interpreterRequired')?.hasError('requiredIfTrue')">
+                    <mat-error *ngIf="form.get('__interpreter_required')?.hasError('requiredIfTrue')">
                       {{ 'error.required' | translate }}
                     </mat-error>
                   </div>
                 </div>
 
-                <div class="row" *ngIf="form.get('__interpreterRequired')?.value">
+                <div class="row" *ngIf="form.get('__interpreter_required')?.value">
                   <div class="col">
                     <mat-form-field>
                       <mat-label>{{
                         "stepper.additional.interpreter_language" | translate
                         }}</mat-label>
-                      <mat-select formControlName="interpreterLanguage">
+                      <mat-select formControlName="interpreter_language">
                         <mat-option *ngFor="let language of languages" [value]="language">
                           {{ language }}
                         </mat-option>
                       </mat-select>
-                      <mat-error *ngIf="form.get('interpreterLanguage')?.hasError('requiredIfTrue')">
+                      <mat-error *ngIf="form.get('interpreter_language')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>
                     </mat-form-field>
@@ -497,17 +507,18 @@
 
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witnessPresent">
+                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="__witness_present"
+                      (change)="onChangeWitnessPresent($event)">
                       I intend to call a witness(es).
                     </mat-checkbox>
                   </div>
                 </div>
 
-                <div class="row" *ngIf="form.get('__witnessPresent')?.value">
+                <div class="row" *ngIf="form.get('__witness_present')?.value">
                   <div class="col">
                     <mat-form-field class="pe-4">
                       <mat-label>Number of witnesses</mat-label>
-                      <mat-select (selectionChange)="customWitnessOption = false" formControlName="numberOfWitnesses">
+                      <mat-select (selectionChange)="customWitnessOption = false" formControlName="number_of_witness">
                         <mat-option [value]=1>1</mat-option>
                         <mat-option [value]=2>2</mat-option>
                         <mat-option [value]=3>3</mat-option>
@@ -515,24 +526,28 @@
                         <mat-option [value]=5>5</mat-option>
                         <mat-option (click)="customWitnessOption = true" [value]=6>Custom</mat-option>
                       </mat-select>
-                      <mat-error *ngIf="form.get('numberOfWitnesses')?.hasError('required')">
+                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('required')">
                         {{ "error.required" | translate }}
                       </mat-error>
                     </mat-form-field>
                     <mat-form-field *ngIf="customWitnessOption">
                       <mat-label>Number of witnesses</mat-label>
-                      <input matInput type="number" min="0" step="1" formControlName="numberOfWitnesses" />
-                      <mat-error *ngIf="form.get('numberOfWitnesses')?.hasError('required')">
+                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
+                        formControlName="number_of_witness" />
+                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('required')">
                         {{ "error.required" | translate }}
                       </mat-error>
-                      <mat-error *ngIf="form.get('numberOfWitnesses')?.hasError('min')">
+                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('min')">
                         {{ "error.positive_number" | translate }}
+                      </mat-error>
+                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('max')">
+                        {{ "error.max_number" | translate }}
                       </mat-error>
                     </mat-form-field>
                   </div>
                 </div>
 
-                <div class="col" *ngIf="form.get('__witnessPresent')?.value">
+                <div class="col" *ngIf="form.get('__witness_present')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>If you are calling a witness please keep the following information in mind:</strong><br />
@@ -542,7 +557,7 @@
                     </ng-container>
                   </app-alert>
                 </div>
-                <div class="col" *ngIf="form.get('representedByLawyer')?.value">
+                <div class="col" *ngIf="form.get('represented_by_lawyer')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to
@@ -553,7 +568,7 @@
                     </ng-container>
                   </app-alert>
                 </div>
-                <div class="col" *ngIf="form.get('__interpreterRequired')?.value">
+                <div class="col" *ngIf="form.get('__interpreter_required')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>The court also provides visual language interpreters (American Sign Language) and CART
@@ -562,7 +577,7 @@
                     </ng-container>
                   </app-alert>
                 </div>
-                <div class="col" *ngIf="form.get('__witnessPresent')?.value">
+                <div class="col" *ngIf="form.get('__witness_present')?.value">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>If you bring a witness, you are responsible for ensuring they are aware of the hearing
@@ -573,16 +588,6 @@
               </section>
             </form>
 
-            <section *ngIf="!form.get('__isReductionRequired')?.value && !form?.get('__isCourtRequired')?.value">
-              <div class="col">
-                <app-alert type="warning" icon="warning">
-                  <ng-container #alertContent class="alert-content">
-                    Todo: information will be displayed here.
-                  </ng-container>
-                </app-alert>
-              </div>
-            </section>
-
             <app-stepper-footer (save)="onStepSave()" (back)="disputeStepper.previous()"
               [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
               [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
@@ -590,6 +595,7 @@
           </app-stepper-page>
         </mat-step>
 
+        <!-- summary -->
         <mat-step>
           <ng-template matStepLabel>Ticket request overview</ng-template>
           <app-stepper-page>
@@ -606,54 +612,91 @@
             </section>
 
             <div class="mb-2">
-              <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of form?.value.ticketCounts; let i = index">
+              <section class="px-4 py-2 mb-3 card-section"
+                *ngFor="let row of form?.value.disputed_counts; let i = index">
                 <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
               </section>
 
               <section class="px-4 py-2 mb-4 card-section">
                 <div class="page-subheader pagebreak">
                   <strong> Additional information </strong>
-                  <hr />
-                  <ng-container *ngIf="isShowCheckbox?.requestCounts?.length > 0">
-                    <h3>
-                      <ng-container *ngFor="let i of isShowCheckbox?.requestCounts let inx = index">
+                  <ng-container *ngIf="isShowCheckbox?.request_counts?.length > 0">
+                    <hr />
+                    <strong class="fs-5">
+                      <ng-container *ngFor="let i of isShowCheckbox?.request_counts let inx = index">
                         {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                       </ng-container>
-                    </h3>
+                    </strong>
                     <h3>I do not want to attend a court hearing and want to supply written reasons.</h3>
-                    <ng-container *ngIf="form?.value.reductionReason">
+                    <ng-container *ngIf="form?.value.fine_reduction_reason">
                       <div class="count-heading">Written reasons for fine reduction request</div>
-                      <div class="count-data">{{ form?.value.reductionReason }}</div>
+                      <div class="count-data">{{ form?.value.fine_reduction_reason }}</div>
                     </ng-container>
-                    <ng-container *ngIf="form?.value.moreTimeReason">
+                    <ng-container *ngIf="form?.value.time_to_pay_reason">
                       <div class="count-heading">Written reasons for time to pay request</div>
-                      <div class="count-data">{{ form?.value.moreTimeReason }}</div>
+                      <div class="count-data">{{ form?.value.time_to_pay_reason }}</div>
                     </ng-container>
                   </ng-container>
                 </div>
-                <hr />
-                <div *ngIf="countDataList?.newObj?.count1.toString()">
-                  <h3>Count:{{countDataList?.newObj?.count1.toString()}}</h3>
-
-                  <h3>I want to attend a court hearing and dispute the charge.</h3>
-                  <table class="disputre">
-                    <tr>
-                      <th>Action</th>
-                      <th>* of witness</th>
-                    </tr>
-                    <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.lawyerPresent'>
-                      <td> interpreterRequired</td>
-                      <td>Yes</td>
-                    </tr>
-                    <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'>
-                      <td>Language</td>
-                      <td>{{countDataList?.dispute?.interpreterLanguage}}</td>
-                    </tr>
-                    <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'>
-                      <td>witnessPresent</td>
-                      <td>{{countDataList?.dispute?.numberOfWitnesses}}</td>
-                    </tr>
-                  </table>
+                <div *ngIf="isShowCheckbox?.not_guilty?.length > 0">
+                  <hr />
+                  <strong class="fs-5">
+                    <ng-container *ngFor="let i of isShowCheckbox?.not_guilty let inx = index">
+                      {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+                    </ng-container>
+                  </strong>
+                  <br />
+                  <div class="mb-3">
+                    <strong>I want to attend a court hearing and dispute the charge.</strong>
+                  </div>
+                  <div class="row mb-2" *ngIf="legalRepresentationForm">
+                    <div class="row mb-3">
+                      <small>Action</small>
+                      <div><strong>I intend to be represented by a lawyer in court</strong></div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col">
+                        <small>Name of law firm</small>
+                        <div><strong>{{ legalRepresentationForm.get("law_firm_name").value }}</strong></div>
+                      </div>
+                      <div class="col">
+                        <small>Full name of lawyer</small>
+                        <div><strong>{{ legalRepresentationForm.get("lawyer_full_name").value }}</strong></div>
+                      </div>
+                      <div class="col">
+                        <small>Contact Email</small>
+                        <div><strong>{{ legalRepresentationForm.get("lawyer_email").value }}</strong></div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <small>Address of the law firm</small>
+                      <div><strong>{{ legalRepresentationForm.get("lawyer_address").value }}</strong></div>
+                    </div>
+                  </div>
+                  <div class="row mb-2" *ngIf="form.get('interpreter_language')?.value">
+                    <div class="row">
+                      <div class="col-lg-8">
+                        <small>Action</small>
+                        <div><strong>I require a language interpreter at the hearing</strong></div>
+                      </div>
+                      <div class="col">
+                        <small>Language</small>
+                        <div><strong>{{form.get('interpreter_language')?.value}}</strong></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-2" *ngIf="form.get('number_of_witness')?.value">
+                    <div class="row">
+                      <div class="col-lg-8">
+                        <small>Action</small>
+                        <div><strong>I intend to call witness(es)</strong></div>
+                      </div>
+                      <div class="col">
+                        <small># of witness(es)</small>
+                        <div><strong>{{form.get('number_of_witness')?.value}}</strong></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </section>
             </div>

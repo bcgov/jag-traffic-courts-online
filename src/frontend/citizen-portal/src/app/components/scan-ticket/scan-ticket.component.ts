@@ -25,7 +25,6 @@ export class ScanTicketComponent implements OnInit {
   public ticketImageSrc: string;
   public ticketFilename: string;
   public form: FormGroup;
-  public isHidden = true;
 
   private progressRef: NgProgressRef;
   private ticket: ViolationTicket;
@@ -55,10 +54,6 @@ export class ScanTicketComponent implements OnInit {
     this.form.disable();
   }
 
-  public toggle() {
-    this.isHidden = !this.isHidden;
-  }
-
   public onSubmit(): void {
     const data: DialogOptions = {
       titleKey: 'Are you sure all ticket information is correct?',
@@ -71,6 +66,7 @@ export class ScanTicketComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
+          this.violationTicketService.ticket$.next(this.ticket);
           this.violationTicketService.goToDisputeSummary({
             ticketNumber: this.ticket.ticket_number,
             time: (<any>this.ticket)[this.violationTicketService.ocrTicketTimeKey], // special handling

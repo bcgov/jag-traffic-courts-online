@@ -21,11 +21,4 @@ public interface IFilePersistenceService
     /// <returns></returns>
     /// <exception cref="FileNotFoundException">The file was not found.</exception>
     Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken);
-    /// <summary>
-    /// Removes the file from storage.
-    /// </summary>
-    /// <param name="filename"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task DeleteFileAsync(string filename, CancellationToken cancellationToken);
 }
