@@ -1,12 +1,14 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +52,14 @@ public class DisputeController {
 	 * @return list of all dispute tickets
 	 */
 	@GetMapping("/disputes")
-	public Iterable<Dispute> getAllDisputes(
+	public List<Dispute> getAllDisputes(
 			@RequestParam(required = false)
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
 			Date olderThan) {
-		return disputeService.getAllDisputes(olderThan);
+		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan);
+		// Swagger doesn't seem to know what an Iterable<Dispute> object is.  Convert to an actual instantiated list to return a collection.
+		return IterableUtils.toList(allDisputes);
 	}
 
 	/**
