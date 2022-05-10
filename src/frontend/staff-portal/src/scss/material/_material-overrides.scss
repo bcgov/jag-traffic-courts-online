@@ -163,3 +163,10 @@ mat-error {
     top: -5px;
   }
 }
+.mat-form-field .mat-form-field-label-wrapper label {
+  line-height: 27px;
+}
+
+.mat-form-field .mat-form-field-infix input {
+  line-height: 27px;
+}

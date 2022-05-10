@@ -1,387 +1,451 @@
 <div class="ticket-info">
-  <a style="color: #009CDE;" (click)="onBack()"><mat-icon inline="true">arrow_back</mat-icon> Back to TRM home</a>
-    <div class="ticket-info-section">
-      <app-page-header>
-        <ng-container subHeader>
-          Ticket Information
-        </ng-container>
-      </app-page-header>
-      <div style="display: flex; justify-content: space-evenly">      
-   
-        <section class="mb-2 img-section" style="width: 20%;">
+  <a (click)="onBack()" style="color: #48afe5">
+    <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
+  </a>
+  <div class="ticket-info-section">
+    <mat-expansion-panel [expanded]="true"
+    >
+      <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
+    <app-page-header (click)="handleCollapse('ticketInformation')">
+      <ng-container subHeader>
+        <span>Ticket Information</span> 
+        <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle" style="font-size:18px; color:#009cde"></i>
+        <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
+      </ng-container>
+    </app-page-header>
+    </mat-expansion-panel-header>
+    <div class="ticket-body">
+    <div style="display: flex; justify-content: space-evenly">
+
+      <section class="mb-2 img-section" [style.width]="!disableForm ? '25%' : '20%'">
+        <div class="row">
+          <div *ngIf="!disableForm">
+            <ng-container subHeader>
+              Ticket Image
+            </ng-container>
+          </div>
+          <div *ngIf="disableForm" class="col-lg-5">
+            <img src="../../../assets/violation-ticket-sample.jpg" width="150" height="200">
+            <button data-toggle="modal" data-target="#exampleModal"><i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle" style="font-size:20px; color:#009cde"></i>Click to expand ticket Image</button>
+          </div>
+          <div *ngIf="!disableForm" class="col-lg-5">
+            <img src="../../../assets/violation-ticket-sample.jpg" width="280" height="500">
+            <button data-toggle="modal" data-target="#exampleModal"><i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle" style="font-size:20px; color:#009cde"></i>Click to expand ticket Image</button>
+          </div>
+        </div>
+      </section>
+      <section [ngClass]="!disableForm? 'ticket-section-form':''" class="mb-2" [style.width]="!disableForm ? '48%' : '60%'">
+        <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+
+          <div class="row">
+            <div *ngIf="!disableForm">
+              <ng-container subHeader>
+                <span>Ticket Details</span>
+              </ng-container>
+            </div>
+            <section>
               <div class="row">
-                <div class="col-lg-5">
-                  <img src="../../../assets/violation-ticket-sample.jpg" width="150" height="200">
-                  <button data-toggle="modal" data-target="#exampleModal" >Click to expand ticket Image</button>
+                <div class="col-lg-4">
+                  <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100 mb-2" >
+                    <mat-label>Violation ticket number</mat-label>
+                    <input formControlName="violationTicketNumber" matInput [readonly]="disableForm" type="text"
+                      oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
+                    <!-- <mat-hint>
+                        <strong>A ticket number is 2 letters and 8 numbers</strong>
+                      </mat-hint> -->
+                    <mat-error *ngIf="violationTicketNumber.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                    <mat-error *ngIf="violationTicketNumber.value && violationTicketNumber.hasError('mask')">
+                      This ticket number is not valid. It must be 2 letters and 8
+                      numbers.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Violation date</mat-label>
+                    <input matInput [readonly]="disableForm" [matDatepicker]="picker" formControlName="violationDate"
+                      [max]="todayDate" readonly (click)="picker.open()" />
+                    <mat-datepicker-toggle matSuffix [for]="picker">
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
+                    <mat-error *ngIf="violationDate.hasError('required')">
+                      {{ "error.required" | translate }}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-4">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Violation time</mat-label>
+                    <input matInput [readonly]="disableForm" type="time" formControlName="violationTime" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+
+              </div>
+            </section>
+
+            <section>
+              <ng-container subHeader>
+                <span> Personal Inofrmation </span>
+              </ng-container>
+              <div class="row">
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Surname</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="surname" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Given names</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="givenNames" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Province/State of drivers licence</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="driverLicenseProvince" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Driver's license number</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="driverLicenseNumber" mask="0000000"
+                      autocomplete="off" [showMaskTyped]="false" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+
+              </div>
+            </section>
+
+            <section>
+              <ng-container subHeader>
+               <span> Count 1</span>
+              </ng-container>
+              <div class="row">
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Section / Act / Description </mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count1Charge" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Fine amount ($)</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count1FineAmount" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
                 </div>
               </div>
             </section>
-        <section class="mb-2" style="width: 66%;">
-          <form (ngSubmit)="onSubmit()"
-          [formGroup]="form"
-          novalidate>
-  
-          <div class="row">
-                <section>
-                  <div class="row">
-                    <div class="col-lg-5">
-                      <mat-form-field class="w-100 mb-2">
-                        <mat-label>Violation ticket number</mat-label>
-                        <input formControlName="violationTicketNumber"
-                               matInput [readonly]="disableForm"
-                               type="text"
-                               oninput="this.value = this.value.toUpperCase()"
-                               mask="SS00000000"
-                               autocomplete="off" />
-                        <!-- <mat-hint>
-                          <strong>A ticket number is 2 letters and 8 numbers</strong>
-                        </mat-hint> -->
-                        <mat-error *ngIf="violationTicketNumber.hasError('required')">
-                          {{ "error.required" | translate }}
-                        </mat-error>
-                        <mat-error *ngIf="violationTicketNumber.value && violationTicketNumber.hasError('mask')">
-                          This ticket number is not valid. It must be 2 letters and 8
-                          numbers.
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-                 
-                    <div class="col-lg-4">
-                      <mat-form-field class="w-100">
-                        <mat-label>Violation date</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               [matDatepicker]="picker"
-                               formControlName="violationDate"
-                               [max]="todayDate"
-                               readonly
-                               (click)="picker.open()" />
-                        <mat-datepicker-toggle matSuffix
-                                               [for]="picker">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #picker
-                                        [touchUi]="isMobile"
-                                        startView="multi-year"></mat-datepicker>
-                        <mat-error *ngIf="violationDate.hasError('required')">
-                          {{ "error.required" | translate }}
-                        </mat-error>
-                      </mat-form-field>
-                    </div>
-        
-                    <div class="col-lg-3">
-                      <mat-form-field class="w-100">
-                        <mat-label>Violation time</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               type="time"
-                               formControlName="violationTime" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </section>
-               
-                 <section>
-                  <ng-container subHeader>
-                    Personal Inofrmation
-                   </ng-container>
-                   <div class="row">
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Surname</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="surname" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-        
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Given names</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="givenNames" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Province/State of drivers licence</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="driverLicenseProvince" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-        
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Driver's license number</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="driverLicenseNumber"
-                               mask="0000000"
-                               autocomplete="off"
-                               [showMaskTyped]="false" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <ng-container subHeader>
-                    Count 1
-                   </ng-container>
-                   <div class="row">
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count1Charge" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Fine amount ($)</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count1FineAmount" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <ng-container subHeader>
-                    Count 2
-                   </ng-container>
-                   <div class="row">
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count2Charge" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Fine amount ($)</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count2FineAmount" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <ng-container subHeader>
-                    Count 3
-                   </ng-container>
-                   <div class="row">
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count3Charge" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-        
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Fine amount ($)</mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count3FineAmount" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </section>
-                <section>
-                  <ng-container subHeader>
-                    Count Location
-                   </ng-container>
-                   <div class="row">
-                    <div class="col-lg-6">
-                      <mat-form-field class="w-100">
-                        <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm"
-                               formControlName="count1Charge" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </section>
-                <div class="col offset-lg-6 col-lg-4">
-                  <button class="dangerButton btn btn-danger"
-                          mat-flat-button
-                          style=" background-color: rgb(201, 32, 32); color: white;"
-                          type="button"
-                          color="red"
-                          class="large"
-                          (click)="editForm()">
-                   FALGGED FIELDS - validation required
-                    
-                  </button>
+            <section>
+              <ng-container subHeader>
+                <span> Count 2</span>
+              </ng-container>
+              <div class="row">
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Section / Act / Description </mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count2Charge" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
                 </div>
-                    </div>
-                  </form>
-                </section> 
-  
+
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Fine amount ($)</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count2FineAmount" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+            <section>
+              <ng-container subHeader>
+               <span>Count 3</span> 
+              </ng-container>
+              <div class="row">
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Section / Act / Description </mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count3Charge" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Fine amount ($)</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count3FineAmount" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+            <section>
+              <ng-container subHeader>
+               <span> Count Location </span>
+              </ng-container>
+              <div class="row">
+                <div class="col-lg-6">
+                  <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100">
+                    <mat-label>Section / Act / Description </mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="count1Charge" />
+                    <mat-error>{{ "error.required" | translate }}</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+            <div class="col">
+              <button *ngIf="disableForm" class="dangerButton btn btn-danger" mat-flat-button
+                style=" background-color: rgb(201, 32, 32); color: white;float: right;" type="button" color="red" class="large"
+                (click)="editForm()">
+                FALGGED FIELDS - validation required
+              </button>
+              <button *ngIf="!disableForm" class="btn btn-primary" mat-flat-button
+              style=" background-color: #003366; color: white;float: right;" type="button" color="red" class="large"
+              (click)="editForm()">
+              Edit Form
+            </button >
+            </div>
           </div>
-      
-     
+        </form>
+      </section>
+
+      <section class="mb-2" *ngIf="!disableForm" [style.width]="!disableForm ? '20%' : '0%'">
+        <div class="row">
+          <div *ngIf="!disableForm">
+            <ng-container subHeader>
+             <span> Citizen flags </span>
+            </ng-container>
+          </div>
+          <div class="row">
+          <div class="col-lg-12">
+            <mat-form-field  [ngClass]="!disableForm? 'border-form':''"  class="w-100 mb-2">
+              <mat-label>Description of differences</mat-label>
+              <input formControlName="violationTicketNumber" matInput type="text" autocomplete="off" />
+            </mat-form-field>
+          </div>
+          </div>
+
+          <div class="row">
+            <div *ngIf="!disableForm">
+              <ng-container subHeader>
+                System flags
+              </ng-container>
+            </div>
+            <div class="col-lg-12">
+               <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Violation ticket number </p>
+               <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Violation date </p>
+               <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Violation time </p>
+               <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Surname </p>
+               <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Given Name </p>
+               <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Province/State of drivers licence </p>
+               <p class="systemFlagList"><span class="dot-fail"></span><span class="fail">75%</span>-Driver's license number</p>
+            </div>
+            </div>
+        </div>
+      </section>
+
     </div>
-    </div>
+    <div class="contact-info" *ngIf="disableForm">
+
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+          <app-page-header>
+            <ng-container subHeader>
+              <span>Contact Information </span>
+              <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
+                style="font-size:18px; color:#009cde"></i>
+              <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"
+                style="font-size:18px; color:#009cde"></i>
+            </ng-container>
+          </app-page-header>
   
+        </mat-expansion-panel-header>
+        <div class="contact-body">
+          <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+            <section class="mb-2" style="width: 66%;">
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Surname</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="surname" />
+                    <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Given names</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="givenNames" />
+                    <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+              </div>
   
-    <div class="modal"  id="exampleModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header" style="justify-content: flex-end;">
-            <h1></h1>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+              <section>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Mailing address</mat-label>
+                      <input matInput [readonly]="disableForm" formControlName="mailingAddress" />
+                      <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Country</mat-label>
+                      <input matInput [readonly]="disableForm" formControlName="country" />
+                      <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                    </mat-form-field>
+                  </div>
+                </div>
+  
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>City</mat-label>
+                      <input matInput [readonly]="disableForm" formControlName="city" />
+                      <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                      <mat-label>Province</mat-label>
+                      <input matInput [readonly]="disableForm" formControlName="province" />
+                      <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                    </mat-form-field>
+                  </div>
+                </div>
+              </section>
+  
+              <div class="row">
+  
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Postal code</mat-label>
+                    <input matInput [readonly]="disableForm" mask="S0S 0S0"
+                      oninput="this.value = this.value.toUpperCase()" formControlName="postalCode"
+                      [showMaskTyped]="true" />
+                    <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Birthdate</mat-label>
+                    <input matInput [readonly]="disableForm" [max]="maxDateOfBirth" [matDatepicker]="picker"
+                      formControlName="birthdate" readonly (click)="picker.open()" />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
+                    <!-- <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
+                  "error.required" | translate
+                  }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Phone number</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="phoneNumber" mask="(000) 000-0000"
+                      [showMaskTyped]="true" />
+                    <!-- <mat-error *ngIf="phoneNumber.hasError('required')">{{
+                  "error.required" | translate
+                  }}</mat-error>
+                <mat-error *ngIf="phoneNumber.hasError('phone')">Must be a valid phone number</mat-error> -->
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Email address</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="emailAddress" autocomplete="off" />
+                    <!-- <mat-error *ngIf="emailAddress.hasError('required')">{{
+                  "error.required" | translate
+                  }}</mat-error>
+                <mat-error *ngIf="emailAddress.hasError('email')">{{
+                  "error.email_address" | translate -->
+                    <!-- }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Driver's licence number</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="driverLicenseNumber" mask="0000000"
+                      [showMaskTyped]="false" />
+                    <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+  
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <mat-label>Province or state of driver's licence</mat-label>
+                    <input matInput [readonly]="disableForm" formControlName="driverLicenseProvince" />
+                    <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+          </form>
+          <div class="col offset-lg-6 col-lg-4">
+            <button id="primaryButton" mat-flat-button type="button" color="primary" class="large" (click)="editForm()">
+              <strong>Edit Fields</strong>
+  
             </button>
           </div>
-          <div class="modal-body" style="height: 550px; text-align: center;">
-            <img src="../../../assets/violation-ticket-sample.jpg" width="300" height="500">
-          </div>
         </div>
-      </div>
+      </mat-expansion-panel>
+  
     </div>
+  
 
-    <div class="contact-info">
-      <app-page-header>
-        <ng-container subHeader>
-          Contact Information
-        </ng-container>
-      </app-page-header>
-      <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
-        <section class="mb-2" style="width: 66%;">
-          <div class="row">
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Surname</mat-label>
-                <input matInput [readonly]="disableForm" formControlName="surname" />
-                <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-              </mat-form-field>
-            </div>
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Given names</mat-label>
-                <input matInput [readonly]="disableForm" formControlName="givenNames" />
-                <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-              </mat-form-field>
-            </div>
-          </div>
-  
-          <section>
-            <div class="row">
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Mailing address</mat-label>
-                  <input matInput [readonly]="disableForm" formControlName="mailingAddress" />
-                  <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-                </mat-form-field>
-              </div>
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Country</mat-label>
-                  <input matInput [readonly]="disableForm" formControlName="country" />
-                  <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-                </mat-form-field>
-              </div>
-            </div>
-  
-            <div class="row">
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>City</mat-label>
-                  <input matInput [readonly]="disableForm" formControlName="city" />
-                  <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-                </mat-form-field>
-              </div>
-              <div class="col-md-6">
-                <mat-form-field class="w-100">
-                  <mat-label>Province</mat-label>
-                  <input matInput [readonly]="disableForm" formControlName="province" />
-                  <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-                </mat-form-field>
-              </div>
-            </div>
-          </section>
-  
-          <div class="row">
-  
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Postal code</mat-label>
-                <input matInput [readonly]="disableForm" mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
-                  formControlName="postalCode" [showMaskTyped]="true" />
-                <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-              </mat-form-field>
-            </div>
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Birthdate</mat-label>
-                <input matInput [readonly]="disableForm" [max]="maxDateOfBirth" [matDatepicker]="picker"
-                  formControlName="birthdate" readonly (click)="picker.open()" />
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-                <!-- <mat-error *ngIf="form.get('birthdate').hasError('required')">{{
-                      "error.required" | translate
-                      }}</mat-error> -->
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Phone number</mat-label>
-                <input matInput [readonly]="disableForm" formControlName="phoneNumber" mask="(000) 000-0000"
-                  [showMaskTyped]="true" />
-                <!-- <mat-error *ngIf="phoneNumber.hasError('required')">{{
-                      "error.required" | translate
-                      }}</mat-error>
-                    <mat-error *ngIf="phoneNumber.hasError('phone')">Must be a valid phone number</mat-error> -->
-              </mat-form-field>
-            </div>
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Email address</mat-label>
-                <input matInput [readonly]="disableForm" formControlName="emailAddress" autocomplete="off" />
-                <!-- <mat-error *ngIf="emailAddress.hasError('required')">{{
-                      "error.required" | translate
-                      }}</mat-error>
-                    <mat-error *ngIf="emailAddress.hasError('email')">{{
-                      "error.email_address" | translate -->
-                <!-- }}</mat-error> -->
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Driver's licence number</mat-label>
-                <input matInput [readonly]="disableForm" formControlName="driverLicenseNumber" mask="0000000"
-                  [showMaskTyped]="false" />
-                <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-              </mat-form-field>
-            </div>
-  
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <mat-label>Province or state of driver's licence</mat-label>
-                <input matInput [readonly]="disableForm" formControlName="driverLicenseProvince" />
-                <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
-              </mat-form-field>
-            </div>
-          </div>
-        </section>
-      </form>
-      <div class="col offset-lg-6 col-lg-4">
-        <button id="primaryButton" mat-flat-button type="button" color="primary" class="large" (click)="editForm()">
-          <strong>Edit Form</strong>
-  
+    <div  *ngIf="!disableForm" class="footer" style="align-items: center;"> 
+     <hr/>
+     <button class="dangerButton" mat-flat-button
+     style=" background-color: white; border: 1px solid #003366;margin-right: 2%;" type="button" color="red" class="large"
+     (click)="onBack()">
+     < Cancel and go back
+   </button>
+   <button class="" mat-flat-button
+   style=" background-color: green;color: white;" type="button" color="red" class="large">
+  Confirm and validation ticket fields
+ </button>
+    </div>
+  </div>
+</mat-expansion-panel>
+  </div>
+</div>
+
+
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="justify-content: flex-end;">
+        <h1></h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <div class="modal-body" style="height: 550px; text-align: center;">
+        <img src="../../../assets/violation-ticket-sample.jpg" width="300" height="500">
+      </div>
     </div>
+  </div>
+</div>
