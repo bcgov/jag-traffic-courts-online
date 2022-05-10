@@ -90,7 +90,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 {
                     submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
                 }
-                submitNoticeOfDispute.CitizenSubmittedDate = DateTime.UtcNow;
+                submitNoticeOfDispute.SubmittedDate = DateTime.UtcNow;
                 
                 var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(submitNoticeOfDispute);
 
