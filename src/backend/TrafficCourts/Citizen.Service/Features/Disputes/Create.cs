@@ -12,9 +12,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
     public static class Create
     {
-        public class Request : IRequest<Response>
+        public class Request : IRequest
         {
-            public Models.Dispute.NoticeOfDispute Dispute { get; init; }
+            public NoticeOfDispute Dispute { get; init; }
 
             public Request(Models.Dispute.NoticeOfDispute dispute)
             {
@@ -22,41 +22,24 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             }
         }
 
-        public class Response
-        {
-            public Guid Id { get; init; }
-            public Exception? Exception { get; init; }
-
-            public Response(Guid id)
-            {
-                Id = id;
-            }
-
-            public Response(Exception exception)
-            {
-                Id = Guid.Empty;
-                Exception = exception;
-            }
-        }
-
-        public class CreateDisputeHandler : IRequestHandler<Request, Response>
+        public class CreateDisputeHandler : IRequestHandler<Request>
         {
             private readonly ILogger _logger;
-            public readonly IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> _submitDisputeRequestClient;
+            private readonly IBus _bus;
             public readonly IRequestClient<SendEmail> _sendEmailRequestClient;
             private readonly IRedisCacheService _redisCacheService;
             private readonly IMapper _mapper;
 
-            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IRequestClient<Messaging.MessageContracts.SubmitNoticeOfDispute> submitDisputeRequestClient, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService, IMapper mapper)
+            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IBus bus, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService, IMapper mapper)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-                _submitDisputeRequestClient = submitDisputeRequestClient ?? throw new ArgumentNullException(nameof(submitDisputeRequestClient));
+                _bus = bus ?? throw new ArgumentNullException(nameof(bus));
                 _sendEmailRequestClient = sendEmailRequestClient ?? throw new ArgumentNullException(nameof(sendEmailRequestClient));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             }
 
-            public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Request request, CancellationToken cancellationToken)
             {
                 Models.Dispute.NoticeOfDispute createDisputeRequest = request.Dispute;
                 string? ticketId = createDisputeRequest.TicketId;
@@ -91,8 +74,11 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
                 }
                 submitNoticeOfDispute.CitizenSubmittedDate = DateTime.UtcNow;
-                
-                var response = await _submitDisputeRequestClient.GetResponse<DisputeSubmitted>(submitNoticeOfDispute);
+
+                // Publish submit NoticeOfDispute event (consumer(s) will push event to Oracle Data API to save the Dispute and generate email)
+                await _bus.Publish(submitNoticeOfDispute, cancellationToken);
+
+                _logger.LogDebug("Dispute published to the queue for being consumed by consumers and saved in Oracle Data API");
 
                 // Send email message to the submitter's entered email
                 var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
@@ -107,7 +93,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     }, cancellationToken);
                 }
 
-                return new Response(response.Message.DisputeId);
+                return Unit.Value;
             }
         }
     }
