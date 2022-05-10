@@ -10,9 +10,12 @@ namespace TrafficCourts.Workflow.Service.Models
         public string? TicketNumber { get; set; }
         public string? ProvincialCourtHearingLocation { get; set; }
         public DateTime? IssuedDate { get; set; }
-        public DateTime? CitizenSubmittedDate { get; set; }
+        public DateTime? SubmittedDate { get; set; }
         public string? Surname { get; set; }
         public string? GivenNames { get; set; }
+        public DateTime? Birthdate { get; set; }
+        public string? DriversLicenceNumber { get; set; }
+        public string? DriversLicenceProvince { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }
         public string? Province { get; set; }
@@ -27,8 +30,8 @@ namespace TrafficCourts.Workflow.Service.Models
         public int NumberOfWitness { get; set; }
         public string? FineReductionReason { get; set; }
         public string? TimeToPayReason { get; set; }
-        public bool CitizenDetectedOcrIssues { get; set; }
-        public string? CitizenOcrIssuesDescription { get; set; }
+        public bool DisputantDetectedOcrIssues { get; set; }
+        public string? DisputantOcrIssuesDescription { get; set; }
         public ViolationTicket? ViolationTicket { get; set; }
         public string? OcrViolationTicket { get; set; }
 
@@ -58,6 +61,7 @@ namespace TrafficCourts.Workflow.Service.Models
         public string LawyerFullName { get; set; } = String.Empty;
         public string LawyerEmail { get; set; } = String.Empty;
         public string LawyerAddress { get; set; } = String.Empty;
+        public string LawyerPhoneNumber { get; set; } = String.Empty;
     }
 
     /// <summary>

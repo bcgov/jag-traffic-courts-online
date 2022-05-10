@@ -149,14 +149,14 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// <summary>
         /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
         /// </summary>
-        [JsonPropertyName("citizen_detected_ocr_issues")]
-        public bool CitizenDetectedOcrIssues { get; set; }
+        [JsonPropertyName("disputant_detected_ocr_issues")]
+        public bool DisputantDetectedOcrIssues { get; set; }
 
         /// <summary>
         /// The description of the issue with OCR ticket if the citizen has detected any.
         /// </summary>
-        [JsonPropertyName("citizen_ocr_issues_description")]
-        public string? CitizenOcrIssuesDescription { get; set; }
+        [JsonPropertyName("disputant_ocr_issues_description")]
+        public string? DisputantOcrIssuesDescription { get; set; }
 
         /// <summary>
         /// The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.
