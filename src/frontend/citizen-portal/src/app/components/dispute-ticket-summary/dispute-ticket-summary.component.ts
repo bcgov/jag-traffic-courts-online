@@ -17,6 +17,8 @@ export class DisputeTicketSummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isShowCheckbox = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
+    if (this.noticeOfDispute) {
+      this.isShowCheckbox = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
+    }
   }
 }
