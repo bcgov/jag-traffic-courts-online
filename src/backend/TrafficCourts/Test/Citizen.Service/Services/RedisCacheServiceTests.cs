@@ -17,6 +17,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
         private readonly Mock<IConnectionMultiplexer> _redisMock;
         private readonly Mock<IDatabase> _redisDbAsyncMock;
         private readonly Mock<ILogger<RedisCacheService>> _loggerMock;
+        private readonly IMemoryStreamManager _memoryStreamManager = new SimpleMemoryStreamManager();
 
         public RedisCacheServiceTests()
         {
@@ -31,8 +32,8 @@ namespace TrafficCourts.Test.Citizen.Service.Services
         [Fact]
         public void Constructor_throws_ArgumentNullException_when_cache_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new RedisCacheService(null!, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>(() => new RedisCacheService(_redisMock.Object, null!));
+            Assert.Throws<ArgumentNullException>(() => new RedisCacheService(null!, _memoryStreamManager, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new RedisCacheService(_redisMock.Object, _memoryStreamManager, null!));
         }
 
         [Fact]
@@ -48,7 +49,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(expectedRedis));
 
             var actual = await redisCacheService.GetRecordAsync<ViolationTicket>(filename);
@@ -67,7 +68,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(expectedRedis));
 
             var actual = await redisCacheService.GetRecordAsync<ViolationTicket>(filename);
@@ -86,7 +87,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
 
             await redisCacheService.SetRecordAsync<ViolationTicket>(key, testData);
         }
@@ -101,7 +102,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(expectedRedis));
 
             var actual = await redisCacheService.GetFileRecordAsync(filename);
@@ -121,7 +122,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(expectedRedis));
 
             var actual = await redisCacheService.GetFileRecordAsync(filename);
@@ -138,7 +139,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
 
             var actualFilename = await redisCacheService.SetFileRecordAsync(key, fileStream);
 
@@ -155,7 +156,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
 
             var actualFilename = await redisCacheService.SetFileRecordAsync(null, fileStream);
 
@@ -169,7 +170,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(true));
 
             var result = await redisCacheService.DeleteRecordAsync(key);
@@ -181,7 +182,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
         {
             _redisMock.Setup(_ => _.GetDatabase(It.IsAny<int>(), It.IsAny<object>())).Returns(_redisDbAsyncMock.Object);
 
-            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _loggerMock.Object);
+            RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(true));
 
             var result = await redisCacheService.DeleteRecordAsync(null);
