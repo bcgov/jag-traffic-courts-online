@@ -19,7 +19,7 @@
         [attr.aria-labelledby]="'accordion-header'">
         <div class="col my-3">
           <app-alert type="info" icon="info">
-            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypeLocal.ELECTRONIC_TICKET">
+            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypes.ELECTRONIC_TICKET">
               <strong>Things you should know: </strong>
               <ul class="mt-3">
                 <li>Online payment available through <a target="_blank" href="https://pay.gov.bc.ca/"><u>PayBC</u></a>,
@@ -33,7 +33,7 @@
                   driver’s licence.</li>
               </ul>
             </ng-container>
-            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypeLocal.CAMERA_TICKET">
+            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypes.CAMERA_TICKET">
               <strong>Things you should know: </strong>
               <ul class="mt-3">
                 <li>Visit <a target="_blank" href="https://pay.gov.bc.ca/">PayBC</a> to pay your ticket online now, or
@@ -51,7 +51,7 @@
                   owners do not receive penalty points on their drivers's licence.</li>
               </ul>
             </ng-container>
-            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypeLocal.HANDWRITTEN_TICKET">
+            <ng-container class="alert-content" #alertContent *ngIf="ticketType === ticketTypes.HANDWRITTEN_TICKET">
               <strong>Things you should know: </strong>
               <ul class="mt-3">
                 <li>You can pay these ticket types in person, by mail, or telephone with a credit card. See <a

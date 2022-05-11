@@ -11,9 +11,9 @@ export class TicketTypePipe implements PipeTransform {
     let firstLetter = value ? value.charAt(0) : null;
     if (firstLetter === 'S') {
       return ticketTypes.CAMERA_TICKET;
-    } else if (value === 'E') {
+    } else if (firstLetter === 'E') {
       return ticketTypes.ELECTRONIC_TICKET;
-    } else if (value === 'A') {
+    } else if (firstLetter === 'A') {
       return ticketTypes.HANDWRITTEN_TICKET;
     }
     return null;
