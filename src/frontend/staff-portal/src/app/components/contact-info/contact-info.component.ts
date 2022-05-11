@@ -20,7 +20,9 @@ export class ContactInfoComponent implements OnInit {
   
     public maxDateOfBirth: Date;
     public form: FormGroup;
-  
+    public collapseObj: any = {
+       contactInformation: true
+    }
     private MINIMUM_AGE = 18;
   
     /**
@@ -49,6 +51,10 @@ export class ContactInfoComponent implements OnInit {
     public ngOnInit() {
       this.form = this.formBuilder.group({
         violationTicketNumber: [null, [Validators.required]],
+        mailingAddress: [null],
+        country: [null],
+        phoneNumber: [null],
+        emailAddress: [null],
         violationDate: [null, [Validators.required]],
         violationTime: [null, [Validators.required]],
         surname: [null, [Validators.required]],
@@ -82,6 +88,10 @@ export class ContactInfoComponent implements OnInit {
   
     public onBack() {
       this.backTicketList.emit();
+    }
+
+    public handleCollapse(name: string) {
+      this.collapseObj[name]= !this.collapseObj[name]
     }
   
     public onSubmit(): void {

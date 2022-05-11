@@ -32,18 +32,36 @@ public class LegalRepresentation {
     @GeneratedValue
     private UUID id;
 	
+	/**
+	 * Name of the law firm that will represent the disputant at the hearing.
+	 */
 	@Column
 	private String lawFirmName;
 	
+	/**
+	 * Full name of the lawyer who will represent the disputant at the hearing.
+	 */
 	@Column
 	private String lawyerFullName;
 	
+	/**
+	 * Email address of the lawyer who will represent the disputant at the hearing.
+	 */
 	@Column
 	@Email(regexp = ".+@.+\\..+")
 	private String lawyerEmail;
 	
+	/**
+	 * Address of the lawyer who will represent the disputant at the hearing.
+	 */
 	@Column
 	private String lawyerAddress;
+	
+	/**
+	 * Phone number of the lawyer who will represent the disputant at the hearing.
+	 */
+	@Column
+	private String lawyerPhoneNumber;
 	
 	@JsonBackReference
 	@OneToOne

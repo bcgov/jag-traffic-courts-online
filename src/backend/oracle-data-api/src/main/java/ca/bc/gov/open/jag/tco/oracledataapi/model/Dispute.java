@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -76,7 +77,7 @@ public class Dispute {
      */
     @Column
     @Schema(nullable = true)
-    private Date citizenSubmittedDate;
+    private Date submittedDate;
 
     /**
      * The surname or corporate name.
@@ -91,6 +92,29 @@ public class Dispute {
     @Column
     @Schema(nullable = true)
     private String givenNames;
+    
+    /**
+     * The disputant's birthdate.
+     */
+    @Column
+    @Schema(nullable = true)
+    private Date birthdate;
+    
+    /**
+     * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
+     */
+    @Size(max = 20)
+    @Column(length = 20)
+    @Schema(nullable = true, maxLength = 20)
+    private String driversLicenceNumber;
+    
+    /**
+     * The province or state the drivers licence was issued by.
+     */
+    @Size(max = 30)
+    @Column(length = 30)
+    @Schema(nullable = true, maxLength = 30)
+    private String driversLicenceProvince;
 
     /**
      * The mailing address of the disputant.
@@ -198,11 +222,11 @@ public class Dispute {
     private String rejectedReason;
     
     @Column
-    private boolean citizenDetectedOcrIssues;
+    private boolean disputantDetectedOcrIssues;
     
     @Column
     @Schema(nullable = true)
-    private String citizenOcrIssuesDescription;
+    private String disputantOcrIssuesDescription;
     
     @Column
     private boolean systemDetectedOcrIssues;

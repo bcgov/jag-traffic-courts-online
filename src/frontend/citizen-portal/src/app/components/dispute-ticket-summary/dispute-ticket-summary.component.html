@@ -40,8 +40,8 @@
             </tr>
             <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.lawyerPresent'><td> interpreterRequired</td><td>Yes</td>
             </tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'><td>Language</td><td>{{countDataList?.dispute?.interpreterLanguage}}</td></tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'><td>witnessPresent</td><td>{{countDataList?.dispute?.numberOfWitnesses}}</td></tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'><td>Language</td><td>{{countDataList?.dispute?.interpreter_language}}</td></tr>
+            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'><td>witnessPresent</td><td>{{countDataList?.dispute?.number_of_witness}}</td></tr>
           </table>
         </div>
       </div>
@@ -51,10 +51,10 @@
 
         <ng-container *ngIf="ticket.additional.requestReduction">
           <div class="row"
-               *ngIf="ticket.additional.reductionReason; else noReductionReason">
+               *ngIf="ticket.additional.fine_reduction_reason; else noReductionReason">
             <div class="col-lg-9">
               <small class="d-block">Written reasons for fine reduction request</small>
-              <strong>{{ ticket.additional.reductionReason }}</strong>
+              <strong>{{ ticket.additional.fine_reduction_reason }}</strong>
             </div>
             <div class="col-lg-3"></div>
           </div>
@@ -73,10 +73,10 @@
 
         <ng-container *ngIf="ticket.additional.requestMoreTime">
           <div class="row"
-               *ngIf="ticket.additional.moreTimeReason; else noRequestMoreTime">
+               *ngIf="ticket.additional.time_to_pay_reason; else noRequestMoreTime">
             <div class="col-lg-9">
               <small class="d-block">Written reasons for more time to pay request</small>
-              <strong>{{ ticket?.additional?.moreTimeReason }}</strong>
+              <strong>{{ ticket?.additional?.time_to_pay_reason }}</strong>
             </div>
             <div class="col-lg-3"></div>
           </div>
@@ -119,7 +119,7 @@
             <small class="d-block">Language</small>
             <strong>
               {{
-              ticket.additional.interpreterLanguage
+              ticket.additional.interpreter_language
               | configCode: "languages"
               | default
               }}
@@ -136,7 +136,7 @@
 
           <div class="col-lg-3">
             <small class="d-block"># of witness(es)</small>
-            <strong>{{ ticket.additional.numberOfWitnesses }}</strong>
+            <strong>{{ ticket.additional.number_of_witness }}</strong>
           </div>
         </div>
       </section>

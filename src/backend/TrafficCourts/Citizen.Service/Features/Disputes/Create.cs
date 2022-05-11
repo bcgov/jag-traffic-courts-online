@@ -73,7 +73,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 {
                     submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
                 }
-                submitNoticeOfDispute.CitizenSubmittedDate = DateTime.UtcNow;
+                submitNoticeOfDispute.SubmittedDate = DateTime.UtcNow;
 
                 // Publish submit NoticeOfDispute event (consumer(s) will push event to Oracle Data API to save the Dispute and generate email)
                 await _bus.Publish(submitNoticeOfDispute, cancellationToken);

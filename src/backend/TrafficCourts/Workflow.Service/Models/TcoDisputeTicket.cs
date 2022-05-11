@@ -34,7 +34,7 @@ namespace TrafficCourts.Workflow.Service.Models
         public int Count { get; set; } = 0;
         public string Section { get; set; } = null!;
         public string Act { get; set; } = null!;
-        public double Amount { get; set; } = Double.NaN;
+        public double? Amount { get; set; }
     }
 
     public class DisputeDetail

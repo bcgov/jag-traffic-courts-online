@@ -103,7 +103,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
                 problemDetails.Status = (int)HttpStatusCode.InternalServerError;
                 problemDetails.Title = "Error invoking Azure Form Recognizer";
                 problemDetails.Instance = HttpContext?.Request?.Path;
-                problemDetails.Extensions.Add("errors", e.Message);
+                problemDetails.Extensions.Add("errors", new string[] { e.Message, e.InnerException?.Message });
 
                 return new ObjectResult(problemDetails);
             }
