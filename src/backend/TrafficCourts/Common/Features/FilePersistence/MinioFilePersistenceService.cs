@@ -74,7 +74,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         ArgumentNullException.ThrowIfNull(data);
         if (data.Length == 0) throw new ArgumentException("No data to save", nameof(data));
 
-        var mimeType = await GetMimeTypeAsync(data);
+        var mimeType = await data.GetMimeTypeAsync();
         if (mimeType is null)
         {
             _logger.LogInformation("Could not determine mime type for file, file cannot be saved");
