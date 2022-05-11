@@ -36,10 +36,11 @@ namespace TrafficCourts.Citizen.Service.Models.Search
             Offences = violationTicket
                 .Counts
                 .OrderBy(_ => _.Count)
+                .Where(_ => _.TicketedAmount is not null)
                 .Select(_ => new TicketOffence
                 {
                     OffenceNumber = _.Count,
-                    TicketedAmount = _.TicketedAmount.Value,
+                    TicketedAmount = _.TicketedAmount!.Value,
                     AmountDue = _.AmountDue ?? _.TicketedAmount.Value,
                     OffenceDescription = _.Description,
                     VehicleDescription = string.Empty,
@@ -84,11 +85,11 @@ namespace TrafficCourts.Citizen.Service.Models.Search
         public decimal AmountDue { get; set; }
         /// <summary>
         /// </summary>
-        public string InvoiceType { get; set; }
+        public string? InvoiceType { get; set; }
         /// <summary>
         /// The description of the offence.
         /// </summary>
-        public string OffenceDescription { get; set; }
+        public string? OffenceDescription { get; set; }
 
         /// <summary>
         /// The description of vehicle.

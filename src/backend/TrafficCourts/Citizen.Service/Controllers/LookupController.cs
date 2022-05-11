@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TrafficCourts.Citizen.Service.Services;
 using Statute = TrafficCourts.Citizen.Service.Models.Tickets.Statute;
 
@@ -7,15 +8,13 @@ namespace TrafficCourts.Citizen.Service.Controllers;
 [Route("api/[controller]/[action]")]
 public class LookupController : ControllerBase
 {
-    private readonly ILogger<LookupController> _logger;
     private readonly ILookupService _lookupService;
+    private readonly ILogger<LookupController> _logger;
 
     public LookupController(ILookupService lookupService, ILogger<LookupController> logger)
     {
-        ArgumentNullException.ThrowIfNull(lookupService);
-        ArgumentNullException.ThrowIfNull(logger);
-        _lookupService = lookupService;
-        _logger = logger;
+        _lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary> 
@@ -25,11 +24,12 @@ public class LookupController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(IList<Statute>), 200)]
+    [ProducesResponseType(typeof(IList<Statute>), (int)HttpStatusCode.OK)]
     public IActionResult Statutes(string? section)
     {
         _logger.LogDebug("Retrieving a Statutes");
-        List<Statute> statutes = _lookupService.GetStatutes(section).ToList<Statute>();
+
+        List<Statute> statutes = _lookupService.GetStatutes(section).ToList();
 
         return Ok(statutes);
     }

@@ -8,6 +8,7 @@ using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
 using AutoMapper;
 using System.Diagnostics;
+using NodaTime;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -24,40 +25,45 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
         }
         public class Response
         {
-            private Response()
+            /// <summary>
+            /// Creates a successful response.
+            /// </summary>
+            public Response()
             {
             }
 
             public Response(Exception exception)
             {
-                Success = false;
                 Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             }
 
-            public Response(bool success)
-            {
-                Success = success;
-            }
-
-            public bool Success { get; set; }
             public Exception? Exception { get; init; }
         }
 
-        public class CreateDisputeHandler : IRequestHandler<Request, Response>
+        public class Handler : IRequestHandler<Request, Response>
         {
             private readonly ILogger _logger;
             private readonly IBus _bus;
-            public readonly IRequestClient<SendEmail> _sendEmailRequestClient;
             private readonly IRedisCacheService _redisCacheService;
             private readonly IMapper _mapper;
+            private readonly IClock _clock;
 
-            public CreateDisputeHandler(ILogger<CreateDisputeHandler> logger, IBus bus, IRequestClient<SendEmail> sendEmailRequestClient, IRedisCacheService redisCacheService, IMapper mapper)
+            /// <summary>
+            /// Creates the handler.
+            /// </summary>
+            /// <param name="bus"></param>
+            /// <param name="redisCacheService"></param>
+            /// <param name="mapper"></param>
+            /// <param name="clock"></param>
+            /// <param name="logger"></param>
+            /// <exception cref="ArgumentNullException"></exception>
+            public Handler(IBus bus, IRedisCacheService redisCacheService, IMapper mapper, IClock clock, ILogger<Handler> logger)
             {
-                _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                 _bus = bus ?? throw new ArgumentNullException(nameof(bus));
-                _sendEmailRequestClient = sendEmailRequestClient ?? throw new ArgumentNullException(nameof(sendEmailRequestClient));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+                _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+                _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -66,8 +72,8 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                 using Activity? activity = Diagnostics.Source.StartActivity("Create Dispute");
 
-                Models.Dispute.NoticeOfDispute createDisputeRequest = request.Dispute;
-                string? ticketId = createDisputeRequest.TicketId;
+                NoticeOfDispute dispute = request.Dispute;
+                string? ticketId = dispute.TicketId;
                 string? ocrViolationTicketJson = null;
                 OcrViolationTicket? violationTicket = null;
                 Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
@@ -98,41 +104,43 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     {
                         Exception ex = new ArgumentNullException("No associated Violation Ticket has been found");
                         _logger.LogError(ex, "Error creating dispute - No associated Violation Ticket has been found");
+                        activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                         return new Response(ex);
                     }
 
-                    SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(createDisputeRequest);
+                    SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
                     submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
                     if (lookedUpViolationTicket != null)
                     {
                         submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
                     }
-                    submitNoticeOfDispute.SubmittedDate = DateTime.UtcNow;
+                    submitNoticeOfDispute.SubmittedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
 
                     // Publish submit NoticeOfDispute event (consumer(s) will push event to Oracle Data API to save the Dispute and generate email)
                     await _bus.Publish(submitNoticeOfDispute, cancellationToken);
 
                     _logger.LogDebug("Dispute published to the queue for being consumed by consumers and saved in Oracle Data API");
 
-                    // Send email message to the submitter's entered email
+                    // Send email message to the submitter's entered email - TODO: this needs to be moved to workflow service on SubmitNoticeOfDispute event
                     var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
                     if (template is not null)
                     {
-                        _sendEmailRequestClient.Create(new SendEmail()
+                        await _bus.Publish(new SendEmail()
                         {
                             From = template.Sender,
-                            To = { createDisputeRequest.EmailAddress },
+                            To = { submitNoticeOfDispute!.EmailAddress! },
                             Subject = template.SubjectTemplate,
-                            PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", createDisputeRequest.TicketNumber)
+                            PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber)
                         }, cancellationToken);
                     }
 
-                    //iff success, return true
-                    return new Response(true);
+                    // success, return true
+                    activity?.SetStatus(ActivityStatusCode.Ok);
+                    return new Response();
                 }
                 catch (Exception exception)
                 {
-                    activity?.SetStatus(ActivityStatusCode.Error);
+                    activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
                     _logger.LogError(exception, "Error creating dispute");
                     return new Response(exception);
                 }
