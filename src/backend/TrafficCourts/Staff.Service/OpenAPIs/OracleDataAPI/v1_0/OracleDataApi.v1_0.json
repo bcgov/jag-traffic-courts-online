@@ -273,6 +273,19 @@
       "get": {
         "tags": [ "dispute-controller" ],
         "operationId": "getAllDisputes",
+        "parameters": [
+          {
+            "name": "olderThan",
+            "in": "query",
+            "description": "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": "2022-03-15"
+          }
+        ],
         "responses": {
           "405": {
             "description": "Method Not Allowed",
@@ -329,6 +342,16 @@
       "Dispute": {
         "type": "object",
         "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -462,6 +485,16 @@
       "DisputedCount": {
         "type": "object",
         "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -486,6 +519,16 @@
       "LegalRepresentation": {
         "type": "object",
         "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -503,6 +546,16 @@
       "ViolationTicket": {
         "type": "object",
         "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -661,6 +714,16 @@
       "ViolationTicketCount": {
         "type": "object",
         "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",

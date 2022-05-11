@@ -7,7 +7,6 @@ import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { AppRoutes } from 'app/app.routes';
 import { DisputeResourceService } from 'app/services/dispute-resource.service';
 import { DisputeService } from 'app/services/dispute.service';
-// import { truncate } from 'fs';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -16,7 +15,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./dispute-submit-success.component.scss'],
 })
 export class DisputeSubmitSuccessComponent implements OnInit {
-  debugger
   public busy: Subscription;
   public ticket: TicketDisputeView;
   public countList:any;
@@ -25,6 +23,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
   public readonly whatToExpectURL: string =
     'https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf';
   public ticketTypesEnum = ticketTypes;
+  
   constructor(
     private router: Router,
     private disputeResource: DisputeResourceService,
