@@ -12,6 +12,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 
 import { FindTicketComponent } from './find-ticket.component';
+import { DatePipe } from '@angular/common';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 describe('FindTicketComponent', () => {
   let component: FindTicketComponent;
@@ -32,6 +34,8 @@ describe('FindTicketComponent', () => {
       ],
       declarations: [FindTicketComponent],
       providers: [
+        DatePipe,
+        TicketTypePipe,
         {
           provide: ConfigService,
           useClass: MockConfigService,

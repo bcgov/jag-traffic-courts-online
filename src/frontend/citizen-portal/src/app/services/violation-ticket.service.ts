@@ -1,26 +1,28 @@
-import { DatePipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { LoggerService } from '@core/services/logger.service';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ImageTicketNotFoundDialogComponent } from '@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
-import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
-import { FileUtilsService } from '@shared/services/file-utils.service';
-import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from 'app/api';
-import { AppRoutes } from 'app/app.routes';
-import { NgProgressRef } from 'ngx-progressbar';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { DatePipe } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import { LoggerService } from "@core/services/logger.service";
+import { DialogOptions } from "@shared/dialogs/dialog-options.model";
+import { ImageTicketNotFoundDialogComponent } from "@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component";
+import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component";
+import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
+import { FileUtilsService } from "@shared/services/file-utils.service";
+import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
+import { AppRoutes } from "app/app.routes";
+import { NgProgressRef } from "ngx-progressbar";
+import { BehaviorSubject, Observable } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ViolationTicketService {
   private _ticket: BehaviorSubject<ViolationTicket> = new BehaviorSubject<ViolationTicket>(null);
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private _ticketType: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
 
@@ -31,7 +33,12 @@ export class ViolationTicketService {
     private ticketService: TicketsService,
     private fileUtilsService: FileUtilsService,
     private datePipe: DatePipe,
+    private ticketTypePipe: TicketTypePipe,
   ) {
+    // auto update ticket type
+    this.ticket$.subscribe(ticket => {
+      this._ticketType.next(this.getTicketType(ticket));
+    })
   }
 
   public get ticket$(): BehaviorSubject<ViolationTicket> {
@@ -58,9 +65,13 @@ export class ViolationTicketService {
     return this._inputTicketData.value;
   }
 
+  public get ticketType() {
+    return this._ticketType.value;
+  }
+
   public searchTicket(params): Observable<ViolationTicket> {
     this.reset();
-    this.logger.info('ViolationTicketService:: Search for ticket');
+    this.logger.info("ViolationTicketService:: Search for ticket");
     return this.ticketService.apiTicketsSearchGet(params.ticketNumber, params.time)
       .pipe(
         map((response: ViolationTicket) => {
@@ -69,13 +80,13 @@ export class ViolationTicketService {
             this.goToDisputeSummary(params);
           }
           else {
-            this.logger.error('ViolationTicketService::searchTicket ticket not found');
+            this.logger.error("ViolationTicketService::searchTicket ticket not found");
             this.onError();
           }
           return response;
         }),
         catchError((error: any) => {
-          this.logger.error('ViolationTicketService::searchTicket error has occurred: ', error);
+          this.logger.error("ViolationTicketService::searchTicket error has occurred: ", error);
           this.onError();
           throw error;
         })
@@ -84,9 +95,9 @@ export class ViolationTicketService {
 
   public analyseTicket(ticketFile: File, progressRef: NgProgressRef): void {
     this.reset();
-    this.logger.info('file target', ticketFile);
+    this.logger.info("file target", ticketFile);
     if (!this.checkSize(ticketFile?.size)) {
-      this.logger.info('You must select a file');
+      this.logger.info("You must select a file");
       this.openErrorScenarioOneDialog();
       return;
     }
@@ -176,22 +187,22 @@ export class ViolationTicketService {
   }
 
   private getValue(key: string, field: Field): any { // key for logging only
-    this.logger.info(`${key}: '${field.value || '<missing>'}', with confidence of ${field.fieldConfidence}`);
+    this.logger.info(`${key}: "${field.value || "<missing>"}", with confidence of ${field.fieldConfidence}`);
     let result;
     let value = field.value;
     if (field.type && value && value.length > 0) {
       switch (field.type.toLowerCase()) {
         case "double":
-          result = parseFloat(value.replace(/[^.0-9]/g, '')); // regex replace characters other than numbers
+          result = parseFloat(value.replace(/[^.0-9]/g, "")); // regex replace characters other than numbers
           break;
         case "int64":
-          result = parseInt(value.replace(/[^.0-9]/g, '')); // regex replace characters other than numbers
+          result = parseInt(value.replace(/[^.0-9]/g, "")); // regex replace characters other than numbers
           break;
         case "selectionmark":
           result = value.toLowerCase() === "selected" ? true : false;
           break;
         case "time":
-          result = value.replace(' ', ':');
+          result = value.replace(" ", ":");
           break;
         case "date":
         case "string":
@@ -199,6 +210,14 @@ export class ViolationTicketService {
           result = value;
           break;
       }
+    }
+    return result;
+  }
+
+  public getTicketType(ticket): string {
+    let result: string;
+    if (ticket && ticket.ticket_number) {
+      result = this.ticketTypePipe.transform(ticket.ticket_number);
     }
     return result;
   }
@@ -236,15 +255,15 @@ export class ViolationTicketService {
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
-      if (err.error.errors.file || this.isErrorMatch(err, 'Violation Ticket Number is blank')
-        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form 'AX00000000'.")
+      if (err.error.errors.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
+        || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
         || this.isErrorMatch(err, "low confidence", false)) {
         this.openErrorScenarioOneDialog();
       }
       else if (this.isErrorMatch(err, "more than 30 days ago.", false)) {
         this.openErrorScenarioTwoDialog();
       }
-      else if (this.isErrorMatch(err, "MVA must be selected under the 'Did commit the offence(s) indicated' section.")) {
+      else if (this.isErrorMatch(err, "MVA must be selected under the \"Did commit the offence(s) indicated\" section.")) {
         this.openErrorScenarioThreeDialog();
       } else { // fall back option
         this.openErrorScenarioOneDialog();
@@ -260,9 +279,9 @@ export class ViolationTicketService {
   private openImageTicketNotFoundDialog(title: string, key: string) {
     const data: DialogOptions = {
       titleKey: title,
-      actionType: 'warn',
+      actionType: "warn",
       messageKey: key,
-      actionTextKey: 'Ok',
+      actionTextKey: "Ok",
       cancelHide: true,
     };
     return this.dialog.open(ImageTicketNotFoundDialogComponent, { data })

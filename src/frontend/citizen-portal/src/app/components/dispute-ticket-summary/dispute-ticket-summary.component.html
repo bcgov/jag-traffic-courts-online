@@ -12,10 +12,10 @@
     <section class="px-4 py-2 mb-4 card-section">
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
-        <ng-container *ngIf="isShowCheckbox?.request_counts?.length > 0">
+        <ng-container *ngIf="isShowCheckboxes?.request_counts?.length > 0">
           <hr />
           <strong class="fs-5">
-            <ng-container *ngFor="let i of isShowCheckbox?.request_counts let inx = index">
+            <ng-container *ngFor="let i of isShowCheckboxes?.request_counts let inx = index">
               {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
             </ng-container>
           </strong>
@@ -30,10 +30,10 @@
           </ng-container>
         </ng-container>
       </div>
-      <div *ngIf="isShowCheckbox?.not_guilty?.length > 0">
+      <div *ngIf="isShowCheckboxes?.not_guilty?.length > 0">
         <hr />
         <strong class="fs-5">
-          <ng-container *ngFor="let i of isShowCheckbox?.not_guilty let inx = index">
+          <ng-container *ngFor="let i of isShowCheckboxes?.not_guilty let inx = index">
             {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
           </ng-container>
         </strong>

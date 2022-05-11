@@ -332,7 +332,7 @@
               </div>
 
               <div class="col mt-4"
-                *ngIf="countForm.value.appear_in_court && ticketType === ticketTypesEnum.CAMERA_TICKET">
+                *ngIf="countForm.value.appear_in_court && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -362,8 +362,8 @@
             </app-page-header>
 
             <form [formGroup]="form" novalidate>
-              <div *ngIf="isShowCheckbox?.request_reduction?.length > 0">
-                <ng-container *ngFor="let i of isShowCheckbox.request_reduction let inx = index">
+              <div *ngIf="isShowCheckboxes?.request_reduction?.length > 0">
+                <ng-container *ngFor="let i of isShowCheckboxes.request_reduction let inx = index">
                   {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                 </ng-container>
                 <div class="row">
@@ -384,8 +384,8 @@
                 </div>
               </div>
 
-              <div *ngIf="isShowCheckbox?.request_time_to_pay?.length > 0">
-                <ng-container *ngFor="let i of isShowCheckbox.request_time_to_pay let inx = index">
+              <div *ngIf="isShowCheckboxes?.request_time_to_pay?.length > 0">
+                <ng-container *ngFor="let i of isShowCheckboxes.request_time_to_pay let inx = index">
                   {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                 </ng-container>
                 <div class="row">
@@ -406,9 +406,9 @@
                 </div>
               </div>
 
-              <section *ngIf="isShowCheckbox?.not_guilty?.length > 0">
+              <section *ngIf="isShowCheckboxes?.not_guilty?.length > 0">
                 <div>
-                  <ng-container *ngFor="let i of isShowCheckbox?.not_guilty; let inx = index">
+                  <ng-container *ngFor="let i of isShowCheckboxes?.not_guilty; let inx = index">
                     {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                   </ng-container>
                 </div>

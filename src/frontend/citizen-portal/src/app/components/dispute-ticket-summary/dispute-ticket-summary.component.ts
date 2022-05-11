@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NoticeOfDispute } from 'app/api';
-import { NoticeOfDisputeService } from 'app/services/notice-of-dispute.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { NoticeOfDispute } from "app/api";
+import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 
 @Component({
-  selector: 'app-dispute-ticket-summary',
-  templateUrl: './dispute-ticket-summary.component.html',
-  styleUrls: ['./dispute-ticket-summary.component.scss'],
+  selector: "app-dispute-ticket-summary",
+  templateUrl: "./dispute-ticket-summary.component.html",
+  styleUrls: ["./dispute-ticket-summary.component.scss"],
 })
 export class DisputeTicketSummaryComponent implements OnInit {
   @Input() public noticeOfDispute: NoticeOfDispute;
-  public isShowCheckbox: any;
+  public isShowCheckboxes: any;
 
   constructor(
     protected noticeOfDisputeService: NoticeOfDisputeService,
@@ -18,7 +18,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
-      this.isShowCheckbox = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
+      this.isShowCheckboxes = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
     }
   }
 }

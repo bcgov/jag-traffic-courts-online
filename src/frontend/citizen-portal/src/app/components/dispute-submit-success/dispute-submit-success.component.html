@@ -1,4 +1,4 @@
-<app-page [busy]="busy">
+<app-page [busy]="busy" *ngIf="noticeOfDispute">
   <app-page-header>
     <ng-container header>Ticket resolution request confirmation</ng-container>
   </app-page-header>
@@ -39,16 +39,16 @@
       <br>
       A confirmation email of the request information will be sent to:
       <br>
-      {{ ticket?.disputant?.email_address }}
+      {{ noticeOfDispute.email_address }}
     </p>
     <hr class="d-print-none" />
   </div>
 
   <strong class="d-print-none">Request details</strong>
 
-  <!-- <app-dispute-ticket-summary [ticket]="ticket"></app-dispute-ticket-summary> -->
+  <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
 
-  <section class="mb-2 mt-4 d-print-none">
+  <!-- <section class="mb-2 mt-4 d-print-none">
     <div class="row" *ngIf="isWitnessPresent">
       <div class="col">
         <app-alert type="warning" icon="info">
@@ -89,7 +89,7 @@
         </app-alert>
       </div>
     </div>
-    <div class="row" *ngIf="countsDisputed && ticketType ===ticketTypesEnum.CAMERA_TICKET">
+    <div class="row" *ngIf="countsDisputed && ticketType === ticketTypes.CAMERA_TICKET">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -139,7 +139,7 @@
         </app-alert>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <app-resolution-footer></app-resolution-footer>
 </app-page>
