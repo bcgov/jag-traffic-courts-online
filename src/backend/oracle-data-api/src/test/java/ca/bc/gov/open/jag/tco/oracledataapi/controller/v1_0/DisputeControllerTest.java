@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testSaveDispute() {
 		// Assert db is empty and clean
-		List<Dispute> allDisputes = disputeController.getAllDisputes();
+		List<Dispute> allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a single Dispute
@@ -37,7 +38,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Assert db contains the single created record
-		allDisputes = disputeController.getAllDisputes();
+		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null));
 		assertEquals(1, allDisputes.size());
 		assertEquals(disputeId, allDisputes.get(0).getId());
 		assertEquals(dispute.getSurname(), allDisputes.get(0).getSurname());
@@ -46,7 +47,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		disputeController.deleteDispute(disputeId);
 
 		// Assert db contains is empty again
-		allDisputes = disputeController.getAllDisputes();
+		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null));
 		assertEquals(0, allDisputes.size());
 	}
 
@@ -166,8 +167,8 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = disputeController.getDispute(disputeId);
 		assertEquals("Doe", dispute.getSurname());
 		assertEquals("John", dispute.getGivenNames());
-		List<Dispute> allDisputes = disputeController.getAllDisputes();
-		assertEquals(1, allDisputes.size());
+		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null);
+		assertEquals(1, IterableUtils.size(allDisputes));
 	}
 
 }

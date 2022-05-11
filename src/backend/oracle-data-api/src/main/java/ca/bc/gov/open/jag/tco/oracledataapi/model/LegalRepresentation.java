@@ -25,8 +25,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LegalRepresentation {
-	
+public class LegalRepresentation extends Auditable<String> {
+
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     @GeneratedValue
@@ -68,5 +68,5 @@ public class LegalRepresentation {
 	@JoinColumn(name = "dispute_id", referencedColumnName = "id")
 	@Schema(hidden = true)
 	private Dispute dispute;
-	
+
 }

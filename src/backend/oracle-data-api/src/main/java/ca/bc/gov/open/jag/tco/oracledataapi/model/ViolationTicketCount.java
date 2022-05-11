@@ -32,27 +32,27 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ViolationTicketCount {
-	
+public class ViolationTicketCount extends Auditable<String> {
+
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
     private UUID id;
-	
+
 	/**
 	 * The count number.
 	 */
 	@Column
 	@Min(1) @Max(3)
 	private int count;
-	
+
 	/**
 	 * The description of the offence.
 	 */
 	@Column
 	@Schema(nullable = true)
     private String description;
-	
+
 	/**
 	 * The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc
 	 */
@@ -66,28 +66,28 @@ public class ViolationTicketCount {
 	@Column
 	@Schema(nullable = true)
     private String fullSection;
-	
+
 	/**
 	 * The section part of the full section. For example, "127"
 	 */
 	@Column
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String section;
-	
+
 	/**
 	 * The subsection part of the full section. For example, "(1)"
 	 */
 	@Column
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String subsection;
-	
+
 	/**
 	 * The paragraph part of the full section. For example, "(a)"
 	 */
 	@Column
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String paragraph;
-	
+
 	/**
 	 * The ticketed amount.
 	 */
@@ -101,17 +101,17 @@ public class ViolationTicketCount {
 	@Column
 	@Schema(nullable = true)
     private Boolean isAct;
-	
+
 	/**
 	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
 	 */
 	@Column
 	@Schema(nullable = true)
     private Boolean isRegulation;
-	
+
 	@JsonBackReference
 	@ManyToOne(targetEntity=ViolationTicket.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
 	private ViolationTicket violationTicket;
-	
+
 }

@@ -45,7 +45,7 @@ public class DisputeService : IDisputeService
 
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(CancellationToken cancellationToken)
     {
-        return await GetOracleDataApi().GetAllDisputesAsync(cancellationToken);
+        return await GetOracleDataApi().GetAllDisputesAsync(null, cancellationToken);
     }
 
     public async Task<Guid> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)

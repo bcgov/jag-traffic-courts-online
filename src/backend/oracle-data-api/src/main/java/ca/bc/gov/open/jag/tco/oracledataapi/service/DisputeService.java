@@ -1,6 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,13 +26,17 @@ public class DisputeService {
 
 	/**
 	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
+	 * @param olderThan if specified, will filter the result set to those older than this date.
 	 *
 	 * @return
 	 */
-	public List<Dispute> getAllDisputes() {
-		List<Dispute> disputes = new ArrayList<Dispute>();
-		disputeRepository.findAll().forEach(dispute -> disputes.add(dispute));
-		return disputes;
+	public Iterable<Dispute> getAllDisputes(Date olderThan) {
+		if (olderThan == null) {
+			return disputeRepository.findAll();
+		}
+		else {
+			return disputeRepository.findByCreatedTsBefore(olderThan);
+		}
 	}
 
 	/**

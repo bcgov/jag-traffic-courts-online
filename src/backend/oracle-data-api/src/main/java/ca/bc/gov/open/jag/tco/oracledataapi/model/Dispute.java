@@ -41,7 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Dispute {
+public class Dispute extends Auditable<String> {
 
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
@@ -71,7 +71,7 @@ public class Dispute {
     @Column
     @Schema(nullable = true)
     private Date issuedDate;
-    
+
     /**
      * The date and time the citizen was submitted the notice of dispute.
      */
@@ -122,7 +122,7 @@ public class Dispute {
     @Column
     @Schema(nullable = true)
     private String address;
-    
+
     /**
      * The mailing address city of the disputant.
      */
@@ -150,14 +150,14 @@ public class Dispute {
     @Column
     @Schema(nullable = true)
     private String homePhoneNumber;
-    
+
     /**
      * The disputant's work phone number.
      */
     @Column
     @Schema(nullable = true)
     private String workPhoneNumber;
-    
+
     /**
      * The disputant's email address.
      */
@@ -165,11 +165,11 @@ public class Dispute {
     @Email(regexp = ".+@.+\\..+")
     @Schema(nullable = true)
     private String emailAddress;
-    
+
     @Column
     @Schema(nullable = true)
     private Date filingDate;
-    
+
     @JsonManagedReference
     @OneToMany(targetEntity=DisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="dispute_id")
@@ -180,7 +180,7 @@ public class Dispute {
      */
     @Column
     private boolean representedByLawyer;
-    
+
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
     @Schema(nullable = true)
@@ -199,14 +199,14 @@ public class Dispute {
     @Column
     @Schema(nullable = true)
     private Integer numberOfWitness;
-    
+
     /**
      * Reason indicating why the fine reduction requested for the ticket.
      */
     @Column(length = 256)
     @Schema(nullable = true)
     private String fineReductionReason;
-    
+
     /**
      * Reason indicating why the disputant needs more time in order to make payment for the ticket.
      */
@@ -220,7 +220,7 @@ public class Dispute {
     @Column(length = 256)
     @Schema(nullable = true)
     private String rejectedReason;
-    
+
     @Column
     private boolean disputantDetectedOcrIssues;
     
@@ -230,7 +230,7 @@ public class Dispute {
     
     @Column
     private boolean systemDetectedOcrIssues;
-    
+
     @Column
     @Schema(nullable = true)
     private String jjAssigned;
@@ -247,14 +247,14 @@ public class Dispute {
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
     @Schema(nullable = true)
     private ViolationTicket violationTicket;
-    
-    public void addDisputedCounts(List<DisputedCount> disputedCounts) { 		
-    	for (DisputedCount disputedCount : disputedCounts) { 			
-    		disputedCount.setDispute(this); 		
-    	} 		
-    	this.disputedCounts.addAll(disputedCounts); 	
+
+    public void addDisputedCounts(List<DisputedCount> disputedCounts) {
+    	for (DisputedCount disputedCount : disputedCounts) {
+    		disputedCount.setDispute(this);
+    	}
+    	this.disputedCounts.addAll(disputedCounts);
     }
-    
+
     public void setLegalRepresentation(LegalRepresentation legal) {
         if (legal == null) {
             if (this.legalRepresentation != null) {
@@ -266,7 +266,7 @@ public class Dispute {
         }
         this.legalRepresentation = legal;
     }
-    
+
     public void setViolationTicket(ViolationTicket ticket) {
         if (ticket == null) {
             if (this.violationTicket != null) {
