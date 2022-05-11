@@ -34,13 +34,23 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// </summary>
         /// <param name="dispute"></param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// <response code="400">The request was not well formed. Check the parameters.</response>
+        /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
+        /// </returns>
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> CreateAsync([FromBody] TrafficCourts.Citizen.Service.Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> CreateAsync([FromBody] Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
         {
             Create.Request request = new Create.Request(dispute);
-            var response = await _mediator.Send(request, cancellationToken);
+            Create.Response response = await _mediator.Send(request, cancellationToken);
+
+            if (!response.Success)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, response.Exception);
+            }
 
             return Ok(response);
         }

@@ -36,7 +36,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
         }
 
         [Fact]
-        public async void TestHandlePublishMessageAndReturnsUnitResponse()
+        public async void TestHandlePublishMessageAndReturnsResponse()
         {
             var mockEmailRequestClient = new Mock<IRequestClient<SendEmail>>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
@@ -52,10 +52,10 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var request = new Create.Request(dispute);
 
             // Act
-            Unit response = await disputeHandler.Handle(request, CancellationToken.None);
+            Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.IsType<Unit>(response);
+            Assert.IsType<Create.Response>(response);
         }
 
 
