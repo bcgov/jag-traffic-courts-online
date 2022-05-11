@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.module';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 import { DisputeTicketSummaryComponent } from './dispute-ticket-summary.component';
 
@@ -18,7 +19,8 @@ describe('DisputeTicketSummaryComponent', () => {
         NgxMaterialModule,
       ],
       providers: [
-        DatePipe
+        DatePipe,
+        TicketTypePipe
       ],
       declarations: [ DisputeTicketSummaryComponent ]
     })

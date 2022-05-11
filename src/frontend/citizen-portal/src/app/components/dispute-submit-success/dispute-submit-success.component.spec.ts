@@ -9,6 +9,7 @@ import { NgxMaterialModule } from '@shared/modules/ngx-material/ngx-material.mod
 import { DisputeSubmitSuccessComponent } from './dispute-submit-success.component';
 import { Component } from '@angular/core';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
+import { DatePipe } from '@angular/common';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
@@ -34,6 +35,7 @@ describe('DisputeSubmitSuccessComponent', () => {
       declarations: [DisputeSubmitSuccessComponent, BlankComponent],
       providers: [
         TicketTypePipe,
+        DatePipe
       ],
     }).compileComponents();
   });
