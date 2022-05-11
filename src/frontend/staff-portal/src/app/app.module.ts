@@ -45,6 +45,7 @@ import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
+import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -66,7 +67,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketPageComponent,
     UnauthorizedComponent,
     TicketInfoComponent,
-    ContactInfoComponent
+    ContactInfoComponent,
+    TicketStatusComponent
   ],
   imports: [
     CommonModule,

@@ -12,7 +12,7 @@ import { FormControlValidators } from '@core/validators/form-control.validators'
   styleUrls: ['./ticket-info.component.scss'],
 })
 export class TicketInfoComponent implements OnInit {
-  @Input() public ticketInfo: any;
+  @Input() public ticketInfo: any; // FIXME: this should be a specific type, not "any"
   @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
