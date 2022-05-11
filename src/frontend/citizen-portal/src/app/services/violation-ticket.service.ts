@@ -4,12 +4,11 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ImageTicketNotFoundDialogComponent } from '@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component';
 import { TicketNotFoundDialogComponent } from '@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component';
 import { FileUtilsService } from '@shared/services/file-utils.service';
-import { Field, NoticeOfDispute, OcrViolationTicket, TicketsService, ViolationTicket } from 'app/api';
+import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { NgProgressRef } from 'ngx-progressbar';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -20,7 +19,6 @@ import { map, catchError } from 'rxjs/operators';
 })
 export class ViolationTicketService {
   private _ticket: BehaviorSubject<ViolationTicket> = new BehaviorSubject<ViolationTicket>(null);
-  private _noticOfDispute: BehaviorSubject<NoticeOfDispute> = new BehaviorSubject<NoticeOfDispute>(null);
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public ocrTicketDateKey = "violation_date";
@@ -42,14 +40,6 @@ export class ViolationTicketService {
 
   public get ticket(): ViolationTicket {
     return this._ticket.value;
-  }
-
-  public get noticOfDispute$(): BehaviorSubject<NoticeOfDispute> {
-    return this._noticOfDispute;
-  }
-
-  public get noticOfDispute(): NoticeOfDispute {
-    return this._noticOfDispute.value;
   }
 
   private get ocrTicket$(): BehaviorSubject<OcrViolationTicket> { // not public for current stage
@@ -126,31 +116,6 @@ export class ViolationTicketService {
           }
         })
     })
-  }
-
-  public createNoticeOfDispute(input: NoticeOfDispute): void {
-    const data: DialogOptions = {
-      titleKey: "Submit request",
-      messageKey:
-        "When your request is submitted for adjudication, it can no longer be updated. Are you ready to submit your request?",
-      actionTextKey: "Submit request",
-      cancelTextKey: "Cancel",
-      icon: null,
-    };
-    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
-      .subscribe((response: boolean) => {
-        if (response) {
-          // return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
-          this.noticOfDispute$.next(input);
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
-            queryParams: {
-              ticketNumber: this.ticket.ticket_number,
-              time: this.datePipe.transform(this.ticket.issued_date, "HH:mm"),
-            },
-          });
-          // })
-        }
-      });
   }
 
   private fromOCR(source: OcrViolationTicket): ViolationTicket {

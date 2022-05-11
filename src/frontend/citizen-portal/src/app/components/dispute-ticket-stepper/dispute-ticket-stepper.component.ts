@@ -7,10 +7,8 @@ import { ConfigService } from "@config/config.service";
 import { UtilsService } from "@core/services/utils.service";
 import { FormControlValidators } from "@core/validators/form-control.validators";
 import { TranslateService } from "@ngx-translate/core";
-import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { Address } from "@shared/models/address.model";
-import { DisputesService, NoticeOfDispute, ViolationTicket, Plea } from "app/api";
+import { NoticeOfDispute, ViolationTicket, Plea } from "app/api";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { Subscription } from "rxjs";
@@ -20,6 +18,7 @@ import { MatCheckboxChange } from "@angular/material/checkbox";
 import { FormUtilsService } from "@core/services/form-utils.service";
 import { ToastService } from "@core/services/toast.service";
 import { AppRoutes } from "app/app.routes";
+import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
@@ -40,6 +39,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   public legalRepresentationForm: FormGroup;
   public countForms: FormArray;
   public ticket: ViolationTicket;
+  public noticeOfDispute: NoticeOfDispute;
   public ticketType;
 
   // Disputant
@@ -78,12 +78,7 @@ export class DisputeTicketStepperComponent implements OnInit {
     disputed_counts: [],
   }
 
-  private countFormFields = {
-    plea: null,
-    request_time_to_pay: false,
-    request_reduction: false,
-    appear_in_court: null,
-  }
+  private countFormFields = this.noticeOfDisputeService.countFormFields;
 
   private countFormSetting = {
     __skip: false,
@@ -119,7 +114,7 @@ export class DisputeTicketStepperComponent implements OnInit {
     protected router: Router,
     protected formBuilder: FormBuilder,
     protected violationTicketService: ViolationTicketService,
-    protected disputesService: DisputesService,
+    protected noticeOfDisputeService: NoticeOfDisputeService,
     private utilsService: UtilsService,
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
@@ -169,19 +164,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   private setCheckBoxes() {
-    this.isShowCheckbox = {};
-    let fields = Object.keys(this.countFormFields);
-    fields.forEach(field => {
-      if (this.countForms && this.countForms.value && this.countForms.value.length > -1) {
-        this.isShowCheckbox[field] = this.countForms.value.filter(i => i[field]).map(i => i.count);
-      } else {
-        this.isShowCheckbox[field] = [];
-      }
-    });
-    this.isShowCheckbox.request_counts =
-      [...this.isShowCheckbox.request_time_to_pay, ...this.isShowCheckbox.request_reduction]
-        .filter((value, index, self) => { return self.indexOf(value) === index; }).sort();
-    this.isShowCheckbox.not_guilty = this.countForms.value.filter(i => i.plea === Plea.NotGuilty).map(i => i.count);
+    this.isShowCheckbox = this.noticeOfDisputeService.getIsShowCheckBoxes(this.form.value);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -197,6 +180,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   public onStepSave(countInx?, applyToRemaining?): void {
+    let isSummary = this.stepper.steps.length === this.stepper.selectedIndex + 2;
     let isLast = this.stepper.steps.length === this.stepper.selectedIndex + 1;
     let isValid = this.formUtilsService.checkValidity(this.form);
 
@@ -221,6 +205,12 @@ export class DisputeTicketStepperComponent implements OnInit {
         this.toastService.openErrorToast(this.config.dispute_validation_error);
       }
       return;
+    }
+
+    if (isSummary) {
+      this.noticeOfDispute = <NoticeOfDispute>{ ...this.ticket, ...this.form.value };
+    } else {
+      this.noticeOfDispute = null;
     }
 
     if (isLast) {
@@ -257,11 +247,7 @@ export class DisputeTicketStepperComponent implements OnInit {
    * Submit the dispute
    */
   private submitDispute(): void {
-    let input = <NoticeOfDispute>{
-      ...this.ticket,
-      ...this.form.value
-    };
     // this.busy = this.violationTicketService.createNoticeOfDispute(input); 
-    this.violationTicketService.createNoticeOfDispute(input);
+    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
   }
 }
