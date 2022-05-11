@@ -26,17 +26,14 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var disputeController = new DisputesController(mockMediator.Object, mockLogger.Object);
             var request = new Create.Request(mockTicketDispute.Object);
-            var createResponse = new Create.Response(Guid.NewGuid());
             mockMediator
-                .Setup(_ => _.Send<Create.Response>(It.IsAny<Create.Request>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(createResponse);
+                .Setup(_ => _.Send(It.IsAny<Create.Request>(), It.IsAny<CancellationToken>()));
 
             // Act
             var result = await disputeController.CreateAsync(mockTicketDispute.Object, CancellationToken.None);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal(createResponse, okResult.Value);
         }
     }
 }
