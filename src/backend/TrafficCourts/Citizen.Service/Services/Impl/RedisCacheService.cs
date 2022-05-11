@@ -1,6 +1,7 @@
 ﻿using StackExchange.Redis;
 using System.Text.Json;
 using System.Buffers;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics;
 using Winista.Mime;
 
@@ -13,12 +14,14 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
     {
         private readonly IConnectionMultiplexer _redis;
         private readonly IDatabaseAsync _redisDbAsync;
+        private readonly IMemoryStreamManager _memoryStreamManager;
         private readonly ILogger<RedisCacheService> _logger;
 
-        public RedisCacheService(IConnectionMultiplexer redis, ILogger<RedisCacheService> logger)
+        public RedisCacheService(IConnectionMultiplexer redis, IMemoryStreamManager memoryStreamManager, ILogger<RedisCacheService> logger)
         {
             _redis = redis ?? throw new ArgumentNullException(nameof(redis));
             _redisDbAsync = _redis.GetDatabase(); // Obtain the connection to database
+            _memoryStreamManager = memoryStreamManager;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -57,7 +60,13 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
                 return default;
             }
 
-            var stream = new MemoryStream(fileData);
+            // var stream = new MemoryStream(fileData);
+            MemoryStream stream = _memoryStreamManager.GetStream();
+
+            int size = Convert.ToInt32(fileData.Length()); // Don't think it should ever reach max of int, which is ~2 gigs
+            await stream.WriteAsync(fileData, 0, size);
+
+            stream.Position = 0;
             return stream;
         }
 
