@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
+import { NoticeOfDispute } from 'app/api';
+import { NoticeOfDisputeService } from 'app/services/notice-of-dispute.service';
 
 @Component({
   selector: 'app-dispute-ticket-summary',
@@ -7,16 +8,17 @@ import { TicketDisputeView } from '@shared/models/ticketDisputeView.model';
   styleUrls: ['./dispute-ticket-summary.component.scss'],
 })
 export class DisputeTicketSummaryComponent implements OnInit {
-  @Input() public ticket: any;
-  @Input() public countDataList:any;
-  public defaultLanguage: string;
+  @Input() public noticeOfDispute: NoticeOfDispute;
+  public isShowCheckbox: any;
 
-  constructor() {
-    //
+  constructor(
+    protected noticeOfDisputeService: NoticeOfDisputeService,
+  ) {
   }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    //
+    if (this.noticeOfDispute) {
+      this.isShowCheckbox = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
+    }
   }
 }
