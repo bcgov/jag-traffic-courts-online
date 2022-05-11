@@ -22,7 +22,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             try
             {
-                if (context.RequestId != null)
+                if (context.MessageId != null)
                 {
                     _logger.LogDebug("Consuming message: {MessageId} ", context.MessageId);
 
