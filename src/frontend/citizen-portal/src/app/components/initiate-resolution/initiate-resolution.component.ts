@@ -14,12 +14,12 @@ import { DatePipe } from "@angular/common";
   styleUrls: ["./initiate-resolution.component.scss"],
 })
 export class InitiateResolutionComponent implements OnInit {
+  private params: any;
+
   public busy: Subscription;
   public ticket: ViolationTicket;
   public ticketType: string;
-  private params: any;
-
-  ticketTypeLocal = ticketTypes;
+  public ticketTypes = ticketTypes;
 
   constructor(
     protected route: ActivatedRoute,
