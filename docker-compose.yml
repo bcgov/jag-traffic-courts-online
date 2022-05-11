@@ -54,6 +54,8 @@ services:
       RABBITMQ__PORT: 5672
       RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
+      JWT__AUDIENCE: ${JWT__AUDIENCE:-tco-staff-portal}
+      JWT__AUTHORITY: ${JWT__AUTHORITY:-https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4/}
     ports:
       - "5005:8080"
     restart: always
