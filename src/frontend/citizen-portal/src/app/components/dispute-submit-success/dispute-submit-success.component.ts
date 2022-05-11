@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { NoticeOfDispute } from "app/api";
+import { AppRoutes } from "app/app.routes";
 import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { Subscription } from "rxjs";
@@ -14,35 +15,28 @@ import { Subscription } from "rxjs";
 export class DisputeSubmitSuccessComponent implements OnInit {
   public busy: Subscription;
   public noticeOfDispute: NoticeOfDispute;
-  public countList:any;
+  public countList: any;
   public readonly changeOfAddressURL: string =
     "https://www2.gov.bc.ca/assets/gov/law-crime-and-justice/courthouse-services/court-files-records/court-forms/traffic/ptr805.pdf?forcedownload=true";
   public readonly whatToExpectURL: string =
     "https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf";
   public ticketTypes = ticketTypes;
   public ticketType;
-  
+
   constructor(
     private router: Router,
     private noticeOfDisputeService: NoticeOfDisputeService,
     private violationTicketService: ViolationTicketService,
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.noticeOfDispute = this.noticeOfDisputeService.noticeOfDispute;
     this.ticketType = this.violationTicketService.ticketType;
 
-    // this.disputeService.ticket$.subscribe((ticket) => {
-    //   if (!ticket) {
-    //     this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
-    //     return;
-    //   }
-
-    //   this.ticket = ticket;
-    //   if(ticket && ticket.countList){
-    //       this.countList = ticket.countList;
-    //   }
-    // });
+    if (!this.noticeOfDispute) {
+      this.router.navigate([AppRoutes.disputePath(AppRoutes.FIND)]);
+      return;
+    }
   }
 
   public onPrint(): void {

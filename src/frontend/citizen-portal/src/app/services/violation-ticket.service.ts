@@ -1,6 +1,6 @@
 import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Injectable, OnInit } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { LoggerService } from "@core/services/logger.service";
@@ -18,7 +18,7 @@ import { map, catchError } from "rxjs/operators";
 @Injectable({
   providedIn: "root",
 })
-export class ViolationTicketService implements OnInit {
+export class ViolationTicketService {
   private _ticket: BehaviorSubject<ViolationTicket> = new BehaviorSubject<ViolationTicket>(null);
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -35,9 +35,6 @@ export class ViolationTicketService implements OnInit {
     private datePipe: DatePipe,
     private ticketTypePipe: TicketTypePipe,
   ) {
-  }
-
-  ngOnInit(): void {
     // auto update ticket type
     this.ticket$.subscribe(ticket => {
       this._ticketType.next(this.getTicketType(ticket));
