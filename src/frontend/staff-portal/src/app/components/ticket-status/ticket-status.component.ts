@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DisputeStatus } from 'app/api';
+import { Dispute, DisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-ticket-status',
@@ -7,14 +7,11 @@ import { DisputeStatus } from 'app/api';
   styleUrls: ['./ticket-status.component.scss']
 })
 export class TicketStatusComponent implements OnInit {
-  @Input() public dispute: any; // FIXME: this should be of type Dispute, not "any".
+  @Input() public dispute: Dispute;
   
   constructor() { }
 
   ngOnInit(): void {
-    // FIXME, remove these custom mappings and use the Dispute object directly
-    this.dispute.citizenSubmittedDate = this.dispute.DateSubmitted;
-    this.dispute.status = DisputeStatus.Processing; // No status field on the custom "any" object being passed in
   }
 
 }
