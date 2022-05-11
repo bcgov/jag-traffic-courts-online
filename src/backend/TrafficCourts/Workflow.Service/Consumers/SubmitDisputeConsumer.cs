@@ -27,39 +27,38 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             try
             {
-                if (context.Message != null)
+                if (context.MessageId != null)
                 {
                     _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
+                }
 
-                    NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
+                NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
-                    _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", noticeOfDispute.ToString());
+                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", noticeOfDispute.ToString());
 
-                    var disputeId = await _oracleDataApiService.CreateDisputeAsync(noticeOfDispute);
+                var disputeId = await _oracleDataApiService.CreateDisputeAsync(noticeOfDispute);
 
-                    if (disputeId != Guid.Empty)
+                if (disputeId != Guid.Empty)
+                {
+                    _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
+
+                    await context.RespondAsync<DisputeSubmitted>(new
                     {
-                        _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
+                        context.MessageId,
+                        InVar.Timestamp,
+                        DisputeId = disputeId
+                    });
+                }
+                else
+                {
+                    _logger.LogDebug("Failed to save the dispute");
 
-                        await context.RespondAsync<DisputeSubmitted>(new
-                        {
-                            context.MessageId,
-                            InVar.Timestamp,
-                            DisputeId = disputeId
-                        });
-                    }
-                    else
+                    await context.RespondAsync<DisputeRejected>(new
                     {
-                        _logger.LogDebug("Failed to save the dispute");
-
-                        await context.RespondAsync<DisputeRejected>(new
-                        {
-                            context.MessageId,
-                            InVar.Timestamp,
-                            Reason = "Bad request"
-                        });
-                    }
-
+                        context.MessageId,
+                        InVar.Timestamp,
+                        Reason = "Bad request"
+                    });
                 }
             }
             catch (Exception ex)
