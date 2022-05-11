@@ -3,7 +3,7 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
 } from '@angular/common/http';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
@@ -15,18 +15,14 @@ import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
 import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { SharedModule } from './shared/shared.module';
-import {
-  TranslateModule,
-  TranslateLoader,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
-import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
+import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -37,9 +33,7 @@ import { TicketPageComponent } from './components/ticket-page/ticket-page.compon
 import { DisputeTicketSummaryComponent } from './components/dispute-ticket-summary/dispute-ticket-summary.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
-import { TicketPaymentComponent } from './components/ticket-payment/ticket-payment.component';
 import { CountSummaryComponent } from './components/count-summary/count-summary.component';
-import { TicketPaymentCompleteComponent } from './components/ticket-payment-complete/ticket-payment-complete.component';
 import { CountItemSummaryComponent } from './components/count-item-summary/count-item-summary.component';
 import { CountItemDisputeSummaryComponent } from './components/count-item-dispute-summary/count-item-dispute-summary.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
@@ -67,14 +61,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     LandingComponent,
     FindTicketComponent,
     DisputeSubmitSuccessComponent,
-    DisputeSummaryComponent,
+    InitiateResolutionComponent,
     DisputeTicketStepperComponent,
     TicketPageComponent,
     DisputeTicketSummaryComponent,
     ScanTicketComponent,
-    TicketPaymentComponent,
     CountSummaryComponent,
-    TicketPaymentCompleteComponent,
     CountItemSummaryComponent,
     CountItemDisputeSummaryComponent,
   ],
@@ -129,6 +121,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     // },
     WindowRefService,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent],
 })
 export class AppModule {

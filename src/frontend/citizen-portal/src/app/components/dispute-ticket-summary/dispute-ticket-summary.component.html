@@ -1,145 +1,95 @@
-<ng-container *ngIf="ticket">
+<ng-container *ngIf="noticeOfDispute">
   <section class="mb-2">
-    <app-resolution-header [ticket]="ticket"></app-resolution-header>
+    <app-resolution-header [ticket]="noticeOfDispute"></app-resolution-header>
   </section>
 
   <div class="mb-2">
     <section class="px-4 py-2 mb-3 card-section"
-             *ngFor="let row of ticket.offences; let i = index">
+      *ngFor="let row of noticeOfDispute.disputed_counts; let i = index">
       <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
     </section>
 
-    <section class="px-4 py-2 mb-4 card-section"
-             >
+    <section class="px-4 py-2 mb-4 card-section">
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
-        <hr/>
-        <!-- <p>
-          The following additional information is required and will apply to all counts on this ticket made with that
-          selection.
-        </p> -->
-        
-        <div *ngIf="countDataList?.newObj?.count.toString()">
-          <h3>Count:{{countDataList?.newObj?.count?.toString()}}</h3>
-         
+        <ng-container *ngIf="isShowCheckboxes?.request_counts?.length > 0">
+          <hr />
+          <strong class="fs-5">
+            <ng-container *ngFor="let i of isShowCheckboxes?.request_counts let inx = index">
+              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+            </ng-container>
+          </strong>
           <h3>I do not want to attend a court hearing and want to supply written reasons.</h3>
-          <div class="count-heading">Written reasons for fine reduction request</div>
-          <div class="count-data">{{countDataList?.newObj?.reductionAppearInCourt}}</div>
-          <div class="count-heading">Written reasons for time to pay request</div>
-          <div class="count-data">{{countDataList?.newObj?.reductionAppearInCourtDoNot}}</div>
-        </div>
+          <ng-container *ngIf="noticeOfDispute.fine_reduction_reason">
+            <div class="count-heading">Written reasons for fine reduction request</div>
+            <div class="count-data">{{ noticeOfDispute.fine_reduction_reason }}</div>
+          </ng-container>
+          <ng-container *ngIf="noticeOfDispute.time_to_pay_reason">
+            <div class="count-heading">Written reasons for time to pay request</div>
+            <div class="count-data">{{ noticeOfDispute.time_to_pay_reason }}</div>
+          </ng-container>
+        </ng-container>
+      </div>
+      <div *ngIf="isShowCheckboxes?.not_guilty?.length > 0">
         <hr />
-        <div *ngIf="countDataList?.newObj?.count1.toString()" >
-          <h3>Count:{{countDataList?.newObj?.count1.toString()}}</h3>
-
-          <h3>I want to attend a court hearing and dispute the charge.</h3>
-          <table class="disputre">
-            <tr>
-              <th>Action</th>
-              <th>* of witness</th>
-            </tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.lawyerPresent'><td> interpreterRequired</td><td>Yes</td>
-            </tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.interpreterRequired'><td>Language</td><td>{{countDataList?.dispute?.interpreter_language}}</td></tr>
-            <tr *ngIf='countDataList && countDataList.dispute && countDataList.dispute.witnessPresent'><td>witnessPresent</td><td>{{countDataList?.dispute?.number_of_witness}}</td></tr>
-          </table>
+        <strong class="fs-5">
+          <ng-container *ngFor="let i of isShowCheckboxes?.not_guilty let inx = index">
+            {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+          </ng-container>
+        </strong>
+        <br />
+        <div class="mb-3">
+          <strong>I want to attend a court hearing and dispute the charge.</strong>
+        </div>
+        <div class="row mb-2" *ngIf="noticeOfDispute.legal_representation">
+          <div class="row mb-3">
+            <small>Action</small>
+            <div><strong>I intend to be represented by a lawyer in court</strong></div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <small>Name of law firm</small>
+              <div><strong>{{ noticeOfDispute.legal_representation.law_firm_name }}</strong></div>
+            </div>
+            <div class="col">
+              <small>Full name of lawyer</small>
+              <div><strong>{{ noticeOfDispute.legal_representation.lawyer_full_name }}</strong></div>
+            </div>
+            <div class="col">
+              <small>Contact Email</small>
+              <div><strong>{{ noticeOfDispute.legal_representation.lawyer_email }}</strong></div>
+            </div>
+          </div>
+          <div class="row">
+            <small>Address of the law firm</small>
+            <div><strong>{{ noticeOfDispute.legal_representation.lawyer_address }}</strong></div>
+          </div>
+        </div>
+        <div class="row mb-2" *ngIf="noticeOfDispute.interpreter_language">
+          <div class="row">
+            <div class="col-lg-8">
+              <small>Action</small>
+              <div><strong>I require a language interpreter at the hearing</strong></div>
+            </div>
+            <div class="col">
+              <small>Language</small>
+              <div><strong>{{noticeOfDispute.interpreter_language}}</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2" *ngIf="noticeOfDispute.number_of_witness">
+          <div class="row">
+            <div class="col-lg-8">
+              <small>Action</small>
+              <div><strong>I intend to call witness(es)</strong></div>
+            </div>
+            <div class="col">
+              <small># of witness(es)</small>
+              <div><strong>{{noticeOfDispute.number_of_witness}}</strong></div>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <section *ngIf="ticket.additional && ticket.additional._isReductionRequired">
-        <h3 class="fw-bold mb-0">Request fine reduction and/ or time to pay.</h3>
-
-        <ng-container *ngIf="ticket.additional.requestReduction">
-          <div class="row"
-               *ngIf="ticket.additional.fine_reduction_reason; else noReductionReason">
-            <div class="col-lg-9">
-              <small class="d-block">Written reasons for fine reduction request</small>
-              <strong>{{ ticket.additional.fine_reduction_reason }}</strong>
-            </div>
-            <div class="col-lg-3"></div>
-          </div>
-
-          <ng-template #noReductionReason>
-            <div class="row">
-              <div class="col-lg-9">
-                <small class="d-block">Request a fine reduction request</small>
-                <strong>{{ ticket?.additional?.requestReduction | yesNo }}</strong>
-              </div>
-              <div class="col-lg-3"></div>
-            </div>
-          </ng-template>
-        </ng-container>
-
-
-        <ng-container *ngIf="ticket.additional.requestMoreTime">
-          <div class="row"
-               *ngIf="ticket.additional.time_to_pay_reason; else noRequestMoreTime">
-            <div class="col-lg-9">
-              <small class="d-block">Written reasons for more time to pay request</small>
-              <strong>{{ ticket?.additional?.time_to_pay_reason }}</strong>
-            </div>
-            <div class="col-lg-3"></div>
-          </div>
-
-          <ng-template #noRequestMoreTime>
-            <div class="row">
-              <div class="col-lg-9">
-                <small class="d-block">Request a more time to pay</small>
-                <strong>{{ ticket?.additional?.requestMoreTime | yesNo }}</strong>
-              </div>
-              <div class="col-lg-3"></div>
-            </div>
-          </ng-template>
-        </ng-container>
-
-        <hr *ngIf="ticket.additional.__isCourtRequired" />
-      </section>
-
-      <section *ngIf="ticket.additional && (ticket.additional.lawyerPresent || ticket.additional.interpreterRequired || ticket.additional.witnessPresent)">
-        <h3 class="fw-bold mb-0">Dispute charge.</h3>
-
-        <div class="row"
-             *ngIf="ticket.additional.lawyerPresent">
-          <div class="col-lg-9">
-            <small class="d-block">Action</small>
-            <strong>
-              {{ "stepper.additional.lawyer" | translate }}
-            </strong>
-          </div>
-        </div>
-
-        <div class="row"
-             *ngIf="ticket.additional.interpreterRequired">
-          <div class="col-lg-9">
-            <small class="d-block">Action</small>
-            <strong> I require an interpreter </strong>
-          </div>
-
-          <div class="col-lg-3">
-            <small class="d-block">Language</small>
-            <strong>
-              {{
-              ticket.additional.interpreter_language
-              | configCode: "languages"
-              | default
-              }}
-            </strong>
-          </div>
-        </div>
-
-        <div class="row"
-             *ngIf="ticket.additional.witnessPresent">
-          <div class="col-lg-9">
-            <small class="d-block">Action</small>
-            <strong> I intend to call witness(es) </strong>
-          </div>
-
-          <div class="col-lg-3">
-            <small class="d-block"># of witness(es)</small>
-            <strong>{{ ticket.additional.number_of_witness }}</strong>
-          </div>
-        </div>
-      </section>
     </section>
   </div>
 </ng-container>

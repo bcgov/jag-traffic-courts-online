@@ -3,12 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { DisputeTicketStepperComponent } from '@components/dispute-ticket-stepper/dispute-ticket-stepper.component';
 import { ScanTicketComponent } from '@components/scan-ticket/scan-ticket.component';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
-import { TicketPaymentCompleteComponent } from '@components/ticket-payment-complete/ticket-payment-complete.component';
-import { TicketPaymentComponent } from '@components/ticket-payment/ticket-payment.component';
 import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
-import { DisputeSummaryComponent } from './components/dispute-summary/dispute-summary.component';
+import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { LandingComponent } from './components/landing/landing.component';
 
@@ -33,7 +31,7 @@ const routes: Routes = [
       },
       {
         path: AppRoutes.SUMMARY,
-        component: DisputeSummaryComponent,
+        component: InitiateResolutionComponent,
       },
       {
         path: AppRoutes.STEPPER,

@@ -10,7 +10,7 @@ import { FormatDatePipe } from '@shared/pipes/format-date.pipe';
 import { of } from 'rxjs';
 import { Component } from '@angular/core';
 
-import { DisputeSummaryComponent } from './dispute-summary.component';
+import { InitiateResolutionComponent } from './initiate-resolution.component';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { DatePipe } from '@angular/common';
 
@@ -18,9 +18,9 @@ import { DatePipe } from '@angular/common';
 @Component({ selector: 'app-test-blank', template: `` })
 class BlankComponent {}
 
-describe('DisputeSummaryComponent', () => {
-  let component: DisputeSummaryComponent;
-  let fixture: ComponentFixture<DisputeSummaryComponent>;
+describe('InitiateResolutionComponent', () => {
+  let component: InitiateResolutionComponent;
+  let fixture: ComponentFixture<InitiateResolutionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -36,7 +36,7 @@ describe('DisputeSummaryComponent', () => {
         CdkAccordionModule,
         TranslateModule.forRoot(),
       ],
-      declarations: [DisputeSummaryComponent, BlankComponent],
+      declarations: [InitiateResolutionComponent, BlankComponent],
       providers: [
         DatePipe,
         TicketTypePipe,
@@ -54,7 +54,7 @@ describe('DisputeSummaryComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisputeSummaryComponent);
+    fixture = TestBed.createComponent(InitiateResolutionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
