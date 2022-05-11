@@ -18,6 +18,7 @@ export interface IDisputesService {
 })
 export class DisputesService implements IDisputesService {
   private _disputes: BehaviorSubject<Dispute[]>;
+  private _dispute: BehaviorSubject<Dispute>;
   
 
   constructor(
@@ -65,4 +66,58 @@ export class DisputesService implements IDisputesService {
   public get disputes(): Dispute[] {
     return this._disputes.value;
   }
+
+  /**
+   * Get the dispute from RSI by Id.
+   *
+   * @param disputeId
+   */
+ public getDispute(disputeId: string): Observable<Dispute> {
+
+  return this.disputeService.apiDisputeDisputeIdGet(disputeId)
+    .pipe(
+      map((response: Dispute) =>
+        response ? response : null
+      ),
+      map((dispute: Dispute) => {
+        return dispute;
+      }),
+      tap((dispute) =>
+        this.logger.info('DisputesService::getDisputes', dispute)
+      ),
+      catchError((error: any) => {
+        this.toastService.openErrorToast(this.configService.dispute_error);
+        this.logger.error(
+          'DisputesService::getDispute error has occurred: ',
+          error
+        );
+        throw error;
+      })
+    );
+}
+
+public get dispute$(): BehaviorSubject<Dispute> {
+  return this._dispute;
+}
+
+public get dispute(): Dispute {
+  return this._dispute.value;
+}
+}
+
+export type MoreDisputeStatus = 'New' | 'Processing' | 'Rejected' | 'Cancelled' | 'Alert' | 'Checked Out';
+export const MoreDisputeStatus = {
+  New: 'New' as MoreDisputeStatus,
+  Processing: 'Processing' as MoreDisputeStatus,
+  Rejected: 'Rejected' as MoreDisputeStatus,
+  Cancelled: 'Cancelled' as MoreDisputeStatus,
+  Alert: 'Alert' as MoreDisputeStatus,
+  CheckedOut: 'Checked Out' as MoreDisputeStatus
+}
+export interface DisputeView extends Dispute {
+  DateSubmitted?: Date,
+  RedGreenAlert?: string,
+  moreDisputeStatus: MoreDisputeStatus;
+  FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
+  CourtHearing: boolean, // if at least one count requests court hearing
 }

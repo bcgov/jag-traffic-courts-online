@@ -600,7 +600,8 @@
           },
           "birthdate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "driversLicenceNumber": {
             "maxLength": 20,
