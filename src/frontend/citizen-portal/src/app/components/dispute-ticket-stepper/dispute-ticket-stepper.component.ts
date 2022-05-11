@@ -159,6 +159,12 @@ export class DisputeTicketStepperComponent implements OnInit {
       return;
     }
 
+    if (isSummary) {
+      this.noticeOfDispute = <NoticeOfDispute>{ ...this.ticket, ...this.form.value };
+    } else {
+      this.noticeOfDispute = null;
+    }
+
     if (isLast) {
       this.submitDispute();
     } else {

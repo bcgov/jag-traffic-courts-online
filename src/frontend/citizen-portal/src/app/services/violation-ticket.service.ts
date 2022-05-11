@@ -52,11 +52,11 @@ export class ViolationTicketService implements OnInit {
     return this._ticket.value;
   }
 
-  public get ocrTicket$(): BehaviorSubject<OcrViolationTicket> {
+  private get ocrTicket$(): BehaviorSubject<OcrViolationTicket> { // not public for current stage
     return this._ocrTicket;
   }
 
-  public get ocrTicket(): OcrViolationTicket {
+  private get ocrTicket(): OcrViolationTicket { // not public for current stage
     return this._ocrTicket.value;
   }
 
@@ -181,7 +181,7 @@ export class ViolationTicketService implements OnInit {
 
     // special handling
     if (isDateFound || isTimeFound) {
-      result.issued_date = result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey];
+      result.issued_date = this.datePipe.transform(result[this.ocrTicketDateKey] + " " + result[this.ocrTicketTimeKey], "YYYY-MM-ddTHH:mm:ss");
     }
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
