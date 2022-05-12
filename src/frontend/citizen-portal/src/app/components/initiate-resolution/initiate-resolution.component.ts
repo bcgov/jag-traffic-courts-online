@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LoggerService } from "@core/services/logger.service";
 import { AppRoutes } from "app/app.routes";
 import { Subscription } from "rxjs";
@@ -13,26 +13,30 @@ import { ViolationTicket } from "app/api";
   styleUrls: ["./initiate-resolution.component.scss"],
 })
 export class InitiateResolutionComponent implements OnInit {
+  private params: any;
   public busy: Subscription;
   public ticket: ViolationTicket;
   public ticketType: string;
   public ticketTypes = ticketTypes;
 
   constructor(
+    protected route: ActivatedRoute,
     protected router: Router,
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
   ) {
     // always reconstruct current component
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
+    this.route.queryParams.subscribe((params) => {
+      this.params = params;
+    });
   }
 
   public ngOnInit(): void {
-    if (this.violationTicketService.validateTicket()) {
+    if (this.violationTicketService.validateTicket(this.params)) {
       this.logger.info("InitiateResolutionComponent:: Use existing ticket");
       this.ticket = this.violationTicketService.ticket;
       this.ticketType = this.violationTicketService.ticketType;
-      ;
     } else {
       this.busy = this.violationTicketService.searchTicket().subscribe(res => res);
     }
