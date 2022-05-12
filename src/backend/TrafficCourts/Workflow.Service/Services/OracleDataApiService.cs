@@ -32,7 +32,7 @@ namespace TrafficCourts.Workflow.Service.Services
 
             using (var httpClient = new HttpClient())
             {
-                var oracleDataApiBaseUri = $"http://{_oracleDataApiConfiguration.Host}:{_oracleDataApiConfiguration.Port}/api/v1.0/";
+                var oracleDataApiBaseUri = $"{_oracleDataApiConfiguration.BaseUrl}api/v1.0/";
                 httpClient.BaseAddress = new Uri(oracleDataApiBaseUri);
                 using (var response = await httpClient.PostAsync("dispute", disputeToSubmit, formatter))
                 {

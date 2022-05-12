@@ -513,11 +513,10 @@
 
                 <div class="row" *ngIf="form.get('__witness_present')?.value">
                   <div class="col">
-                    <mat-form-field>
+                    <mat-form-field class="pe-4">
                       <mat-label>Number of witnesses</mat-label>
-                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                        formControlName="number_of_witness" />
-                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('required')">
+                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses" formControlName="number_of_witness" maxlength="2" />
+                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>
                       <mat-error *ngIf="form.get('number_of_witness')?.hasError('min')">
