@@ -52,6 +52,8 @@ export class ScanTicketComponent implements OnInit {
     this.ticketFilename = inputTicketData.filename;
     this.form = this.formBuilder.group(this.ticket); // can add control
     this.form.disable();
+    this.form.controls.disputant_detected_ocr_issues.enable();
+    this.form.controls.disputant_ocr_issues_description.enable();
   }
 
   public onSubmit(): void {
@@ -66,11 +68,8 @@ export class ScanTicketComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          this.violationTicketService.ticket$.next(this.ticket);
-          this.violationTicketService.goToDisputeSummary({
-            ticketNumber: this.ticket.ticket_number,
-            time: (<any>this.ticket)[this.violationTicketService.ocrTicketTimeKey], // special handling
-          });
+          this.violationTicketService.updateOcrIssue(this.form.value.disputant_detected_ocr_issues, this.form.value.disputant_ocr_issues_description);
+          this.violationTicketService.goToInitiateResolution();
         }
       });
   }

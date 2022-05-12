@@ -2,7 +2,7 @@ import { DatePipe } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LoggerService } from "@core/services/logger.service";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ImageTicketNotFoundDialogComponent } from "@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component";
@@ -25,8 +25,12 @@ export class ViolationTicketService {
   private _ticketType: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
+  public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
+  public ocrIssueDescKey = "disputant_ocr_issues_description";
+  private queryParams: any;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
     private logger: LoggerService,
@@ -39,6 +43,9 @@ export class ViolationTicketService {
     this.ticket$.subscribe(ticket => {
       this._ticketType.next(this.getTicketType(ticket));
     })
+    this.route.queryParams.subscribe((params) => {
+      this.queryParams = params;
+    });
   }
 
   public get ticket$(): BehaviorSubject<ViolationTicket> {
@@ -69,15 +76,23 @@ export class ViolationTicketService {
     return this._ticketType.value;
   }
 
-  public searchTicket(params): Observable<ViolationTicket> {
+  public searchTicket(params?): Observable<ViolationTicket> {
     this.reset();
     this.logger.info("ViolationTicketService:: Search for ticket");
+    if (!params) {
+      params = this.queryParams;
+    }
     return this.ticketService.apiTicketsSearchGet(params.ticketNumber, params.time)
       .pipe(
         map((response: ViolationTicket) => {
           if (response) {
             this.ticket$.next(response);
-            this.goToDisputeSummary(params);
+            if (this.validateTicket(params)) {
+              this.goToInitiateResolution(params);
+            } else {
+              this.logger.error("ViolationTicketService::searchTicket ticket info not matched");
+              this.onError();
+            }
           }
           else {
             this.logger.error("ViolationTicketService::searchTicket ticket not found");
@@ -127,6 +142,17 @@ export class ViolationTicketService {
           }
         })
     })
+  }
+
+  public validateTicket(params?) {
+    var result = false;
+    if (this.ticket && this.ticket.issued_date) {
+      var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
+      if (this.ticket.ticket_number === params.ticketNumber && storedTicketTime === params.time) {
+        result = true;
+      }
+    }
+    return result;
   }
 
   private fromOCR(source: OcrViolationTicket): ViolationTicket {
@@ -183,6 +209,10 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
+
+    // add extra fields for notcie of dispute
+    result[this.ocrIssueDetectedKey] = null;
+    result[this.ocrIssueDescKey] = null;
     return result;
   }
 
@@ -221,13 +251,20 @@ export class ViolationTicketService {
     }
     return result;
   }
+  
+  public updateOcrIssue(issueDetected, issuseDesc): void {
+    let ticket = this.ticket;
+    ticket[this.ocrIssueDetectedKey] = issueDetected;
+    ticket[this.ocrIssueDescKey] = issuseDesc;
+    this.ticket$.next(ticket);
+  }
 
-  goToDisputeSummary(paramsInput?): void { // start of dispute
-    if (paramsInput || this.ticket) {
+  goToInitiateResolution(paramsInput?): void {
+    if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm"),
-      }
+        time: (<any>this.ticket)[this.ocrTicketTimeKey], // special handling
+      };
       if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
