@@ -331,8 +331,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4"
-                *ngIf="countForm.value.appear_in_court && ticketType === ticketTypes.CAMERA_TICKET">
+              <div class="col mt-4" *ngIf="countForm.value.appear_in_court && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -604,7 +603,7 @@
 
             <app-stepper-footer [disableSave]="!declared" (save)="onStepSave()" (back)="disputeStepper.previous()"
               [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
-              [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+              [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
             </app-stepper-footer>
           </app-stepper-page>
         </mat-step>

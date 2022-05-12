@@ -49,18 +49,6 @@
   <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
 
   <section class="mb-2 mt-4 d-print-none">
-    <div class="row" *ngIf="noticeOfDispute.number_of_witness > 0">
-      <div class="col">
-        <app-alert type="warning" icon="info">
-          <ng-container #alertContent class="alert-content">
-            <strong>If you are calling a witness please keep the following information in mind:</strong><br />
-            If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the
-            violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record
-            of the disputant.
-          </ng-container>
-        </app-alert>
-      </div>
-    </div>
     <div class="row" *ngIf="isShowCheckboxes.not_guilty.length > 0">
       <div class="col">
         <app-alert type="warning" icon="info">
@@ -128,6 +116,18 @@
           <ng-container #alertContent class="alert-content">
             The court also provides visual language interpreters (American Sign Language) and CART (Communication Access
             Realtime Translation - captioning services) for any court proceeding.
+          </ng-container>
+        </app-alert>
+      </div>
+    </div>
+    <div class="row" *ngIf="noticeOfDispute.number_of_witness > 0">
+      <div class="col">
+        <app-alert type="warning" icon="info">
+          <ng-container #alertContent class="alert-content">
+            <strong>If you are calling a witness please keep the following information in mind:</strong><br />
+            If the disputant or the disputant’s agent does not attend the court hearing, the court will treat the
+            violation ticket as not disputed, the conviction(s) to the allegation(s) will be recorded against the record
+            of the disputant.
           </ng-container>
         </app-alert>
       </div>
