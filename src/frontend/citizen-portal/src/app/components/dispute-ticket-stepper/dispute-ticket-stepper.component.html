@@ -331,8 +331,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4"
-                *ngIf="countForm.value.appear_in_court && ticketType === ticketTypes.CAMERA_TICKET">
+              <div class="col mt-4" *ngIf="countForm.value.appear_in_court && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -514,21 +513,7 @@
 
                 <div class="row" *ngIf="form.get('__witness_present')?.value">
                   <div class="col">
-                    <mat-form-field class="pe-4">
-                      <mat-label>Number of witnesses</mat-label>
-                      <mat-select (selectionChange)="customWitnessOption = false" formControlName="number_of_witness">
-                        <mat-option [value]=1>1</mat-option>
-                        <mat-option [value]=2>2</mat-option>
-                        <mat-option [value]=3>3</mat-option>
-                        <mat-option [value]=4>4</mat-option>
-                        <mat-option [value]=5>5</mat-option>
-                        <mat-option (click)="customWitnessOption = true" [value]=6>Custom</mat-option>
-                      </mat-select>
-                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('required')">
-                        {{ "error.required" | translate }}
-                      </mat-error>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="customWitnessOption">
+                    <mat-form-field>
                       <mat-label>Number of witnesses</mat-label>
                       <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
                         formControlName="number_of_witness" />
@@ -619,7 +604,7 @@
 
             <app-stepper-footer [disableSave]="!declared" (save)="onStepSave()" (back)="disputeStepper.previous()"
               [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
-              [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
+              [saveButtonKey]="'stepper.submit'" [hasSecondaryAction]="true">
             </app-stepper-footer>
           </app-stepper-page>
         </mat-step>
