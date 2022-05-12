@@ -516,23 +516,8 @@
                   <div class="col">
                     <mat-form-field class="pe-4">
                       <mat-label>Number of witnesses</mat-label>
-                      <mat-select (selectionChange)="customWitnessOption = false" formControlName="number_of_witness">
-                        <mat-option [value]=1>1</mat-option>
-                        <mat-option [value]=2>2</mat-option>
-                        <mat-option [value]=3>3</mat-option>
-                        <mat-option [value]=4>4</mat-option>
-                        <mat-option [value]=5>5</mat-option>
-                        <mat-option (click)="customWitnessOption = true" [value]=6>Custom</mat-option>
-                      </mat-select>
-                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('required')">
-                        {{ "error.required" | translate }}
-                      </mat-error>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="customWitnessOption">
-                      <mat-label>Number of witnesses</mat-label>
-                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                        formControlName="number_of_witness" />
-                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('required')">
+                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses" formControlName="number_of_witness" maxlength="2" />
+                      <mat-error *ngIf="form.get('number_of_witness')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>
                       <mat-error *ngIf="form.get('number_of_witness')?.hasError('min')">

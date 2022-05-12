@@ -50,7 +50,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   public isShowCheckboxes: any;
   public customWitnessOption = false;
   public minWitnesses = 1;
-  public maxWitnesses = 9;
+  public maxWitnesses = 99;
 
   // Overview
   public declared = false;
@@ -185,12 +185,13 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   public onChangeWitnessPresent(event: MatCheckboxChange) {
+    // FIXME: This method doesn't seem to work - to be fixed with TCVP-1225
     if (event.checked) {
       this.form.controls.number_of_witness.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
       this.form.controls.number_of_witness.clearValidators();
-      this.form.controls.number_of_witness.updateValueAndValidity();
     }
+    this.form.controls.number_of_witness.updateValueAndValidity();
   }
 
   /**
