@@ -92,12 +92,15 @@
                 <p class="text-dark"><strong>Example: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
                 <mat-checkbox color="primary" class="w-100" formControlName="disputant_detected_ocr_issues">
                   Yes, there are differences between the information on the ticket and the information scanned above.
-                </mat-checkbox> <br>
-                <mat-form-field *ngIf="form.get('disputant_detected_ocr_issues')?.value">
-                  <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
-                  <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues_description" rows="4">
+                </mat-checkbox>
+                <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value">
+                  <mat-form-field>
+                    <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
+                    <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues_description"
+                      rows="4">
                   </textarea>
-                </mat-form-field>
+                  </mat-form-field>
+                </div>
               </div>
             </section>
             <div class="row mb-4 mt-4">

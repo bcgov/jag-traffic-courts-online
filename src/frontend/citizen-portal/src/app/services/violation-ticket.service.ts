@@ -25,6 +25,8 @@ export class ViolationTicketService {
   private _ticketType: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
+  public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
+  public ocrIssueDescKey = "disputant_ocr_issues_description";
   private queryParams: any;
 
   constructor(
@@ -144,9 +146,6 @@ export class ViolationTicketService {
 
   public validateTicket(params?) {
     var result = false;
-    if (!params) {
-      params = this.queryParams;
-    }
     if (this.ticket && this.ticket.issued_date) {
       var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");
       if (this.ticket.ticket_number === params.ticketNumber && storedTicketTime === params.time) {
@@ -210,10 +209,10 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
-    
+
     // add extra fields for notcie of dispute
-    result["disputant_detected_ocr_issues"] = null;
-    result["disputant_ocr_issues_description"] = null;
+    result[this.ocrIssueDetectedKey] = null;
+    result[this.ocrIssueDescKey] = null;
     return result;
   }
 
@@ -252,10 +251,20 @@ export class ViolationTicketService {
     }
     return result;
   }
+  
+  public updateOcrIssue(issueDetected, issuseDesc): void {
+    let ticket = this.ticket;
+    ticket[this.ocrIssueDetectedKey] = issueDetected;
+    ticket[this.ocrIssueDescKey] = issuseDesc;
+    this.ticket$.next(ticket);
+  }
 
   goToInitiateResolution(paramsInput?): void {
     if (this.ticket) {
-      let params = paramsInput ?? this.queryParams;
+      let params = paramsInput ?? {
+        ticketNumber: this.ticket.ticket_number,
+        time: (<any>this.ticket)[this.ocrTicketTimeKey], // special handling
+      };
       if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
