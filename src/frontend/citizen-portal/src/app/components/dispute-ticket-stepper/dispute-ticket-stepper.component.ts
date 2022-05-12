@@ -124,7 +124,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   public onStepCancel(): void {
-    this.violationTicketService.goToDisputeSummary();
+    this.violationTicketService.goToInitiateResolution();
   }
 
   public onAttendHearingChange(form: FormGroup, event): void {
