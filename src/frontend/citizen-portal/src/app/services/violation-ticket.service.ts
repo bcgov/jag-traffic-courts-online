@@ -86,7 +86,7 @@ export class ViolationTicketService {
           if (response) {
             this.ticket$.next(response);
             if (this.validateTicket(params)) {
-              this.goToDisputeSummary(params);
+              this.goToInitiateResolution(params);
             } else {
               this.logger.error("ViolationTicketService::searchTicket ticket info not matched");
               this.onError();
@@ -210,6 +210,10 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
+    
+    // add extra fields for notcie of dispute
+    result["disputant_detected_ocr_issues"] = null;
+    result["disputant_ocr_issues_description"] = null;
     return result;
   }
 
@@ -249,12 +253,9 @@ export class ViolationTicketService {
     return result;
   }
 
-  goToDisputeSummary(paramsInput?): void { // start of dispute
-    if (paramsInput || this.ticket) {
-      let params = paramsInput ?? {
-        ticketNumber: this.ticket.ticket_number,
-        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm"),
-      }
+  goToInitiateResolution(paramsInput?): void {
+    if (this.ticket) {
+      let params = paramsInput ?? this.queryParams;
       if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,

@@ -105,11 +105,11 @@ export interface NoticeOfDispute {
     /**
      * Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
      */
-    citizen_detected_ocr_issues?: boolean;
+    disputant_detected_ocr_issues?: boolean;
     /**
      * The description of the issue with OCR ticket if the citizen has detected any.
      */
-    citizen_ocr_issues_description?: string | null;
+    disputant_ocr_issues_description?: string | null;
     /**
      * The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.
      */

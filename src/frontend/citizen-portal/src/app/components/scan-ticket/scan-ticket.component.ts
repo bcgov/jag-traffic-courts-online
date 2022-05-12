@@ -66,11 +66,12 @@ export class ScanTicketComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          this.violationTicketService.ticket$.next(this.ticket);
-          this.violationTicketService.goToDisputeSummary({
-            ticketNumber: this.ticket.ticket_number,
-            time: (<any>this.ticket)[this.violationTicketService.ocrTicketTimeKey], // special handling
+          this.violationTicketService.ticket$.next({
+            ...this.ticket, // update citizen's response only
+            ...this.form.value.disputant_detected_ocr_issues,
+            ...this.form.value.disputant_ocr_issues_description,
           });
+          this.violationTicketService.goToInitiateResolution();
         }
       });
   }
