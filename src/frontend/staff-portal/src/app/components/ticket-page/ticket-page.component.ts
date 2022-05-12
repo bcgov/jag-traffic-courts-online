@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   public decidePopup = '';
-  public ticketInfo: any; // FIXME: this should be a specific type, not "any"
+  public ticketInfo: DisputeView;
   busy: Subscription;
   newDispute: DisputeView = {
     DateSubmitted: undefined,
@@ -358,12 +358,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   backTicketList(element) {
+    this.ticketInfo = element;
     if (element.ticketNumber[0] == 'A') {
       this.decidePopup = 'E'
     } else {
       this.decidePopup = "A"
     }
-    this.ticketInfo = element
     this.showTicket = !this.showTicket;
   }
   backTicketpage() {

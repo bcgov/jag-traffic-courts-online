@@ -2,7 +2,7 @@
   <a (click)="onBack()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
   </a>
-  <app-ticket-status [dispute]="ticketInfo"></app-ticket-status>
+  <app-ticket-status [dispute]="disputeInfo" *ngIf="disputeInfo"></app-ticket-status>
   <div class="ticket-info-section">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
