@@ -12,6 +12,7 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ScanTicketComponent } from './scan-ticket.component';
 import { Component } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
@@ -37,6 +38,7 @@ describe('ScanTicketComponent', () => {
       declarations: [ScanTicketComponent, BlankComponent],
       providers: [
         DatePipe,
+        TicketTypePipe,
         {
           provide: ConfigService,
           useClass: MockConfigService,

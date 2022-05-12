@@ -13,52 +13,47 @@ using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
 using Xunit.Abstractions;
 using AutoMapper;
+using MediatR;
+using NodaTime;
+using NodaTime.Testing;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
 {
     public class CreateDisputeHandlerTest
     {
-        private readonly Mock<ILogger<Create.CreateDisputeHandler>> _loggerMock = new Mock<ILogger<Create.CreateDisputeHandler>>();
+        private readonly Mock<ILogger<Create.Handler>> _loggerMock = new Mock<ILogger<Create.Handler>>();
 
         [Fact]
         public void constructor_throws_ArgumentNullException_when_passed_null()
         {
-            var mockDisputeRequestClient = new Mock<IRequestClient<SubmitNoticeOfDispute>>();
-            var mockEmailRequestClient = new Mock<IRequestClient<SendEmail>>();
+            var mockBus = new Mock<IBus>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
             var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
+            var mockClock = new Mock<IClock>();
 
-            Assert.Throws<ArgumentNullException>("submitDisputeRequestClient", () => new Create.CreateDisputeHandler(_loggerMock.Object, null, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("sendEmailRequestClient", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, null, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, null, mockFilePersistenceService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("filePersistenceService", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, null, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("logger", () => new Create.CreateDisputeHandler(null, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object));
-            Assert.Throws<ArgumentNullException>("mapper", () => new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, null));
+            Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.Handler(mockBus.Object, null!, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("filePersistenceService", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, null!, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("logger", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, null!));
+            Assert.Throws<ArgumentNullException>("clock", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, null!, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("mapper", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, null!, mockClock.Object, _loggerMock.Object));
         }
 
         [Fact]
-        public async void TestHandleReturnsResponse()
+        public async void TestHandlePublishMessageAndReturnsResponse()
         {
-            var mockTicketDispute = new Mock<NoticeOfDispute>();
-            var mockViolationTicket = new Mock<TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket>();
-            Guid mockGuid = Guid.NewGuid();
-
-            
-            var mockEmailRequestClient = new Mock<IRequestClient<SendEmail>>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
             var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
+            FakeClock clock = new FakeClock(Instant.FromDateTimeUtc(DateTime.UtcNow));
+
             mockAutoMapper.Setup(_ => _.Map<SubmitNoticeOfDispute>(It.IsAny<NoticeOfDispute>())).Returns(new SubmitNoticeOfDispute());
 
-            var mockDisputeRequestClient = new Mock<IRequestClient<SubmitNoticeOfDispute>>();
-            mockDisputeRequestClient.Setup(x => x.GetResponse<DisputeSubmitted>(It.IsAny<SubmitNoticeOfDispute>(), default, default)
-            .Result.Message).Returns(new DisputeSubmitted
-            {
-                DisputeId = mockGuid,
-            });
+            var mockDisputeBus = new Mock<IBus>();
+            mockDisputeBus.Setup(x => x.Publish(It.IsAny<SubmitNoticeOfDispute>(), It.IsAny<CancellationToken>()));
 
-            var disputeHandler = new Create.CreateDisputeHandler(_loggerMock.Object, mockDisputeRequestClient.Object, mockEmailRequestClient.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object);
+            var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
             var request = new Create.Request(dispute);
@@ -66,8 +61,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             // Act
             Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);
 
-
-            Assert.Equal(mockGuid, response.Id);
+            // Assert
+            Assert.IsType<Create.Response>(response);
         }
 
 

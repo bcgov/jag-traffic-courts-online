@@ -25,9 +25,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            if (context.RequestId != null)
+            try
             {
-                _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
+                if (context.MessageId != null)
+                {
+                    _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
+                }
 
                 NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
@@ -57,7 +60,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         Reason = "Bad request"
                     });
                 }
-                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: ", ex);
             }
         }
     }

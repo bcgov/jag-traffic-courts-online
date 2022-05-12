@@ -4,88 +4,90 @@
   </section>
 
   <div class="mb-2">
-    <section class="px-4 py-2 mb-3 card-section"
-      *ngFor="let row of noticeOfDispute.disputed_counts; let i = index">
+    <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of noticeOfDispute.disputed_counts; let i = index">
       <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
     </section>
 
     <section class="px-4 py-2 mb-4 card-section">
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
-        <ng-container *ngIf="isShowCheckbox?.request_counts?.length > 0">
+        <ng-container *ngIf="isShowCheckboxes?.request_reduction?.length > 0">
           <hr />
           <strong class="fs-5">
-            <ng-container *ngFor="let i of isShowCheckbox?.request_counts let inx = index">
+            <ng-container *ngFor="let i of isShowCheckboxes?.request_reduction; let inx = index">
               {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
             </ng-container>
           </strong>
-          <h3>I do not want to attend a court hearing and want to supply written reasons.</h3>
-          <ng-container *ngIf="noticeOfDispute.fine_reduction_reason">
-            <div class="count-heading">Written reasons for fine reduction request</div>
-            <div class="count-data">{{ noticeOfDispute.fine_reduction_reason }}</div>
-          </ng-container>
-          <ng-container *ngIf="noticeOfDispute.time_to_pay_reason">
-            <div class="count-heading">Written reasons for time to pay request</div>
-            <div class="count-data">{{ noticeOfDispute.time_to_pay_reason }}</div>
-          </ng-container>
+          <h3 class="mb-0">I do not want to attend a court hearing and want to supply written reasons.</h3>
+          <small>Written reasons for <strong>fine reduction</strong> request</small>
+          <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
         </ng-container>
-      </div>
-      <div *ngIf="isShowCheckbox?.not_guilty?.length > 0">
-        <hr />
-        <strong class="fs-5">
-          <ng-container *ngFor="let i of isShowCheckbox?.not_guilty let inx = index">
-            {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-          </ng-container>
-        </strong>
-        <br />
-        <div class="mb-3">
-          <strong>I want to attend a court hearing and dispute the charge.</strong>
-        </div>
-        <div class="row mb-2" *ngIf="noticeOfDispute.legal_representation">
-          <div class="row mb-3">
-            <small>Action</small>
-            <div><strong>I intend to be represented by a lawyer in court</strong></div>
-          </div>
-          <div class="row mb-3">
-            <div class="col">
-              <small>Name of law firm</small>
-              <div><strong>{{ noticeOfDispute.legal_representation.law_firm_name }}</strong></div>
-            </div>
-            <div class="col">
-              <small>Full name of lawyer</small>
-              <div><strong>{{ noticeOfDispute.legal_representation.lawyer_full_name }}</strong></div>
-            </div>
-            <div class="col">
-              <small>Contact Email</small>
-              <div><strong>{{ noticeOfDispute.legal_representation.lawyer_email }}</strong></div>
-            </div>
-          </div>
-          <div class="row">
-            <small>Address of the law firm</small>
-            <div><strong>{{ noticeOfDispute.legal_representation.lawyer_address }}</strong></div>
-          </div>
-        </div>
-        <div class="row mb-2" *ngIf="noticeOfDispute.interpreter_language">
-          <div class="row">
-            <div class="col-lg-8">
+        <ng-container *ngIf="isShowCheckboxes?.request_time_to_pay?.length > 0">
+          <hr />
+          <strong class="fs-5">
+            <ng-container *ngFor="let i of isShowCheckboxes?.request_time_to_pay; let inx = index">
+              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+            </ng-container>
+          </strong>
+          <h3 class="mb-0">I do not want to attend a court hearing and want to supply written reasons.</h3>
+          <small>Written reasons for <strong>time to pay</strong> request</small>
+          <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
+        </ng-container>
+        <div *ngIf="isShowCheckboxes?.not_guilty?.length > 0">
+          <hr />
+          <strong class="fs-5 mb-3">
+            <ng-container *ngFor="let i of isShowCheckboxes?.not_guilty let inx = index">
+              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+            </ng-container>
+          </strong>
+          <br />
+          <h3 class="mb-2">I want to attend a court hearing and dispute the charge.</h3>
+          <div class="row mb-2" *ngIf="noticeOfDispute.legal_representation">
+            <div class="row mb-3">
               <small>Action</small>
-              <div><strong>I require a language interpreter at the hearing</strong></div>
+              <div><strong>I intend to be represented by a lawyer in court</strong></div>
             </div>
-            <div class="col">
-              <small>Language</small>
-              <div><strong>{{noticeOfDispute.interpreter_language}}</strong></div>
+            <div class="row mb-3">
+              <div class="col">
+                <small>Name of law firm</small>
+                <div><strong>{{ noticeOfDispute.legal_representation.law_firm_name }}</strong></div>
+              </div>
+              <div class="col">
+                <small>Full name of lawyer</small>
+                <div><strong>{{ noticeOfDispute.legal_representation.lawyer_full_name }}</strong></div>
+              </div>
+              <div class="col">
+                <small>Contact Email</small>
+                <div><strong>{{ noticeOfDispute.legal_representation.lawyer_email }}</strong></div>
+              </div>
+            </div>
+            <div class="row">
+              <small>Address of the law firm</small>
+              <div><strong>{{ noticeOfDispute.legal_representation.lawyer_address }}</strong></div>
             </div>
           </div>
-        </div>
-        <div class="row mb-2" *ngIf="noticeOfDispute.number_of_witness">
-          <div class="row">
-            <div class="col-lg-8">
-              <small>Action</small>
-              <div><strong>I intend to call witness(es)</strong></div>
+          <div class="row mb-2" *ngIf="noticeOfDispute.interpreter_language">
+            <div class="row">
+              <div class="col-lg-8">
+                <small>Action</small>
+                <div><strong>I require a language interpreter at the hearing</strong></div>
+              </div>
+              <div class="col">
+                <small>Language</small>
+                <div><strong>{{noticeOfDispute.interpreter_language}}</strong></div>
+              </div>
             </div>
-            <div class="col">
-              <small># of witness(es)</small>
-              <div><strong>{{noticeOfDispute.number_of_witness}}</strong></div>
+          </div>
+          <div class="row mb-2" *ngIf="noticeOfDispute.number_of_witness">
+            <div class="row">
+              <div class="col-lg-8">
+                <small>Action</small>
+                <div><strong>I intend to call witness(es)</strong></div>
+              </div>
+              <div class="col">
+                <small># of witness(es)</small>
+                <div><strong>{{noticeOfDispute.number_of_witness}}</strong></div>
+              </div>
             </div>
           </div>
         </div>
