@@ -25,7 +25,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { { "MessageId", context.MessageId! } });
+            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { { "MessageId", context.MessageId! }, { "MessageType", nameof(SubmitNoticeOfDispute) } });
 
             try
             {
@@ -62,7 +62,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to process message of type SubmitNoticeOfDispute");
+                _logger.LogError(ex, "Failed to process message");
                 throw;
             }
         }

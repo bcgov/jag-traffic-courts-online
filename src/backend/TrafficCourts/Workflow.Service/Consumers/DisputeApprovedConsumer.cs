@@ -20,7 +20,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
         }
         public async Task Consume(ConsumeContext<DisputeApproved> context)
         {
-            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { { "MessageId", context.MessageId! } });
+            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { { "MessageId", context.MessageId! }, { "MessageType", nameof(DisputeApproved) } });
 
             try
             {
@@ -80,7 +80,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to process message of type DisputeApproved");
+                _logger.LogError(ex, "Failed to process message");
                 throw;
             }
         }
