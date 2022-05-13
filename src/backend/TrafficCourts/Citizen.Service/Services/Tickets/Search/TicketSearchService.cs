@@ -62,7 +62,7 @@ public class TicketSearchService : ITicketSearchService
     {
         Debug.Assert(invoices.Count != 0);
 
-        if (!string.IsNullOrEmpty(invoices[0].ViolationDateTime))
+        if (string.IsNullOrEmpty(invoices[0].ViolationDateTime))
         {
             _logger.LogInformation("Violation date and time is empty");
         }
