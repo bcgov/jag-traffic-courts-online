@@ -210,6 +210,11 @@ export class ViolationTicketService {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
 
+    // set ticketId to imageFilename returned from Ocr
+    if (source.imageFilename) {
+      result.ticketId = source.imageFilename;
+    }
+
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
@@ -254,7 +259,7 @@ export class ViolationTicketService {
   
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected;
+    ticket[this.ocrIssueDetectedKey] = issueDetected===true ? issueDetected : false ;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this.ticket$.next(ticket);
   }

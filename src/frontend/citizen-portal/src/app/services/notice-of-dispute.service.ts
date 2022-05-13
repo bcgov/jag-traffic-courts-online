@@ -11,6 +11,7 @@ import { NoticeOfDispute, Plea } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
+import { DisputesService } from "app/api/api/disputes.service";
 
 @Injectable({
   providedIn: "root",
@@ -32,7 +33,7 @@ export class NoticeOfDisputeService {
     birthdate: [null],
     drivers_licence_number: [null],
     drivers_licence_province: [null],
-    disputed_counts: [],
+    disputed_counts: []
   }
 
   public countFormFields = {
@@ -76,6 +77,7 @@ export class NoticeOfDisputeService {
     private dialog: MatDialog,
     private violationTicketService: ViolationTicketService,
     private datePipe: DatePipe,
+    private disputesService: DisputesService
   ) {
   }
 
@@ -99,15 +101,15 @@ export class NoticeOfDisputeService {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
-          // return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
-          this.noticeOfDispute$.next(input);
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
-            queryParams: {
-              ticketNumber: input.ticket_number,
-              time: this.datePipe.transform(input.issued_date, "HH:mm"),
-            },
-          });
-          // })
+          return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
+            this.noticeOfDispute$.next(input);
+            this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
+              queryParams: {
+                ticketNumber: input.ticket_number,
+                time: this.datePipe.transform(input.issued_date, "HH:mm"),
+              },
+            });
+          })
         }
       });
   }
