@@ -110,15 +110,15 @@ export class NoticeOfDisputeService {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
-          // return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
-          this.noticeOfDispute$.next(input);
-          this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
-            queryParams: {
-              ticketNumber: input.ticket_number,
-              time: this.datePipe.transform(input.issued_date, "HH:mm"),
-            },
-          });
-          // })
+          return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
+            this.noticeOfDispute$.next(input);
+            this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
+              queryParams: {
+                ticketNumber: input.ticket_number,
+                time: this.datePipe.transform(input.issued_date, "HH:mm"),
+              },
+            });
+          })
         }
       });
   }

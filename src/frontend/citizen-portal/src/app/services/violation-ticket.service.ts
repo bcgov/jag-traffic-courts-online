@@ -211,6 +211,9 @@ export class ViolationTicketService {
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
+    // set ticketId to imageFilename returned from Ocr
+    result.ticketId = source.imageFilename;
+
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
@@ -252,10 +255,10 @@ export class ViolationTicketService {
     }
     return result;
   }
-  
+
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected;
+    ticket[this.ocrIssueDetectedKey] = issueDetected === true ? issueDetected : false;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this.ticket$.next(ticket);
   }
