@@ -11,32 +11,37 @@
     <section class="px-4 py-2 mb-4 card-section">
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
-        <ng-container *ngIf="isShowCheckboxes?.request_reduction?.length > 0">
-          <hr />
-          <strong class="fs-5">
-            <ng-container *ngFor="let i of isShowCheckboxes?.request_reduction; let inx = index">
-              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-            </ng-container>
-          </strong>
-          <h3 class="mb-0">I do not want to attend a court hearing and want to supply written reasons.</h3>
-          <small>Written reasons for <strong>fine reduction</strong> request</small>
-          <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
-        </ng-container>
-        <ng-container *ngIf="isShowCheckboxes?.request_time_to_pay?.length > 0">
-          <hr />
-          <strong class="fs-5">
-            <ng-container *ngFor="let i of isShowCheckboxes?.request_time_to_pay; let inx = index">
-              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-            </ng-container>
-          </strong>
-          <h3 class="mb-0">I do not want to attend a court hearing and want to supply written reasons.</h3>
-          <small>Written reasons for <strong>time to pay</strong> request</small>
-          <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
-        </ng-container>
-        <div *ngIf="isShowCheckboxes?.not_guilty?.length > 0">
+
+        <div *ngIf="countsActions?.request_counts?.length > 0">
+          <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
+            <hr />
+            <strong class="fs-5">
+              <ng-container *ngFor="let i of countsActions?.request_reduction; let inx = index">
+                {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+              </ng-container>
+            </strong>
+            <h3 class="mb-0">I do not want to attend a court hearing and want to supply written reasons.</h3>
+            <small>Written reasons for <strong>fine reduction</strong> request</small>
+            <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
+          </ng-container>
+          <ng-container *ngIf="countsActions?.request_counts?.length !== countsActions?.request_time_to_pay?.length">
+            <hr />
+            <strong class="fs-5">
+              <ng-container *ngFor="let i of countsActions?.request_time_to_pay; let inx = index">
+                {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+              </ng-container>
+            </strong>
+          </ng-container>
+          <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
+            <h3 class="mb-0">I do not want to attend a court hearing and want to supply written reasons.</h3>
+            <small>Written reasons for <strong>time to pay</strong> request</small>
+            <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
+          </ng-container>
+        </div>
+        <div *ngIf="countsActions?.not_guilty?.length > 0">
           <hr />
           <strong class="fs-5 mb-3">
-            <ng-container *ngFor="let i of isShowCheckboxes?.not_guilty let inx = index">
+            <ng-container *ngFor="let i of countsActions?.not_guilty let inx = index">
               {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
             </ng-container>
           </strong>

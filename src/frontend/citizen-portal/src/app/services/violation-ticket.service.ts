@@ -144,7 +144,7 @@ export class ViolationTicketService {
     })
   }
 
-  public validateTicket(params?) {
+  public validateTicket(params?): boolean {
     var result = false;
     if (this.ticket && this.ticket.issued_date) {
       var storedTicketTime = this.datePipe.transform(this.ticket.issued_date, "HH:mm");

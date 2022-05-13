@@ -34,7 +34,7 @@ export class NoticeOfDisputeService {
     drivers_licence_province: [null],
     disputed_counts: [],
   }
-  
+
   public countFormFields = {
     plea: null,
     request_time_to_pay: false,
@@ -112,26 +112,26 @@ export class NoticeOfDisputeService {
       });
   }
 
-  public getIsShowCheckBoxes(ticket: NoticeOfDispute): any {
-    let isShowCheckboxes: any = {};
+  public getCountsActions(ticket: NoticeOfDispute): any {
+    let countsActions: any = {};
     let fields = Object.keys(this.countFormFields);
     fields.forEach(field => {
       if (ticket.disputed_counts && ticket.disputed_counts.length > -1) {
-        isShowCheckboxes[field] = ticket.disputed_counts.filter(i => i[field]).map(i => i.count);
+        countsActions[field] = ticket.disputed_counts.filter(i => i[field]).map(i => i.count);
       } else {
-        isShowCheckboxes[field] = [];
+        countsActions[field] = [];
       }
     });
-    isShowCheckboxes.request_counts =
-      [...isShowCheckboxes.request_time_to_pay, ...isShowCheckboxes.request_reduction]
+    countsActions.request_counts =
+      [...countsActions.request_time_to_pay, ...countsActions.request_reduction]
         .filter((value, index, self) => { return self.indexOf(value) === index; }).sort();
-    isShowCheckboxes.not_guilty = ticket.disputed_counts.filter(i => i.plea === Plea.NotGuilty).map(i => i.count);
-    return isShowCheckboxes;
+    countsActions.not_guilty = ticket.disputed_counts.filter(i => i.plea === Plea.NotGuilty).map(i => i.count);
+    return countsActions;
   }
 
   public getNoticeOfDispute(formValue): NoticeOfDispute {
     // form contains all sub forms
     // get the ticket from storage to make sure the user can't change the ticket info
-    return <NoticeOfDispute>{ ...this.violationTicketService.ticket, ...formValue }; 
+    return <NoticeOfDispute>{ ...this.violationTicketService.ticket, ...formValue };
   }
 }

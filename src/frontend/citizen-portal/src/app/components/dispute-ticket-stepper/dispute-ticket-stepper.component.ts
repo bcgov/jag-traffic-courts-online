@@ -47,7 +47,7 @@ export class DisputeTicketStepperComponent implements OnInit {
 
   // Additional
   public languages = this.config.languages;
-  public isShowCheckboxes: any;
+  public countsActions: any;
   public customWitnessOption = false;
   public minWitnesses = 1;
   public maxWitnesses = 99;
@@ -116,7 +116,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   private setCheckBoxes() {
-    this.isShowCheckboxes = this.noticeOfDisputeService.getIsShowCheckBoxes(this.form.value);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.form.value);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
