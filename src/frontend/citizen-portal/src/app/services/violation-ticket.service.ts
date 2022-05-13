@@ -213,8 +213,8 @@ export class ViolationTicketService {
     }
 
     // set ticketId to imageFilename returned from Ocr
-    if (source[this.ocrTicketImageFilenameKey]) {
-      result[this.violationTicketticketIdKey] = source[this.ocrTicketImageFilenameKey];
+    if (source.imageFilename) {
+      result.ticketId = source.imageFilename;
     }
 
     // add extra fields for notcie of dispute

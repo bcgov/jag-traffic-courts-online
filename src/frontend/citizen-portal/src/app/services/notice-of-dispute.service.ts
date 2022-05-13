@@ -33,8 +33,7 @@ export class NoticeOfDisputeService {
     birthdate: [null],
     drivers_licence_number: [null],
     drivers_licence_province: [null],
-    disputed_counts: [],
-    ticket_id: []
+    disputed_counts: []
   }
 
   public countFormFields = {
