@@ -25,11 +25,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { { "MessageId", context.MessageId! }, { "MessageType", nameof(SubmitNoticeOfDispute) } });
+            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { 
+                { "MessageId", context.MessageId! }, 
+                { "MessageType", nameof(SubmitNoticeOfDispute) } 
+            });
 
             try
             {
-                _logger.LogDebug("Consuming message of type SubmitNoticeOfDispute");
+                _logger.LogDebug("Consuming message");
 
                 NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
