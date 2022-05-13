@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using MediatR;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Model;
@@ -55,6 +55,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             /// </summary>
             /// <param name="bus"></param>
             /// <param name="redisCacheService"></param>
+            /// <param name="filePersistenceService"></param>
             /// <param name="mapper"></param>
             /// <param name="clock"></param>
             /// <param name="logger"></param>
