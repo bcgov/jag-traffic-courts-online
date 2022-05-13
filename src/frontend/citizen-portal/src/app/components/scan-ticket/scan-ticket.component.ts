@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-} from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,7 +7,6 @@ import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ViolationTicket } from 'app/api';
-import { AppRoutes } from 'app/app.routes';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';

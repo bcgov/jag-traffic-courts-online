@@ -9,7 +9,7 @@ import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 })
 export class DisputeTicketSummaryComponent implements OnInit {
   @Input() public noticeOfDispute: NoticeOfDispute;
-  public isShowCheckboxes: any;
+  public countsActions: any;
 
   constructor(
     protected noticeOfDisputeService: NoticeOfDisputeService,
@@ -18,7 +18,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
-      this.isShowCheckboxes = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
+      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute);
     }
   }
 }
