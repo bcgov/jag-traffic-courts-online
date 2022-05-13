@@ -94,7 +94,7 @@ export class DisputeTicketStepperComponent implements OnInit {
     let countArray = [];
     this.ticket.counts.forEach(count => {
       let obj = this.getCountFormInitValue(count);
-      countArray.push(this.formBuilder.group(obj));
+      if (count.description) countArray.push(this.formBuilder.group(obj));
     })
     this.countForms = this.formBuilder.array(countArray);
 

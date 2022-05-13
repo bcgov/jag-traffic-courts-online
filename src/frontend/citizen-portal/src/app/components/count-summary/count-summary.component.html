@@ -16,11 +16,12 @@
   </div>
 
   <div class="mb-2">
-    <section class="px-4 py-2 mb-3 card-section"
-             *ngFor="let row of ticket.counts; let i = index">
-      <app-count-item-summary #countitem
-                              [count]="row"
-                              [selectView]="selectView"></app-count-item-summary>
-    </section>
+    <div *ngFor="let row of ticket.counts; let i = index">
+      <section class="px-4 py-2 mb-3 card-section" *ngIf="row && row.description">
+        <app-count-item-summary #countitem
+                                [count]="row"
+                                [selectView]="selectView"></app-count-item-summary>
+      </section>
+    </div>
   </div>
 </div>
