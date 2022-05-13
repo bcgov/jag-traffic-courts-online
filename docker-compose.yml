@@ -33,7 +33,7 @@ services:
     ports:
       - "5000:8080"
     restart: always
-    depends_on: [rabbitmq, redis]
+    depends_on: [rabbitmq, redis, minio-init]
     volumes:
       # mount the current users usersecrets folder
       - "${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro"
@@ -130,18 +130,22 @@ services:
       context: ./src/backend/oracle-data-api
       args:
         - SKIP_TESTS=true
-        - SPLUNK_URL=${SPLUNK_URL:-http://splunk:8088}
-        - SPLUNK_TOKEN=${SPLUNK_HEC_TOKEN:-token}
-        - REDIS_HOST=redis
-        - REDIS_PORT=6379
-        - REDIS_PASSWORD=password
-        - CODETABLE_REFRESH_ENABLED=${CODETABLE_REFRESH_ENABLED:-true}
-        - CODETABLE_REFRESH_CRON=${CODETABLE_REFRESH_CRON:-0 * * * * *}
-        - JAVA_OPTS=${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG}
+    environment:
+      SPLUNK_URL: ${SPLUNK_URL:-http://splunk:8088}
+      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN:-token}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: password
+      CODETABLE_REFRESH_ENABLED: ${CODETABLE_REFRESH_ENABLED:-true}
+      CODETABLE_REFRESH_CRON: ${CODETABLE_REFRESH_CRON:-0 * * * * *}
+      H2_DATASOURCE: ${H2_DATASOURCE:-jdbc:h2:file:./data/h2}
+      JAVA_OPTS: ${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG}
     depends_on:
       - redis
     ports:
       - "5010:8080"
+    volumes:
+      - data-oracle:/data
 
   #############################################################################################
   ###                                 TrafficCourt FRONTEND                                 ###
@@ -248,3 +252,4 @@ services:
 volumes:
   data-rabbit:
   data-redis:
+  data-oracle:

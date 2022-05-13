@@ -361,53 +361,57 @@
             </app-page-header>
 
             <form [formGroup]="form" novalidate>
-              <div *ngIf="isShowCheckboxes?.request_reduction?.length > 0">
-                <ng-container *ngFor="let i of isShowCheckboxes.request_reduction let inx = index">
-                  {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-                </ng-container>
-                <div class="row">
-                  <div class="col-md-12">
-                    <mat-form-field class="w-100">
-                      <mat-label>
-                        Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
-                      </mat-label>
-                      <input matInput formControlName="fine_reduction_reason" />
-                      <mat-error *ngIf="(form.get('fine_reduction_reason')?.dirty 
+              <ng-container *ngIf="countsActions?.request_counts?.length > 0">
+                <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
+                  <ng-container *ngFor="let i of countsActions.request_reduction let inx = index">
+                    {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+                  </ng-container>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <mat-form-field class="w-100">
+                        <mat-label>
+                          Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
+                        </mat-label>
+                        <input matInput formControlName="fine_reduction_reason" />
+                        <mat-error *ngIf="(form.get('fine_reduction_reason')?.dirty 
                         || form.get('fine_reduction_reason')?.touched)
                         && form.get('fine_reduction_reason')?.invalid
                         && form.get('fine_reduction_reason')?.hasError('requiredIfFlags')">
-                        {{ "error.required" | translate }}
-                      </mat-error>
-                    </mat-form-field>
+                          {{ "error.required" | translate }}
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <div *ngIf="isShowCheckboxes?.request_time_to_pay?.length > 0">
-                <ng-container *ngFor="let i of isShowCheckboxes.request_time_to_pay let inx = index">
-                  {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                 </ng-container>
-                <div class="row">
-                  <div class="col-md-12">
-                    <mat-form-field class="w-100">
-                      <mat-label>
-                        Please enter your reasons for why you are requesting <strong>time to pay</strong>
-                      </mat-label>
-                      <input matInput formControlName="time_to_pay_reason" />
-                      <mat-error *ngIf="(form.get('time_to_pay_reason')?.dirty
-                        || form.get('time_to_pay_reason')?.touched)
-                        && form.get('time_to_pay_reason')?.invalid
-                        && form.get('time_to_pay_reason')?.hasError('requiredIfFlags')">
-                        {{ "error.required" | translate }}
-                      </mat-error>
-                    </mat-form-field>
+                <ng-container
+                  *ngIf="countsActions?.request_counts?.length !== countsActions?.request_time_to_pay?.length">
+                  <ng-container *ngFor="let i of countsActions.request_time_to_pay let inx = index">
+                    {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <mat-form-field class="w-100">
+                        <mat-label>
+                          Please enter your reasons for why you are requesting <strong>time to pay</strong>
+                        </mat-label>
+                        <input matInput formControlName="time_to_pay_reason" />
+                        <mat-error *ngIf="(form.get('time_to_pay_reason')?.dirty
+                          || form.get('time_to_pay_reason')?.touched)
+                          && form.get('time_to_pay_reason')?.invalid
+                          && form.get('time_to_pay_reason')?.hasError('requiredIfFlags')">
+                          {{ "error.required" | translate }}
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </ng-container>
+              </ng-container>
 
-              <section *ngIf="isShowCheckboxes?.not_guilty?.length > 0">
+              <section *ngIf="countsActions?.not_guilty?.length > 0">
                 <div>
-                  <ng-container *ngFor="let i of isShowCheckboxes?.not_guilty; let inx = index">
+                  <ng-container *ngFor="let i of countsActions?.not_guilty; let inx = index">
                     {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                   </ng-container>
                 </div>
@@ -487,9 +491,7 @@
                 <div class="row" *ngIf="form.get('__interpreter_required')?.value">
                   <div class="col">
                     <mat-form-field>
-                      <mat-label>{{
-                        "stepper.additional.interpreter_language" | translate
-                        }}</mat-label>
+                      <mat-label>{{ "stepper.additional.interpreter_language" | translate }}</mat-label>
                       <mat-select formControlName="interpreter_language">
                         <mat-option *ngFor="let language of languages" [value]="language">
                           {{ language }}
@@ -513,9 +515,10 @@
 
                 <div class="row" *ngIf="form.get('__witness_present')?.value">
                   <div class="col">
-                    <mat-form-field class="pe-4">
+                    <mat-form-field class="pe-4 w-25">
                       <mat-label>Number of witnesses</mat-label>
-                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses" formControlName="number_of_witness" maxlength="2" />
+                      <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
+                        formControlName="number_of_witness" />
                       <mat-error *ngIf="form.get('number_of_witness')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>
@@ -523,7 +526,7 @@
                         {{ "error.positive_number" | translate }}
                       </mat-error>
                       <mat-error *ngIf="form.get('number_of_witness')?.hasError('max')">
-                        {{ "error.max_number" | translate }}
+                        {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
                       </mat-error>
                     </mat-form-field>
                   </div>

@@ -8,7 +8,8 @@ After running `docker-compose up` from the project root, these services should b
 
 | Name                  | URL                                          | Notes
 | --------------------- | -------------------------------------------- | --------------------------------------------
-| oracle-data-api       | http://localhost:5010/swagger-ui/index.html  | 
+| oracle-data-api       | http://localhost:5010/swagger-ui/index.html  | The tool to query the API
+|                       | http://localhost:5010/h2-console             | A database tool to execute manual SQL queries
 | staff-api             | http://localhost:5005/swagger/index.html     | A bearer token is required to access the api
 | TrafficCourts         | http://localhost:5000/swagger/index.html     | 
 | Splunk                | http://localhost:8000                        | login with admin/password
@@ -17,6 +18,11 @@ After running `docker-compose up` from the project root, these services should b
 
 ### oracle-data-api
 An API that acts as an interface between Oracle and the TrafficCourts API 
+
+There is a swagger-ui tool useful to query the API endpoints.
+
+There is an H2 console that is useful to execute manual SQL queries against the database.  
+Set the JDBC URL parameter to "jdbc:h2:file:./data/h2" to connect, username is "sa", no password.
 
 #### Configuration
 
