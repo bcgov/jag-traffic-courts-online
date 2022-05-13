@@ -11,7 +11,7 @@ import { NoticeOfDispute, Plea } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
-import { DisputesService } from "app/api";
+import { DisputesService } from "app/api/api/disputes.service";
 
 @Injectable({
   providedIn: "root",
