@@ -79,8 +79,8 @@ public class DisputeService : IDisputeService
             try
             {
                 // deserialize json string to a dictionary
-                var keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(dispute.OcrViolationTicket);
-                string? imageFilename = keys?["ImageFilename"];
+                var keys = JsonConvert.DeserializeObject<Dictionary<string, object>>(dispute.OcrViolationTicket);
+                string? imageFilename = (string?)(keys?["ImageFilename"]);
 
                 return imageFilename;
             }
