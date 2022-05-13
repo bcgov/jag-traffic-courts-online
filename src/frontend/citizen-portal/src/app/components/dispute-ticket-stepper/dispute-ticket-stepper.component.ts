@@ -109,6 +109,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       validators: [...this.additionFormValidators]
     });
 
+    // take info from ticket, convert dl number to string
+    this.form.patchValue(this.ticket);
+    this.form.controls['drivers_licence_number'].setValue(this.ticket.drivers_licence_number.toString());
+
     this.setAdditional();
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
   }
