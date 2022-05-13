@@ -23,8 +23,6 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  public violationTicketticketIdKey = "ticketId";
-  public ocrTicketImageFilenameKey = "imageFilename";
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
   public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
