@@ -102,7 +102,6 @@ export class NoticeOfDisputeService {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
-          console.log(input);
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
             this.noticeOfDispute$.next(input);
             this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {

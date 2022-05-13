@@ -130,7 +130,6 @@ export class ViolationTicketService {
         .subscribe({
           next: res => {
             if (res) {
-              console.log("after analyse", res.imageFilename);
               this.ocrTicket$.next(res);
               this.ticket$.next(this.fromOCR(res));
               this.inputTicketData$.next(input);
@@ -216,7 +215,6 @@ export class ViolationTicketService {
     // set ticketId to imageFilename returned from Ocr
     if (source[this.ocrTicketImageFilenameKey]) {
       result[this.violationTicketticketIdKey] = source[this.ocrTicketImageFilenameKey];
-      console.log("violation Ticket setting", source, result);
     }
 
     // add extra fields for notcie of dispute

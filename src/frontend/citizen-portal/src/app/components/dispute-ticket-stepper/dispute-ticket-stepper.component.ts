@@ -107,7 +107,6 @@ export class DisputeTicketStepperComponent implements OnInit {
     }, {
       validators: [...this.additionFormValidators]
     });
-    console.log("stepper form", this.form);
 
     this.setAdditional();
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
