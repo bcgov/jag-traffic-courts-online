@@ -25,16 +25,15 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
+            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { { "MessageId", context.MessageId! } });
+
             try
             {
-                if (context.MessageId != null)
-                {
-                    _logger.LogDebug("Consuming message: {MessageId}", context.MessageId);
-                }
+                _logger.LogDebug("Consuming message of type SubmitNoticeOfDispute");
 
                 NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
-                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", noticeOfDispute.ToString());
+                _logger.LogDebug("TRY CREATING DISPUTE: {Dispute}", noticeOfDispute);
 
                 var disputeId = await _oracleDataApiService.CreateDisputeAsync(noticeOfDispute);
 
@@ -63,7 +62,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error: ", ex);
+                _logger.LogError(ex, "Failed to process message of type SubmitNoticeOfDispute");
+                throw;
             }
         }
     }
