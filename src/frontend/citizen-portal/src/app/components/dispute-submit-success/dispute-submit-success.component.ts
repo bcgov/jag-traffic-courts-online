@@ -21,7 +21,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
     "https://www.provincialcourt.bc.ca/downloads/Traffic/Traffic%20Court%20Guide.pdf";
   public ticketTypes = ticketTypes;
   public ticketType;
-  public isShowCheckboxes: any;
+  public countsActions: any;
 
   constructor(
     private router: Router,
@@ -36,7 +36,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
       return;
     }
     this.ticketType = this.violationTicketService.ticketType;
-    this.isShowCheckboxes = this.noticeOfDisputeService.getIsShowCheckBoxes(this.noticeOfDispute);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute);
   }
 
   public onPrint(): void {
