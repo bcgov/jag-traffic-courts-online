@@ -88,7 +88,7 @@ redis:
 jaeger:
   enabled: false
   exporter:
-    endpoint: jaeger
+    endpoint: http://jaeger-collector:14268/api/traces
     protocol: "http/thrift.binary"
 
 ## @param
