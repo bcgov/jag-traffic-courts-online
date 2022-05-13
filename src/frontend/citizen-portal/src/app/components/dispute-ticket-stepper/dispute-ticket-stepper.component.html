@@ -87,7 +87,9 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Province</mat-label>
-                          <input matInput formControlName="province" />
+                          <mat-select formControlName="province">
+                            <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</mat-option>
+                          </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -100,7 +102,8 @@
                         <mat-label>Postal code</mat-label>
                         <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
                           formControlName="postal_code" [showMaskTyped]="true" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate }}</mat-error>
+                          <mat-error *ngIf="form.get('postal_code').hasError('pattern')">Must be a valid postal code</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -145,7 +148,13 @@
                         <mat-label>Driver's licence number</mat-label>
                         <input matInput formControlName="drivers_licence_number" mask="0000000"
                           [showMaskTyped]="false" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-error *ngIf="form.get('drivers_licence_number').hasError('required')">{{ "error.required" | translate }}</mat-error>
+                          <mat-error 
+                            *ngIf="form.get('drivers_licence_number').hasError('pattern') ||
+                              form.get('drivers_licence_number').hasError('minlength') ||
+                              form.get('drivers_licence_number').hasError('maxlength')">
+                            Must be a valid driver's license number of seven digits
+                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -459,7 +468,7 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact phone number</mat-label>
-                          <input matInput formControlName="lawyer_phone" />
+                          <input matInput formControlName="lawyer_phone" mask="(000) 000-0000"/>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
