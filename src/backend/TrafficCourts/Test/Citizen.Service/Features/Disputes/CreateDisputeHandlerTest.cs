@@ -8,6 +8,7 @@ using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
 using Xunit.Abstractions;
@@ -27,20 +28,23 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
         {
             var mockBus = new Mock<IBus>();
             var mockRedisCacheService = new Mock<IRedisCacheService>();
+            var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
             var mockClock = new Mock<IClock>();
 
-            Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, mockRedisCacheService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.Handler(mockBus.Object, null!, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("logger", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockAutoMapper.Object, mockClock.Object, null!));
-            Assert.Throws<ArgumentNullException>("clock", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockAutoMapper.Object, null!, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("mapper", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, null!, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.Handler(mockBus.Object, null!, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("filePersistenceService", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, null!, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("logger", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, null!));
+            Assert.Throws<ArgumentNullException>("clock", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, null!, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("mapper", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, null!, mockClock.Object, _loggerMock.Object));
         }
 
         [Fact]
         public async void TestHandlePublishMessageAndReturnsResponse()
         {
             var mockRedisCacheService = new Mock<IRedisCacheService>();
+            var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
             FakeClock clock = new FakeClock(Instant.FromDateTimeUtc(DateTime.UtcNow));
 
@@ -49,7 +53,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockDisputeBus = new Mock<IBus>();
             mockDisputeBus.Setup(x => x.Publish(It.IsAny<SubmitNoticeOfDispute>(), It.IsAny<CancellationToken>()));
 
-            var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockAutoMapper.Object, clock, _loggerMock.Object);
+            var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
             var request = new Create.Request(dispute);

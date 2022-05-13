@@ -31,7 +31,7 @@ public class InMemoryFilePersistenceService : FilePersistenceService
 
     public override async Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken)
     {
-        var mimeType = await GetMimeTypeAsync(data);
+        var mimeType = await data.GetMimeTypeAsync();
         if (mimeType is null)
         {
             _logger.LogInformation("Could not determine mime type for file, file cannot be saved");
@@ -49,4 +49,5 @@ public class InMemoryFilePersistenceService : FilePersistenceService
 
         return filename;
     }
+
 }

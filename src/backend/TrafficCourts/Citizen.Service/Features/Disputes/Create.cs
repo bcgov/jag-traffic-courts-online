@@ -1,7 +1,8 @@
-﻿using MassTransit;
+using MassTransit;
 using MediatR;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
@@ -45,6 +46,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             private readonly ILogger _logger;
             private readonly IBus _bus;
             private readonly IRedisCacheService _redisCacheService;
+            private readonly IFilePersistenceService _filePersistenceService;
             private readonly IMapper _mapper;
             private readonly IClock _clock;
 
@@ -53,14 +55,16 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             /// </summary>
             /// <param name="bus"></param>
             /// <param name="redisCacheService"></param>
+            /// <param name="filePersistenceService"></param>
             /// <param name="mapper"></param>
             /// <param name="clock"></param>
             /// <param name="logger"></param>
             /// <exception cref="ArgumentNullException"></exception>
-            public Handler(IBus bus, IRedisCacheService redisCacheService, IMapper mapper, IClock clock, ILogger<Handler> logger)
+            public Handler(IBus bus, IRedisCacheService redisCacheService, IFilePersistenceService filePersistenceService, IMapper mapper, IClock clock, ILogger<Handler> logger)
             {
                 _bus = bus ?? throw new ArgumentNullException(nameof(bus));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
+                _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
                 _clock = clock ?? throw new ArgumentNullException(nameof(clock));
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -77,6 +81,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 string? ocrViolationTicketJson = null;
                 OcrViolationTicket? violationTicket = null;
                 Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
+                MemoryStream? ticketImageStream = null;
 
                 try
                 {
@@ -90,6 +95,21 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                         // and assign null or populate the object in SubmitNoticeOfDispute message. However, a better check/method can be implemented
                         if (violationTicket != null && violationTicket.ImageFilename != null)
                         {
+                            // Since the ImageFilename exists, it should be in the redis db.
+                            // grab it and save to the file persistence service.
+                            ticketImageStream = await _redisCacheService.GetFileRecordAsync(violationTicket.ImageFilename);
+
+                            if (ticketImageStream is not null)
+                            {
+                                var filename = await _filePersistenceService.SaveFileAsync(ticketImageStream, cancellationToken);
+
+                                // remove the image from the redis cache, to free-up the space.
+                                await _redisCacheService.DeleteRecordAsync(violationTicket.ImageFilename);
+
+                                // re-set the imagefilename, as it may have potentially changed.
+                                violationTicket.ImageFilename = filename;
+                            }
+
                             // Serialize OCR violation ticket to a JSON string
                             ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
                         }
@@ -129,7 +149,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                         {
                             From = template.Sender,
                             To = { submitNoticeOfDispute!.EmailAddress! },
-                            Subject = template.SubjectTemplate,
+                            Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber),
                             PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber)
                         }, cancellationToken);
                     }
