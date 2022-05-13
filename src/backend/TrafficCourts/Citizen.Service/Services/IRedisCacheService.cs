@@ -36,7 +36,7 @@
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<MemoryStream> GetFileRecordAsync(string key);
+        Task<MemoryStream?> GetFileRecordAsync(string key);
 
         /// <summary>
         /// Remove the item with the key, from the Redis Cache.

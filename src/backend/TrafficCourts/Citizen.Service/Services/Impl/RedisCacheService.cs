@@ -51,7 +51,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
            await _redisDbAsync.StringSetAsync(key, jsonData, expireTime ?? TimeSpan.FromDays(1));
         }
 
-        public async Task<MemoryStream> GetFileRecordAsync(string key)
+        public async Task<MemoryStream?> GetFileRecordAsync(string key)
         {
             var fileData = await _redisDbAsync.StringGetAsync(key);
 
