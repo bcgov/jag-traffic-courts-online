@@ -36,7 +36,7 @@ export class DisputeSubmitSuccessComponent implements OnInit {
       return;
     }
     this.ticketType = this.violationTicketService.ticketType;
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.disputed_counts);
   }
 
   public onPrint(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -13,16 +13,17 @@ import { Subscription } from "rxjs";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { FormUtilsService } from "@core/services/form-utils.service";
 import { ToastService } from "@core/services/toast.service";
-import { AppRoutes } from "app/app.routes";
 import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
+import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
   templateUrl: "./dispute-ticket-stepper.component.html",
   styleUrls: ["./dispute-ticket-stepper.component.scss"],
 })
-export class DisputeTicketStepperComponent implements OnInit {
+export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   @ViewChild(MatStepper) private stepper: MatStepper;
+  @ViewChild(AddressAutocompleteComponent) private addressAutocomplete: AddressAutocompleteComponent;
 
   public busy: Subscription;
   public isMobile: boolean;
@@ -58,9 +59,10 @@ export class DisputeTicketStepperComponent implements OnInit {
   // Consume from the service
   private ticketFormFields = this.noticeOfDisputeService.ticketFormFields;
   private countFormFields = this.noticeOfDisputeService.countFormFields;
-  private countFormSetting = this.noticeOfDisputeService.countFormSetting;
+  private countFormDefaultValue = this.noticeOfDisputeService.countFormDefaultValue;
   private additionFormFields = this.noticeOfDisputeService.additionFormFields;
   private additionFormValidators = this.noticeOfDisputeService.additionFormValidators;
+  private additionFormDefaultValue = this.noticeOfDisputeService.additionFormDefaultValue;
   private legalRepresentationFields = this.noticeOfDisputeService.legalRepresentationFields;
 
   constructor(
@@ -93,8 +95,7 @@ export class DisputeTicketStepperComponent implements OnInit {
     // build inner object array before the form
     let countArray = [];
     this.ticket.counts.forEach(count => {
-      let obj = this.getCountFormInitValue(count);
-      if (count.description || count.section || count.amount_due) countArray.push(this.formBuilder.group(obj));
+      countArray.push(this.formBuilder.group({ ...count, ...this.countFormFields }));
     })
     this.countForms = this.formBuilder.array(countArray);
 
@@ -102,7 +103,7 @@ export class DisputeTicketStepperComponent implements OnInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
       ...this.additionFormFields,
-      disputed_counts: this.countForms
+      // disputed_counts: this.countForms
     }, {
       validators: [...this.additionFormValidators]
     });
@@ -111,12 +112,19 @@ export class DisputeTicketStepperComponent implements OnInit {
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
   }
 
-  private getCountFormInitValue(count) {
-    return { ...this.countFormFields, ...this.countFormSetting, ...count };
+  ngAfterViewInit(): void {
+    // disable auto complete component
+    setTimeout(() => {
+      this.addressAutocomplete && this.addressAutocomplete.autocomplete.disable();
+    }, 0)
   }
 
-  private setCheckBoxes() {
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.form.value);
+  private getCountFormInitValue(count) {
+    return { ...this.countFormDefaultValue, ...count };
+  }
+
+  private getCountsActions() {
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -128,7 +136,7 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   public onAttendHearingChange(form: FormGroup, event): void {
-    form.patchValue({ ...this.countFormFields, appear_in_court: event.value, __skip: false });
+    form.patchValue({ ...this.countFormDefaultValue, appear_in_court: event.value, __skip: false });
   }
 
   public onStepSave(countInx?, applyToRemaining?): void {
@@ -163,7 +171,7 @@ export class DisputeTicketStepperComponent implements OnInit {
       this.submitDispute();
     } else {
       if (isSummary) {
-        this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute(this.form.value);
+        this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({ ...this.form.value, disputed_count: this.countForms.value });
       } else {
         this.noticeOfDispute = null;
       }
@@ -172,8 +180,16 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   private setAdditional() {
-    this.setCheckBoxes();
-    this.form.patchValue(this.additionFormFields);
+    this.getCountsActions();
+    this.form.patchValue(this.additionFormDefaultValue);
+  }
+
+  public isValid(countInx?): boolean {
+    if (this.countForms?.controls[countInx]) {
+      return !this.countForms.controls[countInx].pristine && this.countForms.controls[countInx].valid
+        && !this.form.pristine && this.form.valid;
+    }
+    return !this.form.pristine && this.form.valid;
   }
 
   public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
@@ -185,13 +201,12 @@ export class DisputeTicketStepperComponent implements OnInit {
   }
 
   public onChangeWitnessPresent(event: MatCheckboxChange) {
-    // FIXME: This method doesn't seem to work - to be fixed with TCVP-1225
     if (event.checked) {
       this.form.controls.number_of_witness.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
       this.form.controls.number_of_witness.clearValidators();
+      this.form.controls.number_of_witness.updateValueAndValidity();
     }
-    this.form.controls.number_of_witness.updateValueAndValidity();
   }
 
   /**

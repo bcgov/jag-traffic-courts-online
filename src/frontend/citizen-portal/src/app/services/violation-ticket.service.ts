@@ -209,6 +209,7 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
+    result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;

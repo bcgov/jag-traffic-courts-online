@@ -19,7 +19,7 @@
         </ng-template>
 
         <!-- disputant -->
-        <mat-step>
+        <mat-step [completed]="isValid()">
           <ng-template matStepLabel>Contact information</ng-template>
           <app-stepper-page>
             <app-page-header>
@@ -168,7 +168,7 @@
               <h2>No current ticket</h2>
             </ng-template>
 
-            <app-stepper-footer (save)="onStepSave($event)" (back)="onStepCancel()"
+            <app-stepper-footer [disableSave]="!isValid()" (save)="onStepSave($event)" (back)="onStepCancel()"
               [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.backReview'"
               [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true"></app-stepper-footer>
           </app-stepper-page>
@@ -176,7 +176,7 @@
 
         <!-- count -->
         <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
-          <mat-step [stepControl]="countForm">
+          <mat-step [completed]="isValid(i)">
             <ng-template matStepLabel>Count {{ countForm.value.count }}: Review</ng-template>
             <app-stepper-page>
               <app-page-header>
@@ -274,12 +274,10 @@
                   </div>
                   <hr />
                   <div class="row">
-                    <mat-checkbox
-                      *ngIf="countForm.value.count === 1 && form?.controls?.disputed_counts?.controls.length > 1"
+                    <mat-checkbox *ngIf="countForm.value.count === 1 && countForms?.controls.length > 1"
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to all counts on this violation ticket.</mat-checkbox>
-                    <mat-checkbox
-                      *ngIf="countForm.value.count === 2 && form?.controls?.disputed_counts?.controls.length > 2"
+                    <mat-checkbox *ngIf="countForm.value.count === 2 && countForms?.controls.length > 2"
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to remaining counts on ticket.
                     </mat-checkbox>
@@ -340,10 +338,10 @@
                 </app-alert>
               </div>
 
-              <app-stepper-footer (save)="onStepSave(i, countForm.value.__apply_to_remaining_counts)"
-                (back)="disputeStepper.previous()" [secondaryActionButtonIcon]="previousButtonIcon"
-                [secondaryActionButtonKey]="'stepper.back'" [saveButtonKey]="'stepper.next'"
-                [hasSecondaryAction]="true">
+              <app-stepper-footer [disableSave]="!isValid(i)"
+                (save)="onStepSave(i, countForm.value.__apply_to_remaining_counts)" (back)="disputeStepper.previous()"
+                [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
+                [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
               </app-stepper-footer>
             </app-stepper-page>
           </mat-step>
@@ -573,7 +571,7 @@
               </section>
             </form>
 
-            <app-stepper-footer (save)="onStepSave()" (back)="disputeStepper.previous()"
+            <app-stepper-footer [disableSave]="!isValid()" (save)="onStepSave()" (back)="disputeStepper.previous()"
               [secondaryActionButtonIcon]="previousButtonIcon" [secondaryActionButtonKey]="'stepper.back'"
               [saveButtonKey]="'stepper.next'" [hasSecondaryAction]="true">
             </app-stepper-footer>
