@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   public decidePopup = '';
-  public ticketInfo: DisputeView;
+  public disputeInfo: DisputeView;
   busy: Subscription;
   newDispute: DisputeView = {
     DateSubmitted: undefined,
@@ -334,7 +334,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
   // return number of validation errors
   getOcrViolationErrors(field?: RecognizedField): number {
-    console.log(field);
     if (field == undefined || field == null) return 0;
     if (field.validationErrors && field.validationErrors.length > 0) {
       return field.validationErrors.length;
@@ -358,7 +357,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   backTicketList(element) {
-    this.ticketInfo = element;
+    this.disputeInfo = element;
     if (element.ticketNumber[0] == 'A') {
       this.decidePopup = 'E'
     } else {

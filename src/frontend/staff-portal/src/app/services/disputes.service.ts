@@ -83,7 +83,7 @@ export class DisputesService implements IDisputesService {
         return dispute;
       }),
       tap((dispute) =>
-        this.logger.info('DisputesService::getDisputes', dispute)
+        this.logger.info('DisputesService::getDispute', dispute)
       ),
       catchError((error: any) => {
         this.toastService.openErrorToast(this.configService.dispute_error);

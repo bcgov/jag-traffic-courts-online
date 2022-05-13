@@ -10,9 +10,8 @@ import { DisputeView } from '../../services/disputes.service';
 export class TicketStatusComponent implements OnInit {
   @Input() public dispute: DisputeView;
   
-  constructor() { console.log("ticket status", this.dispute); }
+  constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }

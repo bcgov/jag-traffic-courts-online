@@ -19,68 +19,59 @@
       <div class="ticket-body">
         <div style="display: flex; justify-content: space-evenly">
 
-          <section class="mb-2 img-section" [style.width]="!disableForm ? '25%' : '20%'">
-            <div class="row">
-              <div *ngIf="!disableForm">
-                <ng-container subHeader>
-                  Ticket Image
-                </ng-container>
-              </div>
-              <div *ngIf="disableForm" class="col-lg-5">
-                <img src="../../../assets/violation-ticket-sample.jpg" width="150" height="200">
-                <button data-toggle="modal" data-target="#exampleModal" (click)="handleCollapse('imageInformation')">
-                  <ng-container subHeader>
-                    <i *ngIf="!collapseObj?.imageInformation" class="fa fa-plus-circle" style="font-size:20px; color:#009cde"></i>
-                    <i *ngIf="collapseObj?.imageInformation" class="fa fa-minus-circle" style="font-size:20px; color:#009cde"></i>
-                    <span>Click to expand ticket image</span>
-                 </ng-container>
-                </button>
-              </div>
-              <div *ngIf="!disableForm" class="col-lg-5">
-                <img src="../../../assets/violation-ticket-sample.jpg" width="280" height="500">
-                <button data-toggle="modal" data-target="#exampleModal"><i *ngIf="!collapseObj?.imageInformation"
-                    class="fa fa-plus-circle" style="font-size:20px; color:#009cde"></i>Click to expand ticket image</button>
-              </div>
+          <section class="mb-2 img-section" [style.width]="disableForm ? '25%' : '20%'">
+            <div *ngIf="!disableForm">
+              <ng-container subHeader>
+                <h3>Ticket Image</h3>
+              </ng-container>
+            </div>
+            <div *ngIf="disableForm==true" data-toggle="modal" data-target="#exampleModal" width="280 !important">
+              <img src="../../../assets/violation-ticket-sample.jpg" width="280" height="500"><br />
+              <span style="font-size:15px; color:#009cde; align-content: center;" width="280">
+                <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
+                <strong> Click to expand ticket image</strong>
+              </span>
+            </div>
+            <div *ngIf="disableForm==false" data-toggle="modal" data-target="#exampleModal" width="150 !important">
+              <img src="../../../assets/violation-ticket-sample.jpg" width="150" height="200"><br />
+              <span style="font-size:10px; color:#009cde; align-content: center;" width="150">
+                <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
+                <strong> Click to expand ticket image</strong>
+              </span>
             </div>
           </section>
           <section [ngClass]="!disableForm? 'ticket-section-form':''" class="mb-2"
-            [style.width]="!disableForm ? '48%' : '60%'">
+            [style.width]="!disableForm ? '48%' : '62%'">
             <form (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
 
               <div class="row">
                 <div *ngIf="!disableForm">
                   <ng-container subHeader>
-                    <span>Ticket Details</span>
+                    <span><h3>Violation Ticket Details</h3></span>
                   </ng-container>
                 </div>
                 <section>
                   <div class="row">
                     <div class="col-lg-4">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100 mb-2">
-                        <mat-label>Violation ticket number</mat-label>
-                        <input formControlName="ticketNumber" matInput [readonly]="disableForm" type="text"
+                        <mat-label *ngIf="disableForm">Violation ticket number</mat-label>
+                        <mat-label *ngIf="!disableForm">Ticket number</mat-label>
+                        <input formControlName="ticketNumber" matInput [readonly]="disableForm==true" type="text"
                           oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
-                        <!-- <mat-hint>
-                        <strong>A ticket number is 2 letters and 8 numbers</strong>
-                      </mat-hint> -->
                         <mat-error *ngIf="form.get('ticketNumber').hasError('required')">
                           {{ "error.required" | translate }}
                         </mat-error>
                         <mat-error *ngIf="form.get('ticketNumber').value && form.get('ticketNumber').hasError('mask')">
-                          This ticket number is not valid. It must be 2 letters and 8
-                          numbers.
+                          This ticket number is not valid. It must be 2 letters and 8 numbers.
                         </mat-error>
                       </mat-form-field>
                     </div>
 
                     <div class="col-lg-4">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
-                        <mat-label>Violation date</mat-label>
-                        <input matInput [readonly]="disableForm" [matDatepicker]="picker"
-                          formControlName="violationDate" [max]="todayDate" readonly (click)="picker.open()" />
-                        <mat-datepicker-toggle matSuffix [for]="picker">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
+                        <mat-label *ngIf="disableForm">Violation date</mat-label>
+                        <mat-label *ngIf="!disableForm">Date</mat-label>
+                        <input matInput [readonly]="disableForm" type="date" placeholder="yyyy-MM-DD" formControlName="violationDate" [max]="todayDate" />
                         <mat-error *ngIf="form.get('violationDate').hasError('required')">
                           {{ "error.required" | translate }}
                         </mat-error>
@@ -89,16 +80,21 @@
 
                     <div class="col-lg-4">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
-                        <mat-label>Violation time</mat-label>
-                        <input matInput [readonly]="disableForm" type="time" formControlName="violationTime" />
-                        <mat-error>{{ "error.required" | translate }}</mat-error>
+                        <mat-label *ngIf="disableForm">Violation time</mat-label>
+                        <mat-label *ngIf="!disableForm">Time</mat-label>
+                        <input matInput [readonly]="disableForm" type="text" mask="00:00" formControlName="violationTime" />
+                        <mat-error *ngIf="form.get('violationTime').hasError('required')">
+                          {{ "error.required" | translate }}</mat-error>
+                        <mat-error *ngIf="form.get('violationTime').hasError('pattern')">
+                           Invalid time. Use 24hr format.
+                        </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
                 </section>
                 <section>
                   <ng-container subHeader>
-                    <span> Personal Information </span>
+                    <span> <h3>Personal Information</h3> </span>
                   </ng-container>
                   <div class="row">
                     <div class="col-lg-6">
@@ -119,7 +115,7 @@
                   <div class="row">
                     <div class="col-lg-6">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
-                        <mat-label>Province/State of drivers licence</mat-label>
+                        <mat-label>Province/State of driver's licence</mat-label>
                         <input matInput [readonly]="disableForm" formControlName="driversLicenceProvince" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
@@ -127,7 +123,7 @@
 
                     <div class="col-lg-6">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
-                        <mat-label>Driver's license number</mat-label>
+                        <mat-label>Driver's licence number</mat-label>
                         <input matInput [readonly]="disableForm" formControlName="driversLicenceNumber" mask="0000000"
                           autocomplete="off" [showMaskTyped]="false" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -137,7 +133,7 @@
                 </section>
                 <section>
                   <ng-container subHeader>
-                    <span> Count 1</span>
+                    <span> <h3>Count 1</h3></span>
                   </ng-container>
                   <div class="row">
                     <div class="col-lg-6">
@@ -158,7 +154,7 @@
                 </section>
                 <section>
                   <ng-container subHeader>
-                    <span> Count 2</span>
+                    <span> <h3>Count 2</h3></span>
                   </ng-container>
                   <div class="row">
                     <div class="col-lg-6">
@@ -179,7 +175,7 @@
                 </section>
                 <section>
                   <ng-container subHeader>
-                    <span>Count 3</span>
+                    <span><h3>Count 3</h3></span>
                   </ng-container>
                   <div class="row">
                     <div class="col-lg-6">
@@ -200,12 +196,11 @@
                 </section>
                 <section>
                   <ng-container subHeader>
-                    <span> Court Location </span>
+                    <span> <h3>Court Location</h3> </span>
                   </ng-container>
                   <div class="row">
                     <div class="col-lg-6">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
-                        <mat-label>Section / Act / Description </mat-label>
                         <input matInput [readonly]="disableForm" formControlName="provincialCourtHearingLocation" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
@@ -228,24 +223,25 @@
             </form>
           </section>
           <section class="mb-2" *ngIf="!disableForm" [style.width]="!disableForm ? '20%' : '0%'">
-            <div class="row">
+            <form (ngSubmit)="onSubmit()" [formGroup]="flagsForm" novalidate>
+              <div class="row">
               <div *ngIf="!disableForm">
                 <ng-container subHeader>
-                  <span> Citizen flags </span>
+                  <span> <h3>Citizen flags</h3> </span>
                 </ng-container>
               </div>
               <div class="row">
                 <div class="col-lg-12">
                   <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100 mb-2">
                     <mat-label>Description of differences</mat-label>
-                    <input formControlName="form.get('ticketNumber').value" matInput type="text" autocomplete="off" />
+                    <input formControlName="disputantOcrIssuesDescription" matInput type="text" autocomplete="off" />
                   </mat-form-field>
                 </div>
               </div>
               <div class="row">
                 <div *ngIf="!disableForm">
                   <ng-container subHeader>
-                    System flags
+                    <h3>System flags</h3>
                   </ng-container>
                 </div>
                 <div class="col-lg-12">
@@ -258,12 +254,13 @@
                   <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Surname </p>
                   <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Given Name </p>
                   <p class="systemFlagList"><span class="dot"></span><span class="success">95%</span>-Province/State of
-                    drivers licence </p>
-                  <p class="systemFlagList"><span class="dot-fail"></span><span class="fail">75%</span>-Driver's license
+                    driver's licence </p>
+                  <p class="systemFlagList"><span class="dot-fail"></span><span class="fail">75%</span>-Driver's licence
                     number</p>
                 </div>
               </div>
             </div>
+          </form>
           </section>
         </div>
         <div class="contact-info" *ngIf="disableForm">
@@ -350,7 +347,7 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Birthdate</mat-label>
-                        <input matInput [readonly]="disableForm" [max]="maxDateOfBirth" [matDatepicker]="picker"
+                        <input matInput [readonly]="disableForm" [matDatepicker]="picker"
                           formControlName="birthdate" readonly (click)="picker.open()" />
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
@@ -397,7 +394,7 @@
 
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
-                        <mat-label>Province or state of driver's licence</mat-label>
+                        <mat-label>Province/State of driver's licence</mat-label>
                         <input matInput [readonly]="disableForm" formControlName="driversLicenceProvince" />
                         <!-- <mat-error>{{ "error.required" | translate }}</mat-error> -->
                       </mat-form-field>
@@ -440,8 +437,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="height: 550px; text-align: center;">
-        <img src="../../../assets/violation-ticket-sample.jpg" width="300" height="500">
+      <div class="modal-body" style="height: 800px; text-align: center;">
+        <img src="../../../assets/violation-ticket-sample.jpg" width="450" height="750">
       </div>
     </div>
   </div>

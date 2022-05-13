@@ -71,8 +71,8 @@
       "postal_code": "Postal Code",
       "home_phone_number": "Home Phone Number",
       "work_phone_number": "Work Phone Number",
-      "driver_license_number": "Driver's License Number",
-      "driver_license_province": "Province or State of Driver's License",
+      "driver_licence_number": "Driver's Licence Number",
+      "driver_licence_province": "Province or State of Driver's Licence",
       "email_address": "Email Address",
       "birthdate": "Birthdate"
     },

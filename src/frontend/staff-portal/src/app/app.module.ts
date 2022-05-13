@@ -25,7 +25,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -46,6 +46,9 @@ import { ContactInfoComponent } from './components/contact-info/contact-info.com
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
+import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MY_DATE_FORMATS } from './services/date-format';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -73,6 +76,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   imports: [
     CommonModule,
     BrowserModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     AppRoutingModule,
     CoreModule,
     SharedModule,
@@ -101,6 +106,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   exports: [NgBusyModule, TranslateModule],
   providers: [
     CurrencyPipe,
+    DatePipe,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
     // AppConfigService,
     // {
@@ -112,6 +118,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     LogInOutService,
     {
       provide: HTTP_INTERCEPTORS,

@@ -143,9 +143,9 @@
           
             </div>
             <div *ngIf="showTicket">
-             <app-contact-info *ngIf="decidePopup == 'A'" (backTicketList)="backTicketpage()" [ticketInfo]="ticketInfo"></app-contact-info>
+             <app-contact-info *ngIf="decidePopup == 'A'" (backTicketList)="backTicketpage()" [disputeInfo]="disputeInfo"></app-contact-info>
 
-             <app-ticket-info *ngIf="decidePopup == 'E'" (backTicketList)="backTicketpage()" [ticketInfo]="ticketInfo"></app-ticket-info>
+             <app-ticket-info *ngIf="decidePopup == 'E'" (backTicketList)="backTicketpage()" [disputeInfo]="disputeInfo"></app-ticket-info>
             </div>
 
         </div>

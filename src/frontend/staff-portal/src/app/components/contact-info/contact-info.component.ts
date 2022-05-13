@@ -65,8 +65,8 @@ export class ContactInfoComponent implements OnInit {
         city: [null, [Validators.required]],
         province: [null, [Validators.required]],
         postalCode: [null, [Validators.required]],
-        driverLicenseNumber: [null, [Validators.required]],
-        driverLicenseProvince: [null, [Validators.required]],
+        driverLicenceNumber: [null, [Validators.required]],
+        driverLicenceProvince: [null, [Validators.required]],
       });
   
       this.form.patchValue({
@@ -81,8 +81,8 @@ export class ContactInfoComponent implements OnInit {
         city: "",
         province: "",
         postalCode: "",
-        driverLicenseNumber: "",
-        driverLicenseProvince: "",
+        driverLicenceNumber: "",
+        driverLicenceProvince: "",
       })
     }
   

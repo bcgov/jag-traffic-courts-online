@@ -1,3 +1,16 @@
+@import "palette.scss";
+
+h3 {
+  font-weight: bold;
+}
+.disputre{
+  width: 100%;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: none;
+}
+
 .ticket-info {
     margin-bottom: 12%;
     .ticket-info-section{
@@ -81,6 +94,17 @@
 
   .ticket-section-form .col-lg-6{
   padding-right: 0px;
+  }
+
+  .subheader {
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+  
+    .title {
+      color: #1d4a77 !important;;
+      display: flex;
+      margin-bottom: 0.05rem;
+    }
   }
 
   ::ng-deep {
