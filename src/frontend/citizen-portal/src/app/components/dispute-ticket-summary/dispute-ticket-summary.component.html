@@ -4,6 +4,71 @@
   </section>
 
   <div class="mb-2">
+    <section class="px-4 py-2 mb-4 card-section">
+      <div class="page-subheader pagebreak">
+        <h2><strong> Disputant contact information</strong></h2>
+          <div class="row mb-2">
+            <div class="lg-2 col-lg-4">
+              <small class="d-block">Surname</small>
+              <div class="text"><strong>{{ noticeOfDispute.surname }}</strong></div>
+            </div>
+            <div class="col-lg-4">
+              <small class="d-block">Given names</small>
+              <div class="text"><strong>{{ noticeOfDispute.given_names }}</strong></div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="lg-2 col-lg-4">
+              <small class="d-block">Mailing address</small>
+              <div class="text"><strong>{{ noticeOfDispute.address }}</strong></div>
+            </div>
+            <div class="col-lg-4">
+              <small class="d-block">Province</small>
+              <div class="text"><strong>{{ noticeOfDispute.province }}</strong></div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="lg-2 col-lg-4">
+              <small class="d-block">City</small>
+              <div class="text"><strong>{{ noticeOfDispute.city }}</strong></div>
+            </div>
+            <div class="col-lg-4">
+              <small class="d-block">Postal/ZIP code</small>
+              <div class="text"><strong>{{ noticeOfDispute.postal_code }}</strong></div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="lg-2 col-lg-4">
+              <small class="d-block">Birth date</small>
+              <div class="text"><strong>{{ noticeOfDispute.birthdate | date:"yyyy/MM/dd" }}</strong></div>
+            </div>
+            <div class="col-lg-4">
+              <small class="d-block">Drivers licence number</small>
+              <div class="text"><strong>{{ noticeOfDispute.drivers_licence_number }}</strong></div>
+            </div>
+            <div class="col-lg-4">
+              <small class="d-block">Province/state of drivers licence</small>
+              <div class="text"><strong>{{ noticeOfDispute.drivers_licence_province }}</strong></div>
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="lg-2 col-lg-4">
+              <small class="d-block">Phone number</small>
+              <div class="text"><strong>{{ noticeOfDispute.home_phone_number }}</strong></div>
+            </div>
+            <div class="col-lg-4">
+              <small class="d-block">Email address</small>
+              <div class="text"><strong>{{ noticeOfDispute.email_address }}</strong></div>
+            </div>
+          </div>
+      </div>
+    </section>
+
+
     <section class="px-4 py-2 mb-3 card-section" *ngFor="let row of noticeOfDispute.disputed_counts; let i = index">
       <app-count-item-dispute-summary [count]="row"></app-count-item-dispute-summary>
     </section>
