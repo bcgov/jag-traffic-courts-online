@@ -23,6 +23,8 @@ export class ViolationTicketService {
   private _ocrTicket: BehaviorSubject<OcrViolationTicket> = new BehaviorSubject<OcrViolationTicket>(null);
   private _inputTicketData: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   private _ticketType: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  public violationTicketticketIdKey = "ticketId";
+  public ocrTicketImageFilenameKey = "imageFilename";
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
   public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
@@ -128,6 +130,7 @@ export class ViolationTicketService {
         .subscribe({
           next: res => {
             if (res) {
+              console.log("after analyse", res.imageFilename);
               this.ocrTicket$.next(res);
               this.ticket$.next(this.fromOCR(res));
               this.inputTicketData$.next(input);
@@ -210,6 +213,12 @@ export class ViolationTicketService {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
 
+    // set ticketId to imageFilename returned from Ocr
+    if (source[this.ocrTicketImageFilenameKey]) {
+      result[this.violationTicketticketIdKey] = source[this.ocrTicketImageFilenameKey];
+      console.log("violation Ticket setting", source, result);
+    }
+
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
@@ -254,7 +263,7 @@ export class ViolationTicketService {
   
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected;
+    ticket[this.ocrIssueDetectedKey] = issueDetected===true ? issueDetected : false ;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this.ticket$.next(ticket);
   }

@@ -102,10 +102,12 @@ export class DisputeTicketStepperComponent implements OnInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
       ...this.additionFormFields,
-      disputed_counts: this.countForms
+      disputed_counts: this.countForms,
+      ticket_id: this.ticket.ticketId
     }, {
       validators: [...this.additionFormValidators]
     });
+    console.log("stepper form", this.form);
 
     this.setAdditional();
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
@@ -199,7 +201,6 @@ export class DisputeTicketStepperComponent implements OnInit {
    * Submit the dispute
    */
   private submitDispute(): void {
-    // this.busy = this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute); 
-    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
+    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute); 
   }
 }
