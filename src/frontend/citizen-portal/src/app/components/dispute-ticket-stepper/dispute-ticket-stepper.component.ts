@@ -172,7 +172,11 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.submitDispute();
     } else {
       if (isSummary) {
-        this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({ ...this.form.value, disputed_count: this.countForms.value });
+        this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
+          ...this.form.value,
+          country: this.form.get("country").value,
+          disputed_counts: this.countForms.value
+        });
       } else {
         this.noticeOfDispute = null;
       }
@@ -187,10 +191,9 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
   public isValid(countInx?): boolean {
     if (this.countForms?.controls[countInx]) {
-      return !this.countForms.controls[countInx].pristine && this.countForms.controls[countInx].valid
-        && !this.form.pristine && this.form.valid;
+      return this.countForms.controls[countInx].valid && this.form.valid;
     }
-    return !this.form.pristine && this.form.valid;
+    return this.form.valid;
   }
 
   public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
@@ -215,6 +218,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
    * Submit the dispute
    */
   private submitDispute(): void {
-    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute); 
+    this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
   }
 }
