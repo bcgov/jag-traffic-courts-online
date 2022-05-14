@@ -110,8 +110,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     });
 
     // take info from ticket, convert dl number to string
-    this.form.patchValue(this.ticket);
-    this.form.controls['drivers_licence_number'].setValue(this.ticket.drivers_licence_number.toString());
+    Object.keys(this.ticket).forEach(key => {
+      this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
+    });
+    this.form.controls['drivers_licence_number'].setValue(this.ticket.drivers_licence_number?.toString());
 
     this.setAdditional();
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
@@ -195,7 +197,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
   public isValid(countInx?): boolean {
     if (this.countForms?.controls[countInx]) {
-      return this.countForms.controls[countInx].valid && this.form.valid;
+      return this.countForms.controls[countInx].valid || this.countForms.controls[countInx].value.__skip;
     }
     return this.form.valid;
   }
