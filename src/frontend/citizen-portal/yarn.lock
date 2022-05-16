@@ -5046,8 +5046,8 @@ libnpmdiff@^2.0.4:
     binary-extensions "^2.2.0"
     diff "^5.0.0"
     minimatch "^3.0.4"
-    npm-package-arg "^8.1.4"
-    pacote "^11.3.4"
+    npm-package-arg "^8.1.1"
+    pacote "^11.3.0"
     tar "^6.1.0"
 
 libnpmexec@^2.0.1:
@@ -5507,10 +5507,6 @@ mkdirp@^0.5.5:
 mkdirp@^1.0.3, mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
-
-moment@^2.29.2:
-  version "2.29.2"
-  resolved "https://registry.npmjs.org/moment/-/moment-2.29.2.tgz"
 
 ms@2.0.0:
   version "2.0.0"

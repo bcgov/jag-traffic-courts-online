@@ -30,6 +30,8 @@ export class DisputeTicketStepperComponent implements OnInit {
   public defaultLanguage: string;
   public ticketTypes = ticketTypes;
   public Plea = Plea;
+  public selected=null;
+
 
   public form: FormGroup;
   public legalRepresentationForm: FormGroup;
@@ -205,5 +207,19 @@ export class DisputeTicketStepperComponent implements OnInit {
    */
   private submitDispute(): void {
     this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute); 
+  }
+  public getToolTipDEata(data){
+    console.log('data', data, this.form.get('interpreter_language'))
+    if(data){
+      let msg="";
+      this.languages.forEach(res=>{
+        if(res === data.value){
+          msg = res
+        }
+      })
+      return msg;
+    }else{
+      return "please select a language";
+    }
   }
 }

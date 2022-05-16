@@ -15,8 +15,8 @@ const routes: Routes = [
   {
     path: AppRoutes.TICKET,
     component: TicketPageComponent,
-    canActivate: [AuthorizationGuard],
-    data: { expectedRole: "vtc-user"}
+    // canActivate: [AuthorizationGuard],
+    // data: { expectedRole: "vtc-user"}
   },
   {
     path: 'unauthorized',
