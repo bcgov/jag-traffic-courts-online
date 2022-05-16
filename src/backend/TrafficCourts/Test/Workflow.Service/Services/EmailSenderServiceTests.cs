@@ -34,7 +34,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             var configValues = new EmailConfiguration
             {
                 Sender = "default@test.com",
-                AllowList = new string[]{ "@test.com" }
+                AllowList = "@test.com"
             };
 
             IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);
@@ -50,7 +50,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             var configValues = new EmailConfiguration
             {
                 Sender = "default@test.com",
-                AllowList = new string[] { }
+                AllowList = string.Empty
             };
 
             IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);

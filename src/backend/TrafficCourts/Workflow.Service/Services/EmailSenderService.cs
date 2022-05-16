@@ -149,16 +149,13 @@ namespace TrafficCourts.Workflow.Service.Services
                         else
                         {
                             // not allowed, metrics? logs?
-                            _logger.LogWarning("Recipient email was blocked from being sent to, due to not matching allowlist:");
-                            _logger.LogWarning(recipient);
+                            _logger.LogInformation("Recipient email was blocked from being sent to, due to not matching allow list: {Recipient}", recipient);
                         }
-
                     }
                     else
                     {
                         // invalid email address, metrics? logs?
-                        _logger.LogWarning("Recipient email provided was invalid:");
-                        _logger.LogWarning(recipient);
+                        _logger.LogInformation("Recipient email provided was invalid: {Recipient}", recipient);
                     }
                 }
             }
@@ -171,11 +168,12 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <returns>boolean true, if email is allowed, false otherwise</returns>
         private bool IsEmailAllowed(MailboxAddress mailboxAddress)
         {
-            if (_emailConfiguration.AllowList is not null && _emailConfiguration.AllowList.Count() > 0)
+            var allowed = _emailConfiguration.Allowed;
+            if (allowed.Count > 0)
             {
                 // configured with an allow list, does the email address end with any of the allowed domains?
                 // Note: assumes the emailAddress is valid.
-                return _emailConfiguration.AllowList.Any(_ => mailboxAddress.Address.EndsWith(_, StringComparison.OrdinalIgnoreCase));
+                return allowed.Any(_ => mailboxAddress.Address.EndsWith(_, StringComparison.OrdinalIgnoreCase));
             }
             return true; // no allow list, production mode, send to anyone
         }
