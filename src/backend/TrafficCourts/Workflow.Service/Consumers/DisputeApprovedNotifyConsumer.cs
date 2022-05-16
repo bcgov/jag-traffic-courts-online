@@ -23,7 +23,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             try
             {
 
-                // Send email message to the submitter's entered email - TODO: this needs to be moved to workflow service on SubmitNoticeOfDispute event
+                // Send email message to the submitter's entered email to notify of dispute approval for processing
                 var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ProcessingDisputeTemplate");
                 if (template is not null)
                 {

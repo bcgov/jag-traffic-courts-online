@@ -30,7 +30,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
-                // Send email message to the submitter's entered email - TODO: this needs to be moved to workflow service on SubmitNoticeOfDispute event
+                // Send email message to the submitter's entered email
                 var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
                 if (template is not null)
                 {
