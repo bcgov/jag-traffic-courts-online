@@ -28,6 +28,8 @@ spec:
       serviceAccountName: {{ include "oracle-data-api.serviceAccountName" . }}
       containers:
         - env:
+          - name: H2_DATASOURCE
+            value: jdbc:h2:file:./data/h2
           {{- if .Values.splunk.enabled }}
           # Logging - Splunk
           - name: SPLUNK_URL
@@ -58,6 +60,9 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+          - mountPath: /data
+            name: {{ include "oracle-data-api.fullname" . }}-data
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -70,4 +75,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      - name: {{ include "oracle-data-api.fullname" . }}-data
+        persistentVolumeClaim:
+          claimName: {{ include "oracle-data-api.fullname" . }}-data
 {{- end }}
