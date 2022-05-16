@@ -18,30 +18,28 @@ namespace TrafficCourts.Workflow.Service.Consumers
         {
             _logger = logger;
         }
+
+        /// <summary>
+        /// Consumer looks-up the e-mail template to use and generates an e-mail message
+        /// based on the template for publishing
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task Consume(ConsumeContext<DisputeApproved> context)
         {
-            try
+            // Send email message to the submitter's entered email to notify of dispute approval for processing
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ProcessingDisputeTemplate");
+            if (template is not null)
             {
-
-                // Send email message to the submitter's entered email to notify of dispute approval for processing
-                var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ProcessingDisputeTemplate");
-                if (template is not null)
+                var emailMessage = new SendEmail()
                 {
-                    var emailMessage = new SendEmail()
-                    {
-                        From = template.Sender,
-                        To = { context.Message.Email! },
-                        Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
-                        PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber)
-                    };
+                    From = template.Sender,
+                    To = { context.Message.Email! },
+                    Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
+                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber)
+                };
 
-                    await context.Publish(emailMessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to process message");
-                throw;
+                await context.Publish(emailMessage);
             }
         }
     }

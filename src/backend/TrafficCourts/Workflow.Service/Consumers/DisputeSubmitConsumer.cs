@@ -10,13 +10,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
     /// <summary>
     ///     Consumer for SubmitDispute message.
     /// </summary>
-    public class SubmitDisputeConsumer : IConsumer<SubmitNoticeOfDispute>
+    public class DisputeSubmitConsumer : IConsumer<SubmitNoticeOfDispute>
     {
-        private readonly ILogger<SubmitDisputeConsumer> _logger;
+        private readonly ILogger<DisputeSubmitConsumer> _logger;
         private readonly IOracleDataApiService _oracleDataApiService;
         private readonly IMapper _mapper;
 
-        public SubmitDisputeConsumer(ILogger<SubmitDisputeConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
+        public DisputeSubmitConsumer(ILogger<DisputeSubmitConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
         {
             _logger = logger;
             _oracleDataApiService = oracleDataApiService;

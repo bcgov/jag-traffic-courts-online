@@ -24,31 +24,29 @@ namespace TrafficCourts.Workflow.Service.Consumers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Consumer looks-up the e-mail template to use and generates an e-mail message
+        /// based on the template for publishing
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            try
-            {
-                NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
+            NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
-                // Send email message to the submitter's entered email
-                var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
-                if (template is not null)
+            // Send email message to the submitter's entered email
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
+            if (template is not null)
+            {
+                var emailMessage = new SendEmail()
                 {
-                    var emailMessage = new SendEmail()
-                    {
-                        From = template.Sender,
-                        To = { noticeOfDispute!.EmailAddress! },
-                        Subject = template.SubjectTemplate.Replace("<ticketid>", noticeOfDispute.TicketNumber),
-                        PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", noticeOfDispute.TicketNumber)
-                    };
+                    From = template.Sender,
+                    To = { noticeOfDispute!.EmailAddress! },
+                    Subject = template.SubjectTemplate.Replace("<ticketid>", noticeOfDispute.TicketNumber),
+                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", noticeOfDispute.TicketNumber)
+                };
 
-                    await context.Publish(emailMessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to process message");
-                throw;
+                await context.Publish(emailMessage);
             }
         }
     }
