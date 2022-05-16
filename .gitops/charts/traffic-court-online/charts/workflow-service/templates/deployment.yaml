@@ -28,6 +28,9 @@ spec:
       serviceAccountName: {{ include "workflow-service.serviceAccountName" . }}
       containers:
         - env:
+          # change to value
+          - name: Serilog__MinimumLevel__Default
+            value: Debug
           - name: ASPNETCORE_URLS
             value: http://*:8080
           - name: RABBITMQ__HOST
