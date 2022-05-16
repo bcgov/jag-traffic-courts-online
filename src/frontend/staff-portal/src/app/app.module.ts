@@ -48,7 +48,6 @@ import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MY_DATE_FORMATS } from './services/date-format';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -118,7 +117,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
     LogInOutService,
     {
       provide: HTTP_INTERCEPTORS,
