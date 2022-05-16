@@ -109,7 +109,7 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Birthdate</mat-label>
-                        <input matInput [max]="maxDateOfBirth" [matDatepicker]="picker" formControlName="birthdate"
+                        <input matInput  [matDatepicker]="picker" formControlName="birthdate"
                           readonly (click)="picker.open()" />
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
@@ -496,10 +496,12 @@
                 </div>
 
                 <div class="row" *ngIf="form.get('__interpreter_required')?.value">
-                  <div class="col">
-                    <mat-form-field>
-                      <mat-label>{{ "stepper.additional.interpreter_language" | translate }}</mat-label>
-                      <mat-select formControlName="interpreter_language">
+                  <div class="col interpreter-language">
+                    <mat-form-field >
+                      <mat-label>{{
+                        "stepper.additional.interpreter_language" | translate
+                        }}</mat-label>
+                      <mat-select formControlName="interpreter_language" matTooltip="{{getToolTipDEata(form.get('interpreter_language'))}}"  >
                         <mat-option *ngFor="let language of languages" [value]="language">
                           {{ language }}
                         </mat-option>

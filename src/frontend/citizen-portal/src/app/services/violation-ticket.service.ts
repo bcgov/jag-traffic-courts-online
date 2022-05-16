@@ -341,7 +341,7 @@ export class ViolationTicketService {
   }
 
   private openInValidTicketDateDialog() {
-    return this.openImageTicketNotFoundDialog("more than 30 days old", "error2");
+    return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
   }
 
   private dateDiff(givenDate: string) {
