@@ -44,7 +44,9 @@ public static class Startup
         {
             // TODO: use cfg.AddConsumers(params Type[] types) or cfg.AddConsumers(params Assembly[] assemblies)
             cfg.AddConsumer<SubmitDisputeConsumer>();
+            cfg.AddConsumer<DisputeSubmitNotifyConsumer>();
             cfg.AddConsumer<DisputeApprovedConsumer>();
+            cfg.AddConsumer<DisputeApprovedNotifyConsumer>();
             cfg.AddConsumer<SendEmailConsumer>();
         }
 

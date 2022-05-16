@@ -163,9 +163,6 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
         await _bus.Publish(approvedEvent, cancellationToken);
-
-        SendEmail processingSendEmail = Mapper.ToProcessingSendEmail(dispute);
-        await _bus.Publish(processingSendEmail, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(Guid disputeId, CancellationToken cancellationToken)

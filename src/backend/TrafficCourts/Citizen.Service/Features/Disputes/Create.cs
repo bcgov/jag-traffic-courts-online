@@ -1,7 +1,6 @@
 using MassTransit;
 using MediatR;
 using System.Text.Json;
-using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Citizen.Service.Models.Tickets;
@@ -140,19 +139,6 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     await _bus.Publish(submitNoticeOfDispute, cancellationToken);
 
                     _logger.LogDebug("Dispute published to the queue for being consumed by consumers and saved in Oracle Data API");
-
-                    // Send email message to the submitter's entered email - TODO: this needs to be moved to workflow service on SubmitNoticeOfDispute event
-                    var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
-                    if (template is not null)
-                    {
-                        await _bus.Publish(new SendEmail()
-                        {
-                            From = template.Sender,
-                            To = { submitNoticeOfDispute!.EmailAddress! },
-                            Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber),
-                            PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber)
-                        }, cancellationToken);
-                    }
 
                     // success, return true
                     activity?.SetStatus(ActivityStatusCode.Ok);
