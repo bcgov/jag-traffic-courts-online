@@ -42,9 +42,6 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", noticeOfDispute.TicketNumber)
                     };
 
-                    var emailSent = JsonSerializer.Serialize(emailMessage);
-                    _logger.LogDebug(emailSent);
-
                     await context.Publish(emailMessage);
                 }
             }
