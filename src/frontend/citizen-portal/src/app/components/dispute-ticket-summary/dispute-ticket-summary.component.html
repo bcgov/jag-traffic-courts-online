@@ -81,7 +81,7 @@
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
 
-        <div *ngIf="countsActions?.request_counts?.length > 0">
+        <div *ngIf="countsActions?.not_appear_in_court?.length > 0">
           <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
             <hr />
             <strong class="fs-5">
@@ -93,7 +93,7 @@
             <small>Written reasons for <strong>fine reduction</strong> request</small>
             <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
           </ng-container>
-          <ng-container *ngIf="countsActions?.request_counts?.length !== countsActions?.request_time_to_pay?.length">
+          <ng-container *ngIf="countsActions?.not_appear_in_court?.length !== countsActions?.request_time_to_pay?.length">
             <hr />
             <strong class="fs-5">
               <ng-container *ngFor="let i of countsActions?.request_time_to_pay; let inx = index">
@@ -107,10 +107,10 @@
             <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
           </ng-container>
         </div>
-        <div *ngIf="countsActions?.not_guilty?.length > 0">
+        <div *ngIf="countsActions?.appear_in_court?.length > 0">
           <hr />
           <strong class="fs-5 mb-3">
-            <ng-container *ngFor="let i of countsActions?.not_guilty let inx = index">
+            <ng-container *ngFor="let i of countsActions?.appear_in_court let inx = index">
               {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
             </ng-container>
           </strong>
