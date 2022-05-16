@@ -211,8 +211,8 @@ export class ViolationTicketService {
     }
     result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
-    // set ticketId to imageFilename returned from Ocr
-    result.ticketId = source.imageFilename;
+    // set ticket_id to imageFilename returned from Ocr
+    result.ticket_id = source.imageFilename;
 
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
