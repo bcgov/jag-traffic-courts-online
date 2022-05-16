@@ -193,6 +193,10 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.logger.log('TicketPageComponent::getAllDisputes');
 
     // for now this will show dummy data plus new records
+    // FIXME: this should be the other way around - pull all Dispute records from staff-api and then maybe append mock data
+    //    Currently, the dashboard data are not staff-api Dispute objects, but custom mock objects.  The mock objects should
+    //    be instances of a Dispute (as defined by staff-api openapi spec).
+    // this.disputesService.getDisputes().subscribe(next => this.dataSource.data = next);
     
     // concatenate all dummy data to this.disputes
     this.disputes = [];
