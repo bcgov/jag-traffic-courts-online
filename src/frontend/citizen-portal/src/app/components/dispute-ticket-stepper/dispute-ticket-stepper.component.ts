@@ -46,14 +46,18 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public showManualButton: boolean = true;
   public showAddressFields: boolean = true; // temporary preset for testing
 
+  // Count
+  public countIndexes: number[];
+
   // Additional
   public languages = this.config.languages;
   public countsActions: any;
   public customWitnessOption = false;
   public minWitnesses = 1;
   public maxWitnesses = 99;
+  public additionalIndex: number;
 
-  // Overview
+  // Summary
   public declared = false;
 
   // Consume from the service
@@ -103,7 +107,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
       ...this.additionFormFields,
-      // disputed_counts: this.countForms,
       ticket_id: this.ticket.ticketId
     }, {
       validators: [...this.additionFormValidators]
@@ -113,16 +116,24 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     Object.keys(this.ticket).forEach(key => {
       this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
     });
-    this.form.controls['drivers_licence_number'].setValue(this.ticket.drivers_licence_number?.toString());
+    this.ticket.drivers_licence_number && this.form.controls['drivers_licence_number'].setValue(this.ticket.drivers_licence_number.toString());
 
     this.setAdditional();
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
+
+    this.countIndexes = this.ticket.counts.map(i => i.count);
+    let lastCountInx = this.countIndexes[this.countIndexes.length - 1]
+    this.additionalIndex = lastCountInx + 1;
   }
 
   ngAfterViewInit(): void {
-    // disable auto complete component
     setTimeout(() => {
-      this.addressAutocomplete && this.addressAutocomplete.autocomplete.disable();
+      this.addressAutocomplete?.autocomplete.disable(); // disable auto complete component
+      this.stepper?.selectionChange.subscribe(event => { // stepper change subscription
+        if (event.previouslySelectedIndex < event.selectedIndex) {
+          this.onStepSave();
+        }
+      })
     }, 0)
   }
 
@@ -146,12 +157,12 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     form.patchValue({ ...this.countFormDefaultValue, appear_in_court: event.value, __skip: false });
   }
 
-  public onStepSave(countInx?, applyToRemaining?): void {
-    let isSummary = this.stepper.steps.length === this.stepper.selectedIndex + 2;
-    let isLast = this.stepper.steps.length === this.stepper.selectedIndex + 1;
+  public onStepSave(): void {
+    let isAdditional = this.stepper.selectedIndex === this.additionalIndex;
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (countInx !== undefined) {
+    if (this.countIndexes.indexOf(this.stepper.selectedIndex) > -1) {
+      let countInx = this.stepper.selectedIndex - 1;
       let countForm = this.countForms.controls[countInx];
       if (countForm.value.request_time_to_pay || countForm.value.request_reduction) {
         countForm.patchValue({ plea: Plea.Guilty });
@@ -159,7 +170,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       if (countForm.value.__skip) {
         countForm.patchValue({ ...this.getCountFormInitValue(this.ticket.counts[countInx]), __skip: true });
       }
-      if (applyToRemaining && countInx + 1 < this.countForms.length) {
+      if (countForm.value.__apply_to_remaining_counts && countInx + 1 < this.countForms.length) {
         let value = this.countForms.controls[countInx].value;
         for (let i = countInx; i < this.countForms.length; i++) {
           this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
@@ -168,25 +179,18 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.setAdditional();
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
-      if (isLast) {
-        this.toastService.openErrorToast(this.config.dispute_validation_error);
-      }
+      this.toastService.openErrorToast(this.config.dispute_validation_error);
       return;
     }
 
-    if (isLast) {
-      this.submitDispute();
+    if (isAdditional) {
+      this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
+        ...this.form.value,
+        country: this.form.get("country").value, // disabled field is not available in this.form.value
+        disputed_counts: this.countForms.value
+      });
     } else {
-      if (isSummary) {
-        this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
-          ...this.form.value,
-          country: this.form.get("country").value,
-          disputed_counts: this.countForms.value
-        });
-      } else {
-        this.noticeOfDispute = null;
-      }
-      this.stepper.next();
+      this.noticeOfDispute = null;
     }
   }
 
@@ -199,7 +203,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     if (this.countForms?.controls[countInx]) {
       return this.countForms.controls[countInx].valid || this.countForms.controls[countInx].value.__skip;
     }
-    return this.form.valid;
+    return this.formUtilsService.checkValidity(this.form);
   }
 
   public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
@@ -223,7 +227,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
    * @description
    * Submit the dispute
    */
-  private submitDispute(): void {
+  public submitDispute(): void {
     this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
   }
 }
