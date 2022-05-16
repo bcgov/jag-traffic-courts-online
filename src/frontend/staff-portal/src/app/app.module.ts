@@ -41,6 +41,7 @@ import { TicketPageComponent } from '@components/ticket-page/ticket-page.compone
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
 import { AuthConfigModule } from './auth/auth-config.module';
@@ -106,6 +107,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   providers: [
     CurrencyPipe,
     DatePipe,
+    MockConfigService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
     // AppConfigService,
     // {
