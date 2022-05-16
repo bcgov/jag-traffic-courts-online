@@ -42,7 +42,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             var configValues = new EmailConfiguration
             {
                 Sender = "default@test.com",
-                AllowList = new string[]{ "@test.com" }
+                AllowList = "@test.com"
             };
 
             IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);
