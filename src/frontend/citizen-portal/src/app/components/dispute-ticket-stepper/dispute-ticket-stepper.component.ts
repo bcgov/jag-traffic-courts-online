@@ -31,7 +31,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public defaultLanguage: string;
   public ticketTypes = ticketTypes;
   public Plea = Plea;
-  public selected=null;
+  public selected = null;
 
 
   public form: FormGroup;
@@ -43,8 +43,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
   // Disputant
   public provinces = this.config.provinces;
-  private MINIMUM_AGE = 18;
-  public maxDateOfBirth: Date;
   public showManualButton: boolean = true;
   public showAddressFields: boolean = true; // temporary preset for testing
 
@@ -84,8 +82,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private config: ConfigService,
   ) {
     // config or static
-    this.maxDateOfBirth = new Date();
-    this.maxDateOfBirth.setFullYear(this.maxDateOfBirth.getFullYear() - this.MINIMUM_AGE);
     this.isMobile = this.utilsService.isMobile();
     this.defaultLanguage = this.translateService.getDefaultLang();
   }
@@ -109,7 +105,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
       ...this.additionFormFields,
-      ticket_id: this.ticket.ticketId
     }, {
       validators: [...this.additionFormValidators]
     });
@@ -155,15 +150,15 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.violationTicketService.goToInitiateResolution();
   }
 
-  public onAttendHearingChange(form: FormGroup, event): void {
-    form.patchValue({ ...this.countFormDefaultValue, appear_in_court: event.value, __skip: false });
+  public onAttendHearingChange(countForm: FormGroup, event): void {
+    countForm.patchValue({ ...this.countFormDefaultValue, appear_in_court: event.value, __skip: false });
   }
 
   public onStepSave(): void {
     let isAdditional = this.stepper.selectedIndex === this.additionalIndex;
     let isValid = this.formUtilsService.checkValidity(this.form);
 
-    if (this.countIndexes.indexOf(this.stepper.selectedIndex) > -1) {
+    if (this.countIndexes?.indexOf(this.stepper.selectedIndex) > -1) {
       let countInx = this.stepper.selectedIndex - 1;
       let countForm = this.countForms.controls[countInx];
       if (countForm.value.request_time_to_pay || countForm.value.request_reduction) {
@@ -199,13 +194,14 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   private setAdditional() {
     this.getCountsActions();
     this.form.patchValue(this.additionFormDefaultValue);
+    this.form.controls.legal_representation?.markAsUntouched();
   }
 
   public isValid(countInx?): boolean {
     if (this.countForms?.controls[countInx]) {
       return this.countForms.controls[countInx].valid || this.countForms.controls[countInx].value.__skip;
     }
-    return this.formUtilsService.checkValidity(this.form);
+    return this.form.valid;
   }
 
   public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
@@ -225,25 +221,26 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public getToolTipDEata(data) {
+    console.log('data', data, this.form.get('interpreter_language'))
+    if (data) {
+      let msg = "";
+      this.languages.forEach(res => {
+        if (res === data.value) {
+          msg = res
+        }
+      })
+      return msg;
+    } else {
+      return "please select a language";
+    }
+  }
+
   /**
    * @description
    * Submit the dispute
    */
   public submitDispute(): void {
     this.noticeOfDisputeService.createNoticeOfDispute(this.noticeOfDispute);
-  }
-  public getToolTipDEata(data){
-    console.log('data', data, this.form.get('interpreter_language'))
-    if(data){
-      let msg="";
-      this.languages.forEach(res=>{
-        if(res === data.value){
-          msg = res
-        }
-      })
-      return msg;
-    }else{
-      return "please select a language";
-    }
   }
 }
