@@ -168,7 +168,7 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <returns>boolean true, if email is allowed, false otherwise</returns>
         private bool IsEmailAllowed(MailboxAddress mailboxAddress)
         {
-            List<string> allowed = _emailConfiguration.Allowed.ToList();
+            var allowed = _emailConfiguration.Allowed;
             if (allowed.Count > 0)
             {
                 // configured with an allow list, does the email address end with any of the allowed domains?
