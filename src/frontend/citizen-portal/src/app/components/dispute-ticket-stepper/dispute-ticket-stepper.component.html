@@ -368,7 +368,7 @@
             </app-page-header>
 
             <form [formGroup]="form" novalidate>
-              <ng-container *ngIf="countsActions?.request_counts?.length > 0">
+              <ng-container *ngIf="countsActions?.not_appear_in_court?.length > 0">
                 <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
                   <ng-container *ngFor="let i of countsActions.request_reduction let inx = index">
                     {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
@@ -391,7 +391,7 @@
                   </div>
                 </ng-container>
                 <ng-container
-                  *ngIf="countsActions?.request_counts?.length !== countsActions?.request_time_to_pay?.length">
+                  *ngIf="countsActions?.not_appear_in_court?.length !== countsActions?.request_time_to_pay?.length">
                   <ng-container *ngFor="let i of countsActions.request_time_to_pay let inx = index">
                     {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                   </ng-container>
@@ -416,9 +416,9 @@
                 </ng-container>
               </ng-container>
 
-              <section *ngIf="countsActions?.not_guilty?.length > 0">
+              <section *ngIf="countsActions?.appear_in_court?.length > 0">
                 <div>
-                  <ng-container *ngFor="let i of countsActions?.not_guilty; let inx = index">
+                  <ng-container *ngFor="let i of countsActions?.appear_in_court; let inx = index">
                     {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
                   </ng-container>
                 </div>

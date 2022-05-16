@@ -133,10 +133,7 @@ export class NoticeOfDisputeService {
         countsActions[field] = [];
       }
     });
-    countsActions.request_counts =
-      [...countsActions.request_time_to_pay, ...countsActions.request_reduction]
-        .filter((value, index, self) => { return self.indexOf(value) === index; }).sort();
-    countsActions.not_guilty = counts.filter(i => i.plea === Plea.NotGuilty).map(i => i.count);
+    countsActions.not_appear_in_court = counts.filter(i => i.appear_in_court === false).map(i => i.count);
     return countsActions;
   }
 
