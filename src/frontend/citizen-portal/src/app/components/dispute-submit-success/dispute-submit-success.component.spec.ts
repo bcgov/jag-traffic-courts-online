@@ -10,6 +10,7 @@ import { DisputeSubmitSuccessComponent } from './dispute-submit-success.componen
 import { Component } from '@angular/core';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { DatePipe } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Added the declaration of BlankComponent to be used for routing
 @Component({ selector: 'app-test-blank', template: `` })
@@ -31,6 +32,7 @@ describe('DisputeSubmitSuccessComponent', () => {
         BrowserAnimationsModule,
         NgxMaterialModule,
         TranslateModule.forRoot(),
+        ReactiveFormsModule,
       ],
       declarations: [DisputeSubmitSuccessComponent, BlankComponent],
       providers: [

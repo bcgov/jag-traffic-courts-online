@@ -209,11 +209,10 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
+    result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
     // set ticketId to imageFilename returned from Ocr
-    if (source.imageFilename) {
-      result.ticketId = source.imageFilename;
-    }
+    result.ticketId = source.imageFilename;
 
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
@@ -256,10 +255,10 @@ export class ViolationTicketService {
     }
     return result;
   }
-  
+
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected===true ? issueDetected : false ;
+    ticket[this.ocrIssueDetectedKey] = issueDetected === true ? issueDetected : false;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this.ticket$.next(ticket);
   }

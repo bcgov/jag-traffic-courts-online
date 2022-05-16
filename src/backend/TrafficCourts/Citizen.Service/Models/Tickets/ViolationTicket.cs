@@ -260,5 +260,6 @@ public class ViolationTicket
     /// <summary>
     /// A unique generated ID set by the system that is used as Redis key for retrieving the ViolationTicket from Redis cache.
     /// </summary>
+    [JsonPropertyName("ticket_id")]
     public string? TicketId { get; set; }
 }
