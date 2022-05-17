@@ -61,27 +61,23 @@ export class FormGroupValidators {
       const funcKey = "requiredIfTrue";
       const first = group.controls[firstKey].value;
       const check = group.controls[checkKey].value;
-      let errors = group.controls[checkKey].errors;
-      if (errors) {
-        delete errors[funcKey];
-      }
+      let errors = group.controls[checkKey].errors; // get all errors first
+      errors && delete errors[funcKey]; // delete specific error only
 
       if (!first) {
-        group.controls[checkKey].setErrors(errors);
+        group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
       }
 
       const valid = !!(check);
       if (valid) {
-        group.controls[checkKey].setErrors(errors);
+        group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
-
       } else {
-        let funcError = {};
-        funcError[funcKey] = true;
-        group.controls[checkKey].setErrors({ ...errors, ...funcError });
+        let funcError = {}; // create a new error
+        funcError[funcKey] = true; // set value
+        group.controls[checkKey].setErrors({ ...errors, ...funcError }); // set new errors combining with the existings
         return funcError;
-
       }
     };
   }
@@ -95,26 +91,23 @@ export class FormGroupValidators {
       const funcKey = "requiredIfValue";
       const first = group.controls[firstKey].value;
       const check = group.controls[checkKey].value;
-      let errors = group.controls[checkKey].errors;
-      if (errors) {
-        delete errors[funcKey];
-      }
+      let errors = group.controls[checkKey].errors; // get all errors first
+      errors && delete errors[funcKey]; // delete specific error only
 
       if (!first || valueText !== first) {
-        group.controls[checkKey].setErrors(errors);
+        group.controls[checkKey].setErrors(errors); // set existing errors        
         return null;
       }
 
       const valid = ((valueText === first) && (check != null));
 
       if (valid) {
-        group.controls[checkKey].setErrors(errors);
+        group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
-
       } else {
-        let funcError = {};
-        funcError[funcKey] = true;
-        group.controls[checkKey].setErrors({ ...errors, ...funcError });
+        let funcError = {}; // create a new error
+        funcError[funcKey] = true; // set value
+        group.controls[checkKey].setErrors({ ...errors, ...funcError }); // set new errors combining with the existings
         return funcError;
       }
     };
@@ -130,29 +123,52 @@ export class FormGroupValidators {
       const first = group.controls[firstKey].value;
       const second = group.controls[secondKey].value;
       const check = group.controls[checkKey].value;
-      let errors = group.controls[checkKey].errors;
-      if (errors) {
-        delete errors[funcKey];
-      }
+      let errors = group.controls[checkKey].errors; // get all errors first
+      errors && delete errors[funcKey]; // delete specific error only
 
       if (!first || !second) {
-        group.controls[checkKey].setErrors(errors);
+        group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
       }
 
       const valid = (first && second && (check != null));
       if (valid) {
-        group.controls[checkKey].setErrors(errors);
+        group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
-
       } else {
-        let funcError = {};
-        funcError[funcKey] = true;
-        group.controls[checkKey].setErrors({ ...errors, ...funcError });
+        let funcError = {}; // create a new error
+        funcError[funcKey] = true; // set value
+        group.controls[checkKey].setErrors({ ...errors, ...funcError }); // set new errors combining with the existings
         return funcError;
       }
     };
   }
+
+    /**
+   * @description
+   * If the property is true, then one of the checkboxes must be selected
+   */
+     public static atLeastOneChecked(check1Key: string, check2Key: string): ValidatorFn {
+      return (group: FormGroup): ValidationErrors | null => {
+        const funcKey = "atLeastOneChecked";
+        const check1Val = group.controls[check1Key].value;
+        const check2Val = group.controls[check2Key].value;
+        let errors = group.controls[check2Key].errors; // get all errors first
+        errors && delete errors[funcKey]; // delete specific error only
+
+        const valid = !!(check1Val) || !!(check2Val);
+        if (valid) {
+          group.controls[check2Key].setErrors(errors); // set existing errors
+          return null;
+        } else {
+          let funcError = {}; // create a new error
+          funcError[funcKey] = true; // set value
+          group.controls[check2Key].setErrors({ ...errors, ...funcError }); // set new errors combining with the existings
+  
+          return funcError;
+        }
+      };
+    }
 
   /**
    * @description
@@ -164,24 +180,23 @@ export class FormGroupValidators {
       const ifKeyVal = group.controls[ifKey].value;
       const check1Val = group.controls[check1Key].value;
       const check2Val = group.controls[check2Key].value;
-      let errors = group.controls[check2Val].errors;
-      if (errors) {
-        delete errors[funcKey];
-      }
+      let errors = group.controls[check2Key].errors; // get all errors first
+      errors && delete errors[funcKey]; // delete specific error only
 
       if (!ifKeyVal) {
-        group.controls[check2Key].setErrors(errors);
+        group.controls[check2Key].setErrors(errors); // set existing errors
         return null;
       }
 
       const valid = !!(check1Val) || !!(check2Val);
       if (valid) {
-        group.controls[check2Key].setErrors(errors);
+        group.controls[check2Key].setErrors(errors); // set existing errors
         return null;
       } else {
-        let funcError = {};
-        funcError[funcKey] = true;
-        group.controls[check2Key].setErrors({ ...errors, ...funcError });
+        let funcError = {}; // create a new error
+        funcError[funcKey] = true; // set value
+        group.controls[check2Key].setErrors({ ...errors, ...funcError }); // set new errors combining with the existings
+
         return funcError;
       }
     };

@@ -29,6 +29,9 @@ spec:
       serviceAccount: {{ include "citizen-api.serviceAccountName" . }}
       containers:
         - env:
+          # change to value
+          - name: Serilog__MinimumLevel__Default
+            value: Debug
           # Form Recognizer
           - name: FormRecognizer__Endpoint
             value: "{{ .Values.formRecognizer.endpoint }}"

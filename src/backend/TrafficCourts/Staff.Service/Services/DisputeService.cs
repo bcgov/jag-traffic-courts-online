@@ -79,8 +79,8 @@ public class DisputeService : IDisputeService
             try
             {
                 // deserialize json string to a dictionary
-                var keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(dispute.OcrViolationTicket);
-                string? imageFilename = keys?["ImageFilename"];
+                var keys = JsonConvert.DeserializeObject<Dictionary<string, object>>(dispute.OcrViolationTicket);
+                string? imageFilename = (string?)(keys?["ImageFilename"]);
 
                 return imageFilename;
             }
@@ -163,9 +163,6 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
         await _bus.Publish(approvedEvent, cancellationToken);
-
-        SendEmail processingSendEmail = Mapper.ToProcessingSendEmail(dispute);
-        await _bus.Publish(processingSendEmail, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(Guid disputeId, CancellationToken cancellationToken)

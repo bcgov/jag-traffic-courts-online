@@ -20,12 +20,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
         }
         public async Task Consume(ConsumeContext<DisputeApproved> context)
         {
+            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { 
+                { "MessageId", context.MessageId! }, 
+                { "MessageType", nameof(DisputeApproved) } 
+            });
+
             try
             {
-                if (context.MessageId != null)
-                {
-                    _logger.LogDebug("Consuming message: {MessageId} ", context.MessageId);
-                }
+                _logger.LogDebug("Consuming message");
 
                 List<Models.TicketCount> ticketDetails = new();
 
@@ -75,13 +77,14 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     DisputeDetails = disputeDetails
                 };
 
-                _logger.LogDebug("TRY SENDING APPROVED DISPUTE TO ARC: {ApprovedDisputeTicket} ", tcoDisputeTicket.ToString());
+                _logger.LogDebug("TRY SENDING APPROVED DISPUTE TO ARC: {ApprovedDisputeTicket} ", tcoDisputeTicket);
 
                 await _submitDisputeToArcService.SubmitDisputeToArcAsync(tcoDisputeTicket);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error: ", ex);
+                _logger.LogError(ex, "Failed to process message");
+                throw;
             }
         }
     }

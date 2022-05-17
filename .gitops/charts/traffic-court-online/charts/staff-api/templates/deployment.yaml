@@ -28,6 +28,9 @@ spec:
       serviceAccountName: {{ include "staff-api.serviceAccountName" . }}
       containers:
         - env:
+          # change to value
+          - name: Serilog__MinimumLevel__Default
+            value: Debug
           # JWT
           - name: Jwt__Authority
             value: "{{ .Values.auth.authority }}"

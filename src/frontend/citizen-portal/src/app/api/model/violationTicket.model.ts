@@ -163,6 +163,6 @@ export interface ViolationTicket {
     /**
      * A unique generated ID set by the system that is used as Redis key for retrieving the ViolationTicket from Redis cache.
      */
-    ticketId?: string | null;
+    ticket_id?: string | null;
 }
 

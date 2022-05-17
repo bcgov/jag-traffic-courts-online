@@ -28,6 +28,9 @@ spec:
       serviceAccountName: {{ include "workflow-service.serviceAccountName" . }}
       containers:
         - env:
+          # change to value
+          - name: Serilog__MinimumLevel__Default
+            value: Debug
           - name: ASPNETCORE_URLS
             value: http://*:8080
           - name: RABBITMQ__HOST
@@ -50,10 +53,8 @@ spec:
           - name: ArcApiConfiguration__Port
             value: "{{ .Values.arc.port }}"
           # oracle-data-api
-          - name: OracleDataApiConfiguration__Host
-            value: "{{ .Values.oracle.host }}"
-          - name: OracleDataApiConfiguration__Port
-            value: "{{ .Values.oracle.port }}"
+          - name: OracleDataApi__BaseUrl
+            value: "http://{{ .Values.oracle.host }}:{{ .Values.oracle.port }}/"
           # smtp
           - name: SmtpConfiguration__Host
             value: "{{ .Values.smtp.host }}"

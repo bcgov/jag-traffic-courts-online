@@ -18,7 +18,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
-      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute);
+      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.disputed_counts);
     }
   }
 }
