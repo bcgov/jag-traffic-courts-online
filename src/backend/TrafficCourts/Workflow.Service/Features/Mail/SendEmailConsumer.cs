@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Services;
 
 namespace TrafficCourts.Workflow.Service.Features.Mail
@@ -10,13 +9,11 @@ namespace TrafficCourts.Workflow.Service.Features.Mail
     /// </summary>
     public class SendEmailConsumer : IConsumer<SendEmail>
     {
-        private readonly ILogger<SendEmailConsumer> _logger;
         private readonly IEmailSenderService _emailSenderService;
 
-        public SendEmailConsumer(ILogger<SendEmailConsumer> logger, IEmailSenderService emailSenderService)
+        public SendEmailConsumer(IEmailSenderService emailSenderService)
         {
-            _logger = logger;
-            _emailSenderService = emailSenderService;
+            _emailSenderService = emailSenderService ?? throw new ArgumentNullException(nameof(emailSenderService));
         }
 
         public async Task Consume(ConsumeContext<SendEmail> context)

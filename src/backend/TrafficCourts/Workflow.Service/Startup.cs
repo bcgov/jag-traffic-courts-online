@@ -32,7 +32,7 @@ public static class Startup
 
         builder.Services.Configure<ArcApiConfiguration>(builder.Configuration.GetRequiredSection("ArcApiConfiguration"));
         builder.Services.Configure<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
-        builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetRequiredSection("EmailConfiguration"));
+        builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();

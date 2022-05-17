@@ -1,40 +1,33 @@
-﻿using MassTransit;
+﻿using MailKit.Net.Smtp;
+using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
+using MimeKit;
+using Moq;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Features.Mail;
 using TrafficCourts.Workflow.Service.Services;
-using TrafficCourts.Workflow.Service.Configuration;
-using MailKit.Net.Smtp;
-using MimeKit;
-using MimeKit.Text;
-using Moq;
 using Xunit;
 
 namespace TrafficCourts.Test.Workflow.Service.Features.Mail
 {
     public class SendEmailConsumerTests
     {
-        private readonly Mock<ILogger<SendEmailConsumer>> _mockLogger;
         private readonly Mock<ILogger<EmailSenderService>> _mockSenderLogger;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
-        private readonly Mock<IEmailSenderService> _mockEmailSenderService;
 
         public SendEmailConsumerTests()
         {
-
-            _mockLogger = new Mock<ILogger<SendEmailConsumer>>();
             _mockSenderLogger = new Mock<ILogger<EmailSenderService>>();
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
-            _mockEmailSenderService = new Mock<IEmailSenderService>();
         }
 
         private EmailSenderService CreateService()
@@ -55,9 +48,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
 
         private SendEmailConsumer CreateConsumer(EmailSenderService senderService)
         {
-            return new SendEmailConsumer(
-                _mockLogger.Object,
-                senderService);
+            return new SendEmailConsumer(senderService);
         }
 
         // Tests:
@@ -129,7 +120,6 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             {
                 await harness.Stop();
             }
-
         }
 
         // Test retrieve mail template found
@@ -180,7 +170,6 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             {
                 await harness.Stop();
             }
-
         }
 
         [Fact]
@@ -224,7 +213,6 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             {
                 await harness.Stop();
             }
-
         }
     }
 }
