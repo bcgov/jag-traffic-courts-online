@@ -57,11 +57,11 @@ services:
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
       JWT__AUDIENCE: ${JWT__AUDIENCE:-tco-staff-portal}
       JWT__AUTHORITY: ${JWT__AUTHORITY:-https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4/}
-      TICKETSTORAGE: ${TICKETSTORAGE:-ObjectStore}
+      TICKETSTORAGE__TYPE: ${TICKETSTORAGE__TYPE:-ObjectStore}
       OBJECTSTORAGE__ENDPOINT: ${OBJECTSTORAGE__ENDPOINT:-minio:9000}
       OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}
       OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
-      OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
+      OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__BUCKETNAME:-traffic-ticket-dev}
     ports:
       - "5005:8080"
     restart: always
