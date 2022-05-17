@@ -14,7 +14,7 @@ namespace TrafficCourts.Workflow.Service.Services
 
         public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailConfiguration = emailConfiguration.Value;
             _smptClientFactory = stmpClientFactory;
         }

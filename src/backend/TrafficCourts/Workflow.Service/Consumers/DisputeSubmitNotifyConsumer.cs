@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using MassTransit;
-using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Models;
-using TrafficCourts.Workflow.Service.Services;
-using ViolationTicketCount = TrafficCourts.Workflow.Service.Models.ViolationTicket;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -17,6 +14,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
     {
         private readonly ILogger<DisputeSubmitNotifyConsumer> _logger;
         private readonly IMapper _mapper;
+        private static readonly string _submitEmailTemplateName = "SubmitDisputeTemplate";
 
         public DisputeSubmitNotifyConsumer(ILogger<DisputeSubmitNotifyConsumer> logger, IMapper mapper)
         {
@@ -35,9 +33,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
             NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
 
             // Send email message to the submitter's entered email
-            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _submitEmailTemplateName);
             if (template is not null)
             {
+                // TODO: there is future ability to opt-out of e-mails... may need to add check to skip over this, if disputant choses so.
                 var emailMessage = new SendEmail()
                 {
                     From = template.Sender,
@@ -47,6 +46,9 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 };
 
                 await context.Publish(emailMessage);
+            } else
+            {
+                _logger.LogError("Email template of: {_submitEmailTemplateName} not found.", _submitEmailTemplateName);
             }
         }
     }

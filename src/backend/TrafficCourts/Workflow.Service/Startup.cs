@@ -32,7 +32,7 @@ public static class Startup
 
         builder.Services.Configure<ArcApiConfiguration>(builder.Configuration.GetRequiredSection("ArcApiConfiguration"));
         builder.Services.Configure<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
-        builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetRequiredSection("EmailConfiguration"));
+        builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
@@ -42,12 +42,7 @@ public static class Startup
 
         void AddConsumers(IBusRegistrationConfigurator cfg)
         {
-            // TODO: use cfg.AddConsumers(params Type[] types) or cfg.AddConsumers(params Assembly[] assemblies)
-            cfg.AddConsumer<SubmitDisputeConsumer>();
-            cfg.AddConsumer<DisputeSubmitNotifyConsumer>();
-            cfg.AddConsumer<DisputeApprovedConsumer>();
-            cfg.AddConsumer<DisputeApprovedNotifyConsumer>();
-            cfg.AddConsumer<SendEmailConsumer>();
+            cfg.AddConsumers(typeof(Startup).Assembly); // add all the consumers in this assembly
         }
 
         builder.Services.AddMassTransit(builder.Configuration, logger, AddConsumers);

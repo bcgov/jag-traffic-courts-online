@@ -1,10 +1,14 @@
-﻿namespace TrafficCourts.Workflow.Service.Configuration
+﻿using TrafficCourts.Common.Configuration.Validation;
+
+namespace TrafficCourts.Workflow.Service.Configuration
 {
     /// <summary>
     /// Represents the email sending configuration
     /// </summary>
-    public class EmailConfiguration
+    public class EmailConfiguration : IValidatable
     {
+        public const string Section = "EmailConfiguration";
+
         private IList<string>? _allowed;
 
         /// <summary>
@@ -26,21 +30,35 @@
             {
                 if (_allowed is null)
                 {
-                    string allowList = AllowList;
-                    if (string.IsNullOrEmpty(allowList))
-                    {
-                        _allowed = Array.Empty<string>();
-                    }
-                    else
-                    {
-                        _allowed = allowList.Split(",")
-                            .Select(_ => _.Trim())
-                            .ToList();
-                    }
+                    _allowed = SplitAllowList();
                 }
 
                 return _allowed;
             }
+        }
+
+        public void Validate()
+        {
+            if (string.IsNullOrEmpty(Sender)) throw new SettingsValidationException(Section, nameof(Sender), "is required");
+
+            if (!string.IsNullOrEmpty(AllowList))
+            {
+                var allowed = SplitAllowList();
+                if (allowed.Any(_ => !_.StartsWith("@"))) throw new SettingsValidationException(Section, nameof(AllowList), "values must start with @");
+            }
+        }
+
+
+        private IList<string> SplitAllowList()
+        {
+            if (string.IsNullOrEmpty(AllowList))
+            {
+                return Array.Empty<string>();
+            }
+
+            return AllowList.Split(",")
+                .Select(_ => _.Trim())
+                .ToList();
         }
     }
 }

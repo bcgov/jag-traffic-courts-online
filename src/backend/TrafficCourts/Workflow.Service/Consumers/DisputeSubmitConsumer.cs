@@ -3,7 +3,6 @@ using MassTransit;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Services;
-using ViolationTicketCount = TrafficCourts.Workflow.Service.Models.ViolationTicket;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
