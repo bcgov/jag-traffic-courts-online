@@ -479,6 +479,15 @@
             "type": "string",
             "nullable": true
           },
+          "assignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "assignedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "violationTicket": { "$ref": "#/components/schemas/ViolationTicket" }
         }
       },
