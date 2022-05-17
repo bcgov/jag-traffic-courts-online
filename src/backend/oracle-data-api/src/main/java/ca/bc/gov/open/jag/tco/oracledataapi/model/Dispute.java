@@ -256,14 +256,14 @@ public class Dispute extends Auditable<String> {
 	 * The IDIR of the Staff whom the dispute is assigned to be reviewed on Staff Portal.
 	 */
 	@Column
-    @Schema(nullable = true)
+	@Schema(nullable = true)
 	private String assignedTo;
 	
 	/**
 	 * The date and time a dispute was assigned to a Staff to be reviewed.
 	 */
 	@Column
-    @Schema(nullable = true)
+	@Schema(nullable = true)
 	private Date assignedTs;
     
     @JsonManagedReference
