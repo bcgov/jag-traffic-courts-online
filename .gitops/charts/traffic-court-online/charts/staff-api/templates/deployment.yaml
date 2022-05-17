@@ -53,6 +53,15 @@ spec:
             value: "{{ .Values.rabbitmq.username }}"
           - name: RabbitMQ__Password
             value: "{{ .Values.rabbitmq.password }}"
+          # Object Storage
+          - name: ObjectStorage__AccessKey
+            value: "{{ required "A valid .Values.objectStorage.accessKey required!" .Values.objectStorage.accessKey }}"
+          - name: ObjectStorage__BucketName
+            value: "{{ required "A valid .Values.objectStorage.bucketName required!" .Values.objectStorage.bucketName }}"
+          - name: ObjectStorage__Endpoint
+            value: "{{ required "A valid .Values.objectStorage.endpoint required!" .Values.objectStorage.endpoint }}"
+          - name: ObjectStorage__SecretKey
+            value: "{{ required "A valid .Values.objectStorage.secretKey required!" .Values.objectStorage.secretKey }}"
           # Redis
           - name: Redis__ConnectionString
             value: "{{ .Values.redis.connectionString }}"

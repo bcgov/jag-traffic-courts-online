@@ -115,7 +115,16 @@ jaeger:
 ##
 oracleApi:
   url: 
-
+  
+## @param 
+## objectStorage.accessKey The username used to access the bucket 
+## objectStorage.secretKey The password used to access the bucket
+objectStorage:
+  endpoint: 
+  bucketName: 
+  accessKey:
+  secretKey:  
+  
 ## @param
 ##
 splunk:
