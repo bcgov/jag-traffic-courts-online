@@ -220,14 +220,23 @@ public class Dispute extends Auditable<String> {
     @Column(length = 256)
     @Schema(nullable = true)
     private String rejectedReason;
-
+    
+    /**
+     * Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
+     */
     @Column
     private boolean disputantDetectedOcrIssues;
     
+    /**
+     * The description of the issue with OCR ticket if the citizen has detected any.
+     */
     @Column
     @Schema(nullable = true)
     private String disputantOcrIssuesDescription;
     
+    /**
+     * Identifier for whether the system has detected any issues with the OCR ticket result or not.
+     */
     @Column
     private boolean systemDetectedOcrIssues;
 
@@ -242,6 +251,20 @@ public class Dispute extends Auditable<String> {
 	@Lob
     @Schema(nullable = true)
     private String ocrViolationTicket;
+	
+	/**
+	 * The IDIR of the Staff whom the dispute is assigned to be reviewed on Staff Portal.
+	 */
+	@Column
+    @Schema(nullable = true)
+	private String assignedTo;
+	
+	/**
+	 * The date and time a dispute was assigned to a Staff to be reviewed.
+	 */
+	@Column
+    @Schema(nullable = true)
+	private Date assignedTs;
     
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
