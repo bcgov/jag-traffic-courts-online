@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Citizen.Service.Validators;
 
 namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
@@ -14,7 +15,8 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// </summary>
         [JsonPropertyName("ticket_number")]
         [MaxLength(12)]
-        public string? TicketNumber { get; set; }
+        [Required]
+        public string TicketNumber { get; set; } = null!;
 
         /// <summary>
         /// The provincial court hearing location named on the violation ticket.
@@ -26,83 +28,99 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The date and time the violation ticket was issue. Time must only be hours and minutes.
         /// </summary>
         [JsonPropertyName("issued_date")]
+        [Required]
         public DateTime? IssuedDate { get; set; }
 
         /// <summary>
         /// The surname or corporate name.
         /// </summary>
         [JsonPropertyName("surname")]
-        public string? Surname { get; set; }
+        [Required]
+        public string Surname { get; set; } = null!;
 
         /// <summary>
         /// The given names or corporate name continued.
         /// </summary>
         [JsonPropertyName("given_names")]
-        public string? GivenNames { get; set; }
+        [Required]
+        public string GivenNames { get; set; } = null!;
 
         /// <summary>
         /// The disputant's birthdate.
         /// </summary>
         [JsonPropertyName("birthdate")]
         [SwaggerSchema(Format = "date")]
-        public DateTime? Birthdate { get; set; }
+        [Required]
+        public DateTime Birthdate { get; set; }
 
         /// <summary>
         /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
         /// </summary>
         [JsonPropertyName("drivers_licence_number")]
         [MaxLength(20)]
-        public string? DriversLicenceNumber { get; set; }
+        [Required]
+        public string DriversLicenceNumber { get; set; } = null!;
 
         /// <summary>
         /// The province or state the drivers licence was issued by.
         /// </summary>
         [JsonPropertyName("drivers_licence_province")]
         [MaxLength(30)]
-        public string? DriversLicenceProvince { get; set; }
+        [Required]
+        public string DriversLicenceProvince { get; set; } = null!;
 
         /// <summary>
         /// The mailing address of the disputant.
         /// </summary>
         [JsonPropertyName("address")]
-        public string? Address { get; set; }
+        [Required]
+        public string Address { get; set; } = null!;
 
         /// <summary>
         /// The mailing address city of the disputant.
         /// </summary>
         [JsonPropertyName("city")]
-        public string? City { get; set; }
+        [Required]
+        public string City { get; set; } = null!;
 
         /// <summary>
         /// The mailing address province of the disputant.
         /// </summary>
         [JsonPropertyName("province")]
-        public string? Province { get; set; }
+        [MaxLength(30)]
+        [Required]
+        public string Province { get; set; } = null!;
 
         /// <summary>
         /// The mailing address postal code or zip code of the disputant.
         /// </summary>
         [JsonPropertyName("postal_code")]
         [MaxLength(6)]
-        public string? PostalCode { get; set; }
+        [Required]
+        public string PostalCode { get; set; } = null!;
 
         /// <summary>
         /// The disputant's home phone number.
         /// </summary>
         [JsonPropertyName("home_phone_number")]
-        public string? HomePhoneNumber { get; set; }
+        [Phone]
+        [Required]
+        public string HomePhoneNumber { get; set; } = null!;
 
         /// <summary>
         /// The disputant's work phone number.
         /// </summary>
         [JsonPropertyName("work_phone_number")]
+        [Phone]
         public string? WorkPhoneNumber { get; set; }
 
         /// <summary>
         /// The disputant's email address.
         /// </summary>
         [JsonPropertyName("email_address")]
-        public string? EmailAddress { get; set; }
+        [EmailAddress]
+        [Required]
+        public string EmailAddress { get; set; } = null!;
 
         /// <summary>
         /// The count dispute details.
@@ -120,6 +138,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The details of the lawyer who represents the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("legal_representation")]
+        [RequiredIf("RepresentedByLawyer", true)]
         public LegalRepresentation? LegalRepresentation { get; set; }
 
         /// <summary>
@@ -132,6 +151,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The number of witnesses that the disputant intends to call.
         /// </summary>
         [JsonPropertyName("number_of_witness")]
+        [Range(0, 99)]
         public int NumberOfWitness { get; set; }
 
         /// <summary>
@@ -156,13 +176,15 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The description of the issue with OCR ticket if the citizen has detected any.
         /// </summary>
         [JsonPropertyName("disputant_ocr_issues_description")]
+        [RequiredIf("DisputantDetectedOcrIssues", true)]
         public string? DisputantOcrIssuesDescription { get; set; }
 
         /// <summary>
         /// The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.
         /// </summary>
         [JsonPropertyName("ticket_id")]
-        public string? TicketId { get; set; }
+        [Required]
+        public string TicketId { get; set; } = null!;
     }
 
 }

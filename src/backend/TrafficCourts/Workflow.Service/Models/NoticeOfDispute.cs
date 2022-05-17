@@ -7,22 +7,22 @@ namespace TrafficCourts.Workflow.Service.Models
     public class NoticeOfDispute
     {
         public DisputeStatus Status { get; set; }
-        public string? TicketNumber { get; set; }
+        public string TicketNumber { get; set; } = null!;
         public string? ProvincialCourtHearingLocation { get; set; }
         public DateTime? IssuedDate { get; set; }
         public DateTime? SubmittedDate { get; set; }
-        public string? Surname { get; set; }
-        public string? GivenNames { get; set; }
+        public string Surname { get; set; } = null!;
+        public string GivenNames { get; set; } = null!;
         public DateTime? Birthdate { get; set; }
-        public string? DriversLicenceNumber { get; set; }
-        public string? DriversLicenceProvince { get; set; }
-        public string? Address { get; set; }
-        public string? City { get; set; }
-        public string? Province { get; set; }
-        public string? PostalCode { get; set; }
-        public string? HomePhoneNumber { get; set; }
+        public string DriversLicenceNumber { get; set; } = null!;
+        public string DriversLicenceProvince { get; set; } = null!;
+        public string Address { get; set; } = null!;
+        public string City { get; set; } = null!;
+        public string Province { get; set; } = null!;
+        public string PostalCode { get; set; } = null!;
+        public string HomePhoneNumber { get; set; } = null!;
         public string? WorkPhoneNumber { get; set; }
-        public string? EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = null!;
         public List<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
         public bool RepresentedByLawyer { get; set; }
         public LegalRepresentation? LegalRepresentation { get; set; }

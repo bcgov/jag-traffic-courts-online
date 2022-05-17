@@ -13,7 +13,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The violation ticket number.
         /// </summary>
-        public string? TicketNumber { get; set; }
+        public string TicketNumber { get; set; } = null!;
 
         /// <summary>
         /// The provincial court hearing location named on the violation ticket.
@@ -33,12 +33,12 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The surname or corporate name.
         /// </summary>
-        public string? Surname { get; set; }
+        public string Surname { get; set; } = null!;
 
         /// <summary>
         /// The given names or corporate name continued.
         /// </summary>
-        public string? GivenNames { get; set; }
+        public string GivenNames { get; set; } = null!;
 
         /// <summary>
         /// The disputant's birthdate.
@@ -48,37 +48,37 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
         /// </summary>
-        public string? DriversLicenceNumber { get; set; }
+        public string DriversLicenceNumber { get; set; } = null!;
 
         /// <summary>
         /// The province or state the drivers licence was issued by.
         /// </summary>
-        public string? DriversLicenceProvince { get; set; }
+        public string DriversLicenceProvince { get; set; } = null!;
 
         /// <summary>
         /// The mailing address of the disputant.
         /// </summary>
-        public string? Address { get; set; }
+        public string Address { get; set; } = null!;
 
         /// <summary>
         /// The mailing address city of the disputant.
         /// </summary>
-        public string? City { get; set; }
+        public string City { get; set; } = null!;
 
         /// <summary>
         /// The mailing address province of the disputant.
         /// </summary>
-        public string? Province { get; set; }
+        public string Province { get; set; } = null!;
 
         /// <summary>
         /// The mailing address postal code or zip code of the disputant.
         /// </summary>
-        public string? PostalCode { get; set; }
+        public string PostalCode { get; set; } = null!;
 
         /// <summary>
         /// The disputant's home phone number.
         /// </summary>
-        public string? HomePhoneNumber { get; set; }
+        public string HomePhoneNumber { get; set; } = null!;
 
         /// <summary>
         /// The disputant's work phone number.
@@ -88,7 +88,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The disputant's email address.
         /// </summary>
-        public string? EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = null!;
 
         /// <summary>
         /// The count dispute details.

@@ -27,16 +27,16 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -65,16 +65,16 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -98,16 +98,16 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -131,16 +131,16 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -179,16 +179,16 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "A Dispute status can only be set to REJECTED iff status is NEW and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -215,16 +215,16 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -243,16 +243,16 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -287,16 +287,16 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -320,16 +320,16 @@
         "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
         "operationId": "codeTableRefresh",
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -362,10 +362,7 @@
             "type": "string",
             "enum": [ "NEW", "PROCESSING", "REJECTED", "CANCELLED" ]
           },
-          "ticketNumber": {
-            "type": "string",
-            "nullable": true
-          },
+          "ticketNumber": { "type": "string" },
           "provincialCourtHearingLocation": {
             "type": "string",
             "nullable": true
@@ -380,14 +377,8 @@
             "format": "date-time",
             "nullable": true
           },
-          "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
+          "surname": { "type": "string" },
+          "givenNames": { "type": "string" },
           "birthdate": {
             "type": "string",
             "format": "date-time",
@@ -396,43 +387,31 @@
           "driversLicenceNumber": {
             "maxLength": 20,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "driversLicenceProvince": {
             "maxLength": 30,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
+          "address": { "type": "string" },
+          "city": { "type": "string" },
           "province": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
           },
           "postalCode": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 6,
+            "minLength": 0,
+            "type": "string"
           },
-          "homePhoneNumber": {
-            "type": "string",
-            "nullable": true
-          },
+          "homePhoneNumber": { "type": "string" },
           "workPhoneNumber": {
             "type": "string",
             "nullable": true
           },
-          "emailAddress": {
-            "type": "string",
-            "nullable": true
-          },
+          "emailAddress": { "type": "string" },
           "filingDate": {
             "type": "string",
             "format": "date-time",
