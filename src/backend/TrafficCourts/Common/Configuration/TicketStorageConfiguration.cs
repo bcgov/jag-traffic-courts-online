@@ -6,7 +6,7 @@ public class TicketStorageConfiguration : IValidatable
 {
     public const string Section = "TicketStorage";
 
-    public TicketStorageType Type { get; set; } = TicketStorageType.InMemory;
+    public TicketStorageType Type { get; set; } = TicketStorageType.ObjectStore;
 
     public void Validate()
     {
