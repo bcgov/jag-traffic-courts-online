@@ -42,12 +42,7 @@ public static class Startup
 
         void AddConsumers(IBusRegistrationConfigurator cfg)
         {
-            // TODO: use cfg.AddConsumers(params Type[] types) or cfg.AddConsumers(params Assembly[] assemblies)
-            cfg.AddConsumer<DisputeSubmitConsumer>();
-            cfg.AddConsumer<DisputeSubmitNotifyConsumer>();
-            cfg.AddConsumer<DisputeApprovedConsumer>();
-            cfg.AddConsumer<DisputeApprovedNotifyConsumer>();
-            cfg.AddConsumer<SendEmailConsumer>();
+            cfg.AddConsumers(typeof(Startup).Assembly); // add all the consumers in this assembly
         }
 
         builder.Services.AddMassTransit(builder.Configuration, logger, AddConsumers);
