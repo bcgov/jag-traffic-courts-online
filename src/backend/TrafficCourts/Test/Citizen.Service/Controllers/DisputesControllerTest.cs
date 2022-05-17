@@ -17,6 +17,9 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
         {
             // Arrange
             var mockTicketDispute = new Mock<NoticeOfDispute>();
+            mockTicketDispute.Object.FineReductionReason = "fine reduction reason";
+            mockTicketDispute.Object.TimeToPayReason = "time to pay reason";
+            mockTicketDispute.Object.DisputedCounts.Add(Mock.Of<DisputedCount>());
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var disputeController = new DisputesController(mockMediator.Object, mockLogger.Object);
