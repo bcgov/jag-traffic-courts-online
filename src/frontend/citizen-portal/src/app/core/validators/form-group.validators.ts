@@ -73,7 +73,6 @@ export class FormGroupValidators {
       if (valid) {
         group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
-
       } else {
         let funcError = {}; // create a new error
         funcError[funcKey] = true; // set value
@@ -105,7 +104,6 @@ export class FormGroupValidators {
       if (valid) {
         group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
-
       } else {
         let funcError = {}; // create a new error
         funcError[funcKey] = true; // set value
@@ -137,7 +135,6 @@ export class FormGroupValidators {
       if (valid) {
         group.controls[checkKey].setErrors(errors); // set existing errors
         return null;
-
       } else {
         let funcError = {}; // create a new error
         funcError[funcKey] = true; // set value
@@ -146,6 +143,32 @@ export class FormGroupValidators {
       }
     };
   }
+
+    /**
+   * @description
+   * If the property is true, then one of the checkboxes must be selected
+   */
+     public static atLeastOneChecked(check1Key: string, check2Key: string): ValidatorFn {
+      return (group: FormGroup): ValidationErrors | null => {
+        const funcKey = "atLeastOneChecked";
+        const check1Val = group.controls[check1Key].value;
+        const check2Val = group.controls[check2Key].value;
+        let errors = group.controls[check2Key].errors; // get all errors first
+        errors && delete errors[funcKey]; // delete specific error only
+
+        const valid = !!(check1Val) || !!(check2Val);
+        if (valid) {
+          group.controls[check2Key].setErrors(errors); // set existing errors
+          return null;
+        } else {
+          let funcError = {}; // create a new error
+          funcError[funcKey] = true; // set value
+          group.controls[check2Key].setErrors({ ...errors, ...funcError }); // set new errors combining with the existings
+  
+          return funcError;
+        }
+      };
+    }
 
   /**
    * @description

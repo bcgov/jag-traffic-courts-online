@@ -47,14 +47,14 @@ export class NoticeOfDisputeService {
   }
 
   public additionFormFields = {
-    represented_by_lawyer: false,
-    interpreter_language: null,
-    number_of_witness: 0,
-    fine_reduction_reason: null,
-    time_to_pay_reason: null,
+    represented_by_lawyer: [false],
+    interpreter_language: [null],
+    number_of_witness: [0],
+    fine_reduction_reason: [null, []],
+    time_to_pay_reason: [null, []],
 
-    __witness_present: false,
-    __interpreter_required: false,
+    __witness_present: [false],
+    __interpreter_required: [false],
   }
 
   public additionFormValidators = [
