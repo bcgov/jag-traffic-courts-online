@@ -1,7 +1,5 @@
 ﻿using MassTransit;
-using System.Text.Json;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Services;
 using TrafficCourts.Common.Features.Mail.Model;
 
 namespace TrafficCourts.Workflow.Service.Consumers
@@ -13,6 +11,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
     public class DisputeApprovedNotifyConsumer : IConsumer<DisputeApproved>
     {
         private readonly ILogger<DisputeApprovedNotifyConsumer> _logger;
+        private static readonly string _approveEmailTemplateName = "ProcessingDisputeTemplate";
 
         public DisputeApprovedNotifyConsumer(ILogger<DisputeApprovedNotifyConsumer> logger)
         {
@@ -28,9 +27,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
         public async Task Consume(ConsumeContext<DisputeApproved> context)
         {
             // Send email message to the submitter's entered email to notify of dispute approval for processing
-            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ProcessingDisputeTemplate");
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _approveEmailTemplateName);
             if (template is not null)
             {
+                // TODO: there is future ability to opt-out of e-mails... may need to add check to skip over this, if disputant choses so.
                 var emailMessage = new SendEmail()
                 {
                     From = template.Sender,
@@ -40,6 +40,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 };
 
                 await context.Publish(emailMessage);
+            }
+            else
+            {
+                _logger.LogError("Email template of: {_approveEmailTemplateName} not found.", _approveEmailTemplateName);
             }
         }
     }

@@ -43,7 +43,7 @@ public static class Startup
         void AddConsumers(IBusRegistrationConfigurator cfg)
         {
             // TODO: use cfg.AddConsumers(params Type[] types) or cfg.AddConsumers(params Assembly[] assemblies)
-            cfg.AddConsumer<SubmitDisputeConsumer>();
+            cfg.AddConsumer<DisputeSubmitConsumer>();
             cfg.AddConsumer<DisputeSubmitNotifyConsumer>();
             cfg.AddConsumer<DisputeApprovedConsumer>();
             cfg.AddConsumer<DisputeApprovedNotifyConsumer>();
