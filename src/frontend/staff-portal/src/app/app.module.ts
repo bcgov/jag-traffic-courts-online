@@ -49,6 +49,7 @@ import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -84,6 +85,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
+    MatAutocompleteModule,
     AuthConfigModule,
     MatSortModule,
     MatIconModule,

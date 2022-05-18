@@ -3,7 +3,6 @@ import { Config, Configuration, ProvinceConfig } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 
 export interface IConfigService extends Configuration {
   load(): Observable<Configuration>;
@@ -25,6 +24,7 @@ export class ConfigService implements IConfigService {
   private disputeError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
+  private statuteError: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     protected utilsService: UtilsService,
@@ -61,6 +61,13 @@ export class ConfigService implements IConfigService {
 
   public get ticket_error(): string {
     return this.ticketError.value;
+  }
+
+  public get statute_error$(): BehaviorSubject<string> {
+    return this.statuteError;
+  }
+  public get statute_error(): string {
+    return this.statuteError.value;
   }
 
   public get dispute_create_error$(): BehaviorSubject<string> {

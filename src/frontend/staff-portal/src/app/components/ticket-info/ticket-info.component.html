@@ -26,14 +26,16 @@
               </ng-container>
             </div>
             <div *ngIf="disableForm==true" data-toggle="modal" data-target="#exampleModal" width="280 !important">
-              <img src="../../../assets/violation-ticket-sample.jpg" width="280" height="500"><br />
+              <!-- <img src="../../../assets/violation-ticket-sample.jpg" width="280" height="500"><br /> -->
+              <img [src]="imageToShow" width="280" height="500"><br />
               <span style="font-size:15px; color:#009cde; align-content: center;" width="280">
                 <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
                 <strong> Click to expand ticket image</strong>
               </span>
             </div>
             <div *ngIf="disableForm==false" data-toggle="modal" data-target="#exampleModal" width="150 !important">
-              <img src="../../../assets/violation-ticket-sample.jpg" width="150" height="200"><br />
+              <!-- <img src="../../../assets/violation-ticket-sample.jpg" width="150" height="200"><br /> -->
+              <img [src]="imageToShow" width="150" height="200"><br />
               <span style="font-size:10px; color:#009cde; align-content: center;" width="150">
                 <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
                 <strong> Click to expand ticket image</strong>
@@ -116,7 +118,11 @@
                     <div class="col-lg-6">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Province/State of driver's licence</mat-label>
-                          <mat-select formControlName="province" [disabled]="disableForm == true" formControlName="driversLicenceProvince" (selectionChange)="onDLProvinceChange($event.value)">
+                          <input matInput readonly="true" formControlName="driversLicenceProvince" *ngIf="disableForm==true" />
+                          <mat-select formControlName="driversLicenceProvince" (selectionChange)="onDLProvinceChange($event.value)" *ngIf="disableForm==false">
+                            <mat-optgroup label="Disputant Input">
+                              <mat-option [value]="initialDisputeValues.driversLicenceProvince">{{ initialDisputeValues.driversLicenceProvince }}</mat-option>
+                            </mat-optgroup>
                             <mat-optgroup label="Canada">
                               <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</mat-option>
                             </mat-optgroup>
@@ -147,8 +153,6 @@
                         <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
-
-                    <button type="button" (click)="showForm()">Show Form</button>
                   </div>
                 </section>
                 <section>
@@ -156,14 +160,18 @@
                     <span> <h3>Count 1</h3></span>
                   </ng-container>
                   <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-8">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm" formControlName="count1Description" />
+                        <input matInput formControlName="count1Description" [readonly]="disableForm==true" [matAutocomplete]="auto" [matTooltip]="form.get('count1Description').value"/>
+                        <mat-autocomplete #auto="matAutocomplete" panelWidth="750">
+                          <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{ getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
+                          <mat-option *ngFor="let statute of filteredCount1Statutes | async" [value]="statute.statuteString">{{ statute.statuteString }}</mat-option>
+                        </mat-autocomplete>
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Fine amount ($)</mat-label>
                         <input matInput [readonly]="disableForm" formControlName="count1TicketedAmount" />
@@ -177,14 +185,18 @@
                     <span> <h3>Count 2</h3></span>
                   </ng-container>
                   <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-8">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm" formControlName="count2Description" />
+                        <input matInput formControlName="count2Description" [readonly]="disableForm==true" [matAutocomplete]="auto2" [matTooltip]="form.get('count2Description').value" />
+                        <mat-autocomplete #auto2="matAutocomplete" panelWidth="750">
+                          <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{ getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
+                          <mat-option *ngFor="let statute of filteredCount2Statutes | async" [value]="statute.statuteString">{{ statute.statuteString }}</mat-option>
+                        </mat-autocomplete>
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Fine amount ($)</mat-label>
                         <input matInput [readonly]="disableForm" formControlName="count2TicketedAmount" />
@@ -198,14 +210,18 @@
                     <span><h3>Count 3</h3></span>
                   </ng-container>
                   <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-8">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Section / Act / Description </mat-label>
-                        <input matInput [readonly]="disableForm" formControlName="count3Description" />
+                        <input matInput formControlName="count3Description" [readonly]="disableForm==true" [matAutocomplete]="auto3" [matTooltip]="form.get('count3Description').value" />
+                        <mat-autocomplete #auto3="matAutocomplete" panelWidth="750">
+                          <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{ getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
+                          <mat-option *ngFor="let statute of filteredCount3Statutes | async" [value]="statute.statuteString">{{ statute.statuteString }}</mat-option>
+                        </mat-autocomplete>
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Fine amount ($)</mat-label>
                         <input matInput [readonly]="disableForm" formControlName="count3TicketedAmount" />
@@ -219,9 +235,13 @@
                     <span> <h3>Court Location</h3> </span>
                   </ng-container>
                   <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-9">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
-                        <input matInput [readonly]="disableForm" formControlName="provincialCourtHearingLocation" />
+                        <input matInput readonly="true" formControlName="provincialCourtHearingLocation" *ngIf="disableForm==true" />
+                        <mat-select formControlName="provincialCourtHearingLocation" *ngIf="disableForm==false">
+                          <mat-option [value]="initialDisputeValues.provincialCourtHearingLocation">{{ initialDisputeValues.provincialCourtHearingLocation }}</mat-option>
+                          <mat-option *ngFor="let courtLocation of courtLocations" [value]="courtLocation.name">{{ courtLocation.name }}</mat-option>
+                        </mat-select>
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
@@ -466,7 +486,7 @@
         </button>
       </div>
       <div class="modal-body" style="height: 800px; text-align: center;">
-        <img src="../../../assets/violation-ticket-sample.jpg" width="450" height="750">
+        <img [src]="imageToShow" width="450" height="750">
       </div>
     </div>
   </div>
