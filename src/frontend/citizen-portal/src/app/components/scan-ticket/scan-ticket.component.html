@@ -11,11 +11,6 @@
     <span>
       Filename: <strong>{{ ticketFilename }}</strong></span>
     <span class="flex-grow-1"></span>
-    <a class="upload-link" (click)="fileInput.click()">
-      <mat-icon class="new-image-icon me-2">highlight_off</mat-icon>
-      Remove and upload new image
-    </a>
-    <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file" />
   </div>
   <hr />
 
