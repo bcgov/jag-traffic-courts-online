@@ -15,26 +15,25 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The count number. Must be unique within an individual dispute.
         /// </summary>
         [JsonPropertyName("count")]
-        [Range(1, 3)]
         public int Count { get; set; }
 
         /// <summary>
         /// The disputant is requesting time to pay the ticketed amount.
         /// </summary>
         [JsonPropertyName("request_time_to_pay")]
-        public bool RequestTimeToPay { get; set; }
+        public bool? RequestTimeToPay { get; set; }
 
         /// <summary>
         /// The disputant is requesting a reduction of the ticketed amount.
         /// </summary>
         [JsonPropertyName("request_reduction")]
-        public bool RequestReduction { get; set; }
+        public bool? RequestReduction { get; set; }
 
         /// <summary>
         /// Does the want to appear in court?
         /// </summary>
         [JsonPropertyName("appear_in_court")]
-        public bool AppearInCourt { get; set; }
+        public bool? AppearInCourt { get; set; }
     }
 
 }

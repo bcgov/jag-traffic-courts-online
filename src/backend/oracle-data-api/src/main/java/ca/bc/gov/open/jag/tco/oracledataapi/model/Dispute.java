@@ -55,7 +55,6 @@ public class Dispute extends Auditable<String> {
      * The violation ticket number.
      */
     @Column
-    @Schema(nullable = true)
     private String ticketNumber;
 
     /**
@@ -69,7 +68,6 @@ public class Dispute extends Auditable<String> {
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     @Column
-    @Schema(nullable = true)
     private Date issuedDate;
 
     /**
@@ -83,21 +81,18 @@ public class Dispute extends Auditable<String> {
      * The surname or corporate name.
      */
     @Column
-    @Schema(nullable = true)
     private String surname;
 
     /**
      * The given names or corporate name continued.
      */
     @Column
-    @Schema(nullable = true)
     private String givenNames;
     
     /**
      * The disputant's birthdate.
      */
     @Column
-    @Schema(nullable = true)
     private Date birthdate;
     
     /**
@@ -105,7 +100,7 @@ public class Dispute extends Auditable<String> {
      */
     @Size(max = 20)
     @Column(length = 20)
-    @Schema(nullable = true, maxLength = 20)
+    @Schema(maxLength = 20)
     private String driversLicenceNumber;
     
     /**
@@ -113,42 +108,41 @@ public class Dispute extends Auditable<String> {
      */
     @Size(max = 30)
     @Column(length = 30)
-    @Schema(nullable = true, maxLength = 30)
+    @Schema(maxLength = 30)
     private String driversLicenceProvince;
 
     /**
      * The mailing address of the disputant.
      */
     @Column
-    @Schema(nullable = true)
     private String address;
 
     /**
      * The mailing address city of the disputant.
      */
     @Column
-    @Schema(nullable = true)
     private String city;
 
     /**
      * The mailing address province of the disputant.
      */
-    @Column
-    @Schema(nullable = true)
+    @Size(max = 30)
+    @Column(length = 30)
+    @Schema(maxLength = 30)
     private String province;
 
     /**
      * The mailing address postal code or zip code of the disputant.
      */
-    @Column
-    @Schema(nullable = true)
+    @Size(max = 6)
+    @Column(length = 6)
+    @Schema(maxLength = 6)
     private String postalCode;
 
     /**
      * The disputant's home phone number.
      */
     @Column
-    @Schema(nullable = true)
     private String homePhoneNumber;
 
     /**
@@ -163,7 +157,6 @@ public class Dispute extends Auditable<String> {
      */
     @Column
     @Email(regexp = ".+@.+\\..+")
-    @Schema(nullable = true)
     private String emailAddress;
 
     @Column

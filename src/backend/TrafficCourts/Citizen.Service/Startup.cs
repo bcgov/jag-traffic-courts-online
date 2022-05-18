@@ -15,6 +15,7 @@ using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
 using TicketStorageType = TrafficCourts.Citizen.Service.Configuration.TicketStorageType;
+using FluentValidation.AspNetCore;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -83,6 +84,12 @@ public static class Startup
 
         // Registering and Initializing AutoMapper
         builder.Services.AddAutoMapper(typeof(NoticeOfDisputeToMessageContractMappingProfile));
+
+        // Finds and registers all the fluent validators in the assembly
+        builder.Services.AddFluentValidation(fv =>
+        {
+            fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        });
 
         // Add services to the container.
         builder.Services
