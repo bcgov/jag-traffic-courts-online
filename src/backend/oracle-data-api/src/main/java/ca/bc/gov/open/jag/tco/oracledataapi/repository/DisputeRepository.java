@@ -12,4 +12,7 @@ public interface DisputeRepository extends CrudRepository<Dispute, UUID> {
 	/** Fetch all records older than the given date. */
     public Iterable<Dispute> findByCreatedTsBefore(Date olderThan);
 
+	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
+    public Iterable<Dispute> findByAssignedTsBefore(Date assignedTs);
+
 }
