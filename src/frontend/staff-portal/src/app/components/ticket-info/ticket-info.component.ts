@@ -12,6 +12,7 @@ import { ConfigService, } from '../../config/config.service';
 import { ProvinceConfig } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { Mock } from 'protractor/built/driverProviders';
+import { NgxMaterialTimepickerHoursFace } from 'ngx-material-timepicker/src/app/material-timepicker/components/timepicker-hours-face/ngx-material-timepicker-hours-face';
 @Component({
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
@@ -61,7 +62,6 @@ export class TicketInfoComponent implements OnInit {
       this.provinces = this.mockConfigService.provinces.filter(x => x.countryCode == 'CA');
       this.states = this.mockConfigService.provinces.filter(x => x.countryCode == 'US');
     }
-    console.log(this.provinces, this.states, this.mockConfigService.provinces);
   }
 
   public ngOnInit() {
@@ -74,7 +74,7 @@ export class TicketInfoComponent implements OnInit {
       homePhoneNumber: [null],
       emailAddress: [null],
       violationDate: [null, [Validators.required]],  // api returns issued date, extract date from that
-      violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract date from that
+      violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that
       surname: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
       country: ["Canada", [Validators.required]], // hard coded this is not returned from API, assumed always Canada
@@ -83,7 +83,7 @@ export class TicketInfoComponent implements OnInit {
       city: [null, [Validators.required]],
       province: [null, [Validators.required]],
       postalCode: [null, [Validators.required]], // space needs to be added back to the middle for display
-      driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],
+      driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]],
       driversLicenceProvince: [null, [Validators.required]],
       provincialCourtHearingLocation: [null, [Validators.required]],
       count1Description: [
@@ -122,16 +122,32 @@ export class TicketInfoComponent implements OnInit {
   }
 
   public onDLProvinceChange(province: string) {
+    console.log("change province", province);
     if (province == 'British Columbia') {
-      this.form.get('drivers_licence_number').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern('^(\d{7}|\d{8}|\d{9})$')]);
-      this.form.get('drivers_licence_number').updateValueAndValidity();
+      this.form.get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
+      this.form.get('driversLicenceNumber').updateValueAndValidity();
       this.form.updateValueAndValidity();
 
     } else {
-      this.form.get('drivers_licence_number').setValidators(Validators.required);
-      this.form.get('drivers_licence_number').updateValueAndValidity();
+      this.form.get('driversLicenceNumber').setValidators(Validators.required);
+      this.form.get('driversLicenceNumber').updateValueAndValidity();
       this.form.updateValueAndValidity();
     }
+  }
+
+  onKeyPressNumbers(event) {
+    var charCode = (event.which) ? event.which : event.keyCode;
+    // Only Numbers 0-9
+    if ((charCode < 48 || charCode > 57) && this.form.get('driversLicenceProvince').value == "British Columbia") {
+      event.preventDefault();
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showForm() {
+    console.log(this.form);
   }
 
   public onSubmit(): void {
@@ -163,6 +179,7 @@ export class TicketInfoComponent implements OnInit {
 
     var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NotGuilty\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NotGuilty\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NotGuilty\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Nameincorrect\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"BritishColumbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"ParkinginahandicapspotwithoutMVAtherequiredsticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracteddriving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceedlicensedgrossvehicleweight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
     this.form.patchValue(responseObject);
+    console.log(responseObject);
 
     // set violation date
     let violationDate = new Date(responseObject.issuedDate);
@@ -172,8 +189,28 @@ export class TicketInfoComponent implements OnInit {
     // set violation time
     let violationTimeString = this.datePipe.transform(violationDate,"hhmm");
     this.form.controls['violationTime'].setValue(violationTimeString);
-    
-    console.log("ticket-info getDispute", violationDate, violationDateString, violationTimeString);
 
+    // set counts 1,2,3
+    responseObject.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
+
+      // actRegulation fullsection.subsection(section) paragraph?? description
+      let ticketDesc = violationTicketCount.actRegulation + " " + violationTicketCount.fullSection;
+      if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "." + violationTicketCount.subsection;
+      if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.section + ")";
+      ticketDesc = ticketDesc + " " + violationTicketCount.description;
+
+      if (violationTicketCount.count == 1) {
+        this.form.controls['count1Description'].setValue(ticketDesc);
+        this.form.controls['count1TicketedAmount'].setValue(violationTicketCount.ticketedAmount);
+      }
+      else if (violationTicketCount.count == 2) {
+        this.form.controls['count2Description'].setValue(ticketDesc);
+        this.form.controls['count2TicketedAmount'].setValue(violationTicketCount.ticketedAmount);
+      }
+      else if (violationTicketCount.count == 3) {
+        this.form.controls['count3Description'].setValue(ticketDesc);
+        this.form.controls['count3TicketedAmount'].setValue(violationTicketCount.ticketedAmount);
+      }
+    });
   }
 }

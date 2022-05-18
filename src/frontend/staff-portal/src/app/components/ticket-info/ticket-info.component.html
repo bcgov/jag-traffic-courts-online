@@ -116,35 +116,39 @@
                     <div class="col-lg-6">
                       <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100">
                         <mat-label>Province/State of driver's licence</mat-label>
-                          <mat-select formControlName="province" [readonly]="disableForm" formControlName="driversLicenceProvince" (selectionChange)="onDLProvinceChange($event.value)">
+                          <mat-select formControlName="province" [disabled]="disableForm == true" formControlName="driversLicenceProvince" (selectionChange)="onDLProvinceChange($event.value)">
                             <mat-optgroup label="Canada">
                               <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}</mat-option>
                             </mat-optgroup>
-                            <mat-optgroup></mat-optgroup>
-                            <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>
+                            <mat-optgroup label="United States">
+                              <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>
+                            </mat-optgroup>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
 
                     <div class="col-lg-6">
-                     <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100" *ngIf="form.get('province').value == 'British Columbia'">
+                     <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100" *ngIf="form.get('driversLicenceProvince').value == 'British Columbia'">
                         <mat-label>Driver's licence number</mat-label>
-                        <input matInput formControlName="driversLicenceNumber" mask="000000000" [readonly]="disableForm" [showMaskTyped]="false" autocomplete="off"/>
+                        <input matInput formControlName="driversLicenceNumber" minlength="7" maxlength="9" (keypress)="onKeyPressNumbers($event)" [readonly]="disableForm" autocomplete="off"/>
                         <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" | translate }}</mat-error>
                         <mat-error 
-                          *ngIf="form.get('driversLicenceNumber').hasError('pattern') ||
+                          *ngIf="
+                            form.get('driversLicenceNumber').hasError('pattern') ||
                             form.get('driversLicenceNumber').hasError('minlength') ||
                             form.get('driversLicenceNumber').hasError('maxlength')">
                           Must be a valid BC driver's license number of seven to nine digits
                         </mat-error>
                       </mat-form-field>
-                      <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100" *ngIf="form.get('province').value != 'British Columbia'">
+                      <mat-form-field [ngClass]="!disableForm? 'border-form':''" class="w-100" *ngIf="form.get('driversLicenceProvince').value != 'British Columbia'">
                         <mat-label>Driver's licence number</mat-label>
                         <input matInput formControlName="driversLicenceNumber" [readonly]="disableForm" autocomplete="off"/>
                         <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
+
+                    <button type="button" (click)="showForm()">Show Form</button>
                   </div>
                 </section>
                 <section>
