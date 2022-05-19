@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
@@ -88,13 +91,13 @@ public class Dispute extends Auditable<String> {
      */
     @Column
     private String givenNames;
-    
+
     /**
      * The disputant's birthdate.
      */
     @Column
     private Date birthdate;
-    
+
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
      */
@@ -102,7 +105,7 @@ public class Dispute extends Auditable<String> {
     @Column(length = 20)
     @Schema(maxLength = 20)
     private String driversLicenceNumber;
-    
+
     /**
      * The province or state the drivers licence was issued by.
      */
@@ -213,20 +216,20 @@ public class Dispute extends Auditable<String> {
     @Column(length = 256)
     @Schema(nullable = true)
     private String rejectedReason;
-    
+
     /**
      * Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
      */
     @Column
     private boolean disputantDetectedOcrIssues;
-    
+
     /**
      * The description of the issue with OCR ticket if the citizen has detected any.
      */
     @Column
     @Schema(nullable = true)
     private String disputantOcrIssuesDescription;
-    
+
     /**
      * Identifier for whether the system has detected any issues with the OCR ticket result or not.
      */
@@ -236,7 +239,7 @@ public class Dispute extends Auditable<String> {
     @Column
     @Schema(nullable = true)
     private String jjAssigned;
-    
+
     /**
 	 * All OCR Violation ticket data serialized into a JSON string.
 	 */
@@ -244,21 +247,22 @@ public class Dispute extends Auditable<String> {
 	@Lob
     @Schema(nullable = true)
     private String ocrViolationTicket;
-	
+
 	/**
 	 * The IDIR of the Staff whom the dispute is assigned to be reviewed on Staff Portal.
 	 */
 	@Column
 	@Schema(nullable = true)
 	private String assignedTo;
-	
+
 	/**
 	 * The date and time a dispute was assigned to a Staff to be reviewed.
 	 */
 	@Column
 	@Schema(nullable = true)
-	private Date assignedTs;
-    
+	@Temporal(TIMESTAMP)
+	private java.util.Date assignedTs;
+
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
     @Schema(nullable = true)

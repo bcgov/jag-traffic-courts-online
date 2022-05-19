@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -154,6 +155,18 @@ public class DisputeService {
 		dispute.setStatus(disputeStatus);
 		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
 		return disputeRepository.save(dispute);
+	}
+
+	/**
+	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
+	 */
+	public void unassignDisputes() {
+		// Find all Disputes with an assignedTs older than 1 hour ago.
+		for (Dispute dispute : disputeRepository.findByAssignedTsBefore(DateUtils.addHours(new Date(), -1))) {
+			dispute.setAssignedTo(null);
+			dispute.setAssignedTs(null);
+			disputeRepository.save(dispute);
+		}
 	}
 
 }
