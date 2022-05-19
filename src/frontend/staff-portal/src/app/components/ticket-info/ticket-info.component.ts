@@ -22,6 +22,7 @@ export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeView;
   @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
   public isMobile: boolean;
+  public showOCR: boolean = false;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
@@ -195,6 +196,7 @@ export class TicketInfoComponent implements OnInit {
     this.disableForm = false;
   }
 
+  // act fullsection(section)(subsection)(paragraph)
   public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
     let ticketDesc = violationTicketCount.actRegulation + " ";
     if (violationTicketCount.fullSection && violationTicketCount.fullSection.length > 0) ticketDesc = ticketDesc + violationTicketCount.fullSection;
@@ -205,11 +207,13 @@ export class TicketInfoComponent implements OnInit {
     return ticketDesc;
   }
 
+  // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
     if (violationTicket.violationTicketCounts.filter(x=> x.count == countNumber)) return this.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x=> x.count == countNumber)[0]);
     else return "";
   }
 
+  // display individual ticket image
   public createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {

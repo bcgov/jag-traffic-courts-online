@@ -47,7 +47,7 @@ export class LookupsService implements ILookupsService {
           return statutes;
         }),
         tap((statutes) =>
-          this.logger.info('LookupsService::getStatutes', statutes)
+          this.logger.info('LookupsService::getStatutes', statutes.length)
         ),
         catchError((error: any) => {
           this.toastService.openErrorToast(this.configService.statute_error);
