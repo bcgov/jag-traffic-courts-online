@@ -40,6 +40,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         // - Ticket number must start with 'A', another alphabetic character, and then 8 digits
         // - In "Did commit offence(s) indicated, under the following act or its regulations" section, only 'MVA' is selected.
         // - If the Violation Date is less than 30 days
+        // - Count ACT/REGs must be MVA as text - all 3 counts must be MVA at this time.
         List<ValidationRule> rules = new();
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketTitle], _ticketTitleRegex, ValidationMessages.TicketTitleInvalid));
         rules.Add(new FieldMatchesRegexRule(violationTicket.Fields[OcrViolationTicket.ViolationTicketNumber], _violationTicketNumberRegex, ValidationMessages.TicketNumberInvalid));
@@ -52,6 +53,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsTCR]));
         rules.Add(new CheckboxIsValidRule(violationTicket.Fields[OcrViolationTicket.OffenceIsOther]));
         rules.Add(new OnlyMVAIsSelectedRule(violationTicket.Fields[OcrViolationTicket.OffenceIsMCA], violationTicket));
+        rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count1ActRegs], 1));
+        rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count2ActRegs], 2));
+        rules.Add(new CountActRegMustBeMVA(violationTicket.Fields[OcrViolationTicket.Count3ActRegs], 3));
         rules.Add(new ViolationDateLT30Rule(violationTicket.Fields[OcrViolationTicket.ViolationDate]));
 
         // Run each rule and aggregate the results
