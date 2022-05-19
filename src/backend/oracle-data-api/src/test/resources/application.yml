@@ -1,3 +1,7 @@
+codetable:
+  refresh:    
+    atStartup: false
+    
 logging:
   level:
     ca.bc.gov.open.jag.tco.oracledataapi: DEBUG
