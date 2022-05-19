@@ -1,8 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import static javax.persistence.TemporalType.TIMESTAMP;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,7 +70,7 @@ public class Dispute extends Auditable<String> {
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     @Column
-    @Temporal(TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date issuedDate;
 
     /**
@@ -79,7 +78,7 @@ public class Dispute extends Auditable<String> {
      */
     @Column
     @Schema(nullable = true)
-    @Temporal(TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date submittedDate;
 
     /**
@@ -167,7 +166,7 @@ public class Dispute extends Auditable<String> {
 
     @Column
     @Schema(nullable = true)
-    @Temporal(TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date filingDate;
 
     @JsonManagedReference
@@ -264,7 +263,7 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date assignedTs;
 
     @JsonManagedReference
