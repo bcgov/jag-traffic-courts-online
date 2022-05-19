@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Minio;
 using NodaTime;
 using TrafficCourts.Common.Configuration;
@@ -41,25 +40,25 @@ namespace TrafficCourts.Common.Features.FilePersistence
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
 
-            services.AddOptions<ObjectBucketConfiguration>()
-                .Bind(configuration)
-                .ValidateDataAnnotations();
-
-            services.AddOptions<MinioClientConfiguration>()
-                .Bind(configuration)
-                .ValidateDataAnnotations();
+            services.UseConfigurationValidation();
+            services.ConfigureValidatableSetting<MinioClientConfiguration>(configuration);
+            services.ConfigureValidatableSetting<ObjectBucketConfiguration>(configuration);
 
             services.AddTransient<IObjectOperations>(serviceProvider =>
             {
-                var options = serviceProvider.GetRequiredService<IOptions<MinioClientConfiguration>>();
-                var configuration = options.Value;
-                
+                var configuration = serviceProvider.GetRequiredService<MinioClientConfiguration>();
+
                 var client = new MinioClient()
                     .WithEndpoint(configuration.Endpoint)
-                    .WithCredentials(configuration.AccessKey, configuration.SecretKey)
-                    .Build();
-                
-                return client;
+                    .WithCredentials(configuration.AccessKey, configuration.SecretKey);
+
+                if (configuration.Ssl)
+                {                    
+                    client = client.WithSSL(); // WithSSL returns the same object, but re-assign to make it less confusing
+                }
+                    
+                // the build method will finalize the object's internal state and returns the same instance
+                return client.Build();
             });
 
             services.AddTransient<IFilePersistenceService, MinioFilePersistenceService>();
