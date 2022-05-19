@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -155,6 +156,26 @@ public class DisputeService {
 		dispute.setStatus(disputeStatus);
 		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
 		return disputeRepository.save(dispute);
+	}
+	
+	/**
+	 * Assigns a specific {@link Dispute} to the IDIR username of the Staff with a timestamp
+	 *
+	 * @param id
+	 * @param username
+	 * @return the saved Dispute
+	 */
+	public void assignDisputeToUser(UUID id, String username) {
+		if (username == null || username.isEmpty()) {
+			logger.error("Attempting to set Dispute to null username - bad method call.");
+			throw new NotAllowedException("Cannot set assigned user to null");
+		}
+		
+		// Find the dispute to be assigned to the username
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+		
+		dispute.setAssignedTo(username);
+		dispute.setAssignedTs(new Date());
 	}
 
 	/**
