@@ -10,7 +10,7 @@ public class Mapper
     {
         DisputeApproved target = new();
         target.CitizenName = dispute.GivenNames + " " + dispute.Surname;
-        target.TicketIssuanceDate = dispute.IssuedDate.HasValue ? dispute.IssuedDate.Value.DateTime : (DateTime?)null;
+        target.TicketIssuanceDate = dispute.IssuedDate.DateTime;
         target.TicketFileNumber = dispute.TicketNumber;
         target.IssuingOrganization = dispute.ViolationTicket.OrganizationLocation;
         target.IssuingLocation = dispute.ProvincialCourtHearingLocation;

@@ -362,77 +362,54 @@
             "type": "string",
             "enum": [ "NEW", "PROCESSING", "REJECTED", "CANCELLED" ]
           },
-          "ticketNumber": {
-            "type": "string",
-            "nullable": true
-          },
+          "ticketNumber": { "type": "string" },
           "provincialCourtHearingLocation": {
             "type": "string",
             "nullable": true
           },
           "issuedDate": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "submittedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "givenNames": {
-            "type": "string",
-            "nullable": true
-          },
+          "surname": { "type": "string" },
+          "givenNames": { "type": "string" },
           "birthdate": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "driversLicenceNumber": {
             "maxLength": 20,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "driversLicenceProvince": {
             "maxLength": 30,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
-          "address": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
+          "address": { "type": "string" },
+          "city": { "type": "string" },
           "province": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
           },
           "postalCode": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 6,
+            "minLength": 0,
+            "type": "string"
           },
-          "homePhoneNumber": {
-            "type": "string",
-            "nullable": true
-          },
+          "homePhoneNumber": { "type": "string" },
           "workPhoneNumber": {
             "type": "string",
             "nullable": true
           },
-          "emailAddress": {
-            "type": "string",
-            "nullable": true
-          },
+          "emailAddress": { "type": "string" },
           "filingDate": {
             "type": "string",
             "format": "date-time",
