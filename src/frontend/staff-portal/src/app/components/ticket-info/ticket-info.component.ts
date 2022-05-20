@@ -32,7 +32,7 @@ export class TicketInfoComponent implements OnInit {
   public todayDate: Date = new Date();
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
-  public initialDisputeValues: DisputeView;
+  public initialDisputeValues: Dispute;
   public courtLocations: Config<string>[];
   public imageToShow: any;
 
@@ -245,7 +245,6 @@ export class TicketInfoComponent implements OnInit {
     // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
     // with notice of dispute form fields only that were changed
     let putDispute = this.lastUpdatedDispute;
-    console.log(putDispute);
 
     putDispute.surname = this.form.get('surname').value;
     putDispute.givenNames = this.form.get('givenNames').value;
@@ -272,18 +271,16 @@ export class TicketInfoComponent implements OnInit {
     // parts are fullSection(section)(subsection)(paragraph) if all are present
     // extract substrings but dont include final ')' of each part
     if (allParts.length > 0) fullSection = allParts[0].substring(0, allParts[0].length);
-    if (allParts.length > 1) section = allParts[1].substring(0, allParts[1].length-1);
-    if (allParts.length > 2) subsection = allParts[2].substring(0, allParts[2].length-1);
-    if (allParts.length > 3) paragraph = allParts[3].substring(0, allParts[3].length-1);
-
-    console.log("deconstruct legal paragraphing", statuteLegalParagraphing, fullSection, section, subsection, paragraph);
+    if (allParts.length > 1) section = allParts[1].substring(0, allParts[1].length - 1);
+    if (allParts.length > 2) subsection = allParts[2].substring(0, allParts[2].length - 1);
+    if (allParts.length > 3) paragraph = allParts[3].substring(0, allParts[3].length - 1);
 
     return { fullSection: fullSection, section: section, subsection: subsection, paragraph: paragraph };
   }
 
   public constructViolationTicketCount(statuteString: string): ViolationTicketCount {
 
-    this.tempViolationTicketCount = {description: "", actRegulation: "", fullSection: "", section: "", subsection: "", paragraph: ""};
+    this.tempViolationTicketCount = { description: "", actRegulation: "", fullSection: "", section: "", subsection: "", paragraph: "" };
 
     // look in list of statutes
     let statute = this.lookupsService.statutes.filter(x => x.statuteString == statuteString) as StatuteView[];
@@ -292,10 +289,9 @@ export class TicketInfoComponent implements OnInit {
       this.tempViolationTicketCount.actRegulation = statute[0].act; // to do break down legal paragraphing
       let parts = this.unLegalParagraph(statute[0].section);
       this.tempViolationTicketCount.fullSection = parts.fullSection;
-      this.tempViolationTicketCount.section = parts.section; 
+      this.tempViolationTicketCount.section = parts.section;
       this.tempViolationTicketCount.subsection = parts.subsection;
       this.tempViolationTicketCount.paragraph = parts.paragraph;
-      console.log("statute found", statuteString, parts, this.tempViolationTicketCount)
       return this.tempViolationTicketCount;
     }
 
@@ -310,7 +306,7 @@ export class TicketInfoComponent implements OnInit {
       this.tempViolationTicketCount.actRegulation = statuteStringParts[0];
       let parts = this.unLegalParagraph(statuteStringParts[1]);
       this.tempViolationTicketCount.fullSection = parts.fullSection;
-      this.tempViolationTicketCount.section = parts.section; 
+      this.tempViolationTicketCount.section = parts.section;
       this.tempViolationTicketCount.subsection = parts.subsection;
       this.tempViolationTicketCount.paragraph = parts.paragraph;
       this.tempViolationTicketCount.description = statuteString.substring(
@@ -324,14 +320,13 @@ export class TicketInfoComponent implements OnInit {
       this.tempViolationTicketCount.fullSection = statuteStringParts[0];
       this.tempViolationTicketCount.description = statuteString.substring(statuteString.indexOf(statuteStringParts[1]));
 
-    // yuk shove it in description field
+      // yuk shove it in description field
     } else {
       this.tempViolationTicketCount.actRegulation = "";
       this.tempViolationTicketCount.fullSection = "";
       this.tempViolationTicketCount.description = statuteString;
     }
 
-    console.log("not found in statutes", statuteString, this.tempViolationTicketCount);
     return this.tempViolationTicketCount;
   }
 
@@ -424,63 +419,63 @@ export class TicketInfoComponent implements OnInit {
   getDispute(): void {
     this.logger.log('TicketInfoComponent::getDispute');
 
-    // this.busy = this.disputesService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
-    //   this.logger.info(
-    //     'TicketInfoComponent::getDispute response',
-    //     response
-    //   );
+    this.busy = this.disputesService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
+      console.log(response);
+      this.disputesService.dispute$.next(response);
+      this.logger.info(
+        'TicketInfoComponent::getDispute response',
+        response
+      );
 
-    //   this.disputesService.dispute$.next(response);
-    // });
+      // var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NOT_GUILTY\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NOT_GUILTY\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NOT_GUILTY\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Name incorrect WWWWWWW\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"Parking in a handicap spot without the required sticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracted driving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceed licensed gross vehicle weight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
+      this.initialDisputeValues = response;
+      this.lastUpdatedDispute = this.initialDisputeValues;
+      this.form.patchValue(response);
 
-    var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NOT_GUILTY\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NOT_GUILTY\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NOT_GUILTY\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Name incorrect WWWWWWW\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"Parking in a handicap spot without the required sticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracted driving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceed licensed gross vehicle weight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
-    this.initialDisputeValues = responseObject;
-    this.lastUpdatedDispute = this.initialDisputeValues;
-    this.form.patchValue(responseObject);
+      // set violation date and time
+      let violationDate = new Date(response.issuedDate);
+      this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
+      this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
 
-    // set violation date and time
-    let violationDate = new Date(responseObject.issuedDate);
-    this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
-    this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
+      // ticket image
+      this.imageToShow = this.initialDisputeValues.violationTicket.violationTicketImage.image;
 
-    // ticket image
-    this.imageToShow = this.initialDisputeValues.violationTicket.violationTicketImage.image;
+      // set disputant detected ocr issues
+      this.flagsForm.get('disputantOcrIssuesDescription').setValue(response.disputantOcrIssuesDescription);
 
-    // set disputant detected ocr issues
-    this.flagsForm.get('disputantOcrIssuesDescription').setValue(responseObject.disputantOcrIssuesDescription);
+      // set provincial court hearing location in violation ticket subform
+      this.form.get('violationTicket').get('provincialCourtHearingLocation').setValue(
+        this.form.get('provincialCourtHearingLocation').value
+      );
 
-    // set provincial court hearing location in violation ticket subform
-    this.form.get('violationTicket').get('provincialCourtHearingLocation').setValue(
-      this.form.get('provincialCourtHearingLocation').value
-    );
+      // set counts 1,2,3 of violation ticket
+      response.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
 
-    // set counts 1,2,3 of violation ticket
-    responseObject.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
-
-      if (violationTicketCount.count == 1) {
-        this.form.get('violationTicket').get('violationTicketCount1').patchValue(violationTicketCount);
-        this.form
-          .get('violationTicket')
-          .get('violationTicketCount1')
-          .get('fullDescription')
-          .setValue(this.getLegalParagraphing(violationTicketCount));
-      }
-      else if (violationTicketCount.count == 2) {
-        this.form.get('violationTicket').get('violationTicketCount2').patchValue(violationTicketCount);
-        this.form
-          .get('violationTicket')
-          .get('violationTicketCount2')
-          .get('fullDescription')
-          .setValue(this.getLegalParagraphing(violationTicketCount));
-      }
-      else if (violationTicketCount.count == 3) {
-        this.form.get('violationTicket').get('violationTicketCount3').patchValue(violationTicketCount);
-        this.form
-          .get('violationTicket')
-          .get('violationTicketCount3')
-          .get('fullDescription')
-          .setValue(this.getLegalParagraphing(violationTicketCount));
-      }
+        if (violationTicketCount.count == 1) {
+          this.form.get('violationTicket').get('violationTicketCount1').patchValue(violationTicketCount);
+          this.form
+            .get('violationTicket')
+            .get('violationTicketCount1')
+            .get('fullDescription')
+            .setValue(this.getLegalParagraphing(violationTicketCount));
+        }
+        else if (violationTicketCount.count == 2) {
+          this.form.get('violationTicket').get('violationTicketCount2').patchValue(violationTicketCount);
+          this.form
+            .get('violationTicket')
+            .get('violationTicketCount2')
+            .get('fullDescription')
+            .setValue(this.getLegalParagraphing(violationTicketCount));
+        }
+        else if (violationTicketCount.count == 3) {
+          this.form.get('violationTicket').get('violationTicketCount3').patchValue(violationTicketCount);
+          this.form
+            .get('violationTicket')
+            .get('violationTicketCount3')
+            .get('fullDescription')
+            .setValue(this.getLegalParagraphing(violationTicketCount));
+        }
+      });
     });
   }
 }

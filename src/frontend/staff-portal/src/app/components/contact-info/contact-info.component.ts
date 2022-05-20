@@ -106,7 +106,6 @@ export class ContactInfoComponent implements OnInit {
       // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
       // with notice of dispute form fields only that were changed
       let putDispute = this.lastUpdatedDispute;
-      console.log(putDispute);
   
       putDispute.surname = this.form.get('surname').value;
       putDispute.givenNames = this.form.get('givenNames').value;
@@ -187,10 +186,6 @@ export class ContactInfoComponent implements OnInit {
      
     public onBack() {
       this.backTicketList.emit();
-    }
-
-    public showForm() {
-      console.log(this.form);
     }
 
     public handleCollapse(name: string) {

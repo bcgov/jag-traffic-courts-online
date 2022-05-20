@@ -217,13 +217,14 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
       this.disputesService.disputes$.next(response);
       response.forEach(d => {
-        this.newDispute.id = d.id
         this.newDispute.ticketNumber = d.ticketNumber;
-        this.newDispute.assignedTo = d.assignedTo;
-        this.newDispute.disputantDetectedOcrIssues = d.disputantDetectedOcrIssues;
         this.newDispute.surname = d.surname;
         this.newDispute.givenNames = d.givenNames;
+        this.newDispute.assignedTo = d.assignedTo;
         this.newDispute.jjAssigned = d.jjAssigned;
+        this.newDispute.id = d.id;
+        this.newDispute.disputantDetectedOcrIssues = d.disputantDetectedOcrIssues;
+        this.newDispute.systemDetectedOcrIssues = this.getSystemDetectedOcrIssues(d.ocrViolationTicket);
 
         // set court hearing to true if its true for any one of the three possible counts
         // otherwise false
@@ -279,7 +280,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   getSystemDetectedOcrIssues(ocrViolationTicket?: string): boolean {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
 
-    if (objOcrViolationTicket.fields) {
+    if (objOcrViolationTicket && objOcrViolationTicket.fields) {
       var fields = objOcrViolationTicket.fields;
 
       if (this.getOcrViolationErrors(fields.violationTicketTitle) > 0) { return true; }

@@ -3,7 +3,7 @@
     <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
   </a>
   <app-ticket-status [dispute]="disputeInfo" *ngIf="disputeInfo"></app-ticket-status>
-  <div class="ticket-info-section">
+  <div class="ticket-info-section" *ngIf="initialDisputeValues">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
         <app-page-header>
