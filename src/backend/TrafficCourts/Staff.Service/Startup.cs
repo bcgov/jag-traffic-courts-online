@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -15,6 +16,9 @@ public static class Startup
 {
     public static void ConfigureApplication(this WebApplicationBuilder builder, Serilog.ILogger logger)
     {
+        // this assembly, used in a couple locations below for registering things
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
         // Add services to the container.
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
@@ -22,7 +26,7 @@ public static class Startup
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
         });
 
-        builder.Services.AddMassTransit(builder.Configuration, logger);
+        builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // Render enums as strings rather than ints
         builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -40,10 +44,17 @@ public static class Startup
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         builder.Services.AddSingleton<IDisputeService, DisputeService>();
 
-        builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+        builder.Services.AddMediatR(assembly);
 
+        AddSwagger(builder, assembly, logger);
+    }
+
+    /// <summary>
+    /// Adds swagger if enabled by configuration
+    /// </summary>
+    private static void AddSwagger(WebApplicationBuilder builder, Assembly assembly, Serilog.ILogger logger)
+    {
         var swagger = SwaggerConfiguration.Get(builder.Configuration);
-
         if (swagger.Enabled)
         {
             logger.Information("Swagger is enabled");
@@ -67,17 +78,17 @@ public static class Startup
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
-                Array.Empty<string>()
-            }
-        });
+                {
+                    {
+                        new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
+                        Array.Empty<string>()
+                    }
+                });
 
                 c.EnableAnnotations();
 
                 // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFile = $"{assembly.GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });

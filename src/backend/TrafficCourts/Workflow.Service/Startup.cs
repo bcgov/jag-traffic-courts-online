@@ -6,6 +6,7 @@ using TrafficCourts.Workflow.Service.Features.Mail;
 using TrafficCourts.Messaging;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Workflow.Service.Mappings;
+using System.Reflection;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -13,6 +14,9 @@ public static class Startup
 {
     public static void ConfigureApplication(this WebApplicationBuilder builder, Serilog.ILogger logger)
     {
+        // this assembly, used in a couple locations below for registering things
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
         // Add services to the container.
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
@@ -22,13 +26,7 @@ public static class Startup
 
         builder.Services.AddControllers();
 
-        var swagger = SwaggerConfiguration.Get(builder.Configuration);
-        if (swagger.Enabled)
-        {
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-        }
+        AddSwagger(builder, assembly, logger);
 
         builder.Services.Configure<ArcApiConfiguration>(builder.Configuration.GetRequiredSection("ArcApiConfiguration"));
         builder.Services.Configure<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
@@ -40,15 +38,24 @@ public static class Startup
         builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
         builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 
-        void AddConsumers(IBusRegistrationConfigurator cfg)
+        builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger, config => config.AddConsumers(assembly));
+
+        builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
+    }
+
+    /// <summary>
+    /// Adds swagger if enabled bu configuration
+    /// </summary>
+    private static void AddSwagger(WebApplicationBuilder builder, Assembly assembly, Serilog.ILogger logger)
+    {
+        var swagger = SwaggerConfiguration.Get(builder.Configuration);
+        if (swagger.Enabled)
         {
-            cfg.AddConsumers(typeof(Startup).Assembly); // add all the consumers in this assembly
+            logger.Information("Swagger is enabled");
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
         }
-
-        builder.Services.AddMassTransit(builder.Configuration, logger, AddConsumers);
-
-        // Registering and Initializing AutoMapper
-        builder.Services.AddAutoMapper(typeof(MessageContractToNoticeOfDisputeMappingProfile));
-
     }
 }
