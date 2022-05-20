@@ -200,7 +200,7 @@ public class DisputeController {
 	}
 
 	/**
-	 * GET endpoint that refreshes all codetables cached in redis
+	 * GET endpoint that refreshes all codetables cached in redis.  Called by an external cronjob trigger.
 	 */
 	@GetMapping("/codetable/refresh")
 	@Operation(
@@ -209,6 +209,18 @@ public class DisputeController {
 			)
 	public void codeTableRefresh() {
 		lookupService.refresh();
+	}
+
+	/**
+	 * GET endpoint that unassigns all Disputes that were assigned for more than 1 hour.  Called by an external cronjob trigger.
+	 */
+	@GetMapping("/disputes/unassign")
+	@Operation(
+			summary = "An endpoint hook to trigger the Unassign Dispute job.",
+			description = "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour."
+			)
+	public void unassignDisputes() {
+		disputeService.unassignDisputes();
 	}
 
 }
