@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableJpaAuditing(auditorAwareRef="auditorAware")
+@EnableJpaAuditing
 public class OracleDataApiApplication {
 
 	private static Logger logger = LoggerFactory.getLogger(OracleDataApiApplication.class);

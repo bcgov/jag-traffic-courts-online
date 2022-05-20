@@ -44,9 +44,6 @@ cronjob:
     refresh:
       # If enabled, this refresh will trigger a pull from JUSTIN to populate a cached copy of the lookup data in redis based on the cron schedule.
       enabled: ${CODETABLE_REFRESH_ENABLED:false}
-      
-      # If true, will refresh code tables at startup.
-      atStartup: true
        
       # A cron-like expression (defaulting to once per day at 3am), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week. 
       # 
@@ -67,6 +64,6 @@ cronjob:
   dispute:
     # If enabled, this unassign cronjob will clear the assignedTo and assignedTs fields on all Disputes whose assignedTs is older than 1 hour
     unassign:
-      enabled: ${UNASSIGN_DISPUTES_ENABLED:true}
+      enabled: ${UNASSIGN_DISPUTES_ENABLED:false}
       # A cron-like expression (defaulting to once every 5 minutes), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week.
       cron: ${UNASSIGN_DISPUTES_CRON:0 */5 * * * *}

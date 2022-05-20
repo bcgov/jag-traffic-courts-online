@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI definition",
-    "version": "v0"
+    "title": "Oracle Data Api",
+    "version": "1.0.0"
   },
   "servers": [
     {
@@ -10,6 +10,7 @@
       "description": "Generated server url"
     }
   ],
+  "security": [ { "x-username": [] } ],
   "paths": {
     "/api/v1.0/dispute/{id}": {
       "get": {
@@ -763,6 +764,13 @@
             "nullable": true
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "x-username": {
+        "type": "apiKey",
+        "name": "x-username",
+        "in": "header"
       }
     }
   }

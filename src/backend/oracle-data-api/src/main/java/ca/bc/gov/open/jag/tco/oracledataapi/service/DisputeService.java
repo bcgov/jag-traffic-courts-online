@@ -1,9 +1,11 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,6 +157,36 @@ public class DisputeService {
 		dispute.setStatus(disputeStatus);
 		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
 		return disputeRepository.save(dispute);
+	}
+
+	/**
+	 * Assigns a specific {@link Dispute} to the IDIR username of the Staff with a timestamp
+	 *
+	 * @param id
+	 * @param principal the current user of the system
+	 */
+	public boolean assignDisputeToUser(UUID id, Principal principal) {
+		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
+			logger.error("Attempting to set Dispute to null username - bad method call.");
+			throw new NotAllowedException("Cannot set assigned user to null");
+		}
+
+		// Find the dispute to be assigned to the username
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+
+		if (StringUtils.isBlank(dispute.getAssignedTo()) || dispute.getAssignedTo().equals(principal.getName())) {
+
+			dispute.setAssignedTo(principal.getName());
+			Date now = new Date();
+			dispute.setAssignedTs(now);
+			disputeRepository.save(dispute);
+
+			logger.debug("Dispute with id " + id + " has been assigned to " + principal.getName() + " on " + now);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

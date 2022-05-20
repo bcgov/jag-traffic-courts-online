@@ -1,9 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import static javax.persistence.TemporalType.TIMESTAMP;
-
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
@@ -71,6 +70,7 @@ public class Dispute extends Auditable<String> {
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date issuedDate;
 
     /**
@@ -78,6 +78,7 @@ public class Dispute extends Auditable<String> {
      */
     @Column
     @Schema(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date submittedDate;
 
     /**
@@ -96,6 +97,7 @@ public class Dispute extends Auditable<String> {
      * The disputant's birthdate.
      */
     @Column
+    @Temporal(TemporalType.DATE)
     private Date birthdate;
 
     /**
@@ -164,6 +166,7 @@ public class Dispute extends Auditable<String> {
 
     @Column
     @Schema(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date filingDate;
 
     @JsonManagedReference
@@ -260,8 +263,8 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TIMESTAMP)
-	private java.util.Date assignedTs;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date assignedTs;
 
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
