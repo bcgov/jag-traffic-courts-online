@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AnyForUntypedForms, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
@@ -10,9 +10,8 @@ import { DisputeView, DisputesService } from '../../services/disputes.service';
 import { Subscription } from 'rxjs';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { ViolationTicket, ViolationTicketCount } from 'app/api';
+import { Dispute, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
-import { Observable, pipe, map, startWith } from 'rxjs';
 @Component({
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
@@ -22,31 +21,29 @@ export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeView;
   @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
   public isMobile: boolean;
-  public showOCR: boolean = false;
   public previousButtonIcon = 'keyboard_arrow_left';
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
   public busy: Subscription;
+  public lastUpdatedDispute: Dispute;
   public form: FormGroup;
   public flagsForm: FormGroup;
+  public tempViolationTicketCount: ViolationTicketCount;
   public todayDate: Date = new Date();
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
   public initialDisputeValues: DisputeView;
   public courtLocations: Config<string>[];
   public imageToShow: any;
-  
+
   /**
    * @description
    * Whether to show the address line fields.
    */
-   public showManualButton: boolean;
-   public showAddressFields: boolean;
-   public filteredCount1Statutes: Observable<StatuteView[]>;
-   public filteredCount2Statutes: Observable<StatuteView[]>;
-   public filteredCount3Statutes: Observable<StatuteView[]>;
-   public disableForm:boolean = true;
-   public collapseObj: any = {
+  public filteredCount1Statutes: StatuteView[];
+  public filteredCount2Statutes: StatuteView[];
+  public filteredCount3Statutes: StatuteView[];
+  public collapseObj: any = {
     ticketInformation: true,
     contactInformation: true,
     imageInformation: true
@@ -64,14 +61,12 @@ export class TicketInfoComponent implements OnInit {
   ) {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
-    this.showManualButton = true;
-    this.showAddressFields = true;
     if (this.mockConfigService.provinces) {
       this.provinces = this.mockConfigService.provinces.filter(x => x.countryCode == 'CA');
       this.states = this.mockConfigService.provinces.filter(x => x.countryCode == 'US');
     }
     if (this.mockConfigService.courtLocations) {
-      this.courtLocations = this.mockConfigService.courtLocations.sort((a,b)=> { if (a.name < b.name) return 1;});
+      this.courtLocations = this.mockConfigService.courtLocations.sort((a, b) => { if (a.name < b.name) return 1; });
     }
 
     this.busy = this.lookupsService.getStatutes().subscribe((response: StatuteView[]) => {
@@ -86,14 +81,12 @@ export class TicketInfoComponent implements OnInit {
     });
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
-      homePhoneNumber: [null],
-      emailAddress: [null],
-      violationDate: [null, [Validators.required]],  // api returns issued date, extract date from that
-      violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that
+      homePhoneNumber: [null, Validators.required],
+      emailAddress: [null, [Validators.email, Validators.required]],
       surname: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
       country: ["Canada", [Validators.required]], // hard coded this is not returned from API, assumed always Canada
-      birthdate: [null], // Optional
+      birthdate: [null, [Validators.required]], // Optional
       address: [null, [Validators.required]],
       city: [null, [Validators.required]],
       province: [null, [Validators.required]],
@@ -101,53 +94,67 @@ export class TicketInfoComponent implements OnInit {
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]],
       driversLicenceProvince: [null, [Validators.required]],
       provincialCourtHearingLocation: [null, [Validators.required]],
-      count1Description: [
-        null,
-        [Validators.required],
-      ],
-      count1TicketedAmount: [
-        null,
-        [Validators.required, FormControlValidators.currency],
-      ],
-      count2Description: [
-        null,
-        [Validators.required],
-      ],
-      count2TicketedAmount: [
-        null,
-        [Validators.required, FormControlValidators.currency],
-      ],
-      count3Description: [
-        null,
-        [Validators.required],
-      ],
-      count3TicketedAmount: [
-        null,
-        [Validators.required, FormControlValidators.currency],
-      ],
       _chargeCount: [1],
       _amountOwing: [null],
+      violationTicket: this.formBuilder.group({
+        ticketNumber: [null, Validators.required],
+        provincialCourtHearingLocation: [null, [Validators.required]],
+        surname: [null, Validators.required],
+        givenNames: [null, Validators.required],
+        driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]],
+        driversLicenceProvince: [null, Validators.required],
+        issuedDate: [null, Validators.required],
+        violationTicketCount1: this.formBuilder.group({
+          description: [null, Validators.required],
+          actRegulation: [null],
+          fullSection: [null],
+          section: [null],
+          subsection: [null],
+          paragraph: [null],
+          fullDescription: [null, Validators.required],
+          ticketedAmount: [null, [Validators.required, FormControlValidators.currency]]
+        }),
+        violationTicketCount2: this.formBuilder.group({
+          description: [null, Validators.required],
+          actRegulation: [null],
+          fullSection: [null],
+          section: [null],
+          subsection: [null],
+          paragraph: [null],
+          fullDescription: [null, Validators.required],
+          ticketedAmount: [null, [Validators.required, FormControlValidators.currency]]
+        }),
+        violationTicketCount3: this.formBuilder.group({
+          description: [null, Validators.required],
+          actRegulation: [null],
+          fullSection: [null],
+          section: [null],
+          subsection: [null],
+          paragraph: [null],
+          fullDescription: [null, Validators.required],
+          ticketedAmount: [null, [Validators.required, FormControlValidators.currency]]
+        }),
+        violationDate: [null, [Validators.required]],  // api returns issued date, extract date from that
+        violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that  
+      })
     });
     // retreive fresh copy from db
     this.getDispute();
-
-    this.filteredCount1Statutes = this.form.controls['count1Description'].valueChanges
-      .pipe(
-        startWith(''),
-        map((val:string) => this.filterStatutes(val))
-      );
-     this.filteredCount2Statutes = this.form.controls['count2Description'].valueChanges
-      .pipe(
-        startWith(''),
-        map((val:string) => this.filterStatutes(val))
-      );
-     this.filteredCount3Statutes = this.form.controls['count3Description'].valueChanges
-      .pipe(
-        startWith(''),
-        map((val:string) => this.filterStatutes(val))
-      );
   }
 
+  onFullDescription1Keyup() {
+    this.filteredCount1Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
+  }
+
+  onFullDescription2Keyup() {
+    this.filteredCount2Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
+  }
+
+  onFullDescription3Keyup() {
+    this.filteredCount3Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
+  }
+
+  // return a filtered list of statutes
   public filterStatutes(val: string): StatuteView[] {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
     return this.lookupsService.statutes.filter(option => option.statuteString.indexOf(val) >= 0);
@@ -157,7 +164,22 @@ export class TicketInfoComponent implements OnInit {
     this.backTicketList.emit();
   }
 
-  public onDLProvinceChange(province: string) {
+  // change validators on drivers licence number in violation ticket when changing province / state
+  public onViolationTicketDLProvinceChange(province: string) {
+    if (province == 'British Columbia') {
+      this.form.get('violationTicket').get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
+      this.form.get('violationTicket').get('driversLicenceNumber').updateValueAndValidity();
+      this.form.updateValueAndValidity();
+
+    } else {
+      this.form.get('violationTicket').get('driversLicenceNumber').setValidators(Validators.required);
+      this.form.get('violationTicket').get('driversLicenceNumber').updateValueAndValidity();
+      this.form.updateValueAndValidity();
+    }
+  }
+
+  // change validators on drivers licence number in notice of dispute when changing province / state
+  public onNoticeOfDisputeDLProvinceChange(province: string) {
     if (province == 'British Columbia') {
       this.form.get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
       this.form.get('driversLicenceNumber').updateValueAndValidity();
@@ -169,11 +191,10 @@ export class TicketInfoComponent implements OnInit {
       this.form.updateValueAndValidity();
     }
   }
-
-  onKeyPressNumbers(event) {
+  onKeyPressNumbers(event: any, BCOnly: boolean) {
     var charCode = (event.which) ? event.which : event.keyCode;
     // Only Numbers 0-9
-    if ((charCode < 48 || charCode > 57) && this.form.get('driversLicenceProvince').value == "British Columbia") {
+    if ((charCode < 48 || charCode > 57) && BCOnly) {
       event.preventDefault();
       return false;
     } else {
@@ -181,19 +202,175 @@ export class TicketInfoComponent implements OnInit {
     }
   }
 
-  public onSubmit(): void {
+  public onSubmitViolationTicket(): void {
+
+    // We are only sending the violation Ticket fields so update a local copy of lastUpdatedDispute
+    // with violation Ticket form fields only that were changed
+    let putDispute = this.lastUpdatedDispute;
+
+    putDispute.violationTicket.ticketNumber = this.form.get('violationTicket').get('ticketNumber').value;
+    putDispute.violationTicket.surname = this.form.get('violationTicket').get('surname').value;
+    putDispute.violationTicket.givenNames = this.form.get('violationTicket').get('givenNames').value;
+    putDispute.violationTicket.driversLicenceNumber = this.form.get('violationTicket').get('driversLicenceNumber').value;
+    putDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
+
+    // provincial court hearing is returned by the GET at the level of notice of dispute but is to be saved with
+    // violation Ticket fields not notice of dispute fields
+    putDispute.provincialCourtHearingLocation = this.form.get('violationTicket').get('provincialCourtHearingLocation').value;
+
+    // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
+    putDispute.violationTicket.issuedDate =
+      this.form.get('violationTicket').get('violationDate').value +
+      "T" +
+      this.form.get('violationTicket').get('violationTime').value;
+
+    // Loop through violation Ticket counts and set fields
+    putDispute.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
+      if (violationTicketCount.count == 1) {
+        violationTicketCount = this.constructViolationTicketCount(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
+        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount1').get('ticketedAmount').value;
+      } else if (violationTicketCount.count == 2) {
+        violationTicketCount = this.constructViolationTicketCount(this.form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value);
+        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount2').get('ticketedAmount').value;
+      } else if (violationTicketCount.count == 3) {
+        violationTicketCount = this.constructViolationTicketCount(this.form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value);
+        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount3').get('ticketedAmount').value;
+      }
+    });
+
+    this.putDispute(putDispute);
+  }
+
+  public onSubmitNoticeOfDispute(): void {
+    // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
+    // with notice of dispute form fields only that were changed
+    let putDispute = this.lastUpdatedDispute;
+    console.log(putDispute);
+
+    putDispute.surname = this.form.get('surname').value;
+    putDispute.givenNames = this.form.get('givenNames').value;
+    putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
+    putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
+    putDispute.emailAddress = this.form.get('emailAddress').value;
+    putDispute.birthdate = this.form.get('birthdate').value;
+    putDispute.address = this.form.get('address').value;
+    putDispute.city = this.form.get('city').value;
+    putDispute.province = this.form.get('province').value;
+    putDispute.postalCode = this.form.get('postalCode').value;
+
+    this.putDispute(putDispute);
+  }
+
+  // decompose string into fullsection, section, subsection, paragraph
+  public unLegalParagraph(statuteLegalParagraphing: string): { fullSection: string, section: string, subsection: string, paragraph: string } {
+    let allParts = statuteLegalParagraphing.split("(");
+    let fullSection = "";
+    let section = "";
+    let subsection = "";
+    let paragraph = "";
+
+    // parts are fullSection(section)(subsection)(paragraph) if all are present
+    // extract substrings but dont include final ')' of each part
+    if (allParts.length > 0) fullSection = allParts[0].substring(0, allParts[0].length);
+    if (allParts.length > 1) section = allParts[1].substring(0, allParts[1].length-1);
+    if (allParts.length > 2) subsection = allParts[2].substring(0, allParts[2].length-1);
+    if (allParts.length > 3) paragraph = allParts[3].substring(0, allParts[3].length-1);
+
+    console.log("deconstruct legal paragraphing", statuteLegalParagraphing, fullSection, section, subsection, paragraph);
+
+    return { fullSection: fullSection, section: section, subsection: subsection, paragraph: paragraph };
+  }
+
+  public constructViolationTicketCount(statuteString: string): ViolationTicketCount {
+
+    this.tempViolationTicketCount = {description: "", actRegulation: "", fullSection: "", section: "", subsection: "", paragraph: ""};
+
+    // look in list of statutes
+    let statute = this.lookupsService.statutes.filter(x => x.statuteString == statuteString) as StatuteView[];
+    if (statute && statute.length > 0) {
+      this.tempViolationTicketCount.description = statute[0].description;
+      this.tempViolationTicketCount.actRegulation = statute[0].act; // to do break down legal paragraphing
+      let parts = this.unLegalParagraph(statute[0].section);
+      this.tempViolationTicketCount.fullSection = parts.fullSection;
+      this.tempViolationTicketCount.section = parts.section; 
+      this.tempViolationTicketCount.subsection = parts.subsection;
+      this.tempViolationTicketCount.paragraph = parts.paragraph;
+      console.log("statute found", statuteString, parts, this.tempViolationTicketCount)
+      return this.tempViolationTicketCount;
+    }
+
+    // if not found in list of statutes, make an attempt from passed in string
+    // first portion before space is act or regulation
+    // second portion before next space is legal paragraphing
+    // remaining is desciption
+    const statuteStringParts = statuteString.split(" ");
+
+    // three parts yay
+    if (statuteStringParts.length > 2) {
+      this.tempViolationTicketCount.actRegulation = statuteStringParts[0];
+      let parts = this.unLegalParagraph(statuteStringParts[1]);
+      this.tempViolationTicketCount.fullSection = parts.fullSection;
+      this.tempViolationTicketCount.section = parts.section; 
+      this.tempViolationTicketCount.subsection = parts.subsection;
+      this.tempViolationTicketCount.paragraph = parts.paragraph;
+      this.tempViolationTicketCount.description = statuteString.substring(
+        statuteString.indexOf(statuteStringParts[2])
+      );
+    }
+
+    // two parts hmm....
+    else if (statuteStringParts.length > 1) {
+      this.tempViolationTicketCount.actRegulation = "";
+      this.tempViolationTicketCount.fullSection = statuteStringParts[0];
+      this.tempViolationTicketCount.description = statuteString.substring(statuteString.indexOf(statuteStringParts[1]));
+
+    // yuk shove it in description field
+    } else {
+      this.tempViolationTicketCount.actRegulation = "";
+      this.tempViolationTicketCount.fullSection = "";
+      this.tempViolationTicketCount.description = statuteString;
+    }
+
+    console.log("not found in statutes", statuteString, this.tempViolationTicketCount);
+    return this.tempViolationTicketCount;
+  }
+
+  public enableNoticeOfDisputeSave(): boolean {
+
+    // check for fields invalid in contact information only
+    if (this.form.get('emailAddress').invalid) return false;
+    if (this.form.get('homePhoneNumber').invalid) return false;
+    if (this.form.get('surname').invalid) return false;
+    if (this.form.get('givenNames').invalid) return false;
+    if (this.form.get('country').invalid) return false;
+    if (this.form.get('birthdate').invalid) return false;
+    if (this.form.get('address').invalid) return false;
+    if (this.form.get('city').invalid) return false;
+    if (this.form.get('province').invalid) return false;
+    if (this.form.get('postalCode').invalid) return false;
+    if (this.form.get('driversLicenceNumber').invalid) return false;
+    if (this.form.get('driversLicenceProvince').invalid) return false;
+
+    // check for touched fields
+    if (this.form.get('emailAddress').touched) return true;
+    if (this.form.get('homePhoneNumber').touched) return true;
+    if (this.form.get('surname').touched) return true;
+    if (this.form.get('givenNames').touched) return true;
+    if (this.form.get('country').touched) return true;
+    if (this.form.get('birthdate').touched) return true;
+    if (this.form.get('address').touched) return true;
+    if (this.form.get('city').touched) return true;
+    if (this.form.get('province').touched) return true;
+    if (this.form.get('postalCode').touched) return true;
+    if (this.form.get('driversLicenceNumber').touched) return true;
+    if (this.form.get('driversLicenceProvince').touched) return true;
+
+    // no contact information touched, all valid
+    return false;
   }
 
   public handleCollapse(name: string) {
-    this.collapseObj[name]= !this.collapseObj[name]
-  }
-  
-  public showManualAddress(): void {
-    this.showAddressFields = true;
-  }
-
-  public editForm(): void {
-    this.disableForm = false;
+    this.collapseObj[name] = !this.collapseObj[name]
   }
 
   // act fullsection(section)(subsection)(paragraph)
@@ -209,7 +386,7 @@ export class TicketInfoComponent implements OnInit {
 
   // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
-    if (violationTicket.violationTicketCounts.filter(x=> x.count == countNumber)) return this.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x=> x.count == countNumber)[0]);
+    if (violationTicket.violationTicketCounts.filter(x => x.count == countNumber)) return this.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0]);
     else return "";
   }
 
@@ -217,14 +394,33 @@ export class TicketInfoComponent implements OnInit {
   public createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
-       this.imageToShow = reader.result;
+      this.imageToShow = reader.result;
     }, false);
- 
-    if (image) {
-       reader.readAsDataURL(image);
-    }
-   }
 
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+  }
+
+  // put dispute by id
+  putDispute(dispute: Dispute): void {
+    this.logger.log('TicketInfoComponent::putDispute', dispute);
+
+    this.busy = this.disputesService.putDispute(dispute.id, dispute).subscribe((response: Dispute) => {
+      this.logger.info(
+        'TicketInfoComponent::putDispute response',
+        response
+      );
+
+      this.disputesService.dispute$.next(response);
+
+      // this structure contains last version of what was send to db
+      this.lastUpdatedDispute = response;
+    });
+
+  }
+
+  // get dispute by id
   getDispute(): void {
     this.logger.log('TicketInfoComponent::getDispute');
 
@@ -237,35 +433,53 @@ export class TicketInfoComponent implements OnInit {
     //   this.disputesService.dispute$.next(response);
     // });
 
-    var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NotGuilty\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NotGuilty\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NotGuilty\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Nameincorrect\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"BritishColumbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"Parking in a handicap spot without the required sticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracted driving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceed licensed gross vehicle weight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
+    var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NOT_GUILTY\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NOT_GUILTY\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NOT_GUILTY\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Name incorrect WWWWWWW\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"Parking in a handicap spot without the required sticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracted driving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceed licensed gross vehicle weight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
     this.initialDisputeValues = responseObject;
+    this.lastUpdatedDispute = this.initialDisputeValues;
     this.form.patchValue(responseObject);
 
-    // set violation date
+    // set violation date and time
     let violationDate = new Date(responseObject.issuedDate);
-    let violationDateString = this.datePipe.transform(violationDate,"yyyy-MM-dd");
-    this.form.controls['violationDate'].setValue(violationDateString);
+    this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
+    this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
 
-    // set violation time
-    let violationTimeString = this.datePipe.transform(violationDate,"hhmm");
-    this.form.controls['violationTime'].setValue(violationTimeString);
+    // ticket image
+    this.imageToShow = this.initialDisputeValues.violationTicket.violationTicketImage.image;
 
-    this.imageToShow = this.initialDisputeValues.violationTicket.violationTicketImage;
+    // set disputant detected ocr issues
+    this.flagsForm.get('disputantOcrIssuesDescription').setValue(responseObject.disputantOcrIssuesDescription);
 
-    // set counts 1,2,3
+    // set provincial court hearing location in violation ticket subform
+    this.form.get('violationTicket').get('provincialCourtHearingLocation').setValue(
+      this.form.get('provincialCourtHearingLocation').value
+    );
+
+    // set counts 1,2,3 of violation ticket
     responseObject.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
 
       if (violationTicketCount.count == 1) {
-        this.form.controls['count1Description'].setValue(this.getLegalParagraphing(violationTicketCount));
-        this.form.controls['count1TicketedAmount'].setValue(violationTicketCount.ticketedAmount);
+        this.form.get('violationTicket').get('violationTicketCount1').patchValue(violationTicketCount);
+        this.form
+          .get('violationTicket')
+          .get('violationTicketCount1')
+          .get('fullDescription')
+          .setValue(this.getLegalParagraphing(violationTicketCount));
       }
       else if (violationTicketCount.count == 2) {
-        this.form.controls['count2Description'].setValue(this.getLegalParagraphing(violationTicketCount));
-        this.form.controls['count2TicketedAmount'].setValue(violationTicketCount.ticketedAmount);
+        this.form.get('violationTicket').get('violationTicketCount2').patchValue(violationTicketCount);
+        this.form
+          .get('violationTicket')
+          .get('violationTicketCount2')
+          .get('fullDescription')
+          .setValue(this.getLegalParagraphing(violationTicketCount));
       }
       else if (violationTicketCount.count == 3) {
-        this.form.controls['count3Description'].setValue(this.getLegalParagraphing(violationTicketCount));
-        this.form.controls['count3TicketedAmount'].setValue(violationTicketCount.ticketedAmount);
+        this.form.get('violationTicket').get('violationTicketCount3').patchValue(violationTicketCount);
+        this.form
+          .get('violationTicket')
+          .get('violationTicketCount3')
+          .get('fullDescription')
+          .setValue(this.getLegalParagraphing(violationTicketCount));
       }
     });
   }

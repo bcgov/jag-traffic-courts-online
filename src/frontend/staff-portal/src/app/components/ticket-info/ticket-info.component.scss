@@ -11,6 +11,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: none;
 }
 
+.save-button {
+  background-color: #003366; 
+  color: white; 
+  width: 30% !important; 
+  float: right; 
+  margin-right: 20px;
+}
+
 .ticket-info {
     margin-bottom: 12%;
     .ticket-info-section{

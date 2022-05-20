@@ -19,23 +19,23 @@ export interface IDisputesService {
 export class DisputesService implements IDisputesService {
   private _disputes: BehaviorSubject<Dispute[]>;
   private _dispute: BehaviorSubject<Dispute>;
-  
+
 
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
     private disputeService: DisputeService
-  ) { 
+  ) {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
 
-/**
-   * Get the disputes from RSI.
-   *
-   * @param none
-   */
- public getDisputes(): Observable<Dispute[]> {
+  /**
+     * Get the disputes from RSI.
+     *
+     * @param none
+     */
+  public getDisputes(): Observable<Dispute[]> {
 
     return this.disputeService.apiDisputeDisputesGet()
       .pipe(
@@ -72,37 +72,66 @@ export class DisputesService implements IDisputesService {
    *
    * @param disputeId
    */
- public getDispute(disputeId: string): Observable<Dispute> {
+  public getDispute(disputeId: string): Observable<Dispute> {
 
-  return this.disputeService.apiDisputeDisputeIdGet(disputeId)
-    .pipe(
-      map((response: Dispute) =>
-        response ? response : null
-      ),
-      map((dispute: Dispute) => {
-        return dispute;
-      }),
-      tap((dispute) =>
-        this.logger.info('DisputesService::getDispute', dispute)
-      ),
-      catchError((error: any) => {
-        this.toastService.openErrorToast(this.configService.dispute_error);
-        this.logger.error(
-          'DisputesService::getDispute error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
-}
+    return this.disputeService.apiDisputeDisputeIdGet(disputeId)
+      .pipe(
+        map((response: Dispute) =>
+          response ? response : null
+        ),
+        map((dispute: Dispute) => {
+          return dispute;
+        }),
+        tap((dispute) =>
+          this.logger.info('DisputesService::getDispute', dispute)
+        ),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputesService::getDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
-public get dispute$(): BehaviorSubject<Dispute> {
-  return this._dispute;
-}
+  public get dispute$(): BehaviorSubject<Dispute> {
+    return this._dispute;
+  }
 
-public get dispute(): Dispute {
-  return this._dispute.value;
-}
+  public get dispute(): Dispute {
+    return this._dispute.value;
+  }
+
+  /**
+     * Put the dispute to RSI by Id.
+     *
+     * @param disputeId
+     */
+  public putDispute(disputeId: string, dispute: Dispute): Observable<Dispute> {
+
+    return this.disputeService.apiDisputeDisputeIdPut(disputeId, dispute)
+      .pipe(
+        map((response: Dispute) =>
+          response ? response : null
+        ),
+        map((dispute: Dispute) => {
+          return dispute;
+        }),
+        tap((dispute) =>
+          this.logger.info('DisputesService::putDispute', dispute)
+        ),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputesService::putDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 }
 
 export type MoreDisputeStatus = 'New' | 'Processing' | 'Rejected' | 'Cancelled' | 'Alert' | 'Checked Out';
