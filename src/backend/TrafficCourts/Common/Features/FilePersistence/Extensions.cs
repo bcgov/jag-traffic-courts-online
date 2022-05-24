@@ -2,29 +2,43 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using NodaTime;
+using System.Configuration;
 using TrafficCourts.Common.Configuration;
 
 namespace TrafficCourts.Common.Features.FilePersistence
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Adds the file persistence storage.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        /// <exception cref="ConfigurationErrorsException"></exception>
         public static IServiceCollection AddFilePersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            TicketStorageConfiguration ticketStorageConfiguration = new();
-            configuration.GetSection(TicketStorageConfiguration.Section).Bind(ticketStorageConfiguration);
+            ArgumentNullException.ThrowIfNull(services);
+            ArgumentNullException.ThrowIfNull(configuration);
 
-            if (ticketStorageConfiguration.Type == TicketStorageType.ObjectStore)
+            TicketStorageConfiguration storageConfiguration = new();
+            configuration.GetSection(TicketStorageConfiguration.Section).Bind(storageConfiguration);
+
+            if (storageConfiguration.Type == TicketStorageType.ObjectStore)
             {
                 // These appear to be pre-requisites.
                 services.AddSingleton<IClock>(SystemClock.Instance); 
                 services.AddRecyclableMemoryStreams();
 
-                return AddObjectStorageFilePersistence(services, configuration.GetSection("ObjectStorage"));
+                // note MinioClientConfiguration.Section == ObjectBucketConfiguration.Section
+                return AddObjectStorageFilePersistence(services, configuration.GetSection(MinioClientConfiguration.Section));
             }
-            else
+            else if (storageConfiguration.Type == TicketStorageType.InMemory)
             {
                 return AddInMemoryFilePersistence(services);
             }
+
+            throw new ConfigurationErrorsException($"Invalid TicketStorageType specified {storageConfiguration.Type}");
         }
 
         public static IServiceCollection AddInMemoryFilePersistence(this IServiceCollection services)

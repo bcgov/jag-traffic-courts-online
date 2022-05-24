@@ -9,13 +9,13 @@ using System.Reflection;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
-using TrafficCourts.Citizen.Service.Mappings;
 using TrafficCourts.Citizen.Service.Services.Impl;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Messaging;
 using TicketStorageType = TrafficCourts.Citizen.Service.Configuration.TicketStorageType;
 using FluentValidation.AspNetCore;
+using TrafficCourts.Common.Features.FilePersistence;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -32,6 +32,9 @@ public static class Startup
     {
         ArgumentNullException.ThrowIfNull(builder);
 
+        // this assembly, used in a couple locations below for registering things
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
@@ -45,19 +48,10 @@ public static class Startup
         builder.AddRedis();
 
         // configure application 
-        var configuration = builder.Configuration.Get<CitizenServiceConfiguration>();
-
         builder.Services.UseConfigurationValidation();
         builder.UseTicketSearch(logger);
 
-        if (configuration.TicketStorage == TicketStorageType.InMemory)
-        {
-            builder.AddInMemoryFilePersistence();
-        }
-        else if (configuration.TicketStorage == TicketStorageType.ObjectStore)
-        {
-            builder.AddObjectStorageFilePersistence();
-        }
+        builder.Services.AddFilePersistence(builder.Configuration);
 
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
@@ -68,10 +62,10 @@ public static class Startup
         builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
         // MassTransit
-        builder.Services.AddMassTransit(builder.Configuration, logger);
+        builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // add MediatR handlers in this program
-        builder.Services.AddMediatR(typeof(Startup).Assembly);
+        builder.Services.AddMediatR(assembly);
 
         // use lowercase routes
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
@@ -81,14 +75,13 @@ public static class Startup
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 
         builder.Services.AddRecyclableMemoryStreams();
-
-        // Registering and Initializing AutoMapper
-        builder.Services.AddAutoMapper(typeof(NoticeOfDisputeToMessageContractMappingProfile));
-
-        // Finds and registers all the fluent validators in the assembly
-        builder.Services.AddFluentValidation(fv =>
+        
+        builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
+        
+        builder.Services.AddFluentValidation(configure =>
         {
-            fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            // Finds and registers all the fluent validators in the assembly
+            configure.RegisterValidatorsFromAssembly(assembly);
         });
 
         // Add services to the container.
@@ -96,10 +89,20 @@ public static class Startup
             .AddControllers(options => options.UseDateOnlyTimeOnlyStringConverters())
             .AddJsonOptions(options => options.UseDateOnlyTimeOnlyStringConverters());
 
+        AddSwagger(builder, assembly, logger);
+    }
+
+    /// <summary>
+    /// Adds swagger if enabled bu configuration
+    /// </summary>
+    private static void AddSwagger(WebApplicationBuilder builder, Assembly assembly, Serilog.ILogger logger)
+    {
         var swagger = SwaggerConfiguration.Get(builder.Configuration);
 
         if (swagger.Enabled)
         {
+            logger.Information("Swagger is enabled");
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
@@ -113,7 +116,7 @@ public static class Startup
 
                 options.UseDateOnlyTimeOnlyStringConverters();
 
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFilename = $"{assembly.GetName().Name}.xml";
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
         }

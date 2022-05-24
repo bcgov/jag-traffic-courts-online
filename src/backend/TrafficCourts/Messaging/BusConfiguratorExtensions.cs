@@ -25,15 +25,17 @@ public static class BusConfiguratorExtensions
     /// <param name="configureBusFactory">ptional bus registration configration function</param>
     /// <exception cref="ArgumentNullException"></exception>
     /// <exception cref="ConfigurationErrorsException"></exception>
-    public static void AddMassTransit(this IServiceCollection services, 
+    public static void AddMassTransit(this IServiceCollection services,
+        string serviceName,
         IConfiguration configuration, 
         Serilog.ILogger logger, 
         Action<IBusRegistrationConfigurator>? configureBusRegistration = null,
         Action<IBusFactoryConfigurator>? configureBusFactory = null)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-        if (logger == null) throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(serviceName);
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(logger);
 
         // determine the transport
         var transport = configuration.GetSection($"{MassTransitSection}:Transport").Get<MassTransitTransport>();
@@ -42,7 +44,7 @@ public static class BusConfiguratorExtensions
         if (transport == MassTransitTransport.RabbitMq)
         {
             logger.Information("Using MassTransit Transport: {Transport}", transport);
-            services.AddMassTransit(config => UseRabbitMq(config, services, configuration, configureBusRegistration, configureBusFactory));
+            services.AddMassTransit(config => UseRabbitMq(config, services, serviceName, configuration, configureBusRegistration, configureBusFactory));
         }
         else if (transport == MassTransitTransport.InMemory)
         {
@@ -63,29 +65,22 @@ public static class BusConfiguratorExtensions
 
     private static void UseInMemory(IBusRegistrationConfigurator config, IConfiguration configuration, Action<IBusRegistrationConfigurator>? configureBusRegistration)
     {
-        if (configureBusRegistration is not null)
-        {
-            configureBusRegistration(config); // add consumers
-        }
-
+        configureBusRegistration?.Invoke(config); // add consumers, etc
         config.SetKebabCaseEndpointNameFormatter();
-
         config.UsingInMemory();
     }
 
     private static void UseRabbitMq(
         IBusRegistrationConfigurator config, 
         IServiceCollection services, 
+        string serviceName,
         IConfiguration configuration, 
         Action<IBusRegistrationConfigurator>? configureBusRegistration,
         Action<IBusFactoryConfigurator>? configureBusFactory)
     {
         services.ConfigureValidatableSetting<RabbitMqHostOptions>(configuration.GetSection(RabbitMqHostOptions.Section));
-
-        if (configureBusRegistration is not null)
-        {
-            configureBusRegistration(config); // add consumers
-        }
+        
+        configureBusRegistration?.Invoke(config); // add consumers, etc
 
         config.SetKebabCaseEndpointNameFormatter();
 
@@ -93,6 +88,9 @@ public static class BusConfiguratorExtensions
         {
             var options = context.GetRequiredService<RabbitMqHostOptions>();
             string connectionName = GetConnectionName(options);
+
+            // enable instrumentation using the built-in .NET Meter class, which can be collected by OpenTelemetry
+            configure.UseInstrumentation(serviceName: serviceName);
 
             configure.Host(options.Host, options.Port, options.VirtualHost, connectionName, host =>
             {
@@ -132,10 +130,7 @@ public static class BusConfiguratorExtensions
             });
 
             // should we call the user's configuration at the start or end?
-            if (configureBusFactory is not null)
-            {
-                configureBusFactory(configure);
-            }
+            configureBusFactory?.Invoke(configure);
         });
     }
 
