@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DisputesService, DisputeView, MoreDisputeStatus } from 'app/services/disputes.service';
+import { DisputesService, DisputeView } from 'app/services/disputes.service';
 import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     ticketNumber: undefined,
     surname: undefined,
     givenNames: undefined,
-    moreDisputeStatus: undefined,
     FilingDate: undefined,
     CourtHearing: undefined,
     disputantDetectedOcrIssues: undefined,
@@ -34,7 +33,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'ticketNumber',
     'surname',
     'givenNames',
-    'moreDisputeStatus',
+    'status',
     'FilingDate',
     'CourtHearing',
     'disputantDetectedOcrIssues',
@@ -42,129 +41,129 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'assignedTo',
   ];
   disputes: DisputeView[] = [];
-  remoteDummyData: DisputeView[] = [
-    {
-      DateSubmitted: new Date('2022/02/08'),
-      ticketNumber: 'AJ00214578',
-      surname: 'McGibbons',
-      givenNames: 'Julius Montgommery',
-      moreDisputeStatus: MoreDisputeStatus.New,
-      FilingDate: undefined,
-      CourtHearing: true,
-      disputantDetectedOcrIssues: true,
-      systemDetectedOcrIssues: true,
-      assignedTo: undefined,
-    },
-    {
-      DateSubmitted: new Date('2022/02/08'),
-      ticketNumber: 'EZ02000460',
-      surname: 'Smithe',
-      givenNames: 'Jaxon',
-      moreDisputeStatus: MoreDisputeStatus.New,
-      FilingDate: undefined,
-      CourtHearing: false,
-      disputantDetectedOcrIssues: false,
-      systemDetectedOcrIssues: true,
-      assignedTo: undefined,
-    },
-    {
-      DateSubmitted: new Date('2022/02/08'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Jacklin',
-      givenNames: 'Susanne',
-      moreDisputeStatus: MoreDisputeStatus.New,
-      FilingDate: undefined,
-      CourtHearing: false,
-      disputantDetectedOcrIssues: false,
-      systemDetectedOcrIssues: false,
-      assignedTo: undefined,
-    },
-    {
-      DateSubmitted: new Date('2022/02/08'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Morris',
-      givenNames: 'Mark',
-      moreDisputeStatus: MoreDisputeStatus.New,
-      FilingDate: undefined,
-      CourtHearing: true,
-      disputantDetectedOcrIssues: true,
-      systemDetectedOcrIssues: false,
-      assignedTo: undefined,
-    },
-    {
-      DateSubmitted: new Date('2022/02/08'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Korrin',
-      givenNames: 'Karen',
-      moreDisputeStatus: MoreDisputeStatus.New,
-      FilingDate: undefined,
-      CourtHearing: false,
-      disputantDetectedOcrIssues: false,
-      systemDetectedOcrIssues: false,
-      assignedTo: undefined,
-    },
-    {
-      DateSubmitted: new Date('2022/02/06'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Aster',
-      givenNames: 'Jack',
-      moreDisputeStatus: MoreDisputeStatus.CheckedOut,
-      FilingDate: undefined,
-      CourtHearing: true,
-      disputantDetectedOcrIssues: true,
-      systemDetectedOcrIssues: false,
-      assignedTo: 'Barry Mann',
-    },
-    {
-      DateSubmitted: new Date('2022/02/06'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Smith',
-      givenNames: 'Portia',
-      moreDisputeStatus: MoreDisputeStatus.Processing,
-      FilingDate: new Date('2022/02/07'),
-      CourtHearing: true,
-      disputantDetectedOcrIssues: true,
-      systemDetectedOcrIssues: false,
-      assignedTo: undefined,
-    },
-    {
-      DateSubmitted: new Date('2022/02/06'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Brown',
-      givenNames: 'Will',
-      status: DisputeStatus.Cancelled,
-      moreDisputeStatus: MoreDisputeStatus.Alert,
-      FilingDate: new Date('2022/02/07'),
-      CourtHearing: false,
-      disputantDetectedOcrIssues: false,
-      systemDetectedOcrIssues: false,
-      assignedTo: 'Barry Mann',
-    },
-    {
-      DateSubmitted: new Date('2022/02/05'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Jones',
-      givenNames: 'Sharron',
-      moreDisputeStatus: MoreDisputeStatus.Processing,
-      FilingDate: new Date('2022/02/06'),
-      CourtHearing: true,
-      disputantDetectedOcrIssues: false,
-      systemDetectedOcrIssues: false,
-      assignedTo: null,
-    },
-    {
-      DateSubmitted: new Date('2022/02/04'),
-      ticketNumber: 'AJ00214578',
-      surname: 'Price',
-      givenNames: 'Simone',
-      moreDisputeStatus: MoreDisputeStatus.Processing,
-      FilingDate: new Date('2022/02/06'),
-      CourtHearing: false,
-      disputantDetectedOcrIssues: false,
-      systemDetectedOcrIssues: false,
-      assignedTo: null,
-    },
-  ];
+  // remoteDummyData: DisputeView[] = [
+  //   {
+  //     DateSubmitted: new Date('2022/02/08'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'McGibbons',
+  //     givenNames: 'Julius Montgommery',
+  //     moreDisputeStatus: MoreDisputeStatus.New,
+  //     FilingDate: undefined,
+  //     CourtHearing: true,
+  //     disputantDetectedOcrIssues: true,
+  //     systemDetectedOcrIssues: true,
+  //     jjAssigned: undefined,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/08'),
+  //     ticketNumber: 'EZ02000460',
+  //     surname: 'Smithe',
+  //     givenNames: 'Jaxon',
+  //     moreDisputeStatus: MoreDisputeStatus.New,
+  //     FilingDate: undefined,
+  //     CourtHearing: false,
+  //     disputantDetectedOcrIssues: false,
+  //     systemDetectedOcrIssues: true,
+  //     jjAssigned: undefined,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/08'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Jacklin',
+  //     givenNames: 'Susanne',
+  //     moreDisputeStatus: MoreDisputeStatus.New,
+  //     FilingDate: undefined,
+  //     CourtHearing: false,
+  //     disputantDetectedOcrIssues: false,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: undefined,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/08'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Morris',
+  //     givenNames: 'Mark',
+  //     moreDisputeStatus: MoreDisputeStatus.New,
+  //     FilingDate: undefined,
+  //     CourtHearing: true,
+  //     disputantDetectedOcrIssues: true,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: undefined,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/08'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Korrin',
+  //     givenNames: 'Karen',
+  //     moreDisputeStatus: MoreDisputeStatus.New,
+  //     FilingDate: undefined,
+  //     CourtHearing: false,
+  //     disputantDetectedOcrIssues: false,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: undefined,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/06'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Aster',
+  //     givenNames: 'Jack',
+  //     moreDisputeStatus: MoreDisputeStatus.CheckedOut,
+  //     FilingDate: undefined,
+  //     CourtHearing: true,
+  //     disputantDetectedOcrIssues: true,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: 'Barry Mann',
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/06'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Smith',
+  //     givenNames: 'Portia',
+  //     moreDisputeStatus: MoreDisputeStatus.Processing,
+  //     FilingDate: new Date('2022/02/07'),
+  //     CourtHearing: true,
+  //     disputantDetectedOcrIssues: true,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: undefined,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/06'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Brown',
+  //     givenNames: 'Will',
+  //     status: DisputeStatus.Cancelled,
+  //     moreDisputeStatus: MoreDisputeStatus.Alert,
+  //     FilingDate: new Date('2022/02/07'),
+  //     CourtHearing: false,
+  //     disputantDetectedOcrIssues: false,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: 'Barry Mann',
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/05'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Jones',
+  //     givenNames: 'Sharron',
+  //     moreDisputeStatus: MoreDisputeStatus.Processing,
+  //     FilingDate: new Date('2022/02/06'),
+  //     CourtHearing: true,
+  //     disputantDetectedOcrIssues: false,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: null,
+  //   },
+  //   {
+  //     DateSubmitted: new Date('2022/02/04'),
+  //     ticketNumber: 'AJ00214578',
+  //     surname: 'Price',
+  //     givenNames: 'Simone',
+  //     moreDisputeStatus: MoreDisputeStatus.Processing,
+  //     FilingDate: new Date('2022/02/06'),
+  //     CourtHearing: false,
+  //     disputantDetectedOcrIssues: false,
+  //     systemDetectedOcrIssues: false,
+  //     jjAssigned: null,
+  //   },
+  // ];
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -181,7 +180,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   isNew(d: DisputeView): boolean {
-    return d.moreDisputeStatus == MoreDisputeStatus.New;
+    return d.status == DisputeStatus.New;
   }
 
   getAllDisputes(): void {
@@ -195,9 +194,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     
     // concatenate all dummy data to this.disputes
     this.disputes = [];
-    this.remoteDummyData.forEach(d => {
-      this.disputes = this.disputes.concat(d);
-    });
+    // this.remoteDummyData.forEach(d => {
+    //   this.disputes = this.disputes.concat(d);
+    // });
 
     this.dataSource.data = this.disputes;
 
@@ -217,47 +216,33 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
       this.disputesService.disputes$.next(response);
       response.forEach(d => {
-        this.newDispute.ticketNumber = d.ticketNumber;
-        this.newDispute.surname = d.surname;
-        this.newDispute.givenNames = d.givenNames;
-        this.newDispute.assignedTo = d.assignedTo;
-        this.newDispute.jjAssigned = d.jjAssigned;
-        this.newDispute.id = d.id;
-        this.newDispute.disputantDetectedOcrIssues = d.disputantDetectedOcrIssues;
-        this.newDispute.systemDetectedOcrIssues = this.getSystemDetectedOcrIssues(d.ocrViolationTicket);
+        var newDispute = { 
+          ticketNumber: d.ticketNumber,
+          surname: d.surname,
+          givenNames: d.givenNames,
+          jjAssigned: d.jjAssigned,
+          id: d.id,
+          assignedTo: d.assignedTo,
+          disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
+          systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
+          CourtHearing: false,
+          DateSubmitted: new Date(d.submittedDate),
+          FilingDate: new Date(d.filingDate),
+          additionalProperties: d.additionalProperties,
+          provincialCourtHearingLocation: d.provincialCourtHearingLocation,
+          status: d.status,
+          RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : ''
+        }
 
         // set court hearing to true if its true for any one of the three possible counts
         // otherwise false
-        this.newDispute.CourtHearing = false;
         if (d.disputedCounts) d.disputedCounts.forEach(c => {
           if (c.appearInCourt == true) {
             this.newDispute.CourtHearing = true;
           }
         });
 
-        this.newDispute.DateSubmitted = new Date(d.submittedDate);
-        if(d.filingDate != null) {
-          this.newDispute.FilingDate = new Date(d.filingDate);
-        }
-        this.newDispute.AssignedTs = new Date(d.assignedTs);
-
-        switch (d.status) {
-          case DisputeStatus.Cancelled:
-            this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
-            break;
-          case DisputeStatus.Processing:
-            this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
-            break;
-          case DisputeStatus.Rejected:
-            this.newDispute.moreDisputeStatus = MoreDisputeStatus.Rejected;
-            break;
-          default:
-            this.newDispute.moreDisputeStatus = MoreDisputeStatus.New;
-            break;
-        };
-        this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '');
-        this.newDispute.provincialCourtHearingLocation = d.provincialCourtHearingLocation;
-        this.disputes = this.disputes.concat(this.newDispute);
+        this.disputes = this.disputes.concat(newDispute);
       });
       this.dataSource.data = this.disputes;
 
@@ -342,8 +327,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter((x: DisputeView) => x.moreDisputeStatus == MoreDisputeStatus.New))
-      return this.dataSource.data.filter((x: DisputeView) => x.moreDisputeStatus == MoreDisputeStatus.New).length;
+    if (this.dataSource.data.filter((x: DisputeView) => x.status == DisputeStatus.New))
+      return this.dataSource.data.filter((x: DisputeView) => x.status == DisputeStatus.New).length;
     else return 0;
   }
 

@@ -134,19 +134,9 @@ export class DisputesService implements IDisputesService {
   }
 }
 
-export type MoreDisputeStatus = 'New' | 'Processing' | 'Rejected' | 'Cancelled' | 'Alert' | 'Checked Out';
-export const MoreDisputeStatus = {
-  New: 'New' as MoreDisputeStatus,
-  Processing: 'Processing' as MoreDisputeStatus,
-  Rejected: 'Rejected' as MoreDisputeStatus,
-  Cancelled: 'Cancelled' as MoreDisputeStatus,
-  Alert: 'Alert' as MoreDisputeStatus,
-  CheckedOut: 'Checked Out' as MoreDisputeStatus
-}
 export interface DisputeView extends Dispute {
   DateSubmitted?: Date,
   RedGreenAlert?: string,
-  moreDisputeStatus: MoreDisputeStatus;
   FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   CourtHearing: boolean, // if at least one count requests court hearing
 }

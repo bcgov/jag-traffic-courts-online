@@ -10,7 +10,7 @@ import { DisputeView, DisputesService } from '../../services/disputes.service';
 import { Subscription } from 'rxjs';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { Dispute, ViolationTicket, ViolationTicketCount } from 'app/api';
+import { Dispute, DisputedCountPlea, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
 @Component({
   selector: 'app-ticket-info',
@@ -105,34 +105,34 @@ export class TicketInfoComponent implements OnInit {
         driversLicenceProvince: [null, Validators.required],
         issuedDate: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
-          description: [null, Validators.required],
+          description: [null],
           actRegulation: [null],
           fullSection: [null],
           section: [null],
           subsection: [null],
           paragraph: [null],
-          fullDescription: [null, Validators.required],
-          ticketedAmount: [null, [Validators.required, FormControlValidators.currency]]
+          fullDescription: [null],
+          ticketedAmount: [null, [FormControlValidators.currency]]
         }),
         violationTicketCount2: this.formBuilder.group({
-          description: [null, Validators.required],
+          description: [null],
           actRegulation: [null],
           fullSection: [null],
           section: [null],
           subsection: [null],
           paragraph: [null],
-          fullDescription: [null, Validators.required],
-          ticketedAmount: [null, [Validators.required, FormControlValidators.currency]]
+          fullDescription: [null],
+          ticketedAmount: [null, [FormControlValidators.currency]]
         }),
         violationTicketCount3: this.formBuilder.group({
-          description: [null, Validators.required],
+          description: [null],
           actRegulation: [null],
           fullSection: [null],
           section: [null],
           subsection: [null],
           paragraph: [null],
-          fullDescription: [null, Validators.required],
-          ticketedAmount: [null, [Validators.required, FormControlValidators.currency]]
+          fullDescription: [null],
+          ticketedAmount: [null, [FormControlValidators.currency]]
         }),
         violationDate: [null, [Validators.required]],  // api returns issued date, extract date from that
         violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that  
@@ -249,6 +249,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.surname = this.form.get('surname').value;
     putDispute.givenNames = this.form.get('givenNames').value;
     putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
+    putDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
     putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
     putDispute.emailAddress = this.form.get('emailAddress').value;
     putDispute.birthdate = this.form.get('birthdate').value;
@@ -370,9 +371,9 @@ export class TicketInfoComponent implements OnInit {
 
   // act fullsection(section)(subsection)(paragraph)
   public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
-    let ticketDesc = violationTicketCount.actRegulation + " ";
-    if (violationTicketCount.fullSection && violationTicketCount.fullSection.length > 0) ticketDesc = ticketDesc + violationTicketCount.fullSection;
-    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.section + ")";
+    if (!violationTicketCount || !violationTicketCount.description) return "";
+    let ticketDesc = (violationTicketCount.actRegulation ? violationTicketCount.actRegulation : "") + " ";
+    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + violationTicketCount.section;
     if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subsection + ")";
     if (violationTicketCount.paragraph && violationTicketCount.paragraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.paragraph + ")";
     ticketDesc = ticketDesc + " " + violationTicketCount.description;
@@ -385,21 +386,10 @@ export class TicketInfoComponent implements OnInit {
     else return "";
   }
 
-  // display individual ticket image
-  public createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener("load", () => {
-      this.imageToShow = reader.result;
-    }, false);
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
-
   // put dispute by id
   putDispute(dispute: Dispute): void {
     this.logger.log('TicketInfoComponent::putDispute', dispute);
+    let tempDispute = dispute;
 
     this.busy = this.disputesService.putDispute(dispute.id, dispute).subscribe((response: Dispute) => {
       this.logger.info(
@@ -407,12 +397,78 @@ export class TicketInfoComponent implements OnInit {
         response
       );
 
-      this.disputesService.dispute$.next(response);
-
       // this structure contains last version of what was send to db
       this.lastUpdatedDispute = response;
     });
 
+  }
+
+  setViolationTicketFieldsFromJSON(dispute: Dispute): Dispute {
+    var objOcrViolationTicket = JSON.parse(dispute.ocrViolationTicket);
+
+    if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
+      var fields = objOcrViolationTicket.Fields;
+
+      dispute.violationTicket.ticketNumber = fields.ticket_number.Value;
+      dispute.violationTicket.surname = fields.surname.Value;
+      dispute.violationTicket.givenNames = fields.given_names.Value;
+      dispute.violationTicket.driversLicenceProvince = fields.drivers_licence_province.Value;
+      dispute.violationTicket.driversLicenceNumber = fields.drivers_licence_number.Value;
+      dispute.violationTicket.isMvaOffence = fields.is_mva_offence.Value;
+      dispute.violationTicket.isLcaOffence = fields.is_lca_offence.Value;
+      dispute.violationTicket.isMcaOffence = fields.is_mca_offence.Value;
+      dispute.violationTicket.isFaaOffence = fields.is_faa_offence.Value;
+      dispute.violationTicket.isTcrOffence = fields.is_tcr_offence.Value;
+      dispute.violationTicket.isCtaOffence = fields.is_cta_offence.Value;
+      dispute.violationTicket.isWlaOffence = fields.is_wla_offence.Value;
+      dispute.violationTicket.isOtherOffence = fields.is_other_offence.Value;
+      dispute.violationTicket.organizationLocation = fields.organization_location.Value;
+      dispute.provincialCourtHearingLocation = fields.provincial_court_hearing_location.Value;
+      
+      // set up ticket count 1
+      if (fields["counts.count_1.description"]) {
+        let violationTicketCount = {
+          count: 1,
+          description: fields["counts.count_1.description"].Value,
+          actRegulation: fields["counts.count_1.act_or_regulation"].Value,
+          section: fields["counts.count_1.section"].Value,
+          ticketedAmount: fields["counts.count_1.ticketed_amount"].Value?.substring(1),
+          isAct: fields["counts.count_1.is_act"].Value,
+          isRegulation: fields["counts.count_1.is_regulation"].Value,
+        } as ViolationTicketCount;
+        dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+      }
+
+      // // set up ticket count 2
+      if (fields["counts.count_2.description"]) {
+        let violationTicketCount = {
+          count: 2,
+          description: fields["counts.count_2.description"].Value,
+          actRegulation: fields["counts.count_2.act_or_regulation"].Value,
+          section: fields["counts.count_2.section"].Value,
+          ticketedAmount: fields["counts.count_2.ticketed_amount"].Value?.substring(1),
+          isAct: fields["counts.count_2.is_act"].Value,
+          isRegulation: fields["counts.count_2.is_regulation"].Value,
+        } as ViolationTicketCount;
+        dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+      }
+
+      // // set up ticket count 3
+      if (fields["counts.count_3.description"]) {
+        let violationTicketCount = {
+          count: 3,
+          description: fields["counts.count_3.description"].Value,
+          actRegulation: fields["counts.count_3.act_or_regulation"].Value,
+          section: fields["counts.count_3.section"].Value,
+          ticketedAmount: fields["counts.count_3.ticketed_amount"].Value?.substring(1),
+          isAct: fields["counts.count_3.is_act"].Value,
+          isRegulation: fields["counts.count_3.is_regulation"].Value,
+        } as ViolationTicketCount;
+        dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+      }
+    }
+
+    return dispute;
   }
 
   // get dispute by id
@@ -420,25 +476,25 @@ export class TicketInfoComponent implements OnInit {
     this.logger.log('TicketInfoComponent::getDispute');
 
     this.busy = this.disputesService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
-      console.log(response);
-      this.disputesService.dispute$.next(response);
+      // this.disputesService.dispute$.next(response);
       this.logger.info(
         'TicketInfoComponent::getDispute response',
         response
       );
 
       // var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NOT_GUILTY\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NOT_GUILTY\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NOT_GUILTY\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Name incorrect WWWWWWW\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"Parking in a handicap spot without the required sticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracted driving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceed licensed gross vehicle weight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
-      this.initialDisputeValues = response;
+      this.initialDisputeValues = this.setViolationTicketFieldsFromJSON(response);
       this.lastUpdatedDispute = this.initialDisputeValues;
-      this.form.patchValue(response);
+      this.form.patchValue(this.initialDisputeValues);
 
       // set violation date and time
       let violationDate = new Date(response.issuedDate);
+      this.form.get('violationTicket').get('issuedDate').setValue(response.issuedDate);
       this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
       this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
 
       // ticket image
-      this.imageToShow = this.initialDisputeValues.violationTicket.violationTicketImage.image;
+      this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
 
       // set disputant detected ocr issues
       this.flagsForm.get('disputantOcrIssuesDescription').setValue(response.disputantOcrIssuesDescription);
@@ -449,9 +505,10 @@ export class TicketInfoComponent implements OnInit {
       );
 
       // set counts 1,2,3 of violation ticket
-      response.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
+      var i = 1;
+      this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
 
-        if (violationTicketCount.count == 1) {
+        if (i == 1) {
           this.form.get('violationTicket').get('violationTicketCount1').patchValue(violationTicketCount);
           this.form
             .get('violationTicket')
@@ -459,7 +516,7 @@ export class TicketInfoComponent implements OnInit {
             .get('fullDescription')
             .setValue(this.getLegalParagraphing(violationTicketCount));
         }
-        else if (violationTicketCount.count == 2) {
+        else if (i == 2) {
           this.form.get('violationTicket').get('violationTicketCount2').patchValue(violationTicketCount);
           this.form
             .get('violationTicket')
@@ -467,7 +524,7 @@ export class TicketInfoComponent implements OnInit {
             .get('fullDescription')
             .setValue(this.getLegalParagraphing(violationTicketCount));
         }
-        else if (violationTicketCount.count == 3) {
+        else if (i == 3) {
           this.form.get('violationTicket').get('violationTicketCount3').patchValue(violationTicketCount);
           this.form
             .get('violationTicket')
@@ -475,6 +532,7 @@ export class TicketInfoComponent implements OnInit {
             .get('fullDescription')
             .setValue(this.getLegalParagraphing(violationTicketCount));
         }
+        i++;
       });
     });
   }
