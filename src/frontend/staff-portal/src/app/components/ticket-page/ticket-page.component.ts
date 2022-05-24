@@ -18,6 +18,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   public ticketInfo: any; // FIXME: this should be a specific type, not "any"
   busy: Subscription;
   newDispute: disputeData = {
+    id: undefined,
     DateSubmitted: undefined,
     ticketNumber: undefined,
     surname: undefined,
@@ -25,9 +26,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     moreDisputeStatus: undefined,
     FilingDate: undefined,
     CourtHearing: undefined,
-    citizenDetectedOcrIssues: undefined,
+    disputantDetectedOcrIssues: undefined,
     systemDetectedOcrIssues: undefined,
-    jjAssigned: undefined
+    AssignedTs: undefined
   };
   displayedColumns: string[] = [
     'RedGreenAlert',
@@ -38,9 +39,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'moreDisputeStatus',
     'FilingDate',
     'CourtHearing',
-    'citizenDetectedOcrIssues',
+    'disputantDetectedOcrIssues',
     'systemDetectedOcrIssues',
-    'jjAssigned',
+    'assignedTo',
   ];
   disputes: disputeData[] = [];
   remoteDummyData: disputeData[] = [
@@ -52,9 +53,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: true,
-      citizenDetectedOcrIssues: true,
+      disputantDetectedOcrIssues: true,
       systemDetectedOcrIssues: true,
-      jjAssigned: undefined,
+      assignedTo: undefined,
     },
     {
       DateSubmitted: new Date('2022/02/08'),
@@ -64,9 +65,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: false,
-      citizenDetectedOcrIssues: false,
+      disputantDetectedOcrIssues: false,
       systemDetectedOcrIssues: true,
-      jjAssigned: undefined,
+      assignedTo: undefined,
     },
     {
       DateSubmitted: new Date('2022/02/08'),
@@ -76,9 +77,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: false,
-      citizenDetectedOcrIssues: false,
+      disputantDetectedOcrIssues: false,
       systemDetectedOcrIssues: false,
-      jjAssigned: undefined,
+      assignedTo: undefined,
     },
     {
       DateSubmitted: new Date('2022/02/08'),
@@ -88,9 +89,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: true,
-      citizenDetectedOcrIssues: true,
+      disputantDetectedOcrIssues: true,
       systemDetectedOcrIssues: false,
-      jjAssigned: undefined,
+      assignedTo: undefined,
     },
     {
       DateSubmitted: new Date('2022/02/08'),
@@ -100,9 +101,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.New,
       FilingDate: undefined,
       CourtHearing: false,
-      citizenDetectedOcrIssues: false,
+      disputantDetectedOcrIssues: false,
       systemDetectedOcrIssues: false,
-      jjAssigned: undefined,
+      assignedTo: undefined,
     },
     {
       DateSubmitted: new Date('2022/02/06'),
@@ -112,9 +113,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.CheckedOut,
       FilingDate: undefined,
       CourtHearing: true,
-      citizenDetectedOcrIssues: true,
+      disputantDetectedOcrIssues: true,
       systemDetectedOcrIssues: false,
-      jjAssigned: 'Barry Mann',
+      assignedTo: 'Barry Mann',
     },
     {
       DateSubmitted: new Date('2022/02/06'),
@@ -124,9 +125,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.Processing,
       FilingDate: new Date('2022/02/07'),
       CourtHearing: true,
-      citizenDetectedOcrIssues: true,
+      disputantDetectedOcrIssues: true,
       systemDetectedOcrIssues: false,
-      jjAssigned: undefined,
+      assignedTo: undefined,
     },
     {
       DateSubmitted: new Date('2022/02/06'),
@@ -137,9 +138,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.Alert,
       FilingDate: new Date('2022/02/07'),
       CourtHearing: false,
-      citizenDetectedOcrIssues: false,
+      disputantDetectedOcrIssues: false,
       systemDetectedOcrIssues: false,
-      jjAssigned: 'Barry Mann',
+      assignedTo: 'Barry Mann',
     },
     {
       DateSubmitted: new Date('2022/02/05'),
@@ -149,9 +150,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.Processing,
       FilingDate: new Date('2022/02/06'),
       CourtHearing: true,
-      citizenDetectedOcrIssues: false,
+      disputantDetectedOcrIssues: false,
       systemDetectedOcrIssues: false,
-      jjAssigned: null,
+      assignedTo: null,
     },
     {
       DateSubmitted: new Date('2022/02/04'),
@@ -161,9 +162,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       moreDisputeStatus: MoreDisputeStatus.Processing,
       FilingDate: new Date('2022/02/06'),
       CourtHearing: false,
-      citizenDetectedOcrIssues: false,
+      disputantDetectedOcrIssues: false,
       systemDetectedOcrIssues: false,
-      jjAssigned: null,
+      assignedTo: null,
     },
   ];
 
@@ -176,10 +177,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-    // set red green alert and status
-    this.remoteDummyData.forEach(x => {
-      x.RedGreenAlert = x.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (x.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '');
-    });
 
     // when authentication token available, get data
     this.getAllDisputes();
@@ -222,9 +219,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
       this.disputesService.disputes$.next(response);
       response.forEach(d => {
-        this.newDispute.jjAssigned = d.jjAssigned;
-        this.newDispute.citizenDetectedOcrIssues = d.citizenDetectedOcrIssues;
-        this.newDispute.systemDetectedOcrIssues = this.getSystemDetectedOcrIssues(d.violationTicket.ocrViolationTicket);
+        this.newDispute.id = d.id
+        this.newDispute.ticketNumber = d.ticketNumber;
+        this.newDispute.assignedTo = d.assignedTo;
+        this.newDispute.disputantDetectedOcrIssues = d.disputantDetectedOcrIssues;
+        this.newDispute.surname = d.surname;
+        this.newDispute.givenNames = d.givenNames;
 
         // set court hearing to true if its true for any one of the three possible counts
         // otherwise false
@@ -235,8 +235,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
           }
         });
 
-        this.newDispute.DateSubmitted = new Date(d.citizenSubmittedDate);
-        this.newDispute.FilingDate = new Date(d.filingDate);
+        this.newDispute.DateSubmitted = new Date(d.submittedDate);
+        if(d.filingDate != null) {
+          this.newDispute.FilingDate = new Date(d.filingDate);
+        }
+        this.newDispute.AssignedTs = new Date(d.assignedTs);
+
         switch (d.status) {
           case DisputeStatus.Cancelled:
             this.newDispute.moreDisputeStatus = MoreDisputeStatus.Cancelled;
@@ -252,14 +256,13 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
             break;
         };
         this.newDispute.RedGreenAlert = this.newDispute.moreDisputeStatus == MoreDisputeStatus.New ? 'Green' : (this.newDispute.moreDisputeStatus == MoreDisputeStatus.Alert ? 'Red' : '');
-        this.newDispute.additionalProperties = d.additionalProperties;
         this.newDispute.provincialCourtHearingLocation = d.provincialCourtHearingLocation;
         this.disputes = this.disputes.concat(this.newDispute);
       });
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: disputeData, b: disputeData) => { if (a.citizenSubmittedDate > b.citizenSubmittedDate) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: disputeData, b: disputeData) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = function (record: disputeData, filter) {
@@ -385,6 +388,7 @@ export interface disputeData extends Dispute {
   moreDisputeStatus: MoreDisputeStatus;
   FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   CourtHearing: boolean, // if at least one count requests court hearing
+  AssignedTs?: Date, 
 }
 
 export interface RecognizedField {

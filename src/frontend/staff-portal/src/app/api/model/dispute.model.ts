@@ -16,6 +16,10 @@ import { LegalRepresentation } from './legalRepresentation.model';
 
 
 export interface Dispute { 
+    createdBy?: string | null;
+    createdTs?: string;
+    modifiedBy?: string | null;
+    modifiedTs?: string;
     /**
      * ID
      */
@@ -23,10 +27,13 @@ export interface Dispute {
     status?: DisputeStatus;
     ticketNumber?: string | null;
     provincialCourtHearingLocation?: string | null;
-    issuedDate?: string | null;
-    citizenSubmittedDate?: string | null;
+    issuedDate?: string;
+    submittedDate?: string | null;
     surname?: string | null;
     givenNames?: string | null;
+    birthdate?: string;
+    driversLicenceNumber?: string | null;
+    driversLicenceProvince?: string | null;
     address?: string | null;
     city?: string | null;
     province?: string | null;
@@ -43,9 +50,13 @@ export interface Dispute {
     fineReductionReason?: string | null;
     timeToPayReason?: string | null;
     rejectedReason?: string | null;
-    citizenDetectedOcrIssues?: boolean;
+    disputantDetectedOcrIssues?: boolean;
+    disputantOcrIssuesDescription?: string | null;
     systemDetectedOcrIssues?: boolean;
     jjAssigned?: string | null;
+    ocrViolationTicket?: string | null;
+    assignedTo?: string | null;
+    assignedTs?: string | null;
     violationTicket?: ViolationTicket;
     additionalProperties?: { [key: string]: any; } | null;
 }
