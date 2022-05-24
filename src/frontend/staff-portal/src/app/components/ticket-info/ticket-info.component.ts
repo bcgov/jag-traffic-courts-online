@@ -12,6 +12,7 @@ import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { Dispute, DisputedCountPlea, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
+import { DateRange } from '@angular/material/datepicker';
 @Component({
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
@@ -222,7 +223,9 @@ export class TicketInfoComponent implements OnInit {
     putDispute.violationTicket.issuedDate =
       this.form.get('violationTicket').get('violationDate').value +
       "T" +
-      this.form.get('violationTicket').get('violationTime').value;
+      this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
+      + ":" +
+      this.form.get('violationTicket').get('violationTime').value.substring(2, 4);
 
     // Loop through violation Ticket counts and set fields
     putDispute.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
@@ -389,9 +392,12 @@ export class TicketInfoComponent implements OnInit {
   // put dispute by id
   putDispute(dispute: Dispute): void {
     this.logger.log('TicketInfoComponent::putDispute', dispute);
-    let tempDispute = dispute;
 
-    this.busy = this.disputesService.putDispute(dispute.id, dispute).subscribe((response: Dispute) => {
+    // no need to pass back byte array with image
+    let tempDispute = dispute;
+    tempDispute.violationTicket.violationTicketImage = null;
+
+    this.busy = this.disputesService.putDispute(dispute.id, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -409,62 +415,92 @@ export class TicketInfoComponent implements OnInit {
     if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
       var fields = objOcrViolationTicket.Fields;
 
-      dispute.violationTicket.ticketNumber = fields.ticket_number.Value;
-      dispute.violationTicket.surname = fields.surname.Value;
-      dispute.violationTicket.givenNames = fields.given_names.Value;
-      dispute.violationTicket.driversLicenceProvince = fields.drivers_licence_province.Value;
-      dispute.violationTicket.driversLicenceNumber = fields.drivers_licence_number.Value;
-      dispute.violationTicket.isMvaOffence = fields.is_mva_offence.Value;
-      dispute.violationTicket.isLcaOffence = fields.is_lca_offence.Value;
-      dispute.violationTicket.isMcaOffence = fields.is_mca_offence.Value;
-      dispute.violationTicket.isFaaOffence = fields.is_faa_offence.Value;
-      dispute.violationTicket.isTcrOffence = fields.is_tcr_offence.Value;
-      dispute.violationTicket.isCtaOffence = fields.is_cta_offence.Value;
-      dispute.violationTicket.isWlaOffence = fields.is_wla_offence.Value;
-      dispute.violationTicket.isOtherOffence = fields.is_other_offence.Value;
-      dispute.violationTicket.organizationLocation = fields.organization_location.Value;
-      dispute.provincialCourtHearingLocation = fields.provincial_court_hearing_location.Value;
-      
+      if (!dispute.violationTicket.ticketNumber) dispute.violationTicket.ticketNumber = fields.ticket_number.Value;
+      if (!dispute.violationTicket.surname) dispute.violationTicket.surname = fields.surname.Value;
+      if (!dispute.violationTicket.givenNames) dispute.violationTicket.givenNames = fields.given_names.Value;
+      if (!dispute.violationTicket.driversLicenceProvince) dispute.violationTicket.driversLicenceProvince = fields.drivers_licence_province.Value;
+      if (!dispute.violationTicket.driversLicenceNumber) dispute.violationTicket.driversLicenceNumber = fields.drivers_licence_number.Value;
+      if (!dispute.violationTicket.isMvaOffence) dispute.violationTicket.isMvaOffence = fields.is_mva_offence.Value == "selected" ? true : false;
+      if (!dispute.violationTicket.isLcaOffence) dispute.violationTicket.isLcaOffence = fields.is_lca_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.isMcaOffence) dispute.violationTicket.isMcaOffence = fields.is_mca_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.isFaaOffence) dispute.violationTicket.isFaaOffence = fields.is_faa_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.isTcrOffence) dispute.violationTicket.isTcrOffence = fields.is_tcr_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.isCtaOffence) dispute.violationTicket.isCtaOffence = fields.is_cta_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.isWlaOffence) dispute.violationTicket.isWlaOffence = fields.is_wla_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.isOtherOffence) dispute.violationTicket.isOtherOffence = fields.is_other_offence.Value == "selected" ? true : false;;
+      if (!dispute.violationTicket.organizationLocation) dispute.violationTicket.organizationLocation = fields.organization_location.Value;
+      if (!dispute.provincialCourtHearingLocation) dispute.provincialCourtHearingLocation = fields.provincial_court_hearing_location.Value;
+
       // set up ticket count 1
       if (fields["counts.count_1.description"]) {
-        let violationTicketCount = {
-          count: 1,
-          description: fields["counts.count_1.description"].Value,
-          actRegulation: fields["counts.count_1.act_or_regulation"].Value,
-          section: fields["counts.count_1.section"].Value,
-          ticketedAmount: fields["counts.count_1.ticketed_amount"].Value?.substring(1),
-          isAct: fields["counts.count_1.is_act"].Value,
-          isRegulation: fields["counts.count_1.is_regulation"].Value,
-        } as ViolationTicketCount;
-        dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+        const foundViolationTicketCount1 = dispute.violationTicket.violationTicketCounts.filter(x => x.count == 1);
+        if (foundViolationTicketCount1.length > 0) {
+          if (!foundViolationTicketCount1[0].description) foundViolationTicketCount1[0].description = fields["counts.count_1.description"].Value;
+          if (!foundViolationTicketCount1[0].actRegulation) foundViolationTicketCount1[0].actRegulation = fields["counts.count_1.act_or_regulation"].Value;
+          if (!foundViolationTicketCount1[0].section) foundViolationTicketCount1[0].section = fields["counts.count_1.section"].Value;
+          if (!foundViolationTicketCount1[0].ticketedAmount) foundViolationTicketCount1[0].ticketedAmount = fields["counts.count_1.ticketed_amount"].Value?.substring(1);
+          if (!foundViolationTicketCount1[0].isAct) foundViolationTicketCount1[0].isAct = fields["counts.count_1.is_act"].Value == "selected" ? true : false;
+          if (!foundViolationTicketCount1[0].isRegulation) foundViolationTicketCount1[0].isRegulation = fields["counts.count_1.is_regulation"].Value == "selected" ? true : false;
+        } else {
+          let violationTicketCount = {
+            count: 1,
+            description: fields["counts.count_1.description"].Value,
+            actRegulation: fields["counts.count_1.act_or_regulation"].Value,
+            section: fields["counts.count_1.section"].Value,
+            ticketedAmount: fields["counts.count_1.ticketed_amount"].Value?.substring(1),
+            isAct: fields["counts.count_1.is_act"].Value == "selected" ? true : false,
+            isRegulation: fields["counts.count_1.is_regulation"].Value == "selected" ? true : false
+          } as ViolationTicketCount;
+          dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+        }
       }
 
       // // set up ticket count 2
       if (fields["counts.count_2.description"]) {
-        let violationTicketCount = {
-          count: 2,
-          description: fields["counts.count_2.description"].Value,
-          actRegulation: fields["counts.count_2.act_or_regulation"].Value,
-          section: fields["counts.count_2.section"].Value,
-          ticketedAmount: fields["counts.count_2.ticketed_amount"].Value?.substring(1),
-          isAct: fields["counts.count_2.is_act"].Value,
-          isRegulation: fields["counts.count_2.is_regulation"].Value,
-        } as ViolationTicketCount;
-        dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+        const foundViolationTicketCount2 = dispute.violationTicket.violationTicketCounts.filter(x => x.count == 2);
+        if (foundViolationTicketCount2.length > 0) {
+          if (!foundViolationTicketCount2[0].description) foundViolationTicketCount2[0].description = fields["counts.count_2.description"].Value;
+          if (!foundViolationTicketCount2[0].actRegulation) foundViolationTicketCount2[0].actRegulation = fields["counts.count_2.act_or_regulation"].Value;
+          if (!foundViolationTicketCount2[0].section) foundViolationTicketCount2[0].section = fields["counts.count_2.section"].Value;
+          if (!foundViolationTicketCount2[0].ticketedAmount) foundViolationTicketCount2[0].ticketedAmount = fields["counts.count_2.ticketed_amount"].Value?.substring(1);
+          if (!foundViolationTicketCount2[0].isAct) foundViolationTicketCount2[0].isAct = fields["counts.count_2.is_act"].Value == "selected" ? true : false;
+          if (!foundViolationTicketCount2[0].isRegulation) foundViolationTicketCount2[0].isRegulation = fields["counts.count_2.is_regulation"].Value == "selected" ? true : false;
+        } else {
+          let violationTicketCount = {
+            count: 2,
+            description: fields["counts.count_2.description"].Value,
+            actRegulation: fields["counts.count_2.act_or_regulation"].Value,
+            section: fields["counts.count_2.section"].Value,
+            ticketedAmount: fields["counts.count_2.ticketed_amount"].Value?.substring(1),
+            isAct: fields["counts.count_2.is_act"].Value == "selected" ? true : false,
+            isRegulation: fields["counts.count_2.is_regulation"].Value == "selected" ? true : false
+          } as ViolationTicketCount;
+          dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+        }
       }
 
       // // set up ticket count 3
-      if (fields["counts.count_3.description"]) {
-        let violationTicketCount = {
-          count: 3,
-          description: fields["counts.count_3.description"].Value,
-          actRegulation: fields["counts.count_3.act_or_regulation"].Value,
-          section: fields["counts.count_3.section"].Value,
-          ticketedAmount: fields["counts.count_3.ticketed_amount"].Value?.substring(1),
-          isAct: fields["counts.count_3.is_act"].Value,
-          isRegulation: fields["counts.count_3.is_regulation"].Value,
-        } as ViolationTicketCount;
-        dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+      if (fields["counts.count_1.description"]) {
+        const foundViolationTicketCount3 = dispute.violationTicket.violationTicketCounts.filter(x => x.count == 3);
+        if (foundViolationTicketCount3.length > 0) {
+          if (!foundViolationTicketCount3[0].description) foundViolationTicketCount3[0].description = fields["counts.count_3.description"].Value;
+          if (!foundViolationTicketCount3[0].actRegulation) foundViolationTicketCount3[0].actRegulation = fields["counts.count_3.act_or_regulation"].Value;
+          if (!foundViolationTicketCount3[0].section) foundViolationTicketCount3[0].section = fields["counts.count_3.section"].Value;
+          if (!foundViolationTicketCount3[0].ticketedAmount) foundViolationTicketCount3[0].ticketedAmount = fields["counts.count_3.ticketed_amount"].Value?.substring(1);
+          if (!foundViolationTicketCount3[0].isAct) foundViolationTicketCount3[0].isAct = fields["counts.count_3.is_act"].Value == "selected" ? true : false;
+          if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = fields["counts.count_3.is_regulation"].Value == "selected" ? true : false;
+        } else {
+          let violationTicketCount = {
+            count: 3,
+            description: fields["counts.count_3.description"].Value,
+            actRegulation: fields["counts.count_3.act_or_regulation"].Value,
+            section: fields["counts.count_3.section"].Value,
+            ticketedAmount: fields["counts.count_3.ticketed_amount"].Value?.substring(1),
+            isAct: fields["counts.count_3.is_act"].Value == "selected" ? true : false,
+            isRegulation: fields["counts.count_3.is_regulation"].Value == "selected" ? true : false
+          } as ViolationTicketCount;
+          dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
+        }
       }
     }
 
