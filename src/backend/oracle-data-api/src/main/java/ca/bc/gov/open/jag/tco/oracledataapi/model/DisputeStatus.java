@@ -5,6 +5,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
  */
 public enum DisputeStatus {
 	NEW,
+	VALIDATED,
 	PROCESSING,
 	REJECTED,
 	CANCELLED

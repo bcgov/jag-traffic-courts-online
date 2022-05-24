@@ -152,6 +152,27 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
+	public void testValidateDispute() {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
+
+		// Retrieve it from the controller's endpoint
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
+		assertEquals(disputeId, dispute.getId());
+		assertEquals(DisputeStatus.NEW, dispute.getStatus());
+
+		// Set the status to VALIDATED
+		disputeController.validateDispute(disputeId, principal);
+
+		// Assert status is set, rejected reason is NOT set.
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
+		assertEquals(DisputeStatus.VALIDATED, dispute.getStatus());
+		assertNull(dispute.getRejectedReason());
+	}
+
+	@Test
 	@Transactional
 	public void testUpdateDispute() {
 		// Create a single Dispute
