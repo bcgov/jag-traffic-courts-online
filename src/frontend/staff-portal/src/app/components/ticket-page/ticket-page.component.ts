@@ -107,7 +107,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
           additionalProperties: d.additionalProperties,
           provincialCourtHearingLocation: d.provincialCourtHearingLocation,
           status: d.status,
-          RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : ''
+          RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
+          assignedTo: d.assignedTo,
+          assignedTs: d.assignedTs
         }
 
         // set court hearing to true if its true for any one of the three possible counts
