@@ -2,20 +2,10 @@
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Consumers;
-using TrafficCourts.Workflow.Service.Features.Mail;
-using TrafficCourts.Workflow.Service.Services;
-using TrafficCourts.Workflow.Service.Configuration;
-using MailKit.Net.Smtp;
-using MimeKit;
-using MimeKit.Text;
 using Moq;
 using Xunit;
 

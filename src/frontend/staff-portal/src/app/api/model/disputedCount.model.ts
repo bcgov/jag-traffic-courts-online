@@ -13,6 +13,10 @@ import { DisputedCountPlea } from './disputedCountPlea.model';
 
 
 export interface DisputedCount { 
+    createdBy?: string | null;
+    createdTs?: string;
+    modifiedBy?: string | null;
+    modifiedTs?: string;
     /**
      * ID
      */

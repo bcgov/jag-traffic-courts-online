@@ -43,7 +43,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             }
             else
             {
-                _logger.LogError("Email template of: {_approveEmailTemplateName} not found.", _approveEmailTemplateName);
+                _logger.LogError($"Email template of: {_approveEmailTemplateName} not found.");
             }
         }
     }

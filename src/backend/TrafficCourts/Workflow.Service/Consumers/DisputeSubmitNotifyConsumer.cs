@@ -48,7 +48,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 await context.Publish(emailMessage);
             } else
             {
-                _logger.LogError("Email template of: {_submitEmailTemplateName} not found.", _submitEmailTemplateName);
+                _logger.LogError($"Email template of: {_submitEmailTemplateName} not found.");
             }
         }
     }

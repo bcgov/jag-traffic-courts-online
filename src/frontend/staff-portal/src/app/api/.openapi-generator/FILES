@@ -12,8 +12,10 @@ model/disputeStatus.model.ts
 model/disputedCount.model.ts
 model/disputedCountPlea.model.ts
 model/legalRepresentation.model.ts
+model/mimeType.model.ts
 model/models.ts
 model/problemDetails.model.ts
 model/violationTicket.model.ts
 model/violationTicketCount.model.ts
+model/violationTicketImage.model.ts
 variables.ts

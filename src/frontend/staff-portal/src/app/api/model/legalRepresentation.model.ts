@@ -12,15 +12,19 @@
 
 
 export interface LegalRepresentation { 
+    createdBy?: string | null;
+    createdTs?: string;
+    modifiedBy?: string | null;
+    modifiedTs?: string;
     /**
      * ID
      */
     id?: string;
     lawFirmName?: string | null;
-    lawyerName?: string | null;
-    lawyerSurname?: string | null;
+    lawyerFullName?: string | null;
     lawyerEmail?: string | null;
     lawyerAddress?: string | null;
+    lawyerPhoneNumber?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

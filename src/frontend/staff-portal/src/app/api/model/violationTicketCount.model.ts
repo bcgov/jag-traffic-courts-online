@@ -12,19 +12,22 @@
 
 
 export interface ViolationTicketCount { 
+    createdBy?: string | null;
+    createdTs?: string;
+    modifiedBy?: string | null;
+    modifiedTs?: string;
     /**
      * ID
      */
     id?: string;
     count?: number;
     description?: string | null;
-    actOrRegulation?: string | null;
+    actRegulation?: string | null;
     fullSection?: string | null;
     section?: string | null;
     subsection?: string | null;
     paragraph?: string | null;
-    act?: string | null;
-    ticketedAmount?: number;
+    ticketedAmount?: number | null;
     isAct?: boolean | null;
     isRegulation?: boolean | null;
     additionalProperties?: { [key: string]: any; } | null;

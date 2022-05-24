@@ -1,5 +1,5 @@
 <div class="ticket-status BC-Gov-15px-black-text">
-    <div>Request submitted date: <span>{{dispute.citizenSubmittedDate | date : 'EEEE, MMMM d, y'}}</span></div>
+    <div>Request submitted date: <span>{{dispute.submittedDate | date : 'EEEE, MMMM d, y'}}</span></div>
     <div>Status: <span>{{dispute.status}}</span></div>
-    <div>Assigned to: <span>{{dispute.jjAssigned ? dispute.jjAssigned : "Unassigned"}}</span></div>
+    <div>Assigned to: <span>{{dispute.assignedTo ? dispute.assignedTo : "Unassigned"}}</span></div>
 </div>
