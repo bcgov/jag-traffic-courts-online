@@ -124,6 +124,13 @@ public class DisputeService : IDisputeService
         return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
+    public async Task ValidateDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Dispute status setting to validated");
+
+        await GetOracleDataApi().ValidateDisputeAsync(disputeId, cancellationToken);
+    }
+
     public async Task CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute cancelled");
@@ -150,7 +157,6 @@ public class DisputeService : IDisputeService
 
         SendEmail rejectSendEmail = Mapper.ToRejectSendEmail(dispute);
         await _bus.Publish(rejectSendEmail, cancellationToken);
-
     }
 
     public async Task SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
