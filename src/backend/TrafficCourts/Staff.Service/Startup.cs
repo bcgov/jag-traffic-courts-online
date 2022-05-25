@@ -31,6 +31,8 @@ public static class Startup
         // Redis
         builder.AddRedis();
 
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // Render enums as strings rather than ints

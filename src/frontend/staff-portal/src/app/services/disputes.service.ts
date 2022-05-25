@@ -86,7 +86,8 @@ export class DisputesService implements IDisputesService {
           this.logger.info('DisputesService::getDispute', dispute)
         ),
         catchError((error: any) => {
-          this.toastService.openErrorToast(this.configService.dispute_error);
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
           this.logger.error(
             'DisputesService::getDispute error has occurred: ',
             error
@@ -123,6 +124,8 @@ export class DisputesService implements IDisputesService {
           this.logger.info('DisputesService::putDispute', dispute)
         ),
         catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'DisputesService::putDispute error has occurred: ',
@@ -139,4 +142,5 @@ export interface DisputeView extends Dispute {
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __CourtHearing: boolean, // if at least one count requests court hearing
+  __AssignedTs?: Date,
 }
