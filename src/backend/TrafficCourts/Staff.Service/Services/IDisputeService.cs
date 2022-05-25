@@ -32,6 +32,13 @@ public interface IDisputeService
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task<Dispute> UpdateDisputeAsync(Guid id, Dispute dispute, System.Threading.CancellationToken cancellationToken);
 
+    /// <summary>Updates the status of a particular Dispute record to VALIDATED.</summary>
+    /// <param name="id">Unique identifier of a Dispute record to validate.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task ValidateDisputeAsync(Guid id, CancellationToken cancellationToken);
+
     /// <summary>Updates the status of a particular Dispute record to CANCELLED.</summary>
     /// <param name="id">Unique identifier of a Dispute record to cancel.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

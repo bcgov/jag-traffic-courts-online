@@ -117,7 +117,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW and the rejected reason must be <= 256 characters. Update failed."),
-		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.")
+		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/reject")
 	public ResponseEntity<Dispute> rejectDispute(@PathVariable UUID id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String rejectedReason,
@@ -126,6 +126,30 @@ public class DisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.REJECTED, rejectedReason), HttpStatus.OK);
+	}
+
+	/**
+	 * PUT endpoint that updates the dispute detail, setting the status to VALIDATED.
+	 *
+	 * @param dispute to be updated
+	 * @param id of the saved {@link Dispute} to update
+	 * @param principal the logged-in user
+	 * @return {@link Dispute}
+	 */
+	@Operation(summary = "Updates the status of a particular Dispute record to VALIDATED.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed."),
+		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
+	})
+	@PutMapping("/dispute/{id}/validate")
+	public ResponseEntity<Dispute> validateDispute(@PathVariable UUID id, Principal principal) {
+		if (!disputeService.assignDisputeToUser(id, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.VALIDATED), HttpStatus.OK);
 	}
 
 	/**
@@ -142,7 +166,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed."),
-		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.")
+		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
 	public ResponseEntity<Dispute> cancelDispute(@PathVariable UUID id, Principal principal) {
@@ -166,7 +190,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed."),
-		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.")
+		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/submit")
 	public ResponseEntity<Dispute> submitDispute(@PathVariable UUID id, Principal principal) {
@@ -189,7 +213,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok"),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
-		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.")
+		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}")
 	public ResponseEntity<Dispute> updateDispute(@PathVariable UUID id, @RequestBody Dispute dispute, Principal principal) {

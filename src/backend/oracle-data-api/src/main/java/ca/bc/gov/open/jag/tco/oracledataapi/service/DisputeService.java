@@ -129,18 +129,23 @@ public class DisputeService {
 		// - current status must be NEW,PROCESSING,REJECTED to change to CANCELLED
 		switch (disputeStatus) {
 		case PROCESSING:
-			if (!List.of(DisputeStatus.NEW, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.REJECTED, DisputeStatus.VALIDATED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.PROCESSING);
 			}
 			break;
 		case CANCELLED:
-			if (!List.of(DisputeStatus.NEW, DisputeStatus.PROCESSING, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.PROCESSING, DisputeStatus.REJECTED, DisputeStatus.VALIDATED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.CANCELLED);
 			}
 			break;
 		case REJECTED:
 			if (!List.of(DisputeStatus.NEW).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.REJECTED);
+			}
+			break;
+		case VALIDATED:
+			if (!List.of(DisputeStatus.NEW).contains(dispute.getStatus())) {
+				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.VALIDATED);
 			}
 			break;
 		case NEW:
