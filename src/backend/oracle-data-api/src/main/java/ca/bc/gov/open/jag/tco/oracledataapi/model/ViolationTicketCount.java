@@ -87,6 +87,13 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Column
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String paragraph;
+	
+	/**
+	 * The subparagraph part of the full section. For example, "(ii)"
+	 */
+	@Column
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+    private String subparagraph;
 
 	/**
 	 * The ticketed amount.

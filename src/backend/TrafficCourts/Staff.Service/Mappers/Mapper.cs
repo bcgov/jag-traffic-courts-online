@@ -21,7 +21,10 @@ public class Mapper
             Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
             {
                 Count = violationTicketCount.Count,
-                Section = violationTicketCount.FullSection,
+                FullSection = violationTicketCount.FullSection,
+                Section = violationTicketCount.Section,
+                Subsection = violationTicketCount.Subsection,
+                Paragraph = violationTicketCount.Paragraph,
                 Act = violationTicketCount.ActRegulation,
                 Amount = violationTicketCount.TicketedAmount
             };
