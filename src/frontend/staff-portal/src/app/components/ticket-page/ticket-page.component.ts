@@ -98,7 +98,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
           provincialCourtHearingLocation: d.provincialCourtHearingLocation,
           status: d.status,
           __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-          assignedTo: d.assignedTo,
           assignedTs: d.assignedTs
         }
 
