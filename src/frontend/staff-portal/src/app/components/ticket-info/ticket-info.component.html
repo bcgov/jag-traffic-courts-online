@@ -520,8 +520,21 @@
             </section>
           </form>
         </div>
-      </mat-expansion-panel>
-    </div>
+        <div *ngIf="!disableForm" class="footer" style="align-items: center;">
+          <hr />
+          <button class="dangerButton" mat-flat-button
+            style=" background-color: white; border: 1px solid #003366;margin-right: 2%;" type="button" color="red"
+            class="large" (click)="onBack()">
+            < Cancel and go back </button>
+              <button class="" mat-flat-button style=" background-color: green;color: white;" type="button" color="red"
+                class="large">
+                Confirm and validation ticket fields
+              </button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <app-ticket-request></app-ticket-request>
+
   </div>
 </div>
 
