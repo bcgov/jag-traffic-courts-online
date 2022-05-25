@@ -87,7 +87,6 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status409Conflict)
         {
-            _logger.LogError(e, "Error");
             ProblemDetails pd = new ProblemDetails
             {
                 Title = "Ticket Dispute Already Assigned",
