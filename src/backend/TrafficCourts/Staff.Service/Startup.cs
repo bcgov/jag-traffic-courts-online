@@ -46,7 +46,8 @@ public static class Startup
 
         // Add DisputeService
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
-        builder.Services.AddSingleton<IDisputeService, DisputeService>();
+        builder.Services.AddSingleton<IDisputeService, DisputeService>();
+
         builder.Services.AddSingleton<ILookupService, RedisLookupService>();
 
         builder.Services.AddMediatR(assembly);
