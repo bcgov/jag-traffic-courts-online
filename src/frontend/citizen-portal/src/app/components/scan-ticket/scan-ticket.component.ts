@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 export class ScanTicketComponent implements OnInit {
   public busy: Subscription | Promise<any>;
   public ticketImageSrc: string;
+  public ticketImageFile: string;
   public ticketFilename: string;
   public form: FormGroup;
   private ticket: ViolationTicket;
@@ -39,8 +40,10 @@ export class ScanTicketComponent implements OnInit {
       this.violationTicketService.goToFind();
       return;
     }
+   
     this.ticketImageSrc = inputTicketData.ticketImage;
     this.ticketFilename = inputTicketData.filename;
+    this.ticketImageFile = inputTicketData.ticketFile.type
     this.form = this.formBuilder.group(this.ticket); // can add control
     this.form.disable();
     this.form.controls.disputant_detected_ocr_issues.enable();

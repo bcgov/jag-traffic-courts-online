@@ -47,6 +47,7 @@ import { ContactInfoComponent } from './components/contact-info/contact-info.com
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
+import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
 import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -72,7 +73,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     UnauthorizedComponent,
     TicketInfoComponent,
     ContactInfoComponent,
-    TicketStatusComponent
+    TicketStatusComponent,
+    TicketRequestComponent
   ],
   imports: [
     CommonModule,
