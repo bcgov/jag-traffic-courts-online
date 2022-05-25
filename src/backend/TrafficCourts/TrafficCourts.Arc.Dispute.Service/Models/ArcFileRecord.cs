@@ -5,14 +5,12 @@
         public int LockoutFlag { get; set; }
         public DateTime TransactionDate { get; set; }
         public DateTime TransactionTime { get; set; }
-        public int TransactionLocation { get; set; }
-        public string TransactionType { get; set; } = String.Empty;
+        public int TransactionLocation { get; } = 20254;
         public DateTime EffectiveDate { get; set; }
-        public string Owner { get; set; } = String.Empty;
+        public string Owner { get; } = "00001";
         public string FileNumber { get; set; } = String.Empty;
         public string CountNumber { get; set; } = String.Empty;
-        public string ReceivableType { get; set; } = String.Empty;
-        public int TransactionNumber { get; set; }
+        public string ReceivableType { get; } = "M";
         public string MvbClientNumber { get; set; } = String.Empty;
         public string UpdateFlag { get; set; } = String.Empty;
         public string Filler { get; set; } = String.Empty;
@@ -21,6 +19,8 @@
 
     public class AdnotatedTicket : ArcFileRecord
     {
+        public string TransactionType { get; } = "EV";
+        public int TransactionNumber { get; } = 100;
         public string Name { get; set; } = String.Empty;
         public string Section { get; set; } = String.Empty;
         public string Subsection { get; set; } = String.Empty;
@@ -35,6 +35,8 @@
 
     public class DisputedTicket : ArcFileRecord
     {
+        public string TransactionType { get; } = "ED";
+        public int TransactionNumber { get; } = 200;
         public DateTime ServiceDate { get; set; }
         public string Name { get; set; } = String.Empty;
         public string DisputeType { get; set; } = String.Empty;

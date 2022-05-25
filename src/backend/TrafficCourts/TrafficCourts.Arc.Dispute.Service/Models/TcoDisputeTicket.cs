@@ -38,11 +38,10 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         [JsonRequired]
         public int Count { get; set; } = 0;
         [JsonRequired]
-        public string Section { get; set; } = String.Empty;
-        [JsonRequired]
-        public string Subsection { get; set; } = String.Empty;
-        [JsonRequired]
-        public string Paragraph { get; set; } = String.Empty;
+        public string FullSection { get; set; } = String.Empty;
+        public string? Section { get; set; }
+        public string? Subsection { get; set; }
+        public string? Paragraph { get; set; }
         [JsonRequired]
         public string Act { get; set; } = String.Empty;
         [JsonRequired]
