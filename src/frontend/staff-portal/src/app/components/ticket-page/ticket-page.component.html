@@ -130,7 +130,7 @@
                       Assigned
                     </th>
                     <td mat-cell *matCellDef="let element">  
-                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.assignedTo ? element.assignedTo : "Unassigned" }}</span>
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" title="{{element.__AssignedTs}}">{{ element.assignedTo ? element.assignedTo : "Unassigned" }}</span>
                     </td>
                   </ng-container>
           

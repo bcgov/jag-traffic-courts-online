@@ -93,7 +93,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
           systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
           __CourtHearing: false,
           __DateSubmitted: new Date(d.submittedDate),
-          __FilingDate: new Date(d.filingDate),
+          __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
+          __AssignedTs: d.assignedTs != null ? new Date(d.assignedTs) : null,
           additionalProperties: d.additionalProperties,
           provincialCourtHearingLocation: d.provincialCourtHearingLocation,
           status: d.status,
@@ -218,6 +219,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     }
     this.showTicket = !this.showTicket;
   }
+
   backTicketpage() {
     this.showTicket = !this.showTicket;
   }

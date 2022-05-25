@@ -60,11 +60,13 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
@@ -82,6 +84,20 @@ public class DisputeController : TCOControllerBase<DisputeController>
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status409Conflict)
+        {
+            _logger.LogError(e, "Error");
+            ProblemDetails pd = new ProblemDetails
+            {
+                Title = "Ticket Dispute Already Assigned",
+                Detail = "The selected ticket dispute record is already assigned",
+                Status = e.StatusCode,
+                Instance = HttpContext?.Request?.Path,
+            };
+            pd.Extensions.Add("errors", e.Message);
+
+            return new ObjectResult(pd);
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
         {
