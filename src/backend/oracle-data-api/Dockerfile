@@ -1,7 +1,7 @@
 #############################################################################################
 ###              Stage where Docker is building spring boot app using maven               ###
 #############################################################################################
-FROM maven:3.8.3-jdk-11 as build
+FROM docker.io/maven:3.8.3-jdk-11 as build
 
 ARG SKIP_TESTS=true
 
