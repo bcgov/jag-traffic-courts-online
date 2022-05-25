@@ -66,59 +66,9 @@ export class ContactInfoComponent implements OnInit {
     });
     this.getDispute();
   }
-
-  public enableNoticeOfDisputeSave(): boolean {
-
-    // check for fields invalid in contact information only
-    if (this.form.get('emailAddress').invalid) return false;
-    if (this.form.get('homePhoneNumber').invalid) return false;
-    if (this.form.get('surname').invalid) return false;
-    if (this.form.get('givenNames').invalid) return false;
-    if (this.form.get('country').invalid) return false;
-    if (this.form.get('birthdate').invalid) return false;
-    if (this.form.get('address').invalid) return false;
-    if (this.form.get('city').invalid) return false;
-    if (this.form.get('province').invalid) return false;
-    if (this.form.get('postalCode').invalid) return false;
-    if (this.form.get('driversLicenceNumber').invalid) return false;
-    if (this.form.get('driversLicenceProvince').invalid) return false;
-
-    // check for touched fields
-    if (this.form.get('emailAddress').touched) return true;
-    if (this.form.get('homePhoneNumber').touched) return true;
-    if (this.form.get('surname').touched) return true;
-    if (this.form.get('givenNames').touched) return true;
-    if (this.form.get('country').touched) return true;
-    if (this.form.get('birthdate').touched) return true;
-    if (this.form.get('address').touched) return true;
-    if (this.form.get('city').touched) return true;
-    if (this.form.get('province').touched) return true;
-    if (this.form.get('postalCode').touched) return true;
-    if (this.form.get('driversLicenceNumber').touched) return true;
-    if (this.form.get('driversLicenceProvince').touched) return true;
-
-    // no contact information touched, all valid
-    return false;
-  }
-
+  
   public onSubmit(): void {
-    // We are only sending the notice of dispute fields so update a local copy of lastUpdatedDispute
-    // with notice of dispute form fields only that were changed
-    let putDispute = this.lastUpdatedDispute;
-
-    putDispute.surname = this.form.get('surname').value;
-    putDispute.givenNames = this.form.get('givenNames').value;
-    putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
-    putDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
-    putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
-    putDispute.emailAddress = this.form.get('emailAddress').value;
-    putDispute.birthdate = this.form.get('birthdate').value;
-    putDispute.address = this.form.get('address').value;
-    putDispute.city = this.form.get('city').value;
-    putDispute.province = this.form.get('province').value;
-    putDispute.postalCode = this.form.get('postalCode').value;
-
-    this.putDispute(putDispute);
+    this.putDispute({...this.lastUpdatedDispute, ...this.form.value});
   }
 
 
@@ -135,16 +85,12 @@ export class ContactInfoComponent implements OnInit {
 
   // change validators on drivers licence number in notice of dispute when changing province / state
   public onNoticeOfDisputeDLProvinceChange(province: string) {
-    if (province == 'British Columbia') {
+    if (province == 'British Columbia') 
       this.form.get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
-      this.form.get('driversLicenceNumber').updateValueAndValidity();
-      this.form.updateValueAndValidity();
-
-    } else {
+    else
       this.form.get('driversLicenceNumber').setValidators(Validators.required);
-      this.form.get('driversLicenceNumber').updateValueAndValidity();
-      this.form.updateValueAndValidity();
-    }
+    this.form.get('driversLicenceNumber').updateValueAndValidity();
+    this.form.updateValueAndValidity
   }
 
   // put dispute by id

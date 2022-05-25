@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Dispute, DisputeStatus } from 'app/api';
+import { Component, Input  } from '@angular/core';
 import { DisputeView } from '../../services/disputes.service';
 
 @Component({
@@ -7,11 +6,9 @@ import { DisputeView } from '../../services/disputes.service';
   templateUrl: './ticket-status.component.html',
   styleUrls: ['./ticket-status.component.scss']
 })
-export class TicketStatusComponent implements OnInit {
+export class TicketStatusComponent {
   @Input() public dispute: DisputeView;
   
   constructor() { }
-
-  ngOnInit(): void { }
 
 }

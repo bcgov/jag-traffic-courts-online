@@ -43,8 +43,8 @@ export class LookupsService implements ILookupsService {
           response ? response : null
         ),
         map((statutes: StatuteView[]) => {
-          statutes.forEach(resp => {resp.statuteString = this.getStatuteString(resp)});
-          statutes.sort((a,b) => {if (a.statuteString < b.statuteString) return -1; })
+          statutes.forEach(resp => {resp.__statuteString = this.get__statuteString(resp)});
+          statutes.sort((a,b) => {if (a.__statuteString < b.__statuteString) return -1; })
           return statutes;
         }),
         tap((statutes) =>
@@ -69,11 +69,11 @@ export class LookupsService implements ILookupsService {
     return this._statutes.value;
   }
 
-  public getStatuteString(statute: Statute): string {
+  public get__statuteString(statute: Statute): string {
     return statute.act + " " + statute.section + " " + statute.description;
   }
 }
 
 export interface StatuteView extends Statute {
-  statuteString?: string;
+  __statuteString?: string;
 }

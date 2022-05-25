@@ -135,8 +135,8 @@ export class DisputesService implements IDisputesService {
 }
 
 export interface DisputeView extends Dispute {
-  DateSubmitted?: Date,
-  RedGreenAlert?: string,
-  FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
-  CourtHearing: boolean, // if at least one count requests court hearing
+  __DateSubmitted?: Date,
+  __RedGreenAlert?: string,
+  __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
+  __CourtHearing: boolean, // if at least one count requests court hearing
 }

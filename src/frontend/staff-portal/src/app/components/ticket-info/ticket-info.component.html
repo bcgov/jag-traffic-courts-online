@@ -177,8 +177,8 @@
                           <mat-autocomplete #auto="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
-                            <mat-option *ngFor="let statute of filteredCount1Statutes" [value]="statute.statuteString">
-                              {{ statute.statuteString }}</mat-option>
+                            <mat-option *ngFor="let statute of filteredCount1Statutes" [value]="statute.__statuteString">
+                              {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
@@ -209,8 +209,8 @@
                           <mat-autocomplete #auto2="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
-                            <mat-option *ngFor="let statute of filteredCount2Statutes" [value]="statute.statuteString">
-                              {{ statute.statuteString }}</mat-option>
+                            <mat-option *ngFor="let statute of filteredCount2Statutes" [value]="statute.__statuteString">
+                              {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
@@ -241,8 +241,8 @@
                           <mat-autocomplete #auto3="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
-                            <mat-option *ngFor="let statute of filteredCount3Statutes" [value]="statute.statuteString">
-                              {{ statute.statuteString }}</mat-option>
+                            <mat-option *ngFor="let statute of filteredCount3Statutes" [value]="statute.__statuteString">
+                              {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>

@@ -196,7 +196,7 @@
             </div>
             <div style="float: right; width: 100%;">
               <button class="save-button btn btn-primary large" mat-flat-button type="submit" color="red"
-                [disabled]="!enableNoticeOfDisputeSave()">
+                [disabled]="!form.touched || form.invalid">
                 Save
               </button>
             </div>

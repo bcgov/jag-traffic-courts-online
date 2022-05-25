@@ -16,25 +16,15 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   public decidePopup = '';
   public disputeInfo: DisputeView;
   busy: Subscription;
-  newDispute: DisputeView = {
-    DateSubmitted: undefined,
-    ticketNumber: undefined,
-    surname: undefined,
-    givenNames: undefined,
-    FilingDate: undefined,
-    CourtHearing: undefined,
-    disputantDetectedOcrIssues: undefined,
-    systemDetectedOcrIssues: undefined
-  };
   displayedColumns: string[] = [
-    'RedGreenAlert',
-    'DateSubmitted',
+    '__RedGreenAlert',
+    '__DateSubmitted',
     'ticketNumber',
     'surname',
     'givenNames',
     'status',
-    'FilingDate',
-    'CourtHearing',
+    '__FilingDate',
+    '__CourtHearing',
     'disputantDetectedOcrIssues',
     'systemDetectedOcrIssues',
     'assignedTo',
@@ -77,7 +67,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.disputes;
 
     // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a: DisputeView, b: DisputeView) => { if (a.DateSubmitted > b.DateSubmitted) { return -1; } else { return 1 } });
+    this.dataSource.data = this.dataSource.data.sort((a: DisputeView, b: DisputeView) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
     
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
     this.dataSource.filterPredicate = function (record: DisputeView, filter) {
@@ -101,13 +91,13 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
           assignedTo: d.assignedTo,
           disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
           systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
-          CourtHearing: false,
-          DateSubmitted: new Date(d.submittedDate),
-          FilingDate: new Date(d.filingDate),
+          __CourtHearing: false,
+          __DateSubmitted: new Date(d.submittedDate),
+          __FilingDate: new Date(d.filingDate),
           additionalProperties: d.additionalProperties,
           provincialCourtHearingLocation: d.provincialCourtHearingLocation,
           status: d.status,
-          RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
+          __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
           assignedTo: d.assignedTo,
           assignedTs: d.assignedTs
         }
@@ -116,7 +106,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
         // otherwise false
         if (d.disputedCounts) d.disputedCounts.forEach(c => {
           if (c.appearInCourt == true) {
-            this.newDispute.CourtHearing = true;
+            newDispute.__CourtHearing = true;
           }
         });
 
@@ -143,8 +133,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   getSystemDetectedOcrIssues(ocrViolationTicket?: string): boolean {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
 
-    if (objOcrViolationTicket && objOcrViolationTicket.fields) {
-      var fields = objOcrViolationTicket.fields;
+    let fields = objOcrViolationTicket?.fields;
+    if (fields) {
 
       if (this.getOcrViolationErrors(fields.violationTicketTitle) > 0) { return true; }
       if (this.getOcrViolationErrors(fields.ticket_number) > 0) { return true; }
