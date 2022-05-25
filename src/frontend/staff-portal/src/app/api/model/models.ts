@@ -5,6 +5,7 @@ export * from './disputedCountPlea.model';
 export * from './legalRepresentation.model';
 export * from './mimeType.model';
 export * from './problemDetails.model';
+export * from './statute.model';
 export * from './violationTicket.model';
 export * from './violationTicketCount.model';
 export * from './violationTicketImage.model';

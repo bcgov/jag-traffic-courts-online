@@ -25,7 +25,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -41,11 +41,15 @@ import { TicketPageComponent } from '@components/ticket-page/ticket-page.compone
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
 import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
+import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -73,12 +77,15 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   imports: [
     CommonModule,
     BrowserModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     AppRoutingModule,
     CoreModule,
     SharedModule,
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
+    MatAutocompleteModule,
     AuthConfigModule,
     MatSortModule,
     MatIconModule,
@@ -101,6 +108,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   exports: [NgBusyModule, TranslateModule],
   providers: [
     CurrencyPipe,
+    DatePipe,
+    MockConfigService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
     // AppConfigService,
     // {

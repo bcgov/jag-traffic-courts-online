@@ -27,11 +27,11 @@ export interface Dispute {
     status?: DisputeStatus;
     ticketNumber?: string | null;
     provincialCourtHearingLocation?: string | null;
-    issuedDate?: string;
+    issuedDate?: string | null;
     submittedDate?: string | null;
     surname?: string | null;
     givenNames?: string | null;
-    birthdate?: string;
+    birthdate?: string | null;
     driversLicenceNumber?: string | null;
     driversLicenceProvince?: string | null;
     address?: string | null;

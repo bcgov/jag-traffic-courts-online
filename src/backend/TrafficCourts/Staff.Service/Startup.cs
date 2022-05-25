@@ -26,6 +26,11 @@ public static class Startup
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
         });
 
+
+
+        // Redis
+        builder.AddRedis();
+
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
         // Render enums as strings rather than ints
@@ -43,6 +48,8 @@ public static class Startup
         // Add DisputeService
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         builder.Services.AddSingleton<IDisputeService, DisputeService>();
+
+        builder.Services.AddSingleton<ILookupService, RedisLookupService>();
 
         builder.Services.AddMediatR(assembly);
 

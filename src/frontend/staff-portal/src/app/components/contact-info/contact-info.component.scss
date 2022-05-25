@@ -1,3 +1,5 @@
+@import "palette.scss";
+
 .contact-info {
   margin-bottom: 12%;
   .contact-info {
@@ -11,6 +13,15 @@
     }
     // :host
   }
+
+  .save-button {
+    background-color: #003366; 
+    color: white; 
+    width: 30% !important; 
+    float: right; 
+    margin-right: 20px;
+  }
+  
   mat-expansion-panel {
     box-shadow: none !important;
     padding-bottom: 1em;

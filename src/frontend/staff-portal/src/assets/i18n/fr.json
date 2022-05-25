@@ -70,8 +70,8 @@
       "postal_code": "Code Postal",
       "home_phone_number": "Numéro de Téléphone Résidentiel",
       "work_phone_number": "Numéro de Téléphone Professionnel",
-      "driver_license_number": "Numéro de Permis de Conduire",
-      "driver_license_province": "Province ou État du Permis de Conduire",
+      "driver_licence_number": "Numéro de Permis de Conduire",
+      "driver_licence_province": "Province ou État du Permis de Conduire",
       "email_address": "Adresse E-Mail",
       "birthdate": "Date de Naissance"
     },
@@ -170,6 +170,7 @@
     "dispute_validation_error": "Votre litige comporte une erreur qui doit être corrigée avant que vous ne puissiez soumettre",
     "ticket_error": "Le ticket n'a pas pu être récupéré",
     "dispute_create_error": "Le litige n'a pas pu être créé",
+    "statute_error": "Les statuts n’ont pas pu être chargés",
     "dispute_error": "Les litiges n’ont pas pu être récupérés"
   },
   "error": {

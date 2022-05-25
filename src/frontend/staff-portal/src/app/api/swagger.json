@@ -542,6 +542,39 @@
           }
         }
       }
+    },
+    "/api/lookup": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Violation Ticket Statutes filtered by given section text (if provided).",
+        "parameters": [
+          {
+            "name": "section",
+            "in": "query",
+            "description": "Motor vehicle act Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Statute"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -600,7 +633,8 @@
           },
           "birthdate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "driversLicenceNumber": {
             "maxLength": 20,
@@ -899,6 +933,29 @@
           }
         },
         "additionalProperties": { }
+      },
+      "Statute": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "double"
+          },
+          "act": {
+            "type": "string",
+            "nullable": true
+          },
+          "section": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government."
       },
       "ViolationTicket": {
         "type": "object",
