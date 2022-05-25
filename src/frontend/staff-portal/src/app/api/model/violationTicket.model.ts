@@ -9,15 +9,23 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ViolationTicketImage } from './violationTicketImage.model';
 import { ViolationTicketCount } from './violationTicketCount.model';
 
 
+/**
+ * An extension of the ViolationTicket object to include a ViolationTicketImage object.
+ */
 export interface ViolationTicket { 
+    violationTicketImage?: ViolationTicketImage;
+    createdBy?: string | null;
+    createdTs?: string;
+    modifiedBy?: string | null;
+    modifiedTs?: string;
     /**
      * ID
      */
     id?: string;
-    ocrViolationTicket?: string | null;
     ticketNumber?: string | null;
     surname?: string | null;
     givenNames?: string | null;
@@ -51,7 +59,7 @@ export interface ViolationTicket {
     isCtaOffence?: boolean | null;
     isOtherOffence?: boolean | null;
     otherOffenceDescription?: string | null;
-    enforcementOrganization?: string | null;
+    organizationLocation?: string | null;
     violationTicketCounts?: Array<ViolationTicketCount> | null;
     additionalProperties?: { [key: string]: any; } | null;
 }

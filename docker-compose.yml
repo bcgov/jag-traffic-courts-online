@@ -30,6 +30,7 @@ services:
       OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}
       OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
       OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
+      OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
     ports:
       - "5000:8080"
     restart: always
@@ -62,6 +63,7 @@ services:
       OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}
       OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
       OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__BUCKETNAME:-traffic-ticket-dev}
+      OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
     ports:
       - "5005:8080"
     restart: always
@@ -131,8 +133,6 @@ services:
       args:
         - SKIP_TESTS=true
     environment:
-      SPLUNK_URL: ${SPLUNK_URL:-http://splunk:8088}
-      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN:-token}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: password

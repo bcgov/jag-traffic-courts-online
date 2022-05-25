@@ -6,7 +6,6 @@ using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using Winista.Mime;
-using ViolationTicket = TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ViolationTicket;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -19,16 +18,19 @@ public class DisputeService : IDisputeService
     private readonly ILogger<DisputeService> _logger;
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DisputeService(
         OracleDataApiConfiguration oracleDataApiConfiguration,
         IBus bus,
         IFilePersistenceService filePersistenceService,
+        IHttpContextAccessor httpContextAccessor,
         ILogger<DisputeService> logger)
     {
         _oracleDataApiConfiguration = oracleDataApiConfiguration ?? throw new ArgumentNullException(nameof(oracleDataApiConfiguration));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -38,8 +40,30 @@ public class DisputeService : IDisputeService
     /// <returns></returns>
     private OracleDataApi_v1_0Client GetOracleDataApi()
     {
-        OracleDataApi_v1_0Client client = new(new HttpClient());
+        var httpClient = new HttpClient();
+        OracleDataApi_v1_0Client client = new(httpClient);
         client.BaseUrl = _oracleDataApiConfiguration.BaseUrl;
+
+        var username = _httpContextAccessor.HttpContext?.User.Claims?.FirstOrDefault(_ => _.Type == "preferred_username")?.Value;
+        if (username is not null)
+        {
+            int index = username.IndexOf("@");
+            if (index > 0)
+            {
+                username = username[..index];
+            }
+
+            var rqstHeader = httpClient.DefaultRequestHeaders;
+            if (rqstHeader != null)
+            {
+                rqstHeader.Add("x-username", username);
+            }
+        }
+        else
+        {
+            _logger.LogError("Username was not found.  Possibly be an unauthenticated user.");
+        }
+
         return client;
     }
 
@@ -124,6 +148,13 @@ public class DisputeService : IDisputeService
         return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
+    public async Task ValidateDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Dispute status setting to validated");
+
+        await GetOracleDataApi().ValidateDisputeAsync(disputeId, cancellationToken);
+    }
+
     public async Task CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute cancelled");
@@ -150,7 +181,6 @@ public class DisputeService : IDisputeService
 
         SendEmail rejectSendEmail = Mapper.ToRejectSendEmail(dispute);
         await _bus.Publish(rejectSendEmail, cancellationToken);
-
     }
 
     public async Task SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)

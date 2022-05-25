@@ -20,7 +20,7 @@ class DisputeServiceTest extends BaseTestSuite {
 	private DisputeService disputeService;
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED", "VALIDATED" })
 	void testSetStatusToPROCESSING_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.PROCESSING);
@@ -37,13 +37,29 @@ class DisputeServiceTest extends BaseTestSuite {
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW" })
+	void testSetStatusToVALIDATED_200(DisputeStatus disputeStatus) {
+		UUID id = saveDispute(disputeStatus);
+		disputeService.setStatus(id, DisputeStatus.VALIDATED);
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "VALIDATED" })
+	void testSetStatusToVALIDATED_405(DisputeStatus disputeStatus) {
+		UUID id = saveDispute(disputeStatus);
+		assertThrows(NotAllowedException.class, () -> {
+			disputeService.setStatus(id, DisputeStatus.VALIDATED);
+		});
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = DisputeStatus.class, names = { "NEW" })
 	void testSetStatusToREJECTED_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.REJECTED);
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED" })
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED", "VALIDATED" })
 	void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
@@ -52,7 +68,7 @@ class DisputeServiceTest extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING", "REJECTED" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING", "REJECTED", "VALIDATED" })
 	void testSetStatusToCANCELLED_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.CANCELLED);

@@ -1,7 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +18,8 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
@@ -55,7 +57,6 @@ public class Dispute extends Auditable<String> {
      * The violation ticket number.
      */
     @Column
-    @Schema(nullable = true)
     private String ticketNumber;
 
     /**
@@ -69,7 +70,7 @@ public class Dispute extends Auditable<String> {
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     @Column
-    @Schema(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date issuedDate;
 
     /**
@@ -77,78 +78,76 @@ public class Dispute extends Auditable<String> {
      */
     @Column
     @Schema(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date submittedDate;
 
     /**
      * The surname or corporate name.
      */
     @Column
-    @Schema(nullable = true)
     private String surname;
 
     /**
      * The given names or corporate name continued.
      */
     @Column
-    @Schema(nullable = true)
     private String givenNames;
-    
+
     /**
      * The disputant's birthdate.
      */
     @Column
-    @Schema(nullable = true)
+    @Temporal(TemporalType.DATE)
     private Date birthdate;
-    
+
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
      */
     @Size(max = 20)
     @Column(length = 20)
-    @Schema(nullable = true, maxLength = 20)
+    @Schema(maxLength = 20)
     private String driversLicenceNumber;
-    
+
     /**
      * The province or state the drivers licence was issued by.
      */
     @Size(max = 30)
     @Column(length = 30)
-    @Schema(nullable = true, maxLength = 30)
+    @Schema(maxLength = 30)
     private String driversLicenceProvince;
 
     /**
      * The mailing address of the disputant.
      */
     @Column
-    @Schema(nullable = true)
     private String address;
 
     /**
      * The mailing address city of the disputant.
      */
     @Column
-    @Schema(nullable = true)
     private String city;
 
     /**
      * The mailing address province of the disputant.
      */
-    @Column
-    @Schema(nullable = true)
+    @Size(max = 30)
+    @Column(length = 30)
+    @Schema(maxLength = 30)
     private String province;
 
     /**
      * The mailing address postal code or zip code of the disputant.
      */
-    @Column
-    @Schema(nullable = true)
+    @Size(max = 6)
+    @Column(length = 6)
+    @Schema(maxLength = 6)
     private String postalCode;
 
     /**
      * The disputant's home phone number.
      */
     @Column
-    @Schema(nullable = true)
     private String homePhoneNumber;
 
     /**
@@ -163,11 +162,11 @@ public class Dispute extends Auditable<String> {
      */
     @Column
     @Email(regexp = ".+@.+\\..+")
-    @Schema(nullable = true)
     private String emailAddress;
 
     @Column
     @Schema(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date filingDate;
 
     @JsonManagedReference
@@ -221,20 +220,29 @@ public class Dispute extends Auditable<String> {
     @Schema(nullable = true)
     private String rejectedReason;
 
+    /**
+     * Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
+     */
     @Column
     private boolean disputantDetectedOcrIssues;
-    
+
+    /**
+     * The description of the issue with OCR ticket if the citizen has detected any.
+     */
     @Column
     @Schema(nullable = true)
     private String disputantOcrIssuesDescription;
-    
+
+    /**
+     * Identifier for whether the system has detected any issues with the OCR ticket result or not.
+     */
     @Column
     private boolean systemDetectedOcrIssues;
 
     @Column
     @Schema(nullable = true)
     private String jjAssigned;
-    
+
     /**
 	 * All OCR Violation ticket data serialized into a JSON string.
 	 */
@@ -242,7 +250,22 @@ public class Dispute extends Auditable<String> {
 	@Lob
     @Schema(nullable = true)
     private String ocrViolationTicket;
-    
+
+	/**
+	 * The IDIR of the Staff whom the dispute is assigned to be reviewed on Staff Portal.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String assignedTo;
+
+	/**
+	 * The date and time a dispute was assigned to a Staff to be reviewed.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date assignedTs;
+
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
     @Schema(nullable = true)

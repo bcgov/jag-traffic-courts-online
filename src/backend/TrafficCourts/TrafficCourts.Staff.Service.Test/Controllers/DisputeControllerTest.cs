@@ -188,4 +188,27 @@ public class DisputeControllerTest
         var notFoundResult = Assert.IsType<HttpError>(result);
         Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
     }
+
+    [Fact]
+    public async void TestValidateDispute200Result()
+    {
+        // Mock the OracleDataApi to update a specific Dispute with id (1), confirm controller updates and returns the dispute.
+
+        // Arrange
+        Dispute dispute = new();
+        Guid id = Guid.NewGuid();
+        dispute.Id = id;
+        var disputeService = new Mock<IDisputeService>();
+        disputeService
+            .Setup(_ => _.ValidateDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<CancellationToken>()))
+            .Verifiable();
+        var mockLogger = new Mock<ILogger<DisputeController>>();
+        DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
+
+        // Act
+        await disputeController.ValidateDisputeAsync(id, CancellationToken.None);
+
+        // Assert
+        disputeService.VerifyAll();
+    }
 }

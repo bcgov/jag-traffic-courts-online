@@ -41,6 +41,7 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -83,6 +84,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CdkAccordionModule,
     NgxMaterialTimepickerModule,
     FormsModule,
+    PdfViewerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -91,7 +93,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       },
       isolate: false,
       extend: true,
-    }),
+    })
   ],
   exports: [
     NgBusyModule,

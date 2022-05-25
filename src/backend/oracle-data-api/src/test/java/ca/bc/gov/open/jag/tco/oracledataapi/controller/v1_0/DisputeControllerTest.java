@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,17 +57,18 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(disputeId, dispute.getId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
 		// Set the status to REJECTED
-		disputeController.rejectDispute(disputeId, "Just because");
+		disputeController.rejectDispute(disputeId, "Just because", principal);
 
 		// Assert status and reason are set.
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
 		assertEquals("Just because", dispute.getRejectedReason());
 	}
@@ -76,29 +78,30 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(disputeId, dispute.getId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
 		// try using an empty reason (should fail with 405 error)
 		assertThrows(ConstraintViolationException.class, () -> {
-			disputeController.rejectDispute(disputeId, "");
+			disputeController.rejectDispute(disputeId, "", principal);
 		});
 
 		// try using an long reason, > 256 (should fail with 405 error)
 		assertThrows(ConstraintViolationException.class, () -> {
-			disputeController.rejectDispute(disputeId, RandomStringUtils.random(257));
+			disputeController.rejectDispute(disputeId, RandomStringUtils.random(257), principal);
 		});
 
 		String longString = RandomStringUtils.random(256);
 
 		// Set the status to REJECTED
-		disputeController.rejectDispute(disputeId, longString);
+		disputeController.rejectDispute(disputeId, longString, principal);
 
 		// Assert status and reason are set.
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(DisputeStatus.REJECTED, dispute.getStatus());
 		assertEquals(longString, dispute.getRejectedReason());
 	}
@@ -108,17 +111,18 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(disputeId, dispute.getId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
 		// Set the status to PROCESSING
-		disputeController.submitDispute(disputeId);
+		disputeController.submitDispute(disputeId, principal);
 
 		// Assert status is set, rejected reason is NOT set.
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();;
 		assertEquals(DisputeStatus.PROCESSING, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
@@ -128,21 +132,43 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(disputeId, dispute.getId());
 		assertEquals(DisputeStatus.NEW, dispute.getStatus());
 
 		// Set the status to PROCESSING
-		disputeController.submitDispute(disputeId);
+		disputeController.submitDispute(disputeId, principal);
 
 		// Set the status to CANCELLED (can only be set to Cancelled after it's first been set to PROCESSING.
-		disputeController.cancelDispute(disputeId);
+		disputeController.cancelDispute(disputeId, principal);
 
 		// Assert status is set, rejected reason is NOT set.
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(DisputeStatus.CANCELLED, dispute.getStatus());
+		assertNull(dispute.getRejectedReason());
+	}
+
+	@Test
+	public void testValidateDispute() {
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
+
+		// Retrieve it from the controller's endpoint
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
+		assertEquals(disputeId, dispute.getId());
+		assertEquals(DisputeStatus.NEW, dispute.getStatus());
+
+		// Set the status to VALIDATED
+		disputeController.validateDispute(disputeId, principal);
+
+		// Assert status is set, rejected reason is NOT set.
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
+		assertEquals(DisputeStatus.VALIDATED, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
 
@@ -152,23 +178,34 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		UUID disputeId = disputeController.saveDispute(dispute);
+		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(disputeId, dispute.getId());
 
 		// Create a new dispute with different values and update the existing dispute
 		Dispute updatedDispute = RandomUtil.createDispute();
 		updatedDispute.setSurname("Doe");
 		updatedDispute.setGivenNames("John");
-		disputeController.updateDispute(disputeId, updatedDispute);
+		disputeController.updateDispute(disputeId, updatedDispute, principal);
 
 		// Assert db contains only the updated dispute record.
-		dispute = disputeController.getDispute(disputeId);
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals("Doe", dispute.getSurname());
 		assertEquals("John", dispute.getGivenNames());
 		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null);
 		assertEquals(1, IterableUtils.size(allDisputes));
+	}
+
+	// Helper method to return an instance of Principal
+	private Principal getPrincipal(String name) {
+		return new Principal() {
+			@Override
+			public String getName() {
+				return name;
+			}
+		};
 	}
 
 }

@@ -60,11 +60,13 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
@@ -82,6 +84,19 @@ public class DisputeController : TCOControllerBase<DisputeController>
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status409Conflict)
+        {
+            ProblemDetails pd = new ProblemDetails
+            {
+                Title = "Ticket Dispute Already Assigned",
+                Detail = "The selected ticket dispute record is already assigned",
+                Status = e.StatusCode,
+                Instance = HttpContext?.Request?.Path,
+            };
+            pd.Extensions.Add("errors", e.Message);
+
+            return new ObjectResult(pd);
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
         {
@@ -169,6 +184,58 @@ public class DisputeController : TCOControllerBase<DisputeController>
         try
         {
             await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
+            return Ok();
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error updating Dispute status:", e);
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Updates the status of a particular Dispute record to VALIDATED.
+    /// </summary>
+    /// <param name="disputeId">Unique identifier for a specific Dispute record to validate.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="404">Dispute record not found. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{disputeId}/validate")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ValidateDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the Dispute status to VALIDATED");
+
+        try
+        {
+            await _disputeService.ValidateDisputeAsync(disputeId, cancellationToken);
             return Ok();
         }
         catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

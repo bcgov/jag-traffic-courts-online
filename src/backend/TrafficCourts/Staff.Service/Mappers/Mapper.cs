@@ -10,7 +10,7 @@ public class Mapper
     {
         DisputeApproved target = new();
         target.CitizenName = dispute.GivenNames + " " + dispute.Surname;
-        target.TicketIssuanceDate = dispute.IssuedDate.HasValue ? dispute.IssuedDate.Value.DateTime : (DateTime?)null;
+        target.TicketIssuanceDate = dispute.IssuedDate.DateTime;
         target.TicketFileNumber = dispute.TicketNumber;
         target.IssuingOrganization = dispute.ViolationTicket.OrganizationLocation;
         target.IssuingLocation = dispute.ProvincialCourtHearingLocation;
@@ -21,7 +21,10 @@ public class Mapper
             Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
             {
                 Count = violationTicketCount.Count,
-                Section = violationTicketCount.FullSection,
+                FullSection = violationTicketCount.FullSection,
+                Section = violationTicketCount.Section,
+                Subsection = violationTicketCount.Subsection,
+                Paragraph = violationTicketCount.Paragraph,
                 Act = violationTicketCount.ActRegulation,
                 Amount = violationTicketCount.TicketedAmount
             };

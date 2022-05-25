@@ -31,10 +31,9 @@ services:
       Serilog__WriteTo__0__Args:eventCollectorToken": "token"
     depends_on: [splunk]
 
-  ticket-search:
+  oracle-data-api:
     environment:
-      Serilog__Using__0: Serilog.Sinks.Splunk
-      Serilog__WriteTo__0__Name: EventCollector
-      Serilog__WriteTo__0__Args:splunkHost": "http://splunk:8088"
-      Serilog__WriteTo__0__Args:eventCollectorToken": "token"
+      SPLUNK_URL: ${SPLUNK_URL:-http://splunk:8088}
+      SPLUNK_TOKEN: ${SPLUNK_HEC_TOKEN:-token}
     depends_on: [splunk]
+    

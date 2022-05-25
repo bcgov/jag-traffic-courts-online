@@ -1,9 +1,12 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -126,18 +129,23 @@ public class DisputeService {
 		// - current status must be NEW,PROCESSING,REJECTED to change to CANCELLED
 		switch (disputeStatus) {
 		case PROCESSING:
-			if (!List.of(DisputeStatus.NEW, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.REJECTED, DisputeStatus.VALIDATED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.PROCESSING);
 			}
 			break;
 		case CANCELLED:
-			if (!List.of(DisputeStatus.NEW, DisputeStatus.PROCESSING, DisputeStatus.REJECTED).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.PROCESSING, DisputeStatus.REJECTED, DisputeStatus.VALIDATED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.CANCELLED);
 			}
 			break;
 		case REJECTED:
 			if (!List.of(DisputeStatus.NEW).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.REJECTED);
+			}
+			break;
+		case VALIDATED:
+			if (!List.of(DisputeStatus.NEW).contains(dispute.getStatus())) {
+				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.VALIDATED);
 			}
 			break;
 		case NEW:
@@ -154,6 +162,48 @@ public class DisputeService {
 		dispute.setStatus(disputeStatus);
 		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
 		return disputeRepository.save(dispute);
+	}
+
+	/**
+	 * Assigns a specific {@link Dispute} to the IDIR username of the Staff with a timestamp
+	 *
+	 * @param id
+	 * @param principal the current user of the system
+	 */
+	public boolean assignDisputeToUser(UUID id, Principal principal) {
+		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
+			logger.error("Attempting to set Dispute to null username - bad method call.");
+			throw new NotAllowedException("Cannot set assigned user to null");
+		}
+
+		// Find the dispute to be assigned to the username
+		Dispute dispute = disputeRepository.findById(id).orElseThrow();
+
+		if (StringUtils.isBlank(dispute.getAssignedTo()) || dispute.getAssignedTo().equals(principal.getName())) {
+
+			dispute.setAssignedTo(principal.getName());
+			Date now = new Date();
+			dispute.setAssignedTs(now);
+			disputeRepository.save(dispute);
+
+			logger.debug("Dispute with id " + id + " has been assigned to " + principal.getName() + " on " + now);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
+	 */
+	public void unassignDisputes() {
+		// Find all Disputes with an assignedTs older than 1 hour ago.
+		for (Dispute dispute : disputeRepository.findByAssignedTsBefore(DateUtils.addHours(new Date(), -1))) {
+			dispute.setAssignedTo(null);
+			dispute.setAssignedTs(null);
+			disputeRepository.save(dispute);
+		}
 	}
 
 }

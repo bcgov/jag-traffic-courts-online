@@ -63,5 +63,22 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 }
             }  
         }
+
+        [Fact]
+        public void can_parse_full_section_with_valid_adnotated_ticket_and_full_section()
+        {
+            // Arrange
+            var fixture = new Fixture();
+            AdnotatedTicket at = fixture.Create<AdnotatedTicket>();
+            string fullSection = "127(1)(a)(ii)";
+
+            // Act
+            AdnotatedTicket? actual = CustomMap.ParseFullSection(at, fullSection);
+
+            // Assert
+            actual.Section.Equals("127");
+            actual.Subsection.Equals("1");
+            actual.Paragraph.Equals("a");
+        }
     }
 }

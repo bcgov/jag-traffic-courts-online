@@ -542,6 +542,39 @@
           }
         }
       }
+    },
+    "/api/lookup": {
+      "get": {
+        "tags": [
+          "Lookup"
+        ],
+        "summary": "Returns a list of Violation Ticket Statutes filtered by given section text (if provided).",
+        "parameters": [
+          {
+            "name": "section",
+            "in": "query",
+            "description": "Motor vehicle act Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Statute"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -549,6 +582,22 @@
       "Dispute": {
         "type": "object",
         "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -567,10 +616,9 @@
           },
           "issuedDate": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
-          "citizenSubmittedDate": {
+          "submittedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -583,6 +631,23 @@
             "type": "string",
             "nullable": true
           },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "driversLicenceNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceProvince": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "address": {
             "type": "string",
             "nullable": true
@@ -592,10 +657,14 @@
             "nullable": true
           },
           "province": {
+            "maxLength": 30,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "postalCode": {
+            "maxLength": 6,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -650,14 +719,31 @@
             "type": "string",
             "nullable": true
           },
-          "citizenDetectedOcrIssues": {
+          "disputantDetectedOcrIssues": {
             "type": "boolean"
+          },
+          "disputantOcrIssuesDescription": {
+            "type": "string",
+            "nullable": true
           },
           "systemDetectedOcrIssues": {
             "type": "boolean"
           },
           "jjAssigned": {
             "type": "string",
+            "nullable": true
+          },
+          "ocrViolationTicket": {
+            "type": "string",
+            "nullable": true
+          },
+          "assignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "assignedTs": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "violationTicket": {
@@ -683,6 +769,22 @@
       "DisputedCount": {
         "type": "object",
         "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -724,6 +826,22 @@
       "LegalRepresentation": {
         "type": "object",
         "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -733,11 +851,7 @@
             "type": "string",
             "nullable": true
           },
-          "lawyerName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerSurname": {
+          "lawyerFullName": {
             "type": "string",
             "nullable": true
           },
@@ -749,10 +863,46 @@
             "type": "string",
             "nullable": true
           },
+          "lawyerPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MimeType": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "subType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "extensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -784,17 +934,55 @@
         },
         "additionalProperties": { }
       },
+      "Statute": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "format": "double"
+          },
+          "act": {
+            "type": "string",
+            "nullable": true
+          },
+          "section": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government."
+      },
       "ViolationTicket": {
         "type": "object",
         "properties": {
+          "violationTicketImage": {
+            "$ref": "#/components/schemas/ViolationTicketImage"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
             "format": "uuid"
-          },
-          "ocrViolationTicket": {
-            "type": "string",
-            "nullable": true
           },
           "ticketNumber": {
             "type": "string",
@@ -813,6 +1001,8 @@
             "nullable": true
           },
           "driversLicenceNumber": {
+            "maxLength": 30,
+            "minLength": 7,
             "type": "string",
             "nullable": true
           },
@@ -932,7 +1122,7 @@
             "type": "string",
             "nullable": true
           },
-          "enforcementOrganization": {
+          "organizationLocation": {
             "type": "string",
             "nullable": true
           },
@@ -949,11 +1139,28 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "An extension of the ViolationTicket object to include a ViolationTicketImage object."
       },
       "ViolationTicketCount": {
         "type": "object",
         "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
           "id": {
             "type": "string",
             "description": "ID",
@@ -969,7 +1176,7 @@
             "type": "string",
             "nullable": true
           },
-          "actOrRegulation": {
+          "actRegulation": {
             "type": "string",
             "nullable": true
           },
@@ -989,13 +1196,10 @@
             "type": "string",
             "nullable": true
           },
-          "act": {
-            "type": "string",
-            "nullable": true
-          },
           "ticketedAmount": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           },
           "isAct": {
             "type": "boolean",
@@ -1012,6 +1216,22 @@
           }
         },
         "additionalProperties": false
+      },
+      "ViolationTicketImage": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "The byte[] of the ViolationTicket image.",
+            "format": "byte",
+            "nullable": true
+          },
+          "mimeType": {
+            "$ref": "#/components/schemas/MimeType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A class that contains the byte[] data (raw image) that is retrieved from the object store."
       }
     },
     "securitySchemes": {

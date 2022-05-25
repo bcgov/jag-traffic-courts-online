@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -25,7 +26,7 @@ public class DisputeServiceTest
     public void TestGetViolationTicketImageFilename(string json, string? expectedFilename)
     {
         //Given
-        DisputeService service = new(new OracleDataApiConfiguration(), new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, new Mock<ILogger<DisputeService>>().Object);
+        DisputeService service = new(new OracleDataApiConfiguration(), new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, new Mock<IHttpContextAccessor>().Object, new Mock<ILogger<DisputeService>>().Object);
         Dispute dispute = new();
         dispute.Id = Guid.NewGuid();
         dispute.ViolationTicket = new();

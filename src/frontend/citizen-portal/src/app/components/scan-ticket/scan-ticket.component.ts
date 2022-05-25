@@ -8,7 +8,6 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ViolationTicket } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
-import { NgProgress, NgProgressRef } from 'ngx-progressbar';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,22 +18,19 @@ import { Subscription } from 'rxjs';
 export class ScanTicketComponent implements OnInit {
   public busy: Subscription | Promise<any>;
   public ticketImageSrc: string;
+  public ticketImageFile: string;
   public ticketFilename: string;
   public form: FormGroup;
-
-  private progressRef: NgProgressRef;
   private ticket: ViolationTicket;
 
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private router: Router,
-    private ngProgress: NgProgress,
     private logger: LoggerService,
     private violationTicketService: ViolationTicketService,
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => { return false; };
-    this.progressRef = this.ngProgress.ref();
   }
 
   public ngOnInit(): void {
@@ -44,8 +40,10 @@ export class ScanTicketComponent implements OnInit {
       this.violationTicketService.goToFind();
       return;
     }
+   
     this.ticketImageSrc = inputTicketData.ticketImage;
     this.ticketFilename = inputTicketData.filename;
+    this.ticketImageFile = inputTicketData.ticketFile.type
     this.form = this.formBuilder.group(this.ticket); // can add control
     this.form.disable();
     this.form.controls.disputant_detected_ocr_issues.enable();
@@ -68,11 +66,6 @@ export class ScanTicketComponent implements OnInit {
           this.violationTicketService.goToInitiateResolution();
         }
       });
-  }
-
-  public onFileChange(event: any) {
-    this.violationTicketService.analyseTicket(event.target.files[0], this.progressRef);
-    event.target.value = null; // reset file input
   }
 
   public onStatuteSelected(event$: MatAutocompleteSelectedEvent): void {

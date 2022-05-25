@@ -11,19 +11,28 @@
     <span>
       Filename: <strong>{{ ticketFilename }}</strong></span>
     <span class="flex-grow-1"></span>
-    <a class="upload-link" (click)="fileInput.click()">
-      <mat-icon class="new-image-icon me-2">highlight_off</mat-icon>
-      Remove and upload new image
-    </a>
-    <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file" />
   </div>
   <hr />
 
   <div class="row">
     <div class="col-lg-6 col-md-12">
-      <span *ngIf="ticketImageSrc">
+      <span>
         <h1><strong>Ticket image</strong></h1>
-        <img [src]="ticketImageSrc" style="width: 100%" class="img-fluid mb-4" />
+        <img  *ngIf="ticketImageFile && ticketImageFile.includes('image')"  [src]="ticketImageSrc" style="width: 100%" class="img-fluid mb-4" />
+        <pdf-viewer 
+        *ngIf="ticketImageFile && ticketImageFile === 'application/pdf'"
+        [rotation]="90"
+        [original-size]="false"
+        [show-all]="true"
+        [fit-to-page]="false"
+        [zoom]="1"
+        [zoom-scale]="'page-width'"
+        [stick-to-page]="false"
+        [render-text]="true"
+        [external-link-target]="'blank'"
+        [autoresize]="true"
+        [show-borders]="false"
+        style="width: 100%; height: 600px;" [src]="ticketImageSrc"></pdf-viewer>
       </span>
     </div>
     <div class="col-lg-6 col-md-12 feild-border">
