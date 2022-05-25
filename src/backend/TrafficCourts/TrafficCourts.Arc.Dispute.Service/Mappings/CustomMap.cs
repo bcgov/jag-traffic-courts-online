@@ -31,10 +31,11 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 {
                     adnotated = ParseFullSection(adnotated, ticket.FullSection);
                 }
-                adnotated.Act = ticket.Act;
+                adnotated.Act = ticket.Act != null ? ticket.Act : "MVA";
                 adnotated.OriginalAmount = ticket.Amount;
                 adnotated.Organization = source.IssuingOrganization;
                 adnotated.OrganizationLocation = source.IssuingLocation;
+                adnotated.ServiceDate = source.TicketIssuanceDate;
 
                 arcFileRecordList.Add(adnotated);
                 // Check if there are data required to encapsulate citizen dispute information
@@ -53,6 +54,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     disputed.FileNumber = source.TicketFileNumber;
                     disputed.MvbClientNumber = source.DriversLicence;
                     // Mapping disputed ticket specific data
+                    disputed.ServiceDate = source.TicketIssuanceDate;
                     disputed.Name = source.CitizenName;
                     disputed.DisputeType = disputeCount.DisputeType != null ? disputeCount.DisputeType : "A"; //TODO: Find out what dispute type actually means
                     disputed.StreetAddress = source.StreetAddress != null ? source.StreetAddress : "";
