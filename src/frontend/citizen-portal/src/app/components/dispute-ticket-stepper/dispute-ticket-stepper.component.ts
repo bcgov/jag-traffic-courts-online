@@ -31,6 +31,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public previousButtonIcon = "keyboard_arrow_left";
   public defaultLanguage: string;
   public ticketTypes = ticketTypes;
+  public todayDate: Date = new Date();
   public Plea = Plea;
   public selected = null;
 

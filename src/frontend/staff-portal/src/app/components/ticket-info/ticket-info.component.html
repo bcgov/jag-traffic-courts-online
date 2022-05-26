@@ -3,7 +3,22 @@
     <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
   </a>
   <app-ticket-status [dispute]="disputeInfo" *ngIf="disputeInfo"></app-ticket-status>
-  <div class="ticket-info-section" *ngIf="initialDisputeValues">
+  <div *ngIf="conflict == true">
+    <span>
+      <h3>This ticket is already assigned.</h3>
+    </span>
+  </div>
+  <div *ngIf="conflict == false && !initialDisputeValues && retrieving == false">
+    <span>
+      <h3>Error retrieving ticket information.</h3>
+    </span>
+  </div>
+  <div *ngIf="conflict == false && retrieving == true">
+    <span>
+      <h3>Retrieving ticket information...</h3>
+    </span>
+  </div>
+  <div class="ticket-info-section" *ngIf="initialDisputeValues && conflict == false">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('ticketInformation')">
         <app-page-header>
@@ -177,7 +192,8 @@
                           <mat-autocomplete #auto="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
-                            <mat-option *ngFor="let statute of filteredCount1Statutes" [value]="statute.__statuteString">
+                            <mat-option *ngFor="let statute of filteredCount1Statutes"
+                              [value]="statute.__statuteString">
                               {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -209,7 +225,8 @@
                           <mat-autocomplete #auto2="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
-                            <mat-option *ngFor="let statute of filteredCount2Statutes" [value]="statute.__statuteString">
+                            <mat-option *ngFor="let statute of filteredCount2Statutes"
+                              [value]="statute.__statuteString">
                               {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -241,7 +258,8 @@
                           <mat-autocomplete #auto3="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
                               getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
-                            <mat-option *ngFor="let statute of filteredCount3Statutes" [value]="statute.__statuteString">
+                            <mat-option *ngFor="let statute of filteredCount3Statutes"
+                              [value]="statute.__statuteString">
                               {{ statute.__statuteString }}</mat-option>
                           </mat-autocomplete>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -278,19 +296,17 @@
                       </div>
                     </div>
                   </section>
-                  <div class="col">
-                    <div style="float: right; width: 100%;">
-                      <button class="save-button btn btn-primary large" mat-flat-button style="background-color: green;"
-                        type="button" color="red">
-                        Validate
-                      </button>
-                      <button class="save-button btn btn-primary large" mat-flat-button type="submit" color="red"
-                        [disabled]="!(form.get('violationTicket').touched) || form.get('violationTicket').invalid">
-                        Save
-                      </button>
-                    </div>
-                  </div>
                 </div>
+              </div>
+              <div style="float: right; width: 100%;" class="row">
+                <button class="large" mat-flat-button type="button" color="primary" (click)="validate()"
+                  style="background-color: #2ba242;" [disabled]="form.get('violationTicket').invalid">
+                  Validate
+                </button>
+                <button class="large" mat-flat-button type="submit" color="primary"
+                  [disabled]="!(form.get('violationTicket').touched) || form.get('violationTicket').invalid">
+                  Save
+                </button>
               </div>
             </form>
           </section>
@@ -340,6 +356,7 @@
           </app-page-header>
         </mat-expansion-panel-header>
         <div class="contact-body">
+          <br />
           <form (ngSubmit)="onSubmitNoticeOfDispute()" [formGroup]="form" novalidate>
             <section class="mb-2" style="width: 66%;">
               <div class="row">
@@ -437,7 +454,8 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
                     <mat-error *ngIf="form.get('birthdate').hasError('required')">Valid birthdate required</mat-error>
-                    <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate</mat-error>
+                    <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -512,7 +530,7 @@
                 </div>
               </div>
               <div style="float: right; width: 100%;">
-                <button class="save-button btn btn-primary large" mat-flat-button type="submit" color="red"
+                <button class="large" mat-flat-button type="submit" color="primary"
                   [disabled]="!enableNoticeOfDisputeSave()">
                   Save
                 </button>
@@ -520,8 +538,23 @@
             </section>
           </form>
         </div>
-    </mat-expansion-panel>
-    <app-ticket-request></app-ticket-request>
+      </mat-expansion-panel>
+      <app-ticket-request></app-ticket-request>
+      <button (click)="showForm()">Show Form</button>
+      <div style="float: right; width: 100%;">
+        <button class="large" mat-flat-button type="button" color="primary"
+          [disabled]="lastUpdatedDispute.status != 'VALIDATED' || this.form.invalid" (click)="approve()"
+          style="background-color:  #2ba242;">
+          Approve and submit to ARC
+        </button>
+        <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
+          [disabled]="lastUpdatedDispute.status != 'VALIDATED' || this.form.invalid" (click)="reject()">
+          Reject
+        </button>
+        <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 </div>

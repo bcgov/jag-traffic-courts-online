@@ -5,6 +5,7 @@ import { DisputesService, DisputeView } from 'app/services/disputes.service';
 import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-ticket-page',
@@ -218,10 +219,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       this.decidePopup = "A"
     }
     this.showTicket = !this.showTicket;
+    if (!this.showTicket) this.getAllDisputes();  // refresh list
   }
 
   backTicketpage() {
     this.showTicket = !this.showTicket;
+    if (!this.showTicket) this.getAllDisputes(); // refresh list
   }
 }
 export interface RecognizedField {
