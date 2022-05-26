@@ -64,21 +64,34 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             }  
         }
 
-        [Fact]
-        public void can_parse_full_section_with_valid_adnotated_ticket_and_full_section()
+        [Theory]
+        [CsvData(@"../../../Arc.Dispute.Service/Data/statutes-test.csv")]
+        public void can_parse_full_section_with_valid_adnotated_ticket_and_full_section(int code, string act, string section, string description)
         {
             // Arrange
-            var fixture = new Fixture();
-            AdnotatedTicket at = fixture.Create<AdnotatedTicket>();
-            string fullSection = "127(1)(a)(ii)";
+            //var fixture = new Fixture();
+            AdnotatedTicket at = new();
+            string fullSection = section;
 
             // Act
             AdnotatedTicket? actual = CustomMap.ParseFullSection(at, fullSection);
 
             // Assert
-            actual.Section.Equals("127");
-            actual.Subsection.Equals("1");
-            actual.Paragraph.Equals("a");
+            string result;
+            if (!string.IsNullOrEmpty(actual.Paragraph))
+            {
+                result = actual.Section + "(" + actual.Subsection + ")" + "(" + actual.Paragraph + ")";
+            }
+            else if(!string.IsNullOrEmpty(actual.Subsection))
+            {
+                result = actual.Section + "(" + actual.Subsection + ")";
+            }
+            else
+            {
+                result = actual.Section;
+            }
+            
+            Assert.Equal(fullSection, result);
         }
     }
 }

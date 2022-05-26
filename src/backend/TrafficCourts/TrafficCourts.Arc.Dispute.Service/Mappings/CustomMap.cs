@@ -80,12 +80,27 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             ArgumentNullException.ThrowIfNull(fullSection);
 
             var sectionArray = fullSection.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+            var count = sectionArray.Length;
 
-            if (sectionArray.Length > 0)
+            if (count > 0)
             {
-                ticket.Section = sectionArray[0];
-                ticket.Subsection = sectionArray[1];
-                ticket.Paragraph = sectionArray[2];
+                switch (count)
+                {
+                    case 1:
+                        ticket.Section = sectionArray[0];
+                        break;
+                    case 2:
+                        ticket.Section = sectionArray[0];
+                        ticket.Subsection = sectionArray[1];
+                        break;
+                    case int _ when count > 2:
+                        ticket.Section = sectionArray[0];
+                        ticket.Subsection = sectionArray[1];
+                        ticket.Paragraph = sectionArray[2];
+                        break;
+                    default:
+                        break;
+                }
             }
 
             return ticket;
