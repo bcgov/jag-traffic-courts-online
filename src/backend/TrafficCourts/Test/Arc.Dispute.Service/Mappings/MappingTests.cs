@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TrafficCourts.Arc.Dispute.Service.Mappings;
 using TrafficCourts.Arc.Dispute.Service.Models;
+using TrafficCourts.Common;
 using Xunit;
 
 namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
@@ -64,34 +65,37 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             }  
         }
 
+        /// <summary>
+        /// These LegalSection tests really should be in their own test class file
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="act"></param>
+        /// <param name="section"></param>
+        /// <param name="description"></param>
         [Theory]
         [CsvData(@"../../../Arc.Dispute.Service/Data/statutes-test.csv")]
-        public void can_parse_full_section_with_valid_adnotated_ticket_and_full_section(int code, string act, string section, string description)
+        public void can_parse_LegalSection(int code, string act, string section, string description)
         {
-            // Arrange
-            //var fixture = new Fixture();
-            AdnotatedTicket at = new();
-            string fullSection = section;
+            bool actual = LegalSection.TryParse(section, out LegalSection? legalSection);
 
-            // Act
-            AdnotatedTicket? actual = CustomMap.ParseFullSection(at, fullSection);
+            Assert.True(actual);
+            Assert.NotNull(legalSection);
+            Assert.Equal(section, legalSection!.ToString());
+        }
 
-            // Assert
-            string result;
-            if (!string.IsNullOrEmpty(actual.Paragraph))
-            {
-                result = actual.Section + "(" + actual.Subsection + ")" + "(" + actual.Paragraph + ")";
-            }
-            else if(!string.IsNullOrEmpty(actual.Subsection))
-            {
-                result = actual.Section + "(" + actual.Subsection + ")";
-            }
-            else
-            {
-                result = actual.Section;
-            }
-            
-            Assert.Equal(fullSection, result);
+        /// <summary>
+        /// These LegalSection tests really should be in their own test class file
+        /// </summary>
+        [Theory]
+        [InlineData("")]
+        [InlineData("(a)")]
+        [InlineData("x(a)")]
+        [InlineData("(a)(i)")]
+        public void will_not_parse_invalid_LegalSection(string section)
+        {
+            bool actual = LegalSection.TryParse(section, out LegalSection? legalSection);
+            Assert.False(actual);
+            Assert.Null(legalSection);
         }
     }
 }

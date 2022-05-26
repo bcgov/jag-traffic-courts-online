@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TrafficCourts.Arc.Dispute.Service.Models;
+using TrafficCourts.Common;
 
 namespace TrafficCourts.Arc.Dispute.Service.Mappings
 {
@@ -29,8 +30,14 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 } 
                 else
                 {
-                    adnotated = ParseFullSection(adnotated, ticket.FullSection);
+                    if (LegalSection.TryParse(ticket.FullSection, out LegalSection? legalSection))
+                    {
+                        adnotated.Section = legalSection!.Section;
+                        adnotated.Subsection = legalSection.Subsection;
+                        adnotated.Paragraph = legalSection.Paragraph;
+                    }
                 }
+
                 adnotated.Act = ticket.Act != null ? ticket.Act : "MVA";
                 adnotated.OriginalAmount = ticket.Amount;
                 adnotated.Organization = source.IssuingOrganization;
@@ -41,6 +48,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 // Check if there are data required to encapsulate citizen dispute information
                 if (source.DisputeCounts != null && source.DisputeCounts.Count != 0)
                 {
+                    // precondition is that there is no duplicated counts,
+                    // this will throw exception if contained duplicate by count number
                     var disputeCount = source.DisputeCounts.SingleOrDefault(_ => _.Count == ticket.Count);
                     if (disputeCount is null)
                     {
@@ -68,43 +77,43 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             return arcFileRecordList;
         }
 
-        /// <summary>
-        /// Parses out the full section from the TicketCount source and splits into 3 separate section groups required by ARC
-        /// </summary>
-        /// <param name="ticket"></param>
-        /// <param name="fullSection"></param>
-        /// <returns></returns>
-        internal static AdnotatedTicket ParseFullSection (AdnotatedTicket ticket, string fullSection)
-        {
-            ArgumentNullException.ThrowIfNull(ticket);
-            ArgumentNullException.ThrowIfNull(fullSection);
+        ///// <summary>
+        ///// Parses out the full section from the TicketCount source and splits into 3 separate section groups required by ARC
+        ///// </summary>
+        ///// <param name="ticket"></param>
+        ///// <param name="fullSection"></param>
+        ///// <returns></returns>
+        //internal static AdnotatedTicket ParseFullSection (AdnotatedTicket ticket, string fullSection)
+        //{
+        //    ArgumentNullException.ThrowIfNull(ticket);
+        //    ArgumentNullException.ThrowIfNull(fullSection);
 
-            var sectionArray = fullSection.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
-            var count = sectionArray.Length;
+        //    var sectionArray = fullSection.Split(new string[] { "(", ")" }, StringSplitOptions.RemoveEmptyEntries);
+        //    var count = sectionArray.Length;
 
-            if (count > 0)
-            {
-                switch (count)
-                {
-                    case 1:
-                        ticket.Section = sectionArray[0];
-                        break;
-                    case 2:
-                        ticket.Section = sectionArray[0];
-                        ticket.Subsection = sectionArray[1];
-                        break;
-                    case int _ when count > 2:
-                        ticket.Section = sectionArray[0];
-                        ticket.Subsection = sectionArray[1];
-                        ticket.Paragraph = sectionArray[2];
-                        break;
-                    default:
-                        break;
-                }
-            }
+        //    if (count > 0)
+        //    {
+        //        switch (count)
+        //        {
+        //            case 1:
+        //                ticket.Section = sectionArray[0];
+        //                break;
+        //            case 2:
+        //                ticket.Section = sectionArray[0];
+        //                ticket.Subsection = sectionArray[1];
+        //                break;
+        //            case int _ when count > 2:
+        //                ticket.Section = sectionArray[0];
+        //                ticket.Subsection = sectionArray[1];
+        //                ticket.Paragraph = sectionArray[2];
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
 
-            return ticket;
-        }
+        //    return ticket;
+        //}
 
     }
 }
