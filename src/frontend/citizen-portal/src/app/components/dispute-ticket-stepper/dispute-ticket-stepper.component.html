@@ -164,7 +164,7 @@
                       <mat-form-field class="w-100">
                         <mat-label>Province or state of driver's licence</mat-label>
                         <mat-select formControlName="drivers_licence_province">
-                          <mat-option *ngFor="let province of provinces" [value]="province.name">
+                          <mat-option *ngFor="let province of provinces" [value]="province.abbreviation">
                             {{ province.name }}
                           </mat-option>
                         </mat-select>
