@@ -171,7 +171,7 @@
     "ticket_error": "Le ticket n'a pas pu être récupéré",
     "dispute_create_error": "Le litige n'a pas pu être créé",
     "statute_error": "Les statuts n’ont pas pu être chargés",
-    "dispute_error": "Les litiges n’ont pas pu être récupérés"
+    "dispute_error": "Les litiges n’ont pas pu être rejugés / sauvegardés."
   },
   "error": {
     "required": "Obligatoire",
