@@ -543,12 +543,12 @@
       <button (click)="showForm()">Show Form</button>
       <div style="float: right; width: 100%;">
         <button class="large" mat-flat-button type="button" color="primary"
-          [disabled]="lastUpdatedDispute.status != 'VALIDATED' || this.form.invalid" (click)="approve()"
+          [disabled]="lastUpdatedDispute.status != 'VALIDATED' || this.form.invalid || this.form.touched" (click)="approve()"
           style="background-color:  #2ba242;">
           Approve and submit to ARC
         </button>
         <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-          [disabled]="lastUpdatedDispute.status != 'VALIDATED' || this.form.invalid" (click)="reject()">
+          [disabled]="lastUpdatedDispute.status != 'VALIDATED' || this.form.invalid || this.form.touched" (click)="reject()">
           Reject
         </button>
         <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">

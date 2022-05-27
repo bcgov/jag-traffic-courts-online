@@ -118,7 +118,7 @@
                         <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
                         <mat-error *ngIf="form.get('birthdate')?.hasError('required')">{{"error.required" |
                           translate}}</mat-error>
-                        <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate
+                        <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate</mat-error>
                       </mat-form-field>
                     </div>
                   </div>

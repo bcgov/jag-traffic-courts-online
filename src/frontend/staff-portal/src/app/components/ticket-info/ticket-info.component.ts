@@ -1,18 +1,21 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { DatePipe } from '@angular/common';
 import { DisputeView, DisputesService } from '../../services/disputes.service';
-import { Subscription } from 'rxjs';
+import { last, Subscription } from 'rxjs';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { Dispute, DisputedCountPlea, ViolationTicket, ViolationTicketCount } from 'app/api';
+import { Dispute, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
-import { DateRange } from '@angular/material/datepicker';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
@@ -23,6 +26,7 @@ export class TicketInfoComponent implements OnInit {
   @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
+  public dialog: MatDialog;
   public retrieving: boolean = true;
   public conflict: boolean = false;
   public previousButtonKey = 'stepper.backReview';
@@ -562,7 +566,21 @@ export class TicketInfoComponent implements OnInit {
   }
 
   public cancel(): void {
-
+    const data: DialogOptions = {
+      titleKey: "Cancel ticket resolution request?",
+      messageKey:
+        "Please enter the reason this request is being cancelled. This information will be sent to the user in email notification.",
+      actionTextKey: "Send cancellation notification",
+      cancelTextKey: "Go back",
+      icon: null,
+    };
+    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+      .subscribe((action: boolean) => {
+        if (action) {
+          this.disputesService.cancelDispute(this.lastUpdatedDispute.id);
+          this.onBack();
+        }
+      });
   }
 
   showForm(): void {
@@ -617,9 +635,9 @@ export class TicketInfoComponent implements OnInit {
             .setValue(this.getLegalParagraphing(violationTicketCount));
         });
       },
-      (error: any) => {
-        this.retrieving = false;
-        if (error.status == 409) this.conflict = true;
-      });
+        (error: any) => {
+          this.retrieving = false;
+          if (error.status == 409) this.conflict = true;
+        });
   }
 }

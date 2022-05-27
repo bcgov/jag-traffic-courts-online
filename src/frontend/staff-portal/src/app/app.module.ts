@@ -22,6 +22,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatIconModule } from '@angular/material/icon';
@@ -87,6 +88,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
+    MatDialogModule,
     MatAutocompleteModule,
     AuthConfigModule,
     MatSortModule,
