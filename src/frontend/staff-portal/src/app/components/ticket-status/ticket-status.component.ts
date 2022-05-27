@@ -1,5 +1,5 @@
 import { Component, Input  } from '@angular/core';
-import { DisputeView } from '../../services/disputes.service';
+import { Dispute } from '../../api/model/dispute.model';
 
 @Component({
   selector: 'app-ticket-status',
@@ -7,7 +7,7 @@ import { DisputeView } from '../../services/disputes.service';
   styleUrls: ['./ticket-status.component.scss']
 })
 export class TicketStatusComponent {
-  @Input() public dispute: DisputeView;
+  @Input() public dispute: Dispute;
   
   constructor() { }
 

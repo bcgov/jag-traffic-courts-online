@@ -8,12 +8,13 @@ import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { DatePipe } from '@angular/common';
 import { DisputeView, DisputesService } from '../../services/disputes.service';
-import { last, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { Dispute, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -26,7 +27,7 @@ export class TicketInfoComponent implements OnInit {
   @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
-  public dialog: MatDialog;
+
   public retrieving: boolean = true;
   public conflict: boolean = false;
   public previousButtonKey = 'stepper.backReview';
@@ -61,6 +62,7 @@ export class TicketInfoComponent implements OnInit {
     protected formBuilder: FormBuilder,
     private utilsService: UtilsService,
     private datePipe: DatePipe,
+    private dialog: MatDialog,
     private logger: LoggerService,
     private disputesService: DisputesService,
     public mockConfigService: MockConfigService,
@@ -103,6 +105,7 @@ export class TicketInfoComponent implements OnInit {
       provincialCourtHearingLocation: [null, [Validators.required]],
       _chargeCount: [1],
       _amountOwing: [null],
+      rejectedReason: [null],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
         provincialCourtHearingLocation: [null, [Validators.required]],
@@ -279,6 +282,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.city = this.form.get('city').value;
     putDispute.province = this.form.get('province').value;
     putDispute.postalCode = this.form.get('postalCode').value;
+    putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
@@ -296,17 +300,19 @@ export class TicketInfoComponent implements OnInit {
       this.lastUpdatedDispute = response;
 
       // markAsUntouched notice of dispute fields
+      console.log(this.form);
       this.form.get('surname').markAsUntouched();
       this.form.get('givenNames').markAsUntouched();
       this.form.get('driversLicenceNumber').markAsUntouched();
       this.form.get('driversLicenceProvince').markAsUntouched();
       this.form.get('homePhoneNumber').markAsUntouched();
       this.form.get('emailAddres').markAsUntouched();
-      this.form.get('birthdate').markAsUntouched();
+      // this.form.get('birthdate').markAsUntouched();
       this.form.get('address').markAsUntouched();
       this.form.get('city').markAsUntouched();
       this.form.get('province').markAsUntouched();
       this.form.get('postalCode').markAsUntouched();
+      this.form.get('rejectedReason').markAsUntouched();
     });
   }
 
@@ -395,6 +401,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('postalCode').invalid) return false;
     if (this.form.get('driversLicenceNumber').invalid) return false;
     if (this.form.get('driversLicenceProvince').invalid) return false;
+    if (this.form.get('rejectedReason').invalid) return false;
 
     // check for touched fields
     if (this.form.get('emailAddress').touched) return true;
@@ -409,6 +416,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('postalCode').touched) return true;
     if (this.form.get('driversLicenceNumber').touched) return true;
     if (this.form.get('driversLicenceProvince').touched) return true;
+    if (this.form.get('rejectedReason').touched) return true;
 
     // no contact information touched, all valid
     return false;
@@ -558,11 +566,56 @@ export class TicketInfoComponent implements OnInit {
   }
 
   public approve(): void {
+    const data: DialogOptions = {
+      titleKey: "Approve ticket resolution request?",
+      messageKey:
+        "Once you approve this request, the information will be sent to ICBC. Are you sure you are ready to approve and submit this request to ARC?",
+      actionTextKey: "Approve and send request",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+    };
+    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          // no need to pass back byte array with image
+          let tempDispute = this.lastUpdatedDispute;
+          tempDispute.violationTicket.violationTicketImage = null;
 
+          // submit dispute and return to TRM home
+          this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(response => {
+            this.onBack()
+          });
+          this.onBack();
+        }
+      });
   }
 
   public reject(): void {
+    const data: DialogOptions = {
+      titleKey: "Reject ticket resolution request?",
+      messageKey:
+        "Please enter the reason this request is being rejected. This information will be sent to the user in email notification.",
+      actionTextKey: "Send rejection notification",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+    };
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action.output.response) {
+          this.lastUpdatedDispute.rejectedReason = action.output.reason;
 
+          // no need to pass back byte array with image
+          let tempDispute = this.lastUpdatedDispute;
+          tempDispute.violationTicket.violationTicketImage = null;
+
+          // udate the reason entered, reject dispute and return to TRM home 
+          this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe(response => {
+            this.onBack()
+          });
+        }
+      });
   }
 
   public cancel(): void {
@@ -571,20 +624,27 @@ export class TicketInfoComponent implements OnInit {
       messageKey:
         "Please enter the reason this request is being cancelled. This information will be sent to the user in email notification.",
       actionTextKey: "Send cancellation notification",
+      actionType: "warn",
       cancelTextKey: "Go back",
-      icon: null,
+      icon: "error_outline"
     };
-    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
-      .subscribe((action: boolean) => {
-        if (action) {
-          this.disputesService.cancelDispute(this.lastUpdatedDispute.id);
-          this.onBack();
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action.output.response) {
+          this.lastUpdatedDispute.rejectedReason = action.output.reason;
+
+          // no need to pass back byte array with image
+          let tempDispute = this.lastUpdatedDispute;
+          tempDispute.violationTicket.violationTicketImage = null;
+
+          // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
+          this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe(response => {
+            this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe(response => {
+              this.onBack()
+            });
+          });
         }
       });
-  }
-
-  showForm(): void {
-    console.log(this.form);
   }
 
   // get dispute by id

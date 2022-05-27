@@ -143,7 +143,7 @@ export class DisputesService implements IDisputesService {
      */
    public cancelDispute(disputeId: string): Observable<Dispute> {
 
-    return this.disputeService.apiDisputeDisputeIdPut(disputeId)
+    return this.disputeService.apiDisputeDisputeIdCancelPut(disputeId)
       .pipe(
         map((response: any) =>
           response ? response : null
@@ -172,9 +172,9 @@ export class DisputesService implements IDisputesService {
      *
      * @param disputeId
      */
-     public rejectDispute(disputeId: string): Observable<Dispute> {
+     public rejectDispute(disputeId: string, rejectedReason: string): Observable<Dispute> {
 
-      return this.disputeService.apiDisputeDisputeIdPut(disputeId)
+      return this.disputeService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
         .pipe(
           map((response: any) =>
             response ? response : null
@@ -205,7 +205,7 @@ export class DisputesService implements IDisputesService {
      */
   public submitDispute(disputeId: string): Observable<Dispute> {
 
-    return this.disputeService.apiDisputeDisputeIdPut(disputeId)
+    return this.disputeService.apiDisputeDisputeIdSubmitPut(disputeId)
       .pipe(
         map((response: any) =>
           response ? response : null

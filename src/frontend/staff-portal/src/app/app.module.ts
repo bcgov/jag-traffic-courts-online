@@ -22,7 +22,7 @@ import {
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { MatStepperModule } from '@angular/material/stepper';
-import { MatDialogModule } from '@angular/material/dialog';
+import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatIconModule } from '@angular/material/icon';
@@ -40,7 +40,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
-
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
@@ -88,7 +87,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ConfigModule,
     HttpClientModule,
     MatStepperModule,
-    MatDialogModule,
     MatAutocompleteModule,
     AuthConfigModule,
     MatSortModule,
@@ -109,7 +107,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     }),
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  exports: [NgBusyModule, TranslateModule],
+  exports: [NgBusyModule, TranslateModule, NgxMaterialModule],
   providers: [
     CurrencyPipe,
     DatePipe,
@@ -152,8 +150,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       multi: false
     },
   ],
-  bootstrap: [AppComponent],
-  
+  bootstrap: [AppComponent]
 })
 export class AppModule {
   private availableLanguages = ['en', 'fr'];
