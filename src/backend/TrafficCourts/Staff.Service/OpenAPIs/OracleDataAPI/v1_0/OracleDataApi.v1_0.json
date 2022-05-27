@@ -341,6 +341,17 @@
               "format": "date-time"
             },
             "example": "2022-03-15"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "If specified, will retrieve records which do not have the specified status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
+            },
+            "example": "CANCELLED"
           }
         ],
         "responses": {
@@ -825,6 +836,11 @@
             "readOnly": true
           },
           "paragraph": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "subparagraph": {
             "type": "string",
             "nullable": true,
             "readOnly": true

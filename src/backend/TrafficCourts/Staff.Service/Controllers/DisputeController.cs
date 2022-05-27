@@ -23,8 +23,10 @@ public class DisputeController : TCOControllerBase<DisputeController>
     }
 
     /// <summary>
-    /// Returns all Disputes from the Oracle Data API.
+    /// Returns all Disputes from the Oracle Data API based on a specified type to exclude and older than date.
     /// </summary>
+    /// <param name="olderThan"></param>
+    /// <param name="status"></param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The Disputes were found.</response>
     /// <response code="401">Unauthenticated.</response>
@@ -34,13 +36,13 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [HttpGet("disputes")]
     [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetDisputesAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputesAsync(DateTimeOffset? olderThan, Status? status, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving all Disputes from oracle-data-api");
 
         try
         {
-            ICollection<Dispute> disputes = await _disputeService.GetAllDisputesAsync(cancellationToken);
+            ICollection<Dispute> disputes = await _disputeService.GetAllDisputesAsync(olderThan, status, cancellationToken);
             return Ok(disputes);
         }
         catch (Exception e)
