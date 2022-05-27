@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
@@ -24,7 +23,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 })
 export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeView;
-  @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
+  @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
 
@@ -58,7 +57,6 @@ export class TicketInfoComponent implements OnInit {
   }
   constructor(
     protected route: ActivatedRoute,
-    protected router: Router,
     protected formBuilder: FormBuilder,
     private utilsService: UtilsService,
     private datePipe: DatePipe,
@@ -66,7 +64,8 @@ export class TicketInfoComponent implements OnInit {
     private logger: LoggerService,
     private disputesService: DisputesService,
     public mockConfigService: MockConfigService,
-    public lookupsService: LookupsService
+    public lookupsService: LookupsService,
+    @Inject(Router) private router,
   ) {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
@@ -300,7 +299,6 @@ export class TicketInfoComponent implements OnInit {
       this.lastUpdatedDispute = response;
 
       // markAsUntouched notice of dispute fields
-      console.log(this.form);
       this.form.get('surname').markAsUntouched();
       this.form.get('givenNames').markAsUntouched();
       this.form.get('driversLicenceNumber').markAsUntouched();
@@ -578,15 +576,15 @@ export class TicketInfoComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          // no need to pass back byte array with image
-          let tempDispute = this.lastUpdatedDispute;
-          tempDispute.violationTicket.violationTicketImage = null;
 
           // submit dispute and return to TRM home
-          this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(response => {
-            this.onBack()
-          });
-          this.onBack();
+          this.busy = this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(
+            {
+              next: response => { this.onBack(); },
+              error: err => { },
+              complete: () => { }
+            }
+          );
         }
       });
   }
@@ -606,13 +604,11 @@ export class TicketInfoComponent implements OnInit {
         if (action.output.response) {
           this.lastUpdatedDispute.rejectedReason = action.output.reason;
 
-          // no need to pass back byte array with image
-          let tempDispute = this.lastUpdatedDispute;
-          tempDispute.violationTicket.violationTicketImage = null;
-
           // udate the reason entered, reject dispute and return to TRM home 
-          this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe(response => {
-            this.onBack()
+          this.busy = this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
+            next: response => { this.onBack(); },
+            error: err => { },
+            complete: () => { }
           });
         }
       });
@@ -638,10 +634,16 @@ export class TicketInfoComponent implements OnInit {
           tempDispute.violationTicket.violationTicketImage = null;
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe(response => {
-            this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe(response => {
-              this.onBack()
-            });
+          this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe({
+            next: response => {
+              this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
+                next: response => { this.onBack() },
+                error: err => { },
+                complete: () => {}
+              });
+            },
+            error: err => { },
+            complete: () => { }
           });
         }
       });
