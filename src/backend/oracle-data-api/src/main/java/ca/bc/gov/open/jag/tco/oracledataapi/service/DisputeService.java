@@ -33,15 +33,15 @@ public class DisputeService {
 	 *
 	 * @return
 	 */
-	public Iterable<Dispute> getAllDisputes(Date olderThan, DisputeStatus status) {
-		if (olderThan == null && status == null) {
+	public Iterable<Dispute> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+		if (olderThan == null && excludeStatus == null) {
 			return disputeRepository.findAll();
 		} else if (olderThan == null) {
-			return disputeRepository.findByStatusNot(status);
-		} else if (status == null) {
+			return disputeRepository.findByStatusNot(excludeStatus);
+		} else if (excludeStatus == null) {
 			return disputeRepository.findByCreatedTsBefore(olderThan);
 		} else {
-			return disputeRepository.findByStatusNotAndCreatedTsBefore(status, olderThan);
+			return disputeRepository.findByStatusNotAndCreatedTsBefore(excludeStatus, olderThan);
 		}
 	}
 

@@ -343,7 +343,7 @@
             "example": "2022-03-15"
           },
           {
-            "name": "status",
+            "name": "excludeStatus",
             "in": "query",
             "description": "If specified, will retrieve records which do not have the specified status",
             "required": false,

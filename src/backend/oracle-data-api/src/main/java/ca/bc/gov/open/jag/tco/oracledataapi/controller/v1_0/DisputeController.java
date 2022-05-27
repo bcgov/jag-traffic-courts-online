@@ -62,8 +62,8 @@ public class DisputeController {
 			Date olderThan,
 			@RequestParam(required = false)
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
-			DisputeStatus status) {
-		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, status);
+			DisputeStatus excludeStatus) {
+		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
 		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
 		return IterableUtils.toList(allDisputes);
 	}

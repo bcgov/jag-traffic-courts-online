@@ -13,10 +13,10 @@ public interface DisputeRepository extends CrudRepository<Dispute, UUID> {
     public Iterable<Dispute> findByCreatedTsBefore(Date olderThan);
     
     /** Fetch all records which do not have the specified status. */
-    public Iterable<Dispute> findByStatusNot(DisputeStatus status);
+    public Iterable<Dispute> findByStatusNot(DisputeStatus excludeStatus);
     
     /** Fetch all records which do not have the specified status and older than the given date. */
-    public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus status, Date olderThan);
+    public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
 	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
     public Iterable<Dispute> findByAssignedTsBefore(Date assignedTs);
