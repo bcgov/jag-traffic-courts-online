@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -10,9 +10,12 @@ import { DisputeView, DisputesService } from '../../services/disputes.service';
 import { Subscription } from 'rxjs';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { Dispute, DisputedCountPlea, ViolationTicket, ViolationTicketCount } from 'app/api';
+import { Dispute, ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
-import { DateRange } from '@angular/material/datepicker';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+
 @Component({
   selector: 'app-ticket-info',
   templateUrl: './ticket-info.component.html',
@@ -20,9 +23,12 @@ import { DateRange } from '@angular/material/datepicker';
 })
 export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeView;
-  @Output() public backTicketList: EventEmitter<MatStepper> = new EventEmitter();
+  @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
+
+  public retrieving: boolean = true;
+  public conflict: boolean = false;
   public previousButtonKey = 'stepper.backReview';
   public saveButtonKey = 'stepper.next';
   public busy: Subscription;
@@ -51,14 +57,15 @@ export class TicketInfoComponent implements OnInit {
   }
   constructor(
     protected route: ActivatedRoute,
-    protected router: Router,
     protected formBuilder: FormBuilder,
     private utilsService: UtilsService,
     private datePipe: DatePipe,
+    private dialog: MatDialog,
     private logger: LoggerService,
     private disputesService: DisputesService,
     public mockConfigService: MockConfigService,
-    public lookupsService: LookupsService
+    public lookupsService: LookupsService,
+    @Inject(Router) private router,
   ) {
     const today = new Date();
     this.isMobile = this.utilsService.isMobile();
@@ -97,6 +104,7 @@ export class TicketInfoComponent implements OnInit {
       provincialCourtHearingLocation: [null, [Validators.required]],
       _chargeCount: [1],
       _amountOwing: [null],
+      rejectedReason: [null],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
         provincialCourtHearingLocation: [null, [Validators.required]],
@@ -237,7 +245,21 @@ export class TicketInfoComponent implements OnInit {
       }
     });
 
-    this.putDispute(putDispute);
+    this.logger.log('TicketInfoComponent::putDispute', putDispute);
+
+    // no need to pass back byte array with image
+    let tempDispute = putDispute;
+    tempDispute.violationTicket.violationTicketImage = null;
+
+    this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe((response: Dispute) => {
+      this.logger.info(
+        'TicketInfoComponent::putDispute response',
+        response
+      );
+    });
+
+    // markAsUntouched form group
+    this.form.get('violationTicket').markAsUntouched();
   }
 
   public onSubmitNoticeOfDispute(): void {
@@ -256,8 +278,34 @@ export class TicketInfoComponent implements OnInit {
     putDispute.city = this.form.get('city').value;
     putDispute.province = this.form.get('province').value;
     putDispute.postalCode = this.form.get('postalCode').value;
+    putDispute.rejectedReason = this.form.get('rejectedReason').value;
 
-    this.putDispute(putDispute);
+    this.logger.log('TicketInfoComponent::putDispute', putDispute);
+
+    // no need to pass back byte array with image
+    let tempDispute = putDispute;
+    tempDispute.violationTicket.violationTicketImage = null;
+
+    this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe((response: Dispute) => {
+      this.logger.info(
+        'TicketInfoComponent::putDispute response',
+        response
+      );
+
+      // markAsUntouched notice of dispute fields
+      this.form.get('surname').markAsUntouched();
+      this.form.get('givenNames').markAsUntouched();
+      this.form.get('driversLicenceNumber').markAsUntouched();
+      this.form.get('driversLicenceProvince').markAsUntouched();
+      this.form.get('homePhoneNumber').markAsUntouched();
+      this.form.get('emailAddress').markAsUntouched();
+      this.form.get('birthdate').markAsUntouched();
+      this.form.get('address').markAsUntouched();
+      this.form.get('city').markAsUntouched();
+      this.form.get('province').markAsUntouched();
+      this.form.get('postalCode').markAsUntouched();
+      this.form.get('rejectedReason').markAsUntouched();
+    });
   }
 
   // decompose string into fullsection, section, subsection, paragraph
@@ -345,6 +393,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('postalCode').invalid) return false;
     if (this.form.get('driversLicenceNumber').invalid) return false;
     if (this.form.get('driversLicenceProvince').invalid) return false;
+    if (this.form.get('rejectedReason').invalid) return false;
 
     // check for touched fields
     if (this.form.get('emailAddress').touched) return true;
@@ -359,6 +408,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('postalCode').touched) return true;
     if (this.form.get('driversLicenceNumber').touched) return true;
     if (this.form.get('driversLicenceProvince').touched) return true;
+    if (this.form.get('rejectedReason').touched) return true;
 
     // no contact information touched, all valid
     return false;
@@ -398,11 +448,7 @@ export class TicketInfoComponent implements OnInit {
         'TicketInfoComponent::putDispute response',
         response
       );
-
-      // this structure contains last version of what was send to db
-      this.lastUpdatedDispute = response;
     });
-
   }
 
   setViolationTicketFieldsFromJSON(dispute: Dispute): Dispute {
@@ -503,49 +549,147 @@ export class TicketInfoComponent implements OnInit {
     return dispute;
   }
 
+  validate(): void {
+    this.lastUpdatedDispute.status = "VALIDATED"; // ToDo: send to api
+  }
+
+  public approve(): void {
+    const data: DialogOptions = {
+      titleKey: "Approve ticket resolution request?",
+      messageKey:
+        "Once you approve this request, the information will be sent to ICBC. Are you sure you are ready to approve and submit this request to ARC?",
+      actionTextKey: "Approve and send request",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+    };
+    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+
+          // submit dispute and return to TRM home
+          this.busy = this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(
+            {
+              next: response => { this.onBack(); },
+              error: err => { },
+              complete: () => { }
+            }
+          );
+        }
+      });
+  }
+
+  public reject(): void {
+    const data: DialogOptions = {
+      titleKey: "Reject ticket resolution request?",
+      messageKey:
+        "Please enter the reason this request is being rejected. This information will be sent to the user in email notification.",
+      actionTextKey: "Send rejection notification",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+    };
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action.output.response) {
+          this.lastUpdatedDispute.rejectedReason = action.output.reason;
+
+          // udate the reason entered, reject dispute and return to TRM home 
+          this.busy = this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
+            next: response => { this.onBack(); },
+            error: err => { },
+            complete: () => { }
+          });
+        }
+      });
+  }
+
+  public cancel(): void {
+    const data: DialogOptions = {
+      titleKey: "Cancel ticket resolution request?",
+      messageKey:
+        "Please enter the reason this request is being cancelled. This information will be sent to the user in email notification.",
+      actionTextKey: "Send cancellation notification",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline"
+    };
+    this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+        if (action.output.response) {
+          this.lastUpdatedDispute.rejectedReason = action.output.reason;
+
+          // no need to pass back byte array with image
+          let tempDispute = this.lastUpdatedDispute;
+          tempDispute.violationTicket.violationTicketImage = null;
+
+          // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
+          this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe({
+            next: response => {
+              this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
+                next: response => { this.onBack() },
+                error: err => { },
+                complete: () => {}
+              });
+            },
+            error: err => { },
+            complete: () => { }
+          });
+        }
+      });
+  }
+
   // get dispute by id
   getDispute(): void {
     this.logger.log('TicketInfoComponent::getDispute');
 
-    this.busy = this.disputesService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
-      // this.disputesService.dispute$.next(response);
-      this.logger.info(
-        'TicketInfoComponent::getDispute response',
-        response
-      );
+    this.conflict = false;
+    this.initialDisputeValues = null;
+    this.lastUpdatedDispute = null;
 
-      // var responseObject = JSON.parse("{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"status\":\"NEW\",\"ticketNumber\":\"AQ92926841\",\"provincialCourtHearingLocation\":\"Franklin\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"submittedDate\":\"2022-05-11T14:38:15.225Z\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine Frances\",\"birthdate\":\"2022-05-11T14:38:15.225Z\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceNumber\":\"3333333\",\"address\":\"3-1409 Camosun Street\",\"city\":\"Victoria\",\"province\":\"British Columbia\",\"postalCode\":\"V8V4L5\",\"homePhoneNumber\":\"2222222222\",\"workPhoneNumber\":\"2222222222\",\"emailAddress\":\"lfdpanda@live.ca\",\"filingDate\":\"2022-05-11T14:38:15.225Z\",\"disputedCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"plea\":\"NOT_GUILTY\",\"count\":1,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa7\",\"plea\":\"NOT_GUILTY\",\"count\":2,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa8\",\"plea\":\"NOT_GUILTY\",\"count\":3,\"requestTimeToPay\":false,\"requestReduction\":false,\"appearInCourt\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"representedByLawyer\":true,\"legalRepresentation\":{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"lawFirmName\":\"MickeyMouse\",\"lawyerFullName\":\"Mickey\",\"lawyerEmail\":\"1@1.com\",\"lawyerAddress\":\"1234EasyStreet\",\"lawyerPhoneNumber\":\"3333333333\",\"additionalProperties\":{\"additionalProp1\":\"string\",\"additionalProp2\":\"string\",\"additionalProp3\":\"string\"}},\"interpreterLanguage\":\"Albanian\",\"numberOfWitness\":2,\"fineReductionReason\":\"finereductionreason\",\"timeToPayReason\":\"Timetopayreason\",\"rejectedReason\":\"string\",\"disputantDetectedOcrIssues\":true,\"disputantOcrIssuesDescription\":\"Name incorrect WWWWWWW\",\"systemDetectedOcrIssues\":true,\"jjAssigned\":\"Bryan\",\"ocrViolationTicket\":\"string\",\"violationTicket\":{\"violationTicketImage\":{\"image\":\"\",\"mimeType\":{\"name\":\"apple\",\"primaryType\":\"image\",\"subType\":\"pdf\",\"description\":\"descr\",\"extensions\":[\"string\"]}},\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\"ticketNumber\":\"AQ92926841\",\"surname\":\"Dame\",\"givenNames\":\"Lorraine\",\"isYoungPerson\":false,\"driversLicenceNumber\":\"33333333\",\"driversLicenceProvince\":\"British Columbia\",\"driversLicenceProducedYear\":2020,\"driversLicenceExpiryYear\":2025,\"birthdate\":\"1965-07-01T14:38:15.225Z\",\"address\":\"3-1409CamosunStreet\",\"city\":\"Victoria\",\"province\":\"BritishColumbia\",\"postalCode\":\"V8V4L5\",\"isChangeOfAddress\":false,\"isDriver\":true,\"isCyclist\":false,\"isOwner\":true,\"isPedestrian\":false,\"isPassenger\":false,\"isOther\":false,\"otherDescription\":\"\",\"issuedDate\":\"2022-05-11T14:38:15.225Z\",\"issuedOnRoadOrHighway\":\"CamosunStreet\",\"issuedAtOrNearCity\":\"Victoria\",\"isMvaOffence\":true,\"isWlaOffence\":false,\"isLcaOffence\":false,\"isMcaOffence\":false,\"isFaaOffence\":false,\"isTcrOffence\":false,\"isCtaOffence\":false,\"isOtherOffence\":false,\"otherOffenceDescription\":\"other\",\"organizationLocation\":\"Victoria\",\"violationTicketCounts\":[{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa0\",\"count\":1,\"description\":\"Parking in a handicap spot without the required sticker\",\"actRegulation\":\"MVA\",\"fullSection\":\"139\",\"section\":\"c\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":140,\"isAct\":false,\"isRegulation\":true,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa1\",\"count\":2,\"description\":\"Distracted driving\",\"actRegulation\":\"MVA\",\"fullSection\":\"182\",\"section\":\"7\",\"subsection\":\"\",\"paragraph\":\"\",\"ticketedAmount\":110,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},{\"id\":\"3fa85f64-5717-4562-b3fc-2c963f66afa2\",\"count\":3,\"description\":\"Exceed licensed gross vehicle weight\",\"actRegulation\":\"MVA\",\"fullSection\":\"188\",\"section\":\"b\",\"subsection\":\"2\",\"paragraph\":\"\",\"ticketedAmount\":480,\"isAct\":false,\"isRegulation\":false,\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}],\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}},\"additionalProperties\":{\"additionalProp1\":\"\",\"additionalProp2\":\"\",\"additionalProp3\":\"\"}}")
-      this.initialDisputeValues = this.setViolationTicketFieldsFromJSON(response);
-      this.lastUpdatedDispute = this.initialDisputeValues;
-      this.form.patchValue(this.initialDisputeValues);
+    this.busy = this.disputesService.getDispute(this.disputeInfo.id)
+      .subscribe((response: Dispute) => {
+        this.retrieving = false;
+        this.logger.info(
+          'TicketInfoComponent::getDispute response',
+          response
+        );
 
-      // set violation date and time
-      let violationDate = new Date(response.issuedDate);
-      this.form.get('violationTicket').get('issuedDate').setValue(response.issuedDate);
-      this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
-      this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
+        this.initialDisputeValues = this.setViolationTicketFieldsFromJSON(response);
+        this.lastUpdatedDispute = this.initialDisputeValues;
+        this.form.patchValue(this.initialDisputeValues);
 
-      // ticket image
-      this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
+        // set violation date and time
+        let violationDate = new Date(response.issuedDate);
+        this.form.get('violationTicket').get('issuedDate').setValue(response.issuedDate);
+        this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
+        this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
 
-      // set disputant detected ocr issues
-      this.flagsForm.get('disputantOcrIssuesDescription').setValue(response.disputantOcrIssuesDescription);
+        // ticket image
+        this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
 
-      // set provincial court hearing location in violation ticket subform
-      this.form.get('violationTicket').get('provincialCourtHearingLocation').setValue(
-        this.form.get('provincialCourtHearingLocation').value
-      );
+        // set disputant detected ocr issues
+        this.flagsForm.get('disputantOcrIssuesDescription').setValue(response.disputantOcrIssuesDescription);
 
-      // set counts 1,2,3 of violation ticket
-      this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
+        // set provincial court hearing location in violation ticket subform
+        this.form.get('violationTicket').get('provincialCourtHearingLocation').setValue(
+          this.form.get('provincialCourtHearingLocation').value
+        );
 
-        this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).patchValue(violationTicketCount);
-        this.form
-          .get('violationTicket')
-          .get('violationTicketCount' + violationTicketCount.count.toString())
-          .get('fullDescription')
-          .setValue(this.getLegalParagraphing(violationTicketCount));
-      });
-    });
+        // set counts 1,2,3 of violation ticket
+        this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
+
+          this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).patchValue(violationTicketCount);
+          this.form
+            .get('violationTicket')
+            .get('violationTicketCount' + violationTicketCount.count.toString())
+            .get('fullDescription')
+            .setValue(this.getLegalParagraphing(violationTicketCount));
+        });
+      },
+        (error: any) => {
+          this.retrieving = false;
+          if (error.status == 409) this.conflict = true;
+        });
   }
 }

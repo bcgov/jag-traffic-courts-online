@@ -1,13 +1,16 @@
 <h3 mat-dialog-title class="d-flex align-items-stretch">
-  <mat-icon *ngIf="options.icon && !options.imageSrc" style="color:#2ba242 !important;">{{ options.icon }}</mat-icon>
+  <mat-icon *ngIf="options.icon && !options.imageSrc" [color]="options.actionType">{{ options.icon }}</mat-icon>&nbsp;
   <img *ngIf="options.imageSrc" [attr.src]="options.imageSrc" alt="" />
-  <strong class="flex-grow-1" *ngIf="options.titleKey">
-    <span style="color:#2ba242;">{{ options.titleKey | translate }}</span>
-  </strong>
+  <strong style="color: red;" *ngIf="options.titleKey">{{ options.titleKey | translate }}</strong>
 </h3>
 <mat-dialog-content>
   <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
   <ng-template appDialogContent></ng-template>
+  <mat-form-field style="width:100%">
+    <textarea matInput
+       [formControl]="reasonForm.get('reason')">
+    </textarea>
+  </mat-form-field> 
 </mat-dialog-content>
 <mat-dialog-actions>
   <button *ngIf="!options.cancelHide" mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
@@ -17,11 +20,10 @@
 
   <span class="flex-grow-1"></span>
 
-  <button *ngIf="!options.actionHide" color="primary" mat-flat-button style="background-color: #2ba242;" (click)="onConfirm()"
+  <button *ngIf="!options.actionHide" mat-flat-button color="primary" (click)="onConfirm()"
     class="my-2 me-1">
     {{ options.actionTextKey }}
   </button>
-
   <a *ngIf="options.actionLink" [attr.href]="options.actionLink.href" [attr.target]="options.actionLink.target">
     {{ options.actionLink.text }}
   </a>

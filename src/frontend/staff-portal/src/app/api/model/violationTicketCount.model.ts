@@ -27,6 +27,7 @@ export interface ViolationTicketCount {
     section?: string | null;
     subsection?: string | null;
     paragraph?: string | null;
+    subparagraph?: string | null;
     ticketedAmount?: number | null;
     isAct?: boolean | null;
     isRegulation?: boolean | null;

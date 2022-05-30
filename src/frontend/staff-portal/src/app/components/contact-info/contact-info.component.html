@@ -2,8 +2,23 @@
   <a (click)="onBack()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
   </a>
-  <app-ticket-status [dispute]="disputeInfo" *ngIf="disputeInfo"></app-ticket-status>
-  <div class="contact-info">
+  <app-ticket-status [dispute]="lastUpdatedDispute" *ngIf="lastUpdatedDispute"></app-ticket-status>
+  <div *ngIf="conflict == true">
+    <span>
+      <h3>This ticket is already assigned.</h3>
+    </span>
+  </div>
+  <div *ngIf="conflict == false && !initialDisputeValues && retrieving == false">
+    <span>
+      <h3>Error retrieving ticket information.</h3>
+    </span>
+  </div>
+  <div *ngIf="conflict == false && retrieving == true">
+    <span>
+      <h3>Retrieving ticket information...</h3>
+    </span>
+  </div>
+  <div class="contact-info" *ngIf="initialDisputeValues && conflict == false">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
         <app-page-header>
@@ -112,7 +127,8 @@
               <div class="col-md-6">
                 <mat-form-field class="w-100">
                   <mat-label>Birthdate</mat-label>
-                  <input matInput [matDatepicker]="picker" formControlName="birthdate" (click)="picker.open()" [max]="todayDate" />
+                  <input matInput [matDatepicker]="picker" formControlName="birthdate" (click)="picker.open()"
+                    [max]="todayDate" />
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
                   <mat-error *ngIf="form.get('birthdate').hasError('required')">Valid birthdate required</mat-error>
@@ -130,7 +146,8 @@
                   <mat-error *ngIf="form.get('homePhoneNumber').hasError('required')">{{
                     "error.required" | translate
                     }}</mat-error>
-                  <mat-error *ngIf="form.get('homePhoneNumber').hasError('mask')">Must be a valid phone number</mat-error>
+                  <mat-error *ngIf="form.get('homePhoneNumber').hasError('mask')">Must be a valid phone number
+                  </mat-error>
                 </mat-form-field>
               </div>
 
@@ -157,7 +174,7 @@
                   <mat-select formControlName="driversLicenceProvince"
                     (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
                     <mat-optgroup label="Canada">
-                      <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
+                      <mat-option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}
                       </mat-option>
                     </mat-optgroup>
                     <mat-optgroup label="United States">
@@ -195,7 +212,7 @@
               </div>
             </div>
             <div style="float: right; width: 100%;">
-              <button class="save-button btn btn-primary large" mat-flat-button type="submit" color="red"
+              <button class="large" mat-flat-button type="submit" color="primary"
                 [disabled]="!form.touched || form.invalid">
                 Save
               </button>
@@ -205,9 +222,38 @@
       </div>
     </mat-expansion-panel>
     <app-ticket-request></app-ticket-request>
-
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header (click)="handleCollapse('notes')">
+        <app-page-header>
+          <ng-container subHeader>
+            <span>Notes </span>
+            <i *ngIf="collapseObj?.notes" class="fa fa-minus-circle" style="font-size:18px; color:#009cde"></i>
+            <i *ngIf="!collapseObj?.notes" class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
+          </ng-container>
+        </app-page-header>
+      </mat-expansion-panel-header><br />
+      <mat-form-field style="width:100%">
+        <textarea matInput [formControl]="form.get('rejectedReason')">
+          </textarea>
+      </mat-form-field>
+    </mat-expansion-panel>
+    <div style="float: right; width: 100%;">
+      <button class="large" mat-flat-button type="button" color="primary"
+        [disabled]="this.form.invalid || this.form.touched"
+        (click)="approve()" style="background-color:  #2ba242;">
+        Approve and submit to ARC
+      </button>
+      <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
+        [disabled]="this.form.invalid || this.form.touched"
+        (click)="reject()">
+        Reject
+      </button>
+      <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">
+        Cancel
+      </button>
+    </div>
   </div>
-  
+
   <ng-template #noTicket>
     <h2>No current ticket</h2>
   </ng-template>

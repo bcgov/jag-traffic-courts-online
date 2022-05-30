@@ -12,6 +12,7 @@ model/dispute.model.ts
 model/disputeStatus.model.ts
 model/disputedCount.model.ts
 model/disputedCountPlea.model.ts
+model/excludeStatus.model.ts
 model/legalRepresentation.model.ts
 model/mimeType.model.ts
 model/models.ts
