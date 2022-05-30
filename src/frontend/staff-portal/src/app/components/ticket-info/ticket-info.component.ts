@@ -256,9 +256,6 @@ export class TicketInfoComponent implements OnInit {
         'TicketInfoComponent::putDispute response',
         response
       );
-
-      // this structure contains last version of what was send to db
-      this.lastUpdatedDispute = response;
     });
 
     // markAsUntouched form group
@@ -294,9 +291,6 @@ export class TicketInfoComponent implements OnInit {
         'TicketInfoComponent::putDispute response',
         response
       );
-
-      // this structure contains last version of what was send to db
-      this.lastUpdatedDispute = response;
 
       // markAsUntouched notice of dispute fields
       this.form.get('surname').markAsUntouched();
@@ -454,11 +448,7 @@ export class TicketInfoComponent implements OnInit {
         'TicketInfoComponent::putDispute response',
         response
       );
-
-      // this structure contains last version of what was send to db
-      this.lastUpdatedDispute = response;
     });
-
   }
 
   setViolationTicketFieldsFromJSON(dispute: Dispute): Dispute {
@@ -560,7 +550,7 @@ export class TicketInfoComponent implements OnInit {
   }
 
   validate(): void {
-    this.lastUpdatedDispute.status = "VALIDATED";
+    this.lastUpdatedDispute.status = "VALIDATED"; // ToDo: send to api
   }
 
   public approve(): void {
