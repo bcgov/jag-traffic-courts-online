@@ -21,6 +21,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { Dispute } from '../model/dispute.model';
 // @ts-ignore
+import { ExcludeStatus } from '../model/excludeStatus.model';
+// @ts-ignore
 import { ProblemDetails } from '../model/problemDetails.model';
 
 // @ts-ignore
@@ -535,14 +537,21 @@ export class DisputeService {
     }
 
     /**
-     * Returns all Disputes from the Oracle Data API.
+     * Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.
+     * @param excludeStatus 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputesGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
-    public apiDisputeDisputesGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
-    public apiDisputeDisputesGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
-    public apiDisputeDisputesGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<Dispute>>;
+    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<Dispute>>>;
+    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<Dispute>>>;
+    public apiDisputeDisputesGet(excludeStatus?: ExcludeStatus, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (excludeStatus !== undefined && excludeStatus !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>excludeStatus, 'excludeStatus');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -587,6 +596,7 @@ export class DisputeService {
         return this.httpClient.get<Array<Dispute>>(`${this.configuration.basePath}/api/dispute/disputes`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

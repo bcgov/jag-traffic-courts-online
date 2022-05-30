@@ -2,6 +2,7 @@ export * from './dispute.model';
 export * from './disputeStatus.model';
 export * from './disputedCount.model';
 export * from './disputedCountPlea.model';
+export * from './excludeStatus.model';
 export * from './legalRepresentation.model';
 export * from './mimeType.model';
 export * from './problemDetails.model';

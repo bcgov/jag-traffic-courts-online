@@ -11,7 +11,17 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Returns all Disputes from the Oracle Data API.",
+        "summary": "Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.",
+        "parameters": [
+          {
+            "name": "excludeStatus",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/ExcludeStatus"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The Disputes were found.",
@@ -937,6 +947,16 @@
         ],
         "type": "string"
       },
+      "ExcludeStatus": {
+        "enum": [
+          "NEW",
+          "VALIDATED",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED"
+        ],
+        "type": "string"
+      },
       "LegalRepresentation": {
         "type": "object",
         "properties": {
@@ -1307,6 +1327,10 @@
             "nullable": true
           },
           "paragraph": {
+            "type": "string",
+            "nullable": true
+          },
+          "subparagraph": {
             "type": "string",
             "nullable": true
           },
