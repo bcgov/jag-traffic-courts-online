@@ -104,4 +104,9 @@ vault:
 jobs:
   codeTables:
     enabled: true
+    # run once every hour
     cronExpression: "0 0 * * * *"
+  unassignDisputes:
+    enabled: true
+    # run once every 5 minutes
+    cronExpression: "0 0/5 * * * *"

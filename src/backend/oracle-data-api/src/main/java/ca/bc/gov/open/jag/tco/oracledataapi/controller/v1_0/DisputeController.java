@@ -47,7 +47,7 @@ public class DisputeController {
 	@Autowired
 	private LookupService lookupService;
 
-	private Logger log = LoggerFactory.getLogger(DisputeController.class);
+	private Logger logger = LoggerFactory.getLogger(DisputeController.class);
 
 	/**
 	 * GET endpoint that retrieves all the dispute detail from the database
@@ -235,6 +235,7 @@ public class DisputeController {
 			description = "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint."
 			)
 	public void codeTableRefresh() {
+		logger.debug("CodeTableRefresh called");
 		lookupService.refresh();
 	}
 
@@ -247,6 +248,7 @@ public class DisputeController {
 			description = "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour."
 			)
 	public void unassignDisputes() {
+		logger.debug("UnassignDisputes called");
 		disputeService.unassignDisputes();
 	}
 

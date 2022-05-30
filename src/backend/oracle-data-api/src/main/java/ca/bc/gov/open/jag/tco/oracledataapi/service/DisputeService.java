@@ -185,11 +185,10 @@ public class DisputeService {
 		if (StringUtils.isBlank(dispute.getAssignedTo()) || dispute.getAssignedTo().equals(principal.getName())) {
 
 			dispute.setAssignedTo(principal.getName());
-			Date now = new Date();
-			dispute.setAssignedTs(now);
+			dispute.setAssignedTs(new Date());
 			disputeRepository.save(dispute);
 
-			logger.debug("Dispute with id " + id + " has been assigned to " + principal.getName() + " on " + now);
+			logger.debug("Dispute with id {} has been assigned to {}", id, principal.getName());
 
 			return true;
 		}
@@ -199,14 +198,22 @@ public class DisputeService {
 
 	/**
 	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
+	 * @return number of records modified.
 	 */
 	public void unassignDisputes() {
+		int count = 0;
+
 		// Find all Disputes with an assignedTs older than 1 hour ago.
-		for (Dispute dispute : disputeRepository.findByAssignedTsBefore(DateUtils.addHours(new Date(), -1))) {
+		Date hourAgo = DateUtils.addHours(new Date(), -1);
+		logger.debug("Unassigning all disputes older than {}", hourAgo.toInstant());
+		for (Dispute dispute : disputeRepository.findByAssignedTsBefore(hourAgo)) {
 			dispute.setAssignedTo(null);
 			dispute.setAssignedTs(null);
 			disputeRepository.save(dispute);
+			count++;
 		}
+
+		logger.debug("Unassigned {} record(s)", count);
 	}
 
 }
