@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +16,7 @@ import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,7 +35,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testSaveDispute() {
 		// Assert db is empty and clean
-		List<Dispute> allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null));
+		List<Dispute> allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a single Dispute
@@ -39,7 +43,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		UUID disputeId = disputeController.saveDispute(dispute);
 
 		// Assert db contains the single created record
-		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null));
+		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null, null));
 		assertEquals(1, allDisputes.size());
 		assertEquals(disputeId, allDisputes.get(0).getId());
 		assertEquals(dispute.getSurname(), allDisputes.get(0).getSurname());
@@ -48,7 +52,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		disputeController.deleteDispute(disputeId);
 
 		// Assert db contains is empty again
-		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null));
+		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null, null));
 		assertEquals(0, allDisputes.size());
 	}
 
@@ -194,8 +198,51 @@ class DisputeControllerTest extends BaseTestSuite {
 		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals("Doe", dispute.getSurname());
 		assertEquals("John", dispute.getGivenNames());
-		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null);
+		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null, null);
 		assertEquals(1, IterableUtils.size(allDisputes));
+	}
+	
+	@Test
+	@Transactional
+	public void testGetAllDisputesByStatusAndCreatedTs() throws ParseException {
+		// Create disputes with different status and createdTs to test
+		Date now = new Date();
+		Principal principal = getPrincipal("testUser");
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setStatus(DisputeStatus.NEW);
+		UUID disputeId = disputeController.saveDispute(dispute);
+		dispute.setCreatedTs(DateUtils.addDays(now, -1));
+		disputeController.updateDispute(disputeId, dispute, principal);
+		
+		Dispute dispute2 = RandomUtil.createDispute();
+		dispute2.setStatus(DisputeStatus.PROCESSING);
+		UUID dispute2Id = disputeController.saveDispute(dispute2);
+		dispute2.setCreatedTs(DateUtils.addDays(now, -2));
+		disputeController.updateDispute(dispute2Id, dispute2, principal);
+		
+		Dispute dispute3 = RandomUtil.createDispute();
+		dispute3.setStatus(DisputeStatus.CANCELLED);
+		UUID dispute3Id = disputeController.saveDispute(dispute3);
+		dispute3.setCreatedTs(DateUtils.addDays(now, -3));
+		disputeController.updateDispute(dispute3Id, dispute3, principal);
+
+		// Assert controller returns all the disputes that were saved if no parameters passed.
+		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null, null);
+		assertEquals(3, IterableUtils.size(allDisputes));
+		
+		// Assert controller returns all disputes which do not have the specified type and older than specified date.
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<Dispute> allDisputesWithStatusAndOlderThan = disputeController.getAllDisputes(sdf.parse(sdf.format(DateUtils.addDays(now, -1))), DisputeStatus.CANCELLED);
+		assertEquals(1, IterableUtils.size(allDisputesWithStatusAndOlderThan));
+		assertEquals(allDisputesWithStatusAndOlderThan.get(0).getStatus(), DisputeStatus.PROCESSING);
+		
+		// Assert controller returns all disputes which do not have the specified type.
+		Iterable<Dispute> allDisputesWithStatus = disputeController.getAllDisputes(null, DisputeStatus.PROCESSING);
+		assertEquals(2, IterableUtils.size(allDisputesWithStatus));
+		
+		// Assert controller returns all disputes older than specified date.
+		Iterable<Dispute> allDisputesWithOlderThan = disputeController.getAllDisputes(sdf.parse(sdf.format(DateUtils.addDays(now, -2))), null);
+		assertEquals(1, IterableUtils.size(allDisputesWithOlderThan));
 	}
 
 	// Helper method to return an instance of Principal
