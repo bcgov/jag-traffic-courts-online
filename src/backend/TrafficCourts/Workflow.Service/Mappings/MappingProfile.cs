@@ -8,19 +8,20 @@ namespace TrafficCourts.Workflow.Service.Mappings
     {
         public MessageContractToNoticeOfDisputeMappingProfile()
         {
-            CreateMap<SubmitNoticeOfDispute, NoticeOfDispute>()
-                .ForMember(dest => dest.DisputedCounts, opt => opt.MapFrom(src => src.DisputedCounts))
-                .ForMember(dest => dest.ViolationTicket, opt => opt.MapFrom(src => src.ViolationTicket))
-                // Parsing DateOfBirth to DateTime due to the DateOnly deserialization issues on oracle-data-api
-                .ForPath(dest => dest.ViolationTicket.Birthdate, 
-                        opt => { 
-                            opt.Condition(src => src.Source.ViolationTicket != null); 
-                            opt.MapFrom(src => src.ViolationTicket.Birthdate);
-                        });
+            CreateMap<SubmitNoticeOfDispute, Common.OpenAPIs.OracleDataApi.v1_0.Dispute>();
+
+            CreateMap<Messaging.MessageContracts.DisputedCount, Common.OpenAPIs.OracleDataApi.v1_0.DisputedCount>();
             CreateMap<Messaging.MessageContracts.DisputedCount, Models.DisputedCount>();
+
+            CreateMap<Messaging.MessageContracts.ViolationTicket, Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicket>();
             CreateMap<Messaging.MessageContracts.ViolationTicket, Models.ViolationTicket>();
+
+            CreateMap<Messaging.MessageContracts.TicketCount, Common.OpenAPIs.OracleDataApi.v1_0.ViolationTicketCount>();
             CreateMap<Messaging.MessageContracts.TicketCount, Models.ViolationTicketCount>();
+
+            CreateMap<Messaging.MessageContracts.LegalRepresentation, Common.OpenAPIs.OracleDataApi.v1_0.LegalRepresentation>();
             CreateMap<Messaging.MessageContracts.LegalRepresentation, Models.LegalRepresentation>();
+
             CreateMap<DateOnly, DateTime>();
         }
     }
