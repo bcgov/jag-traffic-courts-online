@@ -15,7 +15,6 @@ import { FormUtilsService } from "@core/services/form-utils.service";
 import { ToastService } from "@core/services/toast.service";
 import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
-import { FormGroupValidators } from "@core/validators/form-group.validators";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
@@ -31,6 +30,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public previousButtonIcon = "keyboard_arrow_left";
   public defaultLanguage: string;
   public ticketTypes = ticketTypes;
+  public todayDate: Date = new Date();
   public Plea = Plea;
   public selected = null;
 
@@ -126,8 +126,21 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
         if (event.previouslySelectedIndex < event.selectedIndex) {
           this.onStepSave();
         }
+        this.scrollToSectionHook(); // correct angular faulty vertical scrolling
       })
     }, 0)
+  }
+
+  // make sure to scroll to top of mat-step
+  // angular doesnt do this right on its own :) https://github.com/angular/components/issues/8881
+  private scrollToSectionHook() {
+    const stepId = this.stepper._getStepLabelId(this.stepper.selectedIndex);
+    const stepElement = document.getElementById(stepId);
+    if (stepElement) {
+      setTimeout(() => {
+        stepElement.scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth'});
+      }, 250);
+    }
   }
 
   private getCountFormInitValue(count) {
@@ -240,7 +253,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public getToolTipDEata(data) {
-    console.log('data', data, this.form.get('interpreter_language'))
     if (data) {
       let msg = "";
       this.languages.forEach(res => {

@@ -135,6 +135,99 @@ export class DisputesService implements IDisputesService {
         })
       );
   }
+
+  /**
+     * Put the dispute to RSI by Id.
+     *
+     * @param disputeId
+     */
+   public cancelDispute(disputeId: string): Observable<Dispute> {
+
+    return this.disputeService.apiDisputeDisputeIdCancelPut(disputeId)
+      .pipe(
+        map((response: any) =>
+          response ? response : null
+        ),
+        map((dispute: any) => {
+          return dispute;
+        }),
+        tap((dispute) =>
+          this.logger.info('DisputesService::putDispute', dispute)
+        ),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputesService::putDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+    /**
+     * Put the dispute to RSI by Id.
+     *
+     * @param disputeId
+     */
+     public rejectDispute(disputeId: string, rejectedReason: string): Observable<Dispute> {
+
+      return this.disputeService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
+        .pipe(
+          map((response: any) =>
+            response ? response : null
+          ),
+          map((dispute: any) => {
+            return dispute;
+          }),
+          tap((dispute) =>
+            this.logger.info('DisputesService::putDispute', dispute)
+          ),
+          catchError((error: any) => {
+            var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+            this.toastService.openErrorToast(errorMsg);
+            this.toastService.openErrorToast(this.configService.dispute_error);
+            this.logger.error(
+              'DisputesService::putDispute error has occurred: ',
+              error
+            );
+            throw error;
+          })
+        );
+    }
+
+      /**
+     * Put the dispute to RSI by Id.
+     *
+     * @param disputeId
+     */
+  public submitDispute(disputeId: string): Observable<Dispute> {
+
+    return this.disputeService.apiDisputeDisputeIdSubmitPut(disputeId)
+      .pipe(
+        map((response: any) =>
+          response ? response : null
+        ),
+        map((dispute: any) => {
+          return dispute;
+        }),
+        tap((dispute) =>
+          this.logger.info('DisputesService::putDispute', dispute)
+        ),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputesService::putDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 }
 
 export interface DisputeView extends Dispute {

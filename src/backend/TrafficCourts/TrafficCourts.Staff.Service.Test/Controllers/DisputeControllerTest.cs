@@ -28,13 +28,13 @@ public class DisputeControllerTest
         List<Dispute> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetAllDisputesAsync(It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetAllDisputesAsync(null, It.IsAny<CancellationToken>()))
             .ReturnsAsync(disputes);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await disputeController.GetDisputesAsync(CancellationToken.None);
+        IActionResult? result = await disputeController.GetDisputesAsync(null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);

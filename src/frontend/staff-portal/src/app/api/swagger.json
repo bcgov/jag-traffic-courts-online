@@ -11,7 +11,17 @@
         "tags": [
           "Dispute"
         ],
-        "summary": "Returns all Disputes from the Oracle Data API.",
+        "summary": "Returns all Disputes from the Oracle Data API with optional exclusion parameter to exclude disputes having specified status from the result.",
+        "parameters": [
+          {
+            "name": "excludeStatus",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "$ref": "#/components/schemas/ExcludeStatus"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The Disputes were found.",
@@ -115,6 +125,26 @@
           },
           "404": {
             "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -317,6 +347,100 @@
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
+    "/api/dispute/{disputeId}/validate": {
+      "put": {
+        "tags": [
+          "Dispute"
+        ],
+        "summary": "Updates the status of a particular Dispute record to VALIDATED.",
+        "parameters": [
+          {
+            "name": "disputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific Dispute record to validate.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Dispute is updated."
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dispute record not found. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          },
+          "401": {
+            "description": "Unauthenticated."
+          },
+          "403": {
+            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -633,8 +757,7 @@
           },
           "birthdate": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "driversLicenceNumber": {
             "maxLength": 20,
@@ -760,6 +883,7 @@
       "DisputeStatus": {
         "enum": [
           "NEW",
+          "VALIDATED",
           "PROCESSING",
           "REJECTED",
           "CANCELLED"
@@ -820,6 +944,16 @@
         "enum": [
           "GUILTY",
           "NOT_GUILTY"
+        ],
+        "type": "string"
+      },
+      "ExcludeStatus": {
+        "enum": [
+          "NEW",
+          "VALIDATED",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED"
         ],
         "type": "string"
       },
@@ -1193,6 +1327,10 @@
             "nullable": true
           },
           "paragraph": {
+            "type": "string",
+            "nullable": true
+          },
+          "subparagraph": {
             "type": "string",
             "nullable": true
           },

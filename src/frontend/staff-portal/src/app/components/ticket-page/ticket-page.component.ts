@@ -5,6 +5,7 @@ import { DisputesService, DisputeView } from 'app/services/disputes.service';
 import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-ticket-page',
@@ -30,7 +31,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'assignedTo',
   ];
   disputes: DisputeView[] = [];
-  
+
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
   constructor(
@@ -52,23 +53,13 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   getAllDisputes(): void {
     this.logger.log('TicketPageComponent::getAllDisputes');
 
-    // for now this will show dummy data plus new records
-    // FIXME: this should be the other way around - pull all Dispute records from staff-api and then maybe append mock data
-    //    Currently, the dashboard data are not staff-api Dispute objects, but custom mock objects.  The mock objects should
-    //    be instances of a Dispute (as defined by staff-api openapi spec).
-    // this.disputesService.getDisputes().subscribe(next => this.dataSource.data = next);
-    
-    // concatenate all dummy data to this.disputes
     this.disputes = [];
-    // this.remoteDummyData.forEach(d => {
-    //   this.disputes = this.disputes.concat(d);
-    // });
 
     this.dataSource.data = this.disputes;
 
     // initially sort data by Date Submitted
     this.dataSource.data = this.dataSource.data.sort((a: DisputeView, b: DisputeView) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
-    
+
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
     this.dataSource.filterPredicate = function (record: DisputeView, filter) {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
@@ -82,35 +73,37 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
       this.disputesService.disputes$.next(response);
       response.forEach(d => {
-        var newDispute = { 
-          ticketNumber: d.ticketNumber,
-          surname: d.surname,
-          givenNames: d.givenNames,
-          jjAssigned: d.jjAssigned,
-          id: d.id,
-          assignedTo: d.assignedTo,
-          disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
-          systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
-          __CourtHearing: false,
-          __DateSubmitted: new Date(d.submittedDate),
-          __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
-          __AssignedTs: d.assignedTs != null ? new Date(d.assignedTs) : null,
-          additionalProperties: d.additionalProperties,
-          provincialCourtHearingLocation: d.provincialCourtHearingLocation,
-          status: d.status,
-          __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-          assignedTs: d.assignedTs
-        }
-
-        // set court hearing to true if its true for any one of the three possible counts
-        // otherwise false
-        if (d.disputedCounts) d.disputedCounts.forEach(c => {
-          if (c.appearInCourt == true) {
-            newDispute.__CourtHearing = true;
+        if (d.status != "CANCELLED") { // do not show cancelled
+          var newDispute = {
+            ticketNumber: d.ticketNumber,
+            surname: d.surname,
+            givenNames: d.givenNames,
+            jjAssigned: d.jjAssigned,
+            id: d.id,
+            assignedTo: d.assignedTo,
+            disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
+            systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
+            __CourtHearing: false,
+            __DateSubmitted: new Date(d.submittedDate),
+            __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
+            __AssignedTs: d.assignedTs != null ? new Date(d.assignedTs) : null,
+            additionalProperties: d.additionalProperties,
+            provincialCourtHearingLocation: d.provincialCourtHearingLocation,
+            status: d.status,
+            __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
+            assignedTs: d.assignedTs
           }
-        });
 
-        this.disputes = this.disputes.concat(newDispute);
+          // set court hearing to true if its true for any one of the three possible counts
+          // otherwise false
+          if (d.disputedCounts) d.disputedCounts.forEach(c => {
+            if (c.appearInCourt == true) {
+              newDispute.__CourtHearing = true;
+            }
+          });
+
+          this.disputes = this.disputes.concat(newDispute);
+        }
       });
       this.dataSource.data = this.disputes;
 
@@ -152,7 +145,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       if (this.getOcrViolationErrors(fields.is_lca_offense) > 0) { return true; }
       if (this.getOcrViolationErrors(fields.is_tcr_offence) > 0) { return true; }
       if (this.getOcrViolationErrors(fields.is_other_offence) > 0) { return true; }
-    
+
       // seems like a goofy way to process these but this is how the JSON parse returns it
       // count 1
       if (this.getOcrViolationErrors(fields["counts.count_1.description"]) > 0) { return true; }
@@ -161,7 +154,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       if (this.getOcrViolationErrors(fields["counts.count_1.is_regulation"]) > 0) { return true; }
       if (this.getOcrViolationErrors(fields["counts.count_1.section"]) > 0) { return true; }
       if (this.getOcrViolationErrors(fields["counts.count_1.ticketed_amount"]) > 0) { return true; }
-  
+
       // count 2
       if (this.getOcrViolationErrors(fields["counts.count_2.description"]) > 0) { return true; }
       if (this.getOcrViolationErrors(fields["counts.count_2.act_or_regulation"]) > 0) { return true; }
@@ -218,10 +211,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       this.decidePopup = "A"
     }
     this.showTicket = !this.showTicket;
+    if (!this.showTicket) this.getAllDisputes();  // refresh list
   }
 
   backTicketpage() {
     this.showTicket = !this.showTicket;
+    if (!this.showTicket) this.getAllDisputes(); // refresh list
   }
 }
 export interface RecognizedField {
@@ -237,7 +232,7 @@ export interface Point {
   y?: number;
 }
 
-export interface OcrCount { 
+export interface OcrCount {
   description?: RecognizedField;
   act_or_regulation?: RecognizedField;
   is_act?: RecognizedField;

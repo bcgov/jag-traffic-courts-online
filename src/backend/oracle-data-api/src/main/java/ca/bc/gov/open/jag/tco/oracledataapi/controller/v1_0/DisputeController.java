@@ -59,8 +59,11 @@ public class DisputeController {
 			@RequestParam(required = false)
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
-			Date olderThan) {
-		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan);
+			Date olderThan,
+			@RequestParam(required = false)
+			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
+			DisputeStatus excludeStatus) {
+		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
 		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
 		return IterableUtils.toList(allDisputes);
 	}
