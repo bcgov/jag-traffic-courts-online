@@ -169,7 +169,7 @@ export class ContactInfoComponent implements OnInit {
 
   // change validators on drivers licence number in notice of dispute when changing province / state
   public onNoticeOfDisputeDLProvinceChange(province: string) {
-    if (province == 'British Columbia')
+    if (province == 'BC')
       this.form.get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
     else
       this.form.get('driversLicenceNumber').setValidators(Validators.required);

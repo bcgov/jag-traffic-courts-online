@@ -703,6 +703,19 @@
   },
   "components": {
     "schemas": {
+      "BoundingBox": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Dispute": {
         "type": "object",
         "properties": {
@@ -957,6 +970,40 @@
         ],
         "type": "string"
       },
+      "Field": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "fieldConfidence": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of field-specific reasons why the field Confidence may be low",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LegalRepresentation": {
         "type": "object",
         "properties": {
@@ -1041,6 +1088,45 @@
         },
         "additionalProperties": false
       },
+      "OcrViolationTicket": {
+        "type": "object",
+        "properties": {
+          "imageFilename": {
+            "type": "string",
+            "description": "Gets or sets the saved image filename.",
+            "nullable": true
+          },
+          "globalConfidence": {
+            "type": "number",
+            "description": "A global confidence of correctly extracting the document. This value will be low if the title of this \r\nViolation Ticket form is not found (or of low confidence itself) or if the main ticket number is missing or invalid.",
+            "format": "float"
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Field"
+            },
+            "description": "An enumeration of all fields in this Violation Ticket.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A model representation of the extracted OCR results."
+      },
+      "Point": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -1096,6 +1182,9 @@
         "properties": {
           "violationTicketImage": {
             "$ref": "#/components/schemas/ViolationTicketImage"
+          },
+          "ocrViolationTicket": {
+            "$ref": "#/components/schemas/OcrViolationTicket"
           },
           "createdBy": {
             "type": "string",

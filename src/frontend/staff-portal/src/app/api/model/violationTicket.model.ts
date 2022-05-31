@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { OcrViolationTicket } from './ocrViolationTicket.model';
 import { ViolationTicketImage } from './violationTicketImage.model';
 import { ViolationTicketCount } from './violationTicketCount.model';
 
@@ -18,6 +19,7 @@ import { ViolationTicketCount } from './violationTicketCount.model';
  */
 export interface ViolationTicket { 
     violationTicketImage?: ViolationTicketImage;
+    ocrViolationTicket?: OcrViolationTicket;
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;

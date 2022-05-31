@@ -6,6 +6,7 @@ using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using Winista.Mime;
+using System.Text.Json;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -87,6 +88,9 @@ public class DisputeService : IDisputeService
         // Get the object store reference of the image (iff this is a scanned ViolationTicket)
         string? imageFilename = GetViolationTicketImageFilename(dispute);
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(imageFilename, cancellationToken);
+        
+        // deserialize json string to violation ticket fields
+        dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);
 
         return dispute;
     }

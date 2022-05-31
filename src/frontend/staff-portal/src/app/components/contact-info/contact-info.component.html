@@ -48,7 +48,7 @@
               <!-- Notice of dispute given names -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label>Given names</mat-label>
+                  <mat-label>Given name(s)</mat-label>
                   <input matInput formControlName="givenNames" />
                   <mat-error>{{ "error.required" | translate }}</mat-error>
                 </mat-form-field>
@@ -170,7 +170,7 @@
               <!-- Notice of dispute drivers licence province -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label>Province/State of driver's licence</mat-label>
+                  <mat-label>Prov/State of DL</mat-label>
                   <mat-select formControlName="driversLicenceProvince"
                     (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
                     <mat-optgroup label="Canada">
@@ -187,11 +187,11 @@
 
               <!-- Notice of dispute drivers licence number -->
               <div class="col-md-6">
-                <mat-form-field class="border-form" class="w-100"
-                  *ngIf="form.get('driversLicenceProvince').value == 'British Columbia'">
-                  <mat-label>Driver's licence number</mat-label>
+                <mat-form-field class="w-100"
+                  *ngIf="form.get('driversLicenceProvince').value == 'BC'">
+                  <mat-label>DL number</mat-label>
                   <input matInput formControlName="driversLicenceNumber" minlength="7" maxlength="9"
-                    (keypress)="onKeyPressNumbers($event, form.get('driversLicenceProvince').value == 'British Columbia')"
+                    (keypress)="onKeyPressNumbers($event, form.get('driversLicenceProvince').value == 'BC')"
                     autocomplete="off" />
                   <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
                     translate }}</mat-error>
@@ -202,9 +202,9 @@
                     Must be a valid BC driver's license number of seven to nine digits
                   </mat-error>
                 </mat-form-field>
-                <mat-form-field class="border-form" class="w-100"
-                  *ngIf="form.get('driversLicenceProvince').value != 'British Columbia'">
-                  <mat-label>Driver's licence number</mat-label>
+                <mat-form-field class="w-100"
+                  *ngIf="form.get('driversLicenceProvince').value != 'BC'">
+                  <mat-label>DL number</mat-label>
                   <input matInput formControlName="driversLicenceNumber" autocomplete="off" />
                   <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
                     translate }}</mat-error>
