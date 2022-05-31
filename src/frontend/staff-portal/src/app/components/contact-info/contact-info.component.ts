@@ -208,6 +208,7 @@ export class ContactInfoComponent implements OnInit {
       this.initialDisputeValues = response;
       this.lastUpdatedDispute = this.initialDisputeValues;
       this.form.patchValue(this.initialDisputeValues);
+      this.onNoticeOfDisputeDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
     });
 
   }
