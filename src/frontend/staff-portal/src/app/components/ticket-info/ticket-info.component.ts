@@ -436,20 +436,9 @@ export class TicketInfoComponent implements OnInit {
     this.collapseObj[name] = !this.collapseObj[name]
   }
 
-  // act fullsection(section)(subsection)(paragraph)
-  public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
-    if (!violationTicketCount || !violationTicketCount.description) return "";
-    let ticketDesc = (violationTicketCount.actRegulation ? violationTicketCount.actRegulation : "") + " ";
-    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + violationTicketCount.section;
-    if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subsection + ")";
-    if (violationTicketCount.paragraph && violationTicketCount.paragraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.paragraph + ")";
-    ticketDesc = ticketDesc + " " + violationTicketCount.description;
-    return ticketDesc;
-  }
-
   // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
-    if (violationTicket.violationTicketCounts.filter(x => x.count == countNumber)) return this.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0]);
+    if (violationTicket.violationTicketCounts.filter(x => x.count == countNumber)) return (this.violationTicketService.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0]) + " " + violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0].description);
     else return "";
   }
 
@@ -635,7 +624,7 @@ export class TicketInfoComponent implements OnInit {
             .get('violationTicket')
             .get('violationTicketCount' + violationTicketCount.count.toString())
             .get('fullDescription')
-            .setValue(this.getLegalParagraphing(violationTicketCount));
+            .setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description);
         });
 
         this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);
