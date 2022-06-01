@@ -126,7 +126,7 @@ export class TicketInfoComponent implements OnInit {
           subsection: [null],
           paragraph: [null],
           fullDescription: [null],
-          ticketedAmount: [null, [FormControlValidators.currency]]
+          ticketedAmount: [undefined, [FormControlValidators.currency]]
         }),
         violationTicketCount2: this.formBuilder.group({
           description: [null],
@@ -136,7 +136,7 @@ export class TicketInfoComponent implements OnInit {
           subsection: [null],
           paragraph: [null],
           fullDescription: [null],
-          ticketedAmount: [null, [FormControlValidators.currency]]
+          ticketedAmount: [undefined, [FormControlValidators.currency]]
         }),
         violationTicketCount3: this.formBuilder.group({
           description: [null],
@@ -146,7 +146,7 @@ export class TicketInfoComponent implements OnInit {
           subsection: [null],
           paragraph: [null],
           fullDescription: [null],
-          ticketedAmount: [null, [FormControlValidators.currency]]
+          ticketedAmount: [undefined, [FormControlValidators.currency]]
         }),
         violationDate: [null, [Validators.required]],  // api returns issued date, extract date from that
         violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that  
@@ -609,7 +609,7 @@ export class TicketInfoComponent implements OnInit {
         if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
           this.imageToShow = "data:" + this.initialDisputeValues.violationTicket.violationTicketImage.mimeType + ";base64," + this.initialDisputeValues.violationTicket.violationTicketImage.image;
         } else {
-          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;  
+          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
         }
 
         // set disputant detected ocr issues
@@ -624,11 +624,20 @@ export class TicketInfoComponent implements OnInit {
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
 
           this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).patchValue(violationTicketCount);
-          this.form
-            .get('violationTicket')
-            .get('violationTicketCount' + violationTicketCount.count.toString())
-            .get('fullDescription')
-            .setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description);
+          if (!violationTicketCount.ticketedAmount)
+            this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).get('ticketedAmount').setValue(undefined);
+          if (violationTicketCount.section)
+            this.form
+              .get('violationTicket')
+              .get('violationTicketCount' + violationTicketCount.count.toString())
+              .get('fullDescription')
+              .setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description);
+          else
+            this.form
+              .get('violationTicket')
+              .get('violationTicketCount' + violationTicketCount.count.toString())
+              .get('fullDescription')
+              .setValue(undefined);
         });
 
         this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);

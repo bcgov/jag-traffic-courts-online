@@ -24,8 +24,7 @@ export class TicketRequestComponent implements OnInit {
       fineReductionReason: null,
       disputedCount1: this.formBuilder.group({
         plea: null,
-        requestTimeToPay: null,
-        requestReduction: null,
+        requestType: null,
         appearInCourt: null,
         section: null,
         description: null,
@@ -33,8 +32,7 @@ export class TicketRequestComponent implements OnInit {
       }),
       disputedCount2: this.formBuilder.group({
         plea: null,
-        requestTimeToPay: null,
-        requestReduction: null,
+        requestType: null,
         appearInCourt: null,
         section: null,
         description: null,
@@ -42,18 +40,13 @@ export class TicketRequestComponent implements OnInit {
       }),
       disputedCount3: this.formBuilder.group({
         plea: null,
-        requestTimeToPay: null,
-        requestReduction: null,
+        requestType: null,
         appearInCourt: null,
         section: null,
         description: null,
         ticketedAmount: null
       }),
     });
-    this.form.patchValue(this.disputeInfo);
-    this.setDisputedCount(1);
-    this.setDisputedCount(2);
-    this.setDisputedCount(3);
   }
 
   setDisputedCount(count: number) {
@@ -61,18 +54,24 @@ export class TicketRequestComponent implements OnInit {
     let disputedCount = this.disputeInfo.disputedCounts.filter(x => x.count == count)[0];
     let violationTicketCount = this.disputeInfo.violationTicket.violationTicketCounts.filter(x => x.count == count)[0];
     if (disputedCount) {
-      this.form.get('disputedCount1').get('plea').setValue(disputedCount.plea);
-      this.form.get('disputedCount1').get('requestTimeToPay').setValue(disputedCount.requestTimeToPay);
-      this.form.get('disputedCount1').get('requestReduction').setValue(disputedCount.requestTimeToPay);
+      this.form.get('disputedCount' + count.toString()).get('plea').setValue(disputedCount.plea);
+      let requestType = disputedCount.requestTimeToPay == true ? "Time to pay" : "";
+      requestType = requestType.concat(disputedCount.requestTimeToPay == true && disputedCount.requestReduction == true ? " + " : "");
+      requestType = requestType.concat(disputedCount.requestReduction == true ? "Fine reduction" : "");
+      this.form.get('disputedCount' + count.toString()).get('requestType').setValue(requestType);
     }    
     if (violationTicketCount) {
-      this.form.get('disputedCount1').get('section').setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount));
-      this.form.get('disputedCount1').get('description').setValue(violationTicketCount.description);
-      this.form.get('disputedCount1').get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
+      this.form.get('disputedCount' + count.toString()).get('section').setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount));
+      this.form.get('disputedCount' + count.toString()).get('description').setValue(violationTicketCount.description);
+      this.form.get('disputedCount' + count.toString()).get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
     }  
   }
 
   ngOnInit(): void {
+    this.form.patchValue(this.disputeInfo);
+    this.setDisputedCount(1);
+    this.setDisputedCount(2);
+    this.setDisputedCount(3);
   }
 
   public handleCollapse(name: string) {
