@@ -623,21 +623,14 @@ export class TicketInfoComponent implements OnInit {
         // set counts 1,2,3 of violation ticket
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
 
-          this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).patchValue(violationTicketCount);
+          let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString());
+          countForm.patchValue(violationTicketCount);
           if (!violationTicketCount.ticketedAmount)
-            this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).get('ticketedAmount').setValue(undefined);
-          if (violationTicketCount.section)
-            this.form
-              .get('violationTicket')
-              .get('violationTicketCount' + violationTicketCount.count.toString())
-              .get('fullDescription')
-              .setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description);
-          else
-            this.form
-              .get('violationTicket')
-              .get('violationTicketCount' + violationTicketCount.count.toString())
-              .get('fullDescription')
-              .setValue(undefined);
+            countForm.get('ticketedAmount').setValue(undefined);
+          let fullDesc = violationTicketCount.section ? this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description : undefined;
+          countForm
+            .get('fullDescription')
+            .setValue(fullDesc);
         });
 
         this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);

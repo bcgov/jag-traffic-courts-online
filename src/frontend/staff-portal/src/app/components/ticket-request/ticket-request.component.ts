@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Dispute } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
@@ -14,7 +14,7 @@ export class TicketRequestComponent implements OnInit {
     contactInformation: true
   }
   public form: FormGroup;
-
+  
   constructor(
     protected formBuilder: FormBuilder,
     private violationTicketService: ViolationTicketService
@@ -22,30 +22,7 @@ export class TicketRequestComponent implements OnInit {
     this.form = this.formBuilder.group({
       timeToPayReason: null,
       fineReductionReason: null,
-      disputedCount1: this.formBuilder.group({
-        plea: null,
-        requestType: null,
-        appearInCourt: null,
-        section: null,
-        description: null,
-        ticketedAmount: null
-      }),
-      disputedCount2: this.formBuilder.group({
-        plea: null,
-        requestType: null,
-        appearInCourt: null,
-        section: null,
-        description: null,
-        ticketedAmount: null
-      }),
-      disputedCount3: this.formBuilder.group({
-        plea: null,
-        requestType: null,
-        appearInCourt: null,
-        section: null,
-        description: null,
-        ticketedAmount: null
-      }),
+      disputedCounts: this.formBuilder.array([])
     });
   }
 
@@ -53,18 +30,28 @@ export class TicketRequestComponent implements OnInit {
     // set disputed count information
     let disputedCount = this.disputeInfo.disputedCounts.filter(x => x.count == count)[0];
     let violationTicketCount = this.disputeInfo.violationTicket.violationTicketCounts.filter(x => x.count == count)[0];
+
+    let requestType = "";
     if (disputedCount) {
-      this.form.get('disputedCount' + count.toString()).get('plea').setValue(disputedCount.plea);
-      let requestType = disputedCount.requestTimeToPay == true ? "Time to pay" : "";
+      requestType = disputedCount.requestTimeToPay == true ? "Time to pay" : "";
       requestType = requestType.concat(disputedCount.requestTimeToPay == true && disputedCount.requestReduction == true ? " + " : "");
       requestType = requestType.concat(disputedCount.requestReduction == true ? "Fine reduction" : "");
-      this.form.get('disputedCount' + count.toString()).get('requestType').setValue(requestType);
-    }    
-    if (violationTicketCount) {
-      this.form.get('disputedCount' + count.toString()).get('section').setValue(this.violationTicketService.getLegalParagraphing(violationTicketCount));
-      this.form.get('disputedCount' + count.toString()).get('description').setValue(violationTicketCount.description);
-      this.form.get('disputedCount' + count.toString()).get('ticketedAmount').setValue(violationTicketCount.ticketedAmount);
-    }  
+    }
+
+    const disputedCountForm = this.formBuilder.group({
+      count: count,
+      requestType: requestType,
+      section: violationTicketCount? this.violationTicketService.getLegalParagraphing(violationTicketCount) : undefined,
+      description: violationTicketCount?.description,
+      ticketedAmount: violationTicketCount?.ticketedAmount,
+      appearInCourt: disputedCount?.appearInCourt
+    });
+
+    if (violationTicketCount.description) this.disputedCounts.push(disputedCountForm);
+  }
+
+  get disputedCounts() {
+    return this.form.controls["disputedCounts"] as FormArray;
   }
 
   ngOnInit(): void {
