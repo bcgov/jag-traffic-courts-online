@@ -49,7 +49,7 @@ public class RedisLookupService : ILookupService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Could not retrieve Statutes from Redis cache.");
+            _logger.LogError(ex, "Could not retrieve Statutes from Redis cache");
             throw;
         }
 

@@ -40,7 +40,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Could not retrieve data record from Redis cache.");
+                _logger.LogError(ex, "Could not retrieve data record from Redis cache");
                 throw;
             }
         }
@@ -79,7 +79,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
             }
 
             var filename = $"{key}-File";
-            _logger.LogInformation($"Saving file: {filename} to redis cache.");
+            _logger.LogInformation("Saving file: {FileName} to redis cache.", filename);
 
             var buffer = data.ToArray();
             await _redisDbAsync.StringSetAsync(filename, buffer, expireTime ?? TimeSpan.FromDays(1));
