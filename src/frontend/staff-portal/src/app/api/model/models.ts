@@ -6,7 +6,6 @@ export * from './disputedCountPlea.model';
 export * from './excludeStatus.model';
 export * from './field.model';
 export * from './legalRepresentation.model';
-export * from './mimeType.model';
 export * from './ocrViolationTicket.model';
 export * from './point.model';
 export * from './problemDetails.model';
