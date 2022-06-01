@@ -578,7 +578,7 @@
           </form>
         </div>
       </mat-expansion-panel>
-      <app-ticket-request></app-ticket-request>
+      <app-ticket-request [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
       <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header (click)="handleCollapse('notes')">
           <app-page-header>

@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 export interface IViolationTicketService {
   getAllOCRMessages(ocrViolationTicket: OcrViolationTicket);
   setViolationTicketFromJSON(ocrViolationTicket: OcrViolationTicket, violationTicket: ViolationTicket): ViolationTicket;
+  getLegalParagraphing(violationTicketCount: ViolationTicketCount);
 }
 
 @Injectable({
@@ -43,6 +44,16 @@ export class ViolationTicketService implements IViolationTicketService {
     private datePipe: DatePipe,
     private logger: LoggerService,
   ) {
+  }
+
+  // act fullsection(section)(subsection)(paragraph)
+  public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
+    if (!violationTicketCount || !violationTicketCount.description) return "";
+    let ticketDesc = (violationTicketCount.actRegulation ? violationTicketCount.actRegulation : "") + " ";
+    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + violationTicketCount.section;
+    if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subsection + ")";
+    if (violationTicketCount.paragraph && violationTicketCount.paragraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.paragraph + ")";
+    return ticketDesc;
   }
 
   // return all OCR messages for a ticket
@@ -161,7 +172,7 @@ export class ViolationTicketService implements IViolationTicketService {
             description: ocrViolationTicket.fields["counts.count_3.description"].value,
             actRegulation: ocrViolationTicket.fields["counts.count_3.act_or_regulation"].value,
             section: ocrViolationTicket.fields["counts.count_3.section"].value,
-            ticketedAmount: ocrViolationTicket.fields["counts.count_3.ticketed_amount"].value ?  +ocrViolationTicket.fields["counts.count_3.ticketed_amount"].value?.substring(1) : undefined,
+            ticketedAmount: ocrViolationTicket.fields["counts.count_3.ticketed_amount"].value ? +ocrViolationTicket.fields["counts.count_3.ticketed_amount"].value?.substring(1) : undefined,
             isAct: ocrViolationTicket.fields["counts.count_3.is_act"].value == "selected" ? true : false,
             isRegulation: ocrViolationTicket.fields["counts.count_3.is_regulation"].value == "selected" ? true : false
           } as ViolationTicketCount;
