@@ -2,6 +2,17 @@ server:
   port: ${SERVER_PORT:8080}
   
 spring:
+  application:  
+    name: oracle-data-api
+    
+  sleuth:
+    otel:
+      config:
+        trace-id-ratio-based: 1.0
+      exporter:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4317}
+    
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
