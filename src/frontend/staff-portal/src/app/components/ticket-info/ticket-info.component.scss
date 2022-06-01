@@ -4,6 +4,15 @@ h3 {
   font-weight: bold;
 }
 
+.fail-font-weight {
+  font-weight: bold;
+}
+
+.success-font-weight {
+  font-weight: normal;
+}
+
+
 .disputre {
   width: 100%;
 }
@@ -178,10 +187,15 @@ div.container {
       color: #1d4a77 !important;
     }
 
-    // border around input mat field
-    // .ng-valid .mat-form-field-wrapper .mat-form-field-flex {
-    //     border: 2px #62809d solid;
-    //     border-radius: 0;
-    // }
+    // border around input mat field for over80 confidence
+    .ng-valid.overErrThreshold .mat-form-field-wrapper .mat-form-field-flex {
+      border: 2px #62809d solid;
+      border-radius: 0;
+    }
+    // border around input mat field for under80 confidence
+    .ng-valid.underErrThreshold .mat-form-field-wrapper .mat-form-field-flex {
+      border: 2px #df3e13 solid;
+      border-radius: 0;
+    }
   }
 }

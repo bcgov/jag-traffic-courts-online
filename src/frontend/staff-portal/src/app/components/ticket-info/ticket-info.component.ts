@@ -15,6 +15,7 @@ import { LookupsService, StatuteView } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violation-ticket.service';
 
 @Component({
   selector: 'app-ticket-info',
@@ -42,6 +43,9 @@ export class TicketInfoComponent implements OnInit {
   public initialDisputeValues: Dispute;
   public courtLocations: Config<string>[];
   public imageToShow: any;
+  public errorThreshold: number = 0.800;
+  public provincialCourtHearingLocationFlag: OCRMessageToDisplay;
+
 
   /**
    * @description
@@ -62,6 +66,7 @@ export class TicketInfoComponent implements OnInit {
     private datePipe: DatePipe,
     private dialog: MatDialog,
     private logger: LoggerService,
+    public violationTicketService: ViolationTicketService,
     private disputesService: DisputesService,
     public mockConfigService: MockConfigService,
     public lookupsService: LookupsService,
@@ -173,9 +178,22 @@ export class TicketInfoComponent implements OnInit {
     this.backTicketList.emit();
   }
 
+  // violation ticket borders only for new status 
+  public applyOverErrThreshold(fieldName: string): boolean {
+    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName].fieldConfidence <= 0.80) return false;
+    return true;
+  }
+
+  public applyUnderErrThreshold(fieldName: string): boolean {
+    if (this.lastUpdatedDispute.status != 'NEW') return false;
+    if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName].fieldConfidence > 0.80) return false;
+    return true;
+  }
+
   // change validators on drivers licence number in violation ticket when changing province / state
   public onViolationTicketDLProvinceChange(province: string) {
-    if (province == 'British Columbia')
+    if (province == 'BC')
       this.form.get('violationTicket').get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
     else
       this.form.get('violationTicket').get('driversLicenceNumber').setValidators(Validators.required);
@@ -185,7 +203,7 @@ export class TicketInfoComponent implements OnInit {
 
   // change validators on drivers licence number in notice of dispute when changing province / state
   public onNoticeOfDisputeDLProvinceChange(province: string) {
-    if (province == 'British Columbia') {
+    if (province == 'BC') {
       this.form.get('driversLicenceNumber').setValidators([Validators.required, Validators.minLength(7), Validators.maxLength(9), Validators.pattern(/^(\d{7}|\d{8}|\d{9})$/)]);
       this.form.get('driversLicenceNumber').updateValueAndValidity();
       this.form.updateValueAndValidity();
@@ -451,108 +469,31 @@ export class TicketInfoComponent implements OnInit {
     });
   }
 
-  setViolationTicketFieldsFromJSON(dispute: Dispute): Dispute {
+  // use violationTicket Service
+  setFieldsFromJSON(dispute: Dispute): Dispute {
     var objOcrViolationTicket = JSON.parse(dispute.ocrViolationTicket);
 
     if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
       var fields = objOcrViolationTicket.Fields;
 
-      if (!dispute.violationTicket.ticketNumber) dispute.violationTicket.ticketNumber = fields.ticket_number.Value;
-      if (!dispute.violationTicket.surname) dispute.violationTicket.surname = fields.surname.Value;
-      if (!dispute.violationTicket.givenNames) dispute.violationTicket.givenNames = fields.given_names.Value;
-      if (!dispute.violationTicket.driversLicenceProvince) dispute.violationTicket.driversLicenceProvince = fields.drivers_licence_province.Value;
-      if (!dispute.violationTicket.driversLicenceNumber) dispute.violationTicket.driversLicenceNumber = fields.drivers_licence_number.Value;
-      if (!dispute.violationTicket.isMvaOffence) dispute.violationTicket.isMvaOffence = fields.is_mva_offence.Value == "selected" ? true : false;
-      if (!dispute.violationTicket.isLcaOffence) dispute.violationTicket.isLcaOffence = fields.is_lca_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.isMcaOffence) dispute.violationTicket.isMcaOffence = fields.is_mca_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.isFaaOffence) dispute.violationTicket.isFaaOffence = fields.is_faa_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.isTcrOffence) dispute.violationTicket.isTcrOffence = fields.is_tcr_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.isCtaOffence) dispute.violationTicket.isCtaOffence = fields.is_cta_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.isWlaOffence) dispute.violationTicket.isWlaOffence = fields.is_wla_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.isOtherOffence) dispute.violationTicket.isOtherOffence = fields.is_other_offence.Value == "selected" ? true : false;;
-      if (!dispute.violationTicket.organizationLocation) dispute.violationTicket.organizationLocation = fields.organization_location.Value;
-      if (!dispute.provincialCourtHearingLocation) dispute.provincialCourtHearingLocation = fields.provincial_court_hearing_location.Value;
+      if (!dispute.provincialCourtHearingLocation) dispute.provincialCourtHearingLocation = fields["provincial_court_hearing_location"].value;
 
-      // set up ticket count 1
-      if (fields["counts.count_1.description"]) {
-        const foundViolationTicketCount1 = dispute.violationTicket.violationTicketCounts.filter(x => x.count == 1);
-        if (foundViolationTicketCount1.length > 0) {
-          if (!foundViolationTicketCount1[0].description) foundViolationTicketCount1[0].description = fields["counts.count_1.description"].Value;
-          if (!foundViolationTicketCount1[0].actRegulation) foundViolationTicketCount1[0].actRegulation = fields["counts.count_1.act_or_regulation"].Value;
-          if (!foundViolationTicketCount1[0].section) foundViolationTicketCount1[0].section = fields["counts.count_1.section"].Value;
-          if (!foundViolationTicketCount1[0].ticketedAmount) foundViolationTicketCount1[0].ticketedAmount = fields["counts.count_1.ticketed_amount"].Value?.substring(1);
-          if (!foundViolationTicketCount1[0].isAct) foundViolationTicketCount1[0].isAct = fields["counts.count_1.is_act"].Value == "selected" ? true : false;
-          if (!foundViolationTicketCount1[0].isRegulation) foundViolationTicketCount1[0].isRegulation = fields["counts.count_1.is_regulation"].Value == "selected" ? true : false;
-        } else {
-          let violationTicketCount = {
-            count: 1,
-            description: fields["counts.count_1.description"].Value,
-            actRegulation: fields["counts.count_1.act_or_regulation"].Value,
-            section: fields["counts.count_1.section"].Value,
-            ticketedAmount: fields["counts.count_1.ticketed_amount"].Value?.substring(1),
-            isAct: fields["counts.count_1.is_act"].Value == "selected" ? true : false,
-            isRegulation: fields["counts.count_1.is_regulation"].Value == "selected" ? true : false
-          } as ViolationTicketCount;
-          dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
-        }
-      }
-
-      // // set up ticket count 2
-      if (fields["counts.count_2.description"]) {
-        const foundViolationTicketCount2 = dispute.violationTicket.violationTicketCounts.filter(x => x.count == 2);
-        if (foundViolationTicketCount2.length > 0) {
-          if (!foundViolationTicketCount2[0].description) foundViolationTicketCount2[0].description = fields["counts.count_2.description"].Value;
-          if (!foundViolationTicketCount2[0].actRegulation) foundViolationTicketCount2[0].actRegulation = fields["counts.count_2.act_or_regulation"].Value;
-          if (!foundViolationTicketCount2[0].section) foundViolationTicketCount2[0].section = fields["counts.count_2.section"].Value;
-          if (!foundViolationTicketCount2[0].ticketedAmount) foundViolationTicketCount2[0].ticketedAmount = fields["counts.count_2.ticketed_amount"].Value?.substring(1);
-          if (!foundViolationTicketCount2[0].isAct) foundViolationTicketCount2[0].isAct = fields["counts.count_2.is_act"].Value == "selected" ? true : false;
-          if (!foundViolationTicketCount2[0].isRegulation) foundViolationTicketCount2[0].isRegulation = fields["counts.count_2.is_regulation"].Value == "selected" ? true : false;
-        } else {
-          let violationTicketCount = {
-            count: 2,
-            description: fields["counts.count_2.description"].Value,
-            actRegulation: fields["counts.count_2.act_or_regulation"].Value,
-            section: fields["counts.count_2.section"].Value,
-            ticketedAmount: fields["counts.count_2.ticketed_amount"].Value?.substring(1),
-            isAct: fields["counts.count_2.is_act"].Value == "selected" ? true : false,
-            isRegulation: fields["counts.count_2.is_regulation"].Value == "selected" ? true : false
-          } as ViolationTicketCount;
-          dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
-        }
-      }
-
-      // // set up ticket count 3
-      if (fields["counts.count_1.description"]) {
-        const foundViolationTicketCount3 = dispute.violationTicket.violationTicketCounts.filter(x => x.count == 3);
-        if (foundViolationTicketCount3.length > 0) {
-          if (!foundViolationTicketCount3[0].description) foundViolationTicketCount3[0].description = fields["counts.count_3.description"].Value;
-          if (!foundViolationTicketCount3[0].actRegulation) foundViolationTicketCount3[0].actRegulation = fields["counts.count_3.act_or_regulation"].Value;
-          if (!foundViolationTicketCount3[0].section) foundViolationTicketCount3[0].section = fields["counts.count_3.section"].Value;
-          if (!foundViolationTicketCount3[0].ticketedAmount) foundViolationTicketCount3[0].ticketedAmount = fields["counts.count_3.ticketed_amount"].Value?.substring(1);
-          if (!foundViolationTicketCount3[0].isAct) foundViolationTicketCount3[0].isAct = fields["counts.count_3.is_act"].Value == "selected" ? true : false;
-          if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = fields["counts.count_3.is_regulation"].Value == "selected" ? true : false;
-        } else {
-          let violationTicketCount = {
-            count: 3,
-            description: fields["counts.count_3.description"].Value,
-            actRegulation: fields["counts.count_3.act_or_regulation"].Value,
-            section: fields["counts.count_3.section"].Value,
-            ticketedAmount: fields["counts.count_3.ticketed_amount"].Value?.substring(1),
-            isAct: fields["counts.count_3.is_act"].Value == "selected" ? true : false,
-            isRegulation: fields["counts.count_3.is_regulation"].Value == "selected" ? true : false
-          } as ViolationTicketCount;
-          dispute.violationTicket.violationTicketCounts = dispute.violationTicket.violationTicketCounts.concat(violationTicketCount);
-        }
-      }
+      dispute.violationTicket = this.violationTicketService.setViolationTicketFromJSON(dispute.violationTicket.ocrViolationTicket, dispute.violationTicket);
     }
 
     return dispute;
   }
 
+  // send to api, on return update status
   validate(): void {
-    this.lastUpdatedDispute.status = "VALIDATED"; // ToDo: send to api
+    this.busy = this.disputesService.validateDispute(this.lastUpdatedDispute.id).subscribe({
+      next: response => { this.lastUpdatedDispute.status = "VALIDATED"; },
+      error: err => { },
+      complete: () => { }
+    });
   }
 
+  // dialog, if ok then send to api, on return update status, return to TRM home
   public approve(): void {
     const data: DialogOptions = {
       titleKey: "Approve ticket resolution request?",
@@ -563,14 +504,16 @@ export class TicketInfoComponent implements OnInit {
       cancelTextKey: "Go back",
       icon: "error_outline",
     };
+    this.lastUpdatedDispute.status = 'PROCESSING';
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
 
+
           // submit dispute and return to TRM home
           this.busy = this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(
             {
-              next: response => { this.onBack(); },
+              next: response => { this.onBack(); this.lastUpdatedDispute.status = 'PROCESSING'; },
               error: err => { },
               complete: () => { }
             }
@@ -579,6 +522,7 @@ export class TicketInfoComponent implements OnInit {
       });
   }
 
+  // dialog, if ok then send to api, on return update status, return to TRM home
   public reject(): void {
     const data: DialogOptions = {
       titleKey: "Reject ticket resolution request?",
@@ -592,11 +536,14 @@ export class TicketInfoComponent implements OnInit {
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action.output.response) {
-          this.lastUpdatedDispute.rejectedReason = action.output.reason;
+
 
           // udate the reason entered, reject dispute and return to TRM home 
           this.busy = this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
-            next: response => { this.onBack(); },
+            next: response => {
+              this.onBack(); this.lastUpdatedDispute.status = 'REJECTED';
+              this.lastUpdatedDispute.rejectedReason = action.output.reason;
+            },
             error: err => { },
             complete: () => { }
           });
@@ -604,6 +551,7 @@ export class TicketInfoComponent implements OnInit {
       });
   }
 
+  // dialog, if ok then send to api, on return update status, return to TRM home
   public cancel(): void {
     const data: DialogOptions = {
       titleKey: "Cancel ticket resolution request?",
@@ -617,7 +565,7 @@ export class TicketInfoComponent implements OnInit {
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action.output.response) {
-          this.lastUpdatedDispute.rejectedReason = action.output.reason;
+
 
           // no need to pass back byte array with image
           let tempDispute = this.lastUpdatedDispute;
@@ -627,9 +575,12 @@ export class TicketInfoComponent implements OnInit {
           this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe({
             next: response => {
               this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
-                next: response => { this.onBack() },
+                next: response => {
+                  this.onBack(); this.lastUpdatedDispute.status = 'CANCELLED';
+                  this.lastUpdatedDispute.rejectedReason = action.output.reason;
+                },
                 error: err => { },
-                complete: () => {}
+                complete: () => { }
               });
             },
             error: err => { },
@@ -655,7 +606,7 @@ export class TicketInfoComponent implements OnInit {
           response
         );
 
-        this.initialDisputeValues = this.setViolationTicketFieldsFromJSON(response);
+        this.initialDisputeValues = this.setFieldsFromJSON(response);
         this.lastUpdatedDispute = this.initialDisputeValues;
         this.form.patchValue(this.initialDisputeValues);
 
@@ -666,7 +617,11 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
 
         // ticket image
-        this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
+        if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
+          this.imageToShow = "data:" + this.initialDisputeValues.violationTicket.violationTicketImage.mimeType + ";base64," + this.initialDisputeValues.violationTicket.violationTicketImage.image;
+        } else {
+          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;  
+        }
 
         // set disputant detected ocr issues
         this.flagsForm.get('disputantOcrIssuesDescription').setValue(response.disputantOcrIssuesDescription);
@@ -686,6 +641,19 @@ export class TicketInfoComponent implements OnInit {
             .get('fullDescription')
             .setValue(this.getLegalParagraphing(violationTicketCount));
         });
+
+        this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);
+
+        // set system flags for provincial court hearing location
+        this.provincialCourtHearingLocationFlag = {
+          heading: "Court Location",
+          key: "provincical_court_hearing_location",
+          fieldConfidence: this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields["provincial_court_hearing_location"]?.fieldConfidence
+        };
+
+        // update validation rule for drivers licence number
+        this.onNoticeOfDisputeDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
+        this.onViolationTicketDLProvinceChange(this.lastUpdatedDispute.violationTicket.driversLicenceProvince);
       },
         (error: any) => {
           this.retrieving = false;

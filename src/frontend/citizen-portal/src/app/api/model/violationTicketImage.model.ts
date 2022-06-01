@@ -1,6 +1,6 @@
 /**
- * VTC Staff API
- * Violation Ticket Centre Staff API
+ * Traffic Court Online Citizen Api
+ * An API for creating violation ticket disputes
  *
  * The version of the OpenAPI document: v1
  * 
@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { MimeType } from './mimeType.model';
 
 
 export interface ViolationTicketImage { 
     image?: string | null;
-    mimeType?: string | null;
+    mimeType?: MimeType;
 }
 

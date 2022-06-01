@@ -86,6 +86,9 @@ public class DisputeService : IDisputeService
         // Get the object store reference of the image (iff this is a scanned ViolationTicket)
         string? imageFilename = GetViolationTicketImageFilename(dispute);
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(imageFilename, cancellationToken);
+        
+        // deserialize json string to violation ticket fields
+        if (dispute.OcrViolationTicket != null) dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);
 
         return dispute;
     }
