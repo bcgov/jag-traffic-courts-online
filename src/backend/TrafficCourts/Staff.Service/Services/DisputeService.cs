@@ -90,7 +90,7 @@ public class DisputeService : IDisputeService
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(imageFilename, cancellationToken);
         
         // deserialize json string to violation ticket fields
-        dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);
+        if (dispute.OcrViolationTicket != null) dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);
 
         return dispute;
     }

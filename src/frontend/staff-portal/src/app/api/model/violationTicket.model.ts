@@ -14,9 +14,6 @@ import { ViolationTicketImage } from './violationTicketImage.model';
 import { ViolationTicketCount } from './violationTicketCount.model';
 
 
-/**
- * An extension of the ViolationTicket object to include a ViolationTicketImage object.
- */
 export interface ViolationTicket { 
     violationTicketImage?: ViolationTicketImage;
     ocrViolationTicket?: OcrViolationTicket;
@@ -24,9 +21,6 @@ export interface ViolationTicket {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    /**
-     * ID
-     */
     id?: string;
     ticketNumber?: string | null;
     surname?: string | null;

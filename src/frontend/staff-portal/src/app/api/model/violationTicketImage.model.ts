@@ -12,13 +12,7 @@
 import { MimeType } from './mimeType.model';
 
 
-/**
- * A class that contains the byte[] data (raw image) that is retrieved from the object store.
- */
 export interface ViolationTicketImage { 
-    /**
-     * The byte[] of the ViolationTicket image.
-     */
     image?: string | null;
     mimeType?: MimeType;
 }

@@ -737,7 +737,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "status": {
@@ -924,7 +923,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "plea": {
@@ -987,7 +985,6 @@
             "items": {
               "type": "string"
             },
-            "description": "A list of field-specific reasons why the field Confidence may be low",
             "nullable": true
           },
           "type": {
@@ -1025,7 +1022,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "lawFirmName": {
@@ -1093,12 +1089,10 @@
         "properties": {
           "imageFilename": {
             "type": "string",
-            "description": "Gets or sets the saved image filename.",
             "nullable": true
           },
           "globalConfidence": {
             "type": "number",
-            "description": "A global confidence of correctly extracting the document. This value will be low if the title of this \r\nViolation Ticket form is not found (or of low confidence itself) or if the main ticket number is missing or invalid.",
             "format": "float"
           },
           "fields": {
@@ -1106,12 +1100,10 @@
             "additionalProperties": {
               "$ref": "#/components/schemas/Field"
             },
-            "description": "An enumeration of all fields in this Violation Ticket.",
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "A model representation of the extracted OCR results."
+        "additionalProperties": false
       },
       "Point": {
         "type": "object",
@@ -1204,7 +1196,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "ticketNumber": {
@@ -1362,8 +1353,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "An extension of the ViolationTicket object to include a ViolationTicketImage object."
+        "additionalProperties": false
       },
       "ViolationTicketCount": {
         "type": "object",
@@ -1386,7 +1376,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "count": {
@@ -1449,7 +1438,6 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "The byte[] of the ViolationTicket image.",
             "format": "byte",
             "nullable": true
           },
@@ -1457,8 +1445,7 @@
             "$ref": "#/components/schemas/MimeType"
           }
         },
-        "additionalProperties": false,
-        "description": "A class that contains the byte[] data (raw image) that is retrieved from the object store."
+        "additionalProperties": false
       }
     },
     "securitySchemes": {
