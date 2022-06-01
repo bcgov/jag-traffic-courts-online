@@ -146,7 +146,7 @@ export class ViolationTicketService implements IViolationTicketService {
       }
 
       // // set up ticket count 3
-      if (ocrViolationTicket.fields["counts.count_1.description"]) {
+      if (ocrViolationTicket.fields["counts.count_3.description"]) {
         const foundViolationTicketCount3 = violationTicket.violationTicketCounts.filter(x => x.count == 3);
         if (foundViolationTicketCount3.length > 0) {
           if (!foundViolationTicketCount3[0].description) foundViolationTicketCount3[0].description = ocrViolationTicket.fields["counts.count_3.description"].value;
