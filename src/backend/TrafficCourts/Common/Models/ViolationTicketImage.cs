@@ -1,6 +1,6 @@
 ﻿using Winista.Mime;
 
-namespace TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 /// <summary>
 /// A class that contains the byte[] data (raw image) that is retrieved from the object store.

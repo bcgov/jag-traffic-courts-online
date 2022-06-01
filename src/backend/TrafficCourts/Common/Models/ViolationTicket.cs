@@ -1,4 +1,4 @@
-﻿namespace TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+﻿namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 /// <summary>
 /// An extension of the ViolationTicket object to include a ViolationTicketImage object.

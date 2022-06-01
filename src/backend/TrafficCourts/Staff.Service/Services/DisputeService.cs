@@ -4,7 +4,7 @@ using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using Winista.Mime;
 using System.Text.Json;
 
