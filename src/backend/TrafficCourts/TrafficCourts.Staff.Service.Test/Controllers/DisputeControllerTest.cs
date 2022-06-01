@@ -5,8 +5,8 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Controllers;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -78,15 +78,15 @@ public class DisputeController : TCOControllerBase<DisputeController>
             Dispute dispute = await _disputeService.GetDisputeAsync(disputeId, cancellationToken);
             return Ok(dispute);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status409Conflict)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status409Conflict)
         {
             ProblemDetails pd = new ProblemDetails
             {
@@ -99,7 +99,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
 
             return new ObjectResult(pd);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        catch (ApiException e)
         {
             _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
@@ -138,15 +138,15 @@ public class DisputeController : TCOControllerBase<DisputeController>
             await _disputeService.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
             return Ok(dispute);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        catch (ApiException e)
         {
             _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
@@ -187,19 +187,19 @@ public class DisputeController : TCOControllerBase<DisputeController>
             await _disputeService.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
             return Ok();
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        catch (ApiException e)
         {
             _logger.LogError("Error updating Dispute status:", e);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
@@ -239,19 +239,19 @@ public class DisputeController : TCOControllerBase<DisputeController>
             await _disputeService.ValidateDisputeAsync(disputeId, cancellationToken);
             return Ok();
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        catch (ApiException e)
         {
             _logger.LogError("Error updating Dispute status:", e);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
@@ -291,19 +291,19 @@ public class DisputeController : TCOControllerBase<DisputeController>
             await _disputeService.CancelDisputeAsync(disputeId, cancellationToken);
             return Ok();
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        catch (ApiException e)
         {
             _logger.LogError("Error updating Dispute status:", e);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
@@ -345,19 +345,19 @@ public class DisputeController : TCOControllerBase<DisputeController>
             await _disputeService.SubmitDisputeAsync(disputeId, cancellationToken);
             return Ok();
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
-        catch (TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0.ApiException e)
+        catch (ApiException e)
         {
             _logger.LogError("Error updating Dispute status:", e);
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);

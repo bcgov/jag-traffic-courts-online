@@ -1,6 +1,6 @@
 ﻿using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Staff.Service.Mappers;
 
