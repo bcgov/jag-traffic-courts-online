@@ -51,11 +51,13 @@
                         </mat-form-field>
                     </div>
                 </div>
+            </section>
+            <form [formGroup]="form" novalidate>
                 <div class="row">
                     <div class="col-md-6">
                         <mat-form-field class="w-100">
                             <mat-label>Time to pay written reasons</mat-label>
-                            <input matInput />
+                            <input matInput formControlName="timeToPayReason" readOnly="true" />
                         </mat-form-field>
                     </div>
                 </div>
@@ -63,14 +65,11 @@
                     <div class="col-md-6">
                         <mat-form-field class="w-100">
                             <mat-label>Fine reduction written reasons</mat-label>
-                            <input matInput />
+                            <input matInput formControlName="fineReductionReason" readOnly="true" />
                         </mat-form-field>
                     </div>
-                    
                 </div>
-            </section>
+            </form>
         </div>
-
-
     </mat-expansion-panel>
 </div>
