@@ -18,10 +18,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="OpenAPIs\OracleDataApi\v1_0\OracleDataApi.v1_0.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MediatR" Version="10.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
@@ -57,10 +53,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\OracleDataAPI\v1_0\OracleDataApi.v1_0.json" CodeGenerator="NSwagCSharp" Namespace="TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0" />
   </ItemGroup>
 
 </Project>
