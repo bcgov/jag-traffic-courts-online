@@ -16,9 +16,6 @@ export interface ViolationTicketCount {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    /**
-     * ID
-     */
     id?: string;
     count?: number;
     description?: string | null;

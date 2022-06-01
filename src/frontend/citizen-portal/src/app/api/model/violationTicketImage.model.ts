@@ -1,6 +1,6 @@
 /**
- * VTC Staff API
- * Violation Ticket Centre Staff API
+ * Traffic Court Online Citizen Api
+ * An API for creating violation ticket disputes
  *
  * The version of the OpenAPI document: v1
  * 
