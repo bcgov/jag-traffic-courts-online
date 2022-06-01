@@ -34,6 +34,11 @@ public class MinioFilePersistenceService : FilePersistenceService
 
     public override async Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken)
     {
+        using var scope = _logger.BeginScope(new Dictionary<string, object> {
+            ["FileName"] = filename,
+            ["BucketName"] = _bucketName,
+        });
+
         try
         {
             MemoryStream objectStream = _memoryStreamManager.GetStream();
@@ -44,7 +49,6 @@ public class MinioFilePersistenceService : FilePersistenceService
                 .WithCallbackStream((stream) => { stream.CopyTo(objectStream); });
 
             ObjectStat? status = await _objectOperations.GetObjectAsync(args, cancellationToken);
-
             return objectStream;
         }
         catch (BucketNotFoundException exception)
@@ -65,7 +69,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         catch (Exception exception)
         {
             _logger.LogWarning(exception, "Error fetching file from object storage");
-            throw new MinioFilePersistenceException("Error getting file", null!); // TODO: add exception parameter that handles Exception data type
+            throw new MinioFilePersistenceException("Error getting file", exception); // TODO: add exception parameter that handles Exception data type
         }
     }
 
@@ -74,7 +78,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         ArgumentNullException.ThrowIfNull(data);
         if (data.Length == 0) throw new ArgumentException("No data to save", nameof(data));
 
-        var mimeType = await data.GetMimeTypeAsync();
+        var mimeType = data.GetMimeType();
         if (mimeType is null)
         {
             _logger.LogInformation("Could not determine mime type for file, file cannot be saved");
@@ -82,13 +86,14 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
 
         var filename = GetFileName(mimeType);
-        if (filename == string.Empty)
-        {
-            return string.Empty;
-        }
-
         var now = _clock.GetCurrentPacificTime();
         string objectName = $"{now:yyyy-MM-dd}/{filename}";
+
+        using var scope = _logger.BeginScope(new Dictionary<string, object>
+        {
+            ["FileName"] = filename,
+            ["BucketName"] = _bucketName,
+        });
 
         try
         {
@@ -99,7 +104,7 @@ public class MinioFilePersistenceService : FilePersistenceService
             PutObjectArgs putObjectArgs = new PutObjectArgs()
                     .WithBucket(_bucketName)
                     .WithObject(objectName)
-                    .WithContentType(mimeType.Name)
+                    .WithContentType(mimeType.MimeType)
                     .WithObjectSize(data.Length)
                     .WithStreamData(data);
 
@@ -108,9 +113,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
         catch (BucketNotFoundException exception)
         {
-            using var scope = _logger.BeginScope(new Dictionary<string, object> { { "BucketName", _bucketName } });
             _logger.LogWarning("Object Store bucket not found");
-
             throw new FileNotFoundException("File not found", filename, exception);
         }
         catch (MinioException exception)

@@ -4,7 +4,7 @@ namespace TrafficCourts.Common.Features.FilePersistence;
 
 public class MinioFilePersistenceException : FilePersistenceException
 {
-    public MinioFilePersistenceException(string message, MinioException innerException) : base(message, innerException)
+    public MinioFilePersistenceException(string message, Exception innerException) : base(message, innerException)
     {
     }
 }
