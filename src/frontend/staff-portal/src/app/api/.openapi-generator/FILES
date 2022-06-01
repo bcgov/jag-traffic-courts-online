@@ -16,7 +16,6 @@ model/disputedCountPlea.model.ts
 model/excludeStatus.model.ts
 model/field.model.ts
 model/legalRepresentation.model.ts
-model/mimeType.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
 model/point.model.ts

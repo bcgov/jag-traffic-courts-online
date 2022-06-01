@@ -9,11 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { MimeType } from './mimeType.model';
 
 
 export interface ViolationTicketImage { 
     image?: string | null;
-    mimeType?: MimeType;
+    mimeType?: string | null;
 }
 

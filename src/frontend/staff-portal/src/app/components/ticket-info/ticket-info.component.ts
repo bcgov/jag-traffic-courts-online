@@ -617,7 +617,11 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
 
         // ticket image
-        this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
+        if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
+          this.imageToShow = "data:" + this.initialDisputeValues.violationTicket.violationTicketImage.mimeType + ";base64," + this.initialDisputeValues.violationTicket.violationTicketImage.image;
+        } else {
+          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;  
+        }
 
         // set disputant detected ocr issues
         this.flagsForm.get('disputantOcrIssuesDescription').setValue(response.disputantOcrIssuesDescription);

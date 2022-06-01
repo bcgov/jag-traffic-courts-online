@@ -5,8 +5,6 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using Winista.Mime;
-using System.Text.Json;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -130,24 +128,34 @@ public class DisputeService : IDisputeService
     /// <returns></returns>
     private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(string? imageFilename, CancellationToken cancellationToken)
     {
-        if (!String.IsNullOrEmpty(imageFilename))
+        if (String.IsNullOrEmpty(imageFilename))
+        {
+            return null;
+        }
+
+        using (_logger.BeginScope(new Dictionary<string, object> { ["FileName"] = imageFilename }))
         {
             try
             {
                 MemoryStream stream = await _filePersistenceService.GetFileAsync(imageFilename, cancellationToken);
-                MimeType mimeType = await stream.GetMimeTypeAsync();
-                return new ViolationTicketImage(stream.ToArray(), mimeType);
+                FileMimeType? mimeType = stream.GetMimeType();
+                if (mimeType is null)
+                {
+                    _logger.LogWarning("Could not determine mime type for file");
+                    return null;
+                }
+
+                return new ViolationTicketImage(stream.ToArray(), mimeType.MimeType);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.LogError("Could not retrieve image from object storage", e);
+                _logger.LogError(exception, "Could not retrieve image from object storage");
                 throw;
             }
         }
-        return null;
     }
 
-    public async Task<Dispute> UpdateDisputeAsync(Guid disputeId, Dispute dispute, System.Threading.CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(Guid disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
