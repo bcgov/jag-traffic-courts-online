@@ -74,7 +74,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         ArgumentNullException.ThrowIfNull(data);
         if (data.Length == 0) throw new ArgumentException("No data to save", nameof(data));
 
-        var mimeType = await data.GetMimeTypeAsync();
+        var mimeType = data.GetMimeType();
         if (mimeType is null)
         {
             _logger.LogInformation("Could not determine mime type for file, file cannot be saved");
@@ -82,11 +82,6 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
 
         var filename = GetFileName(mimeType);
-        if (filename == string.Empty)
-        {
-            return string.Empty;
-        }
-
         var now = _clock.GetCurrentPacificTime();
         string objectName = $"{now:yyyy-MM-dd}/{filename}";
 
@@ -99,7 +94,7 @@ public class MinioFilePersistenceService : FilePersistenceService
             PutObjectArgs putObjectArgs = new PutObjectArgs()
                     .WithBucket(_bucketName)
                     .WithObject(objectName)
-                    .WithContentType(mimeType.Name)
+                    .WithContentType(mimeType.MimeType)
                     .WithObjectSize(data.Length)
                     .WithStreamData(data);
 

@@ -5,7 +5,6 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
-using Winista.Mime;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -131,8 +130,8 @@ public class DisputeService : IDisputeService
             try
             {
                 MemoryStream stream = await _filePersistenceService.GetFileAsync(imageFilename, cancellationToken);
-                MimeType mimeType = await stream.GetMimeTypeAsync();
-                return new ViolationTicketImage(stream.ToArray(), mimeType);
+                FileMimeType mimeType = stream.GetMimeType();
+                return new ViolationTicketImage(stream.ToArray(), mimeType.MimeType);
             }
             catch (Exception e)
             {

@@ -1,5 +1,4 @@
-﻿using Winista.Mime;
-
+﻿
 namespace TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 
 /// <summary>
@@ -7,12 +6,10 @@ namespace TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 /// </summary>
 public class ViolationTicketImage
 {
-    public ViolationTicketImage(byte[] Image, MimeType MimeType)
+    public ViolationTicketImage(byte[] image, string mimeType)
     {
-        ArgumentNullException.ThrowIfNull(Image);
-        ArgumentNullException.ThrowIfNull(MimeType);
-        this.Image = Image;
-        this.MimeType = MimeType;
+        Image = image ?? throw new ArgumentNullException(nameof(image));
+        MimeType = mimeType ?? throw new ArgumentNullException(nameof(mimeType));
     }
 
     /// <summary>
@@ -23,5 +20,5 @@ public class ViolationTicketImage
     /// <summary>
     /// The MimeType of the image.
     /// </summary>
-    public MimeType MimeType { get; set; }
+    public string MimeType { get; set; }
 }
