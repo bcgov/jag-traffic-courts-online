@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+namespace TrafficCourts.Staff.Service.Models;
+
 /// <summary>
 /// A model representation of the extracted OCR results.
 /// </summary>
