@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Buffers;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics;
-using Winista.Mime;
 
 namespace TrafficCourts.Citizen.Service.Services.Impl
 {
@@ -40,7 +39,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Could not retrieve data record from Redis cache.");
+                _logger.LogError(ex, "Could not retrieve data record from Redis cache");
                 throw;
             }
         }
@@ -60,7 +59,6 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
                 return default;
             }
 
-            // var stream = new MemoryStream(fileData);
             MemoryStream stream = _memoryStreamManager.GetStream();
 
             int size = Convert.ToInt32(fileData.Length()); // Don't think it should ever reach max of int, which is ~2 gigs
@@ -79,7 +77,7 @@ namespace TrafficCourts.Citizen.Service.Services.Impl
             }
 
             var filename = $"{key}-File";
-            _logger.LogInformation($"Saving file: {filename} to redis cache.");
+            _logger.LogInformation("Saving file: {FileName} to redis cache.", filename);
 
             var buffer = data.ToArray();
             await _redisDbAsync.StringSetAsync(filename, buffer, expireTime ?? TimeSpan.FromDays(1));

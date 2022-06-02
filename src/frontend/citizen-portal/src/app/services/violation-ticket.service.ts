@@ -296,7 +296,7 @@ export class ViolationTicketService {
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
-      if (err.error.errors.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
+      if (err.error?.errors?.file || this.isErrorMatch(err, "Violation Ticket Number is blank")
         || this.isErrorMatch(err, "Violation ticket number must start with an A and be of the form \"AX00000000\".")
         || this.isErrorMatch(err, "low confidence", false)) {
         this.openErrorScenarioOneDialog();

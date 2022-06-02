@@ -77,7 +77,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     DisputeDetails = disputeDetails
                 };
 
-                _logger.LogDebug("TRY SENDING APPROVED DISPUTE TO ARC: {ApprovedDisputeTicket} ", tcoDisputeTicket);
+                // use trace because we are logging PII
+                _logger.LogTrace("TRY SENDING APPROVED DISPUTE TO ARC: {ApprovedDisputeTicket} ", tcoDisputeTicket);
 
                 await _submitDisputeToArcService.SubmitDisputeToArcAsync(tcoDisputeTicket);
             }

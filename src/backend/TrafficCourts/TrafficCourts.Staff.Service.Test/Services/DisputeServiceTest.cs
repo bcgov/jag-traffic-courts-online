@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.FilePersistence;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Configuration;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
 

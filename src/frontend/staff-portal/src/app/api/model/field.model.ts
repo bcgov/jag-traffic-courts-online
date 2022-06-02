@@ -9,10 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { BoundingBox } from './boundingBox.model';
 
 
-export interface ViolationTicketImage { 
-    image?: string | null;
-    mimeType?: string | null;
+export interface Field { 
+    value?: string | null;
+    fieldConfidence?: number | null;
+    validationErrors?: Array<string> | null;
+    type?: string | null;
+    boundingBoxes?: Array<BoundingBox> | null;
 }
 

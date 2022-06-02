@@ -23,7 +23,7 @@ public class FormRecognizerOptions : IValidatable
     /// Azure FormRecognizer ModelId, the name of the model used to perform OCR processing.
     /// </summary>
     [Required]
-    public string? ModelId { get; set; } = "ViolationTicket_v3";
+    public string? ModelId { get; set; } = "ViolationTicket_v4";
 
     public void Validate()
     {

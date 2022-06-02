@@ -1,11 +1,11 @@
 ﻿using MassTransit;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using TrafficCourts.Common.Features.FilePersistence;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
-using Winista.Mime;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -44,24 +44,37 @@ public class DisputeService : IDisputeService
         OracleDataApi_v1_0Client client = new(httpClient);
         client.BaseUrl = _oracleDataApiConfiguration.BaseUrl;
 
-        var username = _httpContextAccessor.HttpContext?.User.Claims?.FirstOrDefault(_ => _.Type == "preferred_username")?.Value;
-        if (username is not null)
+        var user = _httpContextAccessor.HttpContext?.User;
+
+        var username = user?.Claims?.FirstOrDefault(_ => _.Type == "preferred_username")?.Value;
+        if (username is not null && !string.IsNullOrWhiteSpace(username))
         {
+            // we expect the username to be of the form: someone@domain
             int index = username.IndexOf("@");
             if (index > 0)
             {
                 username = username[..index];
             }
 
-            var rqstHeader = httpClient.DefaultRequestHeaders;
-            if (rqstHeader != null)
-            {
-                rqstHeader.Add("x-username", username);
-            }
+            HttpRequestHeaders requestHeaders = httpClient.DefaultRequestHeaders;
+            requestHeaders.Add("x-username", username);
         }
         else
         {
-            _logger.LogError("Username was not found.  Possibly be an unauthenticated user.");
+            if (_httpContextAccessor.HttpContext is null)
+            {
+                // this is being executed outside of an web request
+                _logger.LogError("Cannot set x-username header, no HttpContext is available, the request not executing part of a HTTP web api request");
+            }
+            else
+            {                
+                using var scope = _logger.BeginScope(new Dictionary<string, object> {
+                    ["IsAuthenticated"] = _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated ?? false,
+                    ["AuthenticationType"] = _httpContextAccessor.HttpContext.User.Identity?.AuthenticationType ?? String.Empty
+                });
+
+                _logger.LogError("Could not find preferred_username claim on current user");
+            }
         }
 
         return client;
@@ -87,6 +100,9 @@ public class DisputeService : IDisputeService
         // Get the object store reference of the image (iff this is a scanned ViolationTicket)
         string? imageFilename = GetViolationTicketImageFilename(dispute);
         dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(imageFilename, cancellationToken);
+        
+        // deserialize json string to violation ticket fields
+        if (dispute.OcrViolationTicket != null) dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);
 
         return dispute;
     }
@@ -112,7 +128,7 @@ public class DisputeService : IDisputeService
             {
                 // Should never reach here, but if so then it means the ocr json data is invalid or not parseable by .NET
                 // For now, just log the error and return null to mean no image could be found so the GetDispute(id) endpoint doesn't break.
-                _logger.LogError("Could not extract object store file reference from json data.", ex);
+                _logger.LogError(ex, "Could not extract object store file reference from json data");
             }
         }
         return null;
@@ -126,24 +142,34 @@ public class DisputeService : IDisputeService
     /// <returns></returns>
     private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(string? imageFilename, CancellationToken cancellationToken)
     {
-        if (!String.IsNullOrEmpty(imageFilename))
+        if (String.IsNullOrEmpty(imageFilename))
+        {
+            return null;
+        }
+
+        using (_logger.BeginScope(new Dictionary<string, object> { ["FileName"] = imageFilename }))
         {
             try
             {
                 MemoryStream stream = await _filePersistenceService.GetFileAsync(imageFilename, cancellationToken);
-                MimeType mimeType = await stream.GetMimeTypeAsync();
-                return new ViolationTicketImage(stream.ToArray(), mimeType);
+                FileMimeType? mimeType = stream.GetMimeType();
+                if (mimeType is null)
+                {
+                    _logger.LogWarning("Could not determine mime type for file");
+                    return null;
+                }
+
+                return new ViolationTicketImage(stream.ToArray(), mimeType.MimeType);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                _logger.LogError("Could not retrieve image from object storage", e);
+                _logger.LogError(exception, "Could not retrieve image from object storage");
                 throw;
             }
         }
-        return null;
     }
 
-    public async Task<Dispute> UpdateDisputeAsync(Guid disputeId, Dispute dispute, System.Threading.CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(Guid disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }

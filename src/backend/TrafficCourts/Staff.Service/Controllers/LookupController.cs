@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Statute = TrafficCourts.Staff.Service.Models.Statute;
-using TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;

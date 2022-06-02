@@ -13,64 +13,73 @@
             </app-page-header>
 
         </mat-expansion-panel-header>
-        <div class="contact-body">
-            <div class="row mt-2 count-list">
-                <div class="col-lg-2 pe-0">
-                    <div style="display: flex">
-                        <span class="h2">
-                            <strong>Count1</strong>
-                        </span>
+
+        <!-- Counts -->
+        <ng-container *ngFor="let disputedCount of disputedCounts.controls; let i = index">
+            <div class="contact-body" [formGroup]="disputedCount">
+                <div class="row mt-2 count-list">
+                    <div class="col-lg-2 pe-0">
+                        <div style="display: flex">
+                            <span class="h2">
+                                <strong>Count {{ disputedCount.get('count').value }}</strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <small class="d-block"> Section</small>
+                        <div class="text">{{ disputedCount.get('section').value }}</div>
+                    </div>
+                    <div class="col-lg-6">
+                        <small class="d-block"> Description of offence </small>
+                        <div class="text">{{ disputedCount.get('description').value}}</div>
+                    </div>
+                    <div class="col-lg-2">
+                        <small class="d-block">Offence amount</small>
+                        <div class="text">{{ disputedCount.get('ticketedAmount').value | currency }}</div>
                     </div>
                 </div>
-                <div class="col-lg-1">
-                    <small class="d-block"> section</small>
-                    <div class="text">114.2(1)</div>
-                </div>
-                <div class="col-lg-7">
-                    <small class="d-block"> Description of offence </small>
-                    <div class="text">Load or porjection over 1M in front without requiring red flag or cloth</div>
-                </div>
-                <div class="col-lg-2">
-                    <small class="d-block">Offence amount</small>
-                    <div class="text">13212</div>
+
+                <section>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <mat-label>Request type</mat-label>
+                                <input matInput [value]="disputedCount.get('requestType').value" readonly="true" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field class="w-100">
+                                <mat-label>Court hearing?</mat-label>
+                                <input matInput
+                                    [value]="disputedCount.get('appearInCourt').value == 'true' ? 'Yes' : 'No'"
+                                    readonly="true" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </section>
+                <hr />
+            </div>
+        </ng-container>
+
+        <!-- not related to a specific count -->
+        <form [formGroup]="form" novalidate class="contact-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                        <mat-label>Time to pay written reasons</mat-label>
+                        <input matInput formControlName="timeToPayReason" readOnly="true" />
+                    </mat-form-field>
                 </div>
             </div>
-
-            <section>
-                <div class="row">
-                    <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                            <mat-label>Request type</mat-label>
-                            <input matInput />
-                        </mat-form-field>
-                    </div>
-                    <div class="col-md-4">
-                        <mat-form-field class="w-100">
-                            <mat-label>Court hearing?</mat-label>
-                            <input matInput />
-                        </mat-form-field>
-                    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field class="w-100">
+                        <mat-label>Fine reduction written reasons</mat-label>
+                        <input matInput formControlName="fineReductionReason" readOnly="true" />
+                    </mat-form-field>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                            <mat-label>Time to pay written reasons</mat-label>
-                            <input matInput />
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <mat-form-field class="w-100">
-                            <mat-label>Fine reduction written reasons</mat-label>
-                            <input matInput />
-                        </mat-form-field>
-                    </div>
-                    
-                </div>
-            </section>
-        </div>
-
+            </div>
+        </form>
 
     </mat-expansion-panel>
 </div>

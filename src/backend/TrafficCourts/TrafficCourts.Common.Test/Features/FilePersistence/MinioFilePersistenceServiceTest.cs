@@ -44,12 +44,12 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
         }
 
         [Fact]
-        public async Task should_if_no_mime_type_can_be_determined()
+        public async Task should_not_save_file_if_no_mime_type_can_be_determined()
         {
             var now = DateTimeOffset.Now;
             var clock = new FakeClock(Instant.FromDateTimeOffset(now));
 
-            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
+            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>(MockBehavior.Strict); // do not expect any operations to be called on this
 
             IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
 
@@ -60,7 +60,9 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             var actual = await sut.SaveFileAsync(stream, CancellationToken.None);
 
             Assert.NotNull(actual);
-            Assert.StartsWith(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(now, "Pacific Standard Time").ToString("yyyy-MM-dd"), actual);
+            Assert.StartsWith(String.Empty, actual);
+
+            objectOperationsMock.VerifyAll();
         }
 
         [Fact]

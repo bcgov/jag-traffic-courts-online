@@ -21,14 +21,14 @@ export interface DisputedCount {
     /**
      * The disputant is requesting time to pay the ticketed amount.
      */
-    request_time_to_pay?: boolean;
+    request_time_to_pay?: boolean | null;
     /**
      * The disputant is requesting a reduction of the ticketed amount.
      */
-    request_reduction?: boolean;
+    request_reduction?: boolean | null;
     /**
      * Does the want to appear in court?
      */
-    appear_in_court?: boolean;
+    appear_in_court?: boolean | null;
 }
 

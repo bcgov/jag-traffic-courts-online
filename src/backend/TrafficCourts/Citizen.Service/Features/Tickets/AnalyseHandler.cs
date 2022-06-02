@@ -74,13 +74,13 @@ public static class AnalyseHandler
             {
                 result = await _formRegognizerService.AnalyzeImageAsync(stream, cancellationToken);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 // redis will hold the image for 1 day, afterwards, it is removed automatically,
                 // so no need to delete from the system.
                 await _redisCacheService.DeleteRecordAsync(filename);
 
-                _logger.LogError("Exception thrown during analysis");
+                _logger.LogError(exception, "Exception thrown during analysis");
                 throw;
             }
             // Create a custom mapping of DocumentFields to a structured object for validation and serialization.

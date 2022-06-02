@@ -1,4 +1,4 @@
-﻿namespace TrafficCourts.Staff.Service.OpenAPIs.OracleDataApi.v1_0;
+﻿namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 /// <summary>
 /// An extension of the ViolationTicket object to include a ViolationTicketImage object.
@@ -10,4 +10,5 @@ public partial class ViolationTicket
     /// of the object store image reference in the ocrViolationTicket json property.
     /// </summary>
     public ViolationTicketImage? ViolationTicketImage { get; set; }
+    public OcrViolationTicket? OcrViolationTicket { get; set;  }
 }
