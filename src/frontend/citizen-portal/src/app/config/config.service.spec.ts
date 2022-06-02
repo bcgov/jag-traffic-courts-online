@@ -24,7 +24,7 @@ describe('ConfigService', () => {
   it('should get provinces code', inject(
     [ConfigService],
     (service: ConfigService) => {
-      const code = service.provinces[0];
+      const code = service.provinces[0].code;
       expect(code).toBeDefined();
     }
   ));
@@ -40,7 +40,7 @@ describe('ConfigService', () => {
   it('should get countries code', inject(
     [ConfigService],
     (service: ConfigService) => {
-      const code = service.countries[0].code;
+      const code = service.countries[0];
       expect(code).toBeDefined();
     }
   ));

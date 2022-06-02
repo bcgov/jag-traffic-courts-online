@@ -25,8 +25,8 @@ export class NoticeOfDisputeService {
     given_names: [null, [Validators.required]],
     address: [null, [Validators.required]],
     city: [null, [Validators.required]],
-    province: [null, [Validators.required]],
-    country: [{ value: "Canada", disabled: true }, [Validators.required]],
+    province: [null, [Validators.required, Validators.maxLength(30)]],
+    country: [{value: "Canada"}, [Validators.required]],
     postal_code: [null, [Validators.required]],
     home_phone_number: [null, [Validators.required, FormControlValidators.phone]],
     work_phone_number: [null, [FormControlValidators.phone]], // not using now
