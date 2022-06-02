@@ -37,7 +37,7 @@ namespace TrafficCourts.Citizen.Service.Validators
 
             RuleFor(_ => _.AppearInCourt).Must(x => x.Value == true || x is null)
                 .When(_ => _.Plea.Equals(Plea.NotGuilty))
-                .WithMessage("'Appear In Court' must be true since disputant pleaded not guilty");
+                .WithMessage("'Appear In Court' must not be false since disputant pleaded not guilty");
         }
     }
 }
