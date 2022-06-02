@@ -245,10 +245,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
   public onChangeWitnessPresent(event: MatCheckboxChange) {
     if (event.checked) {
-      this.form.controls.number_of_witness.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
+      this.additionalForm.controls.number_of_witness.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
-      this.form.controls.number_of_witness.clearValidators();
-      this.form.controls.number_of_witness.updateValueAndValidity();
+      this.additionalForm.controls.number_of_witness.clearValidators();
+      this.additionalForm.controls.number_of_witness.updateValueAndValidity();
     }
   }
 
