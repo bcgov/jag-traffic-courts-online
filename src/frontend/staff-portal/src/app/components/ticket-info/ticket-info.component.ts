@@ -558,7 +558,7 @@ export class TicketInfoComponent implements OnInit {
 
           // no need to pass back byte array with image
           let tempDispute = this.lastUpdatedDispute;
-          tempDispute.violationTicket.violationTicketImage = null;
+          delete tempDispute.violationTicket.violationTicketImage;
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
           this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe({
