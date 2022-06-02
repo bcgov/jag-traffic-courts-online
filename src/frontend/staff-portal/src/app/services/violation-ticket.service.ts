@@ -99,12 +99,12 @@ export class ViolationTicketService implements IViolationTicketService {
       if (!violationTicket.driversLicenceProvince) violationTicket.driversLicenceProvince = ocrViolationTicket.fields["drivers_licence_province"].value;
       if (!violationTicket.driversLicenceNumber) violationTicket.driversLicenceNumber = ocrViolationTicket.fields["drivers_licence_number"].value;
       if (!violationTicket.isMvaOffence) violationTicket.isMvaOffence = ocrViolationTicket.fields["is_mva_offence"].value == "selected" ? true : false;
-      if (!violationTicket.isLcaOffence) violationTicket.isLcaOffence = ocrViolationTicket.fields["is_lca_offence"].value == "selected" ? true : false;;
-      if (!violationTicket.isMcaOffence) violationTicket.isMcaOffence = ocrViolationTicket.fields["is_mca_offence"].value == "selected" ? true : false;;
-      if (!violationTicket.isFaaOffence) violationTicket.isFaaOffence = ocrViolationTicket.fields["is_faa_offence"].value == "selected" ? true : false;;
-      if (!violationTicket.isTcrOffence) violationTicket.isTcrOffence = ocrViolationTicket.fields["is_tcr_offence"].value == "selected" ? true : false;;
-      if (!violationTicket.isCtaOffence) violationTicket.isCtaOffence = ocrViolationTicket.fields["is_cta_offence"].value == "selected" ? true : false;;
-      if (!violationTicket.isWlaOffence) violationTicket.isWlaOffence = ocrViolationTicket.fields["is_wla_offence"].value == "selected" ? true : false;;
+      if (!violationTicket.isLcaOffence) violationTicket.isLcaOffence = ocrViolationTicket.fields["is_lca_offence"].value == "selected" ? true : false;
+      if (!violationTicket.isMcaOffence) violationTicket.isMcaOffence = ocrViolationTicket.fields["is_mca_offence"].value == "selected" ? true : false;
+      if (!violationTicket.isFaaOffence) violationTicket.isFaaOffence = ocrViolationTicket.fields["is_faa_offence"].value == "selected" ? true : false;
+      if (!violationTicket.isTcrOffence) violationTicket.isTcrOffence = ocrViolationTicket.fields["is_tcr_offence"].value == "selected" ? true : false;
+      if (!violationTicket.isCtaOffence) violationTicket.isCtaOffence = ocrViolationTicket.fields["is_cta_offence"].value == "selected" ? true : false;
+      if (!violationTicket.isWlaOffence) violationTicket.isWlaOffence = ocrViolationTicket.fields["is_wla_offence"].value == "selected" ? true : false;
       if (!violationTicket.isOtherOffence) violationTicket.isOtherOffence = ocrViolationTicket.fields["is_other_offence"].value == "selected" ? true : false;;
       if (!violationTicket.organizationLocation) violationTicket.organizationLocation = ocrViolationTicket.fields["organization_location"].value;
 
@@ -182,6 +182,35 @@ export class ViolationTicketService implements IViolationTicketService {
     }
 
     return violationTicket;
+  }
+
+  // Copied from citizen portal
+  // TODO : use this in function - setViolationTicketFromJSON
+  private getValue(field: Field): any {
+    let result;
+    let value = field.value;
+    if (field.type && value && value.length > 0) {
+      switch (field.type.toLowerCase()) {
+        case "double":
+          result = parseFloat(value.replace(/[^.0-9]/g, "")); // regex replace characters other than numbers
+          break;
+        case "int64":
+          result = parseInt(value.replace(/[^.0-9]/g, "")); // regex replace characters other than numbers
+          break;
+        case "selectionmark":
+          result = value.toLowerCase() === "selected" ? true : false;
+          break;
+        case "time":
+          result = value.replace(" ", ":");
+          break;
+        case "date":
+        case "string":
+        default:
+          result = value;
+          break;
+      }
+    }
+    return result;
   }
 }
 
