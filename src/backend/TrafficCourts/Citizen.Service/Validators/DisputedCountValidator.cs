@@ -35,7 +35,7 @@ namespace TrafficCourts.Citizen.Service.Validators
                 .When(_ => _.Plea.Equals(Plea.NotGuilty))
                 .WithMessage("'Request Reduction' must not be true since disputant pleaded not guilty");
 
-            RuleFor(_ => _.AppearInCourt).Must(x => x.Value == true)
+            RuleFor(_ => _.AppearInCourt).Must(x => x.Value == true || x is null)
                 .When(_ => _.Plea.Equals(Plea.NotGuilty))
                 .WithMessage("'Appear In Court' must be true since disputant pleaded not guilty");
         }
