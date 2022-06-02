@@ -46,7 +46,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (Exception e)
         {
-            _logger.LogError("Error retrieving Disputes from oracle-data-api:", e);
+            _logger.LogError(e, "Error retrieving Disputes from oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -101,12 +101,12 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (ApiException e)
         {
-            _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
+            _logger.LogError(e, "Error retrieving Dispute from oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
+            _logger.LogError(e, "Error retrieving Dispute from oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -148,12 +148,12 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (ApiException e)
         {
-            _logger.LogError("Error retrieving Dispute from oracle-data-api:", e);
+            _logger.LogError(e, "Error retrieving Dispute from oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error updating Dispute in oracle-data-api:", e);
+            _logger.LogError(e, "Error updating Dispute in oracle-data-api");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -201,12 +201,12 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (ApiException e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -232,7 +232,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ValidateDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Updating the Dispute status to VALIDATED");
+        _logger.LogDebug("Updating the Dispute status to {Status}", "VALIDATED");
 
         try
         {
@@ -253,12 +253,12 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (ApiException e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");            
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -284,7 +284,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Updating the Dispute status");
+        _logger.LogDebug("Updating the Dispute status to {Status}", "CANCELLED");
 
         try
         {
@@ -305,12 +305,12 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (ApiException e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
@@ -338,7 +338,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Updating the Dispute status");
+        _logger.LogDebug("Updating the Dispute status to {Status}", "PROCESSING");
 
         try
         {
@@ -359,12 +359,12 @@ public class DisputeController : TCOControllerBase<DisputeController>
         }
         catch (ApiException e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
-            _logger.LogError("Error updating Dispute status:", e);
+            _logger.LogError(e, "Error updating Dispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

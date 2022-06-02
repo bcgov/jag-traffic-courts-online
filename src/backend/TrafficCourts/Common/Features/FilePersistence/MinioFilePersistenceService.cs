@@ -53,17 +53,17 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
         catch (BucketNotFoundException exception)
         {
-            _logger.LogInformation("Bucket not found");
+            _logger.LogInformation(exception, "Bucket not found");
             throw new FileNotFoundException("File not found", filename, exception);
         }
         catch (ObjectNotFoundException exception)
         {
-            _logger.LogInformation("Object not found");
+            _logger.LogInformation(exception, "Object not found");
             throw new FileNotFoundException("File not found", filename, exception);
         }
         catch (DirectoryNotFoundException exception)
         {
-            _logger.LogInformation("Directory not found");
+            _logger.LogInformation(exception, "Directory not found");
             throw new FileNotFoundException("File not found", filename, exception);
         }
         catch (Exception exception)
@@ -113,7 +113,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
         catch (BucketNotFoundException exception)
         {
-            _logger.LogWarning("Object Store bucket not found");
+            _logger.LogWarning(exception, "Object Store bucket not found");
             throw new FileNotFoundException("File not found", filename, exception);
         }
         catch (MinioException exception)
