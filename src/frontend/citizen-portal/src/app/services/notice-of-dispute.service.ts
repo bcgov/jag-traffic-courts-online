@@ -112,7 +112,6 @@ export class NoticeOfDisputeService {
         if (action) {
           input.disputed_counts = input.disputed_counts.filter(i => i.plea);
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
-            console.log(res);
             this.noticeOfDispute$.next(input);
             this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
               queryParams: {
