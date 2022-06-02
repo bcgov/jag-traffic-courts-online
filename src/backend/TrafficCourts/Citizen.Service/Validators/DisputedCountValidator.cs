@@ -27,13 +27,13 @@ namespace TrafficCourts.Citizen.Service.Validators
                 .WithMessage("'Appear In Court' selection is required to be set since disputant pleaded guilty");
 
             // Validation rules for properties if disputant pleaded not guilty
-            RuleFor(_ => _.RequestTimeToPay).Must(x => x.Value == false)
+            RuleFor(_ => _.RequestTimeToPay).Must(x => x.Value == false || x is null)
                 .When(_ => _.Plea.Equals(Plea.NotGuilty))
-                .WithMessage("'Request Time To Pay' must be false since disputant pleaded not guilty");
+                .WithMessage("'Request Time To Pay' must not be true since disputant pleaded not guilty");
 
-            RuleFor(_ => _.RequestReduction).Must(x => x.Value == false)
+            RuleFor(_ => _.RequestReduction).Must(x => x.Value == false || x is null)
                 .When(_ => _.Plea.Equals(Plea.NotGuilty))
-                .WithMessage("'Request Reduction' must be false since disputant pleaded not guilty");
+                .WithMessage("'Request Reduction' must not be true since disputant pleaded not guilty");
 
             RuleFor(_ => _.AppearInCourt).Must(x => x.Value == true)
                 .When(_ => _.Plea.Equals(Plea.NotGuilty))
