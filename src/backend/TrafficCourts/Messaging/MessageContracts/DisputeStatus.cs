@@ -23,6 +23,11 @@
         /// <summary>
         /// The dispute was cancelled by the disputant.
         /// </summary>
-        Cancelled
+        Cancelled,
+
+        /// <summary>
+        /// The dispute was validated by the VTC.
+        /// </summary>
+        Validated
     }
 }
