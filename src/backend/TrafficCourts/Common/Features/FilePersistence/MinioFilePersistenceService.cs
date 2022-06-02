@@ -113,7 +113,6 @@ public class MinioFilePersistenceService : FilePersistenceService
         }
         catch (BucketNotFoundException exception)
         {
-            using var scope = _logger.BeginScope(new Dictionary<string, object> { { "BucketName", _bucketName } });
             _logger.LogWarning(exception, "Object Store bucket not found");
             throw new FileNotFoundException("File not found", filename, exception);
         }
