@@ -10,8 +10,8 @@ spring:
       config:
         trace-id-ratio-based: 1.0
       exporter:
-        otlp:
-          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4317}
+        jaeger:
+          endpoint: ${OTEL_EXPORTER_JAEGER_ENDPOINT:http://localhost:14250}
     
   redis:
     host: ${REDIS_HOST:localhost}

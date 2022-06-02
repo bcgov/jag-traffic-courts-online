@@ -25,23 +25,4 @@ services:
       
   oracle-data-api:
     environment:
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://sleuth:4317}
-  
-  sleuth:
-    environment:
-      OTEL_EXPORTER_JAEGER_ENDPOINT: ${OTEL_EXPORTER_JAEGER_ENDPOINT:-jaeger:14250}
-    image: otel/opentelemetry-collector:latest
-    command: ["--config=/etc/collector/otel-collector-config.yaml", "--log-level=DEBUG"]
-    volumes:
-      - ./.docker/otel-config.yaml:/etc/collector/otel-collector-config.yaml
-    ports:
-      - "1888:1888"   # pprof extension
-      - "13133:13133" # health_check extension
-      - "4317"        # OTLP gRPC receiver
-      - "55670:55679" # zpages extension
-      - "9464:9464"
-      - "55680:55680"
-      - "55681:55681"
-    depends_on:
-      - jaeger
-      
+      OTEL_EXPORTER_JAEGER_ENDPOINT: ${OTEL_EXPORTER_JAEGER_ENDPOINT:-http://jaeger:14250}
