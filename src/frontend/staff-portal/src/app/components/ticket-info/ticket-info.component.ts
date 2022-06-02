@@ -436,20 +436,9 @@ export class TicketInfoComponent implements OnInit {
     this.collapseObj[name] = !this.collapseObj[name]
   }
 
-  // act fullsection(section)(subsection)(paragraph)
-  public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
-    if (!violationTicketCount || !violationTicketCount.description) return "";
-    let ticketDesc = (violationTicketCount.actRegulation ? violationTicketCount.actRegulation : "") + " ";
-    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + violationTicketCount.section;
-    if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subsection + ")";
-    if (violationTicketCount.paragraph && violationTicketCount.paragraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.paragraph + ")";
-    ticketDesc = ticketDesc + " " + violationTicketCount.description;
-    return ticketDesc;
-  }
-
   // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
-    if (violationTicket.violationTicketCounts.filter(x => x.count == countNumber)) return this.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0]);
+    if (violationTicket.violationTicketCounts.filter(x => x.count == countNumber)) return (this.violationTicketService.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0]) + " " + violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0].description);
     else return "";
   }
 
@@ -620,7 +609,7 @@ export class TicketInfoComponent implements OnInit {
         if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
           this.imageToShow = "data:" + this.initialDisputeValues.violationTicket.violationTicketImage.mimeType + ";base64," + this.initialDisputeValues.violationTicket.violationTicketImage.image;
         } else {
-          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;  
+          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
         }
 
         // set disputant detected ocr issues
@@ -634,12 +623,14 @@ export class TicketInfoComponent implements OnInit {
         // set counts 1,2,3 of violation ticket
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
 
-          this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString()).patchValue(violationTicketCount);
-          this.form
-            .get('violationTicket')
-            .get('violationTicketCount' + violationTicketCount.count.toString())
+          let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.count.toString());
+          countForm.patchValue(violationTicketCount);
+          if (!violationTicketCount.ticketedAmount)
+            countForm.get('ticketedAmount').setValue(undefined);
+          let fullDesc = violationTicketCount.section ? this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description : undefined;
+          countForm
             .get('fullDescription')
-            .setValue(this.getLegalParagraphing(violationTicketCount));
+            .setValue(fullDesc);
         });
 
         this.violationTicketService.getAllOCRMessages(this.lastUpdatedDispute.violationTicket.ocrViolationTicket);
