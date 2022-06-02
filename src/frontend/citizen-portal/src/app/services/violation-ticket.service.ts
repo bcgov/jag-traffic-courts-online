@@ -267,7 +267,7 @@ export class ViolationTicketService {
     if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: (<any>this.ticket)[this.ocrTicketTimeKey], // special handling
+        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
       if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
