@@ -20,9 +20,6 @@ export interface Dispute {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    /**
-     * ID
-     */
     id?: string;
     status?: DisputeStatus;
     ticketNumber?: string | null;

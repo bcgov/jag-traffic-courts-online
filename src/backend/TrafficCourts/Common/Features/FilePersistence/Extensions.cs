@@ -62,9 +62,12 @@ namespace TrafficCourts.Common.Features.FilePersistence
             {
                 var configuration = serviceProvider.GetRequiredService<MinioClientConfiguration>();
 
+                // Have to specify a region, otherwise the library will attempt fetch the regions which DELL ECS does not support
+                // The region value of BC is arbitrary, just has to be non null or empty.
                 var client = new MinioClient()
                     .WithEndpoint(configuration.Endpoint)
-                    .WithCredentials(configuration.AccessKey, configuration.SecretKey);
+                    .WithCredentials(configuration.AccessKey, configuration.SecretKey)
+                    .WithRegion("BC"); 
 
                 if (configuration.Ssl)
                 {                    

@@ -11,8 +11,8 @@
  */
 
 
-export interface ViolationTicketImage { 
-    image?: string | null;
-    mimeType?: string | null;
+export interface Point { 
+    x?: number;
+    y?: number;
 }
 

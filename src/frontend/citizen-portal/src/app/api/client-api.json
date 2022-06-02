@@ -269,23 +269,24 @@
             "$ref": "#/components/schemas/Plea"
           },
           "count": {
-            "maximum": 3,
-            "minimum": 1,
             "type": "integer",
             "description": "The count number. Must be unique within an individual dispute.",
             "format": "int32"
           },
           "request_time_to_pay": {
             "type": "boolean",
-            "description": "The disputant is requesting time to pay the ticketed amount."
+            "description": "The disputant is requesting time to pay the ticketed amount.",
+            "nullable": true
           },
           "request_reduction": {
             "type": "boolean",
-            "description": "The disputant is requesting a reduction of the ticketed amount."
+            "description": "The disputant is requesting a reduction of the ticketed amount.",
+            "nullable": true
           },
           "appear_in_court": {
             "type": "boolean",
-            "description": "Does the want to appear in court?"
+            "description": "Does the want to appear in court?",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -359,7 +360,6 @@
         "type": "object",
         "properties": {
           "ticket_number": {
-            "maxLength": 12,
             "type": "string",
             "description": "The violation ticket number.",
             "nullable": true
@@ -372,8 +372,7 @@
           "issued_date": {
             "type": "string",
             "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "surname": {
             "type": "string",
@@ -388,17 +387,14 @@
           "birthdate": {
             "type": "string",
             "description": "The disputant's birthdate.",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "drivers_licence_number": {
-            "maxLength": 20,
             "type": "string",
             "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
             "nullable": true
           },
           "drivers_licence_province": {
-            "maxLength": 30,
             "type": "string",
             "description": "The province or state the drivers licence was issued by.",
             "nullable": true
@@ -419,7 +415,6 @@
             "nullable": true
           },
           "postal_code": {
-            "maxLength": 6,
             "type": "string",
             "description": "The mailing address postal code or zip code of the disputant.",
             "nullable": true

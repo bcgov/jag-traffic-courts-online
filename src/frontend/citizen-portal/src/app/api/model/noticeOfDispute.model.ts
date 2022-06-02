@@ -28,7 +28,7 @@ export interface NoticeOfDispute {
     /**
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
-    issued_date?: string | null;
+    issued_date?: string;
     /**
      * The surname or corporate name.
      */
@@ -40,7 +40,7 @@ export interface NoticeOfDispute {
     /**
      * The disputant\'s birthdate.
      */
-    birthdate?: string | null;
+    birthdate?: string;
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
      */

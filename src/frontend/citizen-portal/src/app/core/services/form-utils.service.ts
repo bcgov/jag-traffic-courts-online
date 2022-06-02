@@ -78,9 +78,11 @@ export class FormUtilsService {
         }
       });
     } else {
-      control.reset();
-      control.clearValidators();
-      control.updateValueAndValidity();
+      if (control) {
+        control.reset();
+        control.clearValidators();
+        control.updateValueAndValidity();
+      }
     }
   }
 

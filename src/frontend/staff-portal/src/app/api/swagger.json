@@ -703,6 +703,19 @@
   },
   "components": {
     "schemas": {
+      "BoundingBox": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Dispute": {
         "type": "object",
         "properties": {
@@ -724,7 +737,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "status": {
@@ -911,7 +923,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "plea": {
@@ -957,6 +968,39 @@
         ],
         "type": "string"
       },
+      "Field": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "fieldConfidence": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "validationErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LegalRepresentation": {
         "type": "object",
         "properties": {
@@ -978,7 +1022,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "lawFirmName": {
@@ -1009,34 +1052,37 @@
         },
         "additionalProperties": false
       },
-      "MimeType": {
+      "OcrViolationTicket": {
         "type": "object",
         "properties": {
-          "name": {
+          "imageFilename": {
             "type": "string",
             "nullable": true
           },
-          "primaryType": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
+          "globalConfidence": {
+            "type": "number",
+            "format": "float"
           },
-          "subType": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "extensions": {
-            "type": "array",
-            "items": {
-              "type": "string"
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Field"
             },
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Point": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
           }
         },
         "additionalProperties": false
@@ -1097,6 +1143,9 @@
           "violationTicketImage": {
             "$ref": "#/components/schemas/ViolationTicketImage"
           },
+          "ocrViolationTicket": {
+            "$ref": "#/components/schemas/OcrViolationTicket"
+          },
           "createdBy": {
             "type": "string",
             "nullable": true
@@ -1115,7 +1164,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "ticketNumber": {
@@ -1273,8 +1321,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "An extension of the ViolationTicket object to include a ViolationTicketImage object."
+        "additionalProperties": false
       },
       "ViolationTicketCount": {
         "type": "object",
@@ -1297,7 +1344,6 @@
           },
           "id": {
             "type": "string",
-            "description": "ID",
             "format": "uuid"
           },
           "count": {
@@ -1360,16 +1406,15 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "The byte[] of the ViolationTicket image.",
             "format": "byte",
             "nullable": true
           },
           "mimeType": {
-            "$ref": "#/components/schemas/MimeType"
+            "type": "string",
+            "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "A class that contains the byte[] data (raw image) that is retrieved from the object store."
+        "additionalProperties": false
       }
     },
     "securitySchemes": {

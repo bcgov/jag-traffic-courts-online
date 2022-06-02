@@ -17,9 +17,6 @@ export interface DisputedCount {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    /**
-     * ID
-     */
     id?: string;
     plea?: DisputedCountPlea;
     count?: number;
