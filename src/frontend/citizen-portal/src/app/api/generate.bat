@@ -12,7 +12,7 @@ docker pull openapitools/openapi-generator-cli:latest
 
 docker run --rm ^
   -v %CD%:/local openapitools/openapi-generator-cli generate ^
-  -i /local/client-api.json ^
+  -i /local/swagger.json ^
   -g typescript-angular ^
   -t /local/templates ^
   --additional-properties=modelFileSuffix=.model ^
