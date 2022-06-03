@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using TrafficCourts.Common.Features.Lookups;
 
-namespace TrafficCourts.Common.Features.Lookups
+namespace TrafficCourts.Common
 {
-    public static class Extensions
+    public static partial class Extensions
     {
         /// <summary>
         /// Adds statute lookup. Callers must ensure Redis is registered.

@@ -1,8 +1,10 @@
 ﻿using MassTransit;
 using MediatR;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.Features.Lookups;
@@ -24,7 +26,8 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
+            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddRedisInstrumentation();
         });
 
         builder.AddRedis();

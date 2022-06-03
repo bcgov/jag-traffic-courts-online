@@ -39,9 +39,8 @@ public static class Startup
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
             // add MassTransit source
-            options
-            .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
-            .AddRedisInstrumentation();
+            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddRedisInstrumentation();
         });
 
         // Redis
@@ -58,8 +57,8 @@ public static class Startup
         builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService>();
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
 
-        builder.Services.AddSingleton<ILookupService, RedisLookupService>();
-        builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
+        builder.Services.AddStatuteLookup();
+        builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
 
         // MassTransit
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
