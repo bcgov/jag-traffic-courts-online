@@ -61,8 +61,8 @@
 
     <!-- Additional Information -->
     <section class="px-4 py-2 mb-4 card-section">
-      <div class="page-subheader pagebreak">
-        <strong> Additional information </strong>
+      <div class="page-subheader pagebreak additional-info">
+        <strong><span class="contact-body">Additional information</span></strong>
 
         <div *ngIf="countsActions?.notAppearInCourt?.length > 0">
           <ng-container *ngIf="countsActions?.requestReduction?.length > 0">
@@ -107,38 +107,42 @@
             <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>
           </div>
           <div class="row mb-2" *ngIf="disputeInfo.legalRepresentation">
-            <div class="row mb-3">
+            <div class="row mb-3"><br />
               <small>Action</small>
-              <div><strong>I intend to be represented by a lawyer in court</strong></div>
+              <h3 class="mb-2 additional-info-desc">I intend to be represented by a lawyer in court</h3>
             </div>
             <div class="row mb-3">
               <div class="col">
                 <small>Name of law firm</small>
-                <div><strong>{{ disputeInfo.legalRepresentation.lawFirmName }}</strong></div>
+                <div> <h3 class="mb-2 additional-info-desc">{{ disputeInfo.legalRepresentation.lawFirmName }}</h3></div>
               </div>
               <div class="col">
                 <small>Full name of lawyer</small>
-                <div><strong>{{ disputeInfo.legalRepresentation.lawyerFullName }}</strong></div>
+                <div> <h3 class="mb-2 additional-info-desc">{{ disputeInfo.legalRepresentation.lawyerFullName }}</h3></div>
               </div>
               <div class="col">
                 <small>Contact Email</small>
-                <div><strong>{{ disputeInfo.legalRepresentation.lawyerEmail }}</strong></div>
+                <div> <h3 class="mb-2 additional-info-desc">{{ disputeInfo.legalRepresentation.lawyerEmail }}</h3></div>
+              </div>
+              <div class="col">
+                <small>Phone Number</small>
+                <div><h3 class="mb-2 additional-info-desc">{{ disputeInfo.legalRepresentation.lawyerPhoneNumber }}</h3></div>
               </div>
             </div>
             <div class="row">
               <small>Address of the law firm</small>
-              <div><strong>{{ disputeInfo.legalRepresentation.lawyerAddress }}</strong></div>
+              <div><h3 class="mb-2 additional-info-desc">{{ disputeInfo.legalRepresentation.lawyerAddress }}</h3></div>
             </div>
           </div>
           <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguage">
             <div class="row">
               <div class="col-lg-8">
                 <small>Action</small>
-                <div><strong>I require a language interpreter at the hearing</strong></div>
+                <div><h3 class="mb-2 additional-info-desc">I require a language interpreter at the hearing</h3></div>
               </div>
               <div class="col">
                 <small>Language</small>
-                <div><strong>{{disputeInfo.interpreterLanguage}}</strong></div>
+                <div><h3 class="mb-2 additional-info-desc">{{disputeInfo.interpreterLanguage}}</h3></div>
               </div>
             </div>
           </div>
@@ -146,11 +150,11 @@
             <div class="row">
               <div class="col-lg-8">
                 <small>Action</small>
-                <div><strong>I intend to call witness(es)</strong></div>
+                <div><h3 class="mb-2 additional-info-desc">I intend to call witness(es)</h3></div>
               </div>
               <div class="col">
                 <small># of witness(es)</small>
-                <div><strong>{{disputeInfo.numberOfWitness}}</strong></div>
+                <div><h3 class="mb-2 additional-info-desc">{{disputeInfo.numberOfWitness}}</h3></div>
               </div>
             </div>
           </div>
