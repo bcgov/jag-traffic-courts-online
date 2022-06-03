@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -17,7 +18,7 @@ public class TicketAmountValidRuleTest
     [InlineData("120.53.123", null)]
     [InlineData("", null)]
     [InlineData("abc", null)]
-    public void TestCurrencyIsValid(string value, float? expectedCurrency)
+    public async Task TestCurrencyIsValid(string value, float? expectedCurrency)
     {
         // Given
         Field field = new();
@@ -27,7 +28,7 @@ public class TicketAmountValidRuleTest
 
         // When
         float? actualCurrency = field.GetCurrency();
-        rule.Run();
+        await rule.RunAsync();
 
         // Then.
         if (expectedCurrency is null)

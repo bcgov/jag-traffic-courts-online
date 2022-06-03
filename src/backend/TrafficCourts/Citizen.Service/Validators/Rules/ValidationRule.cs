@@ -23,6 +23,6 @@ public abstract class ValidationRule
         Field.FieldConfidence = 0;
     }
 
-    public abstract void Run();
+    public abstract Task RunAsync();
 
 }

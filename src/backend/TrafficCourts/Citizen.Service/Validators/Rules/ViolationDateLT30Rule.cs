@@ -14,7 +14,7 @@ public class ViolationDateLT30Rule : ValidationRule
     {
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         DateTime? violationDate = Field.GetDate();
         if (violationDate is null)
@@ -39,5 +39,7 @@ public class ViolationDateLT30Rule : ValidationRule
                 AddValidationError(string.Format(ValidationMessages.ViolationDateGT30Days, violationDate.Value.ToString("yyyy-MM-dd")));
             }
         }
+
+        return Task.CompletedTask;
     }
 }

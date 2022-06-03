@@ -1,9 +1,10 @@
 using Moq;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
-using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
+using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.Models;
 using Xunit;
 using static TrafficCourts.Citizen.Service.Models.Tickets.OcrViolationTicket;
 
@@ -11,7 +12,6 @@ namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 
 public class CountSectionRuleTest
 {
-
     [Theory]
     [InlineData("24(1)", true)]
     [InlineData("23(1)", false)]
@@ -21,13 +21,12 @@ public class CountSectionRuleTest
     [InlineData("224(1)", false)]
     [InlineData("", true)] 
     [InlineData("$", true)] // treat as blank (must have pulled this character from the adjacent Ticket Amount field).
-    public void TestLookup(string sectionValue, bool expectValid)
+    public async Task TestLookup(string sectionValue, bool expectValid)
     {
         // Given
-        var lookupService = new Mock<ILookupService>();
-        List<Statute> statutes = new();
-        statutes.Add(new Statute((decimal) 18886, "MVA", "24(1)", "drive without licence"));
-        lookupService.Setup(_ => _.GetStatutes("24(1)")).Returns(statutes);
+        var lookupService = new Mock<IStatuteLookupService>();
+        var expected = new Statute((decimal) 18886, "MVA", "24(1)", "drive without licence");
+        lookupService.Setup(_ => _.GetBySectionAsync("24(1)")).Returns(Task.FromResult(expected));
 
         Field field = new();
         field.TagName = Count1Section;
@@ -35,7 +34,7 @@ public class CountSectionRuleTest
         CountSectionRule rule = new(field, lookupService.Object);
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then
         if (expectValid)

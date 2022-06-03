@@ -15,12 +15,14 @@ public class CountActRegMustBeMVA : ValidationRule
         _countNum = countNum;
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         string? countAct = this.Field.Value;
         if (countAct is not null && !"MVA".Equals(countAct.Replace("\\s+", "").ToUpper()))
         {
             AddValidationError(String.Format(ValidationMessages.MVAMustBeCountValue, countAct, _countNum));
         }
+
+        return Task.CompletedTask;
     }
 }

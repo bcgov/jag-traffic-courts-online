@@ -14,7 +14,7 @@ public class TimeRule : ValidationRule
     {
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         if (Field.Value is null)
         {
@@ -33,5 +33,8 @@ public class TimeRule : ValidationRule
                 Field.Value = time.Value.ToString(@"hh\:mm");
             }
         }
+
+        return Task.CompletedTask;
+
     }
 }

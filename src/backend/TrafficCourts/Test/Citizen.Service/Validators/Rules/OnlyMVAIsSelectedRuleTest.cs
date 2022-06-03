@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using Xunit;
@@ -20,7 +21,7 @@ public class OnlyMVAIsSelectedRuleTest
     [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "selected", "unselected", "unselected", @"^MVA must be the only selected.*")]
     [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "unselected", "selected", "unselected", @"^MVA must be the only selected.*")]
     [InlineData("selected", "unselected", "unselected", "unselected", "unselected", "unselected", "unselected", "selected", @"^MVA must be the only selected.*")]
-    public void TestFieldsBlank(string? mva, string? mca, string? cta, string? wla, string? faa, string? lca, string? tcr, string? other, string? expectedPattern)
+    public async Task TestFieldsBlank(string? mva, string? mca, string? cta, string? wla, string? faa, string? lca, string? tcr, string? other, string? expectedPattern)
     {
         // Given
         OcrViolationTicket violationTicket = new();
@@ -35,7 +36,7 @@ public class OnlyMVAIsSelectedRuleTest
         OnlyMVAIsSelectedRule rule = new(new Field(mva), violationTicket);
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then.
         if (expectedPattern is not null)

@@ -11,11 +11,13 @@ public class FieldIsRequiredRule : ValidationRule
     {
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         if (Field.Value is null)
         {
             AddValidationError(String.Format(ValidationMessages.FieldIsBlankError, Field.TagName));
         }
+
+        return Task.CompletedTask;
     }
 }

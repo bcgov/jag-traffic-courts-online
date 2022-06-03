@@ -8,10 +8,12 @@ public class CheckboxIsValidRule : ValidationRule
     {
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         if (Field.IsCheckboxSelected() is null) {
             AddValidationError(String.Format(ValidationMessages.CheckboxInvalid, Field.TagName, Field.Value));
         }
+
+        return Task.CompletedTask;
     }
 }

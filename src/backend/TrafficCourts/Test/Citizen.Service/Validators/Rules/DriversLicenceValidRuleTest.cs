@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -21,7 +22,7 @@ public class DriversLicenceValidRuleTest
     [InlineData("AB", "1234567", false, true)]
     [InlineData(null, "1234567", true, true)]
     [InlineData("BC", null, true, true)]
-    public void TestDriversLicenceIsValid(string province, string licenceNumber, bool expectProvValid, bool expectLicValid)
+    public async Task TestDriversLicenceIsValid(string province, string licenceNumber, bool expectProvValid, bool expectLicValid)
     {
         // Given
         Field provinceField = new(province);
@@ -31,7 +32,7 @@ public class DriversLicenceValidRuleTest
         DriversLicenceValidRule rule = new(licenceField, violationTicket);
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then.
         if (expectProvValid)

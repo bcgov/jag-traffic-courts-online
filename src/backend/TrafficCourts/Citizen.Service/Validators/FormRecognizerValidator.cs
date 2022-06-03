@@ -1,6 +1,7 @@
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators.Rules;
+using TrafficCourts.Common.Features.Lookups;
 
 namespace TrafficCourts.Citizen.Service.Validators;
 
@@ -9,9 +10,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
 
     private static readonly string _ticketTitleRegex = @"^VIOLATION TICKET$";
     private static readonly string _violationTicketNumberRegex = @"^A[A-Z]\d{8}$"; // 2 uppercase characters followed by 8 digits.
-    private readonly ILookupService _lookupService;
+    private readonly IStatuteLookupService _lookupService;
 
-    public FormRecognizerValidator(ILookupService lookupService)
+    public FormRecognizerValidator(IStatuteLookupService lookupService)
     {
         ArgumentNullException.ThrowIfNull(lookupService);
         _lookupService = lookupService;
@@ -33,7 +34,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
     }
 
     /// <summary>Applies a set of validation rules to determine if the given violationTicket is valid or not.</summary>
-    private static void ApplyGlobalRules(OcrViolationTicket violationTicket)
+    private static async void ApplyGlobalRules(OcrViolationTicket violationTicket)
     {
         // TCVP-933 A ticket is considered valid iff
         // - Ticket title reads 'VIOLATION TICKET' at top
@@ -59,7 +60,11 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new ViolationDateLT30Rule(violationTicket.Fields[OcrViolationTicket.ViolationDate]));
 
         // Run each rule and aggregate the results
-        rules.ForEach(_ => _.Run());
+        foreach (var rule in rules)
+        {
+            await rule.RunAsync();
+        }
+
         foreach (var field in violationTicket.Fields.Values)
         {
             violationTicket.GlobalValidationErrors.AddRange(field.ValidationErrors);
@@ -72,7 +77,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         }
     }
 
-    private void ApplyFieldRules(OcrViolationTicket violationTicket)
+    private async Task ApplyFieldRules(OcrViolationTicket violationTicket)
     {
         List<ValidationRule> rules = new();
 
@@ -110,6 +115,9 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         rules.Add(new TicketAmountValidRule(violationTicket.Fields[OcrViolationTicket.Count3TicketAmount]));
         rules.Add(new CountSectionRule(violationTicket.Fields[OcrViolationTicket.Count3Section], _lookupService));
 
-        rules.ForEach(_ => _.Run());
+        foreach (var rule in rules)
+        {
+            await rule.RunAsync();
+        }
     }
 }

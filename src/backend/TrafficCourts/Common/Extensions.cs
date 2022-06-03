@@ -5,7 +5,7 @@ namespace TrafficCourts.Common
     /// <summary>
     /// Common extensions methods
     /// </summary>
-    public static class Extensions
+    public static partial class Extensions
     {
         /// <summary>
         /// Gets the base address of the <see cref="Uri"/>.
