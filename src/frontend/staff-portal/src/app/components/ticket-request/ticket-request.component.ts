@@ -46,13 +46,13 @@ export class TicketRequestComponent implements OnInit {
 
     let requestType = "";
     if (disputedCount) {
-      if (disputedCount.plea == 'GUILTY' && disputedCount.appearInCourt == false) {
+      if (disputedCount.plea == DisputedCountPlea.Guilty && disputedCount.appearInCourt == false) {
         requestType = disputedCount.requestTimeToPay == true ? "Time to pay" : "";
         requestType = requestType.concat(disputedCount.requestTimeToPay == true && disputedCount.requestReduction == true ? " + " : "");
         requestType = requestType.concat(disputedCount.requestReduction == true ? "Fine reduction" : "");
-      } else if (disputedCount.plea == 'GUILTY' && disputedCount.appearInCourt == true) {
+      } else if (disputedCount.plea == DisputedCountPlea.Guilty && disputedCount.appearInCourt == true) {
         requestType = 'Time to pay and/or fine reduction';
-      } else if (disputedCount.plea == 'NOT_GUILTY') {
+      } else if (disputedCount.plea == DisputedCountPlea.NotGuilty) {
         requestType = "Dispute offence";
       }
     }
