@@ -7,50 +7,36 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
-import ca.bc.gov.open.jag.tco.oracledataapi.repository.StatuteRepository;
+import io.swagger.v3.core.util.Json;
 
 @Service
 public class LookupService {
 
 	private Logger log = LoggerFactory.getLogger(LookupService.class);
+	private static final String STATUTES = "Statutes";
 
 	@Autowired
-	private StatuteRepository statuteRepository;
+	private RedisTemplate<String, String> redis;
 
 	public void refresh() {
 		log.debug("Refreshing code tables in redis.");
 
 		try {
-			List<Statute> newStatutes = getStatutes();
+			List<Statute> statutes = getStatutes();
+			String json = Json.pretty(statutes);
 
-			// Index statutes by code
-			Map<Integer, Statute> map = newStatutes.stream().collect(Collectors.toMap(Statute::getCode, Function.identity()));
-			Set<Integer> newStatutesIds = map.keySet();
-
-			// Remove statutes that are no longer in the list from Oracle
-			Iterable<Statute> oldStatutes = statuteRepository.findAll();
-			for (Statute statute : oldStatutes) {
-				if (statute != null && !newStatutesIds.contains(statute.getCode())) {
-					statuteRepository.delete(statute);
-				}
-			}
-
-			// Insert/update all statutes with those from Oracle
-			statuteRepository.saveAll(newStatutes);
-
+			// replace the Statutes key with a new json-serialized version of the statutes list.
+			redis.opsForValue().set(STATUTES, json);
 		} catch (Exception e) {
 			log.error("Could not update redis", e);
 		}
