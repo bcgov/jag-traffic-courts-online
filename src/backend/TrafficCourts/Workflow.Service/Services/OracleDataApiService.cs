@@ -1,50 +1,41 @@
 ﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System.Net.Http.Formatting;
-using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Workflow.Service.Configuration;
-using TrafficCourts.Workflow.Service.Models;
 
-namespace TrafficCourts.Workflow.Service.Services
+namespace TrafficCourts.Workflow.Service.Services;
+
+public class OracleDataApiService : IOracleDataApiService
 {
-    public class OracleDataApiService : IOracleDataApiService
+    private readonly ILogger<OracleDataApiService> _logger;
+    private readonly OracleDataApiConfiguration _oracleDataApiConfiguration;
+
+    public OracleDataApiService(ILogger<OracleDataApiService> logger, IOptions<OracleDataApiConfiguration> oracleDataApiConfiguration)
     {
-        private readonly ILogger<OracleDataApiService> _logger;
-        private readonly OracleDataApiConfiguration _oracleDataApiConfiguration;
+        _logger = logger;
+        _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
+    }
 
-        public OracleDataApiService(ILogger<OracleDataApiService> logger, IOptions<OracleDataApiConfiguration> oracleDataApiConfiguration)
+    public async Task<Guid> CreateDisputeAsync(Dispute dispute)
+    {
+        // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
+        if (!string.IsNullOrEmpty(dispute.OcrViolationTicket))
         {
-            _logger = logger;
-            _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
+            dispute.ViolationTicket = new();
+            
+            // TODO: initialize ViolationTicket with data from OCR 
         }
 
-        public async Task<Guid> CreateDisputeAsync(NoticeOfDispute disputeToSubmit)
-        {
-            // Formatting all dispute class properties to camel case since oracle data api
-            // accepts camel case only after serialization
-            var formatter = new JsonMediaTypeFormatter();
-            formatter.SerializerSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
+        return await GetOracleDataApi().SaveDisputeAsync(dispute);
+    }
 
-            using (var httpClient = new HttpClient())
-            {
-                var oracleDataApiBaseUri = $"{_oracleDataApiConfiguration.BaseUrl}api/v1.0/";
-                httpClient.BaseAddress = new Uri(oracleDataApiBaseUri);
-                using (var response = await httpClient.PostAsync("dispute", disputeToSubmit, formatter))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var apiResponse = await response.Content.ReadAsAsync<Guid>();
-                        return apiResponse;
-                    }
-
-                    return Guid.Empty; 
-                }
-            }
-        }
+    /// <summary>
+    /// Returns a new inialized instance of the OracleDataApi_v1_0Client
+    /// </summary>
+    /// <returns></returns>
+    private OracleDataApi_v1_0Client GetOracleDataApi()
+    {
+        OracleDataApi_v1_0Client client = new(new HttpClient());
+        client.BaseUrl = _oracleDataApiConfiguration.BaseUrl;
+        return client;
     }
 }

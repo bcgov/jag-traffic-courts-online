@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Messaging\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="../Citizen.Service/TrafficCourts.Citizen.Service.csproj" />
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
