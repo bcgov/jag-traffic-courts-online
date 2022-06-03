@@ -11,6 +11,7 @@ namespace TrafficCourts.Common.Features.Lookups
     /// <typeparam name="T"></typeparam>
     public abstract class CachedLookupService<T> : ICachedLookupService<T>
     {
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
         private readonly IConnectionMultiplexer _redis;
         protected readonly string _key;
         protected readonly IMemoryCache _cache;
@@ -88,7 +89,7 @@ namespace TrafficCourts.Common.Features.Lookups
             try
             {
                 string json = value; // implicit operator allows RedisValue to string conversion
-                T[]? values = JsonSerializer.Deserialize<T[]>(json);
+                T[]? values = JsonSerializer.Deserialize<T[]>(json, _jsonSerializerOptions);
                 if (values is null)
                 {
                     _logger.LogError("Deserializing redis value returned null, returning empty collection", typeof(T).Name);
