@@ -87,7 +87,9 @@
             <strong class="fs-5">
               <div>{{ countsActions?.request_reduction }}</div>
             </strong>
-            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written reasons.</h3>
+            <h3 class="mb-0 additional-info-desc">
+              I do not want to attend a court hearing and want to supply written reasons.
+            </h3>
             <small>Written reasons for <strong>fine reduction</strong> request</small>
             <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
           </ng-container>
@@ -98,20 +100,32 @@
             </strong>
           </ng-container>
           <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
-            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written reasons.</h3>
+            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written
+              reasons.</h3>
             <small>Written reasons for <strong>time to pay</strong> request</small>
             <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
           </ng-container>
         </div>
         <div *ngIf="countsActions?.appear_in_court?.length > 0">
           <hr />
-          <strong class="fs-5 mb-3">
-            <ng-container *ngFor="let i of countsActions?.appear_in_court let inx = index">
-              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-            </ng-container>
-          </strong>
-          <br />
-          <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>
+          <div *ngIf="countsActions?.gulity.length > 0">
+            <strong class="fs-5 mb-3">
+              <div>{{ countsActions?.gulity }}</div>
+            </strong>
+            <h3 class="mb-2 additional-info-desc">
+              I want to attend a court hearing to request a fine reduction and/or time to pay.
+            </h3>
+            <br />
+          </div>
+          <div *ngIf="countsActions?.not_gulity.length > 0">
+            <strong class="fs-5 mb-3">
+              <div>{{ countsActions?.not_gulity }}</div>
+            </strong>
+            <h3 class="mb-2 additional-info-desc">
+              I want to attend a court hearing and dispute the charge.
+            </h3>
+            <br />
+          </div>
           <div class="row mb-2" *ngIf="noticeOfDispute.legal_representation">
             <div class="row mb-3">
               <small>Action</small>
