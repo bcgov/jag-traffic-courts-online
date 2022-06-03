@@ -14,7 +14,7 @@ public class FieldMatchesRegexRule : ValidationRule
         this._reason = reason;
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         if (Field.Value is null)
         {
@@ -24,5 +24,7 @@ public class FieldMatchesRegexRule : ValidationRule
         {
             AddValidationError(_reason);
         }
+
+        return Task.CompletedTask;
     }
 }

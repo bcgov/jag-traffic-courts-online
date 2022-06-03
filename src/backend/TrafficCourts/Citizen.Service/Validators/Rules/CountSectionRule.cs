@@ -1,8 +1,6 @@
 using System.Text.RegularExpressions;
-using System;
 using TrafficCourts.Citizen.Service.Models.Tickets;
-using TrafficCourts.Citizen.Service.Services;
-using static TrafficCourts.Citizen.Service.Models.Tickets.OcrViolationTicket;
+using TrafficCourts.Common.Features.Lookups;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
 
@@ -11,16 +9,15 @@ namespace TrafficCourts.Citizen.Service.Validators.Rules;
 /// </summary>
 public class CountSectionRule : ValidationRule
 {
+    private readonly IStatuteLookupService _lookupService;
 
-    private readonly ILookupService _lookupService;
-
-    public CountSectionRule(Field field, Services.ILookupService lookupService) : base(field)
+    public CountSectionRule(Field field, IStatuteLookupService lookupService) : base(field)
     {
         ArgumentNullException.ThrowIfNull(lookupService);
         _lookupService = lookupService;
     }
 
-    public override void Run()
+    public override async Task RunAsync()
     {
         if (!String.IsNullOrEmpty(Field.Value))
         {
@@ -28,8 +25,8 @@ public class CountSectionRule : ValidationRule
             Field.Value = Regex.Replace(Field.Value, @"^\$$", ""); // remove $ if it's the only character.
             if (!String.IsNullOrEmpty(Field.Value))
             {
-                IEnumerable<Statute> statutes = _lookupService.GetStatutes(Field.Value);
-                if (!statutes.Any())
+                var statute = await _lookupService.GetBySectionAsync(Field.Value);
+                if (statute is null)
                 {
                     AddValidationError(String.Format(ValidationMessages.CountSectionInvalid, Field.Value));
                 }

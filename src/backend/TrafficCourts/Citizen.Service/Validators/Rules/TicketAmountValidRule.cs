@@ -12,7 +12,7 @@ public class TicketAmountValidRule : ValidationRule
     {
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         if (Field.Value is not null)
         {
@@ -27,5 +27,7 @@ public class TicketAmountValidRule : ValidationRule
                 Field.Value =  String.Format("{0:C}", currency);
             }
         }
+
+        return Task.CompletedTask;
     }
 }
