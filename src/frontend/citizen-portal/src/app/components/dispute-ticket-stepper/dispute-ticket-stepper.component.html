@@ -418,9 +418,7 @@
 
               <section *ngIf="countsActions?.appear_in_court?.length > 0">
                 <div>
-                  <ng-container *ngFor="let i of countsActions?.appear_in_court; let inx = index">
-                    {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-                  </ng-container>
+                  <div>{{ countsActions?.appear_in_court }}</div>
                 </div>
                 <h3 class="mt-4 mb-2 reduction-text">
                 </h3>

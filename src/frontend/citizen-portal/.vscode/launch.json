@@ -8,8 +8,16 @@
       "name": "Launch Chrome",
       "request": "launch",
       "type": "chrome",
-      "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}"
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/*",
+        "/*": "*",
+        "/./~/*": "${webRoot}/node_modules/*"
+      }
     },
 
     // Based on: https://github.com/microsoft/vscode-recipes/tree/master/Angular-CLI
@@ -18,7 +26,7 @@
       "type": "pwa-msedge",
       "request": "launch",
       "preLaunchTask": "npm: debug",
-      "url": "http://localhost:4200/",
+      "url": "http://localhost:8080/",
       "webRoot": "${workspaceFolder}",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
