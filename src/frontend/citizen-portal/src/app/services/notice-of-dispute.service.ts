@@ -129,12 +129,12 @@ export class NoticeOfDisputeService {
     let fields = Object.keys(this.countFormFields);
     fields.forEach(field => {
       if (counts && counts.length > 0) {
-        countsActions[field] = counts.filter(i => i[field]).map(i => i.count);
+        countsActions[field] = counts.filter(i => i[field]).map(i => "Count " + i.count).join(", ");
       } else {
         countsActions[field] = [];
       }
     });
-    countsActions.not_appear_in_court = counts.filter(i => i.appear_in_court === false).map(i => i.count);
+    countsActions.not_appear_in_court = counts.filter(i => i.appear_in_court === false).map(i => "Count " + i.count).join(", ");
     return countsActions;
   }
 

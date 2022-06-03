@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MassTransit;
 using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Models;
 
@@ -30,7 +31,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
         /// <returns></returns>
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
+            Dispute dispute = _mapper.Map<Dispute>(context.Message);
 
             // Send email message to the submitter's entered email
             var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _submitEmailTemplateName);
@@ -40,9 +41,9 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 var emailMessage = new SendEmail()
                 {
                     From = template.Sender,
-                    To = { noticeOfDispute!.EmailAddress! },
-                    Subject = template.SubjectTemplate.Replace("<ticketid>", noticeOfDispute.TicketNumber),
-                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", noticeOfDispute.TicketNumber)
+                    To = { dispute!.EmailAddress! },
+                    Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber),
+                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber)
                 };
 
                 await context.Publish(emailMessage);

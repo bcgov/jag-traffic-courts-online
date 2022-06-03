@@ -267,7 +267,7 @@ export class ViolationTicketService {
     if (this.ticket) {
       let params = paramsInput ?? {
         ticketNumber: this.ticket.ticket_number,
-        time: (<any>this.ticket)[this.ocrTicketTimeKey], // special handling
+        time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
       if (this.dateDiff(this.ticket.issued_date) <= 30) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
@@ -306,6 +306,9 @@ export class ViolationTicketService {
       }
       else if (this.isErrorMatch(err, "MVA must be selected under the \"Did commit the offence(s) indicated\" section.")) {
         this.openErrorScenarioThreeDialog();
+      }
+      else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
+        this.openErrorScenarioFourDialog();
       } else { // fall back option
         this.openErrorScenarioOneDialog();
       }
@@ -338,6 +341,10 @@ export class ViolationTicketService {
 
   private openErrorScenarioThreeDialog() {
     return this.openImageTicketNotFoundDialog("Invalid ticket type", "error3");
+  }
+
+  private openErrorScenarioFourDialog() {
+    return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error4");
   }
 
   private openInValidTicketDateDialog() {
