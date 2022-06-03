@@ -1,151 +1,162 @@
 <div class="request-info">
 
-    <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
-            <app-page-header>
-                <ng-container subHeader>
-                    <span>Ticket Request Information </span>
-                    <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
-                        style="font-size:18px; color:#009cde"></i>
-                    <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"
-                        style="font-size:18px; color:#009cde"></i>
-                </ng-container>
-            </app-page-header>
-
-        </mat-expansion-panel-header>
-
-        <!-- Counts -->
-        <ng-container *ngFor="let disputedCount of disputedCounts.controls; let i = index">
-            <div class="contact-body" [formGroup]="disputedCount">
-                <div class="row mt-2 count-list">
-                    <div class="col-lg-2 pe-0">
-                        <div style="display: flex">
-                            <span class="h2">
-                                <strong>Count {{ disputedCount.get('count').value }}</strong>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <small class="d-block"> Section</small>
-                        <div class="text">{{ disputedCount.get('section').value }}</div>
-                    </div>
-                    <div class="col-lg-6">
-                        <small class="d-block"> Description of offence </small>
-                        <div class="text">{{ disputedCount.get('description').value}}</div>
-                    </div>
-                    <div class="col-lg-2">
-                        <small class="d-block">Offence amount</small>
-                        <div class="text">{{ disputedCount.get('ticketedAmount').value | currency }}</div>
-                    </div>
-                </div>
-
-                <section>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <mat-form-field class="w-100">
-                                <mat-label>Request type</mat-label>
-                                <input matInput [value]="disputedCount.get('requestType').value" readonly="true" />
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-4">
-                            <mat-form-field class="w-100">
-                                <mat-label>Court hearing?</mat-label>
-                                <input matInput
-                                    [value]="disputedCount.get('appearInCourt').value ? 'Yes' : 'No'"
-                                    readonly="true" />
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </section>
-                <hr />
-            </div>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+      <app-page-header>
+        <ng-container subHeader>
+          <span>Ticket Request Information </span>
+          <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
+            style="font-size:18px; color:#009cde"></i>
+          <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"
+            style="font-size:18px; color:#009cde"></i>
         </ng-container>
+      </app-page-header>
 
-        <!-- Additional Information -->
-        <section class="px-4 py-2 mb-4 card-section">
-            <div class="page-subheader pagebreak">
-              <strong> Additional information </strong>
-      
-              <div *ngIf="countsActions?.notAppearInCourt?.length > 0">
-                <ng-container *ngIf="countsActions?.requestReduction?.length > 0">
-                  <hr />
-                  <strong class="fs-5">
-                    <div>{{ countsActions?.requestReduction }}</div>
-                  </strong>
-                  <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written reasons.</h3>
-                  <small>Written reasons for <strong>fine reduction</strong> request</small>
-                  <div>{{ disputeInfo.fineReductionReason }}</div>
-                </ng-container>
-                <ng-container *ngIf="countsActions?.requestReduction !== countsActions.requestTimeToPay">
-                  <hr />
-                  <strong class="fs-5">
-                    <div>{{ countsActions?.requestTimeToPay }}</div>
-                  </strong>
-                </ng-container>
-                <ng-container *ngIf="countsActions?.requestTimeToPay?.length > 0">
-                  <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written reasons.</h3>
-                  <small>Written reasons for <strong>time to pay</strong> request</small>
-                  <div>{{ disputeInfo.timeToPayReason }}</div>
-                </ng-container>
+    </mat-expansion-panel-header>
+
+    <!-- Counts -->
+    <ng-container *ngFor="let disputedCount of disputedCounts.controls; let i = index">
+      <div class="contact-body" [formGroup]="disputedCount">
+        <div class="row mt-2 count-list">
+          <div class="col-lg-2 pe-0">
+            <div style="display: flex">
+              <span class="h2">
+                <strong>Count {{ disputedCount.get('count').value }}</strong>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <small class="d-block"> Section</small>
+            <div class="text">{{ disputedCount.get('section').value }}</div>
+          </div>
+          <div class="col-lg-6">
+            <small class="d-block"> Description of offence </small>
+            <div class="text">{{ disputedCount.get('description').value}}</div>
+          </div>
+          <div class="col-lg-2">
+            <small class="d-block">Offence amount</small>
+            <div class="text">{{ disputedCount.get('ticketedAmount').value | currency }}</div>
+          </div>
+        </div>
+
+        <section>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <mat-label>Request type</mat-label>
+                <input matInput [value]="disputedCount.get('requestType').value" readonly="true" />
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="w-100">
+                <mat-label>Court hearing?</mat-label>
+                <input matInput [value]="disputedCount.get('appearInCourt').value ? 'Yes' : 'No'" readonly="true" />
+              </mat-form-field>
+            </div>
+          </div>
+        </section>
+        <hr />
+      </div>
+    </ng-container>
+
+    <!-- Additional Information -->
+    <section class="px-4 py-2 mb-4 card-section">
+      <div class="page-subheader pagebreak">
+        <strong> Additional information </strong>
+
+        <div *ngIf="countsActions?.notAppearInCourt?.length > 0">
+          <ng-container *ngIf="countsActions?.requestReduction?.length > 0">
+            <hr />
+            <strong class="fs-5">
+              <div>{{ countsActions?.requestReduction }}</div>
+            </strong>
+            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written
+              reasons.</h3>
+            <small>Written reasons for <strong>fine reduction</strong> request</small>
+            <div>{{ disputeInfo.fineReductionReason }}</div>
+          </ng-container>
+          <ng-container *ngIf="countsActions?.requestReduction !== countsActions.requestTimeToPay">
+            <hr />
+            <strong class="fs-5">
+              <div>{{ countsActions?.requestTimeToPay }}</div>
+            </strong>
+          </ng-container>
+          <ng-container *ngIf="countsActions?.requestTimeToPay?.length > 0">
+            <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written
+              reasons.</h3>
+            <small>Written reasons for <strong>time to pay</strong> request</small>
+            <div>{{ disputeInfo.timeToPayReason }}</div>
+          </ng-container>
+        </div>
+        <div *ngIf="countsActions?.appearInCourt?.length > 0">
+          <hr />
+          <div *ngIf="countsActions?.courtGuilty.length > 0">
+            <strong class="fs-5 mb-3">
+              <div>{{ countsActions?.courtGuilty }}</div>
+            </strong>
+            <h3 class="mb-2 additional-info-desc">
+              I want to attend a court hearing to request a fine reduction and/or time to pay.
+            </h3>
+            <br />
+          </div>
+          <div *ngIf="countsActions?.courtNotGuilty.length > 0">
+            <strong class="fs-5 mb-3">
+              <div>{{ countsActions?.courtNotGuilty }}</div>
+            </strong>
+            <br />
+            <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>
+          </div>
+          <div class="row mb-2" *ngIf="disputeInfo.legalRepresentation">
+            <div class="row mb-3">
+              <small>Action</small>
+              <div><strong>I intend to be represented by a lawyer in court</strong></div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <small>Name of law firm</small>
+                <div><strong>{{ disputeInfo.legalRepresentation.lawFirmName }}</strong></div>
               </div>
-              <div *ngIf="countsActions?.appearInCourt?.length > 0">
-                <hr />
-                <strong class="fs-5 mb-3">
-                  <div>{{ countsActions?.appearInCourt }}</div>
-                </strong>
-                <br />
-                <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>
-                <div class="row mb-2" *ngIf="disputeInfo.legalRepresentation">
-                  <div class="row mb-3">
-                    <small>Action</small>
-                    <div><strong>I intend to be represented by a lawyer in court</strong></div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <small>Name of law firm</small>
-                      <div><strong>{{ disputeInfo.legalRepresentation.lawFirmName }}</strong></div>
-                    </div>
-                    <div class="col">
-                      <small>Full name of lawyer</small>
-                      <div><strong>{{ disputeInfo.legalRepresentation.lawyerFullName }}</strong></div>
-                    </div>
-                    <div class="col">
-                      <small>Contact Email</small>
-                      <div><strong>{{ disputeInfo.legalRepresentation.lawyerEmail }}</strong></div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <small>Address of the law firm</small>
-                    <div><strong>{{ disputeInfo.legalRepresentation.lawyerAddress }}</strong></div>
-                  </div>
-                </div>
-                <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguage">
-                  <div class="row">
-                    <div class="col-lg-8">
-                      <small>Action</small>
-                      <div><strong>I require a language interpreter at the hearing</strong></div>
-                    </div>
-                    <div class="col">
-                      <small>Language</small>
-                      <div><strong>{{disputeInfo.interpreterLanguage}}</strong></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mb-2" *ngIf="disputeInfo.numberOfWitness">
-                  <div class="row">
-                    <div class="col-lg-8">
-                      <small>Action</small>
-                      <div><strong>I intend to call witness(es)</strong></div>
-                    </div>
-                    <div class="col">
-                      <small># of witness(es)</small>
-                      <div><strong>{{disputeInfo.numberOfWitness}}</strong></div>
-                    </div>
-                  </div>
-                </div>
+              <div class="col">
+                <small>Full name of lawyer</small>
+                <div><strong>{{ disputeInfo.legalRepresentation.lawyerFullName }}</strong></div>
+              </div>
+              <div class="col">
+                <small>Contact Email</small>
+                <div><strong>{{ disputeInfo.legalRepresentation.lawyerEmail }}</strong></div>
               </div>
             </div>
-          </section>
+            <div class="row">
+              <small>Address of the law firm</small>
+              <div><strong>{{ disputeInfo.legalRepresentation.lawyerAddress }}</strong></div>
+            </div>
+          </div>
+          <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguage">
+            <div class="row">
+              <div class="col-lg-8">
+                <small>Action</small>
+                <div><strong>I require a language interpreter at the hearing</strong></div>
+              </div>
+              <div class="col">
+                <small>Language</small>
+                <div><strong>{{disputeInfo.interpreterLanguage}}</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2" *ngIf="disputeInfo.numberOfWitness">
+            <div class="row">
+              <div class="col-lg-8">
+                <small>Action</small>
+                <div><strong>I intend to call witness(es)</strong></div>
+              </div>
+              <div class="col">
+                <small># of witness(es)</small>
+                <div><strong>{{disputeInfo.numberOfWitness}}</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    </mat-expansion-panel>
+  </mat-expansion-panel>
 </div>

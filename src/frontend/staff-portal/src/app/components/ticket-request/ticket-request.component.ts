@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Dispute, DisputedCount } from 'app/api';
+import { Dispute, DisputedCount, DisputedCountPlea } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -21,7 +21,11 @@ export class TicketRequestComponent implements OnInit {
     requestTimeToPay: [null],
     requestReduction: [null],
     appearInCourt: [null, [Validators.required]],
-    notAppearInCourt: [null, [Validators.required]]
+    notAppearInCourt: [null, [Validators.required]],
+    courtGuilty: [null, [Validators.required]],
+    courtNotGuilty: [null, [Validators.required]],
+    noCourtGuilty: [null, [Validators.required]],
+    noCourtNotGuilty: [null, [Validators.required]]
   }
 
   constructor(
@@ -90,14 +94,19 @@ export class TicketRequestComponent implements OnInit {
     let countsActions: any = {};
 
     let fields = Object.keys(this.countFormFields);
+    let toCountStr = (arr: DisputedCount[]) => arr.map(i => "Count " + i.count).join(", ");
     fields.forEach(field => {
       if (counts && counts.length > 0) {
-        countsActions[field] = counts.filter(i => i[field]).map(i => "Count " + i.count).join(", ");
+        countsActions[field] = toCountStr(counts.filter(i => i[field]));
       } else {
         countsActions[field] = [];
       }
     });
     countsActions.notAppearInCourt = counts.filter(i => i.appearInCourt === false).map(i => "Count " + i.count).join(", ");
+    countsActions.courtGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.Guilty && i.appearInCourt == true));
+    countsActions.courtNotGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.NotGuilty && i.appearInCourt == true));
+    countsActions.noCourtGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.Guilty && i.appearInCourt == false));
+    countsActions.noCourtNotGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.NotGuilty && i.appearInCourt == false));
     console.log(countsActions);
     return countsActions;
   }

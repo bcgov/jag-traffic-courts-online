@@ -47,7 +47,9 @@
               ]
             },
             "allowedCommonJsDependencies": [
-              "faker"
+              "faker",
+              "pdfjs-dist/build/pdf",
+              "pdfjs-dist/web/pdf_viewer"
             ],
             "scripts": [],
             "vendorChunk": true,
