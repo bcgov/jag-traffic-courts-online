@@ -306,8 +306,8 @@ export class ViolationTicketService {
       }
       else if (this.isErrorMatch(err, "MVA must be selected under the \"Did commit the offence(s) indicated\" section.")) {
         this.openErrorScenarioThreeDialog();
-      } 
-      else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count",false)) {
+      }
+      else if (this.isErrorMatch(err, "TCO only supports counts with MVA as the ACT/REG at this time. Read 'CTA' for count", false)) {
         this.openErrorScenarioFourDialog();
       } else { // fall back option
         this.openErrorScenarioOneDialog();
@@ -342,6 +342,7 @@ export class ViolationTicketService {
   private openErrorScenarioThreeDialog() {
     return this.openImageTicketNotFoundDialog("Invalid ticket type", "error3");
   }
+
   private openErrorScenarioFourDialog() {
     return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error4");
   }
@@ -349,7 +350,6 @@ export class ViolationTicketService {
   private openInValidTicketDateDialog() {
     return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
   }
-  
 
   private dateDiff(givenDate: string) {
     var diffYear = (new Date().getTime() - new Date(givenDate).getTime()) / 1000;
