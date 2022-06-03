@@ -108,18 +108,18 @@
         </div>
         <div *ngIf="countsActions?.appear_in_court?.length > 0">
           <hr />
-          <div *ngIf="countsActions?.gulity.length > 0">
+          <div *ngIf="countsActions?.guilty.length > 0">
             <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.gulity }}</div>
+              <div>{{ countsActions?.guilty }}</div>
             </strong>
             <h3 class="mb-2 additional-info-desc">
               I want to attend a court hearing to request a fine reduction and/or time to pay.
             </h3>
             <br />
           </div>
-          <div *ngIf="countsActions?.not_gulity.length > 0">
+          <div *ngIf="countsActions?.not_guilty.length > 0">
             <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.not_gulity }}</div>
+              <div>{{ countsActions?.not_guilty }}</div>
             </strong>
             <h3 class="mb-2 additional-info-desc">
               I want to attend a court hearing and dispute the charge.

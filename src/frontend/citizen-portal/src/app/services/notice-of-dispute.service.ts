@@ -136,8 +136,8 @@ export class NoticeOfDisputeService {
       }
     });
     countsActions.not_appear_in_court = toCountStr(counts.filter(i => i.appear_in_court === false));
-    countsActions.gulity = toCountStr(counts.filter(i => i.plea === Plea.Guilty));
-    countsActions.not_gulity = toCountStr(counts.filter(i => i.plea === Plea.NotGuilty));
+    countsActions.guilty = toCountStr(counts.filter(i => i.plea === Plea.Guilty));
+    countsActions.not_guilty = toCountStr(counts.filter(i => i.plea === Plea.NotGuilty));
     return countsActions;
   }
 
