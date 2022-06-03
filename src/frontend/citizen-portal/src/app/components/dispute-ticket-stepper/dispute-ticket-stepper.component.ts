@@ -152,8 +152,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onCountryChange(country) {
-    this.form.get('province').setValue(null);
-    this.form.get('postal_code').setValue(null);
+    // this.form.get('province').setValue(null);
+    // this.form.get('postal_code').setValue(null);
 
     this.form.get('postal_code').setValidators([Validators.maxLength(6)]);
     this.form.get('province').setValidators([Validators.maxLength(30)]);

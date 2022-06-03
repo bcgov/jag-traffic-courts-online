@@ -5,13 +5,16 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class LookupController : TCOControllerBase<LookupController>
+[Route("api/[controller]/[action]")]
+public class LookupController : ControllerBase
 {
     private readonly ILookupService _lookupService;
-    
-    public LookupController(ILookupService lookupService, ILogger<LookupController> logger) : base(logger)
+    private readonly ILogger<LookupController> _logger;
+
+    public LookupController(ILookupService lookupService, ILogger<LookupController> logger) 
     {
         _lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     /// <summary> 

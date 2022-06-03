@@ -9,6 +9,8 @@ using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Services;
+using Serilog;
+
 
 namespace TrafficCourts.Staff.Service;
 
@@ -23,7 +25,9 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
+            options
+            .AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+            .AddRedisInstrumentation();
         });
 
 

@@ -92,14 +92,17 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label *ngIf="form.get('country').value=='Canada'">Province</mat-label>
-                          <mat-select formControlName="province" *ngIf="form.get('country').value == 'Canada'">
-                            <mat-option value="British Columbia">British Columbia</mat-option>
-                            <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
-                            </mat-option>
-                          </mat-select>
                           <mat-label *ngIf="form.get('country').value=='United States'">State</mat-label>
-                          <mat-select formControlName="province" *ngIf="form.get('country').value == 'United States'">
-                            <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>
+                          <mat-select formControlName="province" *ngIf="form.get('country').value == 'Canada' || form.get('country').value == 'United States'">
+                            <div *ngIf="form.get('country').value == 'Canada'">
+                              <mat-option value="British Columbia">British Columbia</mat-option>
+                              <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
+                              </mat-option>
+                            </div>
+                            <div *ngIf="form.get('country').value == 'United States'">
+                              <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}
+                              </mat-option>
+                            </div>
                           </mat-select>
                           <mat-label
                             *ngIf="form.get('country').value!='United States' && form.get('country').value != 'Canada'">
@@ -107,8 +110,8 @@
                           <input matInput formControlName="province"
                             *ngIf="form.get('country').value != 'United States' && form.get('country').value != 'Canada'"
                             maxlength="30" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
+                          <mat-error>{{ "error.required" | translate }}</mat-error> 
+                        </mat-form-field> 
                       </div>
                     </div>
                   </section>
@@ -157,7 +160,7 @@
                         <input matInput formControlName="home_phone_number" mask="(000) 000-0000"
                           *ngIf="form.get('country').value == 'Canada' || form.get('country').value == 'United States'"
                           [showMaskTyped]="true" />
-                        <input matInput formControlName="home_phone_number" mask="00000000000000000000" 
+                        <input matInput formControlName="home_phone_number" mask="00000000000000000000"
                           *ngIf="form.get('country').value != 'Canada' && form.get('country').value != 'United States'" />
                         <mat-error *ngIf="form.get('home_phone_number')?.hasError('required')">{{"error.required" |
                           translate}}
@@ -195,10 +198,9 @@
                       <mat-form-field class="w-100">
                         <mat-label>Driver's licence number</mat-label>
                         <input matInput formControlName="drivers_licence_number" mask="000000000"
-                          *ngIf="form.get('country').value == 'Canada' && form.get('drivers_licence_province').value == 'BC'"
-                          [showMaskTyped]="false" />
+                          *ngIf="form.get('drivers_licence_province').value == 'BC'" [showMaskTyped]="false" />
                         <input matInput formControlName="drivers_licence_number" maxlength="20"
-                          *ngIf="form.get('country').value != 'Canada' || form.get('drivers_licence_province').value != 'BC'" />
+                          *ngIf="form.get('drivers_licence_province').value != 'BC'" />
                         <mat-error *ngIf="form.get('drivers_licence_number').hasError('required')">{{ "error.required" |
                           translate }}</mat-error>
                         <mat-error *ngIf="form.get('drivers_licence_number').hasError('pattern') ||
