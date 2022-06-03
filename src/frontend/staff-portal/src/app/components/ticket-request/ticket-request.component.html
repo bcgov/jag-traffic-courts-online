@@ -51,7 +51,7 @@
                             <mat-form-field class="w-100">
                                 <mat-label>Court hearing?</mat-label>
                                 <input matInput
-                                    [value]="disputedCount.get('appearInCourt').value == 'true' ? 'Yes' : 'No'"
+                                    [value]="disputedCount.get('appearInCourt').value ? 'Yes' : 'No'"
                                     readonly="true" />
                             </mat-form-field>
                         </div>
@@ -61,25 +61,91 @@
             </div>
         </ng-container>
 
-        <!-- not related to a specific count -->
-        <form [formGroup]="form" novalidate class="contact-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <mat-form-field class="w-100">
-                        <mat-label>Time to pay written reasons</mat-label>
-                        <input matInput formControlName="timeToPayReason" readOnly="true" />
-                    </mat-form-field>
+        <!-- Additional Information -->
+        <section class="px-4 py-2 mb-4 card-section">
+            <div class="page-subheader pagebreak">
+              <strong> Additional information </strong>
+      
+              <div *ngIf="countsActions?.notAppearInCourt?.length > 0">
+                <ng-container *ngIf="countsActions?.requestReduction?.length > 0">
+                  <hr />
+                  <strong class="fs-5">
+                    <div>{{ countsActions?.requestReduction }}</div>
+                  </strong>
+                  <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written reasons.</h3>
+                  <small>Written reasons for <strong>fine reduction</strong> request</small>
+                  <div>{{ disputeInfo.fineReductionReason }}</div>
+                </ng-container>
+                <ng-container *ngIf="countsActions?.requestReduction !== countsActions.requestTimeToPay">
+                  <hr />
+                  <strong class="fs-5">
+                    <div>{{ countsActions?.requestTimeToPay }}</div>
+                  </strong>
+                </ng-container>
+                <ng-container *ngIf="countsActions?.requestTimeToPay?.length > 0">
+                  <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written reasons.</h3>
+                  <small>Written reasons for <strong>time to pay</strong> request</small>
+                  <div>{{ disputeInfo.timeToPayReason }}</div>
+                </ng-container>
+              </div>
+              <div *ngIf="countsActions?.appearInCourt?.length > 0">
+                <hr />
+                <strong class="fs-5 mb-3">
+                  <div>{{ countsActions?.appearInCourt }}</div>
+                </strong>
+                <br />
+                <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>
+                <div class="row mb-2" *ngIf="disputeInfo.legalRepresentation">
+                  <div class="row mb-3">
+                    <small>Action</small>
+                    <div><strong>I intend to be represented by a lawyer in court</strong></div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col">
+                      <small>Name of law firm</small>
+                      <div><strong>{{ disputeInfo.legalRepresentation.lawFirmName }}</strong></div>
+                    </div>
+                    <div class="col">
+                      <small>Full name of lawyer</small>
+                      <div><strong>{{ disputeInfo.legalRepresentation.lawyerFullName }}</strong></div>
+                    </div>
+                    <div class="col">
+                      <small>Contact Email</small>
+                      <div><strong>{{ disputeInfo.legalRepresentation.lawyerEmail }}</strong></div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <small>Address of the law firm</small>
+                    <div><strong>{{ disputeInfo.legalRepresentation.lawyerAddress }}</strong></div>
+                  </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <mat-form-field class="w-100">
-                        <mat-label>Fine reduction written reasons</mat-label>
-                        <input matInput formControlName="fineReductionReason" readOnly="true" />
-                    </mat-form-field>
+                <div class="row mb-2" *ngIf="disputeInfo.interpreterLanguage">
+                  <div class="row">
+                    <div class="col-lg-8">
+                      <small>Action</small>
+                      <div><strong>I require a language interpreter at the hearing</strong></div>
+                    </div>
+                    <div class="col">
+                      <small>Language</small>
+                      <div><strong>{{disputeInfo.interpreterLanguage}}</strong></div>
+                    </div>
+                  </div>
                 </div>
+                <div class="row mb-2" *ngIf="disputeInfo.numberOfWitness">
+                  <div class="row">
+                    <div class="col-lg-8">
+                      <small>Action</small>
+                      <div><strong>I intend to call witness(es)</strong></div>
+                    </div>
+                    <div class="col">
+                      <small># of witness(es)</small>
+                      <div><strong>{{disputeInfo.numberOfWitness}}</strong></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-        </form>
+          </section>
 
     </mat-expansion-panel>
 </div>

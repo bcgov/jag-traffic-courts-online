@@ -4,6 +4,12 @@ h3 {
   font-weight: bold;
 }
 
+.text {
+  font-weight: 700;
+  line-height: 1.5em;
+  color: #07396a;
+}
+
 .disputre {
   width: 100%;
 }
@@ -13,6 +19,13 @@ h3 {
   background-color: #c2c2c2;
   color: #fff;
 }
+
+.count-list{
+  border-left: 15px solid #3b6288;
+  padding: 15px;
+  color: #07396a;
+  background-color: #f3f3f3;
+  }
 
 .mat-flat-button {
   width: 30% !important;

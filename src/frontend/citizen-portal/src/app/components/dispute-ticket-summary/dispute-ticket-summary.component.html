@@ -106,9 +106,7 @@
         <div *ngIf="countsActions?.appear_in_court?.length > 0">
           <hr />
           <strong class="fs-5 mb-3">
-            <ng-container *ngFor="let i of countsActions?.appear_in_court let inx = index">
-              {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-            </ng-container>
+            <div>{{ countsActions?.appear_in_court }}</div>
           </strong>
           <br />
           <h3 class="mb-2 additional-info-desc">I want to attend a court hearing and dispute the charge.</h3>
