@@ -131,7 +131,7 @@
                           *ngIf="form.get('country').value!='United States' && form.get('country').value!='Canada'">
                           Postal/Zip Code</mat-label>
                         <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
-                          formControlName="postal_code" [showMaskTyped]="true"
+                          formControlName="postal_code"
                           *ngIf="form.get('country').value!='United States' && form.get('country').value != 'Canada'" />
                         <mat-error *ngIf="form.get('postal_code').hasError('required')">{{ "error.required" | translate
                           }}</mat-error>
