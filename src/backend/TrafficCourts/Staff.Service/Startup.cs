@@ -1,10 +1,13 @@
 ﻿using MassTransit;
 using MediatR;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
+using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Configuration;
@@ -23,12 +26,10 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName);
+            options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
+                .AddRedisInstrumentation();
         });
 
-
-
-        // Redis
         builder.AddRedis();
 
         builder.Services.AddHttpContextAccessor();
@@ -49,9 +50,9 @@ public static class Startup
 
         // Add DisputeService
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
-        builder.Services.AddSingleton<IDisputeService, DisputeService>();
+        builder.Services.AddTransient<IDisputeService, DisputeService>();
 
-        builder.Services.AddSingleton<ILookupService, RedisLookupService>();
+        builder.Services.AddStatuteLookup();
 
         builder.Services.AddMediatR(assembly);
 

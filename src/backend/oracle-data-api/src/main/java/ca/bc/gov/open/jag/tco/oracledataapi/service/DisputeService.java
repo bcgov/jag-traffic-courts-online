@@ -17,6 +17,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputedCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @Service
@@ -65,6 +66,15 @@ public class DisputeService {
 		dispute.setId(null);
 		for (DisputedCount disputedCount : dispute.getDisputedCounts()) {
 			disputedCount.setId(null);
+		}
+		if (dispute.getLegalRepresentation() != null) {
+			dispute.getLegalRepresentation().setId(null);
+		}
+		if (dispute.getViolationTicket() != null) {
+			dispute.getViolationTicket().setId(null);
+			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
+				violationTicketCount.setId(null);
+			}
 		}
 		disputeRepository.save(dispute);
 	}

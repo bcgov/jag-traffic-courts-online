@@ -66,7 +66,7 @@ export class NoticeOfDisputeService {
     law_firm_name: [null, [Validators.required]],
     lawyer_full_name: [null, [Validators.required]],
     lawyer_email: [null, [Validators.required, Validators.email]],
-    lawyer_phone: [null, [Validators.required]],
+    lawyer_phone_number: [null, [Validators.required]],
     lawyer_address: [null, [Validators.required]],
   }
 
@@ -127,14 +127,17 @@ export class NoticeOfDisputeService {
   public getCountsActions(counts: DisputedCount[]): any {
     let countsActions: any = {};
     let fields = Object.keys(this.countFormFields);
+    let toCountStr = (arr: DisputedCount[]) => arr.map(i => "Count " + i.count).join(", ");
     fields.forEach(field => {
       if (counts && counts.length > 0) {
-        countsActions[field] = counts.filter(i => i[field]).map(i => i.count);
+        countsActions[field] = toCountStr(counts.filter(i => i[field]));
       } else {
         countsActions[field] = [];
       }
     });
-    countsActions.not_appear_in_court = counts.filter(i => i.appear_in_court === false).map(i => i.count);
+    countsActions.not_appear_in_court = toCountStr(counts.filter(i => i.appear_in_court === false));
+    countsActions.guilty = toCountStr(counts.filter(i => i.plea === Plea.Guilty));
+    countsActions.not_guilty = toCountStr(counts.filter(i => i.plea === Plea.NotGuilty));
     return countsActions;
   }
 

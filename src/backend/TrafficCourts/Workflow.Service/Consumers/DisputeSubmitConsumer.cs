@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MassTransit;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Models;
 using TrafficCourts.Workflow.Service.Services;
@@ -33,11 +34,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
             {
                 _logger.LogDebug("Consuming message");
 
-                NoticeOfDispute noticeOfDispute = _mapper.Map<NoticeOfDispute>(context.Message);
+                Dispute dispute = _mapper.Map<Dispute>(context.Message);
 
-                _logger.LogTrace("TRY CREATING DISPUTE: {Dispute}", noticeOfDispute);
+                _logger.LogTrace("TRY CREATING DISPUTE: {Dispute}", dispute);
 
-                var disputeId = await _oracleDataApiService.CreateDisputeAsync(noticeOfDispute);
+                var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
                 if (disputeId != Guid.Empty)
                 {

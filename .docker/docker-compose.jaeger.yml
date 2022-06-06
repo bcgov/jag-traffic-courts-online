@@ -1,11 +1,12 @@
 # Use Jaeger tracing for services
-version: "3.8"
+version: "3.9"
 
 services:
   #############################################################################################
   ###                           Jaeger                                                      ###
   #############################################################################################
   jaeger:
+    container_name: jaeger
     image: jaegertracing/all-in-one:latest
     ports:
       - "5775:5775/udp"
@@ -22,8 +23,10 @@ services:
     environment:
       OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14268/api/traces
       OTEL_EXPORTER_JAEGER_PROTOCOL: http/thrift.binary
+    depends_on: [jaeger]
 
-  ticket-search:
+  oracle-data-api:
     environment:
-      OTEL_EXPORTER_JAEGER_ENDPOINT: http://jaeger:14268/api/traces
-      OTEL_EXPORTER_JAEGER_PROTOCOL: http/thrift.binary
+      OTEL_EXPORTER_JAEGER_ENDPOINT: ${OTEL_EXPORTER_JAEGER_ENDPOINT:-http://jaeger:14250}
+    depends_on: [jaeger]
+

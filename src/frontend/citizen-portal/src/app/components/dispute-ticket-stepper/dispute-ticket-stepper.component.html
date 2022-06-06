@@ -118,7 +118,8 @@
                         <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
                         <mat-error *ngIf="form.get('birthdate')?.hasError('required')">{{"error.required" |
                           translate}}</mat-error>
-                        <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate</mat-error>
+                        <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate
+                        </mat-error>
                       </mat-form-field>
                     </div>
                   </div>
@@ -294,8 +295,10 @@
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to remaining counts on ticket.
                     </mat-checkbox>
-                    <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4">Skip this count, no action
-                      required.</mat-checkbox>
+                    <mat-checkbox formControlName="__skip" color="primary" class="w-100 mt-4"
+                      (change)="onSkipChecked()">
+                      Skip this count, no action required.
+                    </mat-checkbox>
                   </div>
                 </section>
               </form>
@@ -374,9 +377,7 @@
             <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
               <ng-container *ngIf="countsActions?.not_appear_in_court?.length > 0">
                 <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
-                  <ng-container *ngFor="let i of countsActions.request_reduction let inx = index">
-                    {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-                  </ng-container>
+                  <div>{{ countsActions?.request_reduction }}</div>
                   <div class="row">
                     <div class="col-md-12">
                       <mat-form-field class="w-100">
@@ -394,11 +395,8 @@
                     </div>
                   </div>
                 </ng-container>
-                <ng-container
-                  *ngIf="countsActions?.not_appear_in_court?.length !== countsActions?.request_time_to_pay?.length">
-                  <ng-container *ngFor="let i of countsActions.request_time_to_pay let inx = index">
-                    {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-                  </ng-container>
+                <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
+                  <div>{{ countsActions?.request_time_to_pay }}</div>
                 </ng-container>
                 <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
                   <div class="row">
@@ -422,9 +420,7 @@
 
               <section *ngIf="countsActions?.appear_in_court?.length > 0">
                 <div>
-                  <ng-container *ngFor="let i of countsActions?.appear_in_court; let inx = index">
-                    {{ inx === 0 ? "" : ", " }}Count {{ i.toString() }}
-                  </ng-container>
+                  <div>{{ countsActions?.appear_in_court }}</div>
                 </div>
                 <h3 class="mt-4 mb-2 reduction-text">
                 </h3>
@@ -470,7 +466,7 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact phone number</mat-label>
-                          <input matInput formControlName="lawyer_phone" mask="(000) 000-0000" />
+                          <input matInput formControlName="lawyer_phone_number" mask="(000) 000-0000" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>

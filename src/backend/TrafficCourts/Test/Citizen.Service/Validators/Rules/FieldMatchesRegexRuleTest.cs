@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using Xunit;
@@ -21,7 +22,7 @@ public class FieldMatchesRegexRuleTest
     [InlineData("AA123456789", @"^A[A-Z]\d{8}$", 1)]
     [InlineData("BA12345678", @"^A[A-Z]\d{8}$", 1)]
     [InlineData("B123456789", @"^A[A-Z]\d{8}$", 1)]
-    public void TestRegexPattern(string value, string pattern, int expectedErrorCount)
+    public async Task TestRegexPattern(string value, string pattern, int expectedErrorCount)
     {
         // Given
         Field field = new();
@@ -29,7 +30,7 @@ public class FieldMatchesRegexRuleTest
         FieldMatchesRegexRule rule = new(field, pattern, "ERROR: Pattern mismatch ...");
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then
         Assert.Equal(expectedErrorCount == 0, rule.IsValid());
@@ -41,7 +42,7 @@ public class FieldMatchesRegexRuleTest
     }
 
     [Fact]
-    public void TestFieldValueNull()
+    public async Task TestFieldValueNull()
     {
         // Given
         Field field = new();
@@ -50,7 +51,7 @@ public class FieldMatchesRegexRuleTest
         FieldMatchesRegexRule rule = new(field, "AAAA", "Field is blank");
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then
         Assert.False(rule.IsValid());

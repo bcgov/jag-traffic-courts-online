@@ -21,11 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Health\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
   </ItemGroup>
