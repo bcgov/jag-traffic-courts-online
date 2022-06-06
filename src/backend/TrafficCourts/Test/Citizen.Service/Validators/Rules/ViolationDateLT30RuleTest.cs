@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using Xunit;
@@ -48,7 +49,7 @@ public class ViolationDateLT30RuleTest
 
     [Theory]
     [ClassData(typeof(TestData))]
-    public void TestDateLT30Rule(string dateStr, bool isValid)
+    public async Task TestDateLT30Rule(string dateStr, bool isValid)
     {
         // Given
         OcrViolationTicket violationTicket = new();
@@ -58,7 +59,7 @@ public class ViolationDateLT30RuleTest
         ViolationDateLT30Rule rule = new(violationDate);
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then
         Assert.Equal(isValid, rule.IsValid());

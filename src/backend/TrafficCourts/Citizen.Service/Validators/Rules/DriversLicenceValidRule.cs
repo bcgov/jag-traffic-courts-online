@@ -17,7 +17,7 @@ public class DriversLicenceValidRule : ValidationRule
         this._violationTicket = violationTicket;
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         // TCVP-1004
         // - if Driver's Licence province/state = BC and Driver's Licence Number != 7 then flag for staff review
@@ -36,5 +36,7 @@ public class DriversLicenceValidRule : ValidationRule
         {
             AddValidationError(ValidationMessages.DriversLicenceNumberError);
         }
+
+        return Task.CompletedTask;
     }
 }

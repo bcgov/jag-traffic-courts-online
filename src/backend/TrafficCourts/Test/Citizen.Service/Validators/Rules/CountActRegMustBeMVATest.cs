@@ -16,7 +16,7 @@ public class CountActRegMustBeMVATest
     [InlineData("MVA", true)]
     [InlineData("CTA", false)]
     [InlineData("", false)]
-    public void TestACTREGsFields(string countAct, bool expectValid)
+    public async Task TestACTREGsFields(string countAct, bool expectValid)
     {
         // Given
         Field field = new(countAct);
@@ -25,7 +25,7 @@ public class CountActRegMustBeMVATest
         CountActRegMustBeMVA rule = new(field, 1);
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then.
         if (expectValid)

@@ -15,7 +15,7 @@ public class OnlyMVAIsSelectedRule : ValidationRule
         this._violationTicket = violationTicket;
     }
 
-    public override void Run()
+    public override Task RunAsync()
     {
         bool? mva = _violationTicket.Fields[OcrViolationTicket.OffenceIsMVA].IsCheckboxSelected();
         bool? mca = _violationTicket.Fields[OcrViolationTicket.OffenceIsMCA].IsCheckboxSelected();
@@ -34,5 +34,7 @@ public class OnlyMVAIsSelectedRule : ValidationRule
         {
             AddValidationError(ValidationMessages.OnlyMVAMustBeSelectedError);
         }
+
+        return Task.CompletedTask;
     }
 }

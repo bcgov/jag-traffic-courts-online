@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -15,7 +16,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 @Component({
   selector: 'app-contact-info',
   templateUrl: './contact-info.component.html',
-  styleUrls: ['./contact-info.component.scss']
+  styleUrls: ['./contact-info.component.scss', '../../app.component.scss']
 })
 export class ContactInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeView;
@@ -28,18 +29,21 @@ export class ContactInfoComponent implements OnInit {
   public todayDate: Date = new Date();
   public lastUpdatedDispute: Dispute;
   public retrieving: boolean = true;
+  public violationDate: string = "";
+  public violationTime: string = "";
   public conflict: boolean = false;
   public form: FormGroup;
   public collapseObj: any = {
     contactInformation: true
   }
-
+  
   constructor(
     protected route: ActivatedRoute,
     protected formBuilder: FormBuilder,
     private dialog: MatDialog,
     private utilsService: UtilsService,
-    public mockConfigService: MockConfigService,
+    public mockConfigService: MockConfigService,    
+    private datePipe: DatePipe,
     private disputesService: DisputesService,
     private logger: LoggerService,
     @Inject(Router) private router,
@@ -207,6 +211,12 @@ export class ContactInfoComponent implements OnInit {
 
       this.initialDisputeValues = response;
       this.lastUpdatedDispute = this.initialDisputeValues;
+
+              // set violation date and time
+              let tempViolationDate = new Date(this.lastUpdatedDispute.issuedDate);
+              this.violationDate = this.datePipe.transform(tempViolationDate, "yyyy-MM-dd");
+              this.violationTime = this.datePipe.transform(tempViolationDate, "hh:mm");
+      
       this.form.patchValue(this.initialDisputeValues);
       this.onNoticeOfDisputeDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
     });

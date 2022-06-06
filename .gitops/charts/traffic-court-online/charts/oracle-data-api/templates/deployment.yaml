@@ -39,6 +39,11 @@ spec:
           - name: SPLUNK_TOKEN
             value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
           {{- end }}
+          {{- if .Values.jaeger.enabled }}
+          # OpenTelemetry Jaeger
+          - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+            value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
+          {{- end }}
           # Redis
           - name: REDIS_HOST
             value: "{{ .Values.redis.host }}"

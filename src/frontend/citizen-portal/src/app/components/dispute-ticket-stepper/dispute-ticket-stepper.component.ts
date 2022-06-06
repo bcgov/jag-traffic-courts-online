@@ -17,6 +17,9 @@ import { ToastService } from "@core/services/toast.service";
 import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
 import { ProvinceConfig } from "@config/config.model";
+import { DialogOptions } from "@shared/dialogs/dialog-options.model";
+import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
@@ -83,7 +86,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
-    public config: ConfigService,
+    private config: ConfigService,
+    private dialog: MatDialog,
   ) {
     // config or static
     this.isMobile = this.utilsService.isMobile();
@@ -146,7 +150,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     const stepElement = document.getElementById(stepId);
     if (stepElement) {
       setTimeout(() => {
-        stepElement.scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth'});
+        stepElement.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
       }, 250);
     }
   }
@@ -268,7 +272,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       } else if (countForm.value.appear_in_court === false) {
         valid = valid && (countForm.value.request_time_to_pay || countForm.value.request_reduction);
       }
-      return valid;
+      return valid && !this.isAllCountsSkipped;
     }
     return this.form.valid;
   }
@@ -302,6 +306,28 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       return msg;
     } else {
       return "please select a language";
+    }
+  }
+
+  private get isAllCountsSkipped() {
+    if (this.countForms.value.filter(i => i.__skip).length === this.countForms.length) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  onSkipChecked() {
+    if (this.isAllCountsSkipped) {
+      const data: DialogOptions = {
+        titleKey: "Warning",
+        actionType: "warn",
+        messageKey: `You have selected "Skip this count, no action required" for all counts on your ticket. No request will be created. Please review your selection(s).`,
+        actionTextKey: 'Close',
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data });
     }
   }
 

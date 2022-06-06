@@ -2,6 +2,17 @@ server:
   port: ${SERVER_PORT:8080}
   
 spring:
+  application:  
+    name: oracle-data-api
+
+  sleuth:
+    otel:
+      config:
+        trace-id-ratio-based: 1.0
+      exporter:
+        jaeger:
+          endpoint: ${OTEL_EXPORTER_JAEGER_ENDPOINT:http://localhost:14250}
+
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
@@ -9,7 +20,7 @@ spring:
     sentinel:
       master: ${REDIS_SENTINAL_MASTER:}
       nodes: ${REDIS_SENTINAL_NODES:}
-    
+
   datasource:
     driverClassName: org.h2.Driver
     password: ''
@@ -25,6 +36,15 @@ spring:
     hibernate:
       ddl-auto: update
 
+management:
+  trace:
+    http:
+      include: TIME_TAKEN,RESPONSE_HEADERS
+  endpoints:
+    web:
+      exposure:
+        include: httptrace,metrics,prometheus,health
+
 springdoc:
   swagger-ui:
     tagsSorter: alpha
@@ -33,12 +53,11 @@ springdoc:
     # Configure swagger to list the most recent API version first
     groups-order: DESC
 
-
 codetable:
   refresh:    
     # If true, will refresh code tables at startup. Codetables are cached in Redis for quick access and for high-availability
     atStartup: true
-      
+
 cronjob:
   codetable:
     refresh:

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
 using TrafficCourts.Citizen.Service.Validators.Rules;
@@ -12,7 +13,7 @@ public class CheckboxIsValidRuleTest
 
     [Theory]
     [ClassData(typeof(TestData))]
-    public void TestCheckboxIsValid(string name, string? value, bool expectError)
+    public async Task TestCheckboxIsValid(string name, string? value, bool expectError)
     {
         // Given
         Field field = new();
@@ -21,7 +22,7 @@ public class CheckboxIsValidRuleTest
         CheckboxIsValidRule rule = new(field);
 
         // When
-        rule.Run();
+        await rule.RunAsync();
 
         // Then.
         if (expectError)
