@@ -12,8 +12,6 @@ using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Services;
-using Serilog;
-
 
 namespace TrafficCourts.Staff.Service;
 

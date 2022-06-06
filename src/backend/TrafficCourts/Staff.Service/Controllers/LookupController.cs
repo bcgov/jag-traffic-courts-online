@@ -6,8 +6,7 @@ using MediatR;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-[Route("api/[controller]/[action]")]
-public class LookupController : ControllerBase
+public class LookupController : TCOControllerBase<LookupController>
 {
     private readonly IMediator _mediator;
     private readonly ILogger<LookupController> _logger;
