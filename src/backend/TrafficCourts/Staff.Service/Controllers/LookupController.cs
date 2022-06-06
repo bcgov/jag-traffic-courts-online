@@ -9,21 +9,19 @@ namespace TrafficCourts.Staff.Service.Controllers;
 public class LookupController : TCOControllerBase<LookupController>
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<LookupController> _logger;
-
-    public LookupController(IMediator mediator, ILogger<LookupController> logger)
+    
+    public LookupController(IMediator mediator, ILogger<LookupController> logger) : base(logger)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-/// <summary> 
-/// Returns a list of Violation Ticket Statutes filtered by given section text (if provided).
-/// </summary>
-/// <param name="section">Motor vehicle act Section text to query by, ie "13(1)(a)" returns "Motor Vehicle or Trailer without Licence" contravention, or blank for no filter.</param>
-/// <param name="cancellationToken"></param>
-/// <returns></returns>
-[HttpGet]
+    /// <summary> 
+    /// Returns a list of Violation Ticket Statutes filtered by given section text (if provided).
+    /// </summary>
+    /// <param name="section">Motor vehicle act Section text to query by, ie "13(1)(a)" returns "Motor Vehicle or Trailer without Licence" contravention, or blank for no filter.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(typeof(IList<Statute>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> StatutesAsync(string? section, CancellationToken cancellationToken)

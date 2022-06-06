@@ -161,11 +161,11 @@ export class TicketInfoComponent implements OnInit {
   }
 
   onFullDescription2Keyup() {
-    this.filteredCount2Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
+    this.filteredCount2Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value);
   }
 
   onFullDescription3Keyup() {
-    this.filteredCount3Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
+    this.filteredCount3Statutes = this.filterStatutes(this.form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value);
   }
 
   // return a filtered list of statutes
@@ -181,13 +181,13 @@ export class TicketInfoComponent implements OnInit {
   // violation ticket borders only for new status 
   public applyOverErrThreshold(fieldName: string): boolean {
     if (this.lastUpdatedDispute.status != 'NEW') return false;
-    if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName].fieldConfidence <= 0.80) return false;
+    if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence <= 0.80) return false;
     return true;
   }
 
   public applyUnderErrThreshold(fieldName: string): boolean {
     if (this.lastUpdatedDispute.status != 'NEW') return false;
-    if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName].fieldConfidence > 0.80) return false;
+    if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence > 0.80) return false;
     return true;
   }
 
@@ -249,19 +249,18 @@ export class TicketInfoComponent implements OnInit {
       + ":" +
       this.form.get('violationTicket').get('violationTime').value.substring(2, 4);
 
-    // Loop through violation Ticket counts and set fields
-    putDispute.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
-      if (violationTicketCount.count == 1) {
-        violationTicketCount = this.constructViolationTicketCount(this.form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value);
-        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount1').get('ticketedAmount').value;
-      } else if (violationTicketCount.count == 2) {
-        violationTicketCount = this.constructViolationTicketCount(this.form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value);
-        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount2').get('ticketedAmount').value;
-      } else if (violationTicketCount.count == 3) {
-        violationTicketCount = this.constructViolationTicketCount(this.form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value);
-        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount3').get('ticketedAmount').value;
+
+    // Counts 1,2,3
+    putDispute.violationTicket.violationTicketCounts = [] as ViolationTicketCount[];
+    for (let i = 1; i <= 3; i++) {
+      // if form has violation ticket, stuff it in putDispute
+      if (this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value) {
+        let violationTicketCount = this.constructViolationTicketCount(
+          this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('fullDescription').value, i);
+        violationTicketCount.ticketedAmount = this.form.get('violationTicket').get('violationTicketCount' + i.toString()).get('ticketedAmount').value;
+        putDispute.violationTicket.violationTicketCounts = [...putDispute.violationTicket.violationTicketCounts, violationTicketCount];
       }
-    });
+    }
 
     this.logger.log('TicketInfoComponent::putDispute', putDispute);
 
@@ -344,9 +343,11 @@ export class TicketInfoComponent implements OnInit {
     return { fullSection: fullSection, section: section, subsection: subsection, paragraph: paragraph };
   }
 
-  public constructViolationTicketCount(__statuteString: string): ViolationTicketCount {
+  public constructViolationTicketCount(__statuteString: string, count: number): ViolationTicketCount {
 
-    this.tempViolationTicketCount = { description: "", actRegulation: "", fullSection: "", section: "", subsection: "", paragraph: "" };
+    this.tempViolationTicketCount = { description: "", ticketedAmount: null, actRegulation: "", isAct: false, isRegulation: false, paragraph: "", fullSection: "", subsection: "", subparagraph: "", section: "" };
+    this.tempViolationTicketCount.count = count;
+    if (!__statuteString) return this.tempViolationTicketCount;
 
     // look in list of statutes
     let statute = this.lookupsService.statutes.filter(x => x.__statuteString == __statuteString) as StatuteView[];
@@ -438,7 +439,12 @@ export class TicketInfoComponent implements OnInit {
 
   // get legal paragraphing for a particular count
   public getCountLegalParagraphing(countNumber: number, violationTicket: ViolationTicket): string {
-    if (violationTicket.violationTicketCounts.filter(x => x.count == countNumber)) return (this.violationTicketService.getLegalParagraphing(violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0]) + " " + violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0].description);
+    let violationTicketCount = violationTicket.violationTicketCounts.filter(x => x.count == countNumber)[0];
+    if (violationTicketCount) {
+      let desc = (this.violationTicketService
+        .getLegalParagraphing(violationTicketCount) + (violationTicketCount.description ? " " + violationTicketCount.description : ""));
+      return desc;
+    }
     else return "";
   }
 
@@ -627,7 +633,7 @@ export class TicketInfoComponent implements OnInit {
           countForm.patchValue(violationTicketCount);
           if (!violationTicketCount.ticketedAmount)
             countForm.get('ticketedAmount').setValue(undefined);
-          let fullDesc = violationTicketCount.section ? this.violationTicketService.getLegalParagraphing(violationTicketCount) + " " + violationTicketCount.description : undefined;
+          let fullDesc = this.getCountLegalParagraphing(violationTicketCount.count, this.initialDisputeValues.violationTicket);
           countForm
             .get('fullDescription')
             .setValue(fullDesc);
@@ -639,7 +645,7 @@ export class TicketInfoComponent implements OnInit {
         this.provincialCourtHearingLocationFlag = {
           heading: "Court Location",
           key: "provincical_court_hearing_location",
-          fieldConfidence: this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields["provincial_court_hearing_location"]?.fieldConfidence
+          fieldConfidence: this.lastUpdatedDispute.violationTicket.ocrViolationTicket?.fields["provincial_court_hearing_location"]?.fieldConfidence
         };
 
         // update validation rule for drivers licence number

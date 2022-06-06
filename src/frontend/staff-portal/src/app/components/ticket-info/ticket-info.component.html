@@ -199,7 +199,7 @@
                             (keyup)="onFullDescription1Keyup()"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount1').get('fullDescription').value" />
                           <mat-autocomplete #auto="matAutocomplete" panelWidth="750">
-                            <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)">{{
+                            <mat-option [value]="getCountLegalParagraphing(1, initialDisputeValues.violationTicket)" *ngIf="getCountLegalParagraphing(1, initialDisputeValues.violationTicket) != 'null'">{{
                               getCountLegalParagraphing(1, initialDisputeValues.violationTicket) }}</mat-option>
                             <mat-option *ngFor="let statute of filteredCount1Statutes"
                               [value]="statute.__statuteString">
@@ -214,8 +214,11 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_1.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_1.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
-                        </mat-form-field>
+                          <mat-error *ngIf="form.get('violationTicket').get('violationTicketCount1').get('ticketedAmount').hasError('requiired')">{{"error.required" |
+                            translate }}</mat-error>
+                          <mat-error *ngIf="form.get('violationTicket').get('violationTicketCount1').get('ticketedAmount').hasError('currency')">Must be a valid currency amount
+                          </mat-error>
+                              </mat-form-field>
                       </div>
                     </div>
                   </section>
@@ -232,10 +235,10 @@
                         [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_2.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_2.section')}"
                         >
                           <mat-label>Act/Sect/Desc </mat-label>
-                          <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
+                          <input matInput formControlName="fullDescription" [matAutocomplete]="auto2" (keyup)="onFullDescription2Keyup()"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value" />
                           <mat-autocomplete #auto2="matAutocomplete" panelWidth="750">
-                            <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
+                            <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)"  *ngIf="getCountLegalParagraphing(2, initialDisputeValues.violationTicket) != 'null'">{{
                               getCountLegalParagraphing(2, initialDisputeValues.violationTicket) }}</mat-option>
                             <mat-option *ngFor="let statute of filteredCount2Statutes"
                               [value]="statute.__statuteString">
@@ -251,7 +254,10 @@
                         >
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-error *ngIf="form.get('violationTicket').get('violationTicketCount2').get('ticketedAmount').hasError('required')">{{"error.required" |
+                            translate }}</mat-error>
+                          <mat-error *ngIf="form.get('violationTicket').get('violationTicketCount2').get('ticketedAmount').hasError('currency')">Must be a valid currency amount
+                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -269,10 +275,10 @@
                         [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_3.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_3.section')}"
                         >
                           <mat-label>Act/Sect/Desc </mat-label>
-                          <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
+                          <input matInput formControlName="fullDescription" [matAutocomplete]="auto3" (keyup)="onFullDescription3Keyup()"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value" />
                           <mat-autocomplete #auto3="matAutocomplete" panelWidth="750">
-                            <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
+                            <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)"  *ngIf="getCountLegalParagraphing(3, initialDisputeValues.violationTicket) != 'null'">{{
                               getCountLegalParagraphing(3, initialDisputeValues.violationTicket) }}</mat-option>
                             <mat-option *ngFor="let statute of filteredCount3Statutes"
                               [value]="statute.__statuteString">
@@ -288,7 +294,10 @@
                         >
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error>
+                          <mat-error *ngIf="form.get('violationTicket').get('violationTicketCount3').get('ticketedAmount').hasError('required')">{{"error.required" |
+                            translate }}</mat-error>
+                          <mat-error *ngIf="form.get('violationTicket').get('violationTicketCount3').get('ticketedAmount').hasError('currency')">Must be a valid currency amount
+                          </mat-error>
                         </mat-form-field>
                       </div>
                     </div>
@@ -345,37 +354,37 @@
               <div class="col-lg-12" *ngIf="lastUpdatedDispute.status == 'NEW'">
                 <span class="systemFlagList">Violation Ticket</span> <br />
                 <p *ngFor="let systemFlag of violationTicketService.ocrMessages" class="systemFlagList"><span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag.fieldConfidence
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag?.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag?.heading}}</span>
                 </p><br />
                 <span class="systemFlagList">Count 1</span> <br />
                 <p *ngFor="let systemFlag of violationTicketService.count1OcrMessages" class="systemFlagList"><span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag.fieldConfidence
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag?.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag?.heading}}</span>
                 </p><br />
                 <span class="systemFlagList">Count 2</span> <br />
                 <p *ngFor="let systemFlag of violationTicketService.count2OcrMessages" class="systemFlagList"><span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag.fieldConfidence
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag?.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag?.heading}}</span>
                 </p><br />
                 <span class="systemFlagList">Count 3</span> <br />
                 <p *ngFor="let systemFlag of violationTicketService.count3OcrMessages" class="systemFlagList"><span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag.fieldConfidence
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{systemFlag?.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
+                    [ngClass]="systemFlag?.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
                 </p><br />
                 <p class="systemFlagList"><span
-                    [ngClass]="provincialCourtHearingLocationFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="provincialCourtHearingLocationFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{provincialCourtHearingLocationFlag.fieldConfidence
+                    [ngClass]="provincialCourtHearingLocationFlag?.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="provincialCourtHearingLocationFlag?.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{provincialCourtHearingLocationFlag?.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="provincialCourtHearingLocationFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{provincialCourtHearingLocationFlag.heading}}</span>
+                    [ngClass]="provincialCourtHearingLocationFlag?.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{provincialCourtHearingLocationFlag?.heading}}</span>
                 </p><br />
               </div>
             </form>

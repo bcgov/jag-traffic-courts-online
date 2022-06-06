@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -25,6 +25,7 @@ import { MatDialog } from "@angular/material/dialog";
   selector: "app-dispute-ticket-stepper",
   templateUrl: "./dispute-ticket-stepper.component.html",
   styleUrls: ["./dispute-ticket-stepper.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   @ViewChild(MatStepper) private stepper: MatStepper;
@@ -86,7 +87,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
-    private config: ConfigService,
+    public config: ConfigService,
     private dialog: MatDialog,
   ) {
     // config or static
@@ -156,34 +157,43 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onCountryChange(country) {
-    // this.form.get('province').setValue(null);
-    // this.form.get('postal_code').setValue(null);
 
-    this.form.get('postal_code').setValidators([Validators.maxLength(6)]);
-    this.form.get('province').setValidators([Validators.maxLength(30)]);
-    this.form.get('home_phone_number').setValidators([Validators.maxLength(20)]);
-    this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
-    this.form.get('drivers_licence_province').setValidators([Validators.maxLength(30)]);
+    setTimeout(() => {
+      this.form.get('postal_code').setValidators([Validators.maxLength(6)]);
+      this.form.get('province').setValidators([Validators.maxLength(30)]);
+      this.form.get('home_phone_number').setValidators([Validators.maxLength(20)]);
+      this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
+      this.form.get('drivers_licence_province').setValidators([Validators.maxLength(30)]);
 
-    if (country == 'Canada' || country == 'United States') {
-      this.form.get('province').addValidators([Validators.required]);
-      this.form.get('postal_code').addValidators([Validators.required]);
-      this.form.get('home_phone_number').addValidators([Validators.required, FormControlValidators.phone]);
-      this.form.get('drivers_licence_number').addValidators([Validators.required]);
-      this.form.get('drivers_licence_province').addValidators([Validators.required]);
-    } 
+      if (country == 'Canada' || country == 'United States') {
+        this.form.get('province').addValidators([Validators.required]);
+        this.form.get('postal_code').addValidators([Validators.required]);
+        this.form.get('home_phone_number').addValidators([Validators.required, FormControlValidators.phone]);
+        this.form.get('drivers_licence_number').addValidators([Validators.required]);
+        this.form.get('drivers_licence_province').addValidators([Validators.required]);
+      }
+
+      this.form.get('postal_code').updateValueAndValidity();
+      this.form.get('province').updateValueAndValidity();
+      this.form.get('home_phone_number').updateValueAndValidity();
+      this.form.get('drivers_licence_number').updateValueAndValidity();
+      this.form.get('drivers_licence_province').updateValueAndValidity();
+    }, 0);
   }
 
   public onDLProvinceChange(province) {
-    this.form.get('drivers_licence_number').clearValidators();
-    if (province == 'BC') {
-      this.form.get('drivers_licence_number').addValidators([Validators.maxLength(9)])
-    } else {
-      this.form.get('drivers_licence_number').addValidators([Validators.maxLength(20)]);
-    }
-    if (this.form.get('country').value == 'United States' || this.form.get('country').value == 'Canada') {
-      this.form.get('drivers_licence_number').addValidators([Validators.required]);
-    }
+
+    setTimeout(() => {
+      if (province == 'BC') {
+        this.form.get('drivers_licence_number').setValidators([Validators.maxLength(9)])
+      } else {
+        this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
+      }
+      if (this.form.get('country').value == 'United States' || this.form.get('country').value == 'Canada') {
+        this.form.get('drivers_licence_number').addValidators([Validators.required]);
+      }
+      this.form.get('drivers_licence_number').updateValueAndValidity();
+    }, 0)
   }
 
   private getCountFormInitValue(count) {
