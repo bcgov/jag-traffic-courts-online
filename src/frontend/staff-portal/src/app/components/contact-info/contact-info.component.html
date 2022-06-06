@@ -23,6 +23,63 @@
       <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
         <app-page-header>
           <ng-container subHeader>
+            <span>Ticket Information </span>
+            <i *ngIf="collapseObj?.ticketInformation" class="fa fa-minus-circle"
+              style="font-size:18px; color:#009cde"></i>
+            <i *ngIf="!collapseObj?.ticketInformation" class="fa fa-plus-circle"
+              style="font-size:18px; color:#009cde"></i>
+          </ng-container>
+        </app-page-header>
+      </mat-expansion-panel-header>
+      <!-- Ticket number, violation date, time-->
+      <br />
+      <div class="row">
+        <div class="col md-3">
+          <span class="BC-Gov-15px-black-text">Ticket #:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.ticketNumber }}</span> 
+        </div>
+        <div class="col md-3">
+          <span class="BC-Gov-15px-black-text">Ticket type:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.ticketNumber.substring(0,1) == 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
+        </div>
+        <div class="col md-3">
+          <span class="BC-Gov-15px-black-text">Violation time:</span>&nbsp;<span class="text">{{ violationTime }}</span>
+        </div>
+        <div class="col md-3">
+          <span class="BC-Gov-15px-black-text">Violation date:</span>&nbsp;<span class="text">{{ violationDate }}</span>
+        </div>
+      </div>
+      <!-- Counts -->
+      <ng-container *ngFor="let violationCount of lastUpdatedDispute.violationTicket.violationTicketCounts">
+        <div class="contact-body">
+          <div class="row mt-2 count-list">
+            <div class="col-lg-2 pe-0">
+              <div style="display: flex">
+                <span class="h2">
+                  <strong>Count {{ violationCount.count }}</strong>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <small class="d-block"> Section</small>
+              <div class="text">{{ violationCount.section }}</div>
+            </div>
+            <div class="col-lg-6">
+              <small class="d-block"> Description of offence </small>
+              <div class="text">{{ violationCount.description }}</div>
+            </div>
+            <div class="col-lg-2">
+              <small class="d-block">Offence amount</small>
+              <div class="text">{{ violationCount.ticketedAmount | currency }}</div>
+            </div>
+          </div>
+          <hr />
+        </div>
+      </ng-container>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
+        <app-page-header>
+          <ng-container subHeader>
             <span>Contact Information </span>
             <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
               style="font-size:18px; color:#009cde"></i>
@@ -187,8 +244,7 @@
 
               <!-- Notice of dispute drivers licence number -->
               <div class="col-md-6">
-                <mat-form-field class="w-100"
-                  *ngIf="form.get('driversLicenceProvince').value == 'BC'">
+                <mat-form-field class="w-100" *ngIf="form.get('driversLicenceProvince').value == 'BC'">
                   <mat-label>DL number</mat-label>
                   <input matInput formControlName="driversLicenceNumber" minlength="7" maxlength="9"
                     (keypress)="onKeyPressNumbers($event, form.get('driversLicenceProvince').value == 'BC')"
@@ -202,8 +258,7 @@
                     Must be a valid BC driver's license number of seven to nine digits
                   </mat-error>
                 </mat-form-field>
-                <mat-form-field class="w-100"
-                  *ngIf="form.get('driversLicenceProvince').value != 'BC'">
+                <mat-form-field class="w-100" *ngIf="form.get('driversLicenceProvince').value != 'BC'">
                   <mat-label>DL number</mat-label>
                   <input matInput formControlName="driversLicenceNumber" autocomplete="off" />
                   <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
@@ -221,7 +276,7 @@
         </form>
       </div>
     </mat-expansion-panel>
-    <app-ticket-request  [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
+    <app-ticket-request [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('notes')">
         <app-page-header>
@@ -244,8 +299,7 @@
         Approve and submit to ARC
       </button>
       <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-        [disabled]="lastUpdatedDispute.status != 'NEW' || this.form.invalid || this.form.touched"
-        (click)="reject()">
+        [disabled]="lastUpdatedDispute.status != 'NEW' || this.form.invalid || this.form.touched" (click)="reject()">
         Reject
       </button>
       <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">

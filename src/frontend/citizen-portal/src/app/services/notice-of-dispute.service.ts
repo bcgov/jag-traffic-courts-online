@@ -66,7 +66,7 @@ export class NoticeOfDisputeService {
     law_firm_name: [null, [Validators.required]],
     lawyer_full_name: [null, [Validators.required]],
     lawyer_email: [null, [Validators.required, Validators.email]],
-    lawyer_phone: [null, [Validators.required]],
+    lawyer_phone_number: [null, [Validators.required]],
     lawyer_address: [null, [Validators.required]],
   }
 
