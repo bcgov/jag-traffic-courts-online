@@ -1,11 +1,8 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import java.util.Date;
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -30,15 +27,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class JJDispute extends Auditable<String>{
 	
-	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
-    @Id
-    @GeneratedValue
-    private UUID id;
-
     /**
-     * The violation ticket number.
+     * The violation ticket number as unique identifier.
      */
-    @Column
+    @Id
     private String ticketNumber;
     
     /**
