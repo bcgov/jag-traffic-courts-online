@@ -1,11 +1,11 @@
 ﻿using MassTransit;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
+using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -38,11 +38,10 @@ public class DisputeService : IDisputeService
     /// Returns a new inialized instance of the OracleDataApi_v1_0Client
     /// </summary>
     /// <returns></returns>
-    private OracleDataApi_v1_0Client GetOracleDataApi()
+    private OracleDataApiClient GetOracleDataApi()
     {
-        var httpClient = new HttpClient();
-        OracleDataApi_v1_0Client client = new(httpClient);
-        client.BaseUrl = _oracleDataApiConfiguration.BaseUrl;
+        var httpClient = new HttpClient { BaseAddress = new Uri(_oracleDataApiConfiguration.BaseUrl) };
+        OracleDataApiClient client = new(httpClient);
 
         var user = _httpContextAccessor.HttpContext?.User;
 
@@ -118,11 +117,11 @@ public class DisputeService : IDisputeService
         {
             try
             {
-                // deserialize json string to a dictionary
-                var keys = JsonConvert.DeserializeObject<Dictionary<string, object>>(dispute.OcrViolationTicket);
-                string? imageFilename = (string?)(keys?["ImageFilename"]);
-
-                return imageFilename;
+                JsonElement element = JsonSerializer.Deserialize<JsonElement>(dispute.OcrViolationTicket);
+                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("ImageFilename", out JsonElement imageFilename))
+                {
+                    return imageFilename.GetString();
+                }
             }
             catch (Exception ex)
             {
