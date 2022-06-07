@@ -45,6 +45,16 @@ public class DisputeService {
 			return disputeRepository.findByStatusNotAndCreatedTsBefore(excludeStatus, olderThan);
 		}
 	}
+	
+	/**
+	 * Retrieves all {@link Dispute} records that are assigned to the provided JJ, delegating to CrudRepository
+	 * @param jjAssigned, will filter the result set to those having this jjAssigned.
+	 *
+	 * @return
+	 */
+	public List<Dispute> getAllDisputesByJjAssigned(String jjAssigned) {
+		return disputeRepository.findByJjAssignedIgnoreCase(jjAssigned);
+	}
 
 	/**
 	 * Retrieves a specific {@link Dispute} by using the method findById() of CrudRepository
