@@ -105,7 +105,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
     this.ticketType = this.violationTicketService.ticketType;
 
-    // Initialize country value
     this.provinces = this.config.provinces.filter(x => x.countryCode == 'CA' && x.code != 'BC');
     this.states = this.config.provinces.filter(x => x.countryCode == 'US');
 

@@ -188,7 +188,7 @@
               <!-- Notice of dispute postal code -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label *ngIf="form.get('country').value =='Canada'">Postal Code</mat-label>
+                  <mat-label *ngIf="form.get('country').value =='Canada'">Postal code</mat-label>
                   <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
                     formControlName="postalCode" [showMaskTyped]="true" *ngIf="form.get('country').value=='Canada'" />
                   <mat-label *ngIf="form.get('country').value=='United States'">Zip Code</mat-label>
