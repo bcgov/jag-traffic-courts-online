@@ -5,8 +5,7 @@ import { DisputesService, DisputeView } from 'app/services/disputes.service';
 import { DisputeStatus } from 'app/api/model/disputeStatus.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
-
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 @Component({
   selector: 'app-ticket-page',
   templateUrl: './ticket-page.component.html',
@@ -14,6 +13,7 @@ import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
+  public IDIRLogin: string = "";
   public decidePopup = '';
   public disputeInfo: DisputeView;
   busy: Subscription;
@@ -37,7 +37,13 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   constructor(
     public disputesService: DisputesService,
     private logger: LoggerService,
-  ) { }
+    private oidcSecurityService: OidcSecurityService
+  ) { 
+    oidcSecurityService.userData$.subscribe( (userInfo: any) => {
+      // if (userInfo && userInfo.userData && userInfo.userData.name) this.IDIRLogin = 
+      console.log(userInfo);
+    });
+  }
 
   ngOnInit(): void {
 

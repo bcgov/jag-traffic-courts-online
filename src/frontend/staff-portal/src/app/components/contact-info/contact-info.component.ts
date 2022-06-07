@@ -154,6 +154,7 @@ export class ContactInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
+      data : { reason: this.lastUpdatedDispute.rejectedReason }
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {

@@ -58,7 +58,8 @@
                       Ticket
                     </th>
                     <td mat-cell *matCellDef="let element"> 
-                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'"><a (click)="backTicketList(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="element.assignedTo === 'Unassigned' || element.assignedTo === IDIRLogin"><a (click)="backTicketList(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="element.assignedTo !== 'Unassigned' && element.assignedTo !== IDIRLogin"><a (click)="backTicketList(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
                     </td>
                   </ng-container>
               

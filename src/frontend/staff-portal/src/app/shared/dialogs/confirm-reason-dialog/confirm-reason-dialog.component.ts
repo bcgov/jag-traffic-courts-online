@@ -31,7 +31,7 @@ export class ConfirmReasonDialogComponent {
     this.dialogContentOutput = null;
 
     this.reasonForm = this.fb.group({
-      reason: null
+      reason: this.options.data["reason"]
     })
   }
 
