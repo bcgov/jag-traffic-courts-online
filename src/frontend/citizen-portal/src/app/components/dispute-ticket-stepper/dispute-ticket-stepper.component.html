@@ -73,7 +73,7 @@
                           <mat-select formControlName="country" (selectionChange)="onCountryChange($event.value)">
                             <mat-option value="Canada">Canada</mat-option>
                             <mat-option value="United States">United States</mat-option>
-                            <mat-option *ngFor="let country of config.countries" [value]="country">{{ country }}
+                            <mat-option *ngFor="let country of config.countries" [value]="country.name">{{ country.name }}
                             </mat-option>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
