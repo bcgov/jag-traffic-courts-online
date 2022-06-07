@@ -32,10 +32,10 @@ public class OracleDataApiService : IOracleDataApiService
     /// Returns a new inialized instance of the OracleDataApi_v1_0Client
     /// </summary>
     /// <returns></returns>
-    private OracleDataApi_v1_0Client GetOracleDataApi()
+    private OracleDataApiClient GetOracleDataApi()
     {
-        OracleDataApi_v1_0Client client = new(new HttpClient());
-        client.BaseUrl = _oracleDataApiConfiguration.BaseUrl;
+        var httpClient = new HttpClient { BaseAddress = new Uri(_oracleDataApiConfiguration.BaseUrl) };
+        OracleDataApiClient client = new(httpClient);
         return client;
     }
 }

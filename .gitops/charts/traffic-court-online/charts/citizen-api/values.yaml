@@ -82,8 +82,13 @@ affinity: {}
 
 ## @param enable prom scrape metrics
 ##
+## if you enable metrics be sure to add these podAnnotations
+##
+##     podAnnotations:
+##       prometheus.io/scrape: 'true'
+##       prometheus.io/port: "52325"    
 metrics:
-  enabled: true
+  enabled: false
 
 ## @param formRecognizer
 ## Todo: move formRecognizer.apiKey to secret
@@ -115,8 +120,8 @@ redis:
     serviceName: ""
 
 ## @param
-## Todo: move to secret
-##
+## objectStorage.accessKey The username used to access the bucket
+## objectStorage.secretKey The password used to access the bucket
 objectStorage:
   accessKey: ""
   bucketName: ""

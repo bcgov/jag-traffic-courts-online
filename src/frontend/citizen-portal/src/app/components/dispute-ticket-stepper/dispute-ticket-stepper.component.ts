@@ -190,7 +190,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       } else {
         this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
       }
-      if (this.form.get('country').value == 'United States' || this.form.get('country').value == 'Canada') {
+      if (this.form.get('country').value === 'United States' || this.form.get('country').value === 'Canada') {
         this.form.get('drivers_licence_number').addValidators([Validators.required]);
       }
       this.form.get('drivers_licence_number').updateValueAndValidity();

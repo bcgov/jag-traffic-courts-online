@@ -84,6 +84,10 @@ spec:
             value: "{{ .Values.jaeger.exporter.protocol }}"
           {{- end }}
           {{- end }}
+          {{- if .Values.metrics.enabled }}
+          - name: DOTNET_DiagnosticPorts
+            value: /diag/port.sock
+          {{- end }}
           {{- if .Values.swagger.enabled }}
           - name: Swagger__Enabled
             value: "true"
@@ -97,6 +101,40 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.metrics.enabled }}
+          volumeMounts:
+          - mountPath: /diag
+            name: diagnostics
+          {{- end }}
+        {{- if .Values.metrics.enabled }}
+        - name: dotnet-monitor
+          image: mcr.microsoft.com/dotnet/monitor
+          # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
+          # purposes only in this example. Please continue reading after this example for further details.
+          args: [ "--no-auth" ]
+          env:
+          - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
+            value: Listen
+          - name: DOTNETMONITOR_DiagnosticPort__EndpointName
+            value: /diag/port.sock
+          - name: DOTNETMONITOR_Storage__DumpTempFolder
+            value: /diag/dumps
+          - name: DOTNETMONITOR_Urls
+            value: http://localhost:52323
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 52325
+          volumeMounts:
+          - mountPath: /diag
+            name: diagnostics
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -108,5 +146,10 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.metrics.enabled }}
+      volumes:
+      - name: diagnostics
+        emptyDir: {}      
       {{- end }}
 {{- end }}
