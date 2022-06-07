@@ -9,13 +9,13 @@
       <small class="me-2 text-nowrap">Violation time:</small>
       <strong class="text-nowrap">{{ ticket.issued_date | date: "HH:mm" }}</strong>
       <strong class="d-md-inline d-lg-none">{{
-        ticket.issued_date | date:" yyyy/MM/dd"
+        ticket.issued_date | date:" yyyy-MM-dd"
       }}</strong>
     </div>
     <div class="d-xs-none d-sm-none d-md-none d-lg-block col-md-4 col-lg-6 violation-time">
       <small class="me-2 text-nowrap">Violation date:</small>
       <strong class="text-nowrap">{{
-        ticket.issued_date | date:"yyyy/MM/dd"
+        ticket.issued_date | date:"yyyy-MM-dd"
       }}</strong>
     </div>
   </div>
