@@ -384,7 +384,7 @@
                         <mat-label>
                           Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
                         </mat-label>
-                        <input matInput formControlName="fine_reduction_reason" />
+                        <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
                         <mat-error *ngIf="(additionalForm.get('fine_reduction_reason')?.dirty 
                         || additionalForm.get('fine_reduction_reason')?.touched)
                         && additionalForm.get('fine_reduction_reason')?.invalid
@@ -405,7 +405,7 @@
                         <mat-label>
                           Please enter your reasons for why you are requesting <strong>time to pay</strong>
                         </mat-label>
-                        <input matInput formControlName="time_to_pay_reason" />
+                        <input matInput formControlName="time_to_pay_reason" [errorStateMatcher]="matcher" />
                         <mat-error *ngIf="(additionalForm.get('time_to_pay_reason')?.dirty
                           || additionalForm.get('time_to_pay_reason')?.touched)
                           && additionalForm.get('time_to_pay_reason')?.invalid
@@ -441,14 +441,14 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Name of law firm</mat-label>
-                          <input matInput formControlName="law_firm_name" />
+                          <input matInput formControlName="law_firm_name" [errorStateMatcher]="matcher" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Full name of lawyer</mat-label>
-                          <input matInput formControlName="lawyer_full_name" />
+                          <input matInput formControlName="lawyer_full_name" [errorStateMatcher]="matcher" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -457,7 +457,7 @@
                       <div class="col-md-12">
                         <mat-form-field class="w-100">
                           <mat-label>Address of law firm</mat-label>
-                          <input matInput formControlName="lawyer_address" />
+                          <input matInput formControlName="lawyer_address" [errorStateMatcher]="matcher" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -466,14 +466,16 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact phone number</mat-label>
-                          <input matInput formControlName="lawyer_phone_number" mask="(000) 000-0000" />
+                          <input matInput formControlName="lawyer_phone_number" [errorStateMatcher]="matcher"
+                            mask="(000) 000-0000" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>Contact email</mat-label>
-                          <input matInput formControlName="lawyer_email" autocomplete="off" />
+                          <input matInput formControlName="lawyer_email" autocomplete="off"
+                            [errorStateMatcher]="matcher" />
                           <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('required')">
                             {{"error.required" | translate}}</mat-error>
                           <mat-error *ngIf="legalRepresentationForm.get('lawyer_email')?.hasError('email')">
@@ -498,9 +500,9 @@
                 <div class="row" *ngIf="additionalForm.get('__interpreter_required')?.value">
                   <div class="col interpreter-language">
                     <mat-form-field class="w-25">
-                      <mat-label>{{
-                        "stepper.additional.interpreter_language" | translate
-                        }}</mat-label>
+                      <mat-label>
+                        {{ "stepper.additional.interpreter_language" | translate }}
+                      </mat-label>
                       <mat-select formControlName="interpreter_language"
                         matTooltip="{{getToolTipDEata(additionalForm.get('interpreter_language'))}}">
                         <mat-option *ngFor="let language of languages" [value]="language">
@@ -528,7 +530,7 @@
                     <mat-form-field class="pe-4 w-25">
                       <mat-label>Number of witnesses</mat-label>
                       <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                        formControlName="number_of_witness" />
+                        formControlName="number_of_witness" [errorStateMatcher]="matcher" />
                       <mat-error *ngIf="additionalForm.get('number_of_witness')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>

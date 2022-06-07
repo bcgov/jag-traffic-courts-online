@@ -18,6 +18,7 @@ import { AddressAutocompleteComponent } from "@shared/components/address-autocom
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
@@ -44,6 +45,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public ticket: ViolationTicket;
   public noticeOfDispute: NoticeOfDispute;
   public ticketType;
+  public matcher = new FormErrorStateMatcher();
 
   // Disputant
   public provinces = this.config.provinces;
@@ -186,9 +188,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
           this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
         }
       }
-      if (this.countIndexes[this.countIndexes.length - 1] === this.stepper.selectedIndex) {
-        this.setAdditional();
-      }
+      this.setAdditional();
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
       this.toastService.openErrorToast(this.config.dispute_validation_error);
@@ -222,6 +222,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       validators: [...this.additionFormValidators]
     });
     this.additionalForm.markAsUntouched();
+    this.additionalForm.markAsPristine();
   }
 
   public isValid(countInx?): boolean {
