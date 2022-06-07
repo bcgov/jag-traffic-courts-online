@@ -94,11 +94,11 @@ export class TicketInfoComponent implements OnInit {
     });
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
-      homePhoneNumber: [null, Validators.required, Validators.maxLength(20)],
+      homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
       emailAddress: [null, [Validators.email, Validators.required]],
       surname: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
-      country: [null, [Validators.required]], // hard coded this is not returned from API, assumed always Canada
+      country: [null, [Validators.required]], 
       birthdate: [null, [Validators.required]], // Optional
       address: [null, [Validators.required]],
       city: [null, [Validators.required]],
@@ -107,8 +107,6 @@ export class TicketInfoComponent implements OnInit {
       driversLicenceNumber: [null, [Validators.required, Validators.maxLength(20)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       provincialCourtHearingLocation: [null, [Validators.required]],
-      _chargeCount: [1],
-      _amountOwing: [null],
       rejectedReason: [null],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],

@@ -242,7 +242,6 @@ export class ContactInfoComponent implements OnInit {
 
       this.initialDisputeValues = response;
       this.lastUpdatedDispute = this.initialDisputeValues;
-      console.log(this.initialDisputeValues, this.lastUpdatedDispute, this.retrieving, this.conflict);
 
       // set violation date and time
       let tempViolationDate = new Date(this.lastUpdatedDispute.issuedDate);
