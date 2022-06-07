@@ -70,7 +70,7 @@ export class TicketRequestComponent implements OnInit {
       notAppearInCourt: !(disputedCount?.appearInCourt)
     });
 
-    if (violationTicketCount.description) this.disputedCounts.push(disputedCountForm);
+    if (violationTicketCount?.description) this.disputedCounts.push(disputedCountForm);
   }
 
   get disputedCounts() {
@@ -107,7 +107,6 @@ export class TicketRequestComponent implements OnInit {
     countsActions.courtNotGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.NotGuilty && i.appearInCourt == true));
     countsActions.noCourtGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.Guilty && i.appearInCourt == false));
     countsActions.noCourtNotGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.NotGuilty && i.appearInCourt == false));
-    console.log(countsActions);
     return countsActions;
   }
 }

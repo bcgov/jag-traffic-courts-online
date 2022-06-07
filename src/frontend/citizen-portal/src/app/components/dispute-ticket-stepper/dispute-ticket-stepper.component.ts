@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatStepper } from "@angular/material/stepper";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -6,6 +6,7 @@ import { ConfigService } from "@config/config.service";
 import { UtilsService } from "@core/services/utils.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Address } from "@shared/models/address.model";
+import { FormControlValidators } from "@core/validators/form-control.validators";
 import { NoticeOfDispute, ViolationTicket, Plea } from "app/api";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
@@ -15,14 +16,17 @@ import { FormUtilsService } from "@core/services/form-utils.service";
 import { ToastService } from "@core/services/toast.service";
 import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
 import { AddressAutocompleteComponent } from "@shared/components/address-autocomplete/address-autocomplete.component";
+import { ProvinceConfig } from "@config/config.model";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
   templateUrl: "./dispute-ticket-stepper.component.html",
   styleUrls: ["./dispute-ticket-stepper.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   @ViewChild(MatStepper) private stepper: MatStepper;
@@ -44,9 +48,9 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public ticket: ViolationTicket;
   public noticeOfDispute: NoticeOfDispute;
   public ticketType;
+  public matcher = new FormErrorStateMatcher();
 
   // Disputant
-  public provinces = this.config.provinces;
   public showManualButton: boolean = true;
   public showAddressFields: boolean = true; // temporary preset for testing
 
@@ -60,6 +64,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public minWitnesses = 1;
   public maxWitnesses = 99;
   public additionalIndex: number;
+  public provinces: ProvinceConfig[];
+  public states: ProvinceConfig[];
 
   // Summary
   public declared = false;
@@ -83,7 +89,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     private formUtilsService: FormUtilsService,
     private translateService: TranslateService,
     private toastService: ToastService,
-    private config: ConfigService,
+    public config: ConfigService,
     private dialog: MatDialog,
   ) {
     // config or static
@@ -99,6 +105,9 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
     this.ticketType = this.violationTicketService.ticketType;
 
+    this.provinces = this.config.provinces.filter(x => x.countryCode == 'CA' && x.code != 'BC');
+    this.states = this.config.provinces.filter(x => x.countryCode == 'US');
+
     // build inner object array before the form
     let countArray = [];
     this.ticket.counts.forEach(count => {
@@ -110,6 +119,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
     });
+    this.form.get('country').setValue('Canada');
 
     // take info from ticket, convert dl number to string
     Object.keys(this.ticket).forEach(key => {
@@ -145,6 +155,46 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
         stepElement.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
       }, 250);
     }
+  }
+
+  public onCountryChange(country) {
+
+    setTimeout(() => {
+      this.form.get('postal_code').setValidators([Validators.maxLength(6)]);
+      this.form.get('province').setValidators([Validators.maxLength(30)]);
+      this.form.get('home_phone_number').setValidators([Validators.maxLength(20)]);
+      this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
+      this.form.get('drivers_licence_province').setValidators([Validators.maxLength(30)]);
+
+      if (country == 'Canada' || country == 'United States') {
+        this.form.get('province').addValidators([Validators.required]);
+        this.form.get('postal_code').addValidators([Validators.required]);
+        this.form.get('home_phone_number').addValidators([Validators.required, FormControlValidators.phone]);
+        this.form.get('drivers_licence_number').addValidators([Validators.required]);
+        this.form.get('drivers_licence_province').addValidators([Validators.required]);
+      }
+
+      this.form.get('postal_code').updateValueAndValidity();
+      this.form.get('province').updateValueAndValidity();
+      this.form.get('home_phone_number').updateValueAndValidity();
+      this.form.get('drivers_licence_number').updateValueAndValidity();
+      this.form.get('drivers_licence_province').updateValueAndValidity();
+    }, 0);
+  }
+
+  public onDLProvinceChange(province) {
+
+    setTimeout(() => {
+      if (province == 'BC') {
+        this.form.get('drivers_licence_number').setValidators([Validators.maxLength(9)])
+      } else {
+        this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
+      }
+      if (this.form.get('country').value == 'United States' || this.form.get('country').value == 'Canada') {
+        this.form.get('drivers_licence_number').addValidators([Validators.required]);
+      }
+      this.form.get('drivers_licence_number').updateValueAndValidity();
+    }, 0)
   }
 
   private getCountFormInitValue(count) {
@@ -186,9 +236,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
           this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
         }
       }
-      if (this.countIndexes[this.countIndexes.length - 1] === this.stepper.selectedIndex) {
-        this.setAdditional();
-      }
+      this.setAdditional();
     } else if (!isValid) {
       this.utilsService.scrollToErrorSection();
       this.toastService.openErrorToast(this.config.dispute_validation_error);
@@ -222,6 +270,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       validators: [...this.additionFormValidators]
     });
     this.additionalForm.markAsUntouched();
+    this.additionalForm.markAsPristine();
   }
 
   public isValid(countInx?): boolean {
