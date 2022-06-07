@@ -60,6 +60,7 @@ services:
       REDIS__CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING:-redis:6379,password=password}
       JWT__AUDIENCE: ${JWT__AUDIENCE:-tco-staff-portal}
       JWT__AUTHORITY: ${JWT__AUTHORITY:-https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4/}
+      REDIS__CONNECTIONSTRING: ${REDIS_CONNECTIONSTRING:-redis:6379,password=password}
       TICKETSTORAGE__TYPE: ${TICKETSTORAGE__TYPE:-ObjectStore}
       OBJECTSTORAGE__ENDPOINT: ${OBJECTSTORAGE__ENDPOINT:-minio:9000}
       OBJECTSTORAGE__ACCESSKEY: ${OBJECTSTORAGE__ACCESSKEY:-username}

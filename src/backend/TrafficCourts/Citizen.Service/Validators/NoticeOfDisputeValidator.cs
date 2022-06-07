@@ -16,14 +16,12 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.Surname).NotEmpty();
             RuleFor(_ => _.GivenNames).NotEmpty();
             RuleFor(_ => _.Birthdate).NotEmpty();
-            RuleFor(_ => _.DriversLicenceNumber).NotEmpty().MaximumLength(20);
-            RuleFor(_ => _.DriversLicenceProvince).NotEmpty().MaximumLength(30);
+            RuleFor(_ => _.DriversLicenceNumber).MaximumLength(20);
+            RuleFor(_ => _.DriversLicenceProvince).MaximumLength(30);
             RuleFor(_ => _.Address).NotEmpty();
             RuleFor(_ => _.City).NotEmpty();
-            RuleFor(_ => _.Province).NotEmpty().MaximumLength(30);
-            RuleFor(_ => _.PostalCode).NotEmpty().Length(6);
-            RuleFor(_ => _.HomePhoneNumber).NotEmpty()
-                .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"));
+            RuleFor(_ => _.Province).MaximumLength(30);
+            RuleFor(_ => _.PostalCode).MaximumLength(6);
             RuleFor(_ => _.WorkPhoneNumber)
                 .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"));
             RuleFor(_ => _.EmailAddress).NotEmpty().EmailAddress();

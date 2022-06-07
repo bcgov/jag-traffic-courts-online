@@ -35,10 +35,13 @@
       <br />
       <div class="row">
         <div class="col md-3">
-          <span class="BC-Gov-15px-black-text">Ticket #:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.ticketNumber }}</span> 
+          <span class="BC-Gov-15px-black-text">Ticket #:</span>&nbsp;<span class="text">{{
+            lastUpdatedDispute.ticketNumber }}</span>
         </div>
         <div class="col md-3">
-          <span class="BC-Gov-15px-black-text">Ticket type:</span>&nbsp;<span class="text">{{ lastUpdatedDispute.ticketNumber.substring(0,1) == 'E' ? "Electronic Ticket" : "Intersection safety camera ticket" }}</span>
+          <span class="BC-Gov-15px-black-text">Ticket type:</span>&nbsp;<span class="text">{{
+            lastUpdatedDispute.ticketNumber.substring(0,1) == 'E' ? "Electronic Ticket" : "Intersection safety camera
+            ticket" }}</span>
         </div>
         <div class="col md-3">
           <span class="BC-Gov-15px-black-text">Violation time:</span>&nbsp;<span class="text">{{ violationTime }}</span>
@@ -128,9 +131,10 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>Country</mat-label>
-                    <mat-select formControlName="country">
+                    <mat-select formControlName="country" (selectionChange)="onCountryChange($event.value)">
                       <mat-option value="Canada">Canada</mat-option>
-                      <mat-option value="USA">USA</mat-option>
+                      <mat-option value="United States">United States</mat-option>
+                      <mat-option value="International">International</mat-option>
                     </mat-select>
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
@@ -154,14 +158,25 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label *ngIf="form.get('country').value=='Canada'">Province</mat-label>
-                    <mat-label *ngIf="form.get('country').value=='USA'">State</mat-label>
-                    <mat-select formControlName="province" *ngIf="form.get('country').value == 'Canada'">
-                      <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
-                      </mat-option>
+                    <mat-label *ngIf="form.get('country').value=='United States'">State</mat-label>
+                    <mat-select formControlName="province"
+                      *ngIf="form.get('country').value == 'Canada' || form.get('country').value == 'United States'">
+                      <div *ngIf="form.get('country').value == 'Canada'">
+                        <mat-option value="British Columbia">British Columbia</mat-option>
+                        <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
+                        </mat-option>
+                      </div>
+                      <div *ngIf="form.get('country').value == 'United States'">
+                        <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}
+                        </mat-option>
+                      </div>
                     </mat-select>
-                    <mat-select formControlName="province" *ngIf="form.get('country').value == 'USA'">
-                      <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>
-                    </mat-select>
+                    <mat-label
+                      *ngIf="form.get('country').value!='United States' && form.get('country').value != 'Canada'">
+                      Province/State</mat-label>
+                    <input matInput formControlName="province"
+                      *ngIf="form.get('country').value != 'United States' && form.get('country').value != 'Canada'"
+                      maxlength="30" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -173,10 +188,22 @@
               <!-- Notice of dispute postal code -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label>Postal code</mat-label>
+                  <mat-label *ngIf="form.get('country').value =='Canada'">Postal code</mat-label>
                   <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
-                    formControlName="postalCode" [showMaskTyped]="true" />
-                  <mat-error>{{ "error.required" | translate }}</mat-error>
+                    formControlName="postalCode" [showMaskTyped]="true" *ngIf="form.get('country').value=='Canada'" />
+                  <mat-label *ngIf="form.get('country').value=='United States'">Zip Code</mat-label>
+                  <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
+                    formControlName="postalCode" [showMaskTyped]="true"
+                    *ngIf="form.get('country').value=='United States'" />
+                  <mat-label *ngIf="form.get('country').value!='United States' && form.get('country').value!='Canada'">
+                    Postal/Zip Code</mat-label>
+                  <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
+                    formControlName="postalCode"
+                    *ngIf="form.get('country').value!='United States' && form.get('country').value != 'Canada'" />
+                  <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate
+                    }}</mat-error>
+                  <mat-error *ngIf="form.get('postalCode').hasError('pattern')">Must be a valid postal/zip code
+                  </mat-error>
                 </mat-form-field>
               </div>
 
@@ -199,11 +226,15 @@
               <div class="col-md-6">
                 <mat-form-field class="w-100">
                   <mat-label>Phone number</mat-label>
-                  <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000" [showMaskTyped]="true" />
-                  <mat-error *ngIf="form.get('homePhoneNumber').hasError('required')">{{
-                    "error.required" | translate
-                    }}</mat-error>
-                  <mat-error *ngIf="form.get('homePhoneNumber').hasError('mask')">Must be a valid phone number
+                  <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000"
+                    *ngIf="form.get('country').value == 'Canada' || form.get('country').value == 'United States'"
+                    [showMaskTyped]="true" />
+                  <input matInput formControlName="homePhoneNumber" mask="00000000000000000000"
+                    *ngIf="form.get('country').value != 'Canada' && form.get('country').value != 'United States'" />
+                  <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('required')">{{"error.required" |
+                    translate}}
+                  </mat-error>
+                  <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('phone')">Must be a valid phone number
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -229,14 +260,11 @@
                 <mat-form-field class="w-100">
                   <mat-label>Prov/State of DL</mat-label>
                   <mat-select formControlName="driversLicenceProvince"
-                    (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
-                    <mat-optgroup label="Canada">
-                      <mat-option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}
-                      </mat-option>
-                    </mat-optgroup>
-                    <mat-optgroup label="United States">
-                      <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>
-                    </mat-optgroup>
+                    (selectionChange)="onDLProvinceChange($event.value)">
+                    <mat-option value="BC">British Columbia</mat-option>
+                    <mat-option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}
+                    </mat-option>
+                    <mat-option *ngFor="let state of states" [value]="state.code">{{ state.name }}</mat-option>
                   </mat-select>
                   <mat-error>{{ "error.required" | translate }}</mat-error>
                 </mat-form-field>
@@ -244,11 +272,12 @@
 
               <!-- Notice of dispute drivers licence number -->
               <div class="col-md-6">
-                <mat-form-field class="w-100" *ngIf="form.get('driversLicenceProvince').value == 'BC'">
+                <mat-form-field class="w-100">
                   <mat-label>DL number</mat-label>
-                  <input matInput formControlName="driversLicenceNumber" minlength="7" maxlength="9"
-                    (keypress)="onKeyPressNumbers($event, form.get('driversLicenceProvince').value == 'BC')"
-                    autocomplete="off" />
+                  <input matInput formControlName="driversLicenceNumber" mask="000000000"
+                    *ngIf="form.get('driversLicenceProvince').value == 'BC'" [showMaskTyped]="false" />
+                  <input matInput formControlName="driversLicenceNumber" maxlength="20"
+                    *ngIf="form.get('driversLicenceProvince').value != 'BC'" />
                   <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
                     translate }}</mat-error>
                   <mat-error *ngIf="
@@ -257,12 +286,6 @@
                          form.get('driversLicenceNumber').hasError('maxlength')">
                     Must be a valid BC driver's license number of seven to nine digits
                   </mat-error>
-                </mat-form-field>
-                <mat-form-field class="w-100" *ngIf="form.get('driversLicenceProvince').value != 'BC'">
-                  <mat-label>DL number</mat-label>
-                  <input matInput formControlName="driversLicenceNumber" autocomplete="off" />
-                  <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
-                    translate }}</mat-error>
                 </mat-form-field>
               </div>
             </div>
