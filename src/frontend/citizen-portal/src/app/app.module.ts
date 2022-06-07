@@ -1,14 +1,11 @@
 import {
   HttpClient,
   HttpClientModule,
-  HTTP_INTERCEPTORS,
 } from '@angular/common/http';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
 import { NgBusyModule } from 'ng-busy';
-import { MockDisputeService } from 'tests/mocks/mock-dispute.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
@@ -104,28 +101,17 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DatePipe,
     CurrencyPipe,
     AppConfigService,
-    MockDisputeService,
     TicketTypePipe,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: BackendHttpInterceptor,
-      multi: true,
-    },
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
-    // {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: appInit,
-    //   multi: true,
-    //   deps: [AppConfigService], // , KeycloakService],
-    // },
     WindowRefService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   bootstrap: [AppComponent],
 })
+
 export class AppModule {
   private availableLanguages = ['en', 'fr'];
 
