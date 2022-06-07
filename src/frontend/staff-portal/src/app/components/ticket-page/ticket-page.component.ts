@@ -121,7 +121,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   // which has a property ViolationTicket
   // which has a property ocrViolationTicket
   // which is the JSON string for the Azure OCR'd version of a paper ticket
-  // systemDetectedOcrIssues should be set to true if any OCR'd field has any validation errors returned
+  // systemDetectedOcrIssues should be set to true if any OCR'd field has less than 80% confidence
   // so this routine will exit with true at the first field of the fields collection that has an OCR error
   getSystemDetectedOcrIssues(ocrViolationTicket?: string): boolean {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
