@@ -59,27 +59,17 @@ export class ViolationTicketService implements IViolationTicketService {
 
   // return all OCR messages for a ticket
   public getAllOCRMessages(ocrViolationTicket: OcrViolationTicket) {
-    this.ocrMessages = [];
-
     // build list of messages
-    this.ocrMapping.forEach(ocrField => {
-      this.ocrMessages = this.ocrMessages.concat(this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.ocrMapping));
-    });
-
+    this.ocrMessages = this.ocrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.ocrMapping));
+    
     // build list of count 1 messages
-    this.count1OcrMapping.forEach(ocrField => {
-      this.count1OcrMessages = this.count1OcrMessages.concat(this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count1OcrMapping));
-    });
+    this.count1OcrMessages = this.count1OcrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count1OcrMapping));
 
     // build list of count 2 messages
-    this.count2OcrMapping.forEach(ocrField => {
-      this.count2OcrMessages = this.count2OcrMessages.concat(this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count2OcrMapping));
-    });
+    this.count2OcrMessages = this.count2OcrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count2OcrMapping));
 
     // build list of count 3 messages
-    this.count3OcrMapping.forEach(ocrField => {
-      this.count3OcrMessages = this.count3OcrMessages.concat(this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count3OcrMapping));
-    });
+    this.count3OcrMessages = this.count3OcrMapping.map(ocrField =>  this.getFieldOCRMessages(ocrViolationTicket?.fields[ocrField.key], ocrField.key, this.count3OcrMapping));
   }
 
   // return OCR error for a single field

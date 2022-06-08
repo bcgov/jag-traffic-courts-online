@@ -8,8 +8,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { Dispute } from 'app/api';
-import { DisputeView, DisputesService } from '../../services/disputes.service';
+import { Dispute, DisputeService } from '../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -20,7 +19,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
   styleUrls: ['./contact-info.component.scss', '../../app.component.scss']
 })
 export class ContactInfoComponent implements OnInit {
-  @Input() public disputeInfo: DisputeView;
+  @Input() public disputeInfo: Dispute;
   @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public provinces: ProvinceConfig[];
@@ -45,7 +44,7 @@ export class ContactInfoComponent implements OnInit {
     private utilsService: UtilsService,
     public mockConfigService: MockConfigService,
     private datePipe: DatePipe,
-    private disputesService: DisputesService,
+    private disputeService: DisputeService,
     private logger: LoggerService,
     @Inject(Router) private router,
   ) {
@@ -79,7 +78,6 @@ export class ContactInfoComponent implements OnInit {
   }
 
   public onCountryChange(country) {
-
     setTimeout(() => {
       this.form.get('postalCode').setValidators([Validators.maxLength(6)]);
       this.form.get('province').setValidators([Validators.maxLength(30)]);
@@ -108,7 +106,6 @@ export class ContactInfoComponent implements OnInit {
   }
 
   public onDLProvinceChange(province) {
-
     setTimeout(() => {
       if (province == 'BC') {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)])
@@ -142,7 +139,7 @@ export class ContactInfoComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           // submit dispute and return to TRM home
-          this.busy = this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe({
+          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe({
             next: response => { this.onBack(); },
             error: err => { },
             complete: () => { }
@@ -169,7 +166,7 @@ export class ContactInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home 
-          this.busy = this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
+          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => { 
               this.lastUpdatedDispute.status = 'REJECTED';
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
@@ -200,9 +197,9 @@ export class ContactInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputesService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
+          this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
             next: response => {
-              this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
+              this.disputeService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
                 next: response => { 
                   this.lastUpdatedDispute.status = 'CANCELLED';
                   this.lastUpdatedDispute.rejectedReason = action.output.reason;
@@ -234,7 +231,7 @@ export class ContactInfoComponent implements OnInit {
   putDispute(dispute: Dispute): void {
     this.logger.log('TicketInfoComponent::putDispute', dispute);
 
-    this.busy = this.disputesService.putDispute(dispute.id, dispute).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.putDispute(dispute.id, dispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -244,14 +241,13 @@ export class ContactInfoComponent implements OnInit {
       this.lastUpdatedDispute = response;
       this.form.markAsUntouched();
     });
-
   }
 
   // get dispute by id
   getDispute(): void {
     this.logger.log('TicketInfoComponent::getDispute');
 
-    this.busy = this.disputesService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
       this.retrieving = false;
       this.logger.info(
         'TicketInfoComponent::getDispute response',
@@ -276,7 +272,6 @@ export class ContactInfoComponent implements OnInit {
       this.onCountryChange(this.form.get('country').value);
       this.onDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
     });
-
   }
 
   public onBack() {
