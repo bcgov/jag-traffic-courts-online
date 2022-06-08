@@ -45,7 +45,7 @@ public class DisputeService {
 			return disputeRepository.findByStatusNotAndCreatedTsBefore(excludeStatus, olderThan);
 		}
 	}
-	
+
 	/**
 	 * Retrieves all {@link Dispute} records that are assigned to the provided JJ, delegating to CrudRepository
 	 * @param jjAssigned, will filter the result set to those having this jjAssigned.
@@ -162,7 +162,7 @@ public class DisputeService {
 			}
 			break;
 		case REJECTED:
-			if (!List.of(DisputeStatus.NEW).contains(dispute.getStatus())) {
+			if (!List.of(DisputeStatus.NEW, DisputeStatus.VALIDATED).contains(dispute.getStatus())) {
 				throw new NotAllowedException("Changing the status of a Dispute record from %s to %s is not permitted.", dispute.getStatus(), DisputeStatus.REJECTED);
 			}
 			break;

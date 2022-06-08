@@ -52,14 +52,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "NEW" })
+	@EnumSource(value = DisputeStatus.class, names = { "NEW", "VALIDATED" })
 	void testSetStatusToREJECTED_200(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.REJECTED);
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED", "VALIDATED" })
+	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED" })
 	void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
 		UUID id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
