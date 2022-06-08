@@ -8,7 +8,7 @@ export interface DialogOptions {
   cancelTextKey?: string;
 
   // title?: string;
-  // message?: string;
+  message?: string;
   actionType?: 'primary' | 'accent' | 'warn';
   // actionText?: string;
   actionHide?: boolean;

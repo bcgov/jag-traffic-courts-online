@@ -181,7 +181,7 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
-            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
+            "description": "A Dispute status can only be set to PROCESSING iff status is NEW, VALIDATED or REJECTED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -233,7 +233,7 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW and the rejected reason must be <= 256 characters. Update failed.",
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
@@ -273,7 +273,7 @@
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED, VALIDATED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {

@@ -170,7 +170,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, wrong user roles.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/reject")]
     public async Task<IActionResult> RejectDisputeAsync(
@@ -274,7 +274,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, wrong user roles.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
-    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.</response>
+    /// <response code="405">A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/cancel")]
     [ProducesResponseType(StatusCodes.Status200OK)]
