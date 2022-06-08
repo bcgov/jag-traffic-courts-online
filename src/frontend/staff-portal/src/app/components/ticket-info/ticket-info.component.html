@@ -561,6 +561,7 @@
                     <mat-label>Prov/State of DL</mat-label>
                     <mat-select formControlName="driversLicenceProvince"
                       (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
+                      <mat-option value="BC">British Columbia</mat-option>
                       <mat-option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}
                       </mat-option>
                       <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>
