@@ -14,7 +14,6 @@ export class TcoPageHeaderComponent {
 
     oidcSecurityService.userData$.subscribe( (userInfo: any) => {
       if (userInfo && userInfo.userData && userInfo.userData.name) this.fullName = userInfo.userData.name;
-      if (userInfo && userInfo.userData && userInfo.userData.RegionName) this.RegionName = userInfo.userData.RegionName;
     });
 
   }

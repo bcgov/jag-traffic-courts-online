@@ -7,7 +7,7 @@
   <p *ngIf="options.messageKey">{{ options.messageKey | translate }}</p>
   <ng-template appDialogContent></ng-template>
   <mat-form-field style="width:100%">
-    <textarea matInput
+    <textarea matInput maxlength="256"
        [formControl]="reasonForm.get('reason')">
     </textarea>
   </mat-form-field> 

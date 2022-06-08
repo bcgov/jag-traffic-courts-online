@@ -103,11 +103,11 @@ export class TicketInfoComponent implements OnInit {
       address: [null, [Validators.required]],
       city: [null, [Validators.required]],
       province: [null, [Validators.required, Validators.maxLength(30)]],
-      postalCode: [null, [Validators.required, Validators.maxLength(6)]], // space needs to be added back to the middle for display
+      postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
       driversLicenceNumber: [null, [Validators.required, Validators.maxLength(20)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       provincialCourtHearingLocation: [null, [Validators.required]],
-      rejectedReason: [null],
+      rejectedReason: [null, Validators.maxLength(256)],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
         provincialCourtHearingLocation: [null, [Validators.required]],
@@ -171,6 +171,10 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('driversLicenceNumber').addValidators([Validators.required]);
         this.form.get('driversLicenceProvince').addValidators([Validators.required]);
         this.form.get('violationTicket').get('driversLicenceProvince').addValidators([Validators.required]);
+      }
+
+      if (country == 'Canada') {
+        this.form.get('postalCode').addValidators([Validators.minLength(6)]);
       }
 
       this.form.get('postalCode').updateValueAndValidity();
@@ -514,6 +518,7 @@ export class TicketInfoComponent implements OnInit {
 
   // send to api, on return update status
   validate(): void {
+    this.lastUpdatedDispute.rejectedReason = this.form.get('rejectedReason').value;
     this.busy = this.disputesService.validateDispute(this.lastUpdatedDispute.id).subscribe({
       next: response => { this.lastUpdatedDispute.status = "VALIDATED"; },
       error: err => { },
@@ -533,10 +538,10 @@ export class TicketInfoComponent implements OnInit {
       icon: "error_outline",
     };
     this.lastUpdatedDispute.status = 'PROCESSING';
+    this.lastUpdatedDispute.rejectedReason = this.form.get('rejectedReason').value;
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-
 
           // submit dispute and return to TRM home
           this.busy = this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(
@@ -560,16 +565,19 @@ export class TicketInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
+      message: this.form.get('rejectedReason').value
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
-      .subscribe((action: any) => {
-        if (action.output.response) {
-
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home 
           this.busy = this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
-              this.onBack(); this.lastUpdatedDispute.status = 'REJECTED';
+              this.onBack(); 
+              this.lastUpdatedDispute.status = 'REJECTED';
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
             },
             error: err => { },
@@ -588,12 +596,14 @@ export class TicketInfoComponent implements OnInit {
       actionTextKey: "Send cancellation notification",
       actionType: "warn",
       cancelTextKey: "Go back",
-      icon: "error_outline"
+      icon: "error_outline",
+      message: this.form.get('rejectedReason').value
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
-      .subscribe((action: any) => {
-        if (action.output.response) {
-
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // no need to pass back byte array with image
           let tempDispute = this.lastUpdatedDispute;
@@ -604,8 +614,9 @@ export class TicketInfoComponent implements OnInit {
             next: response => {
               this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
                 next: response => {
-                  this.onBack(); this.lastUpdatedDispute.status = 'CANCELLED';
+                  this.lastUpdatedDispute.status = 'CANCELLED';
                   this.lastUpdatedDispute.rejectedReason = action.output.reason;
+                  this.onBack(); 
                 },
                 error: err => { },
                 complete: () => { }

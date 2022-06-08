@@ -40,8 +40,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     private oidcSecurityService: OidcSecurityService
   ) { 
     oidcSecurityService.userData$.subscribe( (userInfo: any) => {
-      // if (userInfo && userInfo.userData && userInfo.userData.name) this.IDIRLogin = 
-      console.log(userInfo);
+      this.IDIRLogin = userInfo?.userData?.preferred_username;
+      this.IDIRLogin = this.IDIRLogin.split("@")[0]; // split at @ sign and take first part
     });
   }
 
@@ -132,53 +132,53 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   getSystemDetectedOcrIssues(ocrViolationTicket?: string): boolean {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
 
-    let fields = objOcrViolationTicket?.fields;
+    let fields = objOcrViolationTicket?.Fields;
     if (fields) {
 
-      if (this.getOcrViolationErrors(fields.violationTicketTitle) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.ticket_number) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.surname) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.given_names) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.drivers_licence_province) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.drivers_licence_number) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.violation_time) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.violation_date) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_mva_offence) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_mca_offence) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_cta_offence) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_wla_offence) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_faa_offence) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_lca_offense) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_tcr_offence) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.is_other_offence) > 0) { return true; }
+      if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return true; }
+      if (this.getOcrViolationErrors(fields.ticket_number)) { return true; }
+      if (this.getOcrViolationErrors(fields.surname)) { return true; }
+      if (this.getOcrViolationErrors(fields.given_names)) { return true; }
+      if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return true; }
+      if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return true; }
+      if (this.getOcrViolationErrors(fields.violation_time)) { return true; }
+      if (this.getOcrViolationErrors(fields.violation_date)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_mva_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_mca_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_cta_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_wla_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_faa_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_lca_offense)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_tcr_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.is_other_offence)) { return true; }
 
       // seems like a goofy way to process these but this is how the JSON parse returns it
       // count 1
-      if (this.getOcrViolationErrors(fields["counts.count_1.description"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.act_or_regulation"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.is_act"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.is_regulation"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.section"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.ticketed_amount"]) > 0) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_1.description"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_1.act_or_regulation"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_1.is_act"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_1.is_regulation"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_1.section"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_1.ticketed_amount"])) { return true; }
 
       // count 2
-      if (this.getOcrViolationErrors(fields["counts.count_2.description"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.act_or_regulation"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.is_act"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.is_regulation"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.section"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.ticketed_amount"]) > 0) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_2.description"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_2.act_or_regulation"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_2.is_act"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_2.is_regulation"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_2.section"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_2.ticketed_amount"])) { return true; }
 
       // count 3
-      if (this.getOcrViolationErrors(fields["counts.count_3.description"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.act_or_regulation"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.is_act"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.is_regulation"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.section"]) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.ticketed_amount"]) > 0) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_3.description"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_3.act_or_regulation"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_3.is_act"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_3.is_regulation"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_3.section"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_3.ticketed_amount"])) { return true; }
 
-      if (this.getOcrViolationErrors(fields.provincial_court_hearing_location) > 0) { return true; }
-      if (this.getOcrViolationErrors(fields.organization_location) > 0) { return true; }
+      if (this.getOcrViolationErrors(fields.provincial_court_hearing_location)) { return true; }
+      if (this.getOcrViolationErrors(fields.organization_location)) { return true; }
     }
 
     // step through fields in deserialized object and look for validation errors
@@ -186,11 +186,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   // return number of validation errors
-  getOcrViolationErrors(field?: RecognizedField): number {
-    if (field == undefined || field == null) return 0;
-    if (field.validationErrors && field.validationErrors.length > 0) {
-      return field.validationErrors.length;
-    } else return 0;
+  getOcrViolationErrors(field?: RecognizedField): boolean {
+    if (field == undefined || field == null) return false;
+    if (field.FieldConfidence && field.FieldConfidence < 0.8) {
+      return true;
+    } else return false;
   }
 
   countNewTickets(): number {
@@ -226,11 +226,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 }
 export interface RecognizedField {
-  value?: any;
-  fieldConfidence?: number;
-  validationErrors?: string[];
-  type?: string;
-  boundingBoxes?: Point[];
+  Value?: any;
+  FieldConfidence?: number;
+  ValidationErrors?: string[];
+  Type?: string;
+  BoundingBoxes?: Point[];
 }
 
 export interface Point {
