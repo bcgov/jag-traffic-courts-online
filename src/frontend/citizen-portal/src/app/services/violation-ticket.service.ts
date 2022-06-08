@@ -269,8 +269,7 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
-      const ticketNumber = this.ticket.ticket_number.charAt(0);
-      if ((this.dateDiff(this.ticket.issued_date) <= 30 && ticketNumber == 'E') || (this.dateDiff(this.ticket.issued_date) <= 45 && ticketNumber == 'S')) {
+      if ((this.dateDiff(this.ticket.issued_date) <= 30 && this.ticketType == 'E') || (this.dateDiff(this.ticket.issued_date) <= 45 && this.ticketType == 'S')) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
@@ -337,7 +336,6 @@ export class ViolationTicketService {
   }
 
   private openErrorScenarioTwoDialog() {
-    console.log('one', this);
     return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
   }
 
