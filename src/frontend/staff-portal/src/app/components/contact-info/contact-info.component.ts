@@ -134,7 +134,6 @@ export class ContactInfoComponent implements OnInit {
       icon: "error_outline",
     };
     this.lastUpdatedDispute.status = 'PROCESSING';
-    this.lastUpdatedDispute.rejectedReason = this.form.get('rejectedReason').value;
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
@@ -142,12 +141,7 @@ export class ContactInfoComponent implements OnInit {
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe({
             next: response => { 
               this.lastUpdatedDispute.status = 'PROCESSING';
-              // update rejected reason so it is not loast
-              this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
-                next: response => { this.onBack() },
-                error: err => {},
-                complete: ()=> {}
-              });
+              this.onBack();
             },
             error: err => { },
             complete: () => { }
