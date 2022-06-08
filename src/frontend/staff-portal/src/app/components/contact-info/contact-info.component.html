@@ -3,22 +3,22 @@
     <mat-icon inline="true">arrow_back</mat-icon> Back to TRM home
   </a>
   <app-ticket-status [dispute]="lastUpdatedDispute" *ngIf="lastUpdatedDispute"></app-ticket-status>
-  <div *ngIf="conflict == true">
+  <div *ngIf="conflict === true">
     <span>
       <h3>This ticket is already assigned.</h3>
     </span>
   </div>
-  <div *ngIf="conflict == false && !initialDisputeValues && retrieving == false">
+  <div *ngIf="conflict === false && !initialDisputeValues && retrieving === false">
     <span>
       <h3>Error retrieving ticket information.</h3>
     </span>
   </div>
-  <div *ngIf="conflict == false && retrieving == true">
+  <div *ngIf="conflict === false && retrieving === true">
     <span>
       <h3>Retrieving ticket information...</h3>
     </span>
   </div>
-  <div class="contact-info" *ngIf="initialDisputeValues && conflict == false">
+  <div class="contact-info" *ngIf="initialDisputeValues && conflict === false">
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
         <app-page-header>
@@ -40,7 +40,7 @@
         </div>
         <div class="col md-3">
           <span class="BC-Gov-15px-black-text">Ticket type:</span>&nbsp;<span class="text">{{
-            lastUpdatedDispute.ticketNumber.substring(0,1) == 'E' ? "Electronic Ticket" : "Intersection safety camera
+            lastUpdatedDispute.ticketNumber.substring(0,1) === 'E' ? "Electronic Ticket" : "Intersection safety camera
             ticket" }}</span>
         </div>
         <div class="col md-3">
@@ -60,10 +60,6 @@
                   <strong>Count {{ violationCount.count }}</strong>
                 </span>
               </div>
-            </div>
-            <div class="col-lg-2">
-              <small class="d-block"> Section</small>
-              <div class="text">{{ violationCount.section }}</div>
             </div>
             <div class="col-lg-6">
               <small class="d-block"> Description of offence </small>
@@ -157,25 +153,25 @@
                 <!-- Notice of dispute province/state -->
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
-                    <mat-label *ngIf="form.get('country').value=='Canada'">Province</mat-label>
-                    <mat-label *ngIf="form.get('country').value=='United States'">State</mat-label>
+                    <mat-label *ngIf="form.get('country').value==='Canada'">Province</mat-label>
+                    <mat-label *ngIf="form.get('country').value==='United States'">State</mat-label>
                     <mat-select formControlName="province"
-                      *ngIf="form.get('country').value == 'Canada' || form.get('country').value == 'United States'">
-                      <div *ngIf="form.get('country').value == 'Canada'">
+                      *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
+                      <div *ngIf="form.get('country').value === 'Canada'">
                         <mat-option value="British Columbia">British Columbia</mat-option>
                         <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
                         </mat-option>
                       </div>
-                      <div *ngIf="form.get('country').value == 'United States'">
+                      <div *ngIf="form.get('country').value === 'United States'">
                         <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}
                         </mat-option>
                       </div>
                     </mat-select>
                     <mat-label
-                      *ngIf="form.get('country').value!='United States' && form.get('country').value != 'Canada'">
+                      *ngIf="form.get('country').value!=='United States' && form.get('country').value !== 'Canada'">
                       Province/State</mat-label>
                     <input matInput formControlName="province"
-                      *ngIf="form.get('country').value != 'United States' && form.get('country').value != 'Canada'"
+                      *ngIf="form.get('country').value !== 'United States' && form.get('country').value !== 'Canada'"
                       maxlength="30" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
@@ -188,21 +184,21 @@
               <!-- Notice of dispute postal code -->
               <div class="col-md-6">
                 <mat-form-field class="w-100">
-                  <mat-label *ngIf="form.get('country').value =='Canada'">Postal code</mat-label>
-                  <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()"
-                    formControlName="postalCode" [showMaskTyped]="true" *ngIf="form.get('country').value=='Canada'" />
-                  <mat-label *ngIf="form.get('country').value=='United States'">Zip Code</mat-label>
+                  <mat-label *ngIf="form.get('country').value ==='Canada'">Postal code</mat-label>
+                  <input matInput mask="S0S 0S0" oninput="this.value = this.value.toUpperCase()" minlength="6"
+                    formControlName="postalCode" [showMaskTyped]="true" *ngIf="form.get('country').value==='Canada'" />
+                  <mat-label *ngIf="form.get('country').value==='United States'">Zip Code</mat-label>
                   <input matInput mask="00000" oninput="this.value = this.value.toUpperCase()"
                     formControlName="postalCode" [showMaskTyped]="true"
-                    *ngIf="form.get('country').value=='United States'" />
-                  <mat-label *ngIf="form.get('country').value!='United States' && form.get('country').value!='Canada'">
+                    *ngIf="form.get('country').value==='United States'" />
+                  <mat-label *ngIf="form.get('country').value!=='United States' && form.get('country').value!=='Canada'">
                     Postal/Zip Code</mat-label>
                   <input matInput maxLength="6" oninput="this.value = this.value.toUpperCase()"
                     formControlName="postalCode"
-                    *ngIf="form.get('country').value!='United States' && form.get('country').value != 'Canada'" />
+                    *ngIf="form.get('country').value!=='United States' && form.get('country').value !== 'Canada'" />
                   <mat-error *ngIf="form.get('postalCode').hasError('required')">{{ "error.required" | translate
                     }}</mat-error>
-                  <mat-error *ngIf="form.get('postalCode').hasError('pattern')">Must be a valid postal/zip code
+                  <mat-error *ngIf="form.get('postalCode').hasError('pattern') || form.get('postalCode').hasError('minlength') || form.get('postalCode').hasError('maxlength')">Must be a valid postal/zip code
                   </mat-error>
                 </mat-form-field>
               </div>
@@ -227,10 +223,10 @@
                 <mat-form-field class="w-100">
                   <mat-label>Phone number</mat-label>
                   <input matInput formControlName="homePhoneNumber" mask="(000) 000-0000"
-                    *ngIf="form.get('country').value == 'Canada' || form.get('country').value == 'United States'"
+                    *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'"
                     [showMaskTyped]="true" />
                   <input matInput formControlName="homePhoneNumber" mask="00000000000000000000"
-                    *ngIf="form.get('country').value != 'Canada' && form.get('country').value != 'United States'" />
+                    *ngIf="form.get('country').value !== 'Canada' && form.get('country').value !== 'United States'" />
                   <mat-error *ngIf="form.get('homePhoneNumber')?.hasError('required')">{{"error.required" |
                     translate}}
                   </mat-error>
@@ -275,9 +271,9 @@
                 <mat-form-field class="w-100">
                   <mat-label>DL number</mat-label>
                   <input matInput formControlName="driversLicenceNumber" mask="000000000"
-                    *ngIf="form.get('driversLicenceProvince').value == 'BC'" [showMaskTyped]="false" />
+                    *ngIf="form.get('driversLicenceProvince').value === 'BC'" [showMaskTyped]="false" />
                   <input matInput formControlName="driversLicenceNumber" maxlength="20"
-                    *ngIf="form.get('driversLicenceProvince').value != 'BC'" />
+                    *ngIf="form.get('driversLicenceProvince').value !== 'BC'" />
                   <mat-error *ngIf="form.get('driversLicenceNumber').hasError('required')">{{ "error.required" |
                     translate }}</mat-error>
                   <mat-error *ngIf="
@@ -300,7 +296,8 @@
       </div>
     </mat-expansion-panel>
     <app-ticket-request [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
-    <mat-expansion-panel [expanded]="true">
+    <!-- Notes to be added in a future enhancement -->
+    <!-- <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('notes')">
         <app-page-header>
           <ng-container subHeader>
@@ -311,18 +308,18 @@
         </app-page-header>
       </mat-expansion-panel-header><br />
       <mat-form-field style="width:100%">
-        <textarea matInput [formControl]="form.get('rejectedReason')">
+        <textarea matInput [formControl]="form.get('rejectedReason')" maxlength="256" readonly="true">
           </textarea>
       </mat-form-field>
-    </mat-expansion-panel>
+    </mat-expansion-panel> -->
     <div style="float: right; width: 100%;">
       <button class="large" mat-flat-button type="button" color="primary"
-        [disabled]="(lastUpdatedDispute.status != 'NEW' && lastUpdatedDispute.status != 'REJECTED') || this.form.invalid || this.form.touched"
+        [disabled]="(lastUpdatedDispute.status !== 'NEW' && lastUpdatedDispute.status !== 'REJECTED') || this.form.invalid || this.form.touched"
         (click)="approve()" style="background-color:  #2ba242;">
         Approve and submit to ARC
       </button>
       <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;"
-        [disabled]="lastUpdatedDispute.status != 'NEW' || this.form.invalid || this.form.touched" (click)="reject()">
+        [disabled]="lastUpdatedDispute.status !== 'NEW' || this.form.invalid || this.form.touched" (click)="reject()">
         Reject
       </button>
       <button class="large" mat-flat-button type="button" color="primary" (click)="cancel()">

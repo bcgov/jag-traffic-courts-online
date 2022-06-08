@@ -6,11 +6,11 @@ import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { DatePipe } from '@angular/common';
-import { DisputeView, DisputesService } from '../../services/disputes.service';
+import { Dispute, DisputeService } from '../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { ProvinceConfig, Config } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { Dispute, ViolationTicket, ViolationTicketCount } from 'app/api';
+import { ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -23,7 +23,7 @@ import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violat
   styleUrls: ['./ticket-info.component.scss'],
 })
 export class TicketInfoComponent implements OnInit {
-  @Input() public disputeInfo: DisputeView;
+  @Input() public disputeInfo: Dispute;
   @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
@@ -46,7 +46,6 @@ export class TicketInfoComponent implements OnInit {
   public errorThreshold: number = 0.800;
   public provincialCourtHearingLocationFlag: OCRMessageToDisplay;
 
-
   /**
    * @description
    * Whether to show the address line fields.
@@ -67,7 +66,7 @@ export class TicketInfoComponent implements OnInit {
     private dialog: MatDialog,
     private logger: LoggerService,
     public violationTicketService: ViolationTicketService,
-    private disputesService: DisputesService,
+    private disputeService: DisputeService,
     public mockConfigService: MockConfigService,
     public lookupsService: LookupsService,
     @Inject(Router) private router,
@@ -98,16 +97,16 @@ export class TicketInfoComponent implements OnInit {
       emailAddress: [null, [Validators.email, Validators.required]],
       surname: [null, [Validators.required]],
       givenNames: [null, [Validators.required]],
-      country: [null, [Validators.required]], 
+      country: [null, [Validators.required]],
       birthdate: [null, [Validators.required]], // Optional
       address: [null, [Validators.required]],
       city: [null, [Validators.required]],
       province: [null, [Validators.required, Validators.maxLength(30)]],
-      postalCode: [null, [Validators.required, Validators.maxLength(6)]], // space needs to be added back to the middle for display
+      postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
       driversLicenceNumber: [null, [Validators.required, Validators.maxLength(20)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       provincialCourtHearingLocation: [null, [Validators.required]],
-      rejectedReason: [null],
+      rejectedReason: [null, Validators.maxLength(256)],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
         provincialCourtHearingLocation: [null, [Validators.required]],
@@ -171,6 +170,10 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('driversLicenceNumber').addValidators([Validators.required]);
         this.form.get('driversLicenceProvince').addValidators([Validators.required]);
         this.form.get('violationTicket').get('driversLicenceProvince').addValidators([Validators.required]);
+      }
+
+      if (country == 'Canada') {
+        this.form.get('postalCode').addValidators([Validators.minLength(6)]);
       }
 
       this.form.get('postalCode').updateValueAndValidity();
@@ -301,7 +304,7 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.putDispute(tempDispute.id, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -336,7 +339,7 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = putDispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.putDispute(tempDispute.id, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -489,7 +492,7 @@ export class TicketInfoComponent implements OnInit {
     let tempDispute = dispute;
     tempDispute.violationTicket.violationTicketImage = null;
 
-    this.busy = this.disputesService.putDispute(dispute.id, tempDispute).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.putDispute(dispute.id, tempDispute).subscribe((response: Dispute) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -514,8 +517,11 @@ export class TicketInfoComponent implements OnInit {
 
   // send to api, on return update status
   validate(): void {
-    this.busy = this.disputesService.validateDispute(this.lastUpdatedDispute.id).subscribe({
-      next: response => { this.lastUpdatedDispute.status = "VALIDATED"; },
+    this.busy = this.disputeService.validateDispute(this.lastUpdatedDispute.id).subscribe({
+      next: response => {
+        this.lastUpdatedDispute.status = "VALIDATED";
+        this.form.controls.violationTicket.disable();
+      },
       error: err => { },
       complete: () => { }
     });
@@ -537,11 +543,13 @@ export class TicketInfoComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
 
-
           // submit dispute and return to TRM home
-          this.busy = this.disputesService.submitDispute(this.lastUpdatedDispute.id).subscribe(
+          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe(
             {
-              next: response => { this.onBack(); this.lastUpdatedDispute.status = 'PROCESSING'; },
+              next: response => {
+                this.lastUpdatedDispute.status = 'PROCESSING';
+                this.onBack();
+              },
               error: err => { },
               complete: () => { }
             }
@@ -560,16 +568,19 @@ export class TicketInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
+      message: this.form.get('rejectedReason').value
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
-      .subscribe((action: any) => {
-        if (action.output.response) {
-
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home 
-          this.busy = this.disputesService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
+          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
-              this.onBack(); this.lastUpdatedDispute.status = 'REJECTED';
+              this.onBack();
+              this.lastUpdatedDispute.status = 'REJECTED';
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
             },
             error: err => { },
@@ -588,24 +599,27 @@ export class TicketInfoComponent implements OnInit {
       actionTextKey: "Send cancellation notification",
       actionType: "warn",
       cancelTextKey: "Go back",
-      icon: "error_outline"
+      icon: "error_outline",
+      message: this.form.get('rejectedReason').value
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
-      .subscribe((action: any) => {
-        if (action.output.response) {
-
+      .subscribe((action?: any) => {
+        if (action?.output?.response) {
+          this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
+          this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // no need to pass back byte array with image
           let tempDispute = this.lastUpdatedDispute;
           delete tempDispute.violationTicket.violationTicketImage;
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputesService.putDispute(tempDispute.id, tempDispute).subscribe({
+          this.busy = this.disputeService.putDispute(tempDispute.id, tempDispute).subscribe({
             next: response => {
-              this.disputesService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
+              this.disputeService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
                 next: response => {
-                  this.onBack(); this.lastUpdatedDispute.status = 'CANCELLED';
+                  this.lastUpdatedDispute.status = 'CANCELLED';
                   this.lastUpdatedDispute.rejectedReason = action.output.reason;
+                  this.onBack();
                 },
                 error: err => { },
                 complete: () => { }
@@ -626,7 +640,7 @@ export class TicketInfoComponent implements OnInit {
     this.initialDisputeValues = null;
     this.lastUpdatedDispute = null;
 
-    this.busy = this.disputesService.getDispute(this.disputeInfo.id)
+    this.busy = this.disputeService.getDispute(this.disputeInfo.id)
       .subscribe((response: Dispute) => {
         this.retrieving = false;
         this.logger.info(
@@ -690,10 +704,12 @@ export class TicketInfoComponent implements OnInit {
         this.onCountryChange(this.form.get('country').value);
         this.onNoticeOfDisputeDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
         this.onViolationTicketDLProvinceChange(this.lastUpdatedDispute.violationTicket.driversLicenceProvince);
-      },
-        (error: any) => {
-          this.retrieving = false;
-          if (error.status == 409) this.conflict = true;
-        });
+        if (this.lastUpdatedDispute.status !== "NEW") {
+          this.form.controls.violationTicket.disable();
+        }
+      }, (error: any) => {
+        this.retrieving = false;
+        if (error.status == 409) this.conflict = true;
+      });
   }
 }

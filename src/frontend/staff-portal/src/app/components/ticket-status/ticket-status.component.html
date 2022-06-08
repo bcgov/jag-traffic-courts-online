@@ -1,5 +1,5 @@
 <div class="ticket-status BC-Gov-15px-black-text" *ngIf="dispute">
-    <div>Request submitted date: <span>{{dispute.submittedDate |date:"EEEE, MMMM d"}}{{(dispute.submittedDate|date:"d")|dateSuffix}}{{dispute.submittedDate|date:",&nbsp;y"}}</span></div>
+    <div>Request submitted date: <span>{{ dispute.submittedDate | customDate:"EEEE, MMMM ddd y"}}</span></div>
     <div>Status: <span>{{dispute.status}}</span></div>
     <div>Assigned to: <span>{{dispute.assignedTo ? dispute.assignedTo : "Unassigned"}}</span></div>
 </div>

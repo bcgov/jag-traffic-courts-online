@@ -1,6 +1,6 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DialogDefaultOptions } from '../dialog-default-options.model';
 import { DialogOptions } from '../dialog-options.model';
 import { DIALOG_DEFAULT_OPTION } from '../dialogs-properties.provider';
@@ -30,8 +30,9 @@ export class ConfirmReasonDialogComponent {
 
     this.dialogContentOutput = null;
 
+    console.log(this.options);
     this.reasonForm = this.fb.group({
-      reason: null
+      reason: [this.options.message, Validators.maxLength(256)]
     })
   }
 
