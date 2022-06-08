@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DisputesService, DisputeView } from 'app/services/disputes.service';
-import { DisputeStatus } from 'app/api/model/disputeStatus.model';
+import { DisputeService, Dispute } from 'app/services/dispute.service';
+import { DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { throwToolbarMixedModesError } from '@angular/material/toolbar';
@@ -15,7 +15,7 @@ import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   public decidePopup = '';
-  public disputeInfo: DisputeView;
+  public disputeInfo: Dispute;
   busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -30,12 +30,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'systemDetectedOcrIssues',
     'assignedTo',
   ];
-  disputes: DisputeView[] = [];
+  disputes: Dispute[] = [];
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
   constructor(
-    public disputesService: DisputesService,
+    public disputeService: DisputeService,
     private logger: LoggerService,
   ) { }
 
@@ -46,7 +46,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.getAllDisputes();
   }
 
-  isNew(d: DisputeView): boolean {
+  isNew(d: Dispute): boolean {
     return d.status == DisputeStatus.New;
   }
 
@@ -58,20 +58,20 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.disputes;
 
     // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a: DisputeView, b: DisputeView) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
+    this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
 
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record: DisputeView, filter) {
+    this.dataSource.filterPredicate = function (record: Dispute, filter) {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
-    this.busy = this.disputesService.getDisputes().subscribe((response) => {
+    this.busy = this.disputeService.getDisputes().subscribe((response) => {
       this.logger.info(
         'TicketPageComponent::getAllDisputes response',
         response
       );
 
-      this.disputesService.disputes$.next(response);
+      this.disputeService.disputes$.next(response);
       response.forEach(d => {
         if (d.status != "CANCELLED") { // do not show cancelled
           var newDispute = {
@@ -108,10 +108,10 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: DisputeView, b: DisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: DisputeView, filter) {
+      this.dataSource.filterPredicate = function (record: Dispute, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
     });
@@ -188,8 +188,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter((x: DisputeView) => x.status == DisputeStatus.New))
-      return this.dataSource.data.filter((x: DisputeView) => x.status == DisputeStatus.New).length;
+    if (this.dataSource.data.filter((x: Dispute) => x.status == DisputeStatus.New))
+      return this.dataSource.data.filter((x: Dispute) => x.status == DisputeStatus.New).length;
     else return 0;
   }
 

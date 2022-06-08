@@ -1,31 +1,16 @@
-import {
-  HttpClient,
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule, APP_INITIALIZER } from '@angular/core';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { BackendHttpInterceptor } from '@core/interceptors/backend-http.interceptor';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
-import { Configuration } from './api/configuration';
-// import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
+import { Configuration } from './api';
+import { SharedModule, } from './shared/shared.module';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
-import {
-  TranslateModule,
-  TranslateLoader,
-  TranslateService,
-} from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
-import { MatStepperModule } from '@angular/material/stepper';
-import { NgxMaterialModule } from './shared/modules/ngx-material/ngx-material.module';
-import { MatSortModule } from '@angular/material/sort';
-import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 
 import localeEn from '@angular/common/locales/en';
@@ -34,8 +19,8 @@ import { registerLocaleData } from '@angular/common';
 import { CoreModule } from './core/core.module';
 
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { CdkAccordionModule} from '@angular/cdk/accordion';
-import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
@@ -48,9 +33,7 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
-import { MatNativeDateModule, MAT_DATE_FORMATS } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -74,24 +57,18 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketInfoComponent,
     ContactInfoComponent,
     TicketStatusComponent,
-    TicketRequestComponent
+    TicketRequestComponent,
+    JjWorkbenchDashboardComponent,
   ],
   imports: [
     CommonModule,
     BrowserModule,
-    MatNativeDateModule,
-    MatDatepickerModule,
     AppRoutingModule,
     CoreModule,
     SharedModule,
     ConfigModule,
     HttpClientModule,
-    MatStepperModule,
-    MatAutocompleteModule,
     AuthConfigModule,
-    MatSortModule,
-    MatIconModule,
-    MatCheckboxModule,
     CdkAccordionModule,
     BrowserAnimationsModule,
     NgxMaterialTimepickerModule,
@@ -106,19 +83,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       extend: true,
     }),
   ],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  exports: [NgBusyModule, TranslateModule, NgxMaterialModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  exports: [NgBusyModule, TranslateModule],
   providers: [
     CurrencyPipe,
     DatePipe,
     MockConfigService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
-    // AppConfigService,
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: BackendHttpInterceptor,
-    //   multi: true,
-    // },
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }

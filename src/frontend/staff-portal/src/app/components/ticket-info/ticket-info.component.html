@@ -348,7 +348,7 @@
                 {{ flagsForm.get('disputantOcrIssuesDescription').value ?
                 flagsForm.get('disputantOcrIssuesDescription').value : 'None' }}
               </div><br /><br />
-              <ng-container subHeader *ngIf="lastUpdatedDispute == 'NEW'">
+              <ng-container subHeader *ngIf="lastUpdatedDispute.status == 'NEW'">
                 <h3>System flags</h3>
               </ng-container>
               <div class="col-lg-12" *ngIf="lastUpdatedDispute.status == 'NEW'">
