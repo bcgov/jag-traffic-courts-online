@@ -119,7 +119,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
 		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW and the rejected reason must be <= 256 characters. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed."),
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/reject")
@@ -251,7 +251,7 @@ public class DisputeController {
 		logger.debug("UnassignDisputes called");
 		disputeService.unassignDisputes();
 	}
-	
+
 	/**
 	 * GET endpoint that retrieves the disputes filtered by JJ assigned
 	 *
@@ -260,7 +260,7 @@ public class DisputeController {
 	 */
 	@GetMapping("/disputes/jj")
 	@Operation(summary = "Returns all disputes that have the specified JJ assigned.")
-	public ResponseEntity<List<Dispute>> getDisputesByJjAssigned(@RequestParam String jjAssigned) {		
+	public ResponseEntity<List<Dispute>> getDisputesByJjAssigned(@RequestParam String jjAssigned) {
 		List<Dispute> allJjAssignedDisputes = disputeService.getAllDisputesByJjAssigned(jjAssigned);
 		return new ResponseEntity<List<Dispute>>(allJjAssignedDisputes, HttpStatus.OK);
 	}
