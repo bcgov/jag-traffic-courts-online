@@ -33,7 +33,6 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
-import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -58,7 +57,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactInfoComponent,
     TicketStatusComponent,
     TicketRequestComponent,
-    JjWorkbenchDashboardComponent,
   ],
   imports: [
     CommonModule,
