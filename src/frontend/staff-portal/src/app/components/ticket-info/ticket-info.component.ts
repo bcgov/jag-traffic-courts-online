@@ -204,7 +204,7 @@ export class TicketInfoComponent implements OnInit {
   }
 
   public onBack() {
-    this.backTicketList.emit();
+    window.location.reload();
   }
 
   // violation ticket borders only for new status 
