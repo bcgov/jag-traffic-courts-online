@@ -6,7 +6,7 @@
         <h1 class="BC-Gov-32px-blue-text">Welcome, {{ fullName }}</h1>
         <p class="BC-Gov-15px-black-text">
           <span style="float:right">
-            {{todayDate|date:"EEEE, MMMM d"}}{{(todayDate|date:"d")|dateSuffix}}{{todayDate|date:",&nbsp;y"}}
+            {{ todayDate | customDate:"EEEE, MMMM ddd y" }}
           </span>
         </p>
         <hr style="opacity: 1; color: #fcba19" />

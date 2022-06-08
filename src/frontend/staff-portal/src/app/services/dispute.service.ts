@@ -1,33 +1,32 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Dispute } from 'app/api/model/dispute.model';
-import { DisputeService } from 'app/api/api/dispute.service';
+import { DisputeService as DisputeApiService, Dispute as DisputeApiModel } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
-export interface IDisputesService {
-  disputes$: BehaviorSubject<Dispute[]>;
-  disputes: Dispute[];
-  getDisputes(): Observable<Dispute[]>;
+export interface IDisputeService {
+  disputes$: BehaviorSubject<DisputeApiModel[]>;
+  disputes: DisputeApiModel[];
+  getDisputes(): Observable<DisputeApiModel[]>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class DisputesService implements IDisputesService {
-  private _disputes: BehaviorSubject<Dispute[]>;
-  private _dispute: BehaviorSubject<Dispute>;
+export class DisputeService implements IDisputeService {
+  private _disputes: BehaviorSubject<DisputeApiModel[]>;
+  private _dispute: BehaviorSubject<DisputeApiModel>;
 
 
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private disputeService: DisputeService
+    private disputeApiService: DisputeApiService
   ) {
-    this._disputes = new BehaviorSubject<Dispute[]>(null);
+    this._disputes = new BehaviorSubject<DisputeApiModel[]>(null);
   }
 
   /**
@@ -35,18 +34,18 @@ export class DisputesService implements IDisputesService {
      *
      * @param none
      */
-  public getDisputes(): Observable<Dispute[]> {
+  public getDisputes(): Observable<DisputeApiModel[]> {
 
-    return this.disputeService.apiDisputeDisputesGet("CANCELLED")
+    return this.disputeApiService.apiDisputeDisputesGet("CANCELLED")
       .pipe(
-        map((response: Dispute[]) => {
-          this.logger.info('DisputesService::getDisputes', response)
+        map((response: DisputeApiModel[]) => {
+          this.logger.info('DisputeService::getDisputes', response)
           return response ? response : null
         }),
         catchError((error: any) => {
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
-            'DisputesService::getDisputes error has occurred: ',
+            'DisputeService::getDisputes error has occurred: ',
             error
           );
           throw error;
@@ -54,11 +53,11 @@ export class DisputesService implements IDisputesService {
       );
   }
 
-  public get disputes$(): BehaviorSubject<Dispute[]> {
+  public get disputes$(): BehaviorSubject<DisputeApiModel[]> {
     return this._disputes;
   }
 
-  public get disputes(): Dispute[] {
+  public get disputes(): DisputeApiModel[] {
     return this._disputes.value;
   }
 
@@ -67,19 +66,19 @@ export class DisputesService implements IDisputesService {
    *
    * @param disputeId
    */
-  public getDispute(disputeId: string): Observable<Dispute> {
+  public getDispute(disputeId: string): Observable<DisputeApiModel> {
 
-    return this.disputeService.apiDisputeDisputeIdGet(disputeId)
+    return this.disputeApiService.apiDisputeDisputeIdGet(disputeId)
       .pipe(
-        map((response: Dispute) => {
-          this.logger.info('DisputesService::getDispute', response)
+        map((response: DisputeApiModel) => {
+          this.logger.info('DisputeService::getDispute', response)
           return response ? response : null
         }),
         catchError((error: any) => {
           var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.logger.error(
-            'DisputesService::getDispute error has occurred: ',
+            'DisputeService::getDispute error has occurred: ',
             error
           );
           throw error;
@@ -87,11 +86,11 @@ export class DisputesService implements IDisputesService {
       );
   }
 
-  public get dispute$(): BehaviorSubject<Dispute> {
+  public get dispute$(): BehaviorSubject<DisputeApiModel> {
     return this._dispute;
   }
 
-  public get dispute(): Dispute {
+  public get dispute(): DisputeApiModel {
     return this._dispute.value;
   }
 
@@ -100,12 +99,12 @@ export class DisputesService implements IDisputesService {
      *
      * @param disputeId
      */
-  public putDispute(disputeId: string, dispute: Dispute): Observable<Dispute> {
+  public putDispute(disputeId: string, dispute: DisputeApiModel): Observable<DisputeApiModel> {
 
-    return this.disputeService.apiDisputeDisputeIdPut(disputeId, dispute)
+    return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
         map((response: Dispute) => {
-          this.logger.info('DisputesService::putDispute', response)
+          this.logger.info('DisputeService::putDispute', response)
           return response ? response : null
         }),
         catchError((error: any) => {
@@ -113,7 +112,7 @@ export class DisputesService implements IDisputesService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
-            'DisputesService::putDispute error has occurred: ',
+            'DisputeService::putDispute error has occurred: ',
             error
           );
           throw error;
@@ -126,12 +125,12 @@ export class DisputesService implements IDisputesService {
      *
      * @param disputeId
      */
-  public cancelDispute(disputeId: string): Observable<Dispute> {
+  public cancelDispute(disputeId: string): Observable<DisputeApiModel> {
 
-    return this.disputeService.apiDisputeDisputeIdCancelPut(disputeId)
+    return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId)
       .pipe(
         map((response: any) => {
-          this.logger.info('DisputesService::cancelDispute', response)
+          this.logger.info('DisputeService::cancelDispute', response)
           return response ? response : null
         }),
         catchError((error: any) => {
@@ -139,7 +138,7 @@ export class DisputesService implements IDisputesService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
-            'DisputesService::cancelDispute error has occurred: ',
+            'DisputeService::cancelDispute error has occurred: ',
             error
           );
           throw error;
@@ -152,12 +151,12 @@ export class DisputesService implements IDisputesService {
    *
    * @param disputeId
    */
-  public validateDispute(disputeId: string): Observable<Dispute> {
+  public validateDispute(disputeId: string): Observable<DisputeApiModel> {
 
-    return this.disputeService.apiDisputeDisputeIdValidatePut(disputeId)
+    return this.disputeApiService.apiDisputeDisputeIdValidatePut(disputeId)
       .pipe(
         map((response: any) => {
-          this.logger.info('DisputesService::validateDispute', response)
+          this.logger.info('DisputeService::validateDispute', response)
 
           return response ? response : null
         }),
@@ -166,7 +165,7 @@ export class DisputesService implements IDisputesService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
-            'DisputesService::validateDispute error has occurred: ',
+            'DisputeService::validateDispute error has occurred: ',
             error
           );
           throw error;
@@ -179,12 +178,12 @@ export class DisputesService implements IDisputesService {
    *
    * @param disputeId
    */
-  public rejectDispute(disputeId: string, rejectedReason: string): Observable<Dispute> {
+  public rejectDispute(disputeId: string, rejectedReason: string): Observable<DisputeApiModel> {
 
-    return this.disputeService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
+    return this.disputeApiService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
       .pipe(
         map((response: any) => {
-          this.logger.info('DisputesService::rejectDispute', response)
+          this.logger.info('DisputeService::rejectDispute', response)
 
           return response ? response : null
         }),
@@ -193,7 +192,7 @@ export class DisputesService implements IDisputesService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
-            'DisputesService::rejectDispute error has occurred: ',
+            'DisputeService::rejectDispute error has occurred: ',
             error
           );
           throw error;
@@ -206,12 +205,12 @@ export class DisputesService implements IDisputesService {
  *
  * @param disputeId
  */
-  public submitDispute(disputeId: string): Observable<Dispute> {
+  public submitDispute(disputeId: string): Observable<DisputeApiModel> {
 
-    return this.disputeService.apiDisputeDisputeIdSubmitPut(disputeId)
+    return this.disputeApiService.apiDisputeDisputeIdSubmitPut(disputeId)
       .pipe(
         map((response: any) => {
-          this.logger.info('DisputesService::submitDispute', response)
+          this.logger.info('DisputeService::submitDispute', response)
           return response ? response : null
         }),
         catchError((error: any) => {
@@ -219,7 +218,7 @@ export class DisputesService implements IDisputesService {
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
-            'DisputesService::submitDispute error has occurred: ',
+            'DisputeService::submitDispute error has occurred: ',
             error
           );
           throw error;
@@ -228,7 +227,7 @@ export class DisputesService implements IDisputesService {
   }
 }
 
-export interface DisputeView extends Dispute {
+export interface Dispute extends DisputeApiModel {
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined

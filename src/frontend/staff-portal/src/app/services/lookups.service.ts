@@ -1,8 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Statute } from 'app/api/model/statute.model';
-import { LookupService } from 'app/api/api/lookup.service';
+import { Statute, LookupService } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -18,24 +17,24 @@ export interface ILookupsService {
 })
 export class LookupsService implements ILookupsService {
   private _statutes: BehaviorSubject<Statute[]>;
-  
+
 
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
     private lookupService: LookupService
-  ) { 
+  ) {
     this._statutes = new BehaviorSubject<Statute[]>(null);
     this.getStatutes();
   }
 
-/**
-   * Get the statutes from Redis.
-   *
-   * @param none
-   */
- public getStatutes(): Observable<StatuteView[]> {
+  /**
+     * Get the statutes from Redis.
+     *
+     * @param none
+     */
+  public getStatutes(): Observable<StatuteView[]> {
 
     return this.lookupService.apiLookupGet()
       .pipe(
@@ -43,8 +42,8 @@ export class LookupsService implements ILookupsService {
           response ? response : null
         ),
         map((statutes: StatuteView[]) => {
-          statutes.forEach(resp => {resp.__statuteString = this.get__statuteString(resp)});
-          statutes.sort((a,b) => {if (a.__statuteString < b.__statuteString) return -1; })
+          statutes.forEach(resp => { resp.__statuteString = this.get__statuteString(resp) });
+          statutes.sort((a, b) => { if (a.__statuteString < b.__statuteString) return -1; })
           return statutes;
         }),
         tap((statutes) =>
