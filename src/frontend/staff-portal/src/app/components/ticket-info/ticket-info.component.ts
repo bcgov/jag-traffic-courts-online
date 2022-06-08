@@ -547,7 +547,15 @@ export class TicketInfoComponent implements OnInit {
           // submit dispute and return to TRM home
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe(
             {
-              next: response => { this.onBack(); this.lastUpdatedDispute.status = 'PROCESSING'; },
+              next: response => {
+                this.lastUpdatedDispute.status = 'PROCESSING';
+                // update rejected reason so it is not loast
+                this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
+                  next: response => { this.onBack() },
+                  error: err => { },
+                  complete: () => { }
+                });
+              },
               error: err => { },
               complete: () => { }
             }
@@ -577,7 +585,7 @@ export class TicketInfoComponent implements OnInit {
           // udate the reason entered, reject dispute and return to TRM home 
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
-              this.onBack(); 
+              this.onBack();
               this.lastUpdatedDispute.status = 'REJECTED';
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
             },
@@ -617,7 +625,7 @@ export class TicketInfoComponent implements OnInit {
                 next: response => {
                   this.lastUpdatedDispute.status = 'CANCELLED';
                   this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack(); 
+                  this.onBack();
                 },
                 error: err => { },
                 complete: () => { }

@@ -140,7 +140,15 @@ export class ContactInfoComponent implements OnInit {
         if (action) {
           // submit dispute and return to TRM home
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe({
-            next: response => { this.onBack(); },
+            next: response => { 
+              this.lastUpdatedDispute.status = 'PROCESSING';
+              // update rejected reason so it is not loast
+              this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
+                next: response => { this.onBack() },
+                error: err => {},
+                complete: ()=> {}
+              });
+            },
             error: err => { },
             complete: () => { }
           });
@@ -157,7 +165,7 @@ export class ContactInfoComponent implements OnInit {
       actionType: "warn",
       cancelTextKey: "Go back",
       icon: "error_outline",
-      message: this.form.get('rejectedReason').value 
+      message: this.form.get('rejectedReason').value
     };
     this.dialog.open(ConfirmReasonDialogComponent, { data }).afterClosed()
       .subscribe((action?: any) => {
@@ -167,7 +175,7 @@ export class ContactInfoComponent implements OnInit {
 
           // udate the reason entered, reject dispute and return to TRM home 
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
-            next: response => { 
+            next: response => {
               this.lastUpdatedDispute.status = 'REJECTED';
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
               this.onBack();
@@ -200,10 +208,10 @@ export class ContactInfoComponent implements OnInit {
           this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
             next: response => {
               this.disputeService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
-                next: response => { 
+                next: response => {
                   this.lastUpdatedDispute.status = 'CANCELLED';
                   this.lastUpdatedDispute.rejectedReason = action.output.reason;
-                  this.onBack(); 
+                  this.onBack();
                 },
                 error: err => { },
                 complete: () => { }
