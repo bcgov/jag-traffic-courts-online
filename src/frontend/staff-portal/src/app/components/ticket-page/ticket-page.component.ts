@@ -40,8 +40,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     private oidcSecurityService: OidcSecurityService
   ) { 
     oidcSecurityService.userData$.subscribe( (userInfo: any) => {
-      this.IDIRLogin = userInfo?.userData?.preferred_username;
-      this.IDIRLogin = this.IDIRLogin.split("@")[0]; // split at @ sign and take first part
+      this.IDIRLogin = userInfo?.userData?.preferred_username?.split("@")[0]; // split at @ sign and take first part
     });
   }
 
