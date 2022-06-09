@@ -270,7 +270,9 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
-      if ((this.dateDiff(this.ticket.issued_date) <= 30 && this.ticketType == ticketTypes.ELECTRONIC_TICKET) || (this.dateDiff(this.ticket.issued_date) <= 45 && this.ticketType == ticketTypes.CAMERA_TICKET)) {
+      let dateDiff = this.dateDiff(this.ticket.issued_date);
+      if ((dateDiff <= 30 && (this.ticketType === ticketTypes.ELECTRONIC_TICKET || this.ticketType === ticketTypes.HANDWRITTEN_TICKET))
+        || (dateDiff <= 45 && this.ticketType === ticketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
@@ -349,7 +351,7 @@ export class ViolationTicketService {
   }
 
   private openInValidTicketDateDialog() {
-    return this.openImageTicketNotFoundDialog(`Your ticket is over ${this.ticketType === ticketTypes.CAMERA_TICKET ? '45' :'30'} days old`, "error4");
+    return this.openImageTicketNotFoundDialog(`Your ticket is over ${this.ticketType === ticketTypes.CAMERA_TICKET ? '45' : '30'} days old`, "error4");
   }
 
   private dateDiff(givenDate: string) {
