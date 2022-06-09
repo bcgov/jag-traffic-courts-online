@@ -229,6 +229,7 @@
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
+                            (keyup)="onFullDescription2Keyup()"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-autocomplete #auto2="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(2, initialDisputeValues.violationTicket)">{{
@@ -266,6 +267,7 @@
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"
+                            (keyup)="onFullDescription3Keyup()"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-autocomplete #auto3="matAutocomplete" panelWidth="750">
                             <mat-option [value]="getCountLegalParagraphing(3, initialDisputeValues.violationTicket)">{{
@@ -559,6 +561,7 @@
                     <mat-label>Prov/State of DL</mat-label>
                     <mat-select formControlName="driversLicenceProvince"
                       (selectionChange)="onNoticeOfDisputeDLProvinceChange($event.value)">
+                      <mat-option value="BC">British Columbia</mat-option>
                       <mat-option *ngFor="let province of provinces" [value]="province.code">{{ province.name }}
                       </mat-option>
                       <mat-option *ngFor="let state of states" [value]="state.name">{{ state.name }}</mat-option>

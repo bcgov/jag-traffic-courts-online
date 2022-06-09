@@ -5,3 +5,8 @@ codetable:
 logging:
   level:
     ca.bc.gov.open.jag.tco.oracledataapi: DEBUG
+    
+spring:
+  sql:
+    init:
+      mode: never

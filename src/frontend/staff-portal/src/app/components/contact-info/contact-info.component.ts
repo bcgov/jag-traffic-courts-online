@@ -277,7 +277,7 @@ export class ContactInfoComponent implements OnInit {
   }
 
   public onBack() {
-    this.backTicketList.emit();
+    window.location.reload();
   }
 
   public handleCollapse(name: string) {
