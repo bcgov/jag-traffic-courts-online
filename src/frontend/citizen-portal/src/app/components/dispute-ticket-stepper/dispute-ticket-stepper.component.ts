@@ -119,8 +119,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
     });
-    this.form.get('country').setValue('Canada');
-
+    this.form.get("country").setValue("Canada");
+    
     // take info from ticket, convert dl number to string
     Object.keys(this.ticket).forEach(key => {
       this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
