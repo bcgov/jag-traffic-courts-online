@@ -12,11 +12,20 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
 @Service
 public class JJDisputeService {
-	
+
 	private Logger logger = LoggerFactory.getLogger(DisputeService.class);
 
 	@Autowired
 	JJDisputeRepository jjDisputeRepository;
+
+	/**
+	 * Retrieves a {@link JJDispute} record by ID, delegating to CrudRepository
+	 * @param ticketNumber the id (primary key) of the JJDispute to retrieve
+	 * @return
+	 */
+	public JJDispute getJJDisputeById(String ticketNumber) {
+		return jjDisputeRepository.findById(ticketNumber).orElseThrow();
+	}
 
 	/**
 	 * Retrieves all {@link JJDispute} records, delegating to CrudRepository

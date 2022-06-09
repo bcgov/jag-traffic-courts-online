@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,6 +10,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,15 +27,17 @@ import lombok.Setter;
 @Table
 @Getter
 @Setter
+@Builder(toBuilder = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class JJDispute extends Auditable<String>{
-	
+
     /**
      * The violation ticket number as unique identifier.
      */
     @Id
     private String ticketNumber;
-    
+
     /**
      * The date and time the violation ticket was issued.
      */
@@ -40,21 +45,21 @@ public class JJDispute extends Auditable<String>{
     @Schema(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date violationDate;
-    
+
     /**
      * The given name and last name of the disputant.
      */
     @Column
     @Schema(nullable = true)
     private String disputantName;
-    
+
     /**
      * The enforcement officer associated to the disputed violation ticket.
      */
     @Column
     @Schema(nullable = true)
     private String enforcementOfficer;
-    
+
     /**
      * The police detachment location.
      */
@@ -68,14 +73,14 @@ public class JJDispute extends Auditable<String>{
     @Column
     @Schema(nullable = true)
     private String courthouseLocation;
-    
+
 	/**
 	 * The ID of the Staff whom the dispute is assigned to be reviewed on JJ Workbench.
 	 */
 	@Column
 	@Schema(nullable = true)
 	private String jjAssignedTo;
-	
+
 	/**
 	 * The ID of the jj group whom the dispute is assigned to be listed on JJ Workbench.
 	 */

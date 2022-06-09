@@ -252,17 +252,4 @@ public class DisputeController {
 		disputeService.unassignDisputes();
 	}
 
-	/**
-	 * GET endpoint that retrieves the disputes filtered by JJ assigned
-	 *
-	 * @param jjAssigned
-	 * @return list of all disputes filtered by JJ assigned
-	 */
-	@GetMapping("/disputes/jj")
-	@Operation(summary = "Returns all disputes that have the specified JJ assigned.")
-	public ResponseEntity<List<Dispute>> getDisputesByJjAssigned(@RequestParam String jjAssigned) {
-		List<Dispute> allJjAssignedDisputes = disputeService.getAllDisputesByJjAssigned(jjAssigned);
-		return new ResponseEntity<List<Dispute>>(allJjAssignedDisputes, HttpStatus.OK);
-	}
-
 }
