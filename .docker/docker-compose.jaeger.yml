@@ -28,5 +28,6 @@ services:
   oracle-data-api:
     environment:
       OTEL_EXPORTER_JAEGER_ENDPOINT: ${OTEL_EXPORTER_JAEGER_ENDPOINT:-http://jaeger:14250}
+      SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-true}
     depends_on: [jaeger]
 
