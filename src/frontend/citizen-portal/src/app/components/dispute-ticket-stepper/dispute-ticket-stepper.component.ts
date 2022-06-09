@@ -21,6 +21,7 @@ import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { FormErrorStateMatcher } from "@shared/directives/form-error-state-matcher.directive";
+import { cloneDeep } from "lodash";
 
 @Component({
   selector: "app-dispute-ticket-stepper",
@@ -105,8 +106,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }
     this.ticketType = this.violationTicketService.ticketType;
 
-    this.provinces = this.config.provinces.filter(x => x.countryCode == 'CA' && x.code != 'BC');
-    this.states = this.config.provinces.filter(x => x.countryCode == 'US');
+    this.provinces = this.config.provinces.filter(x => x.countryCode == "CA" && x.code != "BC");
+    this.states = this.config.provinces.filter(x => x.countryCode == "US");
 
     // build inner object array before the form
     let countArray = [];
@@ -119,13 +120,12 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.form = this.formBuilder.group({
       ...this.ticketFormFields,
     });
-    this.form.get("country").setValue("Canada");
-    
+
     // take info from ticket, convert dl number to string
     Object.keys(this.ticket).forEach(key => {
       this.ticket[key] && this.form.get(key)?.patchValue(this.ticket[key]);
     });
-    this.ticket.drivers_licence_number && this.form.controls['drivers_licence_number'].setValue(this.ticket.drivers_licence_number.toString());
+    this.ticket.drivers_licence_number && this.form.controls["drivers_licence_number"].setValue(this.ticket.drivers_licence_number.toString());
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
 
     this.countIndexes = this.ticket.counts.map(i => i.count);
@@ -152,48 +152,46 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     const stepElement = document.getElementById(stepId);
     if (stepElement) {
       setTimeout(() => {
-        stepElement.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
+        stepElement.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
       }, 250);
     }
   }
 
   public onCountryChange(country) {
-
     setTimeout(() => {
-      this.form.get('postal_code').setValidators([Validators.maxLength(6)]);
-      this.form.get('province').setValidators([Validators.maxLength(30)]);
-      this.form.get('home_phone_number').setValidators([Validators.maxLength(20)]);
-      this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
-      this.form.get('drivers_licence_province').setValidators([Validators.maxLength(30)]);
+      this.form.get("postal_code").setValidators([Validators.maxLength(6)]);
+      this.form.get("province").setValidators([Validators.maxLength(30)]);
+      this.form.get("home_phone_number").setValidators([Validators.maxLength(20)]);
+      this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
+      this.form.get("drivers_licence_province").setValidators([Validators.maxLength(30)]);
 
-      if (country == 'Canada' || country == 'United States') {
-        this.form.get('province').addValidators([Validators.required]);
-        this.form.get('postal_code').addValidators([Validators.required]);
-        this.form.get('home_phone_number').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('drivers_licence_number').addValidators([Validators.required]);
-        this.form.get('drivers_licence_province').addValidators([Validators.required]);
+      if (country === "Canada" || country === "United States") {
+        this.form.get("province").addValidators([Validators.required]);
+        this.form.get("postal_code").addValidators([Validators.required]);
+        this.form.get("home_phone_number").addValidators([Validators.required, FormControlValidators.phone]);
+        this.form.get("drivers_licence_number").addValidators([Validators.required]);
+        this.form.get("drivers_licence_province").addValidators([Validators.required]);
       }
 
-      this.form.get('postal_code').updateValueAndValidity();
-      this.form.get('province').updateValueAndValidity();
-      this.form.get('home_phone_number').updateValueAndValidity();
-      this.form.get('drivers_licence_number').updateValueAndValidity();
-      this.form.get('drivers_licence_province').updateValueAndValidity();
+      this.form.get("postal_code").updateValueAndValidity();
+      this.form.get("province").updateValueAndValidity();
+      this.form.get("home_phone_number").updateValueAndValidity();
+      this.form.get("drivers_licence_number").updateValueAndValidity();
+      this.form.get("drivers_licence_province").updateValueAndValidity();
     }, 0);
   }
 
   public onDLProvinceChange(province) {
-
     setTimeout(() => {
-      if (province == 'BC') {
-        this.form.get('drivers_licence_number').setValidators([Validators.maxLength(9)])
+      if (province == "BC") {
+        this.form.get("drivers_licence_number").setValidators([Validators.maxLength(9)])
       } else {
-        this.form.get('drivers_licence_number').setValidators([Validators.maxLength(20)]);
+        this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
       }
-      if (this.form.get('country').value === 'United States' || this.form.get('country').value === 'Canada') {
-        this.form.get('drivers_licence_number').addValidators([Validators.required]);
+      if (this.form.get("country").value === "United States" || this.form.get("country").value === "Canada") {
+        this.form.get("drivers_licence_number").addValidators([Validators.required]);
       }
-      this.form.get('drivers_licence_number').updateValueAndValidity();
+      this.form.get("drivers_licence_number").updateValueAndValidity();
     }, 0)
   }
 
@@ -257,7 +255,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
   private setAdditional() {
     this.getCountsActions();
-    let fields = { ...this.additionFormFields };
+    let fields = cloneDeep(this.additionFormFields);
     if (this.countsActions.request_reduction.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
       fields.fine_reduction_reason[1].push(Validators.required);
     }
@@ -269,8 +267,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     }, {
       validators: [...this.additionFormValidators]
     });
-    this.additionalForm.markAsUntouched();
-    this.additionalForm.markAsPristine();
   }
 
   public isValid(countInx?): boolean {
@@ -334,7 +330,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
         titleKey: "Warning",
         actionType: "warn",
         messageKey: `You have selected "Skip this count, no action required" for all counts on your ticket. No request will be created. Please review your selection(s).`,
-        actionTextKey: 'Close',
+        actionTextKey: "Close",
         cancelHide: true
       };
       this.dialog.open(ConfirmDialogComponent, { data });
