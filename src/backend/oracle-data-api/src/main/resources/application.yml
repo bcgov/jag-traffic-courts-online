@@ -6,7 +6,8 @@ spring:
     name: oracle-data-api
 
   sleuth:
-    otel:
+    enabled: ${SPRING_SLEUTH_ENABLED:false}
+    otel:   
       config:
         trace-id-ratio-based: 1.0
       exporter:
