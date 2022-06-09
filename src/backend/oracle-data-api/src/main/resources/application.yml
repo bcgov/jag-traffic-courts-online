@@ -20,7 +20,10 @@ spring:
     sentinel:
       master: ${REDIS_SENTINAL_MASTER:}
       nodes: ${REDIS_SENTINAL_NODES:}
-
+  
+  sql:
+    init:
+      mode: always
   datasource:
     driverClassName: org.h2.Driver
     password: ''
@@ -32,6 +35,7 @@ spring:
       settings:
         web-allow-others: true
   jpa:
+    defer-datasource-initialization: true
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update

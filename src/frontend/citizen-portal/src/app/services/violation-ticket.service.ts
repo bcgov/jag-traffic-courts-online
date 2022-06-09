@@ -7,6 +7,7 @@ import { LoggerService } from "@core/services/logger.service";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { ImageTicketNotFoundDialogComponent } from "@shared/dialogs/image-ticket-not-found-dialog/image-ticket-not-found-dialog.component";
 import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-dialog/ticket-not-found-dialog.component";
+import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
 import { FileUtilsService } from "@shared/services/file-utils.service";
 import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
@@ -269,7 +270,7 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
-      if (this.dateDiff(this.ticket.issued_date) <= 30) {
+      if ((this.dateDiff(this.ticket.issued_date) <= 30 && this.ticketType == ticketTypes.ELECTRONIC_TICKET) || (this.dateDiff(this.ticket.issued_date) <= 45 && this.ticketType == ticketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
           queryParams: params,
         });
@@ -344,11 +345,11 @@ export class ViolationTicketService {
   }
 
   private openErrorScenarioFourDialog() {
-    return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error4");
+    return this.openImageTicketNotFoundDialog("Non-MVA ticket", "error2");
   }
 
   private openInValidTicketDateDialog() {
-    return this.openImageTicketNotFoundDialog("Your ticket is over 30 days old", "error2");
+    return this.openImageTicketNotFoundDialog(`Your ticket is over ${this.ticketType === ticketTypes.CAMERA_TICKET ? '45' :'30'} days old`, "error4");
   }
 
   private dateDiff(givenDate: string) {
