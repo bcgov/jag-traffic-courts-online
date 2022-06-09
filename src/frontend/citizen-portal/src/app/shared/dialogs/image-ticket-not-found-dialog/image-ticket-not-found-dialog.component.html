@@ -29,9 +29,16 @@
       It appears that your ticket is not a Motor Vehicle Act violation ticket.
     </p>
   </div>
-  <div>
+  <div *ngIf="options.messageKey === '!error4'">
     <span class="flex-grow-1"></span>
     <p>Please
+      <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+        target="blank">click here</a> for more options.
+    </p>
+  </div>
+  <div *ngIf="options.messageKey === 'error4'">
+    <span class="flex-grow-1"></span>
+    <p>If your ticket could not be scanned successfully, please 
       <a href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
         target="blank">click here</a> for more options.
     </p>
