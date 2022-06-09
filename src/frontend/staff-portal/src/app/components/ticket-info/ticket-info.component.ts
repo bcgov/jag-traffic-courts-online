@@ -356,6 +356,7 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('address').markAsUntouched();
       this.form.get('city').markAsUntouched();
       this.form.get('province').markAsUntouched();
+      this.form.get('country').markAsUntouched();
       this.form.get('postalCode').markAsUntouched();
       this.form.get('rejectedReason').markAsUntouched();
     });
