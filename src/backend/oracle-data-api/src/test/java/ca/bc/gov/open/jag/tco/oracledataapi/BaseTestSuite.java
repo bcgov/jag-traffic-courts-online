@@ -1,5 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +11,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Transactional
 public class BaseTestSuite {
 
 	@Autowired

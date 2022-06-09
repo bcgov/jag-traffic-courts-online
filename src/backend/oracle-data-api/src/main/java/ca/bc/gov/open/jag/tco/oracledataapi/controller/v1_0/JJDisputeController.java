@@ -22,7 +22,21 @@ public class JJDisputeController {
 	private JJDisputeService jjDisputeService;
 
 	private Logger logger = LoggerFactory.getLogger(JJDisputeController.class);
-	
+
+	/**
+	 * GET endpoint that retrieves a jj dispute by id from the database
+	 * @param ticketNumber the primary key of the jj dispute to retrieve.
+	 * @return a single jj dispute
+	 */
+	@GetMapping("/dispute/{id}")
+	public JJDispute getJJDispute(
+			@Parameter(description = "The primary key of the jj dispute to retrieve")
+			String id) {
+		logger.debug("getJJDispute called");
+
+		return jjDisputeService.getJJDisputeById(id);
+	}
+
 	/**
 	 * GET endpoint that retrieves all the jj disputes optionally filtered by jjGroupAssignedTo and/or jjAssignedTo from the database
 	 * @param jjGroupAssignedTo if specified, will filter the result set to those assigned to the specified jj group.
@@ -38,7 +52,7 @@ public class JJDisputeController {
 			@Parameter(description = "If specified, will retrieve the records which are assigned to the specified jj staff")
 			String jjAssignedTo) {
 		logger.debug("getAllJJDisputes called");
-		
+
 		return jjDisputeService.getAllJJDisputes(jjGroupAssignedTo, jjAssignedTo);
 	}
 }
