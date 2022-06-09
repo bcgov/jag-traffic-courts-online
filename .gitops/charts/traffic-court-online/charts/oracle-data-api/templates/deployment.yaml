@@ -41,6 +41,8 @@ spec:
           {{- end }}
           {{- if .Values.jaeger.enabled }}
           # OpenTelemetry Jaeger
+          - name: SPRING_SLEUTH_ENABLED
+            value: true
           - name: OTEL_EXPORTER_JAEGER_ENDPOINT
             value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
           {{- end }}
