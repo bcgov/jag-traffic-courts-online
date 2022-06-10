@@ -184,7 +184,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public onDLProvinceChange(province) {
     setTimeout(() => {
       if (province == "BC") {
-        this.form.get("drivers_licence_number").setValidators([Validators.maxLength(9)])
+        this.form.get("drivers_licence_number").setValidators([Validators.maxLength(9)]);
+        this.form.get("drivers_licence_number").addValidators([Validators.minLength(7)]);
       } else {
         this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
       }
