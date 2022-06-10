@@ -90,4 +90,8 @@ export class HeaderComponent implements OnInit {
     this.oidcSecurityService.logoffAndRevokeTokens();
     this.isLoggedIn = false;
   }
+
+  goToJjWorkbench() {
+    this.router.navigate([AppRoutes.JJWORKBENCH]);
+  }
 }
