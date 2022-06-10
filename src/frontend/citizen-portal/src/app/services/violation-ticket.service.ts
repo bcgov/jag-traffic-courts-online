@@ -296,7 +296,6 @@ export class ViolationTicketService {
 
   private onError(err?: HttpErrorResponse): void {
     this.reset();
-    console.log(err);
     if (!err) {
       this.dialog.open(TicketNotFoundDialogComponent);
     } else {
