@@ -1,7 +1,6 @@
 export class AppRoutes {
-  public static TICKET = 'ticket';
-
-  public static routePath(route: string): string {
-    return `/${route}`;
-  }
+  // All route declared here should start with "/"
+  public static UNAUTHORIZED = "/unauthorized";
+  public static TICKET = "/ticket";
+  public static JJWORKBENCH = "/jjworkbench";
 }

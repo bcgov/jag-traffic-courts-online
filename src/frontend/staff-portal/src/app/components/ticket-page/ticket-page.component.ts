@@ -76,7 +76,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
         response
       );
 
-      this.disputeService.disputes$.next(response);
       response.forEach(d => {
         if (d.status != "CANCELLED") { // do not show cancelled
           var newDispute = {

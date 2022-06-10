@@ -4,6 +4,7 @@ import { NgModule, isDevMode } from '@angular/core';
 import { AuthModule, LogLevel, StsConfigHttpLoader, StsConfigLoader } from 'angular-auth-oidc-client';
 import { map } from 'rxjs/operators';
 import { environment } from 'environments/environment';
+import { AppRoutes } from 'app/app.routes';
 
 export const httpLoaderFactory = (httpClient: HttpClient) => {
   const config$ = httpClient.get<any>(`assets/config/oidc.json`).pipe(
@@ -24,8 +25,8 @@ export const httpLoaderFactory = (httpClient: HttpClient) => {
         useRefreshToken: true,
         renewTimeBeforeTokenExpiresInSeconds: 60,
         autoUserInfo: true,
-        unauthorizedRoute: '/unauthorized',
-        forbiddenRoute: '/unauthorized', // used for wrong roles
+        unauthorizedRoute: AppRoutes.UNAUTHORIZED,
+        forbiddenRoute: AppRoutes.UNAUTHORIZED, // used for wrong roles
         ignoreNonceAfterRefresh: true,
         secureRoutes: ['/api'],
         customParamsAuthRequest: {
