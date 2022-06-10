@@ -32,7 +32,7 @@ export class NoticeOfDisputeService {
     work_phone_number: [null, [FormControlValidators.phone]], // not using now
     email_address: [null, [Validators.required, Validators.email]],
     birthdate: [null, [Validators.required]],
-    drivers_licence_number: [null, [Validators.required]],
+    drivers_licence_number: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
     drivers_licence_province: [null, [Validators.required]],
     disputed_counts: [],
   }
