@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<log4j2.version>2.17.1</log4j2.version>
-		<release.train.version>2021.0.1</release.train.version>
+		<release.train.version>2021.0.3</release.train.version>
   		<spring-cloud-sleuth-otel.version>1.1.0-M6</spring-cloud-sleuth-otel.version>
 	</properties>
 	
@@ -101,14 +101,14 @@
 		<dependency>
 			<groupId>com.splunk.logging</groupId>
 			<artifactId>splunk-library-javalogging</artifactId>
-			<version>1.11.4</version>
+			<version>1.11.5</version>
 		</dependency>
 
 		<!-- Swagger UI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.7</version>
+			<version>1.6.9</version>
 		</dependency>
 
 		<!-- CSV reader - TODO: remove once data is read from Oracle instead -->
@@ -141,7 +141,7 @@
   		<dependency>
 	    	<groupId>io.grpc</groupId>
 	    	<artifactId>grpc-okhttp</artifactId>
-	    	<version>1.46.0</version>
+	    	<version>1.47.0</version>
 	  	</dependency>
 	</dependencies>
 

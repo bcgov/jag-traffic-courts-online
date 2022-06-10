@@ -29,7 +29,7 @@ namespace TrafficCourts.Workflow.Service.Services
             };
 
             using var httpClient = new HttpClient();
-            var arcBaseUri = $"https://{_arcApiConfiguration.Host}:{_arcApiConfiguration.Port}";
+            var arcBaseUri = $"http://{_arcApiConfiguration.Host}:{_arcApiConfiguration.Port}";
             httpClient.BaseAddress = new Uri(arcBaseUri);
 
             using var response = await httpClient.PostAsync("api/TcoDisputeTicket", approvedDispute, formatter);

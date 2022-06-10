@@ -71,7 +71,7 @@ export class ContactInfoComponent implements OnInit {
       rejectedReason: [null, Validators.maxLength(256)], // Optional
       country: [null, [Validators.required]],
       postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]],
-      driversLicenceNumber: [null, [Validators.required, Validators.maxLength(20)]],
+      driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
     });
     this.getDispute();
@@ -82,14 +82,12 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('postalCode').setValidators([Validators.maxLength(6)]);
       this.form.get('province').setValidators([Validators.maxLength(30)]);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
-      this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
 
       if (country == 'Canada' || country == 'United States') {
         this.form.get('province').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceNumber').addValidators([Validators.required]);
         this.form.get('driversLicenceProvince').addValidators([Validators.required]);
       }
 
@@ -100,15 +98,16 @@ export class ContactInfoComponent implements OnInit {
       this.form.get('postalCode').updateValueAndValidity();
       this.form.get('province').updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
-      this.form.get('driversLicenceNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
+      this.onDLProvinceChange(this.form.get('driversLicenceProvince').value);
     }, 5);
   }
 
   public onDLProvinceChange(province) {
     setTimeout(() => {
       if (province == 'BC') {
-        this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)])
+        this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
+        this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
       } else {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       }
@@ -272,7 +271,6 @@ export class ContactInfoComponent implements OnInit {
       else this.form.get('country').setValue("International");
 
       this.onCountryChange(this.form.get('country').value);
-      this.onDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
     });
   }
 

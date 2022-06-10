@@ -103,7 +103,7 @@ export class TicketInfoComponent implements OnInit {
       city: [null, [Validators.required]],
       province: [null, [Validators.required, Validators.maxLength(30)]],
       postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
-      driversLicenceNumber: [null, [Validators.required, Validators.maxLength(20)]],
+      driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
       provincialCourtHearingLocation: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)],
@@ -112,7 +112,7 @@ export class TicketInfoComponent implements OnInit {
         provincialCourtHearingLocation: [null, [Validators.required]],
         surname: [null, Validators.required],
         givenNames: [null, Validators.required],
-        driversLicenceNumber: [null, [Validators.required, Validators.maxLength(20)]],
+        driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
         issuedDate: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
@@ -159,7 +159,6 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('postalCode').setValidators([Validators.maxLength(6)]);
       this.form.get('province').setValidators([Validators.maxLength(30)]);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
-      this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
       this.form.get('violationTicket').get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
 
@@ -167,7 +166,6 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('province').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
-        this.form.get('driversLicenceNumber').addValidators([Validators.required]);
         this.form.get('driversLicenceProvince').addValidators([Validators.required]);
         this.form.get('violationTicket').get('driversLicenceProvince').addValidators([Validators.required]);
       }
@@ -179,9 +177,10 @@ export class TicketInfoComponent implements OnInit {
       this.form.get('postalCode').updateValueAndValidity();
       this.form.get('province').updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
-      this.form.get('driversLicenceNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
       this.form.get('violationTicket').get('driversLicenceProvince').updateValueAndValidity();
+      this.onNoticeOfDisputeDLProvinceChange(this.form.get('driversLicenceProvince').value);
+      this.onViolationTicketDLProvinceChange(this.form.get('violationTicket').get('driversLicenceProvince').value);
     }, 5);
   }
 
@@ -226,6 +225,7 @@ export class TicketInfoComponent implements OnInit {
     setTimeout(() => {
       if (province == 'BC') {
         this.form.get('violationTicket').get('driversLicenceNumber').setValidators([Validators.maxLength(9)])
+        this.form.get('violationTicket').get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
       } else {
         this.form.get('violationTicket').get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       }
@@ -240,7 +240,8 @@ export class TicketInfoComponent implements OnInit {
   public onNoticeOfDisputeDLProvinceChange(province: string) {
     setTimeout(() => {
       if (province == 'BC') {
-        this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)])
+        this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(9)]);
+        this.form.get('driversLicenceNumber').addValidators([Validators.minLength(7)]);
       } else {
         this.form.get('driversLicenceNumber').setValidators([Validators.maxLength(20)]);
       }
@@ -703,8 +704,6 @@ export class TicketInfoComponent implements OnInit {
         else this.form.get('country').setValue("International");
 
         this.onCountryChange(this.form.get('country').value);
-        this.onNoticeOfDisputeDLProvinceChange(this.lastUpdatedDispute.driversLicenceProvince);
-        this.onViolationTicketDLProvinceChange(this.lastUpdatedDispute.violationTicket.driversLicenceProvince);
         if (this.lastUpdatedDispute.status !== "NEW") {
           this.form.controls.violationTicket.disable();
         }
