@@ -5,6 +5,8 @@ codetable:
 logging:
   level:
     ca.bc.gov.open.jag.tco.oracledataapi: DEBUG
+    org.hibernate.SQL: WARN # set to DEBUG to see DDL/DML statements 
+    org.hibernate.type: WARN # set to TRACE to see SQL parameters 
     
 spring:
   sql:
