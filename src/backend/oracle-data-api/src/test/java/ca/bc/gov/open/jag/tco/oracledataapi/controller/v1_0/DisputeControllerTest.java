@@ -9,8 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -40,7 +38,7 @@ class DisputeControllerTest extends BaseTestSuite {
 
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 
 		// Assert db contains the single created record
 		allDisputes = IterableUtils.toList(disputeController.getAllDisputes(null, null));
@@ -60,7 +58,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testRejectDisputeSuccess() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
@@ -81,7 +79,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testRejectDisputeFail() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
@@ -114,7 +112,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testSubmitDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
@@ -135,7 +133,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testCancelDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
@@ -159,7 +157,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testValidateDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
@@ -181,7 +179,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	public void testUpdateDispute() {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		Principal principal = getPrincipal("testUser");
 
 		// Retrieve it from the controller's endpoint
@@ -210,19 +208,19 @@ class DisputeControllerTest extends BaseTestSuite {
 		Principal principal = getPrincipal("testUser");
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setStatus(DisputeStatus.NEW);
-		UUID disputeId = disputeController.saveDispute(dispute);
+		Long disputeId = disputeController.saveDispute(dispute);
 		dispute.setCreatedTs(DateUtils.addDays(now, -1));
 		disputeController.updateDispute(disputeId, dispute, principal);
 		
 		Dispute dispute2 = RandomUtil.createDispute();
 		dispute2.setStatus(DisputeStatus.PROCESSING);
-		UUID dispute2Id = disputeController.saveDispute(dispute2);
+		Long dispute2Id = disputeController.saveDispute(dispute2);
 		dispute2.setCreatedTs(DateUtils.addDays(now, -2));
 		disputeController.updateDispute(dispute2Id, dispute2, principal);
 		
 		Dispute dispute3 = RandomUtil.createDispute();
 		dispute3.setStatus(DisputeStatus.CANCELLED);
-		UUID dispute3Id = disputeController.saveDispute(dispute3);
+		Long dispute3Id = disputeController.saveDispute(dispute3);
 		dispute3.setCreatedTs(DateUtils.addDays(now, -3));
 		disputeController.updateDispute(dispute3Id, dispute3, principal);
 

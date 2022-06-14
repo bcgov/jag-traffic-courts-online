@@ -3,8 +3,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -62,7 +60,7 @@ public class DisputeService {
 	 * @param id of the Dispute to be returned
 	 * @return
 	 */
-	public Dispute getDisputeById(UUID id) {
+	public Dispute getDisputeById(Long id) {
 		return disputeRepository.findById(id).orElseThrow();
 	}
 
@@ -96,7 +94,7 @@ public class DisputeService {
 	 * @param {@link Dispute}
 	 * @return
 	 */
-	public Dispute update(UUID id, Dispute dispute) {
+	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
 		BeanUtils.copyProperties(dispute, disputeToUpdate, "id", "disputedCounts");
@@ -115,7 +113,7 @@ public class DisputeService {
 	 *
 	 * @param id of the dispute to be deleted
 	 */
-	public void delete(UUID id) {
+	public void delete(Long id) {
 		disputeRepository.deleteById(id);
 	}
 
@@ -126,7 +124,7 @@ public class DisputeService {
 	 * @param disputeStatus
 	 * @return the saved Dispute
 	 */
-	public Dispute setStatus(UUID id, DisputeStatus disputeStatus) {
+	public Dispute setStatus(Long id, DisputeStatus disputeStatus) {
 		return setStatus(id, disputeStatus, null);
 	}
 
@@ -138,7 +136,7 @@ public class DisputeService {
 	 * @param rejectedReason the rejected reason if the status is REJECTED.
 	 * @return the saved Dispute
 	 */
-	public Dispute setStatus(UUID id, DisputeStatus disputeStatus, String rejectedReason) {
+	public Dispute setStatus(Long id, DisputeStatus disputeStatus, String rejectedReason) {
 		if (disputeStatus == null) {
 			logger.error("Attempting to set Dispute status to null - bad method call.");
 			throw new NotAllowedException("Cannot set Dispute status to null");
@@ -193,7 +191,7 @@ public class DisputeService {
 	 * @param id
 	 * @param principal the current user of the system
 	 */
-	public boolean assignDisputeToUser(UUID id, Principal principal) {
+	public boolean assignDisputeToUser(Long id, Principal principal) {
 		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
 			logger.error("Attempting to set Dispute to null username - bad method call.");
 			throw new NotAllowedException("Cannot set assigned user to null");

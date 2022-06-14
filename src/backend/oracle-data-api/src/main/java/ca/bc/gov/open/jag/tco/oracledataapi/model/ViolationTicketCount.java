@@ -1,7 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,7 +35,7 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
-    private UUID id;
+    private Long id;
 
 	/**
 	 * The count number.
