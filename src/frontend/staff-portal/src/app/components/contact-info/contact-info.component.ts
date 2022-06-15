@@ -259,9 +259,13 @@ export class ContactInfoComponent implements OnInit {
       this.lastUpdatedDispute = this.initialDisputeValues;
 
       // set violation date and time
-      let tempViolationDate =new Date(this.lastUpdatedDispute.issuedDate).toUTCString();
-      this.violationDate = this.datePipe.transform(tempViolationDate, "yyyy-MM-dd");
-      this.violationTime = new Date(tempViolationDate).getUTCHours() + ":" + new Date(tempViolationDate).getUTCMinutes();
+      let tempViolationDate = this.lastUpdatedDispute?.issuedDate.split("T");
+      if(tempViolationDate){
+        this.violationDate = tempViolationDate[0];
+        this.violationTime = tempViolationDate[1].split(":")[0] + ":" + tempViolationDate[1].split(":")[1];
+      }
+      
+
       this.form.patchValue(this.initialDisputeValues);
 
 

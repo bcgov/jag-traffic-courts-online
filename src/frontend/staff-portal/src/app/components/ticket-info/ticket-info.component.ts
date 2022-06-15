@@ -655,10 +655,10 @@ export class TicketInfoComponent implements OnInit {
         this.form.patchValue(this.initialDisputeValues);
 
         // set violation date and time
-        let violationDate = new Date(response.issuedDate);
+        let violationDate = response.issuedDate.split("T");
         this.form.get('violationTicket').get('issuedDate').setValue(response.issuedDate);
-        this.form.get('violationTicket').get('violationDate').setValue(this.datePipe.transform(violationDate, "yyyy-MM-dd"));
-        this.form.get('violationTicket').get('violationTime').setValue(this.datePipe.transform(violationDate, "hhmm"));
+        this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
+        this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1]);
 
         // ticket image
         if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
