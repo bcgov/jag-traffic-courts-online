@@ -343,7 +343,7 @@
             "description": "Dispute record not found. Update failed."
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed."
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be <= 256 characters. Update failed."
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
@@ -508,7 +508,7 @@
             }
           },
           "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.",
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -1134,8 +1134,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government."
+        "additionalProperties": false
       },
       "ViolationTicket": {
         "type": "object",
@@ -1382,7 +1381,7 @@
           },
           "ticketedAmount": {
             "type": "number",
-            "format": "double",
+            "format": "float",
             "nullable": true
           },
           "isAct": {

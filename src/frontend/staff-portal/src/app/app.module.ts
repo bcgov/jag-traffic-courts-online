@@ -30,9 +30,9 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
 import { AuthConfigModule } from './auth/auth-config.module';
-import { LogInOutService } from 'app/services/log-in-out.service';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
+import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -57,6 +57,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ContactInfoComponent,
     TicketStatusComponent,
     TicketRequestComponent,
+    JjWorkbenchDashboardComponent,
   ],
   imports: [
     CommonModule,
@@ -87,12 +88,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CurrencyPipe,
     DatePipe,
     MockConfigService,
-    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, JwtHelperService,
+    JwtHelperService,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, 
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     },
-    LogInOutService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

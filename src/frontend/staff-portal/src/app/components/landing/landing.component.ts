@@ -1,7 +1,7 @@
-import { OnInit, Component, ViewEncapsulation, Inject } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { LogInOutService } from 'app/services/log-in-out.service';
+import { OnInit, Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AppRoutes } from 'app/app.routes';
 
 @Component({
   selector: 'app-landing',
@@ -13,58 +13,21 @@ export class LandingComponent implements OnInit {
   public isLoggedIn = false;
 
   constructor(
-    public oidcSecurityService : OidcSecurityService,
-    private logInOutService : LogInOutService,
-    @Inject(Router) private router,
+    private oidcSecurityService: OidcSecurityService,
+    private router: Router,
+  ) {
+  }
 
-  ) {   }
-
-  public async ngOnInit() {
-
-      // initial component not protected by route guarding for keycloak
-      // mimicking csrs project works ok except logs back in after logging out
-      this.logInOutService.getLogoutStatus.subscribe((data) => {
-        if (data !== null || data !== '')
-        {
-          if(data === 'IDIR Sign in'){
-            this.login();
-          }
-          else
-            if(data === 'Sign out'){
-              this.logout();
-            }
-        }
-      })
-
-      this.oidcSecurityService.checkAuth().subscribe(
-        ({ isAuthenticated}) => {
-          if (isAuthenticated === true)
-          {
-            this.router.navigate(['/ticket']);
-            this.isLoggedIn = true;
-          }
-          else
-          {
-            this.isLoggedIn = false;
-          }
-
-          this.logInOutService.currentUser(isAuthenticated);
-      });
-
+  ngOnInit() {
+    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
+      if (isAuthenticated) {
+        this.isLoggedIn = isAuthenticated;
+        this.router.navigate([AppRoutes.TICKET]);
+      }
+    })
   }
 
   login() {
     this.oidcSecurityService.authorize();
   }
-
-  logout() {
-    this.oidcSecurityService.logoffAndRevokeTokens();
-    this.isLoggedIn = false;
-  }
-
-   public onClickBtn()
-   {
-    this.logInOutService.logoutUser('IDIR Sign in');
-   }
-
 }

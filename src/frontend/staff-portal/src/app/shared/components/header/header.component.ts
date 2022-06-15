@@ -5,11 +5,14 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  AfterViewInit,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
-import { LogInOutService } from 'app/services/log-in-out.service';
 
 @Component({
   selector: 'app-header',
@@ -25,17 +28,19 @@ export class HeaderComponent implements OnInit {
 
   public languageCode: string;
   public languageDesc: string;
-  public btnLabel: string ='IDIR Sign in';
-  public btnIcon: string = 'login'; 
+  public btnLabel: string = 'IDIR Sign in';
+  public btnIcon: string = 'login';
 
   public environment: string;
   public version: string;
+  public isLoggedIn: Boolean = false;
 
   constructor(
     protected logger: LoggerService,
     private appConfigService: AppConfigService,
     private translateService: TranslateService,
-    public logInOutService: LogInOutService
+    private oidcSecurityService: OidcSecurityService,
+    private router: Router,
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
@@ -47,21 +52,9 @@ export class HeaderComponent implements OnInit {
     this.version = this.appConfigService.version;
   }
 
-  public async ngOnInit() {
-    this.logInOutService.getCurrentStatus.subscribe((data) => {
-      if (data !== null || data !== undefined)
-      {
-        if(data === true){
-
-          this.btnLabel = 'Sign out';
-          this.btnIcon = 'logout';
-        }
-        else
-        {
-          this.btnLabel = 'IDIR Sign in';
-          this.btnIcon = 'login';
-        }
-      }
+  ngOnInit() {
+    this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
+      this.isLoggedIn = isAuthenticated;
     })
   }
 
@@ -80,21 +73,6 @@ export class HeaderComponent implements OnInit {
     };
   }
 
-  public onClickBtn()
-  {
-    this.logInOutService.logoutUser(this.btnLabel);
-    if (this.btnLabel === 'IDIR Sign in')
-    {
-      this.btnLabel = 'Sign out';
-      this.btnIcon = 'logout';
-    }
-    else
-    {
-      this.btnLabel = 'IDIR Sign in';
-      this.btnIcon = 'login';
-    }
-  }
-
   public onLanguage(): void {
     this.translateService.setDefaultLang(this.languageCode);
     const { languageCode, languageDesc } = this.toggleLanguage(
@@ -102,5 +80,18 @@ export class HeaderComponent implements OnInit {
     );
     this.languageCode = languageCode;
     this.languageDesc = languageDesc;
+  }
+
+  login() {
+    this.oidcSecurityService.authorize();
+  }
+
+  logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens();
+    this.isLoggedIn = false;
+  }
+
+  goToJjWorkbench() {
+    this.router.navigate([AppRoutes.JJWORKBENCH]);
   }
 }
