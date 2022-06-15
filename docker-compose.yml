@@ -141,7 +141,7 @@ services:
       REDIS_PASSWORD: password
       CODETABLE_REFRESH_ENABLED: ${CODETABLE_REFRESH_ENABLED:-true}
       CODETABLE_REFRESH_CRON: ${CODETABLE_REFRESH_CRON:-0 * * * * *}
-      H2_DATASOURCE: ${H2_DATASOURCE:-jdbc:h2:file:./data/h2-v2}
+      H2_DATASOURCE: ${H2_DATASOURCE:-jdbc:h2:file:./data/h2}
       SPRING_SLEUTH_ENABLED: ${SPRING_SLEUTH_ENABLED:-false}
       JAVA_OPTS: ${JAVA_OPTS:--Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG}
     depends_on:
