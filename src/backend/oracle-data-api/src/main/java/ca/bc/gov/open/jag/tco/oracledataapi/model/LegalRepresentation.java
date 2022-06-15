@@ -1,7 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +28,7 @@ public class LegalRepresentation extends Auditable<String> {
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 	
 	/**
 	 * Name of the law firm that will represent the disputant at the hearing.

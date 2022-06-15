@@ -76,7 +76,7 @@ public class DisputeController {
 	 * @return {@link Dispute}
 	 */
 	@GetMapping("/dispute/{id}")
-	public ResponseEntity<Dispute> getDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> getDispute(@PathVariable Long id, Principal principal) {
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -89,7 +89,7 @@ public class DisputeController {
 	 * @param id of the {@link Dispute} to be deleted
 	 */
 	@DeleteMapping("/dispute/{id}")
-	public void deleteDispute(@PathVariable UUID id) {
+	public void deleteDispute(@PathVariable Long id) {
 		disputeService.delete(id);
 	}
 
@@ -100,7 +100,7 @@ public class DisputeController {
 	 * @return id of the saved {@link Dispute}
 	 */
 	@PostMapping("/dispute")
-	public UUID saveDispute(@RequestBody Dispute dispute) {
+	public Long saveDispute(@RequestBody Dispute dispute) {
 		disputeService.save(dispute);
 		return dispute.getId();
 	}
@@ -123,7 +123,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/reject")
-	public ResponseEntity<Dispute> rejectDispute(@PathVariable UUID id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String rejectedReason,
+	public ResponseEntity<Dispute> rejectDispute(@PathVariable Long id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String rejectedReason,
 			Principal principal) {
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -148,7 +148,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/validate")
-	public ResponseEntity<Dispute> validateDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> validateDispute(@PathVariable Long id, Principal principal) {
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -172,7 +172,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
-	public ResponseEntity<Dispute> cancelDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> cancelDispute(@PathVariable Long id, Principal principal) {
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -196,7 +196,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/submit")
-	public ResponseEntity<Dispute> submitDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> submitDispute(@PathVariable Long id, Principal principal) {
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -219,7 +219,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}")
-	public ResponseEntity<Dispute> updateDispute(@PathVariable UUID id, @RequestBody Dispute dispute, Principal principal) {
+	public ResponseEntity<Dispute> updateDispute(@PathVariable Long id, @RequestBody Dispute dispute, Principal principal) {
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}

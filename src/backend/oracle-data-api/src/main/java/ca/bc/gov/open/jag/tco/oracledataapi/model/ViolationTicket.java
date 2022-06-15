@@ -3,8 +3,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +40,7 @@ public class ViolationTicket extends Auditable<String> {
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     /**
      * The violation ticket number.
