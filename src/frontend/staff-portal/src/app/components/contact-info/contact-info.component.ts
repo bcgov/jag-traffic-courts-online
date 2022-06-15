@@ -260,9 +260,9 @@ export class ContactInfoComponent implements OnInit {
 
       // set violation date and time
       let tempViolationDate = new Date(this.lastUpdatedDispute.issuedDate);
+      tempViolationDate.setHours(tempViolationDate.getHours() + 7);
       this.violationDate = this.datePipe.transform(tempViolationDate, "yyyy-MM-dd");
       this.violationTime = this.datePipe.transform(tempViolationDate, "hh:mm");
-
       this.form.patchValue(this.initialDisputeValues);
 
       // set country from province
