@@ -1,0 +1,77 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: azure-cognitive-service-custom-layout
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: azure-cognitive-service-custom-layout
+      app.kubernetes.io/name: azure-cognitive-service-custom-layout
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: azure-cognitive-service-custom-layout
+        app.kubernetes.io/name: azure-cognitive-service-custom-layout
+    spec:
+      volumes:
+        - name: forms-recognizer-shared
+          persistentVolumeClaim:
+            claimName: forms-recognizer-shared
+        - name: forms-recognizer-logs
+          persistentVolumeClaim:
+            claimName: forms-recognizer-logs
+      containers:
+        - resources:
+            limits:
+              cpu: '1'
+              memory: 4Gi
+            requests:
+              cpu: '250m'
+              memory: 2Gi
+          name: azure-cognitive-service-custom-layout
+          env:
+            - name: eula
+              value: accept              
+            - name: Logging__Console__LogLevel__Default
+              value: Information
+            - name: Queue__RabbitMQ__HostName
+              value: rabbitmq
+            - name: Queue__RabbitMQ__Port
+              value: '5672'
+            - name: SharedRootFolder
+              value: /shared
+            - name: Mounts__Shared
+              value: /shared
+            - name: Mounts__Output
+              value: /logs
+            - name: Queue__RabbitMQ__Username
+              value: user
+            - name: Queue__RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq
+                  key: rabbitmq-password                  
+            - name: apikey
+              valueFrom:
+                secretKeyRef:
+                  name: forms-recognizer-bcgov-tenant
+                  key: FORMRECOGNIZER__APIKEY
+            - name: billing
+              valueFrom:
+                secretKeyRef:
+                  name: forms-recognizer-bcgov-tenant
+                  key: FORMRECOGNIZER__ENDPOINT
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          volumeMounts:
+            - name: forms-recognizer-shared
+              mountPath: /shared
+            - name: forms-recognizer-logs
+              mountPath: /logs
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/0198bb-tools/forms-recognizer-layout:latest

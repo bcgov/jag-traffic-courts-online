@@ -6,26 +6,29 @@ services:
   #############################################################################################
   
   form-rec-nginx:
-    image: nginx:alpine
+    build:
+      context: ./tools/form-recognizer
+      dockerfile: Dockerfile.proxy
     container_name: azure-cognitive-service-proxy
-    volumes:
-      - ./tools/form-recognizer/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "5200:5200"
 
   form-rec-layout:
-    container_name: azure-cognitive-service-layout
+    container_name: azure-cognitive-service-custom-layout
     build:
-      context: ../tools/form-recognizer
+      context: ./tools/form-recognizer
+      dockerfile: Dockerfile.layout
     depends_on:
       - rabbitmq
     environment:
       eula: accept
       apikey: ${FORMRECOGNIZER__APIKEY}
       billing: ${FORMRECOGNIZER__ENDPOINT}
-      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST}
-      Queue:RabbitMQ:Port: ${RABBITMQ__PORT}
       Logging:Console:LogLevel:Default: Information
+      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
+      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
+      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
+      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
       SharedRootFolder: /shared
       Mounts:Shared: /shared
       Mounts:Output: /logs
@@ -50,8 +53,10 @@ services:
       apikey: ${FORMRECOGNIZER__APIKEY}
       billing: ${FORMRECOGNIZER__ENDPOINT}
       Logging:Console:LogLevel:Default: Information
-      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST}
-      Queue:RabbitMQ:Port: ${RABBITMQ__PORT}
+      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
+      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
+      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
+      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
       SharedRootFolder: /shared
       Mounts:Shared: /shared
       Mounts:Output: /logs
@@ -78,8 +83,10 @@ services:
       CustomFormRecognizer:ContainerPhase: All
       CustomFormRecognizer:LayoutAnalyzeUri: http://azure-cognitive-service-layout:5000/formrecognizer/v2.1/layout/analyze
       Logging:Console:LogLevel:Default: Information
-      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST}
-      Queue:RabbitMQ:Port: ${RABBITMQ__PORT}
+      Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
+      Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
+      Queue:RabbitMQ:Username: ${RABBITMQ__USERNAME:-guest}
+      Queue:RabbitMQ:Password: ${RABBITMQ__PASSWORD:-guest}
       SharedRootFolder: /shared
       Mounts:Shared: /shared
       Mounts:Output: /logs
