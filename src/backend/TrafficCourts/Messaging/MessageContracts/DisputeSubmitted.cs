@@ -8,6 +8,6 @@ namespace TrafficCourts.Messaging.MessageContracts
 {
     public class DisputeSubmitted : IMessage
     {
-        public Guid DisputeId { get; set; }
+        public long DisputeId { get; set; }
     }
 }
