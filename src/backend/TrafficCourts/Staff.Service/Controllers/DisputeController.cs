@@ -69,7 +69,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving Dispute from oracle-data-api");
 
@@ -129,7 +129,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateDisputeAsync(Guid disputeId, Dispute dispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute in oracle-data-api");
 
@@ -174,7 +174,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{disputeId}/reject")]
     public async Task<IActionResult> RejectDisputeAsync(
-        Guid disputeId, 
+        long disputeId, 
         [FromForm] 
         [Required]
         [StringLength(256, ErrorMessage = "Rejected reason cannot exceed 256 characters.")] string rejectedReason, 
@@ -230,7 +230,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ValidateDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> ValidateDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "VALIDATED");
 
@@ -282,7 +282,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "CANCELLED");
 
@@ -336,7 +336,7 @@ public class DisputeController : TCOControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "PROCESSING");
 

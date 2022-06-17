@@ -22,9 +22,9 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute1 = new();
-        dispute1.Id = Guid.NewGuid();
+        dispute1.Id = 1;
         Dispute dispute2 = new();
-        dispute2.Id = Guid.NewGuid();
+        dispute2.Id =2;
         List<Dispute> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
         disputeService
@@ -51,11 +51,11 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new (disputeService.Object, mockLogger.Object);
@@ -75,11 +75,11 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -99,11 +99,11 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.GetDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -123,11 +123,11 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(dispute);
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -147,11 +147,11 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -171,12 +171,12 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
-        Guid updatedId = Guid.NewGuid();
+        long updatedId = 2;
         disputeService
-            .Setup(_ => _.UpdateDisputeAsync(It.Is<Guid>(v => v == updatedId), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == updatedId), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status404NotFound, "rsp", null, null));
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
@@ -196,11 +196,11 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute = new();
-        Guid id = Guid.NewGuid();
+        long id = 1;
         dispute.Id = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
-            .Setup(_ => _.ValidateDisputeAsync(It.Is<Guid>(v => v == id), It.IsAny<CancellationToken>()))
+            .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
             .Verifiable();
         var mockLogger = new Mock<ILogger<DisputeController>>();
         DisputeController disputeController = new(disputeService.Object, mockLogger.Object);
