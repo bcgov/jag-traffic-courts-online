@@ -60,8 +60,9 @@ public static class AnalyseHandler
         {
             _logger.LogDebug("Analysing {FileName}", request.Image.FileName);
 
-            // Generate a guid for using as Violation Ticket Key to save OCR related data into Redis
-            string ticketId = Guid.NewGuid().ToString("n");
+            // Generate a guid with a suffix '-o' to indicate that it's an OCRed ticketId
+            // for using as Violation Ticket Key to save OCR related data into Redis
+            string ticketId = string.Concat(Guid.NewGuid().ToString("n"), "-o");
 
             var stream = GetStreamForFile(request.Image);
 

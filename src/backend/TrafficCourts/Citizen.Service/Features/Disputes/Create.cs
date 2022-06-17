@@ -84,16 +84,21 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                 try
                 {
-                    // Check if the request contains ticket id and it's a valid format guid
-                    if (ticketId != null && Guid.TryParseExact(ticketId, "n", out _))
+                    // Check if the request contains ticket id
+                    if (String.IsNullOrEmpty(ticketId))
                     {
-                        // Get the OCR violation ticket data from Redis cache using the ticket id key
-                        violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ticketId);
-
-                        // TODO: This check works for now to determine which type of object is returned from redis cache
-                        // and assign null or populate the object in SubmitNoticeOfDispute message. However, a better check/method can be implemented
-                        if (violationTicket != null && violationTicket.ImageFilename != null)
+                        // Check if the ticket id belongs to an OCR type of ticket
+                        if (ticketId.EndsWith("o"))
                         {
+                            // Get the OCR violation ticket data from Redis cache using the ticket id key
+                            violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ticketId);
+
+                            if (violationTicket is null || String.IsNullOrEmpty(violationTicket.ImageFilename))
+                            {
+                                _logger.LogError("No OCR violation ticket and image filename have been found for the {ticketId}", ticketId);
+                                throw new TicketLookupFailedException($"No OCR violation ticket and image filename has been found for the {ticketId}");
+                            }
+
                             // Since the ImageFilename exists, it should be in the redis db.
                             // grab it and save to the file persistence service.
                             ticketImageStream = await _redisCacheService.GetFileRecordAsync(violationTicket.ImageFilename);
@@ -112,16 +117,22 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                             // Serialize OCR violation ticket to a JSON string
                             ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
                         }
+                        // Get the looked up ticket
                         else
                         {
                             // Get the looked up violation ticket data from Redis cache using the ticket id key
                             lookedUpViolationTicket = await _redisCacheService.GetRecordAsync<Models.Tickets.ViolationTicket>(ticketId);
+
+                            if (lookedUpViolationTicket is null)
+                            {
+                                _logger.LogError("No looked up violation ticket has been found for the {ticketId}", ticketId);
+                            }
                         }
                     }
 
                     if (ocrViolationTicketJson == null && lookedUpViolationTicket == null)
                     {
-                        Exception ex = new ArgumentNullException("No associated Violation Ticket has been found");
+                        Exception ex = new TicketLookupFailedException("No associated Violation Ticket has been found");
                         _logger.LogError(ex, "Error creating dispute - No associated Violation Ticket has been found");
                         activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                         return new Response(ex);
@@ -152,5 +163,11 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 }
             }
         }
+    }
+
+    [Serializable]
+    internal class TicketLookupFailedException : Exception
+    {
+        public TicketLookupFailedException(string? message) : base(message) { }
     }
 }
