@@ -11,17 +11,19 @@
  */
 
 
-export interface LegalRepresentation { 
+export interface JJDispute { 
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    id?: number;
-    lawFirmName?: string | null;
-    lawyerFullName?: string | null;
-    lawyerEmail?: string | null;
-    lawyerAddress?: string | null;
-    lawyerPhoneNumber?: string | null;
+    ticketNumber?: string | null;
+    violationDate?: string | null;
+    disputantName?: string | null;
+    enforcementOfficer?: string | null;
+    policeDetachment?: string | null;
+    courthouseLocation?: string | null;
+    jjAssignedTo?: string | null;
+    jjGroupAssignedTo?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

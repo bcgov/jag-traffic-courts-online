@@ -3,6 +3,7 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 import { DisputeService } from './api/dispute.service';
+import { JJService } from './api/jJ.service';
 import { LookupService } from './api/lookup.service';
 
 @NgModule({
