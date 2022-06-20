@@ -6,13 +6,13 @@ using TrafficCourts.Staff.Service.Authentication;
 namespace TrafficCourts.Staff.Service.Controllers
 {
     [ApiController]
-    [Authorize(Roles = Roles.User)]
+    [Authorize(Roles = Roles.VTCUser)]
     [Route("api/[controller]")]
-    public abstract class TCOControllerBase<TController> : ControllerBase
+    public abstract class VTCControllerBase<TController> : ControllerBase
     {
         protected readonly ILogger<TController> _logger;
 
-        protected TCOControllerBase(ILogger<TController> logger)
+        protected VTCControllerBase(ILogger<TController> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

@@ -17,7 +17,7 @@ export interface DisputedCount {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    id?: string;
+    id?: number;
     plea?: DisputedCountPlea;
     count?: number;
     requestTimeToPay?: boolean;

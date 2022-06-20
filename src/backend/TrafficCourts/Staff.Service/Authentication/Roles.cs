@@ -5,5 +5,6 @@ public static class Roles
     /// <summary>
     /// Violation Ticket Centre Staff API User
     /// </summary>
-    public const string User = "vtc-user";
+    public const string VTCUser = "vtc-user";
+    public const string JJUser = "jj-user";
 }

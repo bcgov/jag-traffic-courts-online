@@ -6,7 +6,7 @@ using MediatR;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class LookupController : TCOControllerBase<LookupController>
+public class LookupController : VTCControllerBase<LookupController>
 {
     private readonly IMediator _mediator;
     

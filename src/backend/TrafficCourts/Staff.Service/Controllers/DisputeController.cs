@@ -6,7 +6,7 @@ using TrafficCourts.Staff.Service.Services;
 namespace TrafficCourts.Staff.Service.Controllers;
 
 // implement role authorization by using TCOControllerBase class as in csrs project
-public class DisputeController : TCOControllerBase<DisputeController>
+public class DisputeController : VTCControllerBase<DisputeController>
 {
     private readonly IDisputeService _disputeService;
 

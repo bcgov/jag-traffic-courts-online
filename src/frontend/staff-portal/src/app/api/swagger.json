@@ -77,8 +77,8 @@
             "description": "Unique identifier for a specific Dispute record.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -186,8 +186,8 @@
             "description": "Unique identifier for a specific Dispute record.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -297,8 +297,8 @@
             "description": "Unique identifier for a specific Dispute record to cancel.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -364,8 +364,8 @@
             "description": "Unique identifier for a specific Dispute record to validate.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -458,8 +458,8 @@
             "description": "Unique identifier for a specific Dispute record to cancel.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -552,8 +552,8 @@
             "description": "Unique identifier for a specific Dispute record to submit.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -667,6 +667,162 @@
         }
       }
     },
+    "/api/jj/disputes": {
+      "get": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Returns all JJ Disputes from the Oracle Data API",
+        "parameters": [
+          {
+            "name": "jjGroupAssignedTo",
+            "in": "query",
+            "description": "If specified, will retrieve the records which are assigned to the specified jj group",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "jjAssignedTo",
+            "in": "query",
+            "description": "If specified, will retrieve the records which are assigned to the specified jj staff",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JJ disputes were found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          },
+          "401": {
+            "description": "Unauthenticated."
+          },
+          "403": {
+            "description": "Forbidden, wrong user roles."
+          }
+        }
+      }
+    },
+    "/api/jj/{JJDisputeId}": {
+      "get": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Returns a single JJ Dispute with the given identifier from the Oracle Data API.",
+        "parameters": [
+          {
+            "name": "JJDisputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific JJ dispute record.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JJ dispute was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          },
+          "401": {
+            "description": "Unauthenticated."
+          },
+          "403": {
+            "description": "Forbidden, wrong user roles."
+          }
+        }
+      }
+    },
     "/api/lookup": {
       "get": {
         "tags": [
@@ -736,8 +892,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "status": {
             "$ref": "#/components/schemas/DisputeStatus"
@@ -922,8 +1078,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "plea": {
             "$ref": "#/components/schemas/DisputedCountPlea"
@@ -1001,6 +1157,66 @@
         },
         "additionalProperties": false
       },
+      "JJDispute": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputantName": {
+            "type": "string",
+            "nullable": true
+          },
+          "enforcementOfficer": {
+            "type": "string",
+            "nullable": true
+          },
+          "policeDetachment": {
+            "type": "string",
+            "nullable": true
+          },
+          "courthouseLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjGroupAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LegalRepresentation": {
         "type": "object",
         "properties": {
@@ -1021,8 +1237,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "lawFirmName": {
             "type": "string",
@@ -1162,8 +1378,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "ticketNumber": {
             "type": "string",
@@ -1342,8 +1558,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "count": {
             "maximum": 3,

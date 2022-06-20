@@ -5,6 +5,7 @@ export * from './disputedCount.model';
 export * from './disputedCountPlea.model';
 export * from './excludeStatus.model';
 export * from './field.model';
+export * from './jJDispute.model';
 export * from './legalRepresentation.model';
 export * from './ocrViolationTicket.model';
 export * from './point.model';
