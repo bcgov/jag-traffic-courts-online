@@ -581,8 +581,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government."
+        "additionalProperties": false
       },
       "ViolationTicket": {
         "required": [
