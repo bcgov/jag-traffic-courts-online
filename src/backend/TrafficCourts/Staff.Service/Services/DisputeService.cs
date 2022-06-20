@@ -84,12 +84,12 @@ public class DisputeService : IDisputeService
         return await GetOracleDataApi().GetAllDisputesAsync(null, excludeStatus, cancellationToken);
     }
 
-    public async Task<Guid> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
+    public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().SaveDisputeAsync(dispute, cancellationToken);
     }
 
-    public async Task<Dispute> GetDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task<Dispute> GetDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
 
@@ -168,19 +168,19 @@ public class DisputeService : IDisputeService
         }
     }
 
-    public async Task<Dispute> UpdateDisputeAsync(Guid disputeId, Dispute dispute, CancellationToken cancellationToken)
+    public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
-    public async Task ValidateDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task ValidateDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute status setting to validated");
 
         await GetOracleDataApi().ValidateDisputeAsync(disputeId, cancellationToken);
     }
 
-    public async Task CancelDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute cancelled");
 
@@ -194,7 +194,7 @@ public class DisputeService : IDisputeService
         await _bus.Publish(cancelSendEmail, cancellationToken);
     }
 
-    public async Task RejectDisputeAsync(Guid disputeId, string rejectedReason, CancellationToken cancellationToken)
+    public async Task RejectDisputeAsync(long disputeId, string rejectedReason, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute rejected");
 
@@ -208,7 +208,7 @@ public class DisputeService : IDisputeService
         await _bus.Publish(rejectSendEmail, cancellationToken);
     }
 
-    public async Task SubmitDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute submitted for approval processing");
 
@@ -220,7 +220,7 @@ public class DisputeService : IDisputeService
         await _bus.Publish(approvedEvent, cancellationToken);
     }
 
-    public async Task DeleteDisputeAsync(Guid disputeId, CancellationToken cancellationToken)
+    public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
     }
