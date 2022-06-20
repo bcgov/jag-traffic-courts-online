@@ -154,7 +154,7 @@ export class JjDisputeService {
    *
    * @param disputeId
    */
-  public getJjDispute(disputeId: string): Observable<JjDispute> {
+  public getJjDispute(disputeId: number): Observable<JjDispute> {
     let data = this.tempData.filter(i => i.dispute.id === disputeId);
     let result = data.length > 0 ? data[0] : null;
     this._jjDispute.next(result);

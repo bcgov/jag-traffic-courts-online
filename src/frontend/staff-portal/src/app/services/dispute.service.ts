@@ -66,7 +66,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public getDispute(disputeId: string): Observable<Dispute> {
+  public getDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdGet(disputeId)
       .pipe(
@@ -99,7 +99,7 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public putDispute(disputeId: string, dispute: Dispute): Observable<Dispute> {
+  public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
@@ -125,7 +125,7 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public cancelDispute(disputeId: string): Observable<Dispute> {
+  public cancelDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId)
       .pipe(
@@ -151,7 +151,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public validateDispute(disputeId: string): Observable<Dispute> {
+  public validateDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdValidatePut(disputeId)
       .pipe(
@@ -178,7 +178,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public rejectDispute(disputeId: string, rejectedReason: string): Observable<Dispute> {
+  public rejectDispute(disputeId: number, rejectedReason: string): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
       .pipe(
@@ -205,7 +205,7 @@ export class DisputeService implements IDisputeService {
  *
  * @param disputeId
  */
-  public submitDispute(disputeId: string): Observable<Dispute> {
+  public submitDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdSubmitPut(disputeId)
       .pipe(

@@ -3,6 +3,7 @@ README.md
 api.module.ts
 api/api.ts
 api/dispute.service.ts
+api/jJ.service.ts
 api/lookup.service.ts
 configuration.ts
 encoder.ts
@@ -15,6 +16,7 @@ model/disputedCount.model.ts
 model/disputedCountPlea.model.ts
 model/excludeStatus.model.ts
 model/field.model.ts
+model/jJDispute.model.ts
 model/legalRepresentation.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
