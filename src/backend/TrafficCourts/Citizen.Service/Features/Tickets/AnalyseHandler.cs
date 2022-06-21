@@ -62,7 +62,7 @@ public static class AnalyseHandler
 
             // Generate a guid with a suffix '-o' to indicate that it's an OCRed ticketId
             // for using as Violation Ticket Key to save OCR related data into Redis
-            string ticketId = string.Concat(Guid.NewGuid().ToString("n"), "-o");
+            string ticketId = $"{Guid.NewGuid():n}-o";
 
             var stream = GetStreamForFile(request.Image);
 

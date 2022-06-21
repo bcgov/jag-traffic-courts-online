@@ -85,17 +85,17 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 try
                 {
                     // Check if the request contains ticket id
-                    if (String.IsNullOrEmpty(ticketId))
+                    if (!String.IsNullOrEmpty(ticketId))
                     {
                         // Check if the ticket id belongs to an OCR type of ticket
-                        if (ticketId.EndsWith("o"))
+                        if (ticketId.EndsWith("-o"))
                         {
                             // Get the OCR violation ticket data from Redis cache using the ticket id key
                             violationTicket = await _redisCacheService.GetRecordAsync<OcrViolationTicket>(ticketId);
 
                             if (violationTicket is null || String.IsNullOrEmpty(violationTicket.ImageFilename))
                             {
-                                _logger.LogError("No OCR violation ticket and image filename have been found for the {ticketId}", ticketId);
+                                _logger.LogInformation("No OCR violation ticket and image filename have been found for the {TicketId}", ticketId);
                                 throw new TicketLookupFailedException($"No OCR violation ticket and image filename has been found for the {ticketId}");
                             }
 
@@ -117,16 +117,20 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                             // Serialize OCR violation ticket to a JSON string
                             ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
                         }
-                        // Get the looked up ticket
-                        else
+                        // Check if the ticket id belongs to a Looked Up type of ticket
+                        else if (ticketId.EndsWith("-l"))
                         {
                             // Get the looked up violation ticket data from Redis cache using the ticket id key
                             lookedUpViolationTicket = await _redisCacheService.GetRecordAsync<Models.Tickets.ViolationTicket>(ticketId);
 
                             if (lookedUpViolationTicket is null)
                             {
-                                _logger.LogError("No looked up violation ticket has been found for the {ticketId}", ticketId);
+                                _logger.LogInformation("No looked up violation ticket has been found for the {TicketId}", ticketId);
                             }
+                        }
+                        else
+                        {
+                            _logger.LogInformation("An invalid {TicketId} has been passed", ticketId);
                         }
                     }
 

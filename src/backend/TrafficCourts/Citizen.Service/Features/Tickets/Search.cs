@@ -123,7 +123,7 @@ public static class Search
 
                 // Generate a guid with a suffix '-l' to indicate that it's a looked up ticketId
                 // for using as Violation Ticket Key to save looked up ticket data into Redis
-                string ticketId = string.Concat(Guid.NewGuid().ToString("n"), "-l");
+                string ticketId = $"{Guid.NewGuid():n}-l";
 
                 // Save the violation ticket data into Redis using the generated guid and set it to expire after 1 day from Redis 
                 await _redisCacheService.SetRecordAsync<ViolationTicket>(ticketId, ticket, TimeSpan.FromDays(1));
