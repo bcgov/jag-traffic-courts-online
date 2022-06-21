@@ -99,6 +99,9 @@ export class NoticeOfDisputeService {
   }
 
   public createNoticeOfDispute(input: NoticeOfDispute): void {
+    input.birthdate = this.datePipe.transform(input.birthdate, "yyyy-MM-dd");
+    input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-dd HH:mm:ss");
+
     const data: DialogOptions = {
       titleKey: "Submit request",
       messageKey:

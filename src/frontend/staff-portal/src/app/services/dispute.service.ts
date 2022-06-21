@@ -5,6 +5,7 @@ import { DisputeService as DisputeApiService, Dispute as DisputeApiModel } from 
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 export interface IDisputeService {
   disputes$: Observable<Dispute[]>;
@@ -24,7 +25,8 @@ export class DisputeService implements IDisputeService {
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private disputeApiService: DisputeApiService
+    private disputeApiService: DisputeApiService,
+    private datePipe:DatePipe
   ) {
     this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
@@ -101,6 +103,9 @@ export class DisputeService implements IDisputeService {
      */
   public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
+     dispute.birthdate = this.datePipe.transform(dispute?.birthdate, "yyyy-MM-dd");
+     dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate, "yyyy-MM-dd HH:mm:ss");
+    //  dispute.violationTicket = 
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
         map((response: Dispute) => {
