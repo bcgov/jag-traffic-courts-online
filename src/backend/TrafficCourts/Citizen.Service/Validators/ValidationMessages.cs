@@ -2,6 +2,7 @@ namespace TrafficCourts.Citizen.Service.Validators;
 
 public static class ValidationMessages
 {
+    public static readonly string RequiredFieldError = @"{0} is a required field. No value found.";
     public static readonly string FieldIsBlankError = "{0} is blank";
     public static readonly string DriversLicenceNumberError = "Drivers Licence Number is not 7 digits.";
     public static readonly string DriversLicenceProvinceError = "Drivers Licence Province is not 'BC'. Could not validate Drivers Licence Number.";
@@ -12,9 +13,8 @@ public static class ValidationMessages
     public static readonly string MVAMustBeSelectedError = @"MVA must be selected under the 'Did commit the offence(s) indicated' section.";
     public static readonly string MVAMustBeCountValue = @"TCO only supports counts with MVA as the ACT/REG at this time. Read '{0}' for count {1}.";
     public static readonly string OnlyMVAMustBeSelectedError = @"MVA must be the only selected ACT under the 'Did commit the offence(s) indicated' section.";
-    public static readonly string ViolationDateInvalid = @"Violation Date must be a valid date. Read '{0}'.";
-    public static readonly string ViolationDateFutureInvalid = @"Violation Date must not be in the future. Read '{0}'.";
-    public static readonly string ViolationDateGT30Days = @"Violation Date '{0}' is more than 30 days ago.";
+    public static readonly string DateFutureInvalid = @"{0} must not be in the future. Read '{1}'.";
+    public static readonly string DateOfServiceGT30Days = @"Date of Service '{0}' is more than 30 days ago.";
     public static readonly string TimeInvalid = @"'{0}' is not a valid time.";
     public static readonly string LowConfidenceError = "Too many fields have a low confidence.";
     public static readonly string CountSectionInvalid = @"'{0}' was not found in the list of known MVA Violation Ticket Contraventions.";

@@ -45,6 +45,7 @@ public class OcrViolationTicket
     public static readonly string Count3TicketAmount = "counts.count_3.ticketed_amount";
     public static readonly string HearingLocation = "provincial_court_hearing_location";
     public static readonly string DetachmentLocation = "organization_location";
+    public static readonly string DateOfService = "service_date";
 
     /// <summary>
     /// Gets or sets the saved image filename.
