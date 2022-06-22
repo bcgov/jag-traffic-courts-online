@@ -18,6 +18,5 @@ export class TcoPageHeaderComponent {
 
   }
   
-
   @Input() showHorizontalRule = true;
 }

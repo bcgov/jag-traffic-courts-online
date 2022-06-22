@@ -106,6 +106,7 @@ export interface JJDisputeView extends JJDispute {  // TODO replace this with th
   emailAddress?: string | null;
   filingDate?: string | null;
   disputedCounts?: Array<DisputedCount> | null;
+  jjFinalDispositionCount?: Array<JJFinalDispositionCount> | null;
   representedByLawyer?: boolean;
   legalRepresentation?: LegalRepresentation;
   interpreterLanguage?: string | null;
@@ -121,4 +122,11 @@ export interface JJDisputeView extends JJDispute {  // TODO replace this with th
   assignedTo?: string | null;
   assignedTs?: string | null;
   violationTicket?: ViolationTicket;
+  jjRemarks?: string | null;
+}
+export interface JJFinalDispositionCount {
+  count?: number | null;
+  ticketedAmount?: number | null;
+  dueTs?: string | null;
+  comments?: string | null;
 }

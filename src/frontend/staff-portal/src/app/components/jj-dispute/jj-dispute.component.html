@@ -100,6 +100,15 @@
           <h3>Written Reasons</h3>
         </span>
       </ng-container>
+      <div>
+        <h4><b>Fine Reduction</b><span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span></h4>
+        <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
+        <br /><br />
+      </div>
+      <div>
+        <h4><b>Time to Pay</b><span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading }}</span></h4>
+        <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
+    </div>
     </section><br />
     <section>
       <ng-container subHeader>
@@ -107,6 +116,13 @@
           <h3>Count(s)</h3>
         </span>
       </ng-container>
+      <div style="display: grid; grid-template-columns: auto auto auto">
+        <span *ngFor="let violationTicketCount of lastUpdatedJJDispute.violationTicket.violationTicketCounts">
+          <app-jj-count 
+            [violationTicketCount]="violationTicketCount"
+            [jjDisputeInfo]="lastUpdatedJJDispute"></app-jj-count>
+        </span>
+      </div>
     </section><br />
     <section>
       <ng-container subHeader>
@@ -114,6 +130,9 @@
           <h3>Add Remarks</h3>
         </span>
       </ng-container>
+      <mat-form-field style="width:100%">
+        <textarea matInput [(ngModel)]="lastUpdatedJJDispute.jjRemarks"></textarea>
+      </mat-form-field>
     </section><br />
     <div style="float: right; width: 100%;">
       <button class="large" mat-flat-button type="button" color="primary" (click)="onSave()">

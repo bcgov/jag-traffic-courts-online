@@ -1,0 +1,24 @@
+<div class="contact-info">
+  <section>
+    <ng-container subHeader>
+      <span>
+        <h3>Count {{ violationTicketCount.count }} </h3>
+      </span>
+    </ng-container>
+    <div style="display: grid; grid-template-columns: auto auto">
+      <span class="section-grid-cell" style="grid-column-start: 1; grid-column-end: 2;">
+        <span class="section-grid-header">Description of offence<br/></span>
+        <span class="section-grid-text">{{ violationTicketCount.section }}</span>
+      </span>
+      <span class="section-grid-cell">
+        <span class="section-grid-header">Due Date<br/></span>
+        <span class="section-grid-text">{{ addThirtyDays(violationDate) | date: "MMM dd,yyyy"  }}</span>
+      </span>
+      <span class="section-grid-cell">
+        <span class="section-grid-header">Fine amount<br/></span>
+        <span class="section-grid-text">{{ violationTicketCount.ticketedAmount | currency }}</span>
+      </span>
+    </div>
+    <hr/>
+  </section><br />
+</div>
