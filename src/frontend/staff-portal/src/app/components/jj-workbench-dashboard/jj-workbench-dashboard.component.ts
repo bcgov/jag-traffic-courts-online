@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JjDisputeService, JjDispute } from 'app/services/jj-dispute.service';
-import { DisputeStatus } from 'app/api';
+import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { JJDispute } from '../../api/model/jJDispute.model';
 import { LoggerService } from '@core/services/logger.service';
-import { of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -13,8 +13,10 @@ import { of, Subscription } from 'rxjs';
 })
 export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
   busy: Subscription;
+  jjDisputeInfo: JJDispute;
 
   data = [];
+  showDispute: boolean = false;
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
   displayedColumns: string[] = [
@@ -28,7 +30,7 @@ export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
   ];
 
   constructor(
-    public jjDisputeService: JjDisputeService,
+    public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
   ) { }
 
@@ -40,18 +42,29 @@ export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  getAll(): void {
-    this.logger.log('TicketPageComponent::getAllDisputes');
+  backTicketList(element) {
+    this.jjDisputeInfo = element;
+    this.showDispute = !this.showDispute;
+    if (!this.showDispute) this.getAll();  // refresh list
+  }
 
-    this.jjDisputeService.getJjDisputes().subscribe((response) => {
+  backTicketpage() {
+    this.showDispute = !this.showDispute;
+    if (!this.showDispute) this.getAll(); // refresh list
+  }
+
+  getAll(): void {
+    this.logger.log('JJWorkbenchDashboardComponent::getAllDisputes');
+
+    this.jjDisputeService.getJJDisputes().subscribe((response) => {
       this.data = response;
       this.dataSource.data = this.data;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: JjDispute, b: JjDispute) => { if (a.violationDate > b.violationDate) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) => { if (a.violationDate > b.violationDate) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: JjDispute, filter) {
+      this.dataSource.filterPredicate = function (record: JJDispute, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
     });

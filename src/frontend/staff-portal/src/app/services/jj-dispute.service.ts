@@ -4,132 +4,21 @@ import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { DisputeService, Dispute } from './dispute.service';
-import { cloneDeep } from 'lodash';
-import { DatePipe } from '@angular/common';
-import { DisputeStatus } from 'app/api';
+import { JJService, JJDispute, Dispute } from 'app/api';
 
 @Injectable({
   providedIn: 'root',
 })
-export class JjDisputeService {
-  private _jjDisputes: BehaviorSubject<JjDispute[]> = new BehaviorSubject<JjDispute[]>(null);
-  private _jjDispute: BehaviorSubject<JjDispute> = new BehaviorSubject<JjDispute>(null);
-
-  private mockData: JjDispute[] = [
-    {
-      "createdBy": "System",
-      "createdTs": "2022-06-09T21:45:35.781+00:00",
-      "modifiedBy": null,
-      "modifiedTs": null,
-      "ticketNumber": "1000001",
-      "violationDate": "2022-06-09T21:45:35.781+00:00",
-      "disputantName": "John Doe",
-      "enforcementOfficer": "Steven Allan",
-      "policeDetachment": "West Shore",
-      "courthouseLocation": "Victoria",
-      "jjAssignedTo": "JJ1",
-      "jjGroupAssignedTo": "JJGroup1"
-    },
-    {
-      "createdBy": "System",
-      "createdTs": "2022-06-09T21:45:35.781+00:00",
-      "modifiedBy": null,
-      "modifiedTs": null,
-      "ticketNumber": "1000002",
-      "violationDate": "2022-06-08T00:00:00.000+00:00",
-      "disputantName": "Jane Doe",
-      "enforcementOfficer": "Alison Kerr",
-      "policeDetachment": "Valemount",
-      "courthouseLocation": "Vancouver",
-      "jjAssignedTo": "JJ2",
-      "jjGroupAssignedTo": "JJGroup2"
-    },
-    {
-      "createdBy": "System",
-      "createdTs": "2022-06-09T21:45:35.781+00:00",
-      "modifiedBy": null,
-      "modifiedTs": null,
-      "ticketNumber": "1000003",
-      "violationDate": "2022-06-07T00:00:00.000+00:00",
-      "disputantName": "Simon Young",
-      "enforcementOfficer": "Adrian Peake",
-      "policeDetachment": "University",
-      "courthouseLocation": "Vancouver",
-      "jjAssignedTo": null,
-      "jjGroupAssignedTo": "JJGroup2"
-    },
-    {
-      "createdBy": "System",
-      "createdTs": "2022-06-09T21:45:35.781+00:00",
-      "modifiedBy": null,
-      "modifiedTs": null,
-      "ticketNumber": "1000004",
-      "violationDate": "2022-06-06T00:00:00.000+00:00",
-      "disputantName": "Matt Vaughan",
-      "enforcementOfficer": "Steven Allan",
-      "policeDetachment": "Whistler",
-      "courthouseLocation": "Whistler",
-      "jjAssignedTo": "JJ3",
-      "jjGroupAssignedTo": "JJGroup1"
-    },
-    {
-      "createdBy": "System",
-      "createdTs": "2022-06-09T21:45:35.781+00:00",
-      "modifiedBy": null,
-      "modifiedTs": null,
-      "ticketNumber": "1000005",
-      "violationDate": "2022-06-05T00:00:00.000+00:00",
-      "disputantName": "Gavin Glover",
-      "enforcementOfficer": "Harry Reid",
-      "policeDetachment": "Ladysmith",
-      "courthouseLocation": "Squamish",
-      "jjAssignedTo": "JJ3",
-      "jjGroupAssignedTo": "JJGroup3"
-    },
-    {
-      "createdBy": "System",
-      "createdTs": "2022-06-09T21:45:35.781+00:00",
-      "modifiedBy": null,
-      "modifiedTs": null,
-      "ticketNumber": "1000006",
-      "violationDate": "2022-06-04T00:00:00.000+00:00",
-      "disputantName": "Gavin Glover",
-      "enforcementOfficer": "Harry Reid",
-      "policeDetachment": "Ladysmith",
-      "courthouseLocation": "Squamish",
-      "jjAssignedTo": null,
-      "jjGroupAssignedTo": null
-    }
-  ]
-  private tempData: JjDispute[] = [];
+export class JJDisputeService {
+  private _JJDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
+  private _JJDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
 
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private disputeService: DisputeService,
-    private datePipe: DatePipe
+    private jjApiService: JJService,
   ) {
-    this.disputeService.getDisputes().subscribe(disputes => {
-      if (disputes) {
-        let i = 0;
-        this.tempData = [];
-        disputes.filter(dispute => dispute.assignedTo).forEach(dispute => {
-          let data = cloneDeep(this.mockData[i % (this.mockData.length - 1)]);
-          data.dispute = dispute;
-          data.jjAssignedTo = dispute.assignedTo;
-          data.disputantName = dispute.givenNames + " " + dispute.surname;
-          data.modifiedBy = dispute.modifiedBy;
-          data.modifiedTs = dispute.modifiedTs;
-          data.violationDate = this.datePipe.transform(data.violationDate, "yyyy-MM-dd");
-          data.__status = DisputeStatus.New;
-          this.tempData.push(data);
-          i++;
-        })
-        this._jjDisputes.next(this.tempData);
-      }
-    });
   }
 
   /**
@@ -137,16 +26,31 @@ export class JjDisputeService {
      *
      * @param none
      */
-  public getJjDisputes(): Observable<JjDispute[]> {
-    return this.jjDisputes$;
+  public getJJDisputes(): Observable<JJDispute[]> {
+    return this.jjApiService.apiJjDisputesGet()
+      .pipe(
+        map((response: JJDispute[]) => {
+          this.logger.info('jj-DisputeService::getJJDisputes', response);
+          this._JJDisputes.next(response);
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::getJJDisputes error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
-  public get jjDisputes$(): Observable<JjDispute[]> {
-    return this._jjDisputes.asObservable();
+  public get JJDisputes$(): Observable<JJDispute[]> {
+    return this._JJDisputes.asObservable();
   }
 
-  public get jjDisputes(): JjDispute[] {
-    return this._jjDisputes.value;
+  public get JJDisputes(): JJDispute[] {
+    return this._JJDisputes.value;
   }
 
   /**
@@ -154,36 +58,34 @@ export class JjDisputeService {
    *
    * @param disputeId
    */
-  public getJjDispute(disputeId: number): Observable<JjDispute> {
-    let data = this.tempData.filter(i => i.dispute.id === disputeId);
-    let result = data.length > 0 ? data[0] : null;
-    this._jjDispute.next(result);
-    return this.jjDispute$;
+  public getJJDispute(disputeId: string): Observable<JJDispute> {
+    return this.jjApiService.apiJjJJDisputeIdGet(disputeId)
+      .pipe(
+        map((response: JJDispute) => {
+          this.logger.info('jj-DisputeService::getJJDispute', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.logger.error(
+            'jj-DisputeService::getJJDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
   }
 
-  public get jjDispute$(): Observable<JjDispute> {
-    return this._jjDispute.asObservable();
+  public get JJDispute$(): Observable<JJDispute> {
+    return this._JJDispute.asObservable();
   }
 
-  public get jjDispute(): JjDispute {
-    return this._jjDispute.value;
+  public get JJDispute(): JJDispute {
+    return this._JJDispute.value;
   }
 }
 
-export interface JjDispute {
-  createdBy?: string | null;
-  createdTs?: string;
-  modifiedBy?: string | null;
-  modifiedTs?: string;
-  id?: string;
-  ticketNumber?: string | null;
-  violationDate?: string;
-  disputantName?: string | null;
-  enforcementOfficer?: string | null;
-  policeDetachment?: string | null;
-  courthouseLocation?: string | null;
-  jjAssignedTo?: string | null;
-  jjGroupAssignedTo?: string | null;
-  dispute?: Dispute | null;
-  __status?: string | null;
+export interface JJDisputeView extends JJDispute {
+  dispute?: Dispute;
 }
