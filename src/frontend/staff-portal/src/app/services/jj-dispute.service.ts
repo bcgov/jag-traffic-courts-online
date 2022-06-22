@@ -4,7 +4,7 @@ import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { JJService, JJDispute, Dispute } from 'app/api';
+import { JJService, JJDispute, Dispute, DisputeStatus, DisputedCount, LegalRepresentation, ViolationTicket } from 'app/api';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +86,39 @@ export class JJDisputeService {
   }
 }
 
-export interface JJDisputeView extends JJDispute {
-  dispute?: Dispute;
+export interface JJDisputeView extends JJDispute {  // TODO replace this with this with data structure that will come from mock data
+  id?: number;
+  status?: DisputeStatus;
+  provincialCourtHearingLocation?: string | null;
+  issuedDate?: string;
+  submittedDate?: string | null;
+  surname?: string | null;
+  givenNames?: string | null;
+  birthdate?: string;
+  driversLicenceNumber?: string | null;
+  driversLicenceProvince?: string | null;
+  address?: string | null;
+  city?: string | null;
+  province?: string | null;
+  postalCode?: string | null;
+  homePhoneNumber?: string | null;
+  workPhoneNumber?: string | null;
+  emailAddress?: string | null;
+  filingDate?: string | null;
+  disputedCounts?: Array<DisputedCount> | null;
+  representedByLawyer?: boolean;
+  legalRepresentation?: LegalRepresentation;
+  interpreterLanguage?: string | null;
+  numberOfWitness?: number | null;
+  fineReductionReason?: string | null;
+  timeToPayReason?: string | null;
+  rejectedReason?: string | null;
+  disputantDetectedOcrIssues?: boolean;
+  disputantOcrIssuesDescription?: string | null;
+  systemDetectedOcrIssues?: boolean;
+  jjAssigned?: string | null;
+  ocrViolationTicket?: string | null;
+  assignedTo?: string | null;
+  assignedTs?: string | null;
+  violationTicket?: ViolationTicket;
 }
