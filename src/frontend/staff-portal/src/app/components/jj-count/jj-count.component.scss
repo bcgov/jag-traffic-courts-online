@@ -2,7 +2,7 @@
 
 h3 {
   font-weight: bold;
-  color: black !important;
+  color: #1d4a77 !important;
 }
 
 .text {
@@ -11,18 +11,66 @@ h3 {
   color: black;
 }
 
+.section {
+  background-color: gray !important;
+}
+
 .section-grid-cell {
   border:none; 
   padding-left: 5px;
+  padding-bottom: 15px;
 }
 
+.section-jj-grid-cell {
+  border-right-width: 2px; 
+  border-right-style: solid;
+  border-right-color: #e4f2ff;
+  padding-left: 5px;
+  padding-bottom: 15px;
+}
 .section-grid-header {
   font-size:small; 
+  color: #707070;
   font-weight: bold;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-grid-header2 {
+  font-size:small; 
+  color: #707070;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .section-grid-text {
   font-size:small; 
+  font-weight: bold;
+  color: #1d4a77 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-jj-grid-text2 {
+  font-size: small;
+  color: #bcd9f3 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-jj-grid-text {
+  font-size:small; 
+  color: #1d4a77 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+p {
+  line-height: 1.1;
+}
+
+.count-text {
+  color: #1d4a77 !important;
 }
 
 .disputre {

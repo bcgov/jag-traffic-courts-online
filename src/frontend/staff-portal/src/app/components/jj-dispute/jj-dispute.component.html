@@ -20,36 +20,36 @@
       </ng-container>
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
-          <span class="section-grid-header">Surname<br/></span>
-          <span>{{ lastUpdatedJJDispute.violationTicket.surname }}</span>
+          <p class="section-grid-header">Surname</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.surname }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Given Name(s)<br/></span>
-          <span>{{ lastUpdatedJJDispute.violationTicket.givenNames }}</span>
+          <p class="section-grid-header">Given Name(s)</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.givenNames }}</p>
         </span>
         <span>
-          <span class="section-grid-header">&nbsp;<br/></span>
-          <span>&nbsp;</span>
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-grid-text">&nbsp;</p>
         </span>
         <span>
-          <span class="section-grid-header">&nbsp;<br/></span>
-          <span>&nbsp;</span>
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-grid-text">&nbsp;</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Violation Date<br/></span>
-          <span>{{ violationDate | date: "MMM dd, yyyy" }}</span>
+          <p class="section-grid-header">Violation Date</p>
+          <p class="section-grid-text">{{ violationDate | date: "MMM dd, yyyy" }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Violation Time<br/></span>
-          <span>{{ violationTime }}</span>
+          <p class="section-grid-header">Violation Time</p>
+          <p class="section-grid-text">{{ violationTime }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Location of Offence<br/></span>
-          <span>{{ lastUpdatedJJDispute.violationTicket.address }}</span>
+          <p class="section-grid-header">Location of Offence</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.address }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Organization/Detachment/Location<br/></span>
-          <span>{{ lastUpdatedJJDispute.violationTicket.organizationLocation }}</span>
+          <p class="section-grid-header">Organization/Detachment/Location</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.organizationLocation }}</p>
         </span>
       </div>
     </section><br />
@@ -61,36 +61,36 @@
       </ng-container>
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
-          <span class="section-grid-header">Surname<br/></span>
-          <span>{{ lastUpdatedJJDispute.surname }}</span>
+          <p class="section-grid-header">Surname</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.surname }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Given Name(s)<br/></span>
-          <span>{{ lastUpdatedJJDispute.givenNames }}</span>
+          <p class="section-grid-header">Given Name(s)</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">City<br/></span>
-          <span>{{ lastUpdatedJJDispute.city }}</span>
+          <p class="section-grid-header">City</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.city }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Address<br/></span>
-          <span>{{ lastUpdatedJJDispute.address }}</span>
+          <p class="section-grid-header">Address</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Prov / State of DL<br/></span>
-          <span>{{ lastUpdatedJJDispute.driversLicenceProvince }}</span>
+          <p class="section-grid-header">Prov / State of DL</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Postal Code<br/></span>
-          <span>{{ lastUpdatedJJDispute.postalCode }}</span>
+          <p class="section-grid-header">Postal Code</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.postalCode }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Birthdate<br/></span>
-          <span>{{ lastUpdatedJJDispute.birthdate | date: "MMM dd, yyyy" }}</span>
+          <p class="section-grid-header">Birthdate</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.birthdate | date: "MMM dd, yyyy" }}</p>
         </span>
         <span class="section-grid-cell">
-          <span class="section-grid-header">Driver's Licence #<br/></span>
-          <span>{{ lastUpdatedJJDispute.driversLicenceNumber }}</span>
+          <p class="section-grid-header">Driver's Licence #</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
         </span>
       </div>
     </section><br />
@@ -116,11 +116,13 @@
           <h3>Count(s)</h3>
         </span>
       </ng-container>
-      <div style="display: grid; grid-template-columns: auto auto auto">
-        <span *ngFor="let violationTicketCount of lastUpdatedJJDispute.violationTicket.violationTicketCounts">
+      <div style="display: grid; grid-template-columns: 33% 33% 33%">
+        <span *ngFor="let violationTicketCount of lastUpdatedJJDispute.violationTicket.violationTicketCounts" style="border:1px solid black; ">
           <app-jj-count 
-            [violationTicketCount]="violationTicketCount"
-            [jjDisputeInfo]="lastUpdatedJJDispute"></app-jj-count>
+            [count]="violationTicketCount.count"
+            [jjDisputeInfo]="lastUpdatedJJDispute"
+            [finalDispositionCount]="getFinalDispositionCount(violationTicketCount.count)"
+            (finalDispositionCountUpdate)="updateFinalDispositionCount($event)"></app-jj-count>
         </span>
       </div>
     </section><br />
@@ -131,7 +133,7 @@
         </span>
       </ng-container>
       <mat-form-field style="width:100%">
-        <textarea matInput [(ngModel)]="lastUpdatedJJDispute.jjRemarks"></textarea>
+        <textarea matInput [(ngModel)]="lastUpdatedJJDispute.jjRemarks" maxlength="1500" rows="6"></textarea>
       </mat-form-field>
     </section><br />
     <div style="float: right; width: 100%;">

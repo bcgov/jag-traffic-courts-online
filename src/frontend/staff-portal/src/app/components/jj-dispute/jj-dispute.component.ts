@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { JJDisputeView, JJDisputeService } from '../../services/jj-dispute.service';
+import { JJDisputeView, JJDisputeService, JJFinalDispositionCount } from '../../services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { ViolationTicket, DisputedCountPlea } from 'app/api';
@@ -149,6 +149,39 @@ export class JJDisputeComponent implements OnInit {
       count: 3,
       section: "92.1(1) MVA - Fail to stop resulting in pursuit",
       ticketedAmount: 380
+    });
+
+    this.lastUpdatedJJDispute.jjFinalDispositionCounts = [];
+    this.lastUpdatedJJDispute.jjFinalDispositionCounts.push({
+      count: 1,
+      fineAmount: 380,
+      dueTs: this.jjDisputeService.addThirtyDays(this.lastUpdatedJJDispute.violationDate).toDateString(),
+      comments: ""
+    })
+    this.lastUpdatedJJDispute.jjFinalDispositionCounts.push({
+      count: 2,
+      fineAmount: 196,
+      dueTs: this.jjDisputeService.addThirtyDays(this.lastUpdatedJJDispute.violationDate).toDateString(),
+      comments: ""
+    })
+    this.lastUpdatedJJDispute.jjFinalDispositionCounts.push({
+      count: 3,
+      fineAmount: 380,
+      dueTs: this.jjDisputeService.addThirtyDays(this.lastUpdatedJJDispute.violationDate).toDateString(),
+      comments: ""
+    })
+  }
+
+  getFinalDispositionCount(count: number) {
+    return this.lastUpdatedJJDispute.jjFinalDispositionCounts.filter(x => x.count == count)[0];
+  }
+
+  // get from child component
+  updateFinalDispositionCount(updatedJJFinalDispositionCount: JJFinalDispositionCount) {
+    this.lastUpdatedJJDispute.jjFinalDispositionCounts.forEach(jjFinalDispositionCount => {
+      if (jjFinalDispositionCount.count == updatedJJFinalDispositionCount.count) {
+        jjFinalDispositionCount = updatedJJFinalDispositionCount;
+      }
     });
   }
 

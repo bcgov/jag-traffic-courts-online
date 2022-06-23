@@ -84,6 +84,12 @@ export class JJDisputeService {
   public get JJDispute(): JJDispute {
     return this._JJDispute.value;
   }
+
+  public addThirtyDays(initialDate: string): Date {
+    var futureDate = new Date(initialDate);
+    futureDate.setDate(futureDate.getDate() + 30);
+    return futureDate;
+  }
 }
 
 export interface JJDisputeView extends JJDispute {  // TODO replace this with this with data structure that will come from mock data
@@ -106,7 +112,7 @@ export interface JJDisputeView extends JJDispute {  // TODO replace this with th
   emailAddress?: string | null;
   filingDate?: string | null;
   disputedCounts?: Array<DisputedCount> | null;
-  jjFinalDispositionCount?: Array<JJFinalDispositionCount> | null;
+  jjFinalDispositionCounts?: Array<JJFinalDispositionCount> | null;
   representedByLawyer?: boolean;
   legalRepresentation?: LegalRepresentation;
   interpreterLanguage?: string | null;
@@ -126,7 +132,7 @@ export interface JJDisputeView extends JJDispute {  // TODO replace this with th
 }
 export interface JJFinalDispositionCount {
   count?: number | null;
-  ticketedAmount?: number | null;
+  fineAmount?: number | null;
   dueTs?: string | null;
   comments?: string | null;
 }
