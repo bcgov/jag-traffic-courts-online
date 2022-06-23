@@ -3,11 +3,10 @@ using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using Xunit;
-using static TrafficCourts.Citizen.Service.Models.Tickets.OcrViolationTicket;
 
 namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 
-public class ViolationDateLT30RuleTest
+public class DateOfServiceLT30RuleTest
 {
 
     [Theory]
@@ -53,10 +52,10 @@ public class ViolationDateLT30RuleTest
     {
         // Given
         OcrViolationTicket violationTicket = new();
-        Field violationDate = new();
-        violationDate.Value = dateStr;
-        violationTicket.Fields.Add(OcrViolationTicket.ViolationDate, violationDate);
-        ViolationDateLT30Rule rule = new(violationDate);
+        Field dateOfService = new();
+        dateOfService.Value = dateStr;
+        violationTicket.Fields.Add(OcrViolationTicket.DateOfService, dateOfService);
+        DateOfServiceLT30Rule rule = new(dateOfService);
 
         // When
         await rule.RunAsync();
@@ -67,12 +66,13 @@ public class ViolationDateLT30RuleTest
 
     public class TestData : TheoryData<string, bool>
     {
-        public TestData() {
+        public TestData()
+        {
             DateTime now = DateTime.Now;
             for (int i = -32; i < 3; i++)
             {
                 // Valid date values are from 30 days ago to today. 
-                // If the Violation Date is in the future then we must have mis-read it - considered invalid
+                // If the DateOfService is in the future then we must have mis-read it - considered invalid
                 string dateStr = now.AddDays(i).ToString("yyyy MM dd");
                 bool isValid = i >= -30 && i <= 0;
                 Add(dateStr, isValid);
