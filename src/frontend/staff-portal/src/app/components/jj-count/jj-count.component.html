@@ -66,8 +66,8 @@
           <p class="section-grid-header">Reduce fine</p>
           <p class="section-jj-grid-text">            
             <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}" (change)="updateFineAmount($event)">
-              <mat-radio-button value="yes" style="font-size: small">yes</mat-radio-button>
-              <mat-radio-button value="no" style="padding-right: 5px; font-size: small">no</mat-radio-button>
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
             </mat-radio-group>
           </p>
         </span>
@@ -88,8 +88,8 @@
           <p class="section-grid-header" ><span *ngIf="fineReduction=='no'">&nbsp;<br/><br/></span></p>
           <p class="section-jj-grid-text">            
             <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}" (change)="updateInclSurcharge($event)" *ngIf="fineReduction=='yes'">
-              <mat-radio-button value="yes" style="font-size: small">yes</mat-radio-button>
-              <mat-radio-button value="no" style="padding-right: 5px; font-size: small">no</mat-radio-button>
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
             </mat-radio-group>
             <span *ngIf="fineReduction=='no'"><br/><br/><br/><br/></span>
           </p>
