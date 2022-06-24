@@ -56,9 +56,9 @@ public static class AuthenticationExtensions
         if (resourceAccessClaim != null)
         {
             var audiencesRoles = JsonSerializer.Deserialize<Dictionary<string, ResourceAccess>>(resourceAccessClaim);
-            foreach(var audienceRole in audiencesRoles)
+            if (audiencesRoles != null) foreach(var audienceRole in audiencesRoles)
             {
-                if (audienceRole.Key == audience)
+                if (audienceRole.Key == audience && audienceRole.Value.roles != null)
                 {
                     foreach(var role in audienceRole.Value.roles)
                     {
