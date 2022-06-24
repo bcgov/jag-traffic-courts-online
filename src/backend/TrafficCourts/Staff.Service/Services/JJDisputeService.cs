@@ -79,7 +79,7 @@ public class JJDisputeService : IJJDisputeService
         return client;
     }
 
-    public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string jjGroupAssignedTo, string jjAssignedTo, CancellationToken cancellationToken)
+    public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjGroupAssignedTo, string? jjAssignedTo, CancellationToken cancellationToken)
     {
         return await GetOracleDataApi().GetAllJJDisputesAsync(jjGroupAssignedTo, jjAssignedTo, cancellationToken);
     }

@@ -10,7 +10,7 @@ public interface IJJDisputeService
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
     /// <returns>A collection of JJDispute objects</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string jjGroupAssignedTo, string jjAssignedTo, CancellationToken cancellationToken);
+    Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjGroupAssignedTo, string? jjAssignedTo, CancellationToken cancellationToken);
 
     /// <summary>Returns a specific JJ dispute from the database.</summary>
     /// <param name="id">Unique identifier of a JJ Dispute record.</param>
