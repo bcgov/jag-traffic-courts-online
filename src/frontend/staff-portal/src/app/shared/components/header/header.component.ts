@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-header',
@@ -22,6 +23,7 @@ import { AppConfigService } from 'app/services/app-config.service';
 })
 export class HeaderComponent implements OnInit {
   public fullName: string;
+  todayDate: Date = new Date();
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
@@ -34,6 +36,9 @@ export class HeaderComponent implements OnInit {
   public environment: string;
   public version: string;
   public isLoggedIn: Boolean = false;
+  public jjRole: boolean = false;
+  public vtcRole: boolean = false;
+  public headingText: string = "Authenticating...";
 
   constructor(
     protected logger: LoggerService,
@@ -41,6 +46,7 @@ export class HeaderComponent implements OnInit {
     private translateService: TranslateService,
     private oidcSecurityService: OidcSecurityService,
     private router: Router,
+    public jwtHelper: JwtHelperService
   ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
@@ -55,7 +61,33 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
       this.isLoggedIn = isAuthenticated;
+
+      if (isAuthenticated) {
+        // decode the token to get its payload
+        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
+        console.log(tokenPayload);
+        let resource_access = tokenPayload.resource_access["tco-staff-portal"];
+        if (resource_access) {
+          let roles = resource_access.roles;
+          if (roles) roles.forEach(role => {
+            if (role == "vtc-user") { // TODO USE role name for JJ
+              this.jjRole = true;
+            } 
+            if (role == "vtc-user") {
+              this.vtcRole = true;
+            }
+          });
+        }
+
+        if (this.jjRole) this.headingText = "JJ Written Reasons - Assignments";
+        else this.headingText = "Ticket Resolution Management ";
+      }
     })
+
+    this.oidcSecurityService.userData$.subscribe( (userInfo: any) => {
+      if (userInfo && userInfo.userData && userInfo.userData.name) this.fullName = userInfo.userData.name;
+    });
+
   }
 
   public toggleSidenav(): void {

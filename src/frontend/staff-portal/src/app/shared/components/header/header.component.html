@@ -8,7 +8,7 @@
            rel="noopener">
           <img src="/assets/gov_bc_logo.jpg"
                alt="Government of BC Logo" />
-        </a>| Ticket Resolution  Management 
+        </a>&nbsp;&nbsp;{{ headingText }} 
         <span class="badge badge-pill badge-light header"
             *ngIf="environment !== 'prod'">
         {{ environment }} v{{ version }}
@@ -30,8 +30,12 @@
       <button mat-button *ngIf="!isLoggedIn" (click)="login()">
         <mat-icon class="auth" inline="true">login</mat-icon>IDIR Sign in
       </button>
+      <div style="line-height: 0.1" *ngIf="isLoggedIn && jjRole">
+        <p>{{ fullName }}</p>
+        <p><span style="font-size: small">{{ todayDate | customDate:"EEEE, MMMM ddd y" }}</span></p>
+      </div>
       <button mat-button *ngIf="isLoggedIn" (click)="logout()">
-        <mat-icon class="auth" inline="true">logout</mat-icon>Sign out
+        <mat-icon class="auth" inline="true">logout</mat-icon><span *ngIf="vtcRole && jjRole">Sign out</span>
       </button>
     </mat-toolbar>
   </div>

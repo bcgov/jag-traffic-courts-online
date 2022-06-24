@@ -6,5 +6,5 @@ public static class Roles
     /// Violation Ticket Centre Staff API User
     /// </summary>
     public const string VTCUser = "vtc-user";
-    public const string JJUser = "jj-user";
+    public const string JJUser = "vtc-user"; // TODO -- use a specific jj-user role
 }
