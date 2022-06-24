@@ -33,6 +33,8 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
+import { JJDisputeComponent } from '@components/jj-dispute/jj-dispute.component';
+import { JJCountComponent } from '@components/jj-count/jj-count.component';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -58,6 +60,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketStatusComponent,
     TicketRequestComponent,
     JjWorkbenchDashboardComponent,
+    JJDisputeComponent,
+    JJCountComponent
   ],
   imports: [
     CommonModule,

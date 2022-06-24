@@ -1,0 +1,162 @@
+<div class="contact-info">
+  <section style="background-color: #f1f1f1 !important;">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>&nbsp;Count {{ violationTicketCount.count }} </h3>
+      </span>
+    </ng-container>
+    <div style="display: grid; grid-template-columns: auto auto">
+      <span class="section-grid-cell" style="grid-column: span 2">
+        <p class="section-grid-header">Description of offence</p>
+        <p class="section-grid-text">{{ violationTicketCount.section }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Due Date</p>
+        <p class="section-grid-text">{{ jjDisputeService.addThirtyDays(violationDate) | date: "MMM dd,yyyy"  }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Fine amount</p>
+        <p class="section-grid-text">{{ violationTicketCount.ticketedAmount | currency }}</p>
+      </span>
+    </div>
+    <hr style="margin: 0 0 0 0"/>
+  </section>
+  <section style="background-color: #f1f1f1 !important;">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>&nbsp;Disputant Request</h3>
+      </span>
+    </ng-container>
+    <div style="display: grid; grid-template-columns: auto auto">
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Offence Date</p>
+        <p class="section-grid-text">{{ violationDate | date: "MMM dd,yyyy"  }}</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Plea</p>
+        <p class="section-grid-text">{{ disputedCount.plea }}</p>
+      </span>
+      <span class="section-grid-cell" style="grid-column: span 2">
+        <p class="section-grid-header">For this count</p>
+        <p class="section-grid-text" *ngIf="disputedCount.appearInCourt == true">I want to appear in court</p>
+        <p class="section-grid-text" *ngIf="disputedCount.appearInCourt != true">I do not want to appear in court</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Request fine reduction</p>
+        <p class="section-grid-text" *ngIf="disputedCount.requestReduction == true">yes</p>
+        <p class="section-grid-text" *ngIf="disputedCount.requestReduction != true">no</p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Request time to pay</p>
+        <p class="section-grid-text" *ngIf="disputedCount.requestTimeToPay == true">yes</p>
+        <p class="section-grid-text" *ngIf="disputedCount.requestTimeToPay != true">no</p>
+      </span>
+    </div>
+    <hr style="margin: 0 0 0 0"/>
+  </section>
+  <section>
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>&nbsp;JJ decision</h3>
+      </span>
+    </ng-container>
+    <form name="form" novalidate>
+      <div style="display: grid; grid-template-columns: 33% 33% 33%">
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">Reduce fine</p>
+          <p class="section-jj-grid-text">            
+            <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}" (change)="updateFineAmount($event)">
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+            </mat-radio-group>
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Offence Amt</p>
+          <p class="section-jj-grid-text">
+            {{ violationTicketCount.ticketedAmount | currency }}<br /><br/>
+            <span [hidden]="!(fineReduction=='yes')" class="section-grid-header">Lesser/Greater<br/></span>
+            <span [hidden]="!(fineReduction=='yes')">$ </span><input type="number" [hidden]="!(fineReduction=='yes')" [formControl]="form.get('partialFineAmount')" (change)="onChangePartialFineAmount()" style="background-color:#e4f2ff; width: 80%; font-size: smaller; border: 0" />
+          </p>
+        </span>      
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header" ><span *ngIf="fineReduction=='yes'">Includes surcharge</span></p>
+          <p class="section-grid-header" ><span *ngIf="fineReduction=='no'">&nbsp;<br/><br/></span></p>
+          <p class="section-jj-grid-text">            
+            <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}" (change)="updateInclSurcharge($event)" *ngIf="fineReduction=='yes'">
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+            </mat-radio-group>
+            <span *ngIf="fineReduction=='no'"><br/><br/><br/><br/></span>
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;<br /><br /></p>
+          <p class="section-jj-grid-text">
+            <span *ngIf="fineReduction=='yes'">{{ partialFineAmount | currency }}</span>
+            <span *ngIf="fineReduction=='no'"><br/></span>
+          </p>
+          <p class="section-jj-grid-text2">
+            <span *ngIf="fineReduction=='yes'">&nbsp;+&nbsp;({{ surcharge | currency }})</span>
+            <span *ngIf="fineReduction=='no'"><br/></span>
+          </p>
+        </span>      
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">Time to pay</p>
+          <p class="section-jj-grid-text">            
+            <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row" (change)="updateDueTs($event)">
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+            </mat-radio-group>
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">
+            <input [formControl]="form.get('dueTs')" type="date" [hidden]="!(timeToPay=='yes')" style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0">
+          </p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">&nbsp;</p>
+        </span>      
+        <span class="section-grid-cell" style="grid-column: span 3">
+          <mat-label class="section-grid-header">Comments</mat-label>
+          <textarea matInput [formControl]="form.get('comments')" maxlength="1500" style="background-color:#e4f2ff; width: 100%; font-size: small; resize: none;" rows="5">
+          </textarea>
+        </span>
+      </div>
+    </form>
+  </section>
+  <section>
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>&nbsp;Final disposition</h3>
+      </span>
+    </ng-container>
+    <div style="display: grid; grid-template-columns: 33% 33% 33%">
+      <span class="section-jj-grid-cell">
+        <p class="section-grid-header">&nbsp;</p>
+        <p class="section-jj-grid-text">&nbsp;</p>
+      </span>
+      <span class="section-jj-grid-cell">
+        <p class="section-grid-header">Due date</p>
+        <p class="section-grid-header">&nbsp;</p>
+        <p><span style="font-weight: bold;">{{ finalDispositionCount.dueTs | date: "MMM dd" }}</span></p>
+      </span>
+      <span class="section-grid-cell">
+        <p class="section-grid-header">Fine amount</p>
+        <p class="section-grid-header2">incl. surcharge</p>
+        <p><span style="font-weight: bold;">{{ finalDispositionCount.fineAmount | currency }}</span></p>
+      </span>
+    </div>
+  </section>
+</div>

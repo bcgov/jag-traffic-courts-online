@@ -51,6 +51,7 @@ public static class Startup
         // Add DisputeService
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         builder.Services.AddTransient<IDisputeService, DisputeService>();
+        builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
 
         builder.Services.AddStatuteLookup();
 
