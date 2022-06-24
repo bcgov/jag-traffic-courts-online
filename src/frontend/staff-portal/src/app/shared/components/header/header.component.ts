@@ -60,28 +60,28 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
-      this.isLoggedIn = isAuthenticated;
 
-      if (isAuthenticated) {
-        // decode the token to get its payload
-        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-        console.log(tokenPayload);
-        let resource_access = tokenPayload.resource_access["tco-staff-portal"];
-        if (resource_access) {
-          let roles = resource_access.roles;
-          if (roles) roles.forEach(role => {
-            if (role == "vtc-user") { // TODO USE role name for JJ
-              this.jjRole = true;
-            } 
-            if (role == "vtc-user") {
-              this.vtcRole = true;
-            }
-          });
-        }
+      // decode the token to get its payload
+      const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
+      let resource_access = tokenPayload?.resource_access["tco-staff-portal"];
+      if (resource_access) {
+        this.isLoggedIn = true;
+        let roles = resource_access.roles;
+        if (roles) roles.forEach(role => {
+          if (role == "vtc-user") { // TODO USE role name for JJ
+            this.jjRole = true;
+          } 
+          if (role == "vtc-user") {
+            this.vtcRole = true;
+          }
+        });
+      } else this.isLoggedIn = false;
 
-        if (this.jjRole) this.headingText = "JJ Written Reasons - Assignments";
-        else this.headingText = "Ticket Resolution Management ";
-      }
+      if (this.jjRole && this.isLoggedIn) this.headingText = "JJ Written Reasons - Assignments";
+      else if (this.vtcRole && this.isLoggedIn) this.headingText = "Ticket Resolution Management ";
+      else if (!this.isLoggedIn) this.headingText = "Please sign in"
+
+      this.fullName = this.oidcSecurityService.getUserData()?.name;
     })
 
     this.oidcSecurityService.userData$.subscribe( (userInfo: any) => {
@@ -121,9 +121,5 @@ export class HeaderComponent implements OnInit {
   logout() {
     this.oidcSecurityService.logoffAndRevokeTokens();
     this.isLoggedIn = false;
-  }
-
-  goToJjWorkbench() {
-    this.router.navigate([AppRoutes.JJWORKBENCH]);
   }
 }

@@ -29,23 +29,25 @@ export class LandingComponent implements OnInit {
 
         // decode the token to get its payload
         const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-        let resource_access = tokenPayload.resource_access["tco-staff-portal"];
-        if (resource_access) {
-          let roles = resource_access.roles;
-          if (roles) roles.forEach(role => {
-            if (role == "vtc-user") { // TODO USE role name for JJ
-              this.jjRole = true;
-            } 
-            if (role == "vtc-user") {
-              this.vtcRole = true;
-            }
-          });
+        if (tokenPayload) { 
+          let resource_access = tokenPayload.resource_access["tco-staff-portal"];
+          if (resource_access) {
+            let roles = resource_access.roles;
+            if (roles) roles.forEach(role => {
+              if (role == "vtc-user") { // TODO USE role name for JJ
+                this.jjRole = true;
+              } 
+              if (role == "vtc-user") {
+                this.vtcRole = true;
+              }
+            });
+          }
         }
 
         // navigate to Ticket Resolution Management or JJ Workbench or Unauthorized based on role
         if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
         else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
-        else this.router.navigate([AppRoutes.UNAUTHORIZED]);
+        if (!this.jjRole && !this.vtcRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
       }
     })
   }

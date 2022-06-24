@@ -24,16 +24,15 @@ export class AuthorizationGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
     return this.oidcSecurityService.isAuthenticated$.pipe(
       map(({ isAuthenticated }) => {
-        // allow navigation if authenticated
-        if (isAuthenticated) {
 
-          // this will be passed from the route config
-          // on the data property
-          const expectedRole = route.data.expectedRole;
+        // this will be passed from the route config
+        // on the data property
+        const expectedRole = route.data.expectedRole;
 
-          // decode the token to get its payload
-          const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-          let resource_access = tokenPayload.resource_access["tco-staff-portal"];
+        // decode the token to get its payload
+        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
+        if (tokenPayload) {
+        let resource_access = tokenPayload?.resource_access["tco-staff-portal"];
           if (resource_access) {
             let roles = resource_access.roles;
             if (roles) roles.forEach(role => {
@@ -42,13 +41,10 @@ export class AuthorizationGuard implements CanActivate {
               }
             });
           }
+         } else return this.router.parseUrl('/');
 
           if (this.passAuthGuard == true) return true;
           else return this.router.parseUrl(AppRoutes.UNAUTHORIZED);
-        }
-
-        // redirect if not authenticated
-        return this.router.parseUrl('/');
       })
     );
   }

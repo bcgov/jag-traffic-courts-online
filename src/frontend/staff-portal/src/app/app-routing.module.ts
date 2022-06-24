@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
-import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
 import { LandingComponent } from './components/landing/landing.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
@@ -23,7 +22,7 @@ let routes: Routes = [
     path: AppRoutes.JJWORKBENCH,
     component: JjWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: "vtc-user" }
+    data: { expectedRole: "vtc-user" } // TODO change to jj-user
   },
   {
     path: AppRoutes.UNAUTHORIZED,
