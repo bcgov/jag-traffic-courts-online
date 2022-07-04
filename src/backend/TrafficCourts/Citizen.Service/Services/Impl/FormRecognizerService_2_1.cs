@@ -1,14 +1,19 @@
 using Azure;
+using Azure.AI.FormRecognizer;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
+using Azure.AI.FormRecognizer.Models;
 using System.Diagnostics;
 using TrafficCourts.Citizen.Service.Configuration;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 
 namespace TrafficCourts.Citizen.Service.Services;
 
-public class FormRecognizerService : IFormRecognizerService
+/// <summary>
+/// This class uses Form Recognizer's FormRecognizerClient to access an API version 2.1
+/// </summary>
+public class FormRecognizerService_2_1 : IFormRecognizerService
 {
-    private readonly ILogger<FormRecognizerService> _logger;
+    private readonly ILogger<FormRecognizerService_2_1> _logger;
     private readonly string _apiKey;
     private readonly Uri _endpoint;
     private readonly string _modelId;
@@ -55,7 +60,7 @@ public class FormRecognizerService : IFormRecognizerService
         { "Date of Service",            OcrViolationTicket.DateOfService }
     };
 
-    public FormRecognizerService(FormRecognizerOptions options, ILogger<FormRecognizerService> logger)
+    public FormRecognizerService_2_1(FormRecognizerOptions options, ILogger<FormRecognizerService_2_1> logger)
     {
         ArgumentNullException.ThrowIfNull(options);
         _apiKey = options.ApiKey ?? throw new ArgumentException($"{nameof(options.ApiKey)} is required");
@@ -64,65 +69,69 @@ public class FormRecognizerService : IFormRecognizerService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<AnalyzeResult> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken)
+    public async Task<OcrViolationTicket> AnalyzeImageAsync(MemoryStream stream, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(stream);
-
-        AzureKeyCredential credential = new(_apiKey);
-        DocumentAnalysisClient documentAnalysisClient = new(_endpoint, credential);
 
         using Activity? activity = Diagnostics.Source.StartActivity("Analyze Document");
         activity?.AddBaggage("ModelId", _modelId);
 
-        AnalyzeDocumentOperation analyseDocumentOperation = await documentAnalysisClient.StartAnalyzeDocumentAsync(_modelId, stream, null, cancellationToken);
-        await analyseDocumentOperation.WaitForCompletionAsync(cancellationToken);
+        AzureKeyCredential credential = new(_apiKey);
+        FormRecognizerClient formRecognizerClient = new(_endpoint, credential);
+        Task<RecognizeCustomFormsOperation> operation = formRecognizerClient.StartRecognizeCustomFormsAsync(_modelId, stream, null, cancellationToken);
+        Response<RecognizedFormCollection> response = await operation.WaitForCompletionAsync(cancellationToken);
 
-        return analyseDocumentOperation.Value;
+        return Map(response.Value);
     }
 
-    public OcrViolationTicket Map(AnalyzeResult result)
+    private OcrViolationTicket Map(RecognizedFormCollection result)
     {
         using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
 
+
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();
-        violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
 
-        foreach (var fieldLabel in _fieldLabels)
+        if (result.Count > 0)
         {
-            Field field = new();
-            field.TagName = fieldLabel.Key;
-            field.JsonName = fieldLabel.Value;
+            //violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
 
-            DocumentField? extractedField = GetDocumentField(result, fieldLabel.Key);
-            if (extractedField is not null)
+            foreach (var fieldLabel in _fieldLabels)
             {
-                field.Value = extractedField.Content;
-                field.FieldConfidence = extractedField.Confidence;
-                field.Type = Enum.GetName(extractedField.ValueType);
-                foreach (BoundingRegion region in extractedField.BoundingRegions)
-                {
-                    Models.Tickets.BoundingBox boundingBox = new();
-                    boundingBox.Points.Add(new Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                    boundingBox.Points.Add(new Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
-                    field.BoundingBoxes.Add(boundingBox);
-                }
-            }
+                Field field = new();
+                field.TagName = fieldLabel.Key;
+                field.JsonName = fieldLabel.Value;
 
-            violationTicket.Fields.Add(fieldLabel.Value, field);
+                DocumentField? extractedField = GetDocumentField(result, fieldLabel.Key);
+                if (extractedField is not null)
+                {
+                    field.Value = extractedField.Content;
+                    field.FieldConfidence = extractedField.Confidence;
+                    field.Type = Enum.GetName(extractedField.ValueType);
+                    foreach (BoundingRegion region in extractedField.BoundingRegions)
+                    {
+                        Models.Tickets.BoundingBox boundingBox = new();
+                        boundingBox.Points.Add(new Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
+                        boundingBox.Points.Add(new Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
+                        boundingBox.Points.Add(new Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
+                        boundingBox.Points.Add(new Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                        field.BoundingBoxes.Add(boundingBox);
+                    }
+                }
+
+                violationTicket.Fields.Add(fieldLabel.Value, field);
+            }
         }
 
         return violationTicket;
     }
 
-    private static DocumentField? GetDocumentField(AnalyzeResult result, string fieldKey)
+    private static DocumentField? GetDocumentField(RecognizedFormCollection result, string fieldKey)
     {
-        if (result.Documents is not null && result.Documents.Count > 0)
-        {
-            return result.Documents[0].Fields[fieldKey];
-        }
+        //if (result.Documents is not null && result.Documents.Count > 0)
+        //{
+        //    return result.Documents[0].Fields[fieldKey];
+        //}
         return null;
     }
 }

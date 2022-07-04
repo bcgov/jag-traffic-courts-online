@@ -54,7 +54,10 @@ public static class Startup
 
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
-        builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService>();
+        // API version 2.1 is the latest version available for deployment to OpenShift
+        builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2_1>();
+        // API version 3.x (aka 2022_06_30_preview) is the latest version used by Azure cloud services, but this version is not containerizable yet
+        //builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2022_06_30_preview>();
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
 
         builder.Services.AddStatuteLookup();
