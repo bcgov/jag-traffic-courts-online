@@ -44,7 +44,7 @@ services:
 
   form-rec-custom-api:
     container_name: azure-cognitive-service-custom-api
-    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-api
+    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-api:2.1-preview
     restart: always
     depends_on:
       - rabbitmq
@@ -72,7 +72,7 @@ services:
 
   form-rec-custom-supervised:
     container_name: azure-cognitive-service-custom-supervised
-    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-supervised
+    image: mcr.microsoft.com/azure-cognitive-services/form-recognizer/custom-supervised:2.1-preview
     restart: always
     depends_on:
       - rabbitmq

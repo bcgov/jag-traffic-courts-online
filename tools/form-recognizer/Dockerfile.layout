@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout
+# Full list is available here: https://mcr.microsoft.com/v2/azure-cognitive-services/form-recognizer/layout/tags/list
+
+FROM mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout:2.1-preview
 
 USER root
 
