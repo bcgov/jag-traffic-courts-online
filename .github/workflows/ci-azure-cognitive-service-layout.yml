@@ -1,7 +1,7 @@
 name: Build Form Recognizer Layout Image and Push to Openshift Registry
 on:
   push:
-    branches: [spike/azure-ocr]
+    branches: [main, develop]
     paths:
       - 'tools/form-recognizer/**'
       - '.github/workflows/pr-azure-cognitive-service-layout.yml'

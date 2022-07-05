@@ -1,7 +1,7 @@
 name: Build Form Recognizer Proxy Image and Push to Openshift Registry
 on:
   push:
-    branches: [spike/azure-ocr]
+    branches: [main, develop]
     paths:
       - 'tools/form-recognizer/Dockerfile.proxy'
       - 'tools/form-recognizer/nginx.conf'
