@@ -88,33 +88,44 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
     {
         using Activity? activity = Diagnostics.Source.StartActivity("Map Analyze Result");
 
-
         // Initialize OcrViolationTicket with all known fields extracted from the Azure Form Recognizer
         OcrViolationTicket violationTicket = new();
 
         if (result.Count > 0)
         {
-            //violationTicket.GlobalConfidence = result.Documents[0]?.Confidence ?? 0f;
+            violationTicket.GlobalConfidence = result[0].FormTypeConfidence ?? 0f;
 
             foreach (var fieldLabel in _fieldLabels)
             {
                 Field field = new();
                 field.TagName = fieldLabel.Key;
                 field.JsonName = fieldLabel.Value;
+                var t = field.TagName;
 
-                DocumentField? extractedField = GetDocumentField(result, fieldLabel.Key);
+                FormField? extractedField = GetDocumentField(result, fieldLabel.Key);
                 if (extractedField is not null)
                 {
-                    field.Value = extractedField.Content;
                     field.FieldConfidence = extractedField.Confidence;
-                    field.Type = Enum.GetName(extractedField.ValueType);
-                    foreach (BoundingRegion region in extractedField.BoundingRegions)
+                    field.Type = Enum.GetName(extractedField.Value.ValueType);
+                    if (field.Type is not null && field.Type.Equals("SelectionMark"))
                     {
+                        // Special case, SelectionMarks. These, it would seem, never populate the ValueData.Text property - always null. We need to extract the value of the field via other means.
+                        field.Value = Enum.GetName(extractedField.Value.AsSelectionMarkState())?.ToLower();
+                    }
+                    else 
+                    {
+                        field.Value = extractedField.ValueData?.Text;
+                    }
+
+                    FieldData? valueData = extractedField.ValueData;
+                    if (valueData is not null)
+                    {
+                        FieldBoundingBox bb = valueData.BoundingBox;
                         Models.Tickets.BoundingBox boundingBox = new();
-                        boundingBox.Points.Add(new Point(region.BoundingBox[0].X, region.BoundingBox[0].Y));
-                        boundingBox.Points.Add(new Point(region.BoundingBox[1].X, region.BoundingBox[1].Y));
-                        boundingBox.Points.Add(new Point(region.BoundingBox[2].X, region.BoundingBox[2].Y));
-                        boundingBox.Points.Add(new Point(region.BoundingBox[3].X, region.BoundingBox[3].Y));
+                        boundingBox.Points.Add(new Point(bb[0].X, bb[0].Y));
+                        boundingBox.Points.Add(new Point(bb[1].X, bb[1].Y));
+                        boundingBox.Points.Add(new Point(bb[2].X, bb[2].Y));
+                        boundingBox.Points.Add(new Point(bb[3].X, bb[3].Y));
                         field.BoundingBoxes.Add(boundingBox);
                     }
                 }
@@ -126,12 +137,12 @@ public class FormRecognizerService_2_1 : IFormRecognizerService
         return violationTicket;
     }
 
-    private static DocumentField? GetDocumentField(RecognizedFormCollection result, string fieldKey)
+    private static FormField? GetDocumentField(RecognizedFormCollection result, string fieldKey)
     {
-        //if (result.Documents is not null && result.Documents.Count > 0)
-        //{
-        //    return result.Documents[0].Fields[fieldKey];
-        //}
+        if (result[0] is not null)
+        {
+            return result[0].Fields[fieldKey];
+        }
         return null;
     }
 }
