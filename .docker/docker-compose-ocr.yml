@@ -5,11 +5,21 @@ services:
   ###                           Azure Form Recognizer (3 containers)                        ###
   #############################################################################################
   
+  citizen-api:
+    environment:
+      FORMRECOGNIZER__APIVERSION: ${FORMRECOGNIZER__APIVERSION:-2.1}
+      FORMRECOGNIZER__ENDPOINT: ${FORMRECOGNIZER__ENDPOINT:-http://azure-cognitive-service-proxy:5200}
+      FORMRECOGNIZER__MODELID: ${FORMRECOGNIZER__MODELID:-75f5614c-eded-4413-a3d9-c67281e8402e}
+      
   form-rec-nginx:
     build:
       context: ./tools/form-recognizer
       dockerfile: Dockerfile.proxy
     container_name: azure-cognitive-service-proxy
+    depends_on:
+      - form-rec-layout
+      - form-rec-custom-api
+      - form-rec-custom-supervised
     ports:
       - "5200:5200"
 
@@ -23,7 +33,7 @@ services:
     environment:
       eula: accept
       apikey: ${FORMRECOGNIZER__APIKEY}
-      billing: ${FORMRECOGNIZER__ENDPOINT}
+      billing: ${FORMRECOGNIZER__BILLING_URL}
       Logging:Console:LogLevel:Default: Information
       Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
       Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
@@ -48,10 +58,12 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+      - form-rec-layout
+      - form-rec-custom-supervised
     environment:
       eula: accept
       apikey: ${FORMRECOGNIZER__APIKEY}
-      billing: ${FORMRECOGNIZER__ENDPOINT}
+      billing: ${FORMRECOGNIZER__BILLING_URL}
       Logging:Console:LogLevel:Default: Information
       Queue:RabbitMQ:HostName: ${RABBITMQ__HOST:-rabbitmq}
       Queue:RabbitMQ:Port: ${RABBITMQ__PORT:-5672}
@@ -76,10 +88,11 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+      - form-rec-layout
     environment:
       eula: accept
       apikey: ${FORMRECOGNIZER__APIKEY}
-      billing: ${FORMRECOGNIZER__ENDPOINT}
+      billing: ${FORMRECOGNIZER__BILLING_URL}
       CustomFormRecognizer:ContainerPhase: All
       CustomFormRecognizer:LayoutAnalyzeUri: http://azure-cognitive-service-custom-layout:5000/formrecognizer/v2.1/layout/analyze
       Logging:Console:LogLevel:Default: Information
