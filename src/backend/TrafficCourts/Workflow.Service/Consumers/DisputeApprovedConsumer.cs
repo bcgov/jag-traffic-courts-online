@@ -36,7 +36,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     var ticketDetail = new Models.TicketCount
                     {
                         Count = vtc.Count,
+                        FullSection = vtc.FullSection,
                         Section = vtc.Section,
+                        Subsection = vtc.Subsection,
+                        Paragraph = vtc.Paragraph,
                         Act = vtc.Act,
                         Amount = vtc.Amount
                     };
@@ -44,19 +47,19 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 }
 
                 // Add dispute details model as part of TcoDisputeTicket model if defined in the message
-                List<DisputeDetail> disputeDetails = new();
+                List<Models.DisputeCount> disputeCounts = new();
 
                 if (context.Message.DisputeCounts != null && context.Message.DisputeCounts.Any())
                 {
                     foreach (Messaging.MessageContracts.DisputeCount dc in context.Message.DisputeCounts)
                     {
-                        Models.DisputeDetail disputeDetail = new Models.DisputeDetail
+                        Models.DisputeCount disputeDetail = new Models.DisputeCount
                         {
                             Count = dc.Count,
                             DisputeType = dc.DisputeType
                         };
 
-                        disputeDetails.Add(disputeDetail);
+                        disputeCounts.Add(disputeDetail);
                     }
                 }
 
@@ -74,7 +77,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     Province = context.Message.Province,
                     PostalCode = context.Message.PostalCode,
                     Email = context.Message.Email,
-                    DisputeDetails = disputeDetails
+                    DisputeCounts = disputeCounts
                 };
 
                 // use trace because we are logging PII
