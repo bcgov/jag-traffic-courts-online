@@ -10,7 +10,9 @@
     <textarea matInput maxlength="256"
        [formControl]="reasonForm.get('reason')">
     </textarea>
-  </mat-form-field> 
+    <mat-error *ngIf="reasonForm.get('reason').hasError('required')">{{ "error.required" | translate
+    }}</mat-error>
+  </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button *ngIf="!options.cancelHide" mat-stroked-button color="primary" [mat-dialog-close]="false" cdkFocusInitial
@@ -21,7 +23,7 @@
   <span class="flex-grow-1"></span>
 
   <button *ngIf="!options.actionHide" mat-flat-button color="primary" (click)="onConfirm()"
-    class="my-2 me-1">
+    class="my-2 me-1" [disabled]="reasonForm.valid == false">
     {{ options.actionTextKey }}
   </button>
   <a *ngIf="options.actionLink" [attr.href]="options.actionLink.href" [attr.target]="options.actionLink.target">
