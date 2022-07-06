@@ -11,7 +11,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
         public DateTime TicketIssuanceDate { get; set; }
         [JsonProperty("ticket_file_number"), JsonRequired]
         public string TicketFileNumber { get; set; } = String.Empty;
-        [JsonProperty("issuing_organization"), JsonRequired]
+        [JsonProperty("issuing_organization")]
         public string IssuingOrganization { get; set; } = String.Empty;
         [JsonProperty("issuing_location"), JsonRequired]
         public string IssuingLocation { get; set; } = String.Empty;
@@ -35,22 +35,25 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
 
     public class TicketCount
     {
-        [JsonRequired]
+        [JsonRequired, JsonProperty("count")]
         public int Count { get; set; } = 0;
-        [JsonRequired]
+        [JsonProperty("full_section")]
         public string FullSection { get; set; } = String.Empty;
+        [JsonProperty("section")]
         public string? Section { get; set; }
+        [JsonProperty("subsection")]
         public string? Subsection { get; set; }
+        [JsonProperty("paragraph")]
         public string? Paragraph { get; set; }
-        [JsonRequired]
-        public string Act { get; set; } = String.Empty;
-        [JsonRequired]
+        [JsonProperty("act")]
+        public string Act { get; set; } = "MVA";
+        [JsonRequired, JsonProperty("amount")]
         public double Amount { get; set; }
     }
 
     public partial class DisputeCount
     {
-        [JsonRequired]
+        [JsonRequired, JsonProperty("count")]
         public int Count { get; set; }
         [JsonProperty("dispute_type")]
         public string? DisputeType { get; set; }
