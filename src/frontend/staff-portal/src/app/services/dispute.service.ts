@@ -104,6 +104,7 @@ export class DisputeService implements IDisputeService {
   public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
      dispute.birthdate = this.datePipe.transform(dispute?.birthdate, "yyyy-MM-dd");
+     dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate,"yyyy-MM-ddTHH:mm:ss");
     //  dispute.violationTicket =
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
