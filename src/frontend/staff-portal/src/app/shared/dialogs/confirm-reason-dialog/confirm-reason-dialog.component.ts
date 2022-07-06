@@ -36,7 +36,6 @@ export class ConfirmReasonDialogComponent {
   }
 
   public onConfirm(): void {
-    console.log(this.reasonForm);
     const response =
       this.dialogContentOutput !== null
         ? { output: this.dialogContentOutput }
