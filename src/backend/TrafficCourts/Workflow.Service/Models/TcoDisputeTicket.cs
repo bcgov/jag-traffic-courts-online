@@ -16,7 +16,7 @@ namespace TrafficCourts.Workflow.Service.Models
         public string? Province { get; set; }
         public string? PostalCode { get; set; }
         public string? Email { get; set; }
-        public IList<DisputeDetail> DisputeDetails { get; set; } = new List<DisputeDetail>();
+        public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 
         public override string ToString()
         {
@@ -32,12 +32,15 @@ namespace TrafficCourts.Workflow.Service.Models
     public class TicketCount
     {
         public int Count { get; set; } = 0;
-        public string Section { get; set; } = null!;
-        public string Act { get; set; } = null!;
+        public string FullSection { get; set; } = String.Empty;
+        public string? Section { get; set; }
+        public string? Subsection { get; set; }
+        public string? Paragraph { get; set; }
+        public string Act { get; set; } = String.Empty;
         public double? Amount { get; set; }
     }
 
-    public class DisputeDetail
+    public class DisputeCount
     {
         public int Count { get; set; } = 0;
         public string? DisputeType { get; set; }
