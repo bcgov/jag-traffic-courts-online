@@ -10,6 +10,8 @@
     <textarea matInput maxlength="256"
        [formControl]="reasonForm.get('reason')">
     </textarea>
+    <mat-error *ngIf="reasonForm.get('reason').hasError('required')">{{ "error.required" | translate
+    }}</mat-error>
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
