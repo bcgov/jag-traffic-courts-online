@@ -9,54 +9,13 @@
   </div>
   <div *ngIf="lastUpdatedJJDispute && retrieving === false">
     <div style="float:inline">
-      <span style="float:left"><h1><b>Written Reasons Dispute - {{ lastUpdatedJJDispute.disputantName }}</b></h1></span>
+      <span style="float:left"><h1><b>Written Reasons Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}</b></h1></span>
       <span style="float:right"><h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1></span>
-    </div> <br /><br /> 
+    </div> <br /><br />
     <section>
       <ng-container subHeader>
         <span>
           <h3>Ticket Information</h3>
-        </span>
-      </ng-container>
-      <div style="display: grid; grid-template-columns: auto auto auto auto">
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Surname</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.surname }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Given Name(s)</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.givenNames }}</p>
-        </span>
-        <span>
-          <p class="section-grid-header">&nbsp;</p>
-          <p class="section-grid-text">&nbsp;</p>
-        </span>
-        <span>
-          <p class="section-grid-header">&nbsp;</p>
-          <p class="section-grid-text">&nbsp;</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Violation Date</p>
-          <p class="section-grid-text">{{ violationDate | date: "MMM dd, yyyy" }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Violation Time</p>
-          <p class="section-grid-text">{{ violationTime }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Location of Offence</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.address }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Organization/Detachment/Location</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.violationTicket.organizationLocation }}</p>
-        </span>
-      </div>
-    </section><br />
-    <section>
-      <ng-container subHeader>
-        <span>
-          <h3>Contact Information</h3>
         </span>
       </ng-container>
       <div style="display: grid; grid-template-columns: auto auto auto auto">
@@ -69,28 +28,65 @@
           <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
         </span>
         <span class="section-grid-cell">
-          <p class="section-grid-header">City</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.city }}</p>
+          <p class="section-grid-header">Location of Offence</p>
+          <p class="section-grid-text">???</p>
         </span>
         <span class="section-grid-cell">
+          <p class="section-grid-header">Organization/Detachment/Location</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Violation Date</p>
+          <p class="section-grid-text">{{ violationDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Violation Time</p>
+          <p class="section-grid-text">{{ violationTime }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Online Submission Date</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Date Received from ICBC</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+      </div>
+    </section><br />
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Contact Information</h3>
+        </span>
+      </ng-container>
+      <div style="display: grid; grid-template-columns: auto auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Surname</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.surname }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Given Name(s)</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.givenNames }}</p>
+        </span>
+        <span class="section-grid-cell" style="grid-column: span 2">
           <p class="section-grid-header">Address</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.address }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Prov / State of DL</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceProvince }}</p>
-        </span>
-        <span class="section-grid-cell">
-          <p class="section-grid-header">Postal Code</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.postalCode }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.address }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Birthdate</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.birthdate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.birthdate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Prov / State of DL</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.province }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Driver's Licence #</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.driversLicenceNumber }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.driversLicenceNumber }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Email</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.emailAddress }}</p>
         </span>
       </div>
     </section><br />
@@ -117,12 +113,12 @@
         </span>
       </ng-container>
       <div style="display: grid; grid-template-columns: 33% 33% 33%">
-        <span *ngFor="let violationTicketCount of lastUpdatedJJDispute.violationTicket.violationTicketCounts" style="border:1px solid black; ">
-          <app-jj-count 
-            [count]="violationTicketCount.count"
+        <span *ngFor="let jjDisputedCount of lastUpdatedJJDispute.jjDisputedCounts" style="border:1px solid black; ">
+          <app-jj-count
+            [count]="jjDisputedCount.count"
             [jjDisputeInfo]="lastUpdatedJJDispute"
-            [finalDispositionCount]="getFinalDispositionCount(violationTicketCount.count)"
-            (finalDispositionCountUpdate)="updateFinalDispositionCount($event)"></app-jj-count>
+            [jjDisputedCount]="getJJDisputedCount(jjDisputedCount.count)"
+            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)"></app-jj-count>
         </span>
       </div>
     </section><br />
@@ -133,18 +129,18 @@
         </span>
       </ng-container>
       <mat-form-field style="width:100%">
-        <textarea matInput [(ngModel)]="lastUpdatedJJDispute.jjRemarks" maxlength="1500" rows="6"></textarea>
+        <textarea matInput [(ngModel)]="lastUpdatedJJDispute.remarks" maxlength="1500" rows="6"></textarea>
       </mat-form-field>
     </section><br />
     <div style="float: right; width: 100%;">
-      <button class="large" mat-flat-button type="button" color="primary" (click)="onSave()">
-        Save
-      </button>
-      <button class="large" mat-flat-button type="button" color="primary" style="background-color: red;" (click)="onReject()">
-        Reject
-      </button>
-      <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" style="background-color:  #2ba242;">
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" style="background-color: #003366;">
         Submit
+      </button>
+      <button class="large" mat-flat-button type="button" color="primary" style="background-color: white;" (click)="onReject()">
+        <span style="color: #003366;">Reject</span>
+      </button>
+      <button class="large" mat-flat-button type="button" color="primary" style="background-color: white;" (click)="onSave()">
+        <span style="color: #003366;">Save & Finish Later</span>
       </button>
     </div>
   </div>

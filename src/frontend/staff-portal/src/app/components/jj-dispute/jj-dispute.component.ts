@@ -5,14 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { JJDisputeView, JJDisputeService, JJFinalDispositionCount } from '../../services/jj-dispute.service';
+import { JJDisputeView, JJDisputeService } from '../../services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
-import { ViolationTicket, DisputedCountPlea } from 'app/api';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
-import { ViolationTicketService } from 'app/services/violation-ticket.service';
+import { JJDisputedCount } from 'app/api/model/models';
 @Component({
   selector: 'app-jj-dispute',
   templateUrl: './jj-dispute.component.html',
@@ -30,7 +26,7 @@ export class JJDisputeComponent implements OnInit {
   public violationTime: string = "";
   public timeToPayCountsHeading: string = "";
   public fineReductionCountsHeading: string = "";
-  
+
   constructor(
     protected route: ActivatedRoute,
     private dialog: MatDialog,
@@ -78,14 +74,14 @@ export class JJDisputeComponent implements OnInit {
       this.violationTime = violationDate[1].split(":")[0] + ":" + violationDate[1].split(":")[1];
 
       // set up headings for written reasons
-      this.lastUpdatedJJDispute.disputedCounts.forEach(disputedCount => {
+      this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
         if (disputedCount.requestTimeToPay == true) this.timeToPayCountsHeading += "Count " + disputedCount.count.toString() + ", ";
         if (disputedCount.requestReduction == true) this.fineReductionCountsHeading += "Count " + disputedCount.count.toString() + ", ";
       });
       if (this.timeToPayCountsHeading.length > 0) {
         this.timeToPayCountsHeading = this.timeToPayCountsHeading.substring(0, this.timeToPayCountsHeading.lastIndexOf(","));
       }
-      if (this.fineReductionCountsHeading.length > 0) { 
+      if (this.fineReductionCountsHeading.length > 0) {
         this.fineReductionCountsHeading = this.fineReductionCountsHeading.substring(0, this.fineReductionCountsHeading.lastIndexOf(","));
       }
     });
@@ -93,94 +89,19 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public mockData() {
-    // mock fields since we don't have any data yet
-    this.lastUpdatedJJDispute.violationTicket = {} as ViolationTicket;
-    this.lastUpdatedJJDispute.violationTicket.givenNames = "Francois Robert";
-    this.lastUpdatedJJDispute.violationTicket.surname = "Hodge";
-    this.lastUpdatedJJDispute.violationTicket.address = "1298 Mapleview Place";
-    this.lastUpdatedJJDispute.violationTicket.organizationLocation = "Delta Police";
-
-    this.lastUpdatedJJDispute.surname = "Hodge";
-    this.lastUpdatedJJDispute.givenNames = "Francois Robert";
-    this.lastUpdatedJJDispute.city = "Vancouver";
-    this.lastUpdatedJJDispute.address = "1298 Mapleview Place";
-    this.lastUpdatedJJDispute.driversLicenceProvince = "BC";
-    this.lastUpdatedJJDispute.postalCode = "V56 3X7";
-    this.lastUpdatedJJDispute.birthdate = "03/15/1976";
-    this.lastUpdatedJJDispute.driversLicenceNumber = "6455895";
     this.lastUpdatedJJDispute.fineReductionReason = "I have lost my job and I am looking for another one";
     this.lastUpdatedJJDispute.timeToPayReason = "N/A";
-
-    this.lastUpdatedJJDispute.disputedCounts = [];
-    this.lastUpdatedJJDispute.disputedCounts.push({
-      plea: DisputedCountPlea.Guilty,
-      count: 1,
-      requestTimeToPay: false,
-      requestReduction: true,
-      appearInCourt: false
-    });
-    this.lastUpdatedJJDispute.disputedCounts.push({
-      plea: DisputedCountPlea.Guilty,
-      count: 2,
-      requestTimeToPay: false,
-      requestReduction: true,
-      appearInCourt: false
-    });
-    this.lastUpdatedJJDispute.disputedCounts.push({
-      plea: DisputedCountPlea.Guilty,
-      count: 3,
-      requestTimeToPay: false,
-      requestReduction: true,
-      appearInCourt: false
-    });
-
-    this.lastUpdatedJJDispute.violationTicket.violationTicketCounts = [];
-    this.lastUpdatedJJDispute.violationTicket.violationTicketCounts.push({
-      count: 1,
-      section: "92.1(1) MVA - Fail to stop resulting in pursuit",
-      ticketedAmount: 380
-    });
-    this.lastUpdatedJJDispute.violationTicket.violationTicketCounts.push({
-      count: 2,
-      section: "146(5) MVA - Speed against area sign",
-      ticketedAmount: 196
-    });
-    this.lastUpdatedJJDispute.violationTicket.violationTicketCounts.push({
-      count: 3,
-      section: "92.1(1) MVA - Fail to stop resulting in pursuit",
-      ticketedAmount: 380
-    });
-
-    this.lastUpdatedJJDispute.jjFinalDispositionCounts = [];
-    this.lastUpdatedJJDispute.jjFinalDispositionCounts.push({
-      count: 1,
-      fineAmount: 380,
-      dueTs: this.jjDisputeService.addThirtyDays(this.lastUpdatedJJDispute.violationDate).toDateString(),
-      comments: ""
-    })
-    this.lastUpdatedJJDispute.jjFinalDispositionCounts.push({
-      count: 2,
-      fineAmount: 196,
-      dueTs: this.jjDisputeService.addThirtyDays(this.lastUpdatedJJDispute.violationDate).toDateString(),
-      comments: ""
-    })
-    this.lastUpdatedJJDispute.jjFinalDispositionCounts.push({
-      count: 3,
-      fineAmount: 380,
-      dueTs: this.jjDisputeService.addThirtyDays(this.lastUpdatedJJDispute.violationDate).toDateString(),
-      comments: ""
-    })
   }
 
-  getFinalDispositionCount(count: number) {
-    return this.lastUpdatedJJDispute.jjFinalDispositionCounts.filter(x => x.count == count)[0];
+  getJJDisputedCount(count: number) {
+    return this.lastUpdatedJJDispute.jjDisputedCounts.filter(x => x.count == count)[0];
   }
 
   // get from child component
-  updateFinalDispositionCount(updatedJJFinalDispositionCount: JJFinalDispositionCount) {
-    this.lastUpdatedJJDispute.jjFinalDispositionCounts.forEach(jjFinalDispositionCount => {
-      if (jjFinalDispositionCount.count == updatedJJFinalDispositionCount.count) {
-        jjFinalDispositionCount = updatedJJFinalDispositionCount;
+  updateFinalDispositionCount(updatedJJDisputedCount: JJDisputedCount) {
+    this.lastUpdatedJJDispute.jjDisputedCounts.forEach(jjDisputedCount => {
+      if (jjDisputedCount.count == updatedJJDisputedCount.count) {
+        jjDisputedCount = updatedJJDisputedCount;
       }
     });
   }
