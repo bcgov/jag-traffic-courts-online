@@ -1,3 +1,5 @@
+DELETE FROM DISPUTANT_CONTACT_INFORMATION;
+DELETE FROM JJDISPUTED_COUNT;
 DELETE FROM JJDISPUTE;
 
 INSERT INTO JJDISPUTE (TICKET_NUMBER, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, COURTHOUSE_LOCATION, 
@@ -8,3 +10,28 @@ INSERT INTO JJDISPUTE (TICKET_NUMBER, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIF
   ('1000004', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Whistler', 'Matt', 'Vaughan', 'Steven Allan', 'JJ3', 'JJGroup1', 'Whistler', DATEADD('DAY',-3, CURRENT_DATE), 'IN_PROGRESS', DATEADD('DAY',-3, CURRENT_DATE), DATEADD('DAY',-3, CURRENT_DATE)),
   ('1000005', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Squamish', 'Gavin', 'Glover', 'Harry Reid', 'JJ3', 'JJGroup3', 'Ladysmith', DATEADD('DAY',-4, CURRENT_DATE), 'REVIEW', DATEADD('DAY',-4, CURRENT_DATE), DATEADD('DAY',-4, CURRENT_DATE)),
   ('1000006', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, 'Squamish', 'Gavin', 'Glover', 'Harry Reid', NULL, NULL, 'Ladysmith', DATEADD('DAY',-5, CURRENT_DATE), 'COMPLETED', DATEADD('DAY',-5, CURRENT_DATE), DATEADD('DAY',-5, CURRENT_DATE));
+  
+ 
+INSERT INTO DISPUTANT_CONTACT_INFORMATION (ID, JJDISPUTE_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, ADDRESS, BIRTHDATE, DRIVERS_LICENCE_NUMBER, EMAIL_ADDRESS, GIVEN_NAMES, PROVINCE, SURNAME) VALUES 
+	(1, '1000001', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '3-1409 Camosun Street', '1965-07-01', '1234567', 'Lorraine.dame@nttdata.com', 'John', 'BC', 'Doe'),
+	(2, '1000002', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '202-1306 Stellys Cross Road', '1965-07-01', '876655', 'Lorraine.dame@nttdata.com', 'Jane', 'BC', 'Doe'),
+	(3, '1000003', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '3-1409 Camosun Street', '1965-07-01', '3838383', 'Lorraine.dame@nttdata.com', 'Simon', 'BC', 'Young'),
+	(4, '1000004', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '429 Raynor Avenue', '1965-07-01', '8765432', 'Lorraine.dame@nttdata.com', 'Matt', 'BC', 'Vaughan'),
+	(5, '1000005', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '425 Raynor Avenue', '1965-07-01', '8787873', 'Lorraine.dame@nttdata.com', 'Gavin', 'BC', 'Glover'),
+	(6, '1000006', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1236 Mackenzie Street', '1965-07-01', '9890833', 'Lorraine.dame@nttdata.com', 'Gavin', 'BC', 'Glover');
+	
+INSERT INTO JJDISPUTED_COUNT (ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, JJ_DISPUTE_TICKET_NUMBER, JJDISPUTE_ID, COUNT, APPEAR_IN_COURT, COMMENTS, DESCRIPTION, PLEA, REQUEST_REDUCTION, TICKETED_FINE_AMOUNT, LESSER_OR_GREATER_AMOUNT, INCLUDES_SURCHARGE, REQUEST_TIME_TO_PAY, DUE_DATE, REVISED_DUE_DATE) VALUES 
+(1, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(2, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(3, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(4, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(5, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(6, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(7, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000003', '1000003', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(8, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000003', '1000003', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(9, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000004', '1000004', 1, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(10, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(11, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(12, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(13, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000006', '1000006', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(14, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000006', '1000006', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null);
