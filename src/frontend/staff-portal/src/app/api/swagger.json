@@ -872,6 +872,69 @@
         },
         "additionalProperties": false
       },
+      "DisputantContactInformation": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "driversLicenceNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Dispute": {
         "type": "object",
         "properties": {
@@ -1180,12 +1243,29 @@
             "type": "string",
             "nullable": true
           },
+          "status": {
+            "$ref": "#/components/schemas/JJDisputeStatus"
+          },
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "violationDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "disputantName": {
+          "icbcReceivedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
             "type": "string",
             "nullable": true
           },
@@ -1209,6 +1289,22 @@
             "type": "string",
             "nullable": true
           },
+          "remarks": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactInformation": {
+            "$ref": "#/components/schemas/DisputantContactInformation"
+          },
+          "jjDisputedCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JJDisputedCount"
+            },
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
@@ -1216,6 +1312,108 @@
           }
         },
         "additionalProperties": false
+      },
+      "JJDisputeStatus": {
+        "enum": [
+          "NEW",
+          "IN_PROGRESS",
+          "COMPLETED",
+          "REVIEW"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCount": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "plea": {
+            "$ref": "#/components/schemas/JJDisputedCountPlea"
+          },
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestTimeToPay": {
+            "type": "boolean"
+          },
+          "requestReduction": {
+            "type": "boolean"
+          },
+          "appearInCourt": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ticketedFineAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "includesSurcharge": {
+            "type": "boolean"
+          },
+          "revisedDueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalFineAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "comments": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "lesserOrGreaterAmount": {
+            "type": "number",
+            "format": "float"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputedCountPlea": {
+        "enum": [
+          "GUILTY",
+          "NOT_GUILTY"
+        ],
+        "type": "string"
       },
       "LegalRepresentation": {
         "type": "object",

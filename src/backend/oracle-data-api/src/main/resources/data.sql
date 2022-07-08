@@ -21,17 +21,17 @@ INSERT INTO DISPUTANT_CONTACT_INFORMATION (ID, JJDISPUTE_ID, CREATED_BY, CREATED
 	(6, '1000006', 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP,  '1236 Mackenzie Street', '1965-07-01', '9890833', 'Lorraine.dame@nttdata.com', 'Gavin', 'BC', 'Glover');
 	
 INSERT INTO JJDISPUTED_COUNT (ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, JJ_DISPUTE_TICKET_NUMBER, JJDISPUTE_ID, COUNT, APPEAR_IN_COURT, COMMENTS, DESCRIPTION, PLEA, REQUEST_REDUCTION, TICKETED_FINE_AMOUNT, LESSER_OR_GREATER_AMOUNT, INCLUDES_SURCHARGE, REQUEST_TIME_TO_PAY, DUE_DATE, REVISED_DUE_DATE) VALUES 
-(1, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
-(2, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
-(3, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
-(4, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
-(5, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
-(6, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
-(7, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000003', '1000003', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
-(8, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000003', '1000003', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
-(9, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000004', '1000004', 1, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
-(10, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
-(11, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
-(12, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, null, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
-(13, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000006', '1000006', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, null, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
-(14, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000006', '1000006', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, null, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null);
+(1, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, 5.00, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(2, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, 345.0, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(3, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000001', '1000001', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, 40.00, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(4, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, 10.00, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(5, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, 300.00, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(6, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000002', '1000002', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, 47.00, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(7, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000003', '1000003', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, 3.00, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(8, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000003', '1000003', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, 300.00, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(9, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000004', '1000004', 1, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, 40.00, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(10, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, 5.00, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(11, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, 200.00, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null),
+(12, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000005', '1000005', 3, FALSE, '', '45(a) Driving without licence', 0, TRUE, 45.00, 20.00, TRUE, TRUE, DATEADD('DAY', 25, CURRENT_DATE), null),
+(13, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000006', '1000006', 1, FALSE, '', '124(c)(1) Driving with burned out break lights', 0, TRUE, 5.00, 20.00, TRUE, TRUE, DATEADD('DAY', 30, CURRENT_DATE), null),
+(14, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, '1000006', '1000006', 2, FALSE, '', '67(b) Excessive speeding', 0, TRUE, 350.0, 475.00, TRUE, TRUE, DATEADD('DAY', 35, CURRENT_DATE), null);
