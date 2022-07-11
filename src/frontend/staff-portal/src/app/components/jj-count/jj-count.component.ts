@@ -42,7 +42,7 @@ export class JJCountComponent implements OnInit {
     }
 
     ngOnInit(): void {
-      this.violationDate = this.jjDisputeInfo.violationDate.split("T")[0];
+      if (this.jjDisputedCount) this.violationDate = this.jjDisputeInfo.violationDate.split("T")[0];
 
       this.form = this.formBuilder.group({
         totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
@@ -52,29 +52,26 @@ export class JJCountComponent implements OnInit {
       });
 
       // initialize if no value
-      if (!this.jjDisputedCount.totalFineAmount) this.jjDisputedCount.totalFineAmount = this.jjDisputedCount.ticketedFineAmount;
-      if (!this.jjDisputedCount.revisedDueDate) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.dueDate;
+      if (this.jjDisputedCount) {
+        if (!this.jjDisputedCount.totalFineAmount) this.jjDisputedCount.totalFineAmount = this.jjDisputedCount.ticketedFineAmount;
+        if (!this.jjDisputedCount.revisedDueDate) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.dueDate;
 
-      // initialize form, radio buttons
-      this.form.patchValue(this.jjDisputedCount);
-      this.inclSurcharge = this.jjDisputedCount.includesSurcharge == true ? "yes" : "no";
-      this.fineReduction = this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no";
-      this.timeToPay = this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no";
+        // initialize form, radio buttons
+        this.form.patchValue(this.jjDisputedCount);
+        this.inclSurcharge = this.jjDisputedCount.includesSurcharge == true ? "yes" : "no";
+        this.fineReduction = this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no";
+        this.timeToPay = this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no";
 
-      // listen for form changes
-      this.form.valueChanges.subscribe(() => {
-        this.jjDisputedCount.comments = this.form.get('comments').value;
-        this.jjDisputedCount.revisedDueDate = this.form.get('revisedDueDate').value;
-        this.jjDisputedCount.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
-        this.jjDisputedCount.totalFineAmount = this.form.get('totalFineAmount').value;
-        this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? true : false;
-        this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
-      });
-
-    }
-
-    showForm() {
-      console.log(this.form);
+        // listen for form changes
+        this.form.valueChanges.subscribe(() => {
+          this.jjDisputedCount.comments = this.form.get('comments').value;
+          this.jjDisputedCount.revisedDueDate = this.form.get('revisedDueDate').value;
+          this.jjDisputedCount.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
+          this.jjDisputedCount.totalFineAmount = this.form.get('totalFineAmount').value;
+          this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? true : false;
+          this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
+        });
+      }
     }
 
     onChangelesserOrGreaterAmount() {

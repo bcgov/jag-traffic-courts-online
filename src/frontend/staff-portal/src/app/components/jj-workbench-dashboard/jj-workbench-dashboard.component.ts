@@ -17,6 +17,7 @@ export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
 
   data = [];
   showDispute: boolean = false;
+  jjPage: string = "Assignments";
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
   displayedColumns: string[] = [
@@ -43,13 +44,17 @@ export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
   }
 
   backTicketList(element) {
-    this.jjDisputeInfo = element;
     this.showDispute = !this.showDispute;
+    if (this.showDispute) this.jjPage = "Dispute Details";
+    else this.jjPage = "Assignments";
+    this.jjDisputeInfo = element;
     if (!this.showDispute) this.getAll();  // refresh list
   }
 
   backTicketpage() {
     this.showDispute = !this.showDispute;
+    if (this.showDispute) this.jjPage = "Dispute Details";
+    else this.jjPage = "Assignments";
     if (!this.showDispute) this.getAll(); // refresh list
   }
 

@@ -113,11 +113,11 @@
         </span>
       </ng-container>
       <div style="display: grid; grid-template-columns: 33% 33% 33%">
-        <span *ngFor="let jjDisputedCount of lastUpdatedJJDispute.jjDisputedCounts" style="border:1px solid black; ">
+        <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
           <app-jj-count
-            [count]="jjDisputedCount.count"
+            [count]="i"
             [jjDisputeInfo]="lastUpdatedJJDispute"
-            [jjDisputedCount]="getJJDisputedCount(jjDisputedCount.count)"
+            [jjDisputedCount]="getJJDisputedCount(i)"
             (jjDisputedCountUpdate)="updateFinalDispositionCount($event)"></app-jj-count>
         </span>
       </div>
@@ -125,7 +125,9 @@
     <section>
       <ng-container subHeader>
         <span>
-          <h3>Add Remarks</h3>
+          <h3>Add Remarks
+          <span class="small-note"><i>* This is for internal use only</i></span>
+        </h3>
         </span>
       </ng-container>
       <mat-form-field style="width:100%">
