@@ -1281,11 +1281,23 @@
             "type": "string",
             "nullable": true
           },
+          "offenceLocation": {
+            "type": "string",
+            "nullable": true
+          },
           "jjAssignedTo": {
             "type": "string",
             "nullable": true
           },
           "jjGroupAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "fineReductionReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeToPayReason": {
             "type": "string",
             "nullable": true
           },

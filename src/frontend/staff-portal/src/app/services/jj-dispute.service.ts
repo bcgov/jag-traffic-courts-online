@@ -91,8 +91,3 @@ export class JJDisputeService {
     return futureDate;
   }
 }
-
-export interface JJDisputeView extends JJDispute {  // TODO replace this with this with data structure that will come from mock data
-  fineReductionReason?: string | null;
-  timeToPayReason?: string | null;
-}

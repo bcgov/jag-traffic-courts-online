@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { JJDisputeView, JJDisputeService } from '../../services/jj-dispute.service';
+import { JJDisputeService } from '../../services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount } from 'app/api/model/models';
@@ -19,7 +19,7 @@ export class JJDisputeComponent implements OnInit {
   @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public busy: Subscription;
-  public lastUpdatedJJDispute: JJDisputeView;
+  public lastUpdatedJJDispute: JJDispute;
   public todayDate: Date = new Date();
   public retrieving: boolean = true;
   public violationDate: string = "";
@@ -66,7 +66,6 @@ export class JJDisputeComponent implements OnInit {
       );
 
       this.lastUpdatedJJDispute = response;
-      this.mockData(); // TODO : get rid of this when data arrives
 
       // set violation date and time
       let violationDate = this.lastUpdatedJJDispute.violationDate.split("T");
@@ -86,11 +85,6 @@ export class JJDisputeComponent implements OnInit {
       }
     });
 
-  }
-
-  public mockData() {
-    this.lastUpdatedJJDispute.fineReductionReason = "I have lost my job and I am looking for another one";
-    this.lastUpdatedJJDispute.timeToPayReason = "N/A";
   }
 
   getJJDisputedCount(count: number) {

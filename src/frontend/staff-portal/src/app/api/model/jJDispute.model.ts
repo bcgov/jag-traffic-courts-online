@@ -29,8 +29,11 @@ export interface JJDispute {
     enforcementOfficer?: string | null;
     policeDetachment?: string | null;
     courthouseLocation?: string | null;
+    offenceLocation?: string | null;
     jjAssignedTo?: string | null;
     jjGroupAssignedTo?: string | null;
+    fineReductionReason?: string | null;
+    timeToPayReason?: string | null;
     remarks?: string | null;
     contactInformation?: DisputantContactInformation;
     jjDisputedCounts?: Array<JJDisputedCount> | null;

@@ -5,8 +5,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService } from '../../services/jj-dispute.service';
-import { JJDisputeView } from '../../services/jj-dispute.service';
-import { JJDisputedCount } from 'app/api';
+import { JJDispute, JJDisputedCount } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
@@ -15,7 +14,7 @@ import { MatRadioChange } from '@angular/material/radio';
   styleUrls: ['./jj-count.component.scss']
 })
 export class JJCountComponent implements OnInit {
-  @Input() public jjDisputeInfo: JJDisputeView
+  @Input() public jjDisputeInfo: JJDispute;
   @Input() public count: number;
   @Input() public jjDisputedCount: JJDisputedCount;
   @Output() public jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
