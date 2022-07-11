@@ -84,8 +84,9 @@ public static class Startup
                     Description = "An API sending dispute data to ARC",
                 });
 
-                var xmlFilename = $"{assembly.GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                // Commented out these lines for now since the .xml file is not found and prevents the api's swagger-ui to be accessed
+                //var xmlFilename = $"{assembly.GetName().Name}.xml";
+                //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
         }
     }

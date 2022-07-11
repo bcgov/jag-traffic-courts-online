@@ -25,7 +25,7 @@ namespace TrafficCourts.Workflow.Service.Services
             formatter.SerializerSettings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
-                ContractResolver = new DefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() }
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
             };
 
             using var httpClient = new HttpClient();

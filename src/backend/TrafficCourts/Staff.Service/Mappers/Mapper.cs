@@ -14,7 +14,7 @@ public class Mapper
         target.TicketFileNumber = dispute.TicketNumber;
         target.IssuingOrganization = dispute.ViolationTicket.OrganizationLocation;
         target.IssuingLocation = dispute.ProvincialCourtHearingLocation;
-        target.DriversLicence = dispute.ViolationTicket.DriversLicenceNumber;
+        target.DriversLicence = dispute.DriversLicenceNumber;
         List <Messaging.MessageContracts.ViolationTicketCount> violationTicketCounts = new();
         foreach (var violationTicketCount in dispute.ViolationTicket.ViolationTicketCounts)
         {

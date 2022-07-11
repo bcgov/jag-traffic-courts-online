@@ -1,4 +1,5 @@
 export * from './boundingBox.model';
+export * from './disputantContactInformation.model';
 export * from './dispute.model';
 export * from './disputeStatus.model';
 export * from './disputedCount.model';
@@ -6,6 +7,9 @@ export * from './disputedCountPlea.model';
 export * from './excludeStatus.model';
 export * from './field.model';
 export * from './jJDispute.model';
+export * from './jJDisputeStatus.model';
+export * from './jJDisputedCount.model';
+export * from './jJDisputedCountPlea.model';
 export * from './legalRepresentation.model';
 export * from './ocrViolationTicket.model';
 export * from './point.model';
