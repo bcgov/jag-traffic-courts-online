@@ -9,6 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JJDisputedCount } from './jJDisputedCount.model';
+import { DisputantContactInformation } from './disputantContactInformation.model';
+import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
 export interface JJDispute { 
@@ -17,13 +20,23 @@ export interface JJDispute {
     modifiedBy?: string | null;
     modifiedTs?: string;
     ticketNumber?: string | null;
+    status?: JJDisputeStatus;
+    submittedDate?: string | null;
     violationDate?: string | null;
-    disputantName?: string | null;
+    icbcReceivedDate?: string | null;
+    surname?: string | null;
+    givenNames?: string | null;
     enforcementOfficer?: string | null;
     policeDetachment?: string | null;
     courthouseLocation?: string | null;
+    offenceLocation?: string | null;
     jjAssignedTo?: string | null;
     jjGroupAssignedTo?: string | null;
+    fineReductionReason?: string | null;
+    timeToPayReason?: string | null;
+    remarks?: string | null;
+    contactInformation?: DisputantContactInformation;
+    jjDisputedCounts?: Array<JJDisputedCount> | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

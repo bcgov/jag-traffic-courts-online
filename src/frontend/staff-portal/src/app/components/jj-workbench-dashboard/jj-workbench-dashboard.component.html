@@ -38,65 +38,65 @@
 
                 <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort>
                   <ng-container matColumnDef="ticketNumber">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Violation #
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
+                    <td mat-cell *matCellDef="let element">
                       <span><a (click)="backTicketList(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="violationDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Offense date
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
+                    <td mat-cell *matCellDef="let element">
                       <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="disputantName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Citizen name
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
+                    <td mat-cell *matCellDef="let element">
                       <span>{{ element.disputantName }}</span>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="enforcementOfficer">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Enforcement officer
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
+                    <td mat-cell *matCellDef="let element">
                       <span>{{ element.enforcementOfficer }}</span>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="policeDetachment">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Police detachment
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
+                    <td mat-cell *matCellDef="let element">
                       <span>{{ element.policeDetachment }}</span>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="courthouseLocation">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Courthouse Location
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
+                    <td mat-cell *matCellDef="let element">
                       <span>{{ element.courthouseLocation }}</span>
                     </td>
                   </ng-container>
 
                   <ng-container matColumnDef="status">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> 
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Status
                     </th>
-                    <td mat-cell *matCellDef="let element"> 
-                      <span>{{ element.__status }}</span>
+                    <td mat-cell *matCellDef="let element">
+                      <span>{{ element.status }}</span>
                     </td>
                   </ng-container>
 
@@ -106,7 +106,7 @@
               </div>
             </div>
 
-            <div *ngIf="showDispute==true"> 
+            <div *ngIf="showDispute==true">
               <app-jj-dispute (backTicketList)="backTicketpage()" [jjDisputeInfo]="jjDisputeInfo"></app-jj-dispute>
             </div>
 

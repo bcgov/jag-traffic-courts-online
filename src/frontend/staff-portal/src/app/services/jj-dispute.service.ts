@@ -85,54 +85,9 @@ export class JJDisputeService {
     return this._JJDispute.value;
   }
 
-  public addThirtyDays(initialDate: string): Date {
+  public addDays(initialDate: string, numDays: number): Date {
     var futureDate = new Date(initialDate);
-    futureDate.setDate(futureDate.getDate() + 30);
+    futureDate.setDate(futureDate.getDate() + numDays);
     return futureDate;
   }
-}
-
-export interface JJDisputeView extends JJDispute {  // TODO replace this with this with data structure that will come from mock data
-  id?: number;
-  status?: DisputeStatus;
-  provincialCourtHearingLocation?: string | null;
-  issuedDate?: string;
-  submittedDate?: string | null;
-  surname?: string | null;
-  givenNames?: string | null;
-  birthdate?: string;
-  driversLicenceNumber?: string | null;
-  driversLicenceProvince?: string | null;
-  address?: string | null;
-  city?: string | null;
-  province?: string | null;
-  postalCode?: string | null;
-  homePhoneNumber?: string | null;
-  workPhoneNumber?: string | null;
-  emailAddress?: string | null;
-  filingDate?: string | null;
-  disputedCounts?: Array<DisputedCount> | null;
-  jjFinalDispositionCounts?: Array<JJFinalDispositionCount> | null;
-  representedByLawyer?: boolean;
-  legalRepresentation?: LegalRepresentation;
-  interpreterLanguage?: string | null;
-  numberOfWitness?: number | null;
-  fineReductionReason?: string | null;
-  timeToPayReason?: string | null;
-  rejectedReason?: string | null;
-  disputantDetectedOcrIssues?: boolean;
-  disputantOcrIssuesDescription?: string | null;
-  systemDetectedOcrIssues?: boolean;
-  jjAssigned?: string | null;
-  ocrViolationTicket?: string | null;
-  assignedTo?: string | null;
-  assignedTs?: string | null;
-  violationTicket?: ViolationTicket;
-  jjRemarks?: string | null;
-}
-export interface JJFinalDispositionCount {
-  count?: number | null;
-  fineAmount?: number | null;
-  dueTs?: string | null;
-  comments?: string | null;
 }
