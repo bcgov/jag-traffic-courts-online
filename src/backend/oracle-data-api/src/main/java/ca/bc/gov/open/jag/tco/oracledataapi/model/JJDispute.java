@@ -111,6 +111,13 @@ public class JJDispute extends Auditable<String>{
     @Column
     @Schema(nullable = true)
     private String courthouseLocation;
+    
+    /**
+     * The location where the offence took place.
+     */
+    @Column
+    @Schema(nullable = true)
+    private String offenceLocation;
 
 	/**
 	 * The ID of the Staff whom the dispute is assigned to be reviewed on JJ Workbench.
@@ -125,6 +132,21 @@ public class JJDispute extends Auditable<String>{
 	@Column
 	@Schema(nullable = true)
 	private String jjGroupAssignedTo;
+	
+	/**
+	 * Reason indicating why the fine reduction requested for the ticket.
+	 */
+	@Column(length = 256)
+	@Schema(nullable = true)
+	private String fineReductionReason;
+
+	/**
+	 * Reason indicating why the disputant needs more time in order to make payment
+	 * for the ticket.
+	 */
+	@Column(length = 256)
+	@Schema(nullable = true)
+	private String timeToPayReason;
 	
 	/**
 	 * A note/free form text field that is for internal use of JJs.
