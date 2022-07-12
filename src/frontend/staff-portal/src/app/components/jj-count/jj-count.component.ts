@@ -48,7 +48,7 @@ export class JJCountComponent implements OnInit {
         totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
         lesserOrGreaterAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
         revisedDueDate: [null, [Validators.required]],
-        comments: [null]
+        comments: [{value: null, disabled: !this.jjDisputedCount}]
       });
 
       // initialize if no value

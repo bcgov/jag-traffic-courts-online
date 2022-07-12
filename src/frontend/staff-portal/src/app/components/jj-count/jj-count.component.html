@@ -38,21 +38,21 @@
     <div style="display: grid; grid-template-columns: auto auto">
       <span class="section-grid-cell" style="grid-column: span 2">
         <p class="section-grid-header">For this count I would like to</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt == true">I want to appear in court</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt == false">I do not want to appear in court</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === true">I want to appear in court</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === false">I do not want to appear in court</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Request fine reduction</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction == true">yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction != true">no</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction === true">yes</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction !== true">no</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Request time to pay</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay == true">yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay != true">no</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay === true">yes</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay !== true">no</p>
       </span>
     </div>
     <hr style="margin: 0 0 0 0"/>
@@ -116,7 +116,7 @@
         <span class="section-jj-grid-cell">
           <p class="section-grid-header">Time to pay</p>
           <p class="section-jj-grid-text">
-            <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row" (change)="updateRevisedDueDate($event)" disabled="true" [disabled]="!jjDisputedCount">
+            <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row" (change)="updateRevisedDueDate($event)" [disabled]="!jjDisputedCount">
               <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
               <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
             </mat-radio-group>
@@ -135,7 +135,7 @@
         <span class="section-grid-cell" style="grid-column: span 3">
           <mat-label class="section-grid-header">Comments</mat-label><br />
           <mat-label class="section-grid-header"><i>* These comments will be shared to disputants</i></mat-label>
-          <textarea matInput [disabled]="!jjDisputedCount" [formControl]="form.get('comments')" maxlength="1500" style="background-color:#e4f2ff; width: 100%; font-size: small; resize: none;" rows="5">
+          <textarea matInput [formControl]="form.get('comments')" maxlength="1500" style="background-color:#e4f2ff; width: 100%; font-size: small; resize: none;" rows="5">
           </textarea>
         </span>
       </div>
