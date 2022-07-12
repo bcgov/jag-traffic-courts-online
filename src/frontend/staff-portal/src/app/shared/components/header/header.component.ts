@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  OnChanges,
   AfterViewInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -21,12 +22,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnChanges {
   public fullName: string;
   todayDate: Date = new Date();
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
+  @Input() public jjPage: string;
 
   public languageCode: string;
   public languageDesc: string;
@@ -58,6 +60,10 @@ export class HeaderComponent implements OnInit {
     this.version = this.appConfigService.version;
   }
 
+  ngOnChanges() {
+    if (this.jjRole && this.isLoggedIn) this.headingText = "JJ Written Reasons - " + this.jjPage ;
+  }
+
   ngOnInit() {
     this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
 
@@ -70,14 +76,14 @@ export class HeaderComponent implements OnInit {
         if (roles) roles.forEach(role => {
           if (role == "vtc-user") { // TODO USE role name for JJ
             this.jjRole = true;
-          } 
+          }
           if (role == "vtc-user") {
             this.vtcRole = true;
           }
         });
       } else this.isLoggedIn = false;
 
-      if (this.jjRole && this.isLoggedIn) this.headingText = "JJ Written Reasons - Assignments";
+      if (this.jjRole && this.isLoggedIn) this.headingText = "JJ Written Reasons - " + this.jjPage ;
       else if (this.vtcRole && this.isLoggedIn) this.headingText = "Ticket Resolution Management ";
       else if (!this.isLoggedIn) this.headingText = "Please sign in"
 

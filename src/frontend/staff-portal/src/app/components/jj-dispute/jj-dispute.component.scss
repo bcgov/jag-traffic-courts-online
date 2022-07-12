@@ -16,26 +16,34 @@ p {
 }
 
 .section-grid-cell {
-  border:1px solid black; 
+  border:1px solid black;
   padding-left: 5px;
   padding-bottom: 5px;
 }
 
 .section-grid-header {
-  font-size:small; 
+  font-size:small;
   font-weight: bold;
   margin: 5px 0 0 0 !important;
   padding: 0 !important;
 }
 
 .section-grid-text {
-  font-size:small; 
+  font-size:small;
   margin: 0 0 5px 0 !important;
   padding: 0 !important;
 }
 
 .disputre {
   width: 100%;
+}
+
+.small-note {
+  font-size:small;
+  color: #707070;
+  font-weight: bold;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .button {
@@ -86,7 +94,7 @@ p {
     }
     // :host
   }
-  
+
   mat-expansion-panel {
     box-shadow: none !important;
     padding-bottom: 1em;
