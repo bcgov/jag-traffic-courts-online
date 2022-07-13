@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +44,26 @@ public class JJDisputeService {
 		} else {
 			return jjDisputeRepository.findByJjGroupAssignedToIgnoreCaseAndJjAssignedToIgnoreCase(jjGroupAssignedTo, jjAssignedTo);
 		}
+	}
+	
+	/**
+	 * Updates the properties of a specific {@link JJDispute}
+	 *
+	 * @param id
+	 * @param {@link JJDispute}
+	 * @return
+	 */
+	public JJDispute updateJJDispute(String id, JJDispute jjDispute) {
+		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "ticketNumber", "jjDisputedCounts");
+		// Remove all existing jj disputed counts that are associated to this jj dispute
+		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
+			jjDisputeToUpdate.getJjDisputedCounts().clear();
+		}
+		// Add updated ticket counts
+		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
+
+		return jjDisputeRepository.save(jjDisputeToUpdate);
 	}
 }
