@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
 @Service
@@ -56,7 +57,7 @@ public class JJDisputeService {
 	public JJDispute updateJJDispute(String id, JJDispute jjDispute) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
 
-		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "ticketNumber", "jjDisputedCounts");
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts");
 		// Remove all existing jj disputed counts that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
 			jjDisputeToUpdate.getJjDisputedCounts().clear();
