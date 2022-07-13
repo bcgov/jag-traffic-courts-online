@@ -64,6 +64,8 @@ public class JJDisputeService {
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
+		// Change JJ Dispute status to 'Review Required'
+		jjDisputeToUpdate.setStatus(JJDisputeStatus.REVIEW);
 
 		return jjDisputeRepository.save(jjDisputeToUpdate);
 	}
