@@ -5,8 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
@@ -86,6 +90,26 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null, "Tony Stark"));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
+	}
+	
+	@Test
+	@Transactional
+	public void testUpdateJJDispute() {
+		// Create a single JJ Dispute with a specified remark
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		jjDispute.setRemarks("This is a remark from a JJ");
+		jjDisputeRepository.save(jjDispute);
+
+		// Create a new JJ Dispute with different remark value and update the existing JJ Dispute
+		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
+		updatedJJDispute.setRemarks("This is another remark from another JJ");
+		jjDisputeController.updateJJDispute(jjDispute.getTicketNumber(), updatedJJDispute);
+
+		// Assert db contains only the updated JJ Dispute record.
+		jjDispute = jjDisputeController.getJJDispute(jjDispute.getTicketNumber());
+		assertEquals("This is another remark from another JJ", jjDispute.getRemarks());
+		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null, null);
+		assertEquals(1, IterableUtils.size(allJJDisputes));
 	}
 
 }
