@@ -96,4 +96,49 @@ public class JJController : JJControllerBase<JJController>
         }
     }
 
+    /// <summary>
+    /// Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
+    /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="jjDispute"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Admin resolution is submitted. The JJ Dispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="404">The JJ Dispute to update was not found.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}")]
+    [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
+
+        try
+        {
+            await _JJDisputeService.SubmitAdminResolutionAsync(ticketNumber, jjDispute, cancellationToken);
+            return Ok(jjDispute);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "API Exception: error submitting JJ Dispute Admin Resolution to oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "General Exception: server error submitting JJ Dispute Admin Resolution");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
 }
