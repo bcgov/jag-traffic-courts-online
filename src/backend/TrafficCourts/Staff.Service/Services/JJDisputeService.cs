@@ -90,4 +90,11 @@ public class JJDisputeService : IJJDisputeService
 
         return dispute;
     }
+
+    public async Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
+    {
+        JJDispute dispute = await GetOracleDataApi().UpdateJJDisputeAsync(ticketNumber, jjDispute, cancellationToken);
+
+        return dispute;
+    }
 }
