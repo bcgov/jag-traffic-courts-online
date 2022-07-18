@@ -270,7 +270,11 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
-      let dateDiff = this.dateDiff(this.ticket.issued_date);
+      let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
+      if (this.ticketType === ticketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
+        dateDiff = this.dateDiff(this.ocrTicket.fields["service_date"].value);
+        console.log("hand written", dateDiff);
+      }
       if ((dateDiff <= 30 && (this.ticketType === ticketTypes.ELECTRONIC_TICKET || this.ticketType === ticketTypes.HANDWRITTEN_TICKET))
         || (dateDiff <= 45 && this.ticketType === ticketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
