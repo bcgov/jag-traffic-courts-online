@@ -823,6 +823,110 @@
         }
       }
     },
+    "/api/jj/{ticketNumber}": {
+      "put": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "Unique identifier for a specific JJ Dispute record.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JJDispute"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JJDispute"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/JJDispute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin resolution is submitted. The JJ Dispute is updated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The JJ Dispute to update was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
     "/api/lookup": {
       "get": {
         "tags": [

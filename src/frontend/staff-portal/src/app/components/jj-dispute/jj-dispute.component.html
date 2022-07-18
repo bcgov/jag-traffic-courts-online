@@ -135,14 +135,14 @@
       </mat-form-field>
     </section><br />
     <div style="float: right; width: 100%;">
-      <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" style="background-color: #003366;">
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
         Submit
       </button>
-      <button class="large" mat-flat-button type="button" color="primary" style="background-color: white;" (click)="onReject()">
-        <span style="color: #003366;">Reject</span>
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onMoreOptions()"  [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+        More Options
       </button>
-      <button class="large" mat-flat-button type="button" color="primary" style="background-color: white;" (click)="onSave()">
-        <span style="color: #003366;">Save & Finish Later</span>
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onSave()"  [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+        Save & Finish Later
       </button>
     </div>
   </div>

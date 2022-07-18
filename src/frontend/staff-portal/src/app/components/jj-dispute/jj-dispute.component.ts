@@ -8,7 +8,10 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService } from '../../services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
+
 @Component({
   selector: 'app-jj-dispute',
   templateUrl: './jj-dispute.component.html',
@@ -42,26 +45,40 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.getDispute();
+    this.getJJDispute();
   }
 
   public onSubmit(): void {
+    this.lastUpdatedJJDispute.status = JJDisputeStatus.Review;
+    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+      this.lastUpdatedJJDispute = response;
+      this.logger.info(
+        'JJDisputeComponent::putJJDispute response',
+        response
+      );
+      this.onBack();
+    });
   }
 
   public onSave(): void {
-  }
-
-  public onReject(): void {
+    this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+      this.lastUpdatedJJDispute = response;
+      this.logger.info(
+        'JJDisputeComponent::putJJDispute response',
+        response
+      );
+    });
   }
 
   // get dispute by id
-  getDispute(): void {
-    this.logger.log('JJDisputeComponent::getDispute');
+  getJJDispute(): void {
+    this.logger.log('JJDisputeComponent::getJJDispute');
 
     this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber).subscribe((response: JJDispute) => {
       this.retrieving = false;
       this.logger.info(
-        'JJDisputeComponent::getDispute response',
+        'JJDisputeComponent::getJJDispute response',
         response
       );
 
@@ -89,6 +106,23 @@ export class JJDisputeComponent implements OnInit {
 
   getJJDisputedCount(count: number) {
     return this.lastUpdatedJJDispute.jjDisputedCounts.filter(x => x.count == count)[0];
+  }
+
+  onMoreOptions() {
+    const data: DialogOptions = {
+      titleKey: "Response to Written Reasons Dispute",
+      messageKey: "",
+      actionTextKey: "Require court hearing",
+      actionType: "warn",
+      cancelTextKey: "Go back",
+      icon: "error_outline",
+    };
+    this.dialog.open(MoreOptionsDialogComponent, { data, width: "50%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          // TODO: fill in to do actions depending on choice
+        }
+      });
   }
 
   // get from child component

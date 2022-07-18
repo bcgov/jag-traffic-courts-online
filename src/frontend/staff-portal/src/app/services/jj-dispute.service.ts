@@ -22,7 +22,7 @@ export class JJDisputeService {
   }
 
   /**
-     * Get the disputes from RSI excluding CANCELLED
+     * Get the JJ disputes from RSI
      *
      * @param none
      */
@@ -38,6 +38,32 @@ export class JJDisputeService {
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'jj-DisputeService::getJJDisputes error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  /**
+     * Put the JJ dispute to RSI by Id.
+     *
+     * @param ticketNumber, jjDispute
+     */
+   public putJJDispute(ticketNumber: string, jjDispute: JJDispute): Observable<JJDispute> {
+
+    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, jjDispute)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::putJJDispute', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::putJJDispute error has occurred: ',
             error
           );
           throw error;

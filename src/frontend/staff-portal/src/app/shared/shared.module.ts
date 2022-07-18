@@ -15,6 +15,7 @@ import { StepperFooterComponent } from './components/stepper-footer/stepper-foot
 import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
 import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { MoreOptionsDialogComponent } from './dialogs/more-options-dialog/more-options-dialog.component';
 import { ConfirmReasonDialogComponent } from './dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
 import { DialogContentDirective } from './dialogs/dialog-content.directive';
 import { ImageRequirementsDialogComponent } from './dialogs/image-requirements-dialog/image-requirements-dialog.component';
@@ -44,6 +45,7 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         YesNoPipe,
         PostalPipe,
         ConfirmDialogComponent,
+        MoreOptionsDialogComponent,
         ConfirmReasonDialogComponent,
         DialogContentDirective,
         PageComponent,
