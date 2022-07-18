@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
@@ -9,8 +8,6 @@ import { JJDisputeService } from '../../services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -32,7 +29,6 @@ export class JJDisputeComponent implements OnInit {
 
   constructor(
     protected route: ActivatedRoute,
-    private dialog: MatDialog,
     private utilsService: UtilsService,
     public mockConfigService: MockConfigService,
     private datePipe: DatePipe,
@@ -106,23 +102,6 @@ export class JJDisputeComponent implements OnInit {
 
   getJJDisputedCount(count: number) {
     return this.lastUpdatedJJDispute.jjDisputedCounts.filter(x => x.count == count)[0];
-  }
-
-  onMoreOptions() {
-    const data: DialogOptions = {
-      titleKey: "Response to Written Reasons Dispute",
-      messageKey: "",
-      actionTextKey: "Require court hearing",
-      actionType: "warn",
-      cancelTextKey: "Go back",
-      icon: "error_outline",
-    };
-    this.dialog.open(MoreOptionsDialogComponent, { data, width: "50%" }).afterClosed()
-      .subscribe((action: any) => {
-        if (action) {
-          // TODO: fill in to do actions depending on choice
-        }
-      });
   }
 
   // get from child component
