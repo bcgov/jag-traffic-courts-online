@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -7,6 +8,9 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService } from '../../services/jj-dispute.service';
 import { JJDispute, JJDisputedCount } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
+
 
 @Component({
   selector: 'app-jj-count',
@@ -30,6 +34,7 @@ export class JJCountComponent implements OnInit {
 
   constructor(
     protected route: ActivatedRoute,
+    private dialog: MatDialog,
     private utilsService: UtilsService,
     public mockConfigService: MockConfigService,
     public jjDisputeService: JJDisputeService,
@@ -72,6 +77,23 @@ export class JJCountComponent implements OnInit {
           this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
         });
       }
+    }
+
+    onMoreOptions() {
+      const data: DialogOptions = {
+        titleKey: "Response to Written Reasons Dispute",
+        messageKey: "",
+        actionTextKey: "Require court hearing",
+        actionType: "warn",
+        cancelTextKey: "Go back",
+        icon: "error_outline",
+      };
+      this.dialog.open(MoreOptionsDialogComponent, { data, width: "50%" }).afterClosed()
+        .subscribe((action: any) => {
+          if (action) {
+            // TODO: fill in to do actions depending on choice
+          }
+        });
     }
 
     onChangelesserOrGreaterAmount() {

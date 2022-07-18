@@ -149,8 +149,11 @@
     </ng-container>
     <div style="display: grid; grid-template-columns: 33% 33% 33%">
       <span class="section-jj-grid-cell">
-        <p class="section-grid-header">&nbsp;</p>
-        <p class="section-jj-grid-text">&nbsp;</p>
+        <p class="section-jj-grid-text">
+          <button class="large" mat-flat-button type="button" color="primary" (click)="onMoreOptions()"  [disabled]="(jjDisputeInfo.status != 'NEW' && jjDisputeInfo.status != 'IN_PROGRESS') || !jjDisputedCount">
+            More...
+          </button>
+        </p><p class="section-grid-header">&nbsp;</p>
       </span>
       <span class="section-jj-grid-cell">
         <p class="section-grid-header">Due date</p>

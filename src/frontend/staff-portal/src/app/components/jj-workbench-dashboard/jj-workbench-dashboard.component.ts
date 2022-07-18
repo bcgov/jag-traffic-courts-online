@@ -5,6 +5,7 @@ import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
+import { JJDisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -15,7 +16,7 @@ export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
   busy: Subscription;
   jjDisputeInfo: JJDispute;
 
-  data = [];
+  data = [] as JJDispute[];
   showDispute: boolean = false;
   jjPage: string = "Assignments";
   dataSource = new MatTableDataSource();
@@ -61,9 +62,11 @@ export class JjWorkbenchDashboardComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJWorkbenchDashboardComponent::getAllDisputes');
 
-    this.jjDisputeService.getJJDisputes().subscribe((response) => {
-      this.data = response;
+    this.jjDisputeService.getJJDisputes().subscribe((response: JJDispute[]) => {
+      // filter jj disputes only show new or in progress
+      this.data = response.filter(x => x.status === JJDisputeStatus.New || x.status === JJDisputeStatus.InProgress);
       this.dataSource.data = this.data;
+
 
       // initially sort data by Date Submitted
       this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) => { if (a.violationDate > b.violationDate) { return -1; } else { return 1 } });

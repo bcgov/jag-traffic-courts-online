@@ -46,12 +46,6 @@ p {
   padding: 0 !important;
 }
 
-.button {
-  padding: 20px;
-  background-color: #c2c2c2;
-  color: #fff;
-}
-
 .count-list{
   border-left: 15px solid #3b6288;
   padding: 15px;
@@ -59,23 +53,29 @@ p {
   background-color: #f3f3f3;
   }
 
-.mat-flat-button {
-  width: 30% !important;
-  float: right;
-  margin-top: 1em;
-  margin-right: 20px;
-
-  &.large {
-    height: 46px;
-    font-size: 1.125em;
-    font-weight: bold;
+  .button {
+    padding: 20px;
+    background-color: #c2c2c2;
+    color: #fff;
   }
 
-  &.light {
-    background-color: theme-palette(blue, bg);
-    color: white;
+  .mat-flat-button {
+    width: 30% !important;
+    float: right;
+    margin-top: 1em;
+    margin-right: 20px;
+
+    &.large {
+      height: 46px;
+      font-size: 1.125em;
+      font-weight: bold;
+    }
+
+    &.light {
+      background-color: theme-palette(blue, bg);
+      color: white;
+    }
   }
-}
 
 .mat-flat-button[disabled] {
   background-color: rgba(0, 0, 0, 0.04) !important;
