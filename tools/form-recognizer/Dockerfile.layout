@@ -1,0 +1,15 @@
+# Full list is available here: https://mcr.microsoft.com/v2/azure-cognitive-services/form-recognizer/layout/tags/list
+
+FROM mcr.microsoft.com/azure-cognitive-services/form-recognizer/layout
+
+USER root
+
+COPY /shared-src /shared-src
+COPY /init.sh /init.sh
+
+RUN chmod +x /init.sh 
+RUN chmod +x /init-with-cmd-args.sh
+
+USER 10001
+
+ENTRYPOINT ["/bin/sh", "-c", "/init.sh && /init-with-cmd-args.sh"]

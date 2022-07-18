@@ -26,15 +26,11 @@ public class AnalyseHandlerTests
         var mockLogger = new Mock<ILogger<AnalyseHandler.Handler>>();
         var mockRedisCacheService = new Mock<IRedisCacheService>();
 
-        // calls AnalyzeImageAsync and Map
-        AnalyzeResult expectedAnalyzeResult = FormRecognizerHelper.CreateEmptyAnalyzeResult();
+        // calls AnalyzeImageAsync
+        OcrViolationTicket expectedOcrViolationTicket = new();
         var mockService = new Mock<IFormRecognizerService>(MockBehavior.Strict);
         mockService.Setup(_ => _.AnalyzeImageAsync(It.IsAny<MemoryStream>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(expectedAnalyzeResult));
-
-        OcrViolationTicket expectedOcrViolationTicket = new();
-        mockService.Setup(_ => _.Map(It.Is<AnalyzeResult>(parameter => parameter == expectedAnalyzeResult)))
-            .Returns(expectedOcrViolationTicket);
+            .Returns(Task.FromResult(expectedOcrViolationTicket));
 
         // setup the mock IFilePersistenceService
         string expectedFilename = Guid.NewGuid().ToString("n") + ".jpg";

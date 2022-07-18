@@ -124,6 +124,7 @@ docker-compose down
 | splunk                          | http://localhost:8000                        |       |
 | seq                             | http://localhost:8001                        |       |
 | jaeger                          | http://localhost:16686                       |       |
+| form-recognizer                 | http://localhost:5200                        |       |
 
 ### Logging
 
@@ -163,3 +164,28 @@ To run the project where redis is configured to run in sentinel mode (a high-ava
 ```
 docker-compose -f docker-compose.yml -f ./.docker/docker-compose.redis.yml up -d
 ```
+
+### Form Recognizer
+
+A local containerized instance of Azure's Form Recognizer is available, consisting of 4 containers:
+* azure-cognitive-service-proxy (an nginx router to the below services)
+* azure-cognitive-service-custom-api (main api to the service)
+* azure-cognitive-service-custom-layout (the container that does all the work)
+* azure-cognitive-service-custom-supervised (tracks billing, submits to Azure)
+
+```
+docker-compose -f docker-compose.yml -f .docker/docker-compose-ocr.yml up -d
+```
+
+#### Configuration
+
+| Environment variable            | Description                                                                             | Default                         |
+| ------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------|
+| FORMRECOGNIZER__APIVERSION      | One of "2.1" or "2022-06-30-preview"                                                    | 2022-06-30-preview              |
+| FORMRECOGNIZER__APIKEY          | Billing key of Azure Form Recognizer (32 character GUID, excluding hypens)              |                                 |
+| FORMRECOGNIZER__BILLING_URL     | Azure endpoint for billing purposes (where the apikey is used)                          |                                 |
+| FORMRECOGNIZER__ENDPOINT        | API endpoint                                                                            |                                 |
+| FORMRECOGNIZER__MODELID         | If API version is 2.1, this is the 36 character GUID of the model id (including hypens). If API version is 2022-06-30-preview, this is the model name, ie. ViolationTicket | |
+
+Use 2.1 as the FORMRECOGNIZER__APIVERSION to target Form Recognizer running locally in Docker (or in OpenShift).
+Use 2022-06-30-preview to target Form Recognizer running in Azure cloud (which runs the latest api version, not 2.1).

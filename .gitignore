@@ -60,7 +60,7 @@ package-lock.json
 # Azure Form Recognizer
 /tools/form-recognizer/logs/*
 !/tools/form-recognizer/logs/.keep
-/tools/form-recognizer/shared*
+/tools/form-recognizer/shared/*
 !/tools/form-recognizer/shared/.keep
 
 # SFTP file location that contains generated ARC files 
