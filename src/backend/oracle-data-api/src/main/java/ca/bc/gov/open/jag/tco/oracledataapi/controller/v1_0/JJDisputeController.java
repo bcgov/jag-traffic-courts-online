@@ -5,14 +5,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController(value = "JJDisputeControllerV1_0")
 @RequestMapping("/api/v1.0/jj")
@@ -54,5 +62,25 @@ public class JJDisputeController {
 		logger.debug("getAllJJDisputes called");
 
 		return jjDisputeService.getAllJJDisputes(jjGroupAssignedTo, jjAssignedTo);
+	}
+	
+	/**
+	 * PUT endpoint that updates the JJ Dispute detail with administrative resolution details for each JJ Disputed Count, setting the new value for the fields passed in the body.
+	 *
+	 * @param jj dispute to be updated
+	 * @param id (ticket number) of the saved {@link JJDispute} to update
+	 * @return updated {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the properties of a particular Dispute record based on the given values.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed.")
+	})
+	@PutMapping("/dispute/{ticketNumber}")
+	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute) {
+		logger.debug("PUT /dispute/{ticketNumber} called");
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute), HttpStatus.OK);
 	}
 }

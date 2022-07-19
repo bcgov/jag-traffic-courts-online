@@ -12,6 +12,43 @@
   ],
   "security": [ { "x-username": [] } ],
   "paths": {
+    "/api/v1.0/jj/dispute/{ticketNumber}": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates the properties of a particular Dispute record based on the given values.",
+        "operationId": "updateJJDispute",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/JJDispute" } } },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          }
+        }
+      }
+    },
     "/api/v1.0/dispute/{id}": {
       "get": {
         "tags": [ "dispute-controller" ],
@@ -22,8 +59,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -32,12 +69,12 @@
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -56,8 +93,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -70,12 +107,12 @@
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "409": {
@@ -97,8 +134,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -107,12 +144,12 @@
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -130,8 +167,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -140,12 +177,12 @@
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -170,8 +207,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -180,12 +217,12 @@
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to PROCESSING iff status is NEW, VALIDATED or REJECTED. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -210,8 +247,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -232,12 +269,12 @@
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -262,8 +299,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -272,12 +309,12 @@
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED, VALIDATED or PROCESSING. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -304,12 +341,12 @@
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -317,11 +354,91 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string",
-                  "format": "uuid"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1.0/jj/disputes": {
+      "get": {
+        "tags": [ "jj-dispute-controller" ],
+        "operationId": "getAllJJDisputes",
+        "parameters": [
+          {
+            "name": "jjGroupAssignedTo",
+            "in": "query",
+            "description": "If specified, will retrieve the records which are assigned to the specified jj group",
+            "required": false,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "jjAssignedTo",
+            "in": "query",
+            "description": "If specified, will retrieve the records which are assigned to the specified jj staff",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/JJDispute" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1.0/jj/dispute/{id}": {
+      "get": {
+        "tags": [ "jj-dispute-controller" ],
+        "operationId": "getJJDispute",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The primary key of the jj dispute to retrieve",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
           }
         }
       }
@@ -359,12 +476,12 @@
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -392,55 +509,15 @@
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
-        }
-      }
-    },
-    "/api/v1.0/disputes/jj": {
-      "get": {
-        "tags": [ "dispute-controller" ],
-        "summary": "Returns all disputes that have the specified JJ assigned.",
-        "operationId": "getDisputesByJjAssigned",
-        "parameters": [
-          {
-            "name": "jjAssigned",
-            "in": "query",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Dispute" }
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -455,12 +532,12 @@
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -470,6 +547,201 @@
   },
   "components": {
     "schemas": {
+      "DisputantContactInformation": {
+        "type": "object",
+        "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "description": "ID",
+            "format": "int64",
+            "readOnly": true
+          },
+          "surname": { "type": "string" },
+          "givenNames": { "type": "string" },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "driversLicenceNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
+          },
+          "province": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "address": { "type": "string" },
+          "emailAddress": { "type": "string" }
+        },
+        "nullable": true
+      },
+      "JJDispute": {
+        "type": "object",
+        "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketNumber": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": [ "NEW", "IN_PROGRESS", "COMPLETED", "REVIEW" ]
+          },
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "icbcReceivedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "enforcementOfficer": {
+            "type": "string",
+            "nullable": true
+          },
+          "policeDetachment": {
+            "type": "string",
+            "nullable": true
+          },
+          "courthouseLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "offenceLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjGroupAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "fineReductionReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeToPayReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "remarks": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactInformation": { "$ref": "#/components/schemas/DisputantContactInformation" },
+          "jjDisputedCounts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/JJDisputedCount" }
+          }
+        }
+      },
+      "JJDisputedCount": {
+        "type": "object",
+        "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "description": "ID",
+            "format": "int64",
+            "readOnly": true
+          },
+          "plea": {
+            "type": "string",
+            "enum": [ "GUILTY", "NOT_GUILTY" ]
+          },
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestTimeToPay": { "type": "boolean" },
+          "requestReduction": { "type": "boolean" },
+          "appearInCourt": { "type": "boolean" },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ticketedFineAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "includesSurcharge": { "type": "boolean" },
+          "revisedDueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalFineAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "comments": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "lesserOrGreaterAmount": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
       "Dispute": {
         "type": "object",
         "properties": {
@@ -484,9 +756,9 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID",
-            "format": "uuid",
+            "format": "int64",
             "readOnly": true
           },
           "status": {
@@ -613,9 +885,9 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID",
-            "format": "uuid",
+            "format": "int64",
             "readOnly": true
           },
           "plea": {
@@ -647,9 +919,9 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID",
-            "format": "uuid",
+            "format": "int64",
             "readOnly": true
           },
           "lawFirmName": { "type": "string" },
@@ -674,9 +946,9 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID",
-            "format": "uuid",
+            "format": "int64",
             "readOnly": true
           },
           "ticketNumber": {
@@ -842,9 +1114,9 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
+            "type": "integer",
             "description": "ID",
-            "format": "uuid",
+            "format": "int64",
             "readOnly": true
           },
           "count": {

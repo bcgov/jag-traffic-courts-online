@@ -1,4 +1,3 @@
-using Azure.AI.FormRecognizer.DocumentAnalysis;
 using MediatR;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
@@ -60,8 +59,9 @@ public static class AnalyseHandler
         {
             _logger.LogDebug("Analysing {FileName}", request.Image.FileName);
 
-            // Generate a guid for using as Violation Ticket Key to save OCR related data into Redis
-            string ticketId = Guid.NewGuid().ToString("n");
+            // Generate a guid with a suffix '-o' to indicate that it's an OCRed ticketId
+            // for using as Violation Ticket Key to save OCR related data into Redis
+            string ticketId = $"{Guid.NewGuid():n}-o";
 
             var stream = GetStreamForFile(request.Image);
 
@@ -69,10 +69,11 @@ public static class AnalyseHandler
             var filename = await _redisCacheService.SetFileRecordAsync(ticketId, stream, TimeSpan.FromDays(1));
             stream.Position = 0L; // reset file position
 
-            AnalyzeResult result;
+            OcrViolationTicket violationTicket;
             try
             {
-                result = await _formRegognizerService.AnalyzeImageAsync(stream, cancellationToken);
+                violationTicket = await _formRegognizerService.AnalyzeImageAsync(stream, cancellationToken);
+                violationTicket.ImageFilename = filename;
             }
             catch (Exception exception)
             {
@@ -83,10 +84,6 @@ public static class AnalyseHandler
                 _logger.LogError(exception, "Exception thrown during analysis");
                 throw;
             }
-            // Create a custom mapping of DocumentFields to a structured object for validation and serialization.
-            //   (for some reason the Azure.AI.FormRecognizer.DocumentAnalysis.BoundingBoxes are not serialized (always null), so we map ourselves)
-            OcrViolationTicket violationTicket = _formRegognizerService.Map(result);
-            violationTicket.ImageFilename = filename;
 
             // Validate the violationTicket and adjust confidence values (invalid ticket number, invalid count section text, etc)
             _formRecognizerValidator.ValidateViolationTicket(violationTicket);

@@ -11,11 +11,10 @@
  */
 
 
-export interface MimeType { 
-    name?: string | null;
-    readonly primaryType?: string | null;
-    readonly subType?: string | null;
-    description?: string | null;
-    readonly extensions?: Array<string> | null;
-}
+export type JJDisputedCountPlea = 'GUILTY' | 'NOT_GUILTY';
+
+export const JJDisputedCountPlea = {
+    Guilty: 'GUILTY' as JJDisputedCountPlea,
+    NotGuilty: 'NOT_GUILTY' as JJDisputedCountPlea
+};
 

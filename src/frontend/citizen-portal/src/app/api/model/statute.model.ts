@@ -11,9 +11,6 @@
  */
 
 
-/**
- * A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government.
- */
 export interface Statute { 
     code?: number;
     act?: string | null;

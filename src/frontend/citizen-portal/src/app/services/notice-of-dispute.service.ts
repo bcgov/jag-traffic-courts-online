@@ -9,7 +9,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputedCount, DisputesService, NoticeOfDispute, Plea } from "app/api";
 import { AppRoutes } from "app/app.routes";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
@@ -82,8 +82,8 @@ export class NoticeOfDisputeService {
     this._additionFormDefaultValue = this.fb.group(this.additionFormFields).value;
   }
 
-  public get noticeOfDispute$(): BehaviorSubject<NoticeOfDispute> {
-    return this._noticeOfDispute;
+  public get noticeOfDispute$(): Observable<NoticeOfDispute> {
+    return this._noticeOfDispute.asObservable();
   }
 
   public get noticeOfDispute(): NoticeOfDispute {
@@ -99,6 +99,9 @@ export class NoticeOfDisputeService {
   }
 
   public createNoticeOfDispute(input: NoticeOfDispute): void {
+    input.birthdate = this.datePipe.transform(input.birthdate, "yyyy-MM-dd");
+    input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss");
+
     const data: DialogOptions = {
       titleKey: "Submit request",
       messageKey:
@@ -112,7 +115,7 @@ export class NoticeOfDisputeService {
         if (action) {
           input.disputed_counts = input.disputed_counts.filter(i => i.plea);
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
-            this.noticeOfDispute$.next(input);
+            this._noticeOfDispute.next(input);
             this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
               queryParams: {
                 ticketNumber: input.ticket_number,

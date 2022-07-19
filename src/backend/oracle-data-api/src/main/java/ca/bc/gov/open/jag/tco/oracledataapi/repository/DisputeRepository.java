@@ -2,14 +2,12 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
 import org.springframework.data.repository.CrudRepository;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
-public interface DisputeRepository extends CrudRepository<Dispute, UUID> {
+public interface DisputeRepository extends CrudRepository<Dispute, Long> {
 
 	/** Fetch all records older than the given date. */
     public Iterable<Dispute> findByCreatedTsBefore(Date olderThan);

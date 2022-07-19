@@ -1,7 +1,8 @@
-import { OnInit, Component, ViewEncapsulation, Inject } from '@angular/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { LogInOutService } from 'app/services/log-in-out.service';
+import { OnInit, Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AppRoutes } from 'app/app.routes';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-landing',
@@ -11,60 +12,47 @@ import { Router } from '@angular/router';
 })
 export class LandingComponent implements OnInit {
   public isLoggedIn = false;
+  public jjRole: boolean = false;
+  public vtcRole: boolean = false;
 
   constructor(
-    public oidcSecurityService : OidcSecurityService,
-    private logInOutService : LogInOutService,
-    @Inject(Router) private router,
+    private oidcSecurityService: OidcSecurityService,
+    private router: Router,
+    public jwtHelper: JwtHelperService
+  ) {
+  }
 
-  ) {   }
+  ngOnInit() {
+    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
+      if (isAuthenticated) {
+        this.isLoggedIn = isAuthenticated;
 
-  public async ngOnInit() {
-
-      // initial component not protected by route guarding for keycloak
-      // mimicking csrs project works ok except logs back in after logging out
-      this.logInOutService.getLogoutStatus.subscribe((data) => {
-        if (data !== null || data !== '')
-        {
-          if(data === 'IDIR Sign in'){
-            this.login();
+        // decode the token to get its payload
+        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
+        if (tokenPayload) { 
+          let resource_access = tokenPayload.resource_access["tco-staff-portal"];
+          if (resource_access) {
+            let roles = resource_access.roles;
+            if (roles) roles.forEach(role => {
+              if (role == "vtc-user") { // TODO USE role name for JJ
+                this.jjRole = true;
+              } 
+              if (role == "vtc-user") {
+                this.vtcRole = true;
+              }
+            });
           }
-          else
-            if(data === 'Sign out'){
-              this.logout();
-            }
         }
-      })
 
-      this.oidcSecurityService.checkAuth().subscribe(
-        ({ isAuthenticated}) => {
-          if (isAuthenticated === true)
-          {
-            this.router.navigate(['/ticket']);
-            this.isLoggedIn = true;
-          }
-          else
-          {
-            this.isLoggedIn = false;
-          }
-
-          this.logInOutService.currentUser(isAuthenticated);
-      });
-
+        // navigate to Ticket Resolution Management or JJ Workbench or Unauthorized based on role
+        if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
+        else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
+        if (!this.jjRole && !this.vtcRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
+      }
+    })
   }
 
   login() {
     this.oidcSecurityService.authorize();
   }
-
-  logout() {
-    this.oidcSecurityService.logoffAndRevokeTokens();
-    this.isLoggedIn = false;
-  }
-
-   public onClickBtn()
-   {
-    this.logInOutService.logoutUser('IDIR Sign in');
-   }
-
 }

@@ -77,8 +77,8 @@
             "description": "Unique identifier for a specific Dispute record.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -186,8 +186,8 @@
             "description": "Unique identifier for a specific Dispute record.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -297,8 +297,8 @@
             "description": "Unique identifier for a specific Dispute record to cancel.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -343,7 +343,7 @@
             "description": "Dispute record not found. Update failed."
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, or REJECTED and the rejected reason must be <= 256 characters. Update failed."
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be <= 256 characters. Update failed."
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
@@ -364,8 +364,8 @@
             "description": "Unique identifier for a specific Dispute record to validate.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -458,8 +458,8 @@
             "description": "Unique identifier for a specific Dispute record to cancel.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -508,7 +508,7 @@
             }
           },
           "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is REJECTED or PROCESSING.Update failed.",
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -552,8 +552,8 @@
             "description": "Unique identifier for a specific Dispute record to submit.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -667,6 +667,266 @@
         }
       }
     },
+    "/api/jj/disputes": {
+      "get": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Returns all JJ Disputes from the Oracle Data API",
+        "parameters": [
+          {
+            "name": "jjGroupAssignedTo",
+            "in": "query",
+            "description": "If specified, will retrieve the records which are assigned to the specified jj group",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "jjAssignedTo",
+            "in": "query",
+            "description": "If specified, will retrieve the records which are assigned to the specified jj staff",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JJ disputes were found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JJDispute"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          },
+          "401": {
+            "description": "Unauthenticated."
+          },
+          "403": {
+            "description": "Forbidden, wrong user roles."
+          }
+        }
+      }
+    },
+    "/api/jj/{JJDisputeId}": {
+      "get": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Returns a single JJ Dispute with the given identifier from the Oracle Data API.",
+        "parameters": [
+          {
+            "name": "JJDisputeId",
+            "in": "path",
+            "description": "Unique identifier for a specific JJ dispute record.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The JJ dispute was found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the search from completing successfully or no data found."
+          },
+          "401": {
+            "description": "Unauthenticated."
+          },
+          "403": {
+            "description": "Forbidden, wrong user roles."
+          }
+        }
+      }
+    },
+    "/api/jj/{ticketNumber}": {
+      "put": {
+        "tags": [
+          "JJ"
+        ],
+        "summary": "Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "Unique identifier for a specific JJ Dispute record.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JJDispute"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JJDispute"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/JJDispute"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin resolution is submitted. The JJ Dispute is updated.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JJDispute"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The JJ Dispute to update was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
     "/api/lookup": {
       "get": {
         "tags": [
@@ -716,6 +976,69 @@
         },
         "additionalProperties": false
       },
+      "DisputantContactInformation": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "driversLicenceNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "province": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Dispute": {
         "type": "object",
         "properties": {
@@ -736,8 +1059,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "status": {
             "$ref": "#/components/schemas/DisputeStatus"
@@ -922,8 +1245,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "plea": {
             "$ref": "#/components/schemas/DisputedCountPlea"
@@ -1001,6 +1324,213 @@
         },
         "additionalProperties": false
       },
+      "JJDispute": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ticketNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/JJDisputeStatus"
+          },
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "violationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "icbcReceivedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "givenNames": {
+            "type": "string",
+            "nullable": true
+          },
+          "enforcementOfficer": {
+            "type": "string",
+            "nullable": true
+          },
+          "policeDetachment": {
+            "type": "string",
+            "nullable": true
+          },
+          "courthouseLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "offenceLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjGroupAssignedTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "fineReductionReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeToPayReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "remarks": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactInformation": {
+            "$ref": "#/components/schemas/DisputantContactInformation"
+          },
+          "jjDisputedCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JJDisputedCount"
+            },
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputeStatus": {
+        "enum": [
+          "NEW",
+          "IN_PROGRESS",
+          "COMPLETED",
+          "REVIEW"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCount": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "plea": {
+            "$ref": "#/components/schemas/JJDisputedCountPlea"
+          },
+          "count": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestTimeToPay": {
+            "type": "boolean"
+          },
+          "requestReduction": {
+            "type": "boolean"
+          },
+          "appearInCourt": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ticketedFineAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "includesSurcharge": {
+            "type": "boolean"
+          },
+          "revisedDueDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalFineAmount": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "comments": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "lesserOrGreaterAmount": {
+            "type": "number",
+            "format": "float"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputedCountPlea": {
+        "enum": [
+          "GUILTY",
+          "NOT_GUILTY"
+        ],
+        "type": "string"
+      },
       "LegalRepresentation": {
         "type": "object",
         "properties": {
@@ -1021,8 +1551,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "lawFirmName": {
             "type": "string",
@@ -1134,8 +1664,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government."
+        "additionalProperties": false
       },
       "ViolationTicket": {
         "type": "object",
@@ -1163,8 +1692,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "ticketNumber": {
             "type": "string",
@@ -1343,8 +1872,8 @@
             "format": "date-time"
           },
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int64"
           },
           "count": {
             "maximum": 3,
@@ -1382,7 +1911,7 @@
           },
           "ticketedAmount": {
             "type": "number",
-            "format": "double",
+            "format": "float",
             "nullable": true
           },
           "isAct": {

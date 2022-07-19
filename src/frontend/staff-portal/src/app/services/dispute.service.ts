@@ -5,28 +5,30 @@ import { DisputeService as DisputeApiService, Dispute as DisputeApiModel } from 
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 export interface IDisputeService {
-  disputes$: BehaviorSubject<DisputeApiModel[]>;
+  disputes$: Observable<Dispute[]>;
   disputes: DisputeApiModel[];
-  getDisputes(): Observable<DisputeApiModel[]>;
+  getDisputes(): Observable<Dispute[]>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisputeService implements IDisputeService {
-  private _disputes: BehaviorSubject<DisputeApiModel[]>;
-  private _dispute: BehaviorSubject<DisputeApiModel>;
+  private _disputes: BehaviorSubject<Dispute[]>;
+  private _dispute: BehaviorSubject<Dispute>;
 
 
   constructor(
     private toastService: ToastService,
     private logger: LoggerService,
     private configService: ConfigService,
-    private disputeApiService: DisputeApiService
+    private disputeApiService: DisputeApiService,
+    private datePipe:DatePipe
   ) {
-    this._disputes = new BehaviorSubject<DisputeApiModel[]>(null);
+    this._disputes = new BehaviorSubject<Dispute[]>(null);
   }
 
   /**
@@ -34,13 +36,13 @@ export class DisputeService implements IDisputeService {
      *
      * @param none
      */
-  public getDisputes(): Observable<DisputeApiModel[]> {
-
+  public getDisputes(): Observable<Dispute[]> {
     return this.disputeApiService.apiDisputeDisputesGet("CANCELLED")
       .pipe(
-        map((response: DisputeApiModel[]) => {
-          this.logger.info('DisputeService::getDisputes', response)
-          return response ? response : null
+        map((response: Dispute[]) => {
+          this.logger.info('DisputeService::getDisputes', response);
+          this._disputes.next(response);
+          return response;
         }),
         catchError((error: any) => {
           this.toastService.openErrorToast(this.configService.dispute_error);
@@ -53,11 +55,11 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public get disputes$(): BehaviorSubject<DisputeApiModel[]> {
-    return this._disputes;
+  public get disputes$(): Observable<Dispute[]> {
+    return this._disputes.asObservable();
   }
 
-  public get disputes(): DisputeApiModel[] {
+  public get disputes(): Dispute[] {
     return this._disputes.value;
   }
 
@@ -66,11 +68,11 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public getDispute(disputeId: string): Observable<DisputeApiModel> {
+  public getDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdGet(disputeId)
       .pipe(
-        map((response: DisputeApiModel) => {
+        map((response: Dispute) => {
           this.logger.info('DisputeService::getDispute', response)
           return response ? response : null
         }),
@@ -86,11 +88,11 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public get dispute$(): BehaviorSubject<DisputeApiModel> {
-    return this._dispute;
+  public get dispute$(): Observable<Dispute> {
+    return this._dispute.asObservable();
   }
 
-  public get dispute(): DisputeApiModel {
+  public get dispute(): Dispute {
     return this._dispute.value;
   }
 
@@ -99,8 +101,11 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public putDispute(disputeId: string, dispute: DisputeApiModel): Observable<DisputeApiModel> {
+  public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
 
+     dispute.birthdate = this.datePipe.transform(dispute?.birthdate, "yyyy-MM-dd");
+     dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate,"yyyy-MM-ddTHH:mm:ss");
+    //  dispute.violationTicket =
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
         map((response: Dispute) => {
@@ -125,7 +130,7 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public cancelDispute(disputeId: string): Observable<DisputeApiModel> {
+  public cancelDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId)
       .pipe(
@@ -151,7 +156,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public validateDispute(disputeId: string): Observable<DisputeApiModel> {
+  public validateDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdValidatePut(disputeId)
       .pipe(
@@ -178,7 +183,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public rejectDispute(disputeId: string, rejectedReason: string): Observable<DisputeApiModel> {
+  public rejectDispute(disputeId: number, rejectedReason: string): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
       .pipe(
@@ -205,7 +210,7 @@ export class DisputeService implements IDisputeService {
  *
  * @param disputeId
  */
-  public submitDispute(disputeId: string): Observable<DisputeApiModel> {
+  public submitDispute(disputeId: number): Observable<Dispute> {
 
     return this.disputeApiService.apiDisputeDisputeIdSubmitPut(disputeId)
       .pipe(

@@ -15,7 +15,7 @@ public class OracleDataApiService : IOracleDataApiService
         _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
     }
 
-    public async Task<Guid> CreateDisputeAsync(Dispute dispute)
+    public async Task<long> CreateDisputeAsync(Dispute dispute)
     {
         // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
         if (!string.IsNullOrEmpty(dispute.OcrViolationTicket))

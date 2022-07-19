@@ -2,8 +2,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.UUID;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -22,14 +20,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW", "REJECTED", "VALIDATED" })
 	void testSetStatusToPROCESSING_200(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.PROCESSING);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING" })
 	void testSetStatusToPROCESSING_405(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.PROCESSING);
 		});
@@ -38,14 +36,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW" })
 	void testSetStatusToVALIDATED_200(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.VALIDATED);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "VALIDATED" })
 	void testSetStatusToVALIDATED_405(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.VALIDATED);
 		});
@@ -54,14 +52,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW", "VALIDATED" })
 	void testSetStatusToREJECTED_200(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.REJECTED);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED", "PROCESSING", "REJECTED" })
 	void testSetStatusToREJECTED_405(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.REJECTED);
 		});
@@ -70,14 +68,14 @@ class DisputeServiceTest extends BaseTestSuite {
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "NEW", "PROCESSING", "REJECTED", "VALIDATED" })
 	void testSetStatusToCANCELLED_200(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		disputeService.setStatus(id, DisputeStatus.CANCELLED);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DisputeStatus.class, names = { "CANCELLED" })
 	void testSetStatusToCANCELLED_405(DisputeStatus disputeStatus) {
-		UUID id = saveDispute(disputeStatus);
+		Long id = saveDispute(disputeStatus);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.CANCELLED);
 		});
@@ -85,7 +83,7 @@ class DisputeServiceTest extends BaseTestSuite {
 
 	@Test
 	void testSetStatusToNEW_405() {
-		UUID id = saveDispute(DisputeStatus.NEW);
+		Long id = saveDispute(DisputeStatus.NEW);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, DisputeStatus.NEW);
 		});
@@ -93,13 +91,13 @@ class DisputeServiceTest extends BaseTestSuite {
 
 	@Test
 	void testSetStatusToNULL_405() {
-		UUID id = saveDispute(null);
+		Long id = saveDispute(null);
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, null);
 		});
 	}
 
-	private UUID saveDispute(DisputeStatus disputeStatus) {
+	private Long saveDispute(DisputeStatus disputeStatus) {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(disputeStatus);
 

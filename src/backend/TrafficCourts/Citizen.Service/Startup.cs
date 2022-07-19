@@ -54,7 +54,20 @@ public static class Startup
 
         // Form Recognizer
         builder.Services.ConfigureValidatableSetting<FormRecognizerOptions>(builder.Configuration.GetSection(FormRecognizerOptions.Section));
-        builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService>();
+        if (FormRecognizerOptions.v2_1.Equals(FormRecognizerOptions.Get(builder.Configuration).ApiVersion))
+        {
+            // API version 2.1 is the latest version available for deployment to OpenShift
+            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2_1>();
+        }
+        else if ((FormRecognizerOptions.v2022_06_30_preview.Equals(FormRecognizerOptions.Get(builder.Configuration).ApiVersion)))
+        {
+            // API version 2022_06_30_preview is the latest version used by Azure cloud services, but this version is not containerizable yet
+            builder.Services.AddTransient<IFormRecognizerService, FormRecognizerService_2022_06_30_preview>();
+        }
+        else
+        {
+            throw new ArgumentException("Unknown Form Recognizer ApiVersion. Must be one of '2.1' or '2022-06-30-preview'.");
+        }
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
 
         builder.Services.AddStatuteLookup();

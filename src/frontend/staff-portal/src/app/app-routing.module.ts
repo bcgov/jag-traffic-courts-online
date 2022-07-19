@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
-import { FeatureFlagGuard } from '@core/guards/feature-flag.guard';
 import { AppRoutes } from './app.routes';
 import { LandingComponent } from './components/landing/landing.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { AuthorizationGuard } from '@core/guards/auth-guard';
+import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
 
-const routes: Routes = [
+let routes: Routes = [
   {
     path: '',
     component: LandingComponent,
@@ -19,7 +19,13 @@ const routes: Routes = [
     data: { expectedRole: "vtc-user"}
   },
   {
-    path: 'unauthorized',
+    path: AppRoutes.JJWORKBENCH,
+    component: JjWorkbenchDashboardComponent,
+    canActivate: [AuthorizationGuard],
+    data: { expectedRole: "vtc-user" } // TODO change to jj-user
+  },
+  {
+    path: AppRoutes.UNAUTHORIZED,
     component: UnauthorizedComponent,
   },
   {
@@ -29,8 +35,15 @@ const routes: Routes = [
   },
 ];
 
+// Replcae the starting "/" since it is not needed in RouterModule
+routes.forEach(route => {
+  if (route.path?.startsWith("/")) {
+    route.path = route.path.replace("/", "");
+  }
+})
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

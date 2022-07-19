@@ -30,9 +30,8 @@ export class ConfirmReasonDialogComponent {
 
     this.dialogContentOutput = null;
 
-    console.log(this.options);
     this.reasonForm = this.fb.group({
-      reason: [this.options.message, Validators.maxLength(256)]
+      reason: [this.options.message, [Validators.maxLength(256), Validators.required]]
     })
   }
 

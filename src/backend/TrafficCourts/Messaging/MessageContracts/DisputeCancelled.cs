@@ -8,7 +8,7 @@ namespace TrafficCourts.Messaging.MessageContracts
 {
     public class DisputeCancelled : IMessage
     {
-        public Guid Id { get; set; } = Guid.Empty;
+        public long Id { get; set; } = -1;
         public string? Email { get; set; }
     }
 }

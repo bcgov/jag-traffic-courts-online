@@ -3,7 +3,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -63,6 +62,7 @@ public class DisputeController {
 			@RequestParam(required = false)
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
 			DisputeStatus excludeStatus) {
+		logger.debug("GET /disputes called");
 		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
 		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
 		return IterableUtils.toList(allDisputes);
@@ -76,7 +76,8 @@ public class DisputeController {
 	 * @return {@link Dispute}
 	 */
 	@GetMapping("/dispute/{id}")
-	public ResponseEntity<Dispute> getDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> getDispute(@PathVariable Long id, Principal principal) {
+		logger.debug("GET /disputes/{id} called");
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -89,7 +90,8 @@ public class DisputeController {
 	 * @param id of the {@link Dispute} to be deleted
 	 */
 	@DeleteMapping("/dispute/{id}")
-	public void deleteDispute(@PathVariable UUID id) {
+	public void deleteDispute(@PathVariable Long id) {
+		logger.debug("DELETE /dispute/{id} called");
 		disputeService.delete(id);
 	}
 
@@ -100,7 +102,8 @@ public class DisputeController {
 	 * @return id of the saved {@link Dispute}
 	 */
 	@PostMapping("/dispute")
-	public UUID saveDispute(@RequestBody Dispute dispute) {
+	public Long saveDispute(@RequestBody Dispute dispute) {
+		logger.debug("POST /dispute called");
 		disputeService.save(dispute);
 		return dispute.getId();
 	}
@@ -123,8 +126,9 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/reject")
-	public ResponseEntity<Dispute> rejectDispute(@PathVariable UUID id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String rejectedReason,
+	public ResponseEntity<Dispute> rejectDispute(@PathVariable Long id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String rejectedReason,
 			Principal principal) {
+		logger.debug("PUT /dispute/{id}/reject called");
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -148,7 +152,8 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/validate")
-	public ResponseEntity<Dispute> validateDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> validateDispute(@PathVariable Long id, Principal principal) {
+		logger.debug("PUT /dispute/{id}/validate called");
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -172,7 +177,8 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/cancel")
-	public ResponseEntity<Dispute> cancelDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> cancelDispute(@PathVariable Long id, Principal principal) {
+		logger.debug("PUT /dispute/{id}/cancel called");
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -196,7 +202,8 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}/submit")
-	public ResponseEntity<Dispute> submitDispute(@PathVariable UUID id, Principal principal) {
+	public ResponseEntity<Dispute> submitDispute(@PathVariable Long id, Principal principal) {
+		logger.debug("PUT /dispute/{id}/submit called");
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -219,7 +226,8 @@ public class DisputeController {
 		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
 	})
 	@PutMapping("/dispute/{id}")
-	public ResponseEntity<Dispute> updateDispute(@PathVariable UUID id, @RequestBody Dispute dispute, Principal principal) {
+	public ResponseEntity<Dispute> updateDispute(@PathVariable Long id, @RequestBody Dispute dispute, Principal principal) {
+		logger.debug("PUT /dispute/{id} called");
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
@@ -235,7 +243,7 @@ public class DisputeController {
 			description = "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint."
 			)
 	public void codeTableRefresh() {
-		logger.debug("CodeTableRefresh called");
+		logger.debug("GET /codetable/refresh called");
 		lookupService.refresh();
 	}
 
@@ -248,7 +256,7 @@ public class DisputeController {
 			description = "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour."
 			)
 	public void unassignDisputes() {
-		logger.debug("UnassignDisputes called");
+		logger.debug("GET /disputes/unassign called");
 		disputeService.unassignDisputes();
 	}
 

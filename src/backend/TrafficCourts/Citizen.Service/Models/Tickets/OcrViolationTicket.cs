@@ -45,6 +45,7 @@ public class OcrViolationTicket
     public static readonly string Count3TicketAmount = "counts.count_3.ticketed_amount";
     public static readonly string HearingLocation = "provincial_court_hearing_location";
     public static readonly string DetachmentLocation = "organization_location";
+    public static readonly string DateOfService = "service_date";
 
     /// <summary>
     /// Gets or sets the saved image filename.
@@ -137,11 +138,11 @@ public class Field
     /// <summary>Returns true if the given field's value is "selected", false if "unselected", otherwise null (unknown) value.</summary> 
     public bool? IsCheckboxSelected()
     {
-        if (Value?.Equals("selected") ?? false)
+        if (Value?.Equals("selected", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return true;
         }
-        if (Value?.Equals("unselected") ?? false)
+        if (Value?.Equals("unselected", StringComparison.OrdinalIgnoreCase) ?? false)
         {
             return false;
         }

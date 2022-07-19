@@ -49,24 +49,24 @@ export class ViolationTicketService {
     });
   }
 
-  public get ticket$(): BehaviorSubject<ViolationTicket> {
-    return this._ticket;
+  public get ticket$(): Observable<ViolationTicket> {
+    return this._ticket.asObservable();
   }
 
   public get ticket(): ViolationTicket {
     return this._ticket.value;
   }
 
-  private get ocrTicket$(): BehaviorSubject<OcrViolationTicket> { // not public for current stage
-    return this._ocrTicket;
+  private get ocrTicket$(): Observable<OcrViolationTicket> { // not public for current stage
+    return this._ocrTicket.asObservable();
   }
 
   private get ocrTicket(): OcrViolationTicket { // not public for current stage
     return this._ocrTicket.value;
   }
 
-  public get inputTicketData$() {
-    return this._inputTicketData;
+  public get inputTicketData$(): Observable<any> {
+    return this._inputTicketData.asObservable();
   }
 
   public get inputTicketData() {
@@ -87,7 +87,7 @@ export class ViolationTicketService {
       .pipe(
         map((response: ViolationTicket) => {
           if (response) {
-            this.ticket$.next(response);
+            this._ticket.next(response);
             if (this.validateTicket(params)) {
               this.goToInitiateResolution(params);
             } else {
@@ -129,9 +129,9 @@ export class ViolationTicketService {
         .subscribe({
           next: res => {
             if (res) {
-              this.ocrTicket$.next(res);
-              this.ticket$.next(this.fromOCR(res));
-              this.inputTicketData$.next(input);
+              this._ocrTicket.next(res);
+              this._ticket.next(this.fromOCR(res));
+              this._inputTicketData.next(input);
               this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
             }
             else {
@@ -261,7 +261,7 @@ export class ViolationTicketService {
     let ticket = this.ticket;
     ticket[this.ocrIssueDetectedKey] = issueDetected === true ? issueDetected : false;
     ticket[this.ocrIssueDescKey] = issuseDesc;
-    this.ticket$.next(ticket);
+    this._ticket.next(ticket);
   }
 
   goToInitiateResolution(paramsInput?): void {
@@ -270,7 +270,10 @@ export class ViolationTicketService {
         ticketNumber: this.ticket.ticket_number,
         time: this.datePipe.transform(this.ticket.issued_date, "HH:mm")
       };
-      let dateDiff = this.dateDiff(this.ticket.issued_date);
+      let dateDiff = this.dateDiff(this.ticket.issued_date); // for electronic or camera tickets
+      if (this.ticketType === ticketTypes.HANDWRITTEN_TICKET) { // for handwritten tickets use service date
+        dateDiff = this.dateDiff(this.ocrTicket.fields["service_date"].value);
+      }
       if ((dateDiff <= 30 && (this.ticketType === ticketTypes.ELECTRONIC_TICKET || this.ticketType === ticketTypes.HANDWRITTEN_TICKET))
         || (dateDiff <= 45 && this.ticketType === ticketTypes.CAMERA_TICKET)) {
         this.router.navigate([AppRoutes.disputePath(AppRoutes.SUMMARY)], {
@@ -289,9 +292,9 @@ export class ViolationTicketService {
   }
 
   private reset(): void {
-    this.inputTicketData$.next(null);
-    this.ocrTicket$.next(null);
-    this.ticket$.next(null);
+    this._inputTicketData.next(null);
+    this._ocrTicket.next(null);
+    this._ticket.next(null);
   }
 
   private onError(err?: HttpErrorResponse): void {

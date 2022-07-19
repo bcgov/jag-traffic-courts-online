@@ -39,8 +39,8 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     private logger: LoggerService,
     private oidcSecurityService: OidcSecurityService
   ) { 
-    oidcSecurityService.userData$.subscribe( (userInfo: any) => {
-      this.IDIRLogin = userInfo?.userData?.preferred_username?.split("@")[0]; // split at @ sign and take first part
+    oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
+      this.IDIRLogin = this.oidcSecurityService.getUserData()?.preferred_username?.split("@")[0]; // split at @ sign and take first part
     });
   }
 
@@ -76,7 +76,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
         response
       );
 
-      this.disputeService.disputes$.next(response);
       response.forEach(d => {
         if (d.status != "CANCELLED") { // do not show cancelled
           var newDispute = {

@@ -40,7 +40,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
-                if (disputeId != Guid.Empty)
+                if (disputeId > 0)
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 

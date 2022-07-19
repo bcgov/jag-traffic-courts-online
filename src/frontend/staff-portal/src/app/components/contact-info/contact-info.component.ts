@@ -259,11 +259,15 @@ export class ContactInfoComponent implements OnInit {
       this.lastUpdatedDispute = this.initialDisputeValues;
 
       // set violation date and time
-      let tempViolationDate = new Date(this.lastUpdatedDispute.issuedDate);
-      this.violationDate = this.datePipe.transform(tempViolationDate, "yyyy-MM-dd");
-      this.violationTime = this.datePipe.transform(tempViolationDate, "hh:mm");
+      let tempViolationDate = this.lastUpdatedDispute?.issuedDate.split("T");
+      if(tempViolationDate){
+        this.violationDate = tempViolationDate[0];
+        this.violationTime = tempViolationDate[1].split(":")[0] + ":" + tempViolationDate[1].split(":")[1];
+      }
+      
 
       this.form.patchValue(this.initialDisputeValues);
+
 
       // set country from province
       if (this.provinces.filter(x => x.name == this.lastUpdatedDispute.province || this.lastUpdatedDispute.province == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
@@ -283,3 +287,5 @@ export class ContactInfoComponent implements OnInit {
   }
 
 }
+
+

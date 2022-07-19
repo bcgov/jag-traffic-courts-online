@@ -16,7 +16,7 @@ export interface LegalRepresentation {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    id?: string;
+    id?: number;
     lawFirmName?: string | null;
     lawyerFullName?: string | null;
     lawyerEmail?: string | null;
