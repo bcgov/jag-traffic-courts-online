@@ -6,35 +6,9 @@
       <div class="container">
         <section>
           <div class="flex-6-col">
-            <div *ngIf="showDispute==false">
+            <app-jj-dispute-inbox> (jjPage)="changeHeading($event)"</app-jj-dispute-inbox>
+            <!-- <div *ngIf="showDispute==false">
               <div class="step1">
-                <div>
-                  <div class="flex-container" style="width: 40%">
-                    <!-- <table>
-                      <tr>
-                        <td><span class="BC-Gov-15px-black-text" style="color:green; width:40%;"><b>NEW ticket
-                              records</b></span> </td>
-                        <td style="width:5px">|</td>
-                        <td style="width: 40%">
-                          <select style="border: none;">
-                            <option><span class="BC-Gov-15px-black-bold-text"><b>Fraser Valley
-                                  Region</b>&nbsp;&nbsp;</span></option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><span class="BC-Gov-15px-blue-text"><b>Ticket number search:</b></span></td>
-                        <td colspan="2">
-                          <div class="inputContainer">
-                            <input name="searchInput" matInput type="search" (keyup)="applyFilter($event)"
-                              autocomplete="off" class="input" />
-                            <mat-icon class="inputIcon">search</mat-icon>
-                          </div>
-                        </td>
-                      </tr>
-                    </table> -->
-                  </div>
-                </div>
 
                 <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort>
                   <ng-container matColumnDef="ticketNumber">
@@ -109,7 +83,7 @@
             <div *ngIf="showDispute==true">
               <app-jj-dispute (backTicketList)="backTicketpage()" [jjDisputeInfo]="jjDisputeInfo"></app-jj-dispute>
             </div>
-
+ -->
           </div>
         </section>
       </div>

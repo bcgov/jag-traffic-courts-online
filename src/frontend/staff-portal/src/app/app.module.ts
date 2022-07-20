@@ -33,6 +33,7 @@ import { AuthConfigModule } from './auth/auth-config.module';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
+import { JJDisputeInboxComponent } from '@components/jj-dispute-inbox/jj-dispute-inbox.component';
 import { JJDisputeComponent } from '@components/jj-dispute/jj-dispute.component';
 import { JJCountComponent } from '@components/jj-count/jj-count.component';
 
@@ -60,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketStatusComponent,
     TicketRequestComponent,
     JjWorkbenchDashboardComponent,
+    JJDisputeInboxComponent,
     JJDisputeComponent,
     JJCountComponent
   ],
@@ -93,7 +95,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     DatePipe,
     MockConfigService,
     JwtHelperService,
-    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }, 
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }

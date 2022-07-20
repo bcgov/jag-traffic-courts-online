@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
-import { ProvinceConfig, Config } from '@config/config.model';
+import { ProvinceConfig } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { Dispute, DisputeService } from '../../services/dispute.service';
 import { Subscription } from 'rxjs';
@@ -138,7 +138,7 @@ export class ContactInfoComponent implements OnInit {
         if (action) {
           // submit dispute and return to TRM home
           this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe({
-            next: response => { 
+            next: response => {
               this.lastUpdatedDispute.status = 'PROCESSING';
               this.onBack();
             },
@@ -166,7 +166,7 @@ export class ContactInfoComponent implements OnInit {
           this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-          // udate the reason entered, reject dispute and return to TRM home 
+          // udate the reason entered, reject dispute and return to TRM home
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = 'REJECTED';
@@ -264,7 +264,7 @@ export class ContactInfoComponent implements OnInit {
         this.violationDate = tempViolationDate[0];
         this.violationTime = tempViolationDate[1].split(":")[0] + ":" + tempViolationDate[1].split(":")[1];
       }
-      
+
 
       this.form.patchValue(this.initialDisputeValues);
 

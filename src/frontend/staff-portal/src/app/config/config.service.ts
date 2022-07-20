@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Config, Configuration, ProvinceConfig } from '@config/config.model';
+import { Config, Configuration, ProvinceConfig, CourthouseConfig } from '@config/config.model';
 import { SortWeight, UtilsService } from '@core/services/utils.service';
 import { AppConfigService } from 'app/services/app-config.service';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -82,7 +82,7 @@ export class ConfigService implements IConfigService {
     return [...this.configuration.provinces].sort(this.sortConfigByName());
   }
 
-  public get courtLocations(): Config<string>[] {
+  public get courtLocations(): CourthouseConfig[] {
     return [...this.configuration.courtLocations].sort(this.sortConfigByName());
   }
 
