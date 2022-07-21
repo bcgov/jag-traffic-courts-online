@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
@@ -56,6 +57,39 @@ public class JJDisputeService {
 	 */
 	public JJDispute updateJJDispute(String id, JJDispute jjDispute) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+		
+		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
+		
+		// TCVP-1435 - business rules
+		// - current status must be NEW, REVIEW, IN_PROGRESS to change to IN_PROGRESS
+		// - current status must be NEW, IN_PROGRESS, REVIEW to change to REVIEW
+		// - current status must be REVIEW to change to COMPLETED
+		switch (jjDisputeStatus) {
+		case IN_PROGRESS:
+			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.REVIEW, JJDisputeStatus.IN_PROGRESS).contains(jjDisputeToUpdate.getStatus())) {
+				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), JJDisputeStatus.IN_PROGRESS);
+			}
+			break;
+		case REVIEW:
+			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.REVIEW, JJDisputeStatus.IN_PROGRESS).contains(jjDisputeToUpdate.getStatus())) {
+				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), JJDisputeStatus.REVIEW);
+			}
+			break;
+		case COMPLETED:
+			if (!List.of(JJDisputeStatus.REVIEW).contains(jjDisputeToUpdate.getStatus())) {
+				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), JJDisputeStatus.COMPLETED);
+			}
+			break;
+		case NEW:
+			// This should never happen since setting the status to NEW should only happen during initial creation of the Dispute record.
+			// If we got here, then this means the Dispute record is in an invalid state.
+			logger.error("Attempting to set the status of a JJ Dispute record to NEW after it was created - bad object state.");
+			throw new NotAllowedException("Changing the status of a JJ Dispute record to %s is not permitted.", JJDisputeStatus.NEW);
+		default:
+			// This should never happen, but if so, then it means a new JJDisputeStatus was added and these business rules were not updated accordingly.
+			logger.error("A JJ Dispute record has an unknown status '{}' - bad object state.", jjDisputeToUpdate.getStatus());
+			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
+		}
 
 		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts");
 		// Remove all existing jj disputed counts that are associated to this jj dispute
@@ -64,8 +98,6 @@ public class JJDisputeService {
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
-		// Change JJ Dispute status to 'Review Required'
-		jjDisputeToUpdate.setStatus(JJDisputeStatus.REVIEW);
 
 		return jjDisputeRepository.save(jjDisputeToUpdate);
 	}

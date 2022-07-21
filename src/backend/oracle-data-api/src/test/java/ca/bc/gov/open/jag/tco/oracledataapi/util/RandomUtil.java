@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 
 public class RandomUtil {
 
@@ -167,6 +168,7 @@ public class RandomUtil {
 	public static JJDispute createJJDispute() {
 		JJDispute dispute = new JJDispute();
 		dispute.setTicketNumber(UUID.randomUUID().toString());
+		dispute.setStatus(JJDisputeStatus.NEW);
 		dispute.setCourthouseLocation(randomCity());
 		dispute.setGivenNames(randomGivenName());
 		dispute.setSurname(randomSurname());

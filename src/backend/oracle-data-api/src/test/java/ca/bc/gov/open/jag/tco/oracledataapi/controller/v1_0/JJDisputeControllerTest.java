@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
@@ -101,11 +103,13 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Create a new JJ Dispute with different remark value and update the existing JJ Dispute
 		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
 		updatedJJDispute.setRemarks("This is another remark from another JJ");
+		updatedJJDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
 		jjDisputeController.updateJJDispute(jjDispute.getTicketNumber(), updatedJJDispute);
 
 		// Assert db contains only the updated JJ Dispute record.
 		jjDispute = jjDisputeController.getJJDispute(jjDispute.getTicketNumber());
 		assertEquals("This is another remark from another JJ", jjDispute.getRemarks());
+		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null, null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
 	}
