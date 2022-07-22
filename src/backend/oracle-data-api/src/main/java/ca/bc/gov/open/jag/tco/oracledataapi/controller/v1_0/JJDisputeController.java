@@ -71,11 +71,12 @@ public class JJDisputeController {
 	 * @param id (ticket number) of the saved {@link JJDispute} to update
 	 * @return updated {@link JJDispute}
 	 */
-	@Operation(summary = "Updates the properties of a particular Dispute record based on the given values.")
+	@Operation(summary = "Updates the properties of a particular JJ Dispute record based on the given values.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok"),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed.")
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
 	@PutMapping("/dispute/{ticketNumber}")
 	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute) {

@@ -106,11 +106,13 @@ public class JJController : JJControllerBase<JJController>
     /// <response code="200">Admin resolution is submitted. The JJ Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="404">The JJ Dispute to update was not found.</response>
+    /// <response code="405">An invalid JJ Dispute status is provided. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
     {
@@ -126,6 +128,10 @@ public class JJController : JJControllerBase<JJController>
             return new HttpError(e.StatusCode, e.Message);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
         {
             return new HttpError(e.StatusCode, e.Message);
         }
