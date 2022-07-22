@@ -59,7 +59,7 @@ public class ArcFileService : IArcFileService
 
         // Write ARC data into the memory stream that will be uploaded as a file
         var stream = _memoryStreamManager.GetStream();
-        var fileWriter = new StreamWriter(stream, Encoding.UTF8);
+        var fileWriter = new StreamWriter(stream, Encoding.ASCII);
         var writer = selector.GetWriter(fileWriter, new FixedLengthOptions { RecordSeparator = NewLineRecordSeparator });
 
         await writer.WriteAllAsync(arcFileData);
