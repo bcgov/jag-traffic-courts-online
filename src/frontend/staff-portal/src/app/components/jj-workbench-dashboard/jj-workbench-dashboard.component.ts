@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { Component  } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
-import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { JJDisputeStatus } from 'app/api';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -15,16 +14,49 @@ import { JJDisputeStatus } from 'app/api';
 export class JjWorkbenchDashboardComponent {
   busy: Subscription;
   jjDisputeInfo: JJDispute;
-
+  tabSelected = new FormControl(0);
+  public isLoggedIn = false;
+  public jjAdminRole: boolean = false;
   jjPage: string = "Assignments";
+  public fullName: string = "Loading...";
+  public jjIDIR: string = "";
 
   constructor(
     public jjDisputeService: JJDisputeService,
-    private logger: LoggerService,
-  ) { }
+    private oidcSecurityService: OidcSecurityService,
+    public jwtHelper: JwtHelperService
+
+  ) {
+
+    // check for JJ Admin role
+    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
+      if (isAuthenticated) {
+        this.isLoggedIn = isAuthenticated;
+
+        // decode the token to get its payload
+        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
+        if (tokenPayload) {
+          let resource_access = tokenPayload.resource_access["tco-staff-portal"];
+          if (resource_access) {
+            let roles = resource_access.roles;
+            if (roles) roles.forEach(role => {
+
+              if (role === "vtc-user") { // TODO USE role name for jj Admin
+                this.jjAdminRole = true;
+              }
+            });
+          }
+        }
+
+        this.fullName = this.oidcSecurityService.getUserData()?.name;
+        this.jjIDIR = this.oidcSecurityService.getUserData()?.preferred_username;
+      }
+    });
+  }
 
   changeHeading(heading: any) {
-    console.log(heading);
+    if (heading == "Inbox") this.tabSelected.setValue(1);
+    else if (heading == "Assignments") this.tabSelected.setValue(0);
     this.jjPage = heading;
   }
 

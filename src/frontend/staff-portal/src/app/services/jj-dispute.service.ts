@@ -12,6 +12,7 @@ import { JJService, JJDispute, Dispute, DisputeStatus, DisputedCount, LegalRepre
 export class JJDisputeService {
   private _JJDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
   private _JJDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
+  public jjDisputeStatusesSorted: string[] = ['NEW', 'REVIEW', 'IN_PROGRESS', 'COMPLETED'];
 
   constructor(
     private toastService: ToastService,
