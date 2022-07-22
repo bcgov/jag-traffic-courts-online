@@ -59,6 +59,8 @@ public class ArcFileService : IArcFileService
 
         // Write ARC data into the memory stream that will be uploaded as a file
         var stream = _memoryStreamManager.GetStream();
+        // Encoding with ASCII instead of UTF-8 which prevents final ARC file from being initialized with a
+        // Byte Order Mark (BOM) Character which can cause issues with other systems processing the file.
         var fileWriter = new StreamWriter(stream, Encoding.ASCII);
         var writer = selector.GetWriter(fileWriter, new FixedLengthOptions { RecordSeparator = NewLineRecordSeparator });
 
