@@ -1,29 +1,29 @@
 <app-page [busy]="busy">
   <div class="flex-wrapper">
-    <div class="flex-header d-print-none mb-40" style="margin-bottom: 100px">
+    <div class="flex-header d-print-none mb-40">
       <app-header [jjPage]="jjPage"></app-header>
-      <br />
-      <div class="container">
-        <section>
-          <h2>JJ Dashboard<br/>
-          <span style="font-size:small; font-weight: normal; color: #1d4a77;">Welcome Back JJ {{ fullName }}</span></h2>
-          <div class="flex-6-col" *ngIf="!jjAdminRole">
-            <app-jj-dispute-inbox (jjPage)="changeHeading($event)"></app-jj-dispute-inbox>
-          </div>
-          <div class="flex-6-col" *ngIf="jjAdminRole">
-            <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
-              <mat-tab label="Assignments">
-                <app-jj-dispute-assignments (jjPage)="changeHeading($event)"></app-jj-dispute-assignments>
-              </mat-tab>
-              <mat-tab label="Inbox">
-                <app-jj-dispute-inbox (jjPage)="changeHeading($event)" [jjIDIR]="jjIDIR"></app-jj-dispute-inbox>
-              </mat-tab>
-            </mat-tab-group>
-          </div>
-        </section>
-      </div>
     </div>
-    <div class="flex-footer">
+    <br />
+    <div class="container">
+      <section>
+        <h2>JJ Dashboard<br/>
+        <span style="font-size:small; font-weight: normal; color: #1d4a77;">Welcome Back JJ {{ fullName }}</span></h2>
+        <div class="flex-6-col" *ngIf="!jjAdminRole">
+          <app-jj-dispute-inbox (jjPage)="changeHeading($event)"></app-jj-dispute-inbox>
+        </div>
+        <div class="flex-6-col" *ngIf="jjAdminRole">
+          <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
+            <mat-tab label="Assignments">
+              <app-jj-dispute-assignments (jjPage)="changeHeading($event)"></app-jj-dispute-assignments>
+            </mat-tab>
+            <mat-tab label="Inbox">
+              <app-jj-dispute-inbox (jjPage)="changeHeading($event)" [jjIDIR]="jjIDIR"></app-jj-dispute-inbox>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </section>
+    </div>
+    <div class="flex-footer d-print-none mb-40">
       <app-footer></app-footer>
     </div>
   </div>

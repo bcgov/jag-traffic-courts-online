@@ -1,12 +1,12 @@
 <div *ngIf="showDispute==false">
-  <div class="step1">
+  <div class="step1" style="overflow-x:hidden">
     <!-- filter by teams -->
     <br />
     <div class="row">
       <mat-button-toggle-group style="border: 0px" (change)="filterByTeam($event.value)">
         <mat-button-toggle *ngFor="let teamCount of teamCounts" [value]="teamCount.team" class="teamFilterButton">
           <span style="float: left; margin-right: 20px !important; vertical-align: middle; color: #003366"><h2>TEAM {{ teamCount.team }}</h2></span>
-          <span style="float: right; color: black; vertical-align: middle;"><h1><b>{{ teamCount.assignedCount + teamCount.unassignedCount}}</b></h1></span>
+          <span style="float: right; color: black; vertical-align: middle;"><h1><b>{{ teamCount.unassignedCount}}</b></h1></span>
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div><br />
@@ -17,11 +17,11 @@
         <mat-form-field style="width:250px">
           <mat-label>Bulk Assignments:</mat-label>
           <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:200px; background-color: #f2f2f2; color: black;">
-            <mat-option value="">Clear</mat-option>
+            <mat-option value="unassigned">Clear</mat-option>
             <mat-option *ngFor="let jj of jjList" [value]="jj.idir">JJ {{ jj.name }}</mat-option>
           </mat-select>
         </mat-form-field>&nbsp;
-        <button mat-raised-button [disabled]="bulkjjAssignedTo===''" (click)="onBulkAssign()" style="height:60px; width: 100px"><b>Submit</b></button>
+        <button mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()" style="height:60px; width: 100px"><b>Submit</b></button>
       </div>
       <div>
         <button mat-button style="background-color: #fcba19" readonly="true"><mat-icon>check_circle_outline</mat-icon>&nbsp;Assigned {{ getCurrentTeamCounts()?.assignedCount }} </button>&nbsp;
@@ -34,25 +34,32 @@
     <div class="row">
       <table mat-table [dataSource]="unassignedDataSource" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)" *ngIf="unassignedDataSource.data">
         <ng-container matColumnDef="assignedIcon">
-          <th mat-header-cell *matHeaderCellDef style="padding-right: 10px; width: 50px !important;">
+          <th mat-header-cell *matHeaderCellDef style="width: 50px !important;">
           </th>
-          <td mat-cell *matCellDef="let element" style="padding-right: 10px; width: 50px !important; background-color: #c5c5c5;">
-            <span class="material-symbols-outlined" style="color: #494949"><mat-icon>query_builder</mat-icon></span>
+          <td mat-cell *matCellDef="let element" style="width: 50px !important; background-color: #c5c5c5;">
+            <span class="material-symbols-outlined" style="color: #494949"><mat-icon style="padding-left:10px;">query_builder</mat-icon></span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="jjAssignedTo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:200px !important">
-            ASSIGNED
+          <th mat-header-cell *matHeaderCellDef style="width:250px !important">
+            <div *ngIf="bulkjjAssignedTo=== ''">
+              ASSIGNED
+            </div>
+            <div style="display: flex !important; flex-direction: row !important; justify-content: space-between !important" *ngIf="bulkjjAssignedTo !== ''">
+              ASSIGNED
+              <mat-checkbox (change)="onSelectAll($event)"></mat-checkbox>
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="width:200px !important">
+          <td mat-cell *matCellDef="let element" style="width:250px !important">
             <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo===''">
               <mat-option value="unassigned">unassigned</mat-option>
               <mat-option *ngFor="let jj of jjList" [value]="jj.idir">JJ {{ jj.name }}</mat-option>
             </mat-select>
-            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo != ''">
-              {{ element.jjAssignedToName }}
-              <mat-checkbox></mat-checkbox>
+            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== ''">
+              <span *ngIf="element.jjAssignedTo !== null && element.jjAssignedTo !== 'unassigned'">JJ {{ element.jjAssignedToName }}</span>
+              <span *ngIf="element.jjAssignedTo === null || element.jjAssignedTo === 'unassigned'">unassigned</span>
+              <mat-checkbox [(ngModel)]="element.bulkAssign"></mat-checkbox>
             </div>
           </td>
         </ng-container>
@@ -78,7 +85,7 @@
 
         <ng-container matColumnDef="surname">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:150px !important">
-            LAST, FIRST NAME
+            SURNAME, FIRST NAME(S)
           </th>
           <td mat-cell *matCellDef="let element" style="width:150px !important">
             <span>{{ element.surname }},&nbsp;{{ element.givenNames }}</span>
@@ -112,31 +119,38 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
 
       <!--- table of assigned results -->
       <table mat-table [dataSource]="assignedDataSource" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)" *ngIf="assignedDataSource.data">
         <ng-container matColumnDef="assignedIcon">
-          <th mat-header-cell *matHeaderCellDef style="padding-right: 10px; width: 50px !important;">
+          <th mat-header-cell *matHeaderCellDef style="width: 50px !important;">
           </th>
-          <td mat-cell *matCellDef="let element" style="padding-right: 10px; width: 50px !important; background-color: #fcba19;">
-            <span class="material-symbols-outlined"><mat-icon>check_circle_outline</mat-icon></span>
+          <td mat-cell *matCellDef="let element" style="width: 50px !important; background-color: #fcba19;">
+            <span class="material-symbols-outlined;"><mat-icon style="padding-left: 10px;">check_circle_outline</mat-icon></span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="jjAssignedTo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:200px !important">
-            ASSIGNED
+          <th mat-header-cell *matHeaderCellDef style="width:250px !important">
+            <div *ngIf="bulkjjAssignedTo=== ''">
+              ASSIGNED
+            </div>
+            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== ''">
+              ASSIGNED
+              <mat-checkbox (change)="onSelectAll($event)"></mat-checkbox>
+            </div>
           </th>
-          <td mat-cell *matCellDef="let element" style="width:200px !important">
+          <td mat-cell *matCellDef="let element" style="width:250px !important">
             <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo===''">
               <mat-option value="unassigned">unassigned</mat-option>
               <mat-option *ngFor="let jj of jjList" [value]="jj.idir">JJ {{ jj.name }}</mat-option>
             </mat-select>
-            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo != ''">
-              {{ element.jjAssignedToName }}
+            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== ''">
+              <span *ngIf="element.jjAssignedTo !== null && element.jjAssignedTo !== 'unassigned'">JJ {{ element.jjAssignedToName }}</span>
+              <span *ngIf="element.jjAssignedTo === null || element.jjAssignedTo === 'unassigned'">unassigned</span>
               <mat-checkbox [(ngModel)]="element.bulkAssign"></mat-checkbox>
             </div>
           </td>
@@ -163,7 +177,7 @@
 
         <ng-container matColumnDef="surname">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:150px !important">
-            LAST, FIRST NAME
+            SURNAME, FIRST NAME(S)
           </th>
           <td mat-cell *matCellDef="let element" style="width:150px !important">
             <span>{{ element.surname }},&nbsp;{{ element.givenNames }}</span>

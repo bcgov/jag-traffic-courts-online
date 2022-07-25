@@ -132,8 +132,9 @@ export class JJCountComponent implements OnInit {
 
     updateRevisedDueDate(event: MatRadioChange) {
       // if they select no set it back to passed in due date
+      console.log(event, this.form.get('revisedDueDate').value, this.jjDisputedCount.dueDate);
       if (event.value == "no") {
-        this.form.get('revisedDueDate').setValue(this.form.get('dueDate').value);
+        this.form.get('revisedDueDate').setValue(this.jjDisputedCount.dueDate);
       }
     }
   }
