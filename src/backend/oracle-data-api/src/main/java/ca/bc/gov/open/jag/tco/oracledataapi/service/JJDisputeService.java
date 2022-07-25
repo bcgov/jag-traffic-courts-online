@@ -81,10 +81,10 @@ public class JJDisputeService {
 			}
 			break;
 		case NEW:
-			// This should never happen since setting the status to NEW should only happen during initial creation of the Dispute record.
-			// If we got here, then this means the Dispute record is in an invalid state.
-			logger.error("Attempting to set the status of a JJ Dispute record to NEW after it was created - bad object state.");
-			throw new NotAllowedException("Changing the status of a JJ Dispute record to %s is not permitted.", JJDisputeStatus.NEW);
+			if (!List.of(JJDisputeStatus.NEW).contains(jjDisputeToUpdate.getStatus())) {
+				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), JJDisputeStatus.NEW);
+			}
+			break;
 		default:
 			// This should never happen, but if so, then it means a new JJDisputeStatus was added and these business rules were not updated accordingly.
 			logger.error("A JJ Dispute record has an unknown status '{}' - bad object state.", jjDisputeToUpdate.getStatus());
