@@ -120,7 +120,15 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
   getTeamCount(team: string): teamCounts {
     let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
     let teamDisputes = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
-    return teamDisputes ? { team: team, assignedCount: teamDisputes.filter(x => x.jjAssignedTo)?.length, unassignedCount: teamDisputes.filter(x => !(x.jjAssignedTo))?.length }: { team: team, assignedCount: 0, unassignedCount: 0 } as teamCounts;
+    let teamCounts = { team: team, assignedCount: 0, unassignedCount: 0 } as teamCounts;
+    if (teamDisputes) {
+      let unassignedTeamCounts = teamDisputes.filter(x => x.jjAssignedTo === null || x.jjAssignedTo === "unassigned");
+      if (unassignedTeamCounts.length > 0) teamCounts.unassignedCount = unassignedTeamCounts.length;
+      let assignedTeamCounts = teamDisputes.filter(x => x.jjAssignedTo !== null && x.jjAssignedTo !== "unassigned");
+      if (assignedTeamCounts.length > 0) teamCounts.assignedCount = assignedTeamCounts.length;
+      return teamCounts;
+    }
+    else return teamCounts;
   }
 
   getAll(team: string): void {
