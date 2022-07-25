@@ -15,7 +15,7 @@
     <section>
       <ng-container subHeader>
         <span>
-          <h3>Ticket Information</h3>
+          <h3>Ticket Information / Dispute History</h3>
         </span>
       </ng-container>
       <div style="display: grid; grid-template-columns: auto auto auto auto">
@@ -125,14 +125,12 @@
     <section>
       <ng-container subHeader>
         <span>
-          <h3>Add Remarks
-          <span class="small-note"><i>* This is for internal use only</i></span>
+          <h3>Add Remarks<br/>
+          <span class="small-note"><i><span style="color:red;">*</span> This is for internal use only</i></span>
         </h3>
         </span>
       </ng-container>
-      <mat-form-field style="width:100%">
-        <textarea matInput [(ngModel)]="lastUpdatedJJDispute.remarks" maxlength="1500" rows="6"></textarea>
-      </mat-form-field>
+      <textarea matInput [(ngModel)]="lastUpdatedJJDispute.remarks" maxlength="1500" rows="6" style="background: #fffee6;"></textarea>
     </section><br />
     <div style="float: right; width: 100%;">
       <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
@@ -141,6 +139,6 @@
       <button class="large" mat-flat-button type="button" color="primary" (click)="onSave()"  [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
         Save & Finish Later
       </button>
-    </div>
+    </div><br/><br/>
   </div>
 </div>

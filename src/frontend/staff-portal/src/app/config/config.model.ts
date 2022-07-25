@@ -1,5 +1,5 @@
 export interface Configuration {
-  courtLocations: Config<string>[];
+  courtLocations: CourthouseConfig[];
   policeLocations: Config<string>[];
   languages: Config<string>[];
   countries: Config<string>[];
@@ -20,4 +20,8 @@ export class Config<T> {
 
 export interface ProvinceConfig extends Config<string> {
   countryCode: string;
+}
+
+export interface CourthouseConfig extends Config<string> {
+  jjTeam: string;
 }

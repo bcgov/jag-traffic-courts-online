@@ -114,7 +114,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public onBack() {
-    window.location.reload();
+    this.backTicketList.emit();
   }
 }
 

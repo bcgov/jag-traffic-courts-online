@@ -66,7 +66,7 @@
     <form name="form" novalidate>
       <div style="display: grid; grid-template-columns: 33% 33% 33%">
         <span class="section-jj-grid-cell">
-          <p class="section-grid-header">Reduce fine</p>
+          <p class="section-grid-header">Revise fine</p>
           <p class="section-jj-grid-text">
             <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}" (change)="updateFineAmount($event)" [disabled]="!jjDisputedCount">
               <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
@@ -134,8 +134,8 @@
         </span>
         <span class="section-grid-cell" style="grid-column: span 3">
           <mat-label class="section-grid-header">Comments</mat-label><br />
-          <mat-label class="section-grid-header"><i>* These comments will be shared to disputants</i></mat-label>
-          <textarea matInput [formControl]="form.get('comments')" maxlength="1500" style="background-color:#e4f2ff; width: 100%; font-size: small; resize: none;" rows="5">
+          <mat-label class="small-note"><i><span style="color:red;">*</span> These comments will be shared to disputants</i></mat-label>
+          <textarea matInput [formControl]="form.get('comments')" maxlength="1500" style="background-color:#e4f2ff; background: #fffee6; width: 100%; font-size: small; resize: none;" rows="5">
           </textarea>
         </span>
       </div>
@@ -156,14 +156,14 @@
         </p><p class="section-grid-header">&nbsp;</p>
       </span>
       <span class="section-jj-grid-cell">
-        <p class="section-grid-header">Due date</p>
-        <p class="section-grid-header">&nbsp;</p>
-        <p><span style="font-weight: bold;">{{ jjDisputedCount?.revisedDueDate | date: "MMM dd" }}</span></p>
+        <p><span style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Due date</span><br/>
+        <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px;">{{ jjDisputedCount?.revisedDueDate | date: "yyyy" }}</span><br/>
+        <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{ jjDisputedCount?.revisedDueDate | date: "MMM dd" }}</span></p>
       </span>
       <span class="section-grid-cell">
-        <p class="section-grid-header">Fine amount</p>
-        <p class="section-grid-header2">incl. surcharge</p>
-        <p><span style="font-weight: bold;">{{jjDisputedCount?.totalFineAmount | currency }}</span></p>
+        <p><span style="font-size:small; color: #707070; font-weight: bold; margin: 0 !important; padding-right: 10px; float: right;">Fine amount</span><br/>
+          <span style="font-weight: bold; font-size: small; float: right; padding-right: 10px; color: #707070;">incl. surcharge</span><br/>
+          <span style="font-weight: bold; float: right !important; padding-right: 10px;">{{ jjDisputedCount?.totalFineAmount | currency }}</span></p>
       </span>
     </div>
   </section>

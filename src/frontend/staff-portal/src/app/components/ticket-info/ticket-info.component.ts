@@ -8,7 +8,7 @@ import { FormControlValidators } from '@core/validators/form-control.validators'
 import { DatePipe } from '@angular/common';
 import { Dispute, DisputeService } from '../../services/dispute.service';
 import { Subscription } from 'rxjs';
-import { ProvinceConfig, Config } from '@config/config.model';
+import { ProvinceConfig, CourthouseConfig } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { ViolationTicket, ViolationTicketCount } from 'app/api';
 import { LookupsService, StatuteView } from 'app/services/lookups.service';
@@ -41,7 +41,7 @@ export class TicketInfoComponent implements OnInit {
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
   public initialDisputeValues: Dispute;
-  public courtLocations: Config<string>[];
+  public courtLocations: CourthouseConfig[];
   public imageToShow: any;
   public errorThreshold: number = 0.800;
   public provincialCourtHearingLocationFlag: OCRMessageToDisplay;
@@ -146,7 +146,7 @@ export class TicketInfoComponent implements OnInit {
           ticketedAmount: [null, [FormControlValidators.currency]]
         }),
         violationDate: [null, [Validators.required]],  // api returns issued date, extract date from that
-        violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that  
+        violationTime: [null, [Validators.required, Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3])[0-5][0-9]$/)]],  // api returns issued date, extract time from that
       })
     });
     // retreive fresh copy from db
@@ -206,7 +206,7 @@ export class TicketInfoComponent implements OnInit {
     window.location.reload();
   }
 
-  // violation ticket borders only for new status 
+  // violation ticket borders only for new status
   public applyOverErrThreshold(fieldName: string): boolean {
     if (this.lastUpdatedDispute.status != 'NEW') return false;
     if (this.lastUpdatedDispute.violationTicket.ocrViolationTicket && this.lastUpdatedDispute.violationTicket.ocrViolationTicket.fields[fieldName]?.fieldConfidence <= 0.80) return false;
@@ -578,7 +578,7 @@ export class TicketInfoComponent implements OnInit {
           this.form.get('rejectedReason').setValue(action.output.reason); // update on form for appearances
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
-          // udate the reason entered, reject dispute and return to TRM home 
+          // udate the reason entered, reject dispute and return to TRM home
           this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.onBack();
