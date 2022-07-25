@@ -43,20 +43,20 @@
 
         <ng-container matColumnDef="jjAssignedTo">
           <th mat-header-cell *matHeaderCellDef style="width:250px !important">
-            <div *ngIf="bulkjjAssignedTo=== ''">
+            <div *ngIf="bulkjjAssignedTo=== '' || bulkjjAssignedTo === 'unassigned'">
               ASSIGNED
             </div>
-            <div style="display: flex !important; flex-direction: row !important; justify-content: space-between !important" *ngIf="bulkjjAssignedTo !== ''">
+            <div style="display: flex !important; flex-direction: row !important; justify-content: space-between !important" *ngIf="bulkjjAssignedTo !== '' && bulkjjAssignedTo !== 'unassigned'">
               ASSIGNED
               <mat-checkbox (change)="onSelectAll($event)"></mat-checkbox>
             </div>
           </th>
           <td mat-cell *matCellDef="let element" style="width:250px !important">
-            <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo===''">
+            <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo==='' || bulkjjAssignedTo === 'unassigned'">
               <mat-option value="unassigned">unassigned</mat-option>
               <mat-option *ngFor="let jj of jjList" [value]="jj.idir">JJ {{ jj.name }}</mat-option>
             </mat-select>
-            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== ''">
+            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== '' && bulkjjAssignedTo !== 'unassigned'">
               <span *ngIf="element.jjAssignedTo !== null && element.jjAssignedTo !== 'unassigned'">JJ {{ element.jjAssignedToName }}</span>
               <span *ngIf="element.jjAssignedTo === null || element.jjAssignedTo === 'unassigned'">unassigned</span>
               <mat-checkbox [(ngModel)]="element.bulkAssign"></mat-checkbox>
@@ -135,20 +135,20 @@
 
         <ng-container matColumnDef="jjAssignedTo">
           <th mat-header-cell *matHeaderCellDef style="width:250px !important">
-            <div *ngIf="bulkjjAssignedTo=== ''">
+            <div *ngIf="bulkjjAssignedTo=== '' || bulkjjAssignedTo === 'unassigned'">
               ASSIGNED
             </div>
-            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== ''">
+            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== '' && bulkjjAssignedTo !== 'unassigned'">
               ASSIGNED
               <mat-checkbox (change)="onSelectAll($event)"></mat-checkbox>
             </div>
           </th>
           <td mat-cell *matCellDef="let element" style="width:250px !important">
-            <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo===''">
+            <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo==='' || bulkjjAssignedTo=== 'unassigned'">
               <mat-option value="unassigned">unassigned</mat-option>
               <mat-option *ngFor="let jj of jjList" [value]="jj.idir">JJ {{ jj.name }}</mat-option>
             </mat-select>
-            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== ''">
+            <div style="display: flex; flex-direction: row; justify-content: space-between" *ngIf="bulkjjAssignedTo !== '' && bulkjjAssignedTo !== 'unassigned'">
               <span *ngIf="element.jjAssignedTo !== null && element.jjAssignedTo !== 'unassigned'">JJ {{ element.jjAssignedToName }}</span>
               <span *ngIf="element.jjAssignedTo === null || element.jjAssignedTo === 'unassigned'">unassigned</span>
               <mat-checkbox [(ngModel)]="element.bulkAssign"></mat-checkbox>

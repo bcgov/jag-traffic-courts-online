@@ -145,7 +145,9 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.assignedDataSource.data = this.data.filter(x => x.jjAssignedTo !== null && x.jjAssignedTo !== "unassigned" && x.jjAssignedTo !== undefined) as JJDispute[];
     this.unassignedDataSource.data = this.data.filter(x => x.jjAssignedTo === null || x.jjAssignedTo === "unassigned" || x.jjAssignedTo === undefined) as JJDispute[];
     this.unassignedDataSource.data.forEach((jjDispute: JJDispute) => {
+      let index = this.unassignedDataSource.data.indexOf(jjDispute);
       jjDispute.jjAssignedTo = "unassigned";
+      this.unassignedDataSource.data[index] = jjDispute;
     });
 
     this.teamCounts = [];
@@ -182,17 +184,21 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
 
   bulkUpdateJJAssignedTo(jjDispute: JJDisputeView) {
     let updateDispute = this.data.filter(x => x.ticketNumber === jjDispute.ticketNumber )[0];
+    let index = this.data.indexOf(updateDispute);
     if (this.bulkjjAssignedTo === "unassigned") {
       updateDispute.jjAssignedTo = null;
     }
     else {
       updateDispute.jjAssignedTo = this.bulkjjAssignedTo;
     }
+
     this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute).subscribe((response: JJDispute) => {
       this.logger.info(
         'JJDisputeAssignmentsComponent::putJJDispute response',
         response
       );
+      updateDispute.jjAssignedToName = this.jjList.filter(y => y.idir === updateDispute.jjAssignedTo)[0]?.name;
+      this.data[index] = updateDispute;
       this.resetAssignedUnassigned();
     });
   }
