@@ -6,6 +6,7 @@ import { LandingComponent } from './components/landing/landing.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { AuthorizationGuard } from '@core/guards/auth-guard';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
+import { JJDisputeDecisionInboxComponent } from '@components/jj-dispute-decision-inbox/jj-dispute-decision-inbox.component';
 
 let routes: Routes = [
   {
@@ -23,6 +24,12 @@ let routes: Routes = [
     component: JjWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
     data: { expectedRole: "vtc-user" } // TODO change to jj-user
+  },
+  {
+    path: AppRoutes.JJDECISION,
+    component: JJDisputeDecisionInboxComponent,
+    canActivate: [AuthorizationGuard],
+    data: { expectedRole: "vtc-user" } // TODO change to other user
   },
   {
     path: AppRoutes.UNAUTHORIZED,

@@ -34,6 +34,7 @@ import { TicketStatusComponent } from './components/ticket-status/ticket-status.
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
 import { JJDisputeInboxComponent } from '@components/jj-dispute-inbox/jj-dispute-inbox.component';
+import { JJDisputeDecisionInboxComponent } from '@components/jj-dispute-decision-inbox/jj-dispute-decision-inbox.component';
 import { JJDisputeAssignmentsComponent } from '@components/jj-dispute-assignments/jj-dispute-assignments.component';
 import { JJDisputeComponent } from '@components/jj-dispute/jj-dispute.component';
 import { JJCountComponent } from '@components/jj-count/jj-count.component';
@@ -63,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketRequestComponent,
     JjWorkbenchDashboardComponent,
     JJDisputeInboxComponent,
+    JJDisputeDecisionInboxComponent,
     JJDisputeAssignmentsComponent,
     JJDisputeComponent,
     JJCountComponent
