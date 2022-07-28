@@ -2647,11 +2647,23 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [System.Runtime.Serialization.EnumMember(Value = @"IN_PROGRESS")]
         IN_PROGRESS = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"COMPLETED")]
-        COMPLETED = 2,
+        [System.Runtime.Serialization.EnumMember(Value = @"DATA_UPDATE")]
+        DATA_UPDATE = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"CONFIRMED")]
+        CONFIRMED = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"REQUIRE_COURT_HEARING")]
+        REQUIRE_COURT_HEARING = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"REQUIRE_MORE_INFO")]
+        REQUIRE_MORE_INFO = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ACCEPTED")]
+        ACCEPTED = 6,
 
         [System.Runtime.Serialization.EnumMember(Value = @"REVIEW")]
-        REVIEW = 3,
+        REVIEW = 7,
 
     }
 

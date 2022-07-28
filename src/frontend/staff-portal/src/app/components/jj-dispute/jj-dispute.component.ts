@@ -45,7 +45,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.lastUpdatedJJDispute.status = JJDisputeStatus.Review;
+    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(

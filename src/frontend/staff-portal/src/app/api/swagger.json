@@ -1453,7 +1453,11 @@
         "enum": [
           "NEW",
           "IN_PROGRESS",
-          "COMPLETED",
+          "DATA_UPDATE",
+          "CONFIRMED",
+          "REQUIRE_COURT_HEARING",
+          "REQUIRE_MORE_INFO",
+          "ACCEPTED",
           "REVIEW"
         ],
         "type": "string"

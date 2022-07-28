@@ -5,6 +5,7 @@ import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
+import { JJDisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-jj-dispute-decision-inbox',
@@ -17,6 +18,8 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   busy: Subscription;
   jjDisputeInfo: JJDispute;
+
+  editableStatuses: JJDisputeStatus[] = [ JJDisputeStatus.New, JJDisputeStatus.InProgress, JJDisputeStatus.Review];
 
   data = [] as JJDispute[];
   showDispute: boolean = false;

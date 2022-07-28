@@ -48,13 +48,12 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     { idir: "pbolduc@idir", name: "Phil Bolduc" },
     { idir: "choban@idir", name: "Chris Hoban" },
     { idir: "kneufeld@idir", name: "Kevin Neufeld" },
-    { idir: "rpress@idir", name: "Roberta Press" },
     { idir: "cohiggins@idir", name: "Colm O'Higgins" },
     { idir: "bkarahan@idir", name: "Burak Karahan" },
     { idir: "twong@idir", name: "Tsunwai Wong" },
     { idir: "ewong@idir", name: "Elaine Wong" },
     { idir: "jmoffet@idir", name: "Jeffrey Moffet" },
-    { idir: "rpress@idir", name: "Roberta Press" },
+    { idir: "rspress@idir", name: "Roberta Press" },
   ];
 
   constructor(
@@ -135,7 +134,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.logger.log('JJDisputeAssignmentsComponent::getAllDisputes');
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
-      // filter jj disputes only show new or in progress
+      // filter jj disputes only show new or in progress or review
       this.data = response.filter(x => x.status === JJDisputeStatus.New || x.status === JJDisputeStatus.InProgress);
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
       this.data.forEach(x => {

@@ -603,7 +603,7 @@
           "ticketNumber": { "type": "string" },
           "status": {
             "type": "string",
-            "enum": [ "NEW", "IN_PROGRESS", "COMPLETED", "REVIEW" ]
+            "enum": [ "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW" ]
           },
           "submittedDate": {
             "type": "string",
