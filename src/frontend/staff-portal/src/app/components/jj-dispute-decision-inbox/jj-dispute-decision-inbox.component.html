@@ -1,76 +1,107 @@
-<div *ngIf="showDispute==false">
-  <div class="step1">
-    <br /><h3><b>Violation Ticket Inbox</b> ({{data.length}} results)</h3>
-    <table mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort>
-      <ng-container matColumnDef="ticketNumber">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          VT NUMBER
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span *ngIf="element.status !== 'NEW' && element.status !== 'IN_PROGRESS'">{{ element.ticketNumber }}</span>
-        </td>
-      </ng-container>
+<app-page [busy]="busy">
+  <div class="flex-wrapper">
+    <div class="flex-header d-print-none mb-40">
+      <app-header [jjPage]="jjPageHeading"></app-header>
+    </div>
+    <br />
+    <div class="container">
+      <section>
+        <div *ngIf="showDispute==false">
+          <div class="step1">
+            <br /><span style="font-size:32px; color: #494949;"><b>Written Reasons Disputes</b></span>
+            <br /><span style="color: #009cde;"><h2>Welcome Back {{ fullName }}</h2></span>
+            <div style="float:inline">
+              <span style="float:left"><h2><b>Dispute Decision Inbox</b>&nbsp;<span style="font-size:normal;">({{ dataSource.data.length }} results)</span></h2></span>
+              <span style="float:right; background-color: #f9f2f2;">
+                  <mat-select [value]="currentTeam" (selectionChange)="filterByTeam($event.value)" style="background-color:#f9f2f2; width:200px; font-size:large; margin:10px; padding:auto;">
+                    <mat-option value="All">All</mat-option>
+                    <mat-option value="A">Team A</mat-option>
+                    <mat-option value="B">Team B</mat-option>
+                    <mat-option value="C">Team C</mat-option>
+                    <mat-option value="D">Team D</mat-option>
+                  </mat-select>
+              </span>
+            </div>
 
-      <ng-container matColumnDef="jjDecisionDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          DECISION DATE
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.jjDecisionDate | date: "dd-MMM-yyyy" }}</span>
-        </td>
-      </ng-container>
 
-      <ng-container matColumnDef="jjAssignedToName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          SIGNED BY
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.jjAssignedToName }}</span>
-        </td>
-      </ng-container>
+            <table mat-table [dataSource]="dataSource" style="margin-bottom:30px; width:100%" class="mat-elevation-z8" matSort>
+              <ng-container matColumnDef="ticketNumber">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  VT NUMBER
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span *ngIf="element.status !== 'NEW' && element.status !== 'IN_PROGRESS'">{{ element.ticketNumber }}</span>
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="jjViolationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          VIOLATION DATE
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
-        </td>
-      </ng-container>
+              <ng-container matColumnDef="jjDecisionDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  DECISION DATE
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span>{{ element.jjDecisionDate | date: "dd-MMM-yyyy" }}</span>
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="disputantName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          SURNAME, GIVEN NAME(S)
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.surname }},&nbsp;{{ element.givenNames }}</span>
-        </td>
-      </ng-container>
+              <ng-container matColumnDef="jjAssignedTo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  SIGNED BY
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span>{{ element.jjAssignedToName }}</span>
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="courthouseLocation">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          COURT HOUSE
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.courthouseLocation }}</span>
-        </td>
-      </ng-container>
+              <ng-container matColumnDef="violationDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  VIOLATION DATE
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="vtcAssignedTo">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          ASSIGNED
-        </th>
-        <td mat-cell *matCellDef="let element">
-          <span>{{ element.vtcAssignedToName }}</span>
-        </td>
-      </ng-container>
+              <ng-container matColumnDef="disputantName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  SURNAME, GIVEN NAME(S)
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span>{{ element.surname }},&nbsp;{{ element.givenNames }}</span>
+                </td>
+              </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+              <ng-container matColumnDef="courthouseLocation">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  COURT HOUSE
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span>{{ element.courthouseLocation }}</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="vtcAssignedTo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  ASSIGNED
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span>{{ element.vtcAssignedTo ? element.vtcAssignedToName : "Unassigned" }}</span>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="showDispute==true">
+          <app-jj-dispute (backTicketList)="backTicketpage()" [jjDisputeInfo]="jjDisputeInfo"></app-jj-dispute>
+        </div>
+
+      </section>
+    </div>
+    <div class="flex-footer d-print-none mb-40">
+      <app-footer></app-footer>
+    </div>
   </div>
-</div>
-
-<div *ngIf="showDispute==true">
-  <app-jj-dispute (backTicketList)="backTicketpage()" [jjDisputeInfo]="jjDisputeInfo"></app-jj-dispute>
-</div>
+</app-page>

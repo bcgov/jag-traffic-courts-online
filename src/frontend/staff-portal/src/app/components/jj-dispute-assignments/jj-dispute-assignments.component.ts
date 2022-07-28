@@ -38,7 +38,6 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     "courthouseLocation",
     "policeDetachment",
     "timeToPayReason",
-    "status"
   ];
 
   constructor(
@@ -119,8 +118,10 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.logger.log('JJDisputeAssignmentsComponent::getAllDisputes');
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
-      // filter jj disputes only show new
-      this.data = response.filter(x => this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) > 0);
+      // filter jj disputes only show new, review, in_progress
+      console.log(response.length, "before filter by status");
+      this.data = response.filter(x => this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0);
+      console.log(this.data.length, "after filter by status");
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
       this.data.forEach(x => {
           x.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === x.jjAssignedTo)[0]?.name;

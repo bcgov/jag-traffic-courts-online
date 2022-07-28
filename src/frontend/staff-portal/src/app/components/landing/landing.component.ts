@@ -48,11 +48,11 @@ export class LandingComponent implements OnInit {
           }
         }
 
-        // navigate to Ticket Resolution Management or JJ Workbench or Unauthorized based on role
-        if (this.ddRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
-        else if (this.ddRole) this.router.navigate([AppRoutes.JJDECISION]);
+        // navigate to Ticket Resolution Management or JJ Workbench  or Dispute Decision Inbox or Unauthorized based on role
+        if (this.ddRole) this.router.navigate([AppRoutes.JJDECISION]);
+        else if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
         else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
-        if (!this.jjRole && !this.vtcRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
+        if (!this.jjRole && !this.vtcRole && !this.ddRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
       }
     })
   }

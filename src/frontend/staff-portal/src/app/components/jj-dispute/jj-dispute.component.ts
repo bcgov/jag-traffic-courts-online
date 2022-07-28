@@ -46,6 +46,7 @@ export class JJDisputeComponent implements OnInit {
 
   public onSubmit(): void {
     this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
+    this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(

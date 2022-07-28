@@ -5,9 +5,11 @@ import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
+import { CourthouseConfig } from '@config/config.model';
 import { JJDisputeStatus } from 'app/api';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { MockConfigService } from 'tests/mocks/mock-config.service';
 
 @Component({
   selector: 'app-jj-dispute-decision-inbox',
@@ -19,9 +21,11 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   @Input() public ddIDIR: string;
 
   busy: Subscription;
+  public courtLocations: CourthouseConfig[];
+  currentTeam: string = "All";
   jjDisputeInfo: JJDispute;
   public isLoggedIn = false;
-  public jwtHelper: JwtHelperService
+  jjPageHeading: string = "Dispute Decision Inbox";
   public ddRole: boolean = false;
   public fullName: string = "Loading...";
   data = [] as JJDisputeView[];
@@ -42,6 +46,8 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     public jjDisputeService: JJDisputeService,
     private oidcSecurityService: OidcSecurityService,
     private logger: LoggerService,
+    private jwtHelper: JwtHelperService,
+    public mockConfigService: MockConfigService,
   ) {
 
     // check for dd role
@@ -68,6 +74,15 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
         this.ddIDIR = this.oidcSecurityService.getUserData()?.preferred_username;
       }
     });
+
+    if (this.mockConfigService.courtLocations) {
+      this.courtLocations = this.mockConfigService.courtLocations;
+    }
+  }
+
+  filterByTeam(team: string) {
+    let teamCourthouses = this.courtLocations.filter(x => (x.jjTeam === team || team === "All"));
+    this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
   }
 
   ngOnInit(): void {
@@ -81,7 +96,7 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   backTicketList(element) {
     this.showDispute = !this.showDispute;
     if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Inbox");
+    else this.jjPage.emit("Dispute Decision Inbox");
     this.jjDisputeInfo = element;
     if (!this.showDispute) this.getAll();  // refresh list
   }
@@ -89,7 +104,7 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   backTicketpage() {
     this.showDispute = !this.showDispute;
     if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Inbox");
+    else this.jjPage.emit("Dispute Decision Inbox");
     if (!this.showDispute) this.getAll(); // refresh list
   }
 
