@@ -1,4 +1,6 @@
 ﻿using Renci.SshNet;
+using Renci.SshNet.Common;
+using Renci.SshNet.Sftp;
 
 namespace TrafficCourts.Arc.Dispute.Service.Services;
 
@@ -33,11 +35,49 @@ public class SftpService : ISftpService
             if (_client.IsConnected)
             {
                 _client.BufferSize = 32 * 1024;
-        
+
+                // Iterates directory levels, testing each level using SftpClient.GetAttributes and create the levels that do not exist.
+                // The code has been taken from the following resource:
+                // https://stackoverflow.com/questions/36564941/renci-ssh-net-is-it-possible-to-create-a-folder-containing-a-subfolder-that-doe
                 if (!_client.Exists(path))
                 {
                     _logger.LogInformation("Remote {Directory} does not exist, creating", path);
-                    _client.CreateDirectory(path);
+
+                    string current = "";
+
+                    if (path[0] == '/')
+                    {
+                        path = path.Substring(1);
+                    }
+
+                    while (!string.IsNullOrEmpty(path))
+                    {
+                        int p = path.IndexOf('/');
+                        current += '/';
+                        if (p >= 0)
+                        {
+                            current += path.Substring(0, p);
+                            path = path.Substring(p + 1);
+                        }
+                        else
+                        {
+                            current += path;
+                            path = "";
+                        }
+
+                        try
+                        {
+                            SftpFileAttributes attrs = _client.GetAttributes(current);
+                            if (!attrs.IsDirectory)
+                            {
+                                throw new Exception("not directory");
+                            }
+                        }
+                        catch (SftpPathNotFoundException)
+                        {
+                            _client.CreateDirectory(current);
+                        }
+                    }
                 }
 
                 _client.ChangeDirectory(path);
