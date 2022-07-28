@@ -35,13 +35,13 @@ public class JJController : JJControllerBase<JJController>
     [HttpGet("Disputes")]
     [ProducesResponseType(typeof(IList<JJDispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetJJDisputesAsync(string? jjGroupAssignedTo, string? jjAssignedTo, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving all JJ Disputes from oracle-data-api");
 
         try
         {
-            ICollection<JJDispute> JJDisputes = await _JJDisputeService.GetAllJJDisputesAsync(jjGroupAssignedTo, jjAssignedTo, cancellationToken);
+            ICollection<JJDispute> JJDisputes = await _JJDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
             return Ok(JJDisputes);
         }
         catch (Exception e)

@@ -46,22 +46,18 @@ public class JJDisputeController {
 	}
 
 	/**
-	 * GET endpoint that retrieves all the jj disputes optionally filtered by jjGroupAssignedTo and/or jjAssignedTo from the database
-	 * @param jjGroupAssignedTo if specified, will filter the result set to those assigned to the specified jj group.
+	 * GET endpoint that retrieves all the jj disputes optionally filtered by jjAssignedTo from the database
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
 	 * @return list of all jj disputes
 	 */
 	@GetMapping("/disputes")
 	public List<JJDispute> getAllJJDisputes(
 			@RequestParam(required = false)
-			@Parameter(description = "If specified, will retrieve the records which are assigned to the specified jj group")
-			String jjGroupAssignedTo,
-			@RequestParam(required = false)
 			@Parameter(description = "If specified, will retrieve the records which are assigned to the specified jj staff")
 			String jjAssignedTo) {
 		logger.debug("getAllJJDisputes called");
 
-		return jjDisputeService.getAllJJDisputes(jjGroupAssignedTo, jjAssignedTo);
+		return jjDisputeService.getAllJJDisputes(jjAssignedTo);
 	}
 	
 	/**

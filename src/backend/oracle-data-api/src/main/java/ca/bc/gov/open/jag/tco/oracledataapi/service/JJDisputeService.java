@@ -32,20 +32,13 @@ public class JJDisputeService {
 
 	/**
 	 * Retrieves all {@link JJDispute} records, delegating to CrudRepository
-	 * @param jjGroupAssignedTo if specified, will filter the result set to those assigned to the specified jj group.
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
 	 * @return
 	 */
-	public List<JJDispute> getAllJJDisputes(String jjGroupAssignedTo, String jjAssignedTo) {
-		if (jjGroupAssignedTo == null && jjAssignedTo == null) {
+	public List<JJDispute> getAllJJDisputes(String jjAssignedTo) {
+		if (jjAssignedTo == null) {
 			return (List<JJDispute>) jjDisputeRepository.findAll();
-		} else if (jjGroupAssignedTo == null) {
-			return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
-		} else if (jjAssignedTo == null) {
-			return jjDisputeRepository.findByJjGroupAssignedToIgnoreCase(jjGroupAssignedTo);
-		} else {
-			return jjDisputeRepository.findByJjGroupAssignedToIgnoreCaseAndJjAssignedToIgnoreCase(jjGroupAssignedTo, jjAssignedTo);
-		}
+		} else return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
 	}
 	
 	/**

@@ -127,11 +127,27 @@ public class JJDispute extends Auditable<String>{
 	private String jjAssignedTo;
 
 	/**
-	 * The ID of the jj group whom the dispute is assigned to be listed on JJ Workbench.
+	 * The date that JJ made a decision
 	 */
 	@Column
 	@Schema(nullable = true)
-	private String jjGroupAssignedTo;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date jjDecisionDate;
+	
+	/** 
+	 * VTC assigned to review JJ Decision
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String vtcAssignedTo;
+	
+	/**
+	 * Date and Time that VTC was assigned
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date vtcAssignedTs;
 	
 	/**
 	 * Reason indicating why the fine reduction requested for the ticket.

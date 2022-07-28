@@ -2,13 +2,11 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } fro
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJTeamMember } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { JJDisputeStatus } from 'app/api';
-import { update } from 'lodash';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
@@ -40,20 +38,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     "courthouseLocation",
     "policeDetachment",
     "timeToPayReason",
-  ];
-
-  // TODO dynamically get list of JJs
-  public jjList: JJTeamMember[] = [
-    { idir: "ldame@idir", name: "Lorraine Dame" },
-    { idir: "pbolduc@idir", name: "Phil Bolduc" },
-    { idir: "choban@idir", name: "Chris Hoban" },
-    { idir: "kneufeld@idir", name: "Kevin Neufeld" },
-    { idir: "cohiggins@idir", name: "Colm O'Higgins" },
-    { idir: "bkarahan@idir", name: "Burak Karahan" },
-    { idir: "twong@idir", name: "Tsunwai Wong" },
-    { idir: "ewong@idir", name: "Elaine Wong" },
-    { idir: "jmoffet@idir", name: "Jeffrey Moffet" },
-    { idir: "rspress@idir", name: "Roberta Press" },
+    "status"
   ];
 
   constructor(
@@ -69,7 +54,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit(): void {
-    this.jjList = this.jjList.sort((a: JJTeamMember, b: JJTeamMember) => { if (a.name < b.name) { return -1; } else { return 1 } });
+    this.jjDisputeService.jjList = this.jjDisputeService.jjList.sort((a: JJTeamMember, b: JJTeamMember) => { if (a.name < b.name) { return -1; } else { return 1 } });
     this.getAll("A");
   }
 
@@ -134,11 +119,11 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.logger.log('JJDisputeAssignmentsComponent::getAllDisputes');
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
-      // filter jj disputes only show new or in progress or review
-      this.data = response.filter(x => x.status === JJDisputeStatus.New || x.status === JJDisputeStatus.InProgress);
+      // filter jj disputes only show new
+      this.data = response.filter(x => this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) > 0);
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
       this.data.forEach(x => {
-          x.jjAssignedToName = this.jjList.filter(y => y.idir === x.jjAssignedTo)[0]?.name;
+          x.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === x.jjAssignedTo)[0]?.name;
           x.bulkAssign = false;
         });
       this.resetAssignedUnassigned();
@@ -204,7 +189,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
         'JJDisputeAssignmentsComponent::putJJDispute response',
         response
       );
-      updateDispute.jjAssignedToName = this.jjList.filter(y => y.idir === updateDispute.jjAssignedTo)[0]?.name;
+      updateDispute.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === updateDispute.jjAssignedTo)[0]?.name;
       this.data[index] = updateDispute;
       this.resetAssignedUnassigned();
     });
@@ -232,8 +217,6 @@ export interface teamCounts {
   assignedCount: number;
   unassignedCount: number;
 }
-export interface JJTeamMember { idir: string, name: string; }
-
 export interface JJDisputeView extends JJDispute {
   jjAssignedToName: string;
   bulkAssign: boolean;

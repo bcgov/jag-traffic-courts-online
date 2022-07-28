@@ -45,7 +45,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;
+    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
@@ -57,7 +57,8 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public onSave(): void {
-    this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    // Update status to in progress unless status is set to review in which case do not change
+    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review)  this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(

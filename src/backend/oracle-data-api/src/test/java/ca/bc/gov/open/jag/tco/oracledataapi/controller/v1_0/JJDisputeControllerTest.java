@@ -33,7 +33,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testGetJJDisputeById() {
 		// Assert db is empty and clean
-		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null, null));
+		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a couple of JJDisputes
@@ -50,43 +50,41 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	@Test
 	public void testGetAllJJDisputes() {
 		// Assert db is empty and clean
-		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null, null));
+		List<JJDispute> allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
 		assertEquals(0, allDisputes.size());
 
 		// Create a JJDisputes with different assignedTo
 		 JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjGroupAssignedTo("GroupA")
 				 .jjAssignedTo("Steven Strange")
 				 .build());
 		 JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
-				 .jjGroupAssignedTo("GroupB")
 				 .jjAssignedTo("Tony Stark")
 				 .build());
 		 List<String> ticketNumbers = Arrays.asList(dispute1.getTicketNumber(), dispute2.getTicketNumber());
 
 		// Assert request returns both records
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null, null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
 		assertEquals(2, allDisputes.size());
 		assertTrue(ticketNumbers.contains(allDisputes.get(0).getTicketNumber()));
 		assertTrue(ticketNumbers.contains(allDisputes.get(1).getTicketNumber()));
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes("GroupA", null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null, "Steven Strange"));
+		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes("Steven Strange"));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes("GroupB", null));
+		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null, "Tony Stark"));
+		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes("Tony Stark"));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 	}
@@ -109,7 +107,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute = jjDisputeController.getJJDispute(jjDispute.getTicketNumber());
 		assertEquals("This is another remark from another JJ", jjDispute.getRemarks());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
-		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null, null);
+		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
 	}
 
