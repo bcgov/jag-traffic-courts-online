@@ -57,9 +57,8 @@ public class JJDisputeService {
 		// - current status must be NEW, IN_PROGRESS to change to IN_PROGRESS
 		// - current status must be CONFIRMED, REVIEW to change to REVIEW
 		// - current status must be NEW, IN_PROGRESS, REVIEW, CONFIRMED to change to CONFIRMED
-		// - current status must be REVIEW, NEW, IN_PROGRESS to change to CONFIRMED
 		// - current status must be NEW to change to NEW
-		// - current status must be NEW, REVIEW, IN_PROGRESS to change to DATA_UPDATE, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
+		// - current status must be NEW, REVIEW, IN_PROGRESS or same to change to DATA_UPDATE, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
 		// - current status must be CONFIRMED to change to ACCEPTED
 		switch (jjDisputeStatus) {
 		case IN_PROGRESS:

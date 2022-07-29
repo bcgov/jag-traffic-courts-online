@@ -25,7 +25,6 @@ public class JJController : JJControllerBase<JJController>
     /// Returns all JJ Disputes from the Oracle Data API 
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <param name="jjGroupAssignedTo">If specified, will retrieve the records which are assigned to the specified jj group</param>
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
     /// <response code="200">The JJ disputes were found.</response>
     /// <response code="401">Unauthenticated.</response>

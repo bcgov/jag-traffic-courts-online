@@ -69,19 +69,9 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertTrue(ticketNumbers.contains(allDisputes.get(1).getTicketNumber()));
 
 		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
-		assertEquals(1, allDisputes.size());
-		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
-
-		// Assert request returns one record
 		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes("Steven Strange"));
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute1.getTicketNumber(), allDisputes.get(0).getTicketNumber());
-
-		// Assert request returns one record
-		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes(null));
-		assertEquals(1, allDisputes.size());
-		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 
 		// Assert request returns one record
 		allDisputes = IterableUtils.toList(jjDisputeController.getAllJJDisputes("Tony Stark"));
