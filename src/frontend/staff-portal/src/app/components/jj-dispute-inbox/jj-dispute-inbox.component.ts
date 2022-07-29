@@ -5,6 +5,7 @@ import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
+import { JJDisputeStatus } from 'app/api';
 
 @Component({
   selector: 'app-jj-dispute-inbox',
@@ -63,10 +64,13 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   getAll(): void {
     this.logger.log('JJWorkbenchDashboardComponent::getAllDisputes');
 
-    this.jjDisputeService.getJJDisputes().subscribe((response: JJDispute[]) => {
+    this.jjDisputeService.getJJDisputesByIDIR(this.jjIDIR).subscribe((response: JJDispute[]) => {
       // filter jj disputes only show those for the current JJ
-      this.data = response.filter(x => x.jjAssignedTo == this.jjIDIR); // current IDIR
+      this.data = response; // current IDIR
       this.dataSource.data = this.data;
+
+      // only show status NEW, IN_PROGRESS, CONFIRMED, REVIEW, REQUIRE_COURT_HEARING, REQUIRE_MORE_INFO
+      this.data = this.data.filter(x => x.status === JJDisputeStatus.New || x.status === JJDisputeStatus.Confirmed || x.status === JJDisputeStatus.InProgress || x.status === JJDisputeStatus.Review || x.status === JJDisputeStatus.RequireCourtHearing || x.status === JJDisputeStatus.RequireMoreInfo );
 
       // initially sort by submitted date within status
       this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) =>

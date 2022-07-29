@@ -4,7 +4,7 @@ import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { JJService, JJDispute, Dispute, DisputeStatus, DisputedCount, LegalRepresentation, ViolationTicket } from 'app/api';
+import { JJService, JJDispute, JJDisputeStatus } from 'app/api';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,23 @@ import { JJService, JJDispute, Dispute, DisputeStatus, DisputedCount, LegalRepre
 export class JJDisputeService {
   private _JJDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
   private _JJDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
-  public jjDisputeStatusesSorted: string[] = ['NEW', 'REVIEW', 'IN_PROGRESS', 'COMPLETED'];
+  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted ];
+  public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress];
+  public JJDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
+
+  // TODO dynamically get list of JJs
+  public jjList: JJTeamMember[] = [
+    { idir: "ldame@idir", name: "Lorraine Dame" },
+    { idir: "philbold@idir", name: "Phil Bolduc" },
+    { idir: "choban@idir", name: "Chris Hoban" },
+    { idir: "kneufeld@idir", name: "Kevin Neufeld" },
+    { idir: "cohiggins@idir", name: "Colm O'Higgins" },
+    { idir: "bkarahan@idir", name: "Burak Karahan" },
+    { idir: "twong@idir", name: "Tsunwai Wong" },
+    { idir: "ewong@idir", name: "Elaine Wong" },
+    { idir: "jmoffet@idir", name: "Jeffrey Moffet" },
+    { idir: "rspress@idir", name: "Roberta Press" },
+  ];
 
   constructor(
     private toastService: ToastService,
@@ -45,6 +61,30 @@ export class JJDisputeService {
         })
       );
   }
+
+    /**
+     * Get the JJ disputes from RSI by IDIR
+     *
+     * @param none
+     */
+     public getJJDisputesByIDIR(idir: string): Observable<JJDispute[]> {
+      return this.jjApiService.apiJjDisputesGet(idir)
+        .pipe(
+          map((response: JJDispute[]) => {
+            this.logger.info('jj-DisputeService::getJJDisputes', response);
+            this._JJDisputes.next(response);
+            return response;
+          }),
+          catchError((error: any) => {
+            this.toastService.openErrorToast(this.configService.dispute_error);
+            this.logger.error(
+              'jj-DisputeService::getJJDisputes error has occurred: ',
+              error
+            );
+            throw error;
+          })
+        );
+    }
 
   /**
      * Put the JJ dispute to RSI by Id.
@@ -118,3 +158,5 @@ export class JJDisputeService {
     return futureDate;
   }
 }
+
+export interface JJTeamMember { idir: string, name: string; }

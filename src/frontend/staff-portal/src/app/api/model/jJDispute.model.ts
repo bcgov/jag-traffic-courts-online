@@ -31,7 +31,9 @@ export interface JJDispute {
     courthouseLocation?: string | null;
     offenceLocation?: string | null;
     jjAssignedTo?: string | null;
-    jjGroupAssignedTo?: string | null;
+    jjDecisionDate?: string | null;
+    vtcAssignedTo?: string | null;
+    vtcAssignedTs?: string | null;
     fineReductionReason?: string | null;
     timeToPayReason?: string | null;
     remarks?: string | null;

@@ -1,0 +1,52 @@
+td, th {
+  vertical-align: middle !important;
+  padding-left: 10px !important;
+}
+
+th {
+color: white;
+background-color: #65799e;
+}
+
+.mat-row:nth-child(2n+1){
+  background-color: #f1f6fb;
+}
+.mat-row:nth-child(2n){
+  background-color:#ffffff;
+}
+
+.mat-button,
+.mat-flat-button,
+.mat-icon-button,
+.mat-stroked-button {
+  border-radius: 50px;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .input[name="searchInput"] {
+    width: 100%;
+    padding-right: 40px;
+  }
+
+  .inputIcon {
+    position: absolute;
+    right: 10px;
+  }
+
+  .centerColumn {
+    text-align: center !important;
+  }
+
+  .centerColumn.mat-sort-header-container {
+    justify-content: center !important;
+}
+
+::ng-deep .mat-sort-header-arrow {
+  color: #fff;
+  background-color: #afc6b8;
+}

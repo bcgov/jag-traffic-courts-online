@@ -25,7 +25,6 @@ public class JJController : JJControllerBase<JJController>
     /// Returns all JJ Disputes from the Oracle Data API 
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <param name="jjGroupAssignedTo">If specified, will retrieve the records which are assigned to the specified jj group</param>
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
     /// <response code="200">The JJ disputes were found.</response>
     /// <response code="401">Unauthenticated.</response>
@@ -35,13 +34,13 @@ public class JJController : JJControllerBase<JJController>
     [HttpGet("Disputes")]
     [ProducesResponseType(typeof(IList<JJDispute>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetJJDisputesAsync(string? jjGroupAssignedTo, string? jjAssignedTo, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving all JJ Disputes from oracle-data-api");
 
         try
         {
-            ICollection<JJDispute> JJDisputes = await _JJDisputeService.GetAllJJDisputesAsync(jjGroupAssignedTo, jjAssignedTo, cancellationToken);
+            ICollection<JJDispute> JJDisputes = await _JJDisputeService.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
             return Ok(JJDisputes);
         }
         catch (Exception e)

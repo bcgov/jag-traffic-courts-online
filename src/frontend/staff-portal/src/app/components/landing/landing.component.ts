@@ -14,6 +14,7 @@ export class LandingComponent implements OnInit {
   public isLoggedIn = false;
   public jjRole: boolean = false;
   public vtcRole: boolean = false;
+  public ddRole: boolean = false;
 
   constructor(
     private oidcSecurityService: OidcSecurityService,
@@ -29,25 +30,29 @@ export class LandingComponent implements OnInit {
 
         // decode the token to get its payload
         const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-        if (tokenPayload) { 
+        if (tokenPayload) {
           let resource_access = tokenPayload.resource_access["tco-staff-portal"];
           if (resource_access) {
             let roles = resource_access.roles;
             if (roles) roles.forEach(role => {
-              if (role == "vtc-user") { // TODO USE role name for JJ
+              if (role === "vtc-user") { // TODO USE role name for JJ
                 this.jjRole = true;
-              } 
-              if (role == "vtc-user") {
+              }
+              if (role === "vtc-user") {
                 this.vtcRole = true;
+              }
+              if (role === "vtc-user") {
+                this.ddRole = true;
               }
             });
           }
         }
 
-        // navigate to Ticket Resolution Management or JJ Workbench or Unauthorized based on role
-        if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
+        // navigate to Ticket Resolution Management or JJ Workbench  or Dispute Decision Inbox or Unauthorized based on role
+        if (this.ddRole) this.router.navigate([AppRoutes.JJDECISION]);
+        else if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
         else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
-        if (!this.jjRole && !this.vtcRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
+        if (!this.jjRole && !this.vtcRole && !this.ddRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
       }
     })
   }

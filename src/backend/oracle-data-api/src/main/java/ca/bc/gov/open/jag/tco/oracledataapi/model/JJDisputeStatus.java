@@ -6,6 +6,10 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 public enum JJDisputeStatus {
 	NEW,
 	IN_PROGRESS,
-	COMPLETED,
+	DATA_UPDATE,
+	CONFIRMED,
+	REQUIRE_COURT_HEARING,
+	REQUIRE_MORE_INFO,
+	ACCEPTED,
 	REVIEW
 }

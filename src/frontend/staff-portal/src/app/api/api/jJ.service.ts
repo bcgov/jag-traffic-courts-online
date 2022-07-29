@@ -90,21 +90,16 @@ export class JJService {
 
     /**
      * Returns all JJ Disputes from the Oracle Data API
-     * @param jjGroupAssignedTo If specified, will retrieve the records which are assigned to the specified jj group
      * @param jjAssignedTo If specified, will retrieve the records which are assigned to the specified jj staff
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJjDisputesGet(jjGroupAssignedTo?: string, jjAssignedTo?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<JJDispute>>;
-    public apiJjDisputesGet(jjGroupAssignedTo?: string, jjAssignedTo?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<JJDispute>>>;
-    public apiJjDisputesGet(jjGroupAssignedTo?: string, jjAssignedTo?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<JJDispute>>>;
-    public apiJjDisputesGet(jjGroupAssignedTo?: string, jjAssignedTo?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<JJDispute>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<JJDispute>>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<JJDispute>>>;
+    public apiJjDisputesGet(jjAssignedTo?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (jjGroupAssignedTo !== undefined && jjGroupAssignedTo !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>jjGroupAssignedTo, 'jjGroupAssignedTo');
-        }
         if (jjAssignedTo !== undefined && jjAssignedTo !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>jjAssignedTo, 'jjAssignedTo');
