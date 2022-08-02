@@ -9,7 +9,17 @@ public class KeycloakAuthorizationRequirement : IAuthorizationRequirement
     /// <param name="policyName">Name of the policy.</param>
     public KeycloakAuthorizationRequirement(string policyName)
     {
-        PolicyName = policyName ?? throw new ArgumentNullException(nameof(policyName));
+        if (policyName is null)
+        {
+            throw new ArgumentNullException(nameof(policyName));
+        }
+
+        if (string.IsNullOrWhiteSpace(policyName))
+        {
+            throw new ArgumentException("Policy name cannot be empty or whitespace", nameof(policyName));
+        }
+
+        PolicyName = policyName;
     }
 
     /// <summary>
