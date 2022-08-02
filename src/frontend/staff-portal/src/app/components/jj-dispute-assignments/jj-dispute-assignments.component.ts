@@ -32,6 +32,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     "assignedIcon",
     "jjAssignedTo",
+    "bulkAssign",
     "ticketNumber",
     "submittedDate",
     "surname",
@@ -83,7 +84,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
 
   getType(element: JJDispute): string {
     if (element.timeToPayReason && element.fineReductionReason)
-      return "Time to pay/fine";
+      return "Time to pay/Fine";
     else if (element.timeToPayReason)
       return "Time to pay";
     else return "Fine";
@@ -91,9 +92,9 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
 
   filterByTeam(team: string) {
     let teamCourthouses = this.courtLocations.filter(x => x.jjTeam === team);
-    this.currentTeam = team;
     this.assignedDataSource.data = this.data.filter(x => x.jjAssignedTo !== null && x.jjAssignedTo !== "unassigned" && teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
     this.unassignedDataSource.data = this.data.filter(x => (x.jjAssignedTo === null || x.jjAssignedTo === "unassigned") && teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
+    this.currentTeam = team;
   }
 
   getCurrentTeamCounts(): teamCounts {
@@ -119,9 +120,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
       // filter jj disputes only show new, review, in_progress
-      console.log(response.length, "before filter by status");
       this.data = response.filter(x => this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0);
-      console.log(this.data.length, "after filter by status");
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
       this.data.forEach(x => {
           x.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === x.jjAssignedTo)[0]?.name;
@@ -210,6 +209,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.unassignedDataSource.data.forEach((jjDispute: JJDisputeView) => {
       if (jjDispute.bulkAssign === true) this.bulkUpdateJJAssignedTo(jjDispute);
     });
+    this.bulkjjAssignedTo = "unassigned";
   }
 }
 
