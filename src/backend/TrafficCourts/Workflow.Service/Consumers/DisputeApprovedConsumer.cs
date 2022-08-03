@@ -85,6 +85,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 await _submitDisputeToArcService.SubmitDisputeToArcAsync(tcoDisputeTicket);
             }
+            catch (Services.ApiException ex)
+            {
+                _logger.LogError(ex, "ARC API request has failed to create an ARC file");
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to process message");
