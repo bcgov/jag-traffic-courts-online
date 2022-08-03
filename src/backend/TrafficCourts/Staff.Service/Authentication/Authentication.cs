@@ -20,8 +20,9 @@ public static class AuthenticationExtensions
             {
                 configuration.Bind(_jwtBearerOptionsSection, options);
 
-                options.TokenValidationParameters.NameClaimType = "preferred_username";
-                options.TokenValidationParameters.RoleClaimType = _roleClaimType;
+                // removed until full authorization is enabled, otherwise this will case 403
+                //options.TokenValidationParameters.NameClaimType = "preferred_username";
+                //options.TokenValidationParameters.RoleClaimType = _roleClaimType;
 
                 options.Events = new JwtBearerEvents
                 {
