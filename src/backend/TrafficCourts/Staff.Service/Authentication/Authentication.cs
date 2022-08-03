@@ -2,11 +2,15 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
+using TrafficCourts.Common.Authorization;
 
 namespace TrafficCourts.Staff.Service.Authentication;
 
 public static class AuthenticationExtensions
 {
+    private const string _jwtBearerOptionsSection = "Jwt";
+    private const string _roleClaimType = "role";
+
     public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         // Note: AddJwtBearer does not use IConfigureOptions<JwtBearerOptions>
@@ -14,7 +18,10 @@ public static class AuthenticationExtensions
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                configuration.Bind("Jwt", options);
+                configuration.Bind(_jwtBearerOptionsSection, options);
+
+                options.TokenValidationParameters.NameClaimType = "preferred_username";
+                options.TokenValidationParameters.RoleClaimType = _roleClaimType;
 
                 options.Events = new JwtBearerEvents
                 {
@@ -22,6 +29,30 @@ public static class AuthenticationExtensions
                 };
             });
     }
+
+    /// <summary>
+    /// Adds authorization policy services to the specified Microsoft.Extensions.DependencyInjection.IServiceCollection.
+    /// </summary>
+    /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add services to.</param>
+    /// <param name="configuration">The application configuration</param>
+    /// <returns></returns>
+    public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
+    {
+        var jwtOptions = configuration.GetSection(_jwtBearerOptionsSection).Get<JwtBearerOptions>();
+
+        services.AddAuthorization(options =>
+        {
+            //options.AddPolicy(Policies.CanAssignDisputes, policy => policy.RequiresKeycloakEntitlement("Disputes", "Assign"));
+
+        }).AddKeycloakAuthorization(options =>
+        {
+            options.Audience = jwtOptions.Audience;
+            options.TokenEndpoint = $"{jwtOptions.Authority}/protocol/openid-connect/token";
+        });
+
+        return services;
+    }
+
 
     private static Task OnTokenValidatedAsync(TokenValidatedContext context)
     {
