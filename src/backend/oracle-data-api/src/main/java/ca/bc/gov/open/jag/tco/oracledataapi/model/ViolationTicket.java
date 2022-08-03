@@ -69,6 +69,12 @@ public class ViolationTicket extends Auditable<String> {
     @Column
     @Schema(nullable = true)
     private Boolean isYoungPerson;
+    
+    /**
+	 * The person issued the ticket has been identified as a young person.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String isYoungPersonYN;
 
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
@@ -86,18 +92,32 @@ public class ViolationTicket extends Auditable<String> {
     private String driversLicenceProvince;
 
     /**
-     * The year the drivers licence was produced.
+     * The year the drivers licence was issued.
      */
-    @Column
+    @Column(length = 4)
     @Schema(nullable = true)
-    private Integer driversLicenceProducedYear;
+    private Integer driversLicenceIssuedYear;
 
     /**
      * The year the drivers licence expires.
      */
-    @Column
+    @Column(length = 4)
     @Schema(nullable = true)
     private Integer driversLicenceExpiryYear;
+    
+    /**
+     * The country of the identity issued in.
+     */
+    @Column(length = 100)
+    @Schema(nullable = true)
+    private String identityIssuedCountry;
+    
+    /**
+     * The province of the identity issued in.
+     */
+    @Column(length = 100)
+    @Schema(nullable = true)
+    private String identityIssuedProvince;
 
     /**
      * The birthdate of the individual the violation ticket was issued to.
@@ -140,6 +160,12 @@ public class ViolationTicket extends Auditable<String> {
     @Column
     @Schema(nullable = true)
     private Boolean isChangeOfAddress;
+    
+    /**
+	 * The address represents a change of address. The address on the violation would be different from the address on the drivers licence or provided identification.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String isChangeOfAddressYN;
 
     /**
      * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle driver.
@@ -147,6 +173,12 @@ public class ViolationTicket extends Auditable<String> {
     @Column
     @Schema(nullable = true)
     private Boolean isDriver;
+    
+    /**
+	 * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle driver.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String isDriverYN;
 
     /**
      * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the cyclist.
@@ -161,6 +193,12 @@ public class ViolationTicket extends Auditable<String> {
     @Column
     @Schema(nullable = true)
     private Boolean isOwner;
+    
+    /**
+	 * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle owner.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String isOwnerYN;
 
     /**
      * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a pedestrain.
@@ -200,13 +238,16 @@ public class ViolationTicket extends Auditable<String> {
     /**
      * The violation ticket was issued on this road or highway.
      */
-    @Column
+    @Column(length = 100)
     @Schema(nullable = true)
     private String issuedOnRoadOrHighway;
 
     @Column
     @Schema(nullable = true)
     private String issuedAtOrNearCity;
+    
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String issuedAtOrNearCityYN;
 
     /**
      * The violation ticket was issued for offence under the Motor Vehicle Act (MVA).
@@ -277,6 +318,41 @@ public class ViolationTicket extends Auditable<String> {
     @Column
     @Schema(nullable = true)
     private String organizationLocation;
+    
+    /**
+     * Court location.
+     */
+    @Column(length = 150)
+    @Schema(nullable = true)
+    private String courtLocation;
+    
+    /**
+     * Detachment location.
+     */
+    @Column(length = 150)
+    @Schema(nullable = true)
+    private String detachmentLocation;
+    
+    /**
+	 * Disputant client number
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String disputantClientNumber;
+	
+	/**
+	 * Name of the organization of the disputant
+	 */
+	@Column(length = 150)
+	@Schema(nullable = true)
+	private String disputantOrganization;
+	
+	/**
+	 * Officer Pin
+	 */
+	@Column(length = 10)
+	@Schema(nullable = true)
+	private String officerPin;
     
     @JsonManagedReference
     @OneToMany(targetEntity=ViolationTicketCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

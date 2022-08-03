@@ -36,6 +36,12 @@ public class DisputedCount extends Auditable<String> {
 	 */
 	@Column
 	private Plea plea;
+	
+	/**
+	 * Represents the disputant plea on count.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String pleaCd;
 
 	/**
 	 * The count number.
@@ -49,18 +55,36 @@ public class DisputedCount extends Auditable<String> {
 	 */
 	@Column
 	private boolean requestTimeToPay;
+	
+	/**
+	 * The disputant is requesting time to pay the ticketed amount.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String requestTimeToPayYN;
 
 	/**
 	 * The disputant is requesting a reduction of the ticketed amount.
 	 */
 	@Column
 	private boolean requestReduction;
+	
+	/**
+	 * The disputant is requesting a reduction of the ticketed amount.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String requestReductionYN;
 
 	/**
 	 * Does the want to appear in court?
 	 */
 	@Column
 	private boolean appearInCourt;
+	
+	/**
+	 * Does the want to appear in court?
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String requestCourtAppearanceYN;
 
 	@JsonBackReference
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)

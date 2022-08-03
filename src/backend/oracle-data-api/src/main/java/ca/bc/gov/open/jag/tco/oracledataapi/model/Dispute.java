@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -21,6 +22,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -81,7 +83,7 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The surname or corporate name.
 	 */
-	@Column
+	@Column(length = 30)
 	private String surname;
 
 	/**
@@ -117,7 +119,7 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The mailing address of the disputant.
 	 */
-	@Column
+	@Column(length = 500)
 	private String address;
 
 	/**
@@ -138,27 +140,39 @@ public class Dispute extends Auditable<String> {
 	 * The mailing address postal code or zip code of the disputant.
 	 */
 	@Size(max = 6)
-	@Column(length = 6)
+	@Column(length = 10)
 	@Schema(maxLength = 6)
 	private String postalCode;
+	
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private int addressCityCtryId;
+	
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private int addressCitySeqNo;
+	
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private int addressProvCtryId;
+	
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private int addressProvSeqNo;
 
 	/**
 	 * The disputant's home phone number.
 	 */
-	@Column
+	@Column(length = 20)
 	private String homePhoneNumber;
 
 	/**
 	 * The disputant's work phone number.
 	 */
-	@Column
+	@Column(length = 20)
 	@Schema(nullable = true)
 	private String workPhoneNumber;
 
 	/**
 	 * The disputant's email address.
 	 */
-	@Column
+	@Column(length = 100)
 	@Email(regexp = ".+@.+\\..+")
 	private String emailAddress;
 
@@ -178,11 +192,6 @@ public class Dispute extends Auditable<String> {
 	@Column
 	private boolean representedByLawyer;
 
-	@JsonManagedReference
-	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
-	@Schema(nullable = true)
-	private LegalRepresentation legalRepresentation;
-
 	/**
 	 * The disputant requires spoken language interpreter. The language name is
 	 * indicated in this field.
@@ -194,14 +203,14 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * Number of witness that the disputant intends to call.
 	 */
-	@Column
+	@Column(length = 3)
 	@Schema(nullable = true)
 	private Integer numberOfWitness;
 
 	/**
 	 * Reason indicating why the fine reduction requested for the ticket.
 	 */
-	@Column(length = 256)
+	@Column(length = 500)
 	@Schema(nullable = true)
 	private String fineReductionReason;
 
@@ -209,7 +218,7 @@ public class Dispute extends Auditable<String> {
 	 * Reason indicating why the disputant needs more time in order to make payment
 	 * for the ticket.
 	 */
-	@Column(length = 256)
+	@Column(length = 500)
 	@Schema(nullable = true)
 	private String timeToPayReason;
 
@@ -217,7 +226,7 @@ public class Dispute extends Auditable<String> {
 	 * A note or reason indicating why this Dispute has a status of REJECTED. This
 	 * field is blank for other status types.
 	 */
-	@Column(length = 256)
+	@Column(length = 500)
 	@Schema(nullable = true)
 	private String rejectedReason;
 
@@ -231,7 +240,7 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The description of the issue with OCR ticket if the citizen has detected any.
 	 */
-	@Column
+	@Column(length = 500)
 	@Schema(nullable = true)
 	private String disputantOcrIssuesDescription;
 
@@ -242,7 +251,7 @@ public class Dispute extends Auditable<String> {
 	@Column
 	private boolean systemDetectedOcrIssues;
 
-	@Column
+	@Column(length  = 30)
 	@Schema(nullable = true)
 	private String jjAssigned;
 
@@ -269,28 +278,171 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date assignedTs;
+	
+	/**
+	 * Detachment location
+	 */
+	@Column(length = 150)
+	@Schema(nullable = true)
+	private String detachmentLocation;
+	
+	/**
+	 * Disputant client ID
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String disputantClientId;
+	
+	/**
+	 * Disputant comment
+	 */
+	@Column(length = 4000)
+	@Schema(nullable = true)
+	private String disputantComment;
+	
+	/**
+	 * First given name of the disputant
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String disputantGivenName1;
+	
+	/**
+	 * Second given name of the disputant
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String disputantGivenName2;
+	
+	/**
+	 * Third given name of the disputant
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String disputantGivenName3;
+	
+	/**
+	 * Name of the organization of the disputant
+	 */
+	@Column(length = 150)
+	@Schema(nullable = true)
+	private String disputantOrganization;
+	
+	/**
+	 * Country id of the issued identity
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private int identIssuedCtryId;
+	
+	/**
+	 * Province seq no of the issued identity
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private int identIssuedProvSeqNo;
+	
+	/**
+	 * Indicates that whether an interpreter is required by the disputant or not
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String interpreterRequiredYN;
+	
+	/**
+	 * Language code
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String languageCd;
+	
+	//Legal Representation Section
+	
+	/**
+	 * Indicates that whether the disputant is represented by a lawyer or not
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String representedByLawyerYN;
+	
+	/**
+	 * Name of the law firm that will represent the disputant at the hearing.
+	 */
+	@Column(length = 200)
+	@Schema(nullable = true)
+	private String lawFirmName;
+	
+	/**
+	 * Full name of the lawyer who will represent the disputant at the hearing.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String lawyerFullName;
+	
+	/**
+	 * First given name of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerGivenName1;
+	
+	/**
+	 * Second given name of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerGivenName2;
+	
+	/**
+	 * Surname of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerSurname;
+	
+	/**
+	 * Email address of the lawyer who will represent the disputant at the hearing.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Email(regexp = ".+@.+\\..+")
+	private String lawyerEmail;
+	
+	/**
+	 * Address of the lawyer who will represent the disputant at the hearing.
+	 */
+	@Column(length = 200)
+	@Schema(nullable = true)
+	private String lawyerAddress;
+	
+	/**
+	 * Phone number of the lawyer who will represent the disputant at the hearing.
+	 */
+	@Column(length = 20)
+	@Schema(nullable = true)
+	private String lawyerPhoneNumber;
+	
+	// End of Legal Representation Section
+	
+	/**
+	 * Officer Pin
+	 */
+	@Column(length = 10)
+	@Schema(nullable = true)
+	private String officerPin;
+	
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private Float courtAgenId;
 
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
 	@Schema(nullable = true)
 	private ViolationTicket violationTicket;
+	
+	@JsonBackReference
+	@ManyToOne(targetEntity=DisputeStatusType.class, fetch = FetchType.LAZY)
+	@Schema(hidden = true)
+	private DisputeStatusType statusType;
 
 	public void addDisputedCounts(List<DisputedCount> disputedCounts) {
 		for (DisputedCount disputedCount : disputedCounts) {
 			disputedCount.setDispute(this);
 		}
 		this.disputedCounts.addAll(disputedCounts);
-	}
-
-	public void setLegalRepresentation(LegalRepresentation legal) {
-		if (legal == null) {
-			if (this.legalRepresentation != null) {
-				this.legalRepresentation.setDispute(null);
-			}
-		} else {
-			legal.setDispute(this);
-		}
-		this.legalRepresentation = legal;
 	}
 
 	public void setViolationTicket(ViolationTicket ticket) {

@@ -47,21 +47,21 @@ public class ViolationTicketCount extends Auditable<String> {
 	/**
 	 * The description of the offence.
 	 */
-	@Column
+	@Column(length = 4000)
 	@Schema(nullable = true)
     private String description;
 
 	/**
 	 * The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc
 	 */
-	@Column
+	@Column(length = 5)
 	@Schema(nullable = true)
     private String actRegulation;
 	
 	/**
 	 * The full section of the act or regulation represented in a single string. For example, "127(1)(a)(ii)" which means "fail to yield to pedestrian"
 	 */
-	@Column
+	@Column(length = 50)
 	@Schema(nullable = true)
     private String fullSection;
 
@@ -96,7 +96,7 @@ public class ViolationTicketCount extends Auditable<String> {
 	/**
 	 * The ticketed amount.
 	 */
-	@Column
+	@Column(precision = 8, scale = 2)
 	@Schema(nullable = true)
     private Float ticketedAmount;
 	
@@ -106,6 +106,12 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
     private Boolean isAct;
+	
+	/**
+	 * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String isActYN;
 
 	/**
 	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
@@ -113,6 +119,12 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
     private Boolean isRegulation;
+	
+	/**
+	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
+	 */
+	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
+	private String isRegulationYN;
 
 	@JsonBackReference
 	@ManyToOne(targetEntity=ViolationTicket.class, fetch = FetchType.LAZY)
