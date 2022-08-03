@@ -33,9 +33,22 @@ namespace TrafficCourts.Workflow.Service.Services
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(emailMessage.From ?? _emailConfiguration.Sender));
 
-                AddRecipients(emailMessage.To, email.To);
-                AddRecipients(emailMessage.Cc, email.Cc);
-                AddRecipients(emailMessage.Bcc, email.Bcc);
+                // 
+                bool toAdded = AddRecipients(emailMessage.To, email.To);
+                bool ccAdded = AddRecipients(emailMessage.Cc, email.Cc);
+                bool bccAdded = AddRecipients(emailMessage.Bcc, email.Bcc);
+
+                if (IsAllowedListConfigured)
+                {
+                    // in development, some addresses many not allowed, add AddRecipients will filter out any unallowed email address
+                    // we need to exit before an exception is thrown below due to noone left in the "To" address list.
+                    if (!toAdded && IsAnyEmailValid(emailMessage.To) && !IsAnyEmailAllowed(emailMessage.To))
+                    {
+                        // there is a valid to address, however, non of them are allowed, note we are really using only CC and BCC emails
+                        _logger.LogInformation("Not sending email because none of the valid email addresses are allowed to be set to. See configuration AllowList");
+                        return;
+                    }
+                }
 
                 email.Subject = emailMessage.Subject;
 
@@ -130,11 +143,11 @@ namespace TrafficCourts.Workflow.Service.Services
         }
 
         /// <summary>
-        /// Validate each recipient in the array and add to addressList, if valid.
+        /// Determines if any of the recipients are valid email addresses and are allowed to be set to.
         /// </summary>
         /// <param name="recipients"></param>
-        /// <param name="addressList"></param>
-        private void AddRecipients(IList<string> recipients, InternetAddressList addressList)
+        /// <returns><c>true</c> if there is a valid email address and is allowed to be set to, otherwise <c>false</c>.</returns>
+        private bool IsAnyEmailAllowed(IList<string> recipients)
         {
             if (recipients is not null)
             {
@@ -144,7 +157,56 @@ namespace TrafficCourts.Workflow.Service.Services
                     {
                         if (IsEmailAllowed(mailboxAddress))
                         {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determins if any of the recipients are valid email addresses
+        /// </summary>
+        /// <param name="recipients"></param>
+        /// <returns><c>true</c> if there is a valid email address, otherwise <c>false</c>.</returns>
+        private bool IsAnyEmailValid(IList<string> recipients)
+        {
+            if (recipients is not null)
+            {
+                foreach (var recipient in recipients)
+                {
+                    if (MailboxAddress.TryParse(recipient, out _))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Validate each recipient and if is a valid email address, adds to the <see cref="addressList"/>.
+        /// </summary>
+        /// <param name="recipients"></param>
+        /// <param name="addressList"></param>
+        /// <returns><c>true</c> if any recipient was added to the <see cref="addressList"/>, otherwise <c>false</c>.</returns>
+        private bool AddRecipients(IList<string> recipients, InternetAddressList addressList)
+        {
+            bool added = false;
+
+            if (recipients is not null)
+            {
+                foreach (var recipient in recipients)
+                {
+                    if (MailboxAddress.TryParse(recipient, out MailboxAddress mailboxAddress))
+                    {
+                        if (IsEmailAllowed(mailboxAddress))
+                        {
                             addressList.Add(mailboxAddress);
+                            added = true;
                         }
                         else
                         {
@@ -159,6 +221,8 @@ namespace TrafficCourts.Workflow.Service.Services
                     }
                 }
             }
+
+            return added;
         }
 
         /// <summary>
@@ -177,6 +241,11 @@ namespace TrafficCourts.Workflow.Service.Services
             }
             return true; // no allow list, production mode, send to anyone
         }
+
+        /// <summary>
+        /// Determines if the allowed email list is configured or not.
+        /// </summary>
+        private bool IsAllowedListConfigured => _emailConfiguration.Allowed.Count > 0;
     }
 
     [Serializable]

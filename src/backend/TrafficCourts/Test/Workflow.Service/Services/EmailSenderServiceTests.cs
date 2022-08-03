@@ -23,34 +23,21 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
         public EmailSenderServiceTests()
         {
-
             _mockLogger = new Mock<ILogger<EmailSenderService>>();
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
         }
 
+        /// <summary>
+        /// Creates EmailSenderService with allow list 
+        /// </summary>
+        /// <returns></returns>
         private EmailSenderService CreateService()
         {
             var configValues = new EmailConfiguration
             {
                 Sender = "default@test.com",
                 AllowList = "@test.com"
-            };
-
-            IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);
-
-            return new EmailSenderService(
-                _mockLogger.Object,
-                options,
-                _mockSmtpClientFactory.Object);
-        }
-
-        private EmailSenderService CreateServiceNoAllowList()
-        {
-            var configValues = new EmailConfiguration
-            {
-                Sender = "default@test.com",
-                AllowList = string.Empty
             };
 
             IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);
@@ -81,7 +68,9 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             };
 
             _mockSmtpClient.Setup(client => client.SendAsync(
-                    It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
+                    It.IsAny<MimeMessage>(), 
+                    It.IsAny<CancellationToken>(),
+                    null));
 
             _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(_mockSmtpClient.Object));
@@ -143,7 +132,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         }
 
         [Fact]
-        public async Task SendEmailAsync_AllowListNoTo_ShouldReturnFail()
+        public async Task sending_email_to_only_not_allowed_list_will_not_fail()
         {
             // Arrange
             var emailMessage = new SendEmail
@@ -153,70 +142,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
                 Subject = "Test message",
                 PlainTextContent = "plain old message"
             };
-
-            _mockSmtpClient.Setup(client => client.SendAsync(
-                    It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
-
-            _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult(_mockSmtpClient.Object));
 
             var service = CreateService();
 
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-
             // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage, cancellationToken);
-
-            try
-            {
-                await result;
-            } catch(Exception ex)
-            {
-                // Assert
-                Assert.True(ex.Message == "Missing recipient info");
-            }
-
-            Assert.False(result.IsCompletedSuccessfully);
-        }
-
-        [Fact]
-        public async Task SendEmailAsync_NoAllowListTo_ShouldReturnTaskComplete()
-        {
-            // Arrange
-            var emailMessage = new SendEmail
-            {
-                From = "mail@test.com",
-                To = new string[] { "fail@fail.com" },
-                Subject = "Test message",
-                PlainTextContent = "plain old message"
-            };
-
-            _mockSmtpClient.Setup(client => client.SendAsync(
-                    It.IsAny<MimeMessage>(), It.IsAny<CancellationToken>(), null));
-
-            _mockSmtpClientFactory.Setup(generator => generator.CreateAsync(It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult(_mockSmtpClient.Object));
-
-            var service = CreateServiceNoAllowList();
-
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-
-            // test e-mail send.
-            var result = service.SendEmailAsync(emailMessage, cancellationToken);
-
-            try
-            {
-                await result;
-            }
-            catch (Exception ex)
-            {
-                // Assert
-                Assert.True(ex.Message == "Missing recipient info");
-            }
-
-            Assert.True(result.IsCompletedSuccessfully);
+            await service.SendEmailAsync(emailMessage, CancellationToken.None);
         }
 
         [Fact]
