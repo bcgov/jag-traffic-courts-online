@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
+using System.Runtime.Serialization;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Models;
 
@@ -33,14 +34,45 @@ namespace TrafficCourts.Workflow.Service.Services
             httpClient.BaseAddress = new Uri(arcBaseUri);
 
             using var response = await httpClient.PostAsync("api/TcoDisputeTicket", approvedDispute, formatter);
+            var apiResponse = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                var apiResponse = await response.Content.ReadAsStringAsync();
                 if (apiResponse != null)
                 {
                     _logger.LogInformation("An ARC file has been created successfully with the following data: {ArcApiResponse}", apiResponse);
                 }
             }
+            else
+            {
+                var status = (int)response.StatusCode;
+                _logger.LogError("The request for creating ARC file has failed with the following response: {ArcApiResponse} ", apiResponse);
+                throw new ApiException("The HTTP status code of the response was not expected (" + status + ").", status, apiResponse);
+            }
+        }
+    }
+
+    [Serializable]
+    class ApiException : Exception
+    {
+
+        public int StatusCode { get; private set; }
+
+        public string? Response { get; private set; }
+
+        public ApiException()
+        {
+        }
+
+        public ApiException(string? message, int statusCode, string? response) : base(message)
+        {
+            StatusCode = statusCode;
+            Response = response;
+        }
+
+        public ApiException(string message, int statusCode, string? response, Exception? innerException) : base(message, innerException)
+        {
+            StatusCode = statusCode;
+            Response = response;
         }
     }
 }
