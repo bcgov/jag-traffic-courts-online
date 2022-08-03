@@ -20,8 +20,8 @@ public static class AuthenticationExtensions
             {
                 configuration.Bind(_jwtBearerOptionsSection, options);
 
-                options.TokenValidationParameters.NameClaimType = "preferred_username";
-                options.TokenValidationParameters.RoleClaimType = _roleClaimType;
+                //options.TokenValidationParameters.NameClaimType = "preferred_username";
+                //options.TokenValidationParameters.RoleClaimType = _roleClaimType;
 
                 options.Events = new JwtBearerEvents
                 {
