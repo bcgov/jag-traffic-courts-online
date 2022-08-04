@@ -24,7 +24,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.TransactionTime = source.TicketIssuanceDate;
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
                 adnotated.FileNumber = source.TicketFileNumber + " 01".ToUpper();
-                adnotated.MvbClientNumber = source.DriversLicence.ToUpper();
+                adnotated.MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence);
                 
                 // Map adnotated ticket specific data
                 adnotated.Name = ReverseName(source.CitizenName);
