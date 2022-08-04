@@ -9,7 +9,7 @@
         public DateTime EffectiveDate { get; set; }
         public string Owner { get; } = "00001";
         public string FileNumber { get; set; } = String.Empty;
-        public string CountNumber { get; set; } = String.Empty;
+        public string CountNumber { get; set; } = "001";
         public string ReceivableType { get; } = "M";
         public string MvbClientNumber { get; set; } = String.Empty;
         public string UpdateFlag { get; set; } = String.Empty;
@@ -20,7 +20,7 @@
     public class AdnotatedTicket : ArcFileRecord
     {
         public string TransactionType { get; } = "EV";
-        public int TransactionNumber { get; } = 100;
+        public string TransactionNumber { get; } = "00000";
         public string Name { get; set; } = String.Empty;
         public string Section { get; set; } = String.Empty;
         public string Subsection { get; set; } = String.Empty;
@@ -36,7 +36,7 @@
     public class DisputedTicket : ArcFileRecord
     {
         public string TransactionType { get; } = "ED";
-        public int TransactionNumber { get; } = 200;
+        public string TransactionNumber { get; } = "00000";
         public DateTime ServiceDate { get; set; }
         public string Name { get; set; } = String.Empty;
         public string DisputeType { get; set; } = String.Empty;

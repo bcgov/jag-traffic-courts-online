@@ -22,17 +22,18 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 // Adnotated ticket's Master File Data mapping
                 adnotated.TransactionDate = source.TicketIssuanceDate;
                 adnotated.TransactionTime = source.TicketIssuanceDate;
-                adnotated.FileNumber = source.TicketFileNumber;
-                adnotated.MvbClientNumber = source.DriversLicence;
+                adnotated.EffectiveDate = source.TicketIssuanceDate;
+                adnotated.FileNumber = source.TicketFileNumber + " 01".ToUpper();
+                adnotated.MvbClientNumber = source.DriversLicence.ToUpper();
                 
                 // Map adnotated ticket specific data
-                adnotated.Name = source.CitizenName;
+                adnotated.Name = ReverseName(source.CitizenName);
 
                 if (!string.IsNullOrEmpty(ticket.Section))
                 {
-                    adnotated.Section = ticket.Section;
-                    adnotated.Subsection = ticket.Subsection ?? String.Empty;
-                    adnotated.Paragraph = ticket.Paragraph ?? String.Empty;
+                    adnotated.Section = ticket.Section.ToUpper();
+                    adnotated.Subsection = ticket.Subsection?.ToUpper() ?? String.Empty;
+                    adnotated.Paragraph = ticket.Paragraph?.ToUpper() ?? String.Empty;
                 } 
                 else
                 {
@@ -45,15 +46,15 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         LegalSection.TryParse(ticket.FullSection, out legalSection);
                     }
 
-                    adnotated.Section = legalSection?.Section ?? String.Empty;
-                    adnotated.Subsection = legalSection?.Subsection ?? String.Empty;
-                    adnotated.Paragraph = legalSection?.Paragraph ?? String.Empty;
+                    adnotated.Section = legalSection?.Section.ToUpper() ?? String.Empty;
+                    adnotated.Subsection = legalSection?.Subsection.ToUpper() ?? String.Empty;
+                    adnotated.Paragraph = legalSection?.Paragraph.ToUpper() ?? String.Empty;
                 }
 
-                adnotated.Act = ticket.Act ?? "MVA";
+                adnotated.Act = ticket.Act?.ToUpper() ?? "MVA";
                 adnotated.OriginalAmount = ticket.Amount;
-                adnotated.Organization = source.IssuingOrganization;
-                adnotated.OrganizationLocation = source.IssuingLocation;
+                adnotated.Organization = source.IssuingOrganization.ToUpper();
+                adnotated.OrganizationLocation = source.IssuingLocation.ToUpper();
                 adnotated.ServiceDate = source.TicketIssuanceDate;
 
                 arcFileRecordList.Add(adnotated);
@@ -74,23 +75,34 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         // Dispited ticket's Master File Data mapping
                         TransactionDate = source.TicketIssuanceDate,
                         TransactionTime = source.TicketIssuanceDate,
-                        FileNumber = source.TicketFileNumber,
-                        MvbClientNumber = source.DriversLicence,
+                        EffectiveDate = source.TicketIssuanceDate,
+                        FileNumber = source.TicketFileNumber.ToUpper() + " 01",
+                        MvbClientNumber = source.DriversLicence.ToUpper(),
 
                         // Mapping disputed ticket specific data
                         ServiceDate = source.TicketIssuanceDate,
-                        Name = source.CitizenName,
-                        DisputeType = disputeCount.DisputeType ?? "A", //TODO: Find out what dispute type actually means
-                        StreetAddress = source.StreetAddress ?? String.Empty,
-                        City = source.City ?? String.Empty,
-                        Province = source.Province ?? String.Empty,
-                        PostalCode = source.PostalCode ?? String.Empty
+                        Name = ReverseName(source.CitizenName),
+                        DisputeType = disputeCount.DisputeType?.ToUpper() ?? "A", //TODO: Find out what dispute type actually means
+                        StreetAddress = source.StreetAddress?.ToUpper() ?? String.Empty,
+                        City = source.City?.ToUpper() ?? String.Empty,
+                        Province = source.Province?.ToUpper() ?? String.Empty,
+                        PostalCode = source.PostalCode?.ToUpper() ?? String.Empty
                     };
 
                     arcFileRecordList.Add(disputed);
                 }              
             }
             return arcFileRecordList;
+        }
+
+        internal static string ReverseName(string name)
+        {
+            var splitted = name.Split(" ");
+            string surname = splitted.Last().ToString().ToUpper() + ", ";
+            splitted = splitted.SkipLast(1).ToArray();
+            string givenNames = string.Join(" ", splitted).ToString().ToUpper();
+
+            return surname + givenNames;
         }
     }
 }

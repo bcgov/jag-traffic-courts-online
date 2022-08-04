@@ -41,7 +41,7 @@ public class ArcFileService : IArcFileService
         using var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
 
         // Create a name for the file from the unique file number field of the dispute ticket data
-        string fileName = "dispute-" + arcFileData[0].FileNumber + ".txt";
+        string fileName = "dispute-" + arcFileData[0].FileNumber.Split(" ").First().ToString() + ".txt";
 
         // Call sftp upload service
         _sftpService.UploadFile(stream, _options.RemotePath, fileName);
@@ -87,7 +87,7 @@ public class ArcFileService : IArcFileService
         mapper.Property(_ => _.CountNumber, new Window(3)).ColumnName("count_number");
         mapper.Property(_ => _.ReceivableType, new Window(1)).ColumnName("receivable_type");
         mapper.Property(_ => _.TransactionNumber, new Window(5)).ColumnName("transaction_number");
-        mapper.Property(_ => _.MvbClientNumber, new Window(9)).ColumnName("mvb_client_number");
+        mapper.Property(_ => _.MvbClientNumber, new Window(9) { FillCharacter = '0', Alignment = FixedAlignment.RightAligned }).ColumnName("mvb_client_number");
         mapper.Property(_ => _.UpdateFlag, new Window(1)).ColumnName("update_flag");
         mapper.Property(_ => _.Name, new Window(30)).ColumnName("name");
         mapper.Property(_ => _.Section, new Window(6) { Alignment = FixedAlignment.RightAligned }).ColumnName("section");
@@ -119,7 +119,7 @@ public class ArcFileService : IArcFileService
         mapper.Property(_ => _.CountNumber, new Window(3)).ColumnName("count_number");
         mapper.Property(_ => _.ReceivableType, new Window(1)).ColumnName("receivable_type");
         mapper.Property(_ => _.TransactionNumber, new Window(5)).ColumnName("transaction_number");
-        mapper.Property(_ => _.MvbClientNumber, new Window(9)).ColumnName("mvb_client_number");
+        mapper.Property(_ => _.MvbClientNumber, new Window(9) { FillCharacter = '0', Alignment = FixedAlignment.RightAligned }).ColumnName("mvb_client_number");
         mapper.Property(_ => _.UpdateFlag, new Window(1)).ColumnName("update_flag");
         mapper.Property(_ => _.ServiceDate, new Window(8)).ColumnName("service_date").OutputFormat("yyyyMMdd");
         mapper.Property(_ => _.Name, new Window(30)).ColumnName("name");
