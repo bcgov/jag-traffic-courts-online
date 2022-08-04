@@ -95,7 +95,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
             return arcFileRecordList;
         }
 
-        static string ReverseName(string name)
+        internal static string ReverseName(string name)
         {
             var splitted = name.Split(" ");
             string surname = splitted.Last().ToString().ToUpper() + ", ";

@@ -41,7 +41,7 @@ public class ArcFileService : IArcFileService
         using var stream = await CreateStreamFromArcData(arcFileData, cancellationToken);
 
         // Create a name for the file from the unique file number field of the dispute ticket data
-        string fileName = "dispute-" + arcFileData[0].FileNumber + ".txt";
+        string fileName = "dispute-" + arcFileData[0].FileNumber.Split(" ").First().ToString() + ".txt";
 
         // Call sftp upload service
         _sftpService.UploadFile(stream, _options.RemotePath, fileName);
