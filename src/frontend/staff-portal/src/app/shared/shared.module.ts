@@ -13,7 +13,6 @@ import { PageComponent } from './components/page/page.component';
 import { ResolutionFooterComponent } from './components/resolution-footer/resolution-footer.component';
 import { StepperFooterComponent } from './components/stepper-footer/stepper-footer.component';
 import { StepperPageComponent } from './components/stepper-page/stepper-page.component';
-import { TcoPageHeaderComponent } from './components/tco-page-header/tco-page-header.component';
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { MoreOptionsDialogComponent } from './dialogs/more-options-dialog/more-options-dialog.component';
 import { ConfirmReasonDialogComponent } from './dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -51,7 +50,6 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         PageComponent,
         StepperFooterComponent,
         PageHeaderComponent,
-        TcoPageHeaderComponent,
         DialogContentDirective,
         AlertComponent,
         HeaderComponent,
@@ -93,7 +91,6 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
         PageComponent,
         StepperFooterComponent,
         PageHeaderComponent,
-        TcoPageHeaderComponent,
         DialogContentDirective,
         AlertComponent,
         ConfigModule,

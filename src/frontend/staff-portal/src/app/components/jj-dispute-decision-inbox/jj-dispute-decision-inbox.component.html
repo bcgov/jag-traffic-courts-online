@@ -1,17 +1,11 @@
 <app-page [busy]="busy">
   <div class="flex-wrapper">
-    <div class="flex-header d-print-none mb-40">
-      <app-header [jjPage]="jjPageHeading"></app-header>
-    </div>
-    <br />
     <div class="container">
       <section>
         <div *ngIf="showDispute==false">
           <div class="step1">
-            <br /><span style="font-size:32px; color: #494949;"><b>Written Reasons Disputes</b></span>
-            <br /><span style="color: #009cde;"><h2>Welcome Back {{ fullName }}</h2></span>
             <div style="float:inline">
-              <span style="float:left"><h2><b>Dispute Decision Inbox</b>&nbsp;<span style="font-size:normal;">({{ dataSource.data.length }} results)</span></h2></span>
+              <span style="float:left"><h2><b>Dispute Decision Inbox</b>&nbsp;<span style="font-size:normal;">(No Hearing, {{ dataSource.data.length }} results)</span></h2></span>
               <span style="float:right; background-color: #f9f2f2;">
                   <mat-select [value]="currentTeam" (selectionChange)="filterByTeam($event.value)" style="background-color:#f9f2f2; width:200px; font-size:large; margin:10px; padding:auto;">
                     <mat-option value="All">All</mat-option>

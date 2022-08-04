@@ -1,8 +1,8 @@
 import { OnInit, Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { AppRoutes } from 'app/app.routes';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
   selector: 'app-landing',
@@ -14,50 +14,33 @@ export class LandingComponent implements OnInit {
   public isLoggedIn = false;
   public jjRole: boolean = false;
   public vtcRole: boolean = false;
-  public ddRole: boolean = false;
+  public userProfile: KeycloakProfile = {};
 
   constructor(
-    private oidcSecurityService: OidcSecurityService,
     private router: Router,
-    public jwtHelper: JwtHelperService
+    public keycloak: KeycloakService,
   ) {
   }
 
-  ngOnInit() {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
-      if (isAuthenticated) {
-        this.isLoggedIn = isAuthenticated;
+  public async ngOnInit() {
 
-        // decode the token to get its payload
-        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-        if (tokenPayload) {
-          let resource_access = tokenPayload.resource_access["tco-staff-portal"];
-          if (resource_access) {
-            let roles = resource_access.roles;
-            if (roles) roles.forEach(role => {
-              if (role === "vtc-user") { // TODO USE role name for JJ
-                this.jjRole = true;
-              }
-              if (role === "vtc-user") {
-                this.vtcRole = true;
-              }
-              if (role === "vtc-user") {
-                this.ddRole = true;
-              }
-            });
-          }
-        }
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
 
-        // navigate to Ticket Resolution Management or JJ Workbench  or Dispute Decision Inbox or Unauthorized based on role
-        if (this.ddRole) this.router.navigate([AppRoutes.JJDECISION]);
-        else if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
-        else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
-        if (!this.jjRole && !this.vtcRole && !this.ddRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
-      }
-    })
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+
+      this.jjRole = this.keycloak.isUserInRole("judicial-justice", "tco-staff-portal");
+      this.vtcRole = this.keycloak.isUserInRole("vtc-staff", "tco-staff-portal");
+
+      if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
+      else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
+      if (!this.jjRole && !this.vtcRole) this.router.navigate([AppRoutes.UNAUTHORIZED]);
+  }
   }
 
-  login() {
-    this.oidcSecurityService.authorize();
+  public async login() {
+    await this.keycloak.login({
+      redirectUri: window.location.toString()
+    });
   }
 }

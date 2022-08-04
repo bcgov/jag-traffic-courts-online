@@ -3,5 +3,4 @@ export class AppRoutes {
   public static UNAUTHORIZED = "/unauthorized";
   public static TICKET = "/ticket";
   public static JJWORKBENCH = "/jjworkbench";
-  public static JJDECISION = "/jjdecision";
 }
