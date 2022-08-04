@@ -22,6 +22,9 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             var fixture = new Fixture();
             var tcoDisputeTicket = fixture.Create<TcoDisputeTicket>();
 
+            tcoDisputeTicket.DriversLicence = new Random().Next(99999999).ToString(); //must be numeric
+            var expectedMvbClientNumber = DriversLicence.WithCheckDigit(tcoDisputeTicket.DriversLicence);
+
             var mockMapper = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new MappingProfile());
@@ -39,7 +42,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             {
                 Assert.Equal(tcoDisputeTicket.TicketIssuanceDate, actualRec.TransactionDate);
                 Assert.Equal(tcoDisputeTicket.TicketFileNumber + " 01".ToUpper(), actualRec.FileNumber);
-                Assert.Equal(tcoDisputeTicket.DriversLicence.ToUpper(), actualRec.MvbClientNumber);
+                Assert.Equal(expectedMvbClientNumber, actualRec.MvbClientNumber);
 
                 if (actualRec is AdnotatedTicket)
                 {

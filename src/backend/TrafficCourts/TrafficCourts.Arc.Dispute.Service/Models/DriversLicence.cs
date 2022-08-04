@@ -2,6 +2,7 @@
 {
     public static class DriversLicence
     {
+        private static readonly int[] _digitWeights = { 1, 2, 5, 3, 6, 4, 8, 7 };
         public static string WithCheckDigit(string driversLicence)
         {
             if (driversLicence is null)
@@ -17,7 +18,7 @@
 
             for (int i = 0; i <= 7; i++)
             {
-                sum += (driversLicence[i] - '0') * i;
+                sum += (driversLicence[i] - '0') * _digitWeights[i];
             }
 
             char checkDigit = Convert.ToChar((sum % 11) + '0');
