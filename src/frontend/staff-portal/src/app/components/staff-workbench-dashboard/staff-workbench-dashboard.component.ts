@@ -5,19 +5,18 @@ import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
-  selector: 'app-jj-workbench-dashboard',
-  templateUrl: './jj-workbench-dashboard.component.html',
-  styleUrls: ['./jj-workbench-dashboard.component.scss'],
+  selector: 'app-staff-workbench-dashboard',
+  templateUrl: './staff-workbench-dashboard.component.html',
+  styleUrls: ['./staff-workbench-dashboard.component.scss'],
 })
-export class JjWorkbenchDashboardComponent implements OnInit {
+export class StaffWorkbenchDashboardComponent implements OnInit {
   busy: Subscription;
   tabSelected = new FormControl(0);
   public isLoggedIn = false;
-  public jjAdminRole: boolean = false;
-  jjPage: string = "WR Assignments";
   public fullName: string = "Loading...";
-  public jjIDIR: string = "";
+  public staffIDIR: string = "";
   public userProfile: KeycloakProfile = {};
+  public staffPage: string = "";
 
   constructor(
     public keycloak: KeycloakService
@@ -32,16 +31,15 @@ export class JjWorkbenchDashboardComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
       this.fullName = this.userProfile.firstName + " " + this.userProfile.lastName;
-      this.jjAdminRole = this.keycloak.isUserInRole("admin-judicial-justice", "tco-staff-portal");
-      this.jjIDIR = this.keycloak.getUsername();
+      this.staffIDIR = this.keycloak.getUsername();
     }
 
-
   }
+
   changeHeading(heading: any) {
-    if (heading == "WR Inbox") this.tabSelected.setValue(1);
-    else if (heading == "WR Assignments") this.tabSelected.setValue(0);
-    this.jjPage = heading;
+    if (heading == "Ticket Validation") this.tabSelected.setValue(1);
+    else if (heading == "Decision Validation") this.tabSelected.setValue(0);
+    this.staffPage = heading;
   }
 
 }

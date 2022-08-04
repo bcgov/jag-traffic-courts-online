@@ -1,23 +1,28 @@
 <app-page [busy]="busy">
   <div class="flex-wrapper">
     <div class="flex-header d-print-none mb-40">
-      <app-header [jjPage]="jjPage"></app-header>
+      <app-header></app-header>
     </div>
     <br />
     <div class="container">
       <section>
-        <h2>JJ Dashboard<br/>
-        <span style="font-size:small; font-weight: normal; color: #1d4a77;">Welcome Back JJ {{ fullName }}</span></h2>
-        <div class="flex-6-col" *ngIf="!jjAdminRole">
-          <app-jj-dispute-inbox (jjPage)="changeHeading($event)"></app-jj-dispute-inbox>
-        </div>
-        <div class="flex-6-col" *ngIf="jjAdminRole">
+        <div class="flex-6-col">
           <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
-            <mat-tab label="Assignments">
+            <mat-tab *ngIf="jjAdminRole">
+              <ng-template mat-tab-label><h2>WR Assignments</h2></ng-template>
               <app-jj-dispute-assignments (jjPage)="changeHeading($event)"></app-jj-dispute-assignments>
             </mat-tab>
-            <mat-tab label="Inbox">
+            <mat-tab>
+              <ng-template mat-tab-label><h2>WR Inbox</h2></ng-template>
               <app-jj-dispute-inbox (jjPage)="changeHeading($event)" [jjIDIR]="jjIDIR"></app-jj-dispute-inbox>
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label><h2>Hearing Inbox</h2></ng-template>
+              Under construction
+            </mat-tab>
+            <mat-tab>
+              <ng-template mat-tab-label><h2>DCF</h2></ng-template>
+              Under construction
             </mat-tab>
           </mat-tab-group>
         </div>

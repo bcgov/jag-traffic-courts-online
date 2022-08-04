@@ -70,7 +70,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
   backTicketList(element) {
     this.showDispute = !this.showDispute;
     if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Assignments");
+    else this.jjPage.emit("WR Assignments");
     this.jjDisputeInfo = element;
     if (!this.showDispute) this.getAll(this.currentTeam);  // refresh list
   }
@@ -78,7 +78,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
   backTicketpage() {
     this.showDispute = !this.showDispute;
     if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Assignments");
+    else this.jjPage.emit("WR Assignments");
     if (!this.showDispute) this.getAll(this.currentTeam); // refresh list
   }
 

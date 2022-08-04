@@ -7,8 +7,6 @@ import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { CourthouseConfig } from '@config/config.model';
 import { JJDisputeStatus } from 'app/api';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 
 @Component({
@@ -17,17 +15,14 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
   styleUrls: ['./jj-dispute-decision-inbox.component.scss'],
 })
 export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
-  @Output() public jjPage: EventEmitter<string> = new EventEmitter();
-  @Input() public ddIDIR: string;
+  @Output() public staffPage: EventEmitter<string> = new EventEmitter();
+  @Input() public IDIR: string;
 
   busy: Subscription;
   public courtLocations: CourthouseConfig[];
   currentTeam: string = "All";
   jjDisputeInfo: JJDispute;
   public isLoggedIn = false;
-  jjPageHeading: string = "Dispute Decision Inbox";
-  public ddRole: boolean = false;
-  public fullName: string = "Loading...";
   data = [] as JJDisputeView[];
   showDispute: boolean = false;
   dataSource = new MatTableDataSource();
@@ -44,37 +39,9 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   constructor(
     public jjDisputeService: JJDisputeService,
-    private oidcSecurityService: OidcSecurityService,
     private logger: LoggerService,
-    private jwtHelper: JwtHelperService,
     public mockConfigService: MockConfigService,
   ) {
-
-    // check for dd role
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
-      if (isAuthenticated) {
-        this.isLoggedIn = isAuthenticated;
-
-        // decode the token to get its payload
-        const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-        if (tokenPayload) {
-          let resource_access = tokenPayload.resource_access["tco-staff-portal"];
-          if (resource_access) {
-            let roles = resource_access.roles;
-            if (roles) roles.forEach(role => {
-
-              if (role === "vtc-user") { // TODO USE role name for jj Admin
-                this.ddRole = true;
-              }
-            });
-          }
-        }
-
-        this.fullName = this.oidcSecurityService.getUserData()?.name;
-        this.ddIDIR = this.oidcSecurityService.getUserData()?.preferred_username;
-      }
-    });
-
     if (this.mockConfigService.courtLocations) {
       this.courtLocations = this.mockConfigService.courtLocations;
     }
@@ -85,7 +52,7 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
   }
 
-  ngOnInit(): void {
+  public async ngOnInit() {
     this.getAll();
   }
 
@@ -95,16 +62,16 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
 
   backTicketList(element) {
     this.showDispute = !this.showDispute;
-    if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Dispute Decision Inbox");
+    if (this.showDispute) this.staffPage.emit("Dispute Details");
+    else this.staffPage.emit("Decision Validation");
     this.jjDisputeInfo = element;
     if (!this.showDispute) this.getAll();  // refresh list
   }
 
   backTicketpage() {
     this.showDispute = !this.showDispute;
-    if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Dispute Decision Inbox");
+    if (this.showDispute) this.staffPage.emit("Dispute Details");
+    else this.staffPage.emit("Decision Validation");
     if (!this.showDispute) this.getAll(); // refresh list
   }
 

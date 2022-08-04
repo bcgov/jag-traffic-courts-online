@@ -6,15 +6,13 @@ import {
   Input,
   OnInit,
   OnChanges,
-  AfterViewInit,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
   selector: 'app-header',
@@ -28,7 +26,6 @@ export class HeaderComponent implements OnInit, OnChanges {
   @Input() public isMobile: boolean;
   @Input() public hasMobileSidemenu: boolean;
   @Output() public toggle: EventEmitter<void>;
-  @Input() public jjPage: string;
 
   public languageCode: string;
   public languageDesc: string;
@@ -38,6 +35,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   public environment: string;
   public version: string;
   public isLoggedIn: Boolean = false;
+  public userProfile: KeycloakProfile = {};
   public jjRole: boolean = false;
   public vtcRole: boolean = false;
   public headingText: string = "Authenticating...";
@@ -46,10 +44,9 @@ export class HeaderComponent implements OnInit, OnChanges {
     protected logger: LoggerService,
     private appConfigService: AppConfigService,
     private translateService: TranslateService,
-    private oidcSecurityService: OidcSecurityService,
     private router: Router,
-    public jwtHelper: JwtHelperService
-  ) {
+    public keycloak: KeycloakService,
+    ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
 
@@ -61,39 +58,25 @@ export class HeaderComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.jjRole && this.isLoggedIn) this.headingText = "JJ Written Reasons - " + this.jjPage ;
+    if (this.router.url.includes("jjworkbench")) this.headingText = "JJ Workbench";
+    else if (this.router.url.includes("ticket")) this.headingText = "Staff Workbench";
+    else if (this.router.url.includes("unauthorized")) this.headingText = "Unauthorized";
+    else if (!this.isLoggedIn) this.headingText = "Please sign in";
   }
 
-  ngOnInit() {
-    this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
+  async ngOnInit() {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
 
-      // decode the token to get its payload
-      const tokenPayload = this.jwtHelper.decodeToken(this.oidcSecurityService.getAccessToken());
-      let resource_access = tokenPayload?.resource_access["tco-staff-portal"];
-      if (resource_access) {
-        this.isLoggedIn = true;
-        let roles = resource_access.roles;
-        if (roles) roles.forEach(role => {
-          if (role == "vtc-user") { // TODO USE role name for JJ
-            this.jjRole = true;
-          }
-          if (role == "vtc-user") {
-            this.vtcRole = true;
-          }
-        });
-      } else this.isLoggedIn = false;
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+      this.fullName = this.userProfile.firstName + " " + this.userProfile.lastName;
 
-      if (this.jjRole && this.isLoggedIn) this.headingText = "JJ Written Reasons - " + this.jjPage ;
-      else if (this.vtcRole && this.isLoggedIn) this.headingText = "Ticket Resolution Management ";
-      else if (!this.isLoggedIn) this.headingText = "Please sign in"
+      if (this.router.url.includes("jjworkbench")) this.headingText = "JJ Workbench";
+      else if (this.router.url.includes("ticket")) this.headingText = "Staff Workbench";
+      else if (this.router.url.includes("unauthorized")) this.headingText = "Unauthorized";
+      else if (!this.isLoggedIn) this.headingText = "Please sign in";
 
-      this.fullName = this.oidcSecurityService.getUserData()?.name;
-    })
-
-    this.oidcSecurityService.userData$.subscribe( (userInfo: any) => {
-      if (userInfo && userInfo.userData && userInfo.userData.name) this.fullName = userInfo.userData.name;
-    });
-
+    }
   }
 
   public toggleSidenav(): void {
@@ -120,12 +103,14 @@ export class HeaderComponent implements OnInit, OnChanges {
     this.languageDesc = languageDesc;
   }
 
-  login() {
-    this.oidcSecurityService.authorize();
+  async login() {
+    await this.keycloak.login({
+      redirectUri: window.location.toString()
+    });
   }
 
   logout() {
-    this.oidcSecurityService.logoffAndRevokeTokens();
+    this.keycloak.logout();
     this.isLoggedIn = false;
   }
 }

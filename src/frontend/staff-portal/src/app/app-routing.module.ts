@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
 import { AppRoutes } from './app.routes';
 import { LandingComponent } from './components/landing/landing.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { AuthorizationGuard } from '@core/guards/auth-guard';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
-import { JJDisputeDecisionInboxComponent } from '@components/jj-dispute-decision-inbox/jj-dispute-decision-inbox.component';
+import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench-dashboard/staff-workbench-dashboard.component';
 
 let routes: Routes = [
   {
@@ -15,21 +14,15 @@ let routes: Routes = [
   },
   {
     path: AppRoutes.TICKET,
-    component: TicketPageComponent,
+    component: StaffWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: "vtc-user"}
+    data: { expectedRole: "vtc-staff"}
   },
   {
     path: AppRoutes.JJWORKBENCH,
     component: JjWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: "vtc-user" } // TODO change to jj-user
-  },
-  {
-    path: AppRoutes.JJDECISION,
-    component: JJDisputeDecisionInboxComponent,
-    canActivate: [AuthorizationGuard],
-    data: { expectedRole: "vtc-user" } // TODO change to other user
+    data: { expectedRole: "judicial-justice" }
   },
   {
     path: AppRoutes.UNAUTHORIZED,

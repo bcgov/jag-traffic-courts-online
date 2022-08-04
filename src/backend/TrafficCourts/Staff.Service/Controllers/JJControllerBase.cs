@@ -6,7 +6,7 @@ using TrafficCourts.Staff.Service.Authentication;
 namespace TrafficCourts.Staff.Service.Controllers
 {
     [ApiController]
-    [Authorize(Roles = Roles.JJUser)]
+    [Authorize(Roles = Roles.JudicialJustice)]
     [Route("api/[controller]")]
     public abstract class JJControllerBase<TController> : ControllerBase
     {

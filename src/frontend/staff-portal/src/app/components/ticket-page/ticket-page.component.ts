@@ -1,17 +1,20 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 @Component({
   selector: 'app-ticket-page',
   templateUrl: './ticket-page.component.html',
   styleUrls: ['./ticket-page.component.scss', '../../app.component.scss'],
 })
 export class TicketPageComponent implements OnInit, AfterViewInit {
+  @Output() public staffPage: EventEmitter<string> = new EventEmitter();
+
   dataSource = new MatTableDataSource();
   public IDIRLogin: string = "";
   public decidePopup = '';
@@ -31,21 +34,26 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     'assignedTo',
   ];
   disputes: Dispute[] = [];
+  public userProfile: KeycloakProfile = {};
+  public isLoggedIn: boolean = false;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
+
   constructor(
     public disputeService: DisputeService,
     private logger: LoggerService,
-    private oidcSecurityService: OidcSecurityService
-  ) { 
-    oidcSecurityService.checkAuth().subscribe(({ isAuthenticated }) => {
-      this.IDIRLogin = this.oidcSecurityService.getUserData()?.preferred_username?.split("@")[0]; // split at @ sign and take first part
-    });
+    private keycloak: KeycloakService
+  ) {
   }
 
-  ngOnInit(): void {
+  public async ngOnInit() {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
 
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+      this.IDIRLogin = this.keycloak.getUsername().split("@")[0];
+    }
 
     // when authentication token available, get data
     this.getAllDisputes();
@@ -121,7 +129,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // data returns Notice of Dispute 
+  // data returns Notice of Dispute
   // which has a property ViolationTicket
   // which has a property ocrViolationTicket
   // which is the JSON string for the Azure OCR'd version of a paper ticket
@@ -215,11 +223,15 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       this.decidePopup = "A"
     }
     this.showTicket = !this.showTicket;
+    if (this.showTicket) this.staffPage.emit("Dispute Details");
+    else this.staffPage.emit("Ticket Validation");
     if (!this.showTicket) this.getAllDisputes();  // refresh list
   }
 
   backTicketpage() {
     this.showTicket = !this.showTicket;
+    if (this.showTicket) this.staffPage.emit("Dispute Details");
+    else this.staffPage.emit("Ticket Validation");
     if (!this.showTicket) this.getAllDisputes(); // refresh list
   }
 }

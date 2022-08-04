@@ -1,0 +1,25 @@
+<app-page [busy]="busy">
+  <div class="flex-wrapper">
+    <div class="flex-header d-print-none mb-40">
+      <app-header></app-header>
+    </div>
+    <br />
+    <div class="container">
+      <section>
+        <mat-tab-group mat-align-tabs="start" [selectedIndex]="tabSelected.value" (selectedIndexChange)="tabSelected.setValue($event)">
+          <mat-tab>
+            <ng-template mat-tab-label><h2>Ticket Validation</h2></ng-template>
+            <app-ticket-page [IDIR]="staffIDIR" (staffPage)="changeHeading($event)"></app-ticket-page>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label><h2>Decision Validation</h2></ng-template>
+            <app-jj-dispute-decision-inbox [IDIR]="staffIDIR" (staffPage)="changeHeading($event)"></app-jj-dispute-decision-inbox>
+          </mat-tab>
+        </mat-tab-group>
+      </section>
+    </div>
+    <div class="flex-footer d-print-none mb-40">
+      <app-footer></app-footer>
+    </div>
+  </div>
+</app-page>

@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
@@ -7,11 +7,12 @@ import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { Configuration } from './api';
 import { SharedModule, } from './shared/shared.module';
-import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -27,17 +28,17 @@ import { TicketPageComponent } from '@components/ticket-page/ticket-page.compone
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
 import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { AuthInterceptor, OidcSecurityService } from 'angular-auth-oidc-client';
 import { ContactInfoComponent } from './components/contact-info/contact-info.component';
-import { AuthConfigModule } from './auth/auth-config.module';
 import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
 import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
+import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench-dashboard/staff-workbench-dashboard.component';
 import { JJDisputeInboxComponent } from '@components/jj-dispute-inbox/jj-dispute-inbox.component';
 import { JJDisputeDecisionInboxComponent } from '@components/jj-dispute-decision-inbox/jj-dispute-decision-inbox.component';
 import { JJDisputeAssignmentsComponent } from '@components/jj-dispute-assignments/jj-dispute-assignments.component';
 import { JJDisputeComponent } from '@components/jj-dispute/jj-dispute.component';
 import { JJCountComponent } from '@components/jj-count/jj-count.component';
+import { KeycloakAuthorizationService } from './services/keycloakAuthorization.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -52,6 +53,22 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
+  return async() => {
+    await keycloak.init({
+      config: {
+        url: 'https://dev.oidc.gov.bc.ca/auth',
+        realm: 'ezb8kej4',
+        clientId: 'tco-staff-portal',
+      },
+      initOptions: {
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
+      }
+    });
+  }
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,6 +80,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     TicketStatusComponent,
     TicketRequestComponent,
     JjWorkbenchDashboardComponent,
+    StaffWorkbenchDashboardComponent,
     JJDisputeInboxComponent,
     JJDisputeDecisionInboxComponent,
     JJDisputeAssignmentsComponent,
@@ -73,11 +91,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CommonModule,
     BrowserModule,
     AppRoutingModule,
+    KeycloakAngularModule,
     CoreModule,
     SharedModule,
     ConfigModule,
     HttpClientModule,
-    AuthConfigModule,
     CdkAccordionModule,
     BrowserAnimationsModule,
     NgxMaterialTimepickerModule,
@@ -98,36 +116,16 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CurrencyPipe,
     DatePipe,
     MockConfigService,
-    JwtHelperService,
-    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService]
+    },
+    KeycloakAuthorizationService,
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    },
-    {
-      provide: Configuration, // this configuration together with oidc configuration parameter secureroutes adds the bearer token to /api calls
-      useFactory: (authService: OidcSecurityService) => new Configuration(
-        {
-          basePath: '',//environment.apiUrl,
-          accessToken: authService.getAccessToken.bind(authService),
-          credentials: {
-            'Bearer': () => {
-              var token: string = authService.getAccessToken.bind(authService);
-              if (token) {
-                return 'Bearer ' + token;
-              }
-              return undefined;
-            }
-          }
-        }
-      ),
-      deps: [OidcSecurityService],
-      multi: false
     },
   ],
   bootstrap: [AppComponent]

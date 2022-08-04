@@ -49,7 +49,7 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   backTicketList(element) {
     this.showDispute = !this.showDispute;
     if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Inbox");
+    else this.jjPage.emit("WR Inbox");
     this.jjDisputeInfo = element;
     if (!this.showDispute) this.getAll();  // refresh list
   }
@@ -57,12 +57,12 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   backTicketpage() {
     this.showDispute = !this.showDispute;
     if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("Inbox");
+    else this.jjPage.emit("WR Inbox");
     if (!this.showDispute) this.getAll(); // refresh list
   }
 
   getAll(): void {
-    this.logger.log('JJWorkbenchDashboardComponent::getAllDisputes');
+    this.logger.log('JJDisputeDecisionComponent::getAllDisputes');
 
     this.jjDisputeService.getJJDisputesByIDIR(this.jjIDIR).subscribe((response: JJDispute[]) => {
       // filter jj disputes only show those for the current JJ
