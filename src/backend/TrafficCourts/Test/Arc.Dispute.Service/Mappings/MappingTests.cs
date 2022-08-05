@@ -46,7 +46,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                 var actualTimestamp = actualRec.TransactionDate;
                 var actualHM = new DateTime(actualTimestamp.Year, actualTimestamp.Month, actualTimestamp.Day, actualTimestamp.Hour, actualTimestamp.Minute, 0);
                 Assert.Equal(expectedHM, actualHM);
-                Assert.Equal(tcoDisputeTicket.TicketFileNumber + " 01".ToUpper(), actualRec.FileNumber);
+                Assert.Equal(tcoDisputeTicket.TicketFileNumber.ToUpper() + "  01", actualRec.FileNumber);
                 Assert.Equal(expectedMvbClientNumber, actualRec.MvbClientNumber);
 
                 if (actualRec is AdnotatedTicket)

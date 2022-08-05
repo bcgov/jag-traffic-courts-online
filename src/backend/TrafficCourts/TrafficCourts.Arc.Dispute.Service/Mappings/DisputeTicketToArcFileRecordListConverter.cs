@@ -27,7 +27,8 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                 adnotated.TransactionDate = DateTime.Now.AddMinutes(addedMinutes);
                 adnotated.TransactionTime = DateTime.Now.AddMinutes(addedMinutes);
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
-                adnotated.FileNumber = source.TicketFileNumber + " 01".ToUpper();
+                // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
+                adnotated.FileNumber = source.TicketFileNumber.ToUpper() + "  01";
                 adnotated.MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence);
                 
                 // Map adnotated ticket specific data
@@ -82,8 +83,9 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         TransactionDate = DateTime.Now.AddMinutes(addedMinutes),
                         TransactionTime = DateTime.Now.AddMinutes(addedMinutes),
                         EffectiveDate = source.TicketIssuanceDate,
-                        FileNumber = source.TicketFileNumber.ToUpper() + " 01",
-                        MvbClientNumber = source.DriversLicence.ToUpper(),
+                        // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
+                        FileNumber = source.TicketFileNumber.ToUpper() + "  01",
+                        MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence),
 
                         // Mapping disputed ticket specific data
                         ServiceDate = source.TicketIssuanceDate,
