@@ -85,7 +85,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         EffectiveDate = source.TicketIssuanceDate,
                         // There has to be two spaces between the 10th character and the "01" at the end for ARC to process the file properly
                         FileNumber = source.TicketFileNumber.ToUpper() + "  01",
-                        MvbClientNumber = source.DriversLicence.ToUpper(),
+                        MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence),
 
                         // Mapping disputed ticket specific data
                         ServiceDate = source.TicketIssuanceDate,
