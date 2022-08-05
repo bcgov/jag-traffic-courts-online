@@ -40,7 +40,12 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
 
             foreach (var actualRec in actual)
             {
-                Assert.Equal(tcoDisputeTicket.TicketIssuanceDate, actualRec.TransactionDate);
+                var expectedTimestamp = DateTime.Now;
+                var expectedHM = new DateTime(expectedTimestamp.Year, expectedTimestamp.Month, expectedTimestamp.Day, expectedTimestamp.Hour, expectedTimestamp.Minute, 0);
+
+                var actualTimestamp = actualRec.TransactionDate;
+                var actualHM = new DateTime(actualTimestamp.Year, actualTimestamp.Month, actualTimestamp.Day, actualTimestamp.Hour, actualTimestamp.Minute, 0);
+                Assert.Equal(expectedHM, actualHM);
                 Assert.Equal(tcoDisputeTicket.TicketFileNumber + " 01".ToUpper(), actualRec.FileNumber);
                 Assert.Equal(expectedMvbClientNumber, actualRec.MvbClientNumber);
 

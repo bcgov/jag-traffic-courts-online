@@ -15,13 +15,17 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
 
             List<ArcFileRecord> arcFileRecordList = new();
 
+            // Additional minutes between the transaction times since each transaction timestamp for EV and ED must be unique for ARC to process
+            double addedMinutes = 0;
+
             foreach (TicketCount ticket in source.TicketDetails)
             {
+
                 AdnotatedTicket adnotated = new();
 
                 // Adnotated ticket's Master File Data mapping
-                adnotated.TransactionDate = source.TicketIssuanceDate;
-                adnotated.TransactionTime = source.TicketIssuanceDate;
+                adnotated.TransactionDate = DateTime.Now.AddMinutes(addedMinutes);
+                adnotated.TransactionTime = DateTime.Now.AddMinutes(addedMinutes);
                 adnotated.EffectiveDate = source.TicketIssuanceDate;
                 adnotated.FileNumber = source.TicketFileNumber + " 01".ToUpper();
                 adnotated.MvbClientNumber = DriversLicence.WithCheckDigit(source.DriversLicence);
@@ -70,11 +74,13 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                         continue;
                     }
 
+                    addedMinutes++;
+
                     DisputedTicket disputed = new()
                     {
                         // Dispited ticket's Master File Data mapping
-                        TransactionDate = source.TicketIssuanceDate,
-                        TransactionTime = source.TicketIssuanceDate,
+                        TransactionDate = DateTime.Now.AddMinutes(addedMinutes),
+                        TransactionTime = DateTime.Now.AddMinutes(addedMinutes),
                         EffectiveDate = source.TicketIssuanceDate,
                         FileNumber = source.TicketFileNumber.ToUpper() + " 01",
                         MvbClientNumber = source.DriversLicence.ToUpper(),
@@ -90,7 +96,9 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     };
 
                     arcFileRecordList.Add(disputed);
-                }              
+                }
+
+                addedMinutes++;
             }
             return arcFileRecordList;
         }
