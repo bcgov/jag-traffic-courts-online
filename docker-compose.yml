@@ -58,8 +58,8 @@ services:
       RABBITMQ__PORT: 5672
       RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
-      JWT__AUDIENCE: ${JWT__AUDIENCE:-tco-staff-portal}
-      JWT__AUTHORITY: ${JWT__AUTHORITY:-https://dev.oidc.gov.bc.ca/auth/realms/ezb8kej4/}
+      JWT__AUDIENCE: ${JWT__AUDIENCE:-staff-api}
+      JWT__AUTHORITY: ${JWT__AUTHORITY:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court}
       REDIS__CONNECTIONSTRING: ${REDIS__CONNECTIONSTRING:-redis:6379,password=password}
       TICKETSTORAGE__TYPE: ${TICKETSTORAGE__TYPE:-ObjectStore}
       OBJECTSTORAGE__ENDPOINT: ${OBJECTSTORAGE__ENDPOINT:-minio:9000}
