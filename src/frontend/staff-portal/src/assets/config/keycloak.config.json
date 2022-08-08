@@ -1,0 +1,11 @@
+{
+  "config": {
+    "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/auth",
+    "realm": "traffic-court",
+    "clientId": "staff-portal"
+  },
+  "initOptions": {
+    "onLoad": "check-sso",
+    "silentCheckSsoRedirectUri": "/assets/silent-check-sso.html"
+  }
+}

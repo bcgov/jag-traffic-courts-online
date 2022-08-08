@@ -32,7 +32,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
       this.fullName = this.userProfile.firstName + " " + this.userProfile.lastName;
-      this.jjAdminRole = this.keycloak.isUserInRole("admin-judicial-justice", "tco-staff-portal");
+      this.jjAdminRole = this.keycloak.isUserInRole("admin-judicial-justice", "staff-api");
       this.jjIDIR = this.keycloak.getUsername();
     }
 

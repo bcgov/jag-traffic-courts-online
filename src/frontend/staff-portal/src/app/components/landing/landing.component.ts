@@ -29,8 +29,8 @@ export class LandingComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
 
-      this.jjRole = this.keycloak.isUserInRole("judicial-justice", "tco-staff-portal");
-      this.vtcRole = this.keycloak.isUserInRole("vtc-staff", "tco-staff-portal");
+      this.jjRole = this.keycloak.isUserInRole("judicial-justice", "staff-api");
+      this.vtcRole = this.keycloak.isUserInRole("vtc-staff", "staff-api");
 
       if (this.jjRole) this.router.navigate([AppRoutes.JJWORKBENCH]);
       else if (this.vtcRole) this.router.navigate([AppRoutes.TICKET]);
