@@ -1,9 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppRoutes } from 'app/app.routes';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
-import { BehaviorSubject, from, lastValueFrom, Observable, map, catchError } from 'rxjs';
+import { BehaviorSubject, from, Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,18 +11,14 @@ export class AuthService {
   private _isLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   private _userProfile: BehaviorSubject<KeycloakProfile> = new BehaviorSubject<KeycloakProfile>(null);
 
-  private config: any;
-  private clientId: string;
-
-  private site: string = "tco-staff-portal";
+  private site: string = "staff-api";
   private roles = [
     { name: "judicial-justice", redirectUrl: AppRoutes.JJWORKBENCH },
     { name: "vtc-staff", redirectUrl: AppRoutes.TICKET },
   ]
 
   constructor(
-    private keycloak: KeycloakService,
-    private httpClient: HttpClient
+    private keycloak: KeycloakService
   ) { }
 
   public checkAuth(): Observable<boolean> {
