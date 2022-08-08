@@ -1,16 +1,39 @@
 package ca.bc.gov.court.traffic.ticket.util;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.opencsv.bean.CsvToBeanBuilder;
+
+import ca.bc.gov.court.traffic.ticket.model.Statute;
 import ca.bc.gov.court.traffic.ticket.model.Style;
 import ca.bc.gov.court.traffic.ticket.model.ViolationTicket;
 
 public class RandomUtil {
+
+	public final static List<Statute> statutes = new ArrayList<Statute>();
+	static {
+		try (InputStream stream = RandomUtil.class.getClassLoader().getResourceAsStream("data/statutes.csv");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			statutes.addAll(new CsvToBeanBuilder<Statute>(reader)
+					.withType(Statute.class)
+					.withSkipLines(1)
+					.build()
+					.parse());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public final static String[] COMMON_FIRST_NAMES = new String[] {
 		"Noah",
@@ -69,7 +92,7 @@ public class RandomUtil {
 		"Jones",
 		"Miller",
 		"Davis",
-		"Wilson",	
+		"Wilson",
 		"Anderson",
 		"Harris",
 		"Thompson",
@@ -98,7 +121,7 @@ public class RandomUtil {
 		"West",
 		"Parker",
 	};
-	
+
 	public final static String[] COMMON_CITY_NAMES = new String[] {
 			"Springfield",
 			"Summerfield",
@@ -235,7 +258,7 @@ public class RandomUtil {
 			"Exceed axle weight",
 			"Exceed licensed gross vehicle weight",
 			"Fail to carry licence"
-	};	
+	};
 
 	public final static String[] COMMON_VEHICLE_MAKES = new String[] {
 			"Acura",
@@ -253,7 +276,7 @@ public class RandomUtil {
 			"Mazda",
 			"Tesla",
 			"Toyota",
-	};		
+	};
 
 	public final static String[] COMMON_VEHICLE_TYPES = new String[] {
 			"Camry",
@@ -262,7 +285,7 @@ public class RandomUtil {
 			"Sierra",
 			"Silverado",
 			"Tacoma",
-	};			
+	};
 
 	public final static String[] COMMON_VEHICLE_COLOURS = new String[] {
 			"Black",
@@ -270,23 +293,23 @@ public class RandomUtil {
 			"Red",
 			"Silver",
 			"White",
-	};	
+	};
 
 	public final static String[] BC_ACTS = new String[] {
 			"MVA",
 			"CTA"
-	};	
+	};
 
-	public final static String[] PROVINCES = new String[] { "BC", "AB", "SK", "MB" };	
+	public final static String[] PROVINCES = new String[] { "BC", "AB", "SK", "MB" };
 
 	public static int randomInt(int min, int max) {
 		return (int) Math.round((Math.random() * (max-min)) + min);
 	}
-	
+
 	public static long randomLong(long min, long max) {
 		return Math.round((Math.random() * (max-min)) + min);
 	}
-	
+
 	public static double randomDouble(int min, int max) {
 		return (Math.random() * (max-min)) + min;
 	}
@@ -298,26 +321,34 @@ public class RandomUtil {
 	public static String randomNumeric(int count) {
 		return RandomStringUtils.random(count, 0, 0, false, true, null, new Random());
 	}
-	
+
 	public static boolean randomBool() {
 		return (randomInt(0, 1) == 1);
 	}
-	
+
 	public static String randomSurname() {
     	int index = randomInt(0, COMMON_LAST_NAMES.length-1);
     	return COMMON_LAST_NAMES[index];
 	}
-	
+
+	public static Statute randomStatute() {
+		Statute statute = null;
+		do {
+			statute = statutes.get(randomInt(0, statutes.size()-1));
+		} while (statute == null || StringUtils.isBlank(statute.getDescription()));
+		return statute;
+	}
+
 	public static String randomGivenName() {
     	int index = randomInt(0, COMMON_FIRST_NAMES.length-1);
     	return COMMON_FIRST_NAMES[index];
 	}
-	
+
 	public static String randomProvince() {
     	int index = randomInt(0, PROVINCES.length-1);
     	return PROVINCES[index];
 	}
-	
+
 	public static String randomCity() {
     	int index = randomInt(0, COMMON_CITY_NAMES.length-1);
     	return COMMON_CITY_NAMES[index];
@@ -351,12 +382,12 @@ public class RandomUtil {
 	private static String randomBCActSection() {
     	StringBuffer sb = new StringBuffer();
     	sb.append(randomInt(1, 200));
-    	if (randomBool()) {    		
+    	if (randomBool()) {
     		sb.append("(");
     		sb.append(RandomStringUtils.random(1, 97, 105, true, false));
     		sb.append(")");
     	}
-    	if (randomBool()) {    		
+    	if (randomBool()) {
     		sb.append("(");
     		sb.append(randomNumeric(1));
     		sb.append(")");
@@ -375,7 +406,7 @@ public class RandomUtil {
 
     	return postalCode.toString();
     }
-	
+
     public static String randomAddress() {
     	StringBuilder address = new StringBuilder();
     	address.append("" + randomInt(1, 1000));
@@ -388,7 +419,7 @@ public class RandomUtil {
 
     	return address.toString();
     }
-	
+
 	public static Point getRandomLocation(Style style, int textWidth, int textHeight, int x1, int x2, int x3, int y1, int y2, int y3) {
 		int th = (int) ((textHeight / style.getHeightScale()) + style.getHeightOffset());
 		int minX = x1;
@@ -397,14 +428,14 @@ public class RandomUtil {
 		int minY = (x < x2 ? y2 : y1) + th;
 		int maxY = y3;
 		int y = (int) (Math.random() * (maxY - minY)) + minY;
-		
+
 		return new Point(x, y);
 	}
-	
+
 	public static String randomYear(int len, int min, int max) {
 		return StringUtils.right(randomInt(min, max) + "", len);
 	}
-	
+
     public static Date randomDate(Date minDate, Date maxDate) {
         Date date = new Date();
         long minMilliSecs = minDate.getTime();
@@ -413,32 +444,32 @@ public class RandomUtil {
         date.setTime(l);
         return date;
     }
-    
+
 	public static String randomMonth(boolean pad) {
 		String mm = randomInt(1, 12) + "";
 		return pad ? StringUtils.leftPad(mm, 2, "0") : mm;  // sometime lead month with a zero
 	}
-	
+
 	public static String randomDay(boolean pad) {
 		String mm = randomInt(1, 29) + "";
 		return pad ? StringUtils.leftPad(mm, 2, "0") : mm;  // sometime lead month with a zero
 	}
-	
+
 	public static String randomHour(boolean pad) {
 		String mm = randomInt(0, 23) + "";
 		return pad ? StringUtils.leftPad(mm, 2, "0") : mm;  // sometime lead month with a zero
 	}
-	
+
 	public static String randomMinute(boolean pad) {
 		String mm = randomInt(1, 59) + "";
 		return pad ? StringUtils.leftPad(mm, 2, "0") : mm;  // sometime lead month with a zero
 	}
-	
+
 	public static String randomLicensePlate() {
 		return RandomStringUtils.randomAlphanumeric(3).toUpperCase() + " " +
 		       RandomStringUtils.randomAlphanumeric(3).toUpperCase();
 	}
-	
+
 	public static String randomCheck(int min, int max) {
 		switch (randomInt(min, max)) {
 		case 0:
@@ -446,10 +477,13 @@ public class RandomUtil {
 		case 1:
 		default:
 			return "";
-		} 
+		}
 	}
 
-	public static ViolationTicket randomTicket() {
+	public static ViolationTicket randomTicket(Integer numCounts) {
+		if (numCounts == null)
+			numCounts = Integer.valueOf(3);
+
 		ViolationTicket violationTicket = new ViolationTicket();
 		violationTicket.setViolationTicketNumber("A" + RandomStringUtils.random(1, 65, 90, true, false) + randomNumeric(8));
 		violationTicket.setSurname(randomSurname());
@@ -458,7 +492,7 @@ public class RandomUtil {
 		violationTicket.setDriversLicenceProvince(randomProvince());
 		violationTicket.setDriversLicenceNumber(randomNumeric(7));
 		violationTicket.setDriversLicenceCreated(randomYear(randomBool() ? 2 : 4, 2016, 2021));
-		violationTicket.setDriversLicenceExpiry(randomYear(randomBool() ? 2 : 4, 2022, 2025));		
+		violationTicket.setDriversLicenceExpiry(randomYear(randomBool() ? 2 : 4, 2022, 2025));
 		violationTicket.setBirthdate(DateUtil.toDateString(randomDate(DateUtil.fromDateString("1950-01-01"), DateUtil.fromDateString("2005-12-31"))));
 		violationTicket.setAddress(randomAddress());
 		violationTicket.setIsChangeOfAddress(randomCheck(0, 4));
@@ -492,7 +526,8 @@ public class RandomUtil {
 		violationTicket.setViolationNearPlace(randomCity());
 //		switch (randomInt(0, 7)) {
 //		case 0:
-			violationTicket.setOffenseIsMVA(randomCheck(0, 0));
+//			violationTicket.setOffenseIsMVA(randomCheck(0, 0));
+			violationTicket.setOffenseIsMVA("x");
 //			break;
 //		case 1:
 //			violationTicket.setOffenseIsWLA(randomCheck(0, 1));
@@ -517,31 +552,32 @@ public class RandomUtil {
 //			violationTicket.setOffenseIsOtherDescription("Other");
 //			break;
 //		}
-		violationTicket.setCount1Description(randomViolationDescription());
-		violationTicket.setCount1ActReg(randomBCAct());
-		if (randomBool())
-			violationTicket.setCount1IsACT(randomCheck(0, 1));
-		else
-			violationTicket.setCount1IsREGS(randomCheck(0, 1));
-		violationTicket.setCount1Section(randomBCActSection());
+
+		Statute count1 = randomStatute();
+		violationTicket.setCount1Description(count1.getDescription());
+		violationTicket.setCount1ActReg(count1.getAct());
+		violationTicket.setCount1IsACT("x");
+		violationTicket.setCount1Section(count1.getSection());
 		violationTicket.setCount1TicketAmount((randomInt(1, 50) * 10) + "");
-//		violationTicket.setCount1TicketAmount("IOU");
-		violationTicket.setCount2Description(randomViolationDescription());
-		violationTicket.setCount2ActReg(BC_ACTS[0]); //randomBCAct());
-		if (randomBool())
-			violationTicket.setCount2IsACT(randomCheck(0, 1));
-		else
-			violationTicket.setCount2IsREGS(randomCheck(0, 1));
-		violationTicket.setCount2Section(randomBCActSection());
-		violationTicket.setCount2TicketAmount((randomInt(1, 50) * 10) + "");
-		violationTicket.setCount3Description(randomViolationDescription());
-		violationTicket.setCount3ActReg(BC_ACTS[0]); //randomBCAct());
-		if (randomBool())
-			violationTicket.setCount3IsACT(randomCheck(0, 1));
-		else
-			violationTicket.setCount3IsREGS(randomCheck(0, 1));
-		violationTicket.setCount3Section(randomBCActSection());
-		violationTicket.setCount3TicketAmount((randomInt(1, 50) * 10) + "");
+
+		if (numCounts.intValue() > 1) {
+			Statute count2 = randomStatute();
+			violationTicket.setCount2Description(count2.getDescription());
+			violationTicket.setCount2ActReg(count2.getAct());
+			violationTicket.setCount2IsACT("x");
+			violationTicket.setCount2Section(count2.getSection());
+			violationTicket.setCount2TicketAmount((randomInt(1, 50) * 10) + "");
+		}
+
+		if (numCounts.intValue() > 2) {
+			Statute count3 = randomStatute();
+			violationTicket.setCount3Description(count3.getDescription());
+			violationTicket.setCount3ActReg(count3.getAct());
+			violationTicket.setCount3IsACT("x");
+			violationTicket.setCount3Section(count3.getSection());
+			violationTicket.setCount3TicketAmount((randomInt(1, 50) * 10) + "");
+		}
+
 		violationTicket.setVehicleLicensePlateProvince(randomProvince());
 		violationTicket.setVehicleLicensePlateNumber(randomLicensePlate());
 		violationTicket.setVehicleNscPuj(randomNumeric(2));
@@ -553,7 +589,7 @@ public class RandomUtil {
 		violationTicket.setVehicleYear(randomInt(1980, 2021) + "");
 		violationTicket.setNoticeOfDisputeAddress(randomAddress());
 		violationTicket.setHearingLocation(randomCity());
-		violationTicket.setDateOfService(DateUtil.toDateString(randomDate(DateUtil.fromDateString("2019-01-01"), new Date())));
+		violationTicket.setDateOfService(DateUtil.toDateString(new Date()));
 		violationTicket.setEnforcementOfficerNumber(randomNumeric(7));
 		violationTicket.setDetachmentLocation(violationTicket.getHearingLocation() + " Police");
 		return violationTicket;

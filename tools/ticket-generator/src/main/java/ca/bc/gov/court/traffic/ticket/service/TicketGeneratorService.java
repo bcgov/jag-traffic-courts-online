@@ -24,25 +24,25 @@ import ca.bc.gov.court.traffic.ticket.util.ResourceLoader;
 public class TicketGeneratorService {
 
 	private static final Logger logger = LogManager.getLogger(TicketGeneratorService.class);
-	
+
 	@Autowired
 	private BufferedImage blankTicket;
-	
+
 	@Autowired
 	private ResourceLoader resourceLoader;
-	
-	public BufferedImage createTicket(Integer style) throws Exception {
-		return createTicket(null, style);
+
+	public BufferedImage createTicket(Integer style, Integer numCounts) throws Exception {
+		return createTicket(null, style, numCounts);
 	}
-	
-	public BufferedImage createTicket(ViolationTicket violationTicket, Integer style) throws Exception {
+
+	public BufferedImage createTicket(ViolationTicket violationTicket, Integer style, Integer numCounts) throws Exception {
 		logger.debug("Generating random ticket");
-		
-		if (violationTicket == null) {			
-			violationTicket = RandomUtil.randomTicket();
+
+		if (violationTicket == null) {
+			violationTicket = RandomUtil.randomTicket(numCounts);
 		}
 		int writingStyle = (style == null) ? Integer.valueOf(RandomUtil.randomInt(1, 8)) : style.intValue();
-		
+
 		// Copy blankTicket to new bufferedImage
 		BufferedImage ticketImage = new BufferedImage(blankTicket.getWidth(), blankTicket.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = ticketImage.getGraphics();
@@ -51,22 +51,22 @@ public class TicketGeneratorService {
 		g.setColor(Color.BLACK);
 		drawViolationTicketNumber(violationTicket, g);
 
-		g.setColor(Color.BLUE);	
+		g.setColor(Color.BLUE);
 		drawField(g, writingStyle, violationTicket.getSurname(), 200, 888, 2691, 543, 584, 690);
 		drawField(g, writingStyle, violationTicket.getGivenName(), 200, 1235, 2294, 695, 734, 840);
 		drawField(g, writingStyle, violationTicket.getIsYoungPerson(), 2338, 2338, 2411, 730, 730, 805);
 		drawField(g, writingStyle, violationTicket.getDriversLicenceProvince(), 200, 200, 535, 885, 885, 992);
 		drawField(g, writingStyle, violationTicket.getDriversLicenceNumber(), 534, 534, 1434, 885, 885, 992);
 		drawField(g, writingStyle, violationTicket.getDriversLicenceCreated(), 1437, 1437, 1690, 885, 885, 992);
-		drawField(g, writingStyle, violationTicket.getDriversLicenceExpiry(), 1694, 1694, 1911, 885, 885, 992);		
-		drawField(g, writingStyle, violationTicket.getBirthdateYYYY(), 2135, 2135, 2339, 885, 885, 992);		
-		drawField(g, writingStyle, violationTicket.getBirthdateMM(), 2342, 2342, 2522, 885, 885, 992);	
+		drawField(g, writingStyle, violationTicket.getDriversLicenceExpiry(), 1694, 1694, 1911, 885, 885, 992);
+		drawField(g, writingStyle, violationTicket.getBirthdateYYYY(), 2135, 2135, 2339, 885, 885, 992);
+		drawField(g, writingStyle, violationTicket.getBirthdateMM(), 2342, 2342, 2522, 885, 885, 992);
 		drawField(g, writingStyle, violationTicket.getBirthdateDD(), 2526, 2526, 2691, 885, 885, 992);
 		drawField(g, writingStyle, violationTicket.getAddress(), 200, 408, 2298, 993, 1035, 1143);
 		drawField(g, writingStyle, violationTicket.getIsChangeOfAddress(), 2330, 2330, 2410, 1025, 1025, 1125);
 		drawField(g, writingStyle, violationTicket.getCity(), 200, 311, 1547, 1145, 1187, 1293);
 		drawField(g, writingStyle, violationTicket.getProvince(), 1548, 1839, 1995, 1145, 1187, 1293);
-		drawField(g, writingStyle, violationTicket.getPostalCode(), 1995, 2396, 2694, 1145, 1187, 1293);	
+		drawField(g, writingStyle, violationTicket.getPostalCode(), 1995, 2396, 2694, 1145, 1187, 1293);
 		drawField(g, writingStyle, violationTicket.getNamedIsDriver(), 762, 762, 803, 1392, 1392, 1435);
 		drawField(g, writingStyle, violationTicket.getNamedIsCyclist(), 1212, 1212, 1253, 1392, 1392, 1435);
 		drawField(g, writingStyle, violationTicket.getNamedIsOwner(), 1659, 1659, 1703, 1392, 1392, 1435);
@@ -75,7 +75,7 @@ public class TicketGeneratorService {
 		drawField(g, writingStyle, violationTicket.getNamedIsOther(), 1660, 1660, 1703, 1468, 1468, 1510);
 		drawField(g, writingStyle, violationTicket.getNamedIsOtherDescription(), 1897, 1897, 2700, 1445, 1445, 1507);
 		drawField(g, writingStyle, violationTicket.getViolationDateYYYY(), 558, 558, 929, 1598, 1598, 1688);
-		drawField(g, writingStyle, violationTicket.getViolationDateMM(), 929, 929, 1170, 1598, 1598, 1688);	
+		drawField(g, writingStyle, violationTicket.getViolationDateMM(), 929, 929, 1170, 1598, 1598, 1688);
 		drawField(g, writingStyle, violationTicket.getViolationDateDD(), 1170, 1170, 1436, 1598, 1598, 1688);
 		drawField(g, writingStyle, violationTicket.getViolationTimeHH(), 1857, 1857, 2100, 1562, 1562, 1685);
 		drawField(g, writingStyle, violationTicket.getViolationTimeMM(), 2100, 2100, 2346, 1562, 1562, 1685);
@@ -124,23 +124,23 @@ public class TicketGeneratorService {
 		drawField(g, writingStyle, violationTicket.getDateOfServiceYYYY(), 1780, 1780, 2006, 4195, 4195, 4286);
 		drawField(g, writingStyle, violationTicket.getDateOfServiceMM(), 2006, 2006, 2229, 4195, 4195, 4286);
 		drawField(g, writingStyle, violationTicket.getDateOfServiceDD(), 2229, 2229, 2450, 4195, 4195, 4286);
-		
+
 		// text box used during development to determine where to place the above fields
 //		BufferedImage box = ResourceLoader.getBox();
-//		g.drawImage(box, 1505, 3224, null); 
-//		g.drawImage(box, 1505, 3284, null); 
+//		g.drawImage(box, 1505, 3224, null);
+//		g.drawImage(box, 1505, 3284, null);
 //		g.drawImage(box, 2700 - 75, 2308 - 75, null);
-		
+
 		return resizeImage(ticketImage, blankTicket.getWidth() / 2, blankTicket.getHeight() / 2);
 	}
-	
+
 	BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) throws IOException {
 	    Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
 	    BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
 	    outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
 	    return outputImage;
 	}
-	
+
 	private void drawViolationTicketNumber(ViolationTicket violationTicket, Graphics g) throws Exception {
 		String text = violationTicket.getViolationTicketNumber();
 		Style style = resourceLoader.getStyle(99, 210);
@@ -148,12 +148,12 @@ public class TicketGeneratorService {
 		int stringWidth = metrics.stringWidth(text);
 		g.setFont(style.getFont());
 		g.drawString(text, 2660 - stringWidth, 506);
-	}	
+	}
 
 	private void drawField(Graphics g, int writingStyle, String text, int x1, int x2, int x3, int y1, int y2, int y3) throws FontFormatException, IOException, URISyntaxException {
 		if (text == null)
 			return;
-		
+
 		int fieldWidth = x3 - x1;
 		int fieldHeight = y3 - y1;
 		double fontSize = RandomUtil.randomDouble(95, 135);
@@ -161,14 +161,14 @@ public class TicketGeneratorService {
 		g.setFont(style.getFont());
 		FontMetrics metrics = g.getFontMetrics(style.getFont());
 		String[] lines = (metrics.stringWidth(text) > fieldWidth) ? splitPhrase(text) : new String[] { text };
-		
+
 		// find longest string
 		String longestText = "";
 		for (int i = 0; i < lines.length; i++) {
 			if (lines[i].length() > longestText.length())
 				longestText = lines[i];
 		}
-		
+
 		// if too large, resize to the largest font size that will fit the target width
 		while (metrics.stringWidth(longestText) > fieldWidth) {
 			fontSize = fontSize - 10.0;
@@ -176,21 +176,21 @@ public class TicketGeneratorService {
 			g.setFont(style.getFont());
 			metrics = g.getFontMetrics(style.getFont());
 		}
-		
+
 		int rowHeight = fieldHeight / lines.length;
 		for (int i = 0; i < lines.length; i++) {
-			Point location = RandomUtil.getRandomLocation(style, metrics.stringWidth(lines[0]), metrics.getAscent(), 
-					x1, x2, x3, 
-					y1 + (rowHeight*i), 
-					y2 + (rowHeight*i), 
+			Point location = RandomUtil.getRandomLocation(style, metrics.stringWidth(lines[0]), metrics.getAscent(),
+					x1, x2, x3,
+					y1 + (rowHeight*i),
+					y2 + (rowHeight*i),
 					y1 + (rowHeight*i) + rowHeight);
-			g.drawString(lines[i], location.x, location.y);	
+			g.drawString(lines[i], location.x, location.y);
 		}
-	}	
-	
+	}
+
 	private String[] splitPhrase(String text) {
 		if (!text.contains(" ")) { // cannot split - probably a single word.
-			return new String[] { text }; 
+			return new String[] { text };
 		}
 		try {
 		    // split text around middle, find closes space and split on that.
@@ -208,5 +208,5 @@ public class TicketGeneratorService {
 		    return new String[] { text };
 		}
 	}
-	
+
 }
