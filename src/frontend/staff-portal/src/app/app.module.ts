@@ -56,10 +56,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
   return async() => {
     await keycloak.init({
       config: {
-        // url: 'https://dev.oidc.gov.bc.ca/auth',
-        // realm: 'ezb8kej4',
-        // clientId: 'tco-staff-portal',
-        url: "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
+       url: "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
         realm: "traffic-court",
         clientId: "staff-portal"
       },
