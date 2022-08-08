@@ -1,4 +1,4 @@
-name: Oracle Data API CI
+name: Ticket Generator CI
 
 on:
   push:
