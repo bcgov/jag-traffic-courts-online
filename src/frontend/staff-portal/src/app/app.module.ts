@@ -59,7 +59,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
         // url: 'https://dev.oidc.gov.bc.ca/auth',
         // realm: 'ezb8kej4',
         // clientId: 'tco-staff-portal',
-        url: "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/auth",
+        url: "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
         realm: "traffic-court",
         clientId: "staff-portal"
       },
