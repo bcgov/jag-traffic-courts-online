@@ -52,6 +52,13 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
+		<!-- CSV reader -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.6</version>
+		</dependency>
+		
 		<!-- Swagger UI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
