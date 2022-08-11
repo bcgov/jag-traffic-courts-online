@@ -1,16 +1,25 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -35,14 +44,14 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
-    private Long id;
+    private Long violationTicketCountId;
 
 	/**
 	 * The count number.
 	 */
 	@Column
 	@Min(1) @Max(3)
-	private int count;
+	private int countNo;
 
 	/**
 	 * The description of the offence.
@@ -56,7 +65,23 @@ public class ViolationTicketCount extends Auditable<String> {
 	 */
 	@Column(length = 5)
 	@Schema(nullable = true)
-    private String actRegulation;
+    private String actOrRegulationNameCode;
+	
+	/**
+	 * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+    private YesNo isAct;
+	
+	/**
+	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+    private YesNo isRegulation;
 	
 	/**
 	 * The full section of the act or regulation represented in a single string. For example, "127(1)(a)(ii)" which means "fail to yield to pedestrian"
@@ -100,35 +125,15 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Schema(nullable = true)
     private Float ticketedAmount;
 	
-	/**
-	 * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
-	 */
-	@Column
-	@Schema(nullable = true)
-    private Boolean isAct;
-	
-	/**
-	 * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
-	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private String isActYN;
-
-	/**
-	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
-	 */
-	@Column
-	@Schema(nullable = true)
-    private Boolean isRegulation;
-	
-	/**
-	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
-	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private String isRegulationYN;
-
 	@JsonBackReference
 	@ManyToOne(targetEntity=ViolationTicket.class, fetch = FetchType.LAZY)
+    @JoinColumn(name="violation_ticket_id", referencedColumnName="violationTicketId")
 	@Schema(hidden = true)
 	private ViolationTicket violationTicket;
-
+	
+	@JsonManagedReference
+	@OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="violation_ticket_count_id", referencedColumnName="violationTicketCountId")
+	@Schema(hidden = true)
+	private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
 }

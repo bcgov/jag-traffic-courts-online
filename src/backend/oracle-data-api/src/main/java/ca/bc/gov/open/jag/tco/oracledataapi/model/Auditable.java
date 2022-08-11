@@ -14,6 +14,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,20 +30,24 @@ public abstract class Auditable<U> {
 
 	/** The username of the individual (or system) who created this record. */
 	@CreatedBy
-	private U createdBy;
+	@Schema(nullable = false)
+	private U enteredUserId;
 
 	/** The timestamp this record was created. */
 	@CreatedDate
+	@Schema(nullable = false)
 	@Temporal(TIMESTAMP)
-	private Date createdTs;
+	private Date enteredTs;
 
 	/** The username of the individual (or system) who modified this record. */
 	@LastModifiedBy
-	private U modifiedBy;
+	@Schema(nullable = true)
+	private U updatedUserId;
 
 	/** The timestamp this record was last modified. */
 	@LastModifiedDate
+	@Schema(nullable = true)
 	@Temporal(TIMESTAMP)
-	private Date modifiedTs;
+	private Date updatedTs;
 
 }

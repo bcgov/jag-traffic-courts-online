@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,6 +16,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,22 +34,32 @@ public class DisputeStatusType extends Auditable<String> {
      * Dispute Status Type Code primary key
      */
     @Id
-    private String disputeStatusTypeCd;
+    @Column(length = 10)
+    private String disputeStatusTypeCode;
 	
 	/**
-	 * The desciprtion of the status type
+	 * The description of the status type
 	 */
+    @Column(length = 50)
     @Enumerated(EnumType.STRING)
+    @Schema(nullable = false)
 	private DisputeStatus disputeStatusTypeDescription;
+    
+    /**
+     * Whether the dispute status is active or not Y/N
+     */
+    @Enumerated(EnumType.STRING)
+    @Schema(nullable = false)
+    private YesNo Active;
     
     @JsonManagedReference
 	@OneToMany(targetEntity = Dispute.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinColumn(name = "status_id")
+	@JoinColumn(name = "dispute_status_type_cd")
 	private List<Dispute> disputes = new ArrayList<Dispute>();
     
     public void addDisputes(List<Dispute> disputes) {
 		for (Dispute dispute : disputes) {
-			dispute.setStatusType(this);
+			dispute.setDisputeStatusType(this);
 		}
 		this.disputes.addAll(disputes);
 	}

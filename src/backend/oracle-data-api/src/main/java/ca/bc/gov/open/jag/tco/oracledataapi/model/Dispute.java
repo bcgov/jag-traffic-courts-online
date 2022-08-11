@@ -46,34 +46,26 @@ public class Dispute extends Auditable<String> {
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
-	private Long id;
-
-	@Enumerated(EnumType.STRING)
-	private DisputeStatus status;
-
+	private Long disputeId;
+	
 	/**
-	 * The violation ticket number.
-	 */
-	@Column
-	private String ticketNumber;
-
-	/**
-	 * The provincial court hearing location named on the violation ticket.
-	 */
-	@Column
-	@Schema(nullable = true)
-	private String provincialCourtHearingLocation;
-
-	/**
+     * Court location.
+     */
+    @Column(length = 150)
+    @Schema(nullable = true)
+    private String courtLocation;
+    
+    /**
 	 * The date and time the violation ticket was issue. Time must only be hours and
 	 * minutes.
 	 */
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
+	@Schema(nullable=true)
 	private Date issuedDate;
 
 	/**
-	 * The date and time the citizen was submitted the notice of dispute.
+	 * The date and time the citizen submitted the notice of dispute.
 	 */
 	@Column
 	@Schema(nullable = true)
@@ -84,221 +76,8 @@ public class Dispute extends Auditable<String> {
 	 * The surname or corporate name.
 	 */
 	@Column(length = 30)
-	private String surname;
+	private String disputantSurname;
 
-	/**
-	 * The given names or corporate name continued.
-	 */
-	@Column
-	private String givenNames;
-
-	/**
-	 * The disputant's birthdate.
-	 */
-	@Column
-	@Temporal(TemporalType.DATE)
-	private Date birthdate;
-
-	/**
-	 * The drivers licence number. Note not all jurisdictions will use numeric
-	 * drivers licence numbers.
-	 */
-	@Size(max = 20)
-	@Column(length = 20)
-	@Schema(maxLength = 20)
-	private String driversLicenceNumber;
-
-	/**
-	 * The province or state the drivers licence was issued by.
-	 */
-	@Size(max = 30)
-	@Column(length = 30)
-	@Schema(maxLength = 30)
-	private String driversLicenceProvince;
-
-	/**
-	 * The mailing address of the disputant.
-	 */
-	@Column(length = 500)
-	private String address;
-
-	/**
-	 * The mailing address city of the disputant.
-	 */
-	@Column
-	private String city;
-
-	/**
-	 * The mailing address province of the disputant.
-	 */
-	@Size(max = 30)
-	@Column(length = 30)
-	@Schema(maxLength = 30)
-	private String province;
-
-	/**
-	 * The mailing address postal code or zip code of the disputant.
-	 */
-	@Size(max = 6)
-	@Column(length = 10)
-	@Schema(maxLength = 6)
-	private String postalCode;
-	
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private int addressCityCtryId;
-	
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private int addressCitySeqNo;
-	
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private int addressProvCtryId;
-	
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private int addressProvSeqNo;
-
-	/**
-	 * The disputant's home phone number.
-	 */
-	@Column(length = 20)
-	private String homePhoneNumber;
-
-	/**
-	 * The disputant's work phone number.
-	 */
-	@Column(length = 20)
-	@Schema(nullable = true)
-	private String workPhoneNumber;
-
-	/**
-	 * The disputant's email address.
-	 */
-	@Column(length = 100)
-	@Email(regexp = ".+@.+\\..+")
-	private String emailAddress;
-
-	@Column
-	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date filingDate;
-
-	@JsonManagedReference
-	@OneToMany(targetEntity = DisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinColumn(name = "dispute_id")
-	private List<DisputedCount> disputedCounts = new ArrayList<DisputedCount>();
-
-	/**
-	 * The disputant intends to be represented by a lawyer at the hearing.
-	 */
-	@Column
-	private boolean representedByLawyer;
-
-	/**
-	 * The disputant requires spoken language interpreter. The language name is
-	 * indicated in this field.
-	 */
-	@Column
-	@Schema(nullable = true)
-	private String interpreterLanguage;
-
-	/**
-	 * Number of witness that the disputant intends to call.
-	 */
-	@Column(length = 3)
-	@Schema(nullable = true)
-	private Integer numberOfWitness;
-
-	/**
-	 * Reason indicating why the fine reduction requested for the ticket.
-	 */
-	@Column(length = 500)
-	@Schema(nullable = true)
-	private String fineReductionReason;
-
-	/**
-	 * Reason indicating why the disputant needs more time in order to make payment
-	 * for the ticket.
-	 */
-	@Column(length = 500)
-	@Schema(nullable = true)
-	private String timeToPayReason;
-
-	/**
-	 * A note or reason indicating why this Dispute has a status of REJECTED. This
-	 * field is blank for other status types.
-	 */
-	@Column(length = 500)
-	@Schema(nullable = true)
-	private String rejectedReason;
-
-	/**
-	 * Identifier for whether the citizen has detected any issues with the OCR
-	 * ticket result or not.
-	 */
-	@Column
-	private boolean disputantDetectedOcrIssues;
-
-	/**
-	 * The description of the issue with OCR ticket if the citizen has detected any.
-	 */
-	@Column(length = 500)
-	@Schema(nullable = true)
-	private String disputantOcrIssuesDescription;
-
-	/**
-	 * Identifier for whether the system has detected any issues with the OCR ticket
-	 * result or not.
-	 */
-	@Column
-	private boolean systemDetectedOcrIssues;
-
-	@Column(length  = 30)
-	@Schema(nullable = true)
-	private String jjAssigned;
-
-	/**
-	 * All OCR Violation ticket data serialized into a JSON string.
-	 */
-	@Column
-	@Lob
-	@Schema(nullable = true)
-	private String ocrViolationTicket;
-
-	/**
-	 * The IDIR of the Staff whom the dispute is assigned to be reviewed on Staff
-	 * Portal.
-	 */
-	@Column
-	@Schema(nullable = true)
-	private String assignedTo;
-
-	/**
-	 * The date and time a dispute was assigned to a Staff to be reviewed.
-	 */
-	@Column
-	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date assignedTs;
-	
-	/**
-	 * Detachment location
-	 */
-	@Column(length = 150)
-	@Schema(nullable = true)
-	private String detachmentLocation;
-	
-	/**
-	 * Disputant client ID
-	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private String disputantClientId;
-	
-	/**
-	 * Disputant comment
-	 */
-	@Column(length = 4000)
-	@Schema(nullable = true)
-	private String disputantComment;
-	
 	/**
 	 * First given name of the disputant
 	 */
@@ -321,6 +100,23 @@ public class Dispute extends Auditable<String> {
 	private String disputantGivenName3;
 	
 	/**
+	 * The disputant's birthdate.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.DATE)
+	private Date disputantBirthdate;
+	
+	/**
+	 * The drivers licence number. Note not all jurisdictions will use numeric
+	 * drivers licence numbers.
+	 */
+	@Size(max = 30)
+	@Column(length = 30)
+	@Schema(maxLength = 30, nullable = true)
+	private String driversLicenceNumber;
+	
+	/**
 	 * Name of the organization of the disputant
 	 */
 	@Column(length = 150)
@@ -328,36 +124,89 @@ public class Dispute extends Auditable<String> {
 	private String disputantOrganization;
 	
 	/**
-	 * Country id of the issued identity
+	 * Disputant client ID
 	 */
+	@Column(length = 30)
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private int identIssuedCtryId;
+	private String disputantClientId;
 	
 	/**
-	 * Province seq no of the issued identity
+	 * The province or state the drivers licence was issued by.
 	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private int identIssuedProvSeqNo;
+	@Size(max = 30)
+	@Column(length = 30)
+	@Schema(maxLength = 30, nullable = true)
+	private String driversLicenceProvince;
+	
+	@Enumerated(EnumType.STRING)
+	private DisputeStatus status;
+
+	/**
+	 * The mailing address of the disputant.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String address;
+
+	/**
+	 * The mailing address city of the disputant.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String addressCity;
+
+	/**
+	 * The mailing address province of the disputant.
+	 */
+	@Size(max = 30)
+	@Column(length = 30)
+	@Schema(maxLength = 30, nullable = true)
+	private String addressProvince;
+
+	/**
+	 * The mailing address postal code or zip code of the disputant.
+	 */
+	@Size(max = 10)
+	@Column(length = 10)
+	@Schema(maxLength = 10)
+	private String postalCode;
 	
 	/**
-	 * Indicates that whether an interpreter is required by the disputant or not
+	 * The disputant's home phone number.
 	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private String interpreterRequiredYN;
-	
+	@Column(length = 20)
+	@Schema(nullable = true)
+	private String homePhoneNumber;
+
 	/**
-	 * Language code
+	 * The disputant's work phone number.
 	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private String languageCd;
-	
+	@Column(length = 20)
+	@Schema(nullable = true)
+	private String workPhoneNumber;
+
+	/**
+	 * The disputant's email address.
+	 */
+	@Column(length = 100)
+	@Schema(nullable = true)
+	@Email(regexp = ".+@.+\\..+")
+	private String emailAddress;
+
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date filingDate;
+
 	//Legal Representation Section
-	
+
 	/**
-	 * Indicates that whether the disputant is represented by a lawyer or not
+	 * The disputant intends to be represented by a lawyer at the hearing.
 	 */
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private String representedByLawyerYN;
+	@Column
+	@Enumerated(EnumType.STRING)
+	@Schema(nullable = true)
+    private YesNo representedByLawyer;
 	
 	/**
 	 * Name of the law firm that will represent the disputant at the hearing.
@@ -367,11 +216,11 @@ public class Dispute extends Auditable<String> {
 	private String lawFirmName;
 	
 	/**
-	 * Full name of the lawyer who will represent the disputant at the hearing.
+	 * Surname of the lawyer
 	 */
-	@Column
+	@Column(length = 30)
 	@Schema(nullable = true)
-	private String lawyerFullName;
+	private String lawyerSurname;
 	
 	/**
 	 * First given name of the lawyer
@@ -387,20 +236,6 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String lawyerGivenName2;
 	
-	/**
-	 * Surname of the lawyer
-	 */
-	@Column(length = 30)
-	@Schema(nullable = true)
-	private String lawyerSurname;
-	
-	/**
-	 * Email address of the lawyer who will represent the disputant at the hearing.
-	 */
-	@Column
-	@Schema(nullable = true)
-	@Email(regexp = ".+@.+\\..+")
-	private String lawyerEmail;
 	
 	/**
 	 * Address of the lawyer who will represent the disputant at the hearing.
@@ -415,6 +250,15 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 20)
 	@Schema(nullable = true)
 	private String lawyerPhoneNumber;
+		
+	
+	/**
+	 * Email address of the lawyer who will represent the disputant at the hearing.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Email(regexp = "^(.+)@(\\S+)$." ) /* https://xperti.io/blogs/java-email-address-validate-method/#:~:text=The%20most%20basic%20regular%20expression%20to%20validate%20an,of%20the%20%E2%80%98%40%E2%80%99%20symbol%20in%20the%20email%20address */
+	private String lawyerEmail;
 	
 	// End of Legal Representation Section
 	
@@ -425,24 +269,137 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String officerPin;
 	
-	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
-	private Float courtAgenId;
+	/**
+	 * Detachment location
+	 */
+	@Column(length = 150)
+	@Schema(nullable = true)
+	private String detachmentLocation;
+	
+	
+	/**
+	 * The disputant requires spoken language interpreter. The language name is
+	 * indicated in this field.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String interpreterLanguage;
+	
+	/**
+	 * Indicates that whether an interpreter is required by the disputant or not
+	 */
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+    private YesNo interpreterRequired;
+	
+	/**
+	 * Number of witness that the disputant intends to call.
+	 */
+	@Column(length = 3)
+	@Schema(nullable = true)
+	private Integer witnessNo;
+
+	/**
+	 * Reason indicating why the fine reduction requested for the ticket.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String fineReductionReason;
+
+	/**
+	 * Reason indicating why the disputant needs more time in order to make payment
+	 * for the ticket.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String timeToPayReason;
+	
+	/**
+	 * Disputant comment
+	 */
+	@Column(length = 4000)
+	@Schema(nullable = true)
+	private String disputantComment;
+	
+	/**
+	 * A note or reason indicating why this Dispute has a status of REJECTED. This
+	 * field is blank for other status types.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String rejectedReason;
+	
+	/**
+	 * The IDIR of the Staff whom the dispute is assigned to be reviewed on Staff
+	 * Portal.
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String userAssignedTo;
+
+	/**
+	 * The date and time a dispute was assigned to a Staff to be reviewed.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date userAssignedTs;
+
+	/**
+	 * Identifier for whether the citizen has detected any issues with the OCR
+	 * ticket result or not.
+	 */
+	@Column
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+    private YesNo disputantDetectedOcrIssues;
+
+	/**
+	 * The description of the issue with OCR ticket if the citizen has detected any.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String disputantOcrIssues;
+
+	/**
+	 * Identifier for whether the system has detected any issues with the OCR ticket
+	 * result or not.
+	 */
+	@Column
+	@Schema(nullable= false)
+	@Enumerated(EnumType.STRING)
+    private YesNo systemDetectedOcrIssues;
+
+	/**
+	 * All OCR Violation ticket data serialized into a JSON string.
+	 */
+	@Column
+	@Lob
+	@Schema(nullable = true)
+	private String ocrViolationTicket;
 
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")
 	@Schema(nullable = true)
+	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
 	private ViolationTicket violationTicket;
+	
+	@JsonManagedReference
+	@OneToMany(targetEntity = DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
+	private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
 	
 	@JsonBackReference
 	@ManyToOne(targetEntity=DisputeStatusType.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
-	private DisputeStatusType statusType;
+	@JoinColumn(name = "dispute_status_type_cd", referencedColumnName="disputeStatusTypeCode")
+	private DisputeStatusType disputeStatusType;
 
-	public void addDisputedCounts(List<DisputedCount> disputedCounts) {
-		for (DisputedCount disputedCount : disputedCounts) {
-			disputedCount.setDispute(this);
+	public void addDisputeCounts(List<DisputeCount> disputeCounts) {
+		for (DisputeCount disputeCount : disputeCounts) {
+			disputeCount.setDispute(this);
 		}
-		this.disputedCounts.addAll(disputedCounts);
+		this.disputeCounts.addAll(disputeCounts);
 	}
 
 	public void setViolationTicket(ViolationTicket ticket) {
