@@ -33,7 +33,9 @@ public class DisputeCount extends Auditable<String> {
 	/**
 	 * Primary key
 	 */
+	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
+	@GeneratedValue
 	private Long disputeCountId;
 	
 	/**
@@ -42,7 +44,7 @@ public class DisputeCount extends Auditable<String> {
 	@Column(length = 3)
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Plea pleaCd;
+	private Plea pleaCode;
 
 	/**
 	 * The disputant is requesting time to pay the ticketed amount.
