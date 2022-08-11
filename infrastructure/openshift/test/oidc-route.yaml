@@ -1,0 +1,26 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: oidc
+  namespace: 0198bb-test
+  labels:
+    app.kubernetes.io/component: keycloak
+    app.kubernetes.io/instance: oidc
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloak
+    helm.sh/chart: keycloak-9.6.2
+  annotations:
+    openshift.io/host.generated: 'true'
+    # restrict connections to the load balancer
+    #haproxy.router.openshift.io/ip_whitelist: 142.34.45.132 142.36.41.0/24
+spec:
+  to:
+    kind: Service
+    name: oidc-keycloak
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: None
+  wildcardPolicy: None

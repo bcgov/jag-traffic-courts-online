@@ -7,6 +7,7 @@ using TrafficCourts.Messaging;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Workflow.Service.Mappings;
 using System.Reflection;
+using TrafficCourts.Arc.Dispute.Client;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -28,13 +29,15 @@ public static class Startup
 
         AddSwagger(builder, assembly, logger);
 
-        builder.Services.Configure<ArcApiConfiguration>(builder.Configuration.GetRequiredSection("ArcApiConfiguration"));
         builder.Services.Configure<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
-        builder.Services.AddTransient<ISubmitDisputeToArcService, SubmitDisputeToArcService>();
+
+        // add the Arc Dispute Client
+        builder.Services.AddArcDisputeClient(builder.Configuration, section: "ArcApiConfiguration");
+
         builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
         builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
 
