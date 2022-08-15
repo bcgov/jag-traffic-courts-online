@@ -80,10 +80,9 @@ public class TicketSearchService : ITicketSearchService
             ViolationTicketCount count = new ViolationTicketCount();
             if (!string.IsNullOrEmpty(invoice.InvoiceNumber))
             {
-                count.Count = (short)char.GetNumericValue(invoice.InvoiceNumber[^1]);
+                count.CountNo = (short)char.GetNumericValue(invoice.InvoiceNumber[^1]);
             }
 
-            count.AmountDue = invoice.AmountDue;
             count.Description = invoice.OffenceDescription;
             count.TicketedAmount = invoice.TicketedAmount;
 

@@ -185,4 +185,6 @@ public class SubmitNoticeOfDispute : IMessage
     /// JSON serialized OCR data.
     /// </summary>
     public string? OcrViolationTicket { get; set; }
+
+    public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 }

@@ -190,7 +190,7 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column(length = 100)
 	@Schema(nullable = true)
-	@Email(regexp = ".+@.+\\..+")
+	@Email(regexp = "^(.+)@(\\S+)$." ) /* https://xperti.io/blogs/java-email-address-validate-method/#:~:text=The%20most%20basic%20regular%20expression%20to%20validate%20an,of%20the%20%E2%80%98%40%E2%80%99%20symbol%20in%20the%20email%20address */
 	private String emailAddress;
 
 	@Column

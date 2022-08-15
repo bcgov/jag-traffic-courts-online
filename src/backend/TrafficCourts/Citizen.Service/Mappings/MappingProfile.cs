@@ -13,7 +13,7 @@ namespace TrafficCourts.Citizen.Service.Mappings
             CreateMap<Models.Tickets.ViolationTicket, Messaging.MessageContracts.ViolationTicket>()
                 .ForMember(dest => dest.ViolationTicketCounts, opt => opt.MapFrom(src => src.Counts));
             CreateMap<Models.Tickets.ViolationTicketCount, Messaging.MessageContracts.TicketCount>()
-                .ForMember(dest => dest.FullSection, opt => opt.MapFrom(src => src.Section));
+                .ForMember(dest => dest.FullSection, opt => opt.MapFrom(src => src.FullSection));
         }
     }
 }
