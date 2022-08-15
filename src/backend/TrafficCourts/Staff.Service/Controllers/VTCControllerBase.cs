@@ -6,7 +6,6 @@ using TrafficCourts.Staff.Service.Authentication;
 namespace TrafficCourts.Staff.Service.Controllers
 {
     [ApiController]
-    [Authorize(Roles = Roles.VtcStaff)]
     [Route("api/[controller]")]
     public abstract class VTCControllerBase<TController> : ControllerBase
     {

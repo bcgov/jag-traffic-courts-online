@@ -338,7 +338,6 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Policy = Policies.CanAssignDisputes)]
     public async Task<IActionResult> SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "PROCESSING");
