@@ -24,8 +24,12 @@ public static class KeycloakAuthorizationServiceCollectionExtensions
         }
 
         services.Configure(configure);
+
         services.AddHttpContextAccessor();
-        services.AddSingleton<IAuthorizationHandler, KeycloakAuthorizationHandler>();
+
+        services.AddHttpClient<KeycloakAuthorizationHandler>();
+
+        services.AddTransient<IAuthorizationHandler, KeycloakAuthorizationHandler>();
 
         return services;
     }

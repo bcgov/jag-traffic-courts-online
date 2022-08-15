@@ -44,6 +44,7 @@ public class KeycloakAuthorizationPolicyProvider : IAuthorizationPolicyProvider
     /// <returns>Gets a AuthorizationPolicy for the given policyName</returns>
     public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
+        // note: not really clear on what this code is doing, sample code checks "is not null".
         if (_authorizationOptions.Value.GetPolicy(policyName) is not null)
         {
             return _fallbackPolicyProvider.GetPolicyAsync(policyName);
