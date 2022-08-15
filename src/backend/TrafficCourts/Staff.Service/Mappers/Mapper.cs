@@ -9,46 +9,46 @@ public class Mapper
     public static DisputeApproved ToDisputeApproved(Dispute dispute)
     {
         DisputeApproved target = new();
-        target.CitizenName = dispute.GivenNames + " " + dispute.Surname;
-        target.TicketIssuanceDate = dispute.IssuedDate.DateTime;
-        target.TicketFileNumber = dispute.TicketNumber;
-        target.IssuingOrganization = dispute.ViolationTicket.OrganizationLocation;
-        target.IssuingLocation = dispute.ProvincialCourtHearingLocation;
+        target.CitizenName = dispute.DisputantGivenName1 + " " + dispute.DisputantSurname;
+        target.TicketIssuanceDate = dispute.IssuedDate?.DateTime;
+        target.TicketFileNumber = dispute.ViolationTicket.TicketNumber;
+        target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;
+        target.IssuingLocation = dispute.CourtLocation;
         target.DriversLicence = dispute.DriversLicenceNumber;
         List <Messaging.MessageContracts.ViolationTicketCount> violationTicketCounts = new();
         foreach (var violationTicketCount in dispute.ViolationTicket.ViolationTicketCounts)
         {
             Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
             {
-                Count = violationTicketCount.Count,
+                Count = violationTicketCount.CountNo,
                 FullSection = violationTicketCount.FullSection,
                 Section = violationTicketCount.Section,
                 Subsection = violationTicketCount.Subsection,
                 Paragraph = violationTicketCount.Paragraph,
-                Act = violationTicketCount.ActRegulation,
+                Act = violationTicketCount.ActOrRegulationNameCode,
                 Amount = violationTicketCount.TicketedAmount
             };
+
+            if (violationTicketCount.DisputeCount != null)
+            {
+                Messaging.MessageContracts.DisputeCount disputeCount = new()
+                {
+                    PleaCode = violationTicketCount.DisputeCount.PleaCode,
+                    RequestCourtAppearance = violationTicketCount.DisputeCount.RequestCourtAppearance,
+                    RequestReduction = violationTicketCount.DisputeCount.RequestReduction,
+                    RequestTimeToPay = violationTicketCount.DisputeCount.RequestTimeToPay
+                };
+                ticketCount.DisputeCount = disputeCount;
+            }
 
             violationTicketCounts.Add(ticketCount);
         }
         target.ViolationTicketCounts = violationTicketCounts;
         target.StreetAddress = dispute.Address;
-        target.City = dispute.City;
-        target.Province = dispute.Province;
+        target.City = dispute.AddressCity;
+        target.Province = dispute.AddressProvince;
         target.PostalCode = dispute.PostalCode;
         target.Email = dispute.EmailAddress;
-        List<Messaging.MessageContracts.DisputeCount> disputeCounts = new();
-        foreach (var dc in dispute.DisputedCounts)
-        {
-            Messaging.MessageContracts.DisputeCount disputeCount = new()
-            {
-                Count = dc.Count,
-                DisputeType = nameof(dc.Plea)
-            };
-
-            disputeCounts.Add(disputeCount);
-        }
-        target.DisputeCounts = disputeCounts;
 
         return target;
     }
@@ -63,7 +63,7 @@ public class Mapper
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
         DisputeCancelled disputeCancelled = new();
-        disputeCancelled.Id = dispute.Id;
+        disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
         return disputeCancelled;
     }
@@ -93,8 +93,8 @@ public class Mapper
 
             sendEmail.From = template.Sender;
             sendEmail.To.Add(dispute.EmailAddress);
-            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.ViolationTicket.TicketNumber);
+            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.ViolationTicket.TicketNumber);
             
         }
         return sendEmail;

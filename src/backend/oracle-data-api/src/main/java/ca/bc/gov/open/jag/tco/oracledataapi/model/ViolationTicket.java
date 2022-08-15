@@ -227,5 +227,4 @@ public class ViolationTicket extends Auditable<String> {
 	@JoinColumn(name = "dispute_id", referencedColumnName = "disputeId")
 	@Schema(hidden = true)
 	private Dispute dispute;
-
 }

@@ -251,7 +251,6 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true)
 	private String lawyerPhoneNumber;
 		
-	
 	/**
 	 * Email address of the lawyer who will represent the disputant at the hearing.
 	 */
@@ -384,23 +383,11 @@ public class Dispute extends Auditable<String> {
 	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
 	private ViolationTicket violationTicket;
 	
-	@JsonManagedReference
-	@OneToMany(targetEntity = DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
-	private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
-	
 	@JsonBackReference
 	@ManyToOne(targetEntity=DisputeStatusType.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
 	@JoinColumn(name = "dispute_status_type_cd", referencedColumnName="disputeStatusTypeCode")
 	private DisputeStatusType disputeStatusType;
-
-	public void addDisputeCounts(List<DisputeCount> disputeCounts) {
-		for (DisputeCount disputeCount : disputeCounts) {
-			disputeCount.setDispute(this);
-		}
-		this.disputeCounts.addAll(disputeCounts);
-	}
 
 	public void setViolationTicket(ViolationTicket ticket) {
 		if (ticket == null) {

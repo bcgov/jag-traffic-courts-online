@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -132,8 +133,19 @@ public class ViolationTicketCount extends Auditable<String> {
 	private ViolationTicket violationTicket;
 	
 	@JsonManagedReference
-	@OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToOne(targetEntity=DisputeCount.class, optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="violation_ticket_count_id", referencedColumnName="violationTicketCountId")
-	@Schema(hidden = true)
-	private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
+	@Schema(nullable = true)
+	private DisputeCount disputeCount = new DisputeCount();
+	
+	public void setDisputeCount(DisputeCount disputeCount) {
+		if (disputeCount == null) {
+			if (this.disputeCount != null) {
+				this.disputeCount.setViolationTicketCount(null);
+			}
+		} else {
+			disputeCount.setViolationTicketCount(this);
+		}
+		this.disputeCount = disputeCount;
+	}
 }

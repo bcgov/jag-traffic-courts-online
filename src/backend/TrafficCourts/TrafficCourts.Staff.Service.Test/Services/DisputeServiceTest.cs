@@ -28,7 +28,7 @@ public class DisputeServiceTest
         //Given
         DisputeService service = new(new OracleDataApiConfiguration(), new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, new Mock<IHttpContextAccessor>().Object, new Mock<ILogger<DisputeService>>().Object);
         Dispute dispute = new();
-        dispute.Id = 1;
+        dispute.DisputeId = 1;
         dispute.ViolationTicket = new();
         dispute.OcrViolationTicket = json;
 

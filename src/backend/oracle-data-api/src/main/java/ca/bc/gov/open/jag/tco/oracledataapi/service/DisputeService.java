@@ -66,6 +66,7 @@ public class DisputeService {
 			dispute.getViolationTicket().setViolationTicketId(null);
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
+				violationTicketCount.getDisputeCount().setDisputeCountId(null);
 			}
 		}
 		disputeRepository.save(dispute);
@@ -81,14 +82,7 @@ public class DisputeService {
 	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "id", "disputeCounts");
-		// Remove all existing ticket counts that are associated to this dispute
-		if (disputeToUpdate.getDisputeCounts() != null) {
-			disputeToUpdate.getDisputeCounts().clear();
-		}
-		// Add updated ticket counts
-		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
-
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "violationTicket");
 		return disputeRepository.save(disputeToUpdate);
 	}
 
