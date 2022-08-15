@@ -15,7 +15,7 @@ public class OAuthTokenCache : TokenCache<OAuthOptions, Token>
         StringBuilder buffer = new StringBuilder();
 
         // create a cache key based on all the parameters
-        buffer.Append(configuration.AuthorizationUri);
+        buffer.Append(configuration.TokenUri);
         buffer.Append('|');
         buffer.Append(configuration.ClientId);
         buffer.Append('|');

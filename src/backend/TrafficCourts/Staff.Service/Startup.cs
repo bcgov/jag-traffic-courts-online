@@ -5,6 +5,7 @@ using OpenTelemetry.Trace;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using TrafficCourts.Common;
+using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.Features.Lookups;
@@ -51,6 +52,9 @@ public static class Startup
         builder.Services.AddAuthorization(builder.Configuration);
 
         builder.Services.AddFilePersistence(builder.Configuration);
+
+        builder.Services.AddKeycloakAdminApiClient(builder.Configuration);
+        builder.Services.AddTransient<IKeycloakService, KeycloakService>();
 
         // Add DisputeService
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));

@@ -29,7 +29,7 @@ public class OAuthClient : IOAuthClient
         using var content = new FormUrlEncodedContent(data);
 
         var response = await _httpClient
-            .PostAsync(options.AuthorizationUri, content, cancellationToken);
+            .PostAsync(options.TokenUri, content, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
