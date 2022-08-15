@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -201,6 +202,7 @@ internal class DecisionResponseError
     public string Description { get; set; }
 }
 
+[ExcludeFromCodeCoverage]
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(DecisionResponse))]
 [JsonSerializable(typeof(DecisionResponseError))]
