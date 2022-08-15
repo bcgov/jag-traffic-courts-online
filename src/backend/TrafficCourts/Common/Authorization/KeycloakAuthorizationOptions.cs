@@ -24,14 +24,6 @@ public class KeycloakAuthorizationOptions
     public string TokenEndpoint { get; set; }
 
     /// <summary>
-    /// Gets or sets the backchannel handler.
-    /// </summary>
-    /// <value>
-    /// The backchannel handler.
-    /// </value>
-    public HttpMessageHandler BackchannelHandler { get; set; } = new HttpClientHandler();
-
-    /// <summary>
     /// Gets or sets the audience.
     /// </summary>
     /// <value>

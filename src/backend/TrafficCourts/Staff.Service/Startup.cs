@@ -1,4 +1,4 @@
-﻿using MassTransit;
+using MassTransit;
 using MediatR;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Trace;
@@ -45,7 +45,10 @@ public static class Startup
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         builder.Services.AddAuthentication(builder.Configuration);
-        builder.Services.AddAuthorization(builder.Configuration);
+
+        builder.Services.AddSingleton(new OracleDataApiConfiguration());
+
+        builder.Services.AddAuthorization<Policies>(builder.Configuration);
 
         builder.Services.AddFilePersistence(builder.Configuration);
 

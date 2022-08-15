@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -324,7 +326,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="403">Forbidden, requires dispute:submit permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>

@@ -1,0 +1,18 @@
+﻿namespace TrafficCourts.Staff.Service.Authentication;
+
+/// <summary>
+/// Defines all the scopes that are used in the application.
+/// </summary>
+public static class Scopes
+{
+    public const string Approve = "approve";
+    public const string Assign = "assign";
+
+    public const string Reject = "reject";
+    public const string Review = "review";
+
+    public const string Create = "create";
+    public const string Read = "read";
+    public const string Update = "update";
+    public const string Delete = "delete";
+}
