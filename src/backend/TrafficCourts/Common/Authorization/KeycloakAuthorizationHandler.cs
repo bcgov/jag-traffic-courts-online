@@ -103,8 +103,7 @@ public class KeycloakAuthorizationHandler : AuthorizationHandler<KeycloakAuthori
         HttpRequestMessage request = new()
         {
             Method = HttpMethod.Post,
-            Content = new FormUrlEncodedContent(data),
-            RequestUri = new Uri(_options.TokenEndpoint)
+            Content = new FormUrlEncodedContent(data)
         };
 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace TrafficCourts.Common.Authorization;
 
@@ -27,9 +28,11 @@ public static class KeycloakAuthorizationServiceCollectionExtensions
 
         services.AddHttpContextAccessor();
 
-        services.AddHttpClient<KeycloakAuthorizationHandler>();
-
-        services.AddTransient<IAuthorizationHandler, KeycloakAuthorizationHandler>();
+        services.AddHttpClient<IAuthorizationHandler, KeycloakAuthorizationHandler>((serviceProvider, client) =>
+        {
+            var options = serviceProvider.GetRequiredService<IOptions<KeycloakAuthorizationOptions>>();
+            client.BaseAddress = new Uri(options.Value.TokenEndpoint);
+        });
 
         return services;
     }
