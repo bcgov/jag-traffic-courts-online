@@ -1961,17 +1961,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class DisputantContactInformation
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         /// <summary>
         /// ID
@@ -2016,17 +2016,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class JJDispute
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("ticketNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string TicketNumber { get; set; }
@@ -2104,17 +2104,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class JJDisputedCount
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         /// <summary>
         /// ID
@@ -2178,17 +2178,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Dispute
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         /// <summary>
         /// ID
@@ -2340,6 +2340,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("violationTicket", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public ViolationTicket ViolationTicket { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("disputeCounts", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<DisputeCount> DisputeCounts { get; set; }
+
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
 
         [Newtonsoft.Json.JsonExtensionData]
@@ -2354,23 +2357,27 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class DisputeCount
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         /// <summary>
         /// ID
         /// </summary>
         [Newtonsoft.Json.JsonProperty("disputeCountId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long DisputeCountId { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("countNo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(1, 3)]
+        public int CountNo { get; set; }
 
         [Newtonsoft.Json.JsonProperty("pleaCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -2402,17 +2409,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ViolationTicket
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         /// <summary>
         /// ID
@@ -2517,17 +2524,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.0.0 (NJsonSchema v10.7.1.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ViolationTicketCount
     {
-        [Newtonsoft.Json.JsonProperty("enteredUserId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string EnteredUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CreatedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("enteredTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset EnteredTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("createdTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset CreatedTs { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string UpdatedUserId { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedBy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ModifiedBy { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("updatedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedTs { get; set; }
+        [Newtonsoft.Json.JsonProperty("modifiedTs", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset ModifiedTs { get; set; }
 
         /// <summary>
         /// ID
@@ -2571,7 +2578,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("ticketedAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public float? TicketedAmount { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("disputeCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("disputeCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public DisputeCount DisputeCount { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();

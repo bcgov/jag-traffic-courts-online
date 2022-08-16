@@ -38,9 +38,9 @@ public class DisputeService {
 		} else if (olderThan == null) {
 			return disputeRepository.findByStatusNot(excludeStatus);
 		} else if (excludeStatus == null) {
-			return disputeRepository.findByEnteredTsBefore(olderThan);
+			return disputeRepository.findByCreatedTsBefore(olderThan);
 		} else {
-			return disputeRepository.findByStatusNotAndEnteredTsBefore(excludeStatus, olderThan);
+			return disputeRepository.findByStatusNotAndCreatedTsBefore(excludeStatus, olderThan);
 		}
 	}
 
@@ -67,7 +67,9 @@ public class DisputeService {
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
 				violationTicketCount.getDisputeCount().setDisputeCountId(null);
+				violationTicketCount.getDisputeCount().setDispute(dispute);
 			}
+			
 		}
 		disputeRepository.save(dispute);
 	}

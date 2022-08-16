@@ -543,19 +543,15 @@
       "DisputantContactInformation": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "id": {
             "type": "integer",
@@ -587,19 +583,15 @@
       "JJDispute": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "ticketNumber": { "type": "string" },
           "status": {
@@ -687,19 +679,15 @@
       "JJDisputedCount": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "id": {
             "type": "integer",
@@ -760,19 +748,15 @@
       "Dispute": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "disputeId": {
             "type": "integer",
@@ -969,31 +953,37 @@
             "type": "string",
             "nullable": true
           },
-          "violationTicket": { "$ref": "#/components/schemas/ViolationTicket" }
+          "violationTicket": { "$ref": "#/components/schemas/ViolationTicket" },
+          "disputeCounts": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DisputeCount" }
+          }
         }
       },
       "DisputeCount": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "disputeCountId": {
             "type": "integer",
             "description": "ID",
             "format": "int64",
             "readOnly": true
+          },
+          "countNo": {
+            "maximum": 3,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
           },
           "pleaCode": {
             "type": "string",
@@ -1011,25 +1001,20 @@
             "type": "string",
             "enum": [ "Y", "N" ]
           }
-        },
-        "nullable": true
+        }
       },
       "ViolationTicket": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "violationTicketId": {
             "type": "integer",
@@ -1154,19 +1139,15 @@
       "ViolationTicketCount": {
         "type": "object",
         "properties": {
-          "enteredUserId": { "type": "string" },
-          "enteredTs": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
             "type": "string",
             "format": "date-time"
           },
-          "updatedUserId": {
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
             "type": "string",
-            "nullable": true
-          },
-          "updatedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "violationTicketCountId": {
             "type": "integer",

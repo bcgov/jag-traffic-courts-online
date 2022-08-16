@@ -39,6 +39,13 @@ public class DisputeCount extends Auditable<String> {
 	private Long disputeCountId;
 	
 	/**
+	 * The count number.
+	 */
+	@Column
+	@Min(1) @Max(3)
+	private int countNo;
+	
+	/**
 	 * Represents the disputant plea on count.
 	 */
 	@Column(length = 3)
@@ -70,7 +77,7 @@ public class DisputeCount extends Auditable<String> {
 	@Enumerated(EnumType.STRING)
     private YesNo requestCourtAppearance;
 	
-	@JsonBackReference
+	@JsonBackReference(value= "dispute_count_reference")
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
 	@Schema(hidden = true)
@@ -81,4 +88,8 @@ public class DisputeCount extends Auditable<String> {
     @JoinColumn(name="violation_ticket_count_id", referencedColumnName="violationTicketCountId")
 	@Schema(hidden = true)
 	private ViolationTicketCount violationTicketCount;
+	
+	public void setDispute(Dispute dispute) {
+		this.dispute = dispute;
+	}
 }

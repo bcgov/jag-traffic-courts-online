@@ -190,7 +190,7 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column(length = 100)
 	@Schema(nullable = true)
-	@Email(regexp = "^(.+)@(\\S+)$." ) /* https://xperti.io/blogs/java-email-address-validate-method/#:~:text=The%20most%20basic%20regular%20expression%20to%20validate%20an,of%20the%20%E2%80%98%40%E2%80%99%20symbol%20in%20the%20email%20address */
+	@Email(regexp = ".+@.+\\..+" )
 	private String emailAddress;
 
 	@Column
@@ -256,7 +256,7 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Email(regexp = "^(.+)@(\\S+)$." ) /* https://xperti.io/blogs/java-email-address-validate-method/#:~:text=The%20most%20basic%20regular%20expression%20to%20validate%20an,of%20the%20%E2%80%98%40%E2%80%99%20symbol%20in%20the%20email%20address */
+	@Email(regexp = ".+@.+\\..+" )	
 	private String lawyerEmail;
 	
 	// End of Legal Representation Section
@@ -388,7 +388,12 @@ public class Dispute extends Auditable<String> {
 	@Schema(hidden = true)
 	@JoinColumn(name = "dispute_status_type_cd", referencedColumnName="disputeStatusTypeCode")
 	private DisputeStatusType disputeStatusType;
-
+	
+    @JsonManagedReference(value="dispute_count_reference")
+    @OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="dispute_id", referencedColumnName="disputeId")
+    private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
+    
 	public void setViolationTicket(ViolationTicket ticket) {
 		if (ticket == null) {
 			if (this.violationTicket != null) {

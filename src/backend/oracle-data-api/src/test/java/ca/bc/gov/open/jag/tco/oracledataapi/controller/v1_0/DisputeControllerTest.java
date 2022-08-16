@@ -209,19 +209,19 @@ class DisputeControllerTest extends BaseTestSuite {
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setStatus(DisputeStatus.NEW);
 		Long disputeId = disputeController.saveDispute(dispute);
-		dispute.setUpdatedTs(DateUtils.addDays(now, -1));
+		dispute.setModifiedTs(DateUtils.addDays(now, -1));
 		disputeController.updateDispute(disputeId, dispute, principal);
 		
 		Dispute dispute2 = RandomUtil.createDispute();
 		dispute2.setStatus(DisputeStatus.PROCESSING);
 		Long dispute2Id = disputeController.saveDispute(dispute2);
-		dispute2.setEnteredTs(DateUtils.addDays(now, -2));
+		dispute2.setCreatedTs(DateUtils.addDays(now, -2));
 		disputeController.updateDispute(dispute2Id, dispute2, principal);
 		
 		Dispute dispute3 = RandomUtil.createDispute();
 		dispute3.setStatus(DisputeStatus.CANCELLED);
 		Long dispute3Id = disputeController.saveDispute(dispute3);
-		dispute3.setEnteredTs(DateUtils.addDays(now, -3));
+		dispute3.setCreatedTs(DateUtils.addDays(now, -3));
 		disputeController.updateDispute(dispute3Id, dispute3, principal);
 
 		// Assert controller returns all the disputes that were saved if no parameters passed.

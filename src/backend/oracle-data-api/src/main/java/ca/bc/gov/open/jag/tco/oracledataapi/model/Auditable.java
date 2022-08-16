@@ -30,24 +30,20 @@ public abstract class Auditable<U> {
 
 	/** The username of the individual (or system) who created this record. */
 	@CreatedBy
-	@Schema(nullable = false)
-	private U enteredUserId;
+	private U createdBy;
 
 	/** The timestamp this record was created. */
 	@CreatedDate
-	@Schema(nullable = false)
 	@Temporal(TIMESTAMP)
-	private Date enteredTs;
+	private Date createdTs;
 
 	/** The username of the individual (or system) who modified this record. */
 	@LastModifiedBy
-	@Schema(nullable = true)
-	private U updatedUserId;
+	private U modifiedBy;
 
 	/** The timestamp this record was last modified. */
 	@LastModifiedDate
-	@Schema(nullable = true)
 	@Temporal(TIMESTAMP)
-	private Date updatedTs;
+	private Date modifiedTs;
 
 }
