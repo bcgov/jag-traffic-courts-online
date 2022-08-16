@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Authentication;
 using TrafficCourts.Common.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Resources;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace TrafficCourts.Staff.Service.Authentication;
 
@@ -37,7 +41,7 @@ public static class AuthenticationExtensions
     /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add services to.</param>
     /// <param name="configuration">The application configuration</param>
     /// <returns></returns>
-    public static IServiceCollection AddAuthorization<TPolicy>(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtOptions = configuration.GetSection(_jwtBearerOptionsSection).Get<JwtBearerOptions>();
 
@@ -47,7 +51,7 @@ public static class AuthenticationExtensions
         }
 
         services
-            .AddAuthorization(options => ApplyPolicies<TPolicy>(options))
+            .AddAuthorization(options => ApplyPolicies(options))
             .AddKeycloakAuthorization(options =>
         {
             options.Audience = jwtOptions.Audience;
@@ -57,44 +61,57 @@ public static class AuthenticationExtensions
         return services;
     }
 
-
     /// <summary>
-    /// Gets the policies defined in the <typeparam name="TPolicy" />.
+    /// Gets the policies defined on controllers.
     /// </summary>
     /// <param name="options"></param>
-    private static void ApplyPolicies<TPolicy>(AuthorizationOptions options)
+    private static void ApplyPolicies(AuthorizationOptions options)
     {
-        // get all the public static string fields
-        var fields = typeof(TPolicy)
-            .GetFields(BindingFlags.Static | BindingFlags.Public)
-            .Where(_ => _.FieldType == typeof(string));
+        var policies = GetPolicies();
 
-        foreach (var field in fields)
+        foreach (var authorizationPolicy in policies)
         {
-            // get the value
-            var value = field.GetValue(null) as string;
-            if (string.IsNullOrWhiteSpace((value)))
+            options.AddPolicy(authorizationPolicy.Policy!, policy => policy.RequiresKeycloakEntitlement(authorizationPolicy.Resource, authorizationPolicy.Scope));
+        }
+    }
+
+    private static IEnumerable<KeycloakAuthorizeAttribute> GetPolicies()
+    {
+        // find all controllers and public controller methods looking for KeycloakAuthorizeAttribute and apply
+        var controllerBaseType = typeof(ControllerBase);
+
+        // assume all controllers are defined in this assembly
+        IEnumerable<Type> controllers = typeof(Program)
+            .Assembly
+            .GetTypes()
+            .Where(type => controllerBaseType.IsAssignableFrom(type) && !type.IsAbstract);
+
+        // HashSet will remove any duplicates
+        HashSet<KeycloakAuthorizeAttribute> policies = new HashSet<KeycloakAuthorizeAttribute>();
+
+        foreach (var controller in controllers)
+        {
+            var attributes = controller.GetCustomAttributes<KeycloakAuthorizeAttribute>();
+            foreach (var attribute in attributes)
             {
-                continue;
+                policies.Add(attribute);
             }
 
-            // split on colon
-            var colon = value.IndexOf(':');
-            if (colon == -1)
+            var methods = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var method in methods)
             {
-                continue;
-            }
-
-            // value is "resource:scope"
-            string name = value;
-            string resource = value[0..colon];
-            string scope = value[(colon+1)..];
-
-            // if propertly formatted
-            if (!string.IsNullOrEmpty(resource) && !string.IsNullOrEmpty(scope))
-            {
-                options.AddPolicy(name, policy => policy.RequiresKeycloakEntitlement(resource, scope));
+                // check if the method is a action method
+                if (method.GetCustomAttribute<HttpMethodAttribute>() is not null)
+                {
+                    attributes = method.GetCustomAttributes<KeycloakAuthorizeAttribute>();
+                    foreach (var attribute in attributes)
+                    {
+                        policies.Add(attribute);
+                    }
+                }
             }
         }
+
+        return policies;
     }
 }

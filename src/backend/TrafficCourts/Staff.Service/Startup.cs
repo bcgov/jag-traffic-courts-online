@@ -48,7 +48,7 @@ public static class Startup
 
         builder.Services.AddSingleton(new OracleDataApiConfiguration());
 
-        builder.Services.AddAuthorization<Policies>(builder.Configuration);
+        builder.Services.AddAuthorization(builder.Configuration);
 
         builder.Services.AddFilePersistence(builder.Configuration);
 

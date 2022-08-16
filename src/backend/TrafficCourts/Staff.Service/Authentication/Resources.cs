@@ -5,4 +5,5 @@
 /// </summary>
 public static class Resources
 {
+    public const string Dispute = "dispute";
 }
