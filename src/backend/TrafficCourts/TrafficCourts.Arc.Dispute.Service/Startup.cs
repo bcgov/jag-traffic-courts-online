@@ -1,11 +1,15 @@
 ﻿using Renci.SshNet;
 using Serilog;
+using System.Collections;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using TrafficCourts.Arc.Dispute.Service.Configuration;
 using TrafficCourts.Arc.Dispute.Service.Services;
 using TrafficCourts.Common;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Converters;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TrafficCourts.Arc.Dispute.Service;
 
@@ -37,16 +41,15 @@ public static class Startup
         builder.Services.AddTransient<SftpClient>(serviceProvider =>
         {
             var connectionOptions = serviceProvider.GetRequiredService<SftpConnectionOptions>();
-            var sshPrivateKeyPath = connectionOptions.SshPrivateKeyPath;
 
-            // configuration validates that if SshPrivateKeyPath is not null or empty, and the file must exist
-            if (!string.IsNullOrEmpty(sshPrivateKeyPath))
+            // try to use ssh private key to authenticate
+            PrivateKeyFile? privateKey = connectionOptions.GetPrivateKey();
+            if (privateKey is not null)
             {
-                var privateKey = new PrivateKeyFile(sshPrivateKeyPath);
                 return new SftpClient(connectionOptions.Host, connectionOptions.Port, connectionOptions.Username, new[] { privateKey });
             }
 
-            // using username/password
+            // use username and password
             return new SftpClient(connectionOptions.Host, connectionOptions.Port, connectionOptions.Username, connectionOptions.Password);
         });
 

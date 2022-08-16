@@ -1,4 +1,7 @@
-﻿using TrafficCourts.Common.Configuration.Validation;
+﻿using Renci.SshNet;
+using Renci.SshNet.Common;
+using System.Text;
+using TrafficCourts.Common.Configuration.Validation;
 
 namespace TrafficCourts.Arc.Dispute.Service.Configuration
 {
@@ -37,22 +40,61 @@ namespace TrafficCourts.Arc.Dispute.Service.Configuration
         /// </summary>
         public string? SshPrivateKeyPath { get; set; }
 
+        public string SshPrivateKey { get; set; }
+
         public void Validate()
         {
             if (string.IsNullOrEmpty(Host)) throw new SettingsValidationException(Section, nameof(Host), "is required");
             if (string.IsNullOrEmpty(Username)) throw new SettingsValidationException(Section, nameof(Username), "is required");
 
-            if (!string.IsNullOrEmpty(SshPrivateKeyPath))
+            // validate credentials
+            try
             {
-                if (!File.Exists(SshPrivateKeyPath))
+                var privateKey = GetPrivateKey();
+                if (privateKey is not null)
                 {
-                    throw new SettingsValidationException(Section, nameof(SshPrivateKeyPath), "file does not exist");
+                    return; // good!
                 }
             }
-            else if (string.IsNullOrEmpty(Password))
+            catch (SshException)
+            {
+                if (!string.IsNullOrEmpty(SshPrivateKey))
+                {
+                    throw new SettingsValidationException(Section, nameof(SshPrivateKey), "contains an invalid private key file");
+                }
+
+                throw new SettingsValidationException(Section, nameof(SshPrivateKeyPath), "contains an invalid private key file");
+            }
+
+            if (string.IsNullOrEmpty(Password))
             {
                 throw new SettingsValidationException(Section, nameof(Password), "is required when no private key has been specified");
             }
+        }
+
+        /// <summary>
+        /// Loads the private key based on the configuration.
+        /// </summary>
+        /// <returns>The <see cref="PrivateKeyFile"/> or null of the private key is not available.</returns>
+        /// <exception cref="SshException">The private key is not well formed</exception>
+        public PrivateKeyFile? GetPrivateKey()
+        {
+            if (!string.IsNullOrEmpty(SshPrivateKey))
+            {
+                var bytes = Encoding.ASCII.GetBytes(SshPrivateKey);
+                MemoryStream stream = new MemoryStream(bytes);
+
+                PrivateKeyFile privateKey = new(stream); // throws SshException if the private key is not well formed
+                return privateKey;
+            }
+
+            if (!string.IsNullOrEmpty(SshPrivateKeyPath) && File.Exists(SshPrivateKeyPath))
+            {
+                PrivateKeyFile privateKey = new(SshPrivateKeyPath); // throws SshException if the private key is not well formed
+                return privateKey;
+            }
+
+            return null; // private key not available
         }
     }
 }
