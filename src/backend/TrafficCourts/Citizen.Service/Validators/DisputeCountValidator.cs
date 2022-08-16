@@ -12,6 +12,7 @@ namespace TrafficCourts.Citizen.Service.Validators
         public DisputeCountValidator()
         {
             RuleFor(_ => _.PleaCode).IsInEnum();
+            RuleFor(_ => (int)(_.CountNo)).InclusiveBetween(1, 3);
 
             // Validation rules for properties if disputant pleaded guilty
             RuleFor(_ => _.RequestTimeToPay).NotNull()
@@ -27,11 +28,11 @@ namespace TrafficCourts.Citizen.Service.Validators
                 .WithMessage("'Request Court Appearance' selection is required to be set since disputant pleaded guilty");
 
             // Validation rules for properties if disputant pleaded not guilty
-            RuleFor(_ => _.RequestTimeToPay).Must(x => x == DisputeCountRequestTimeToPay.Y || x is null)
+            RuleFor(_ => _.RequestTimeToPay).Must(x => x == DisputeCountRequestTimeToPay.N || x is null)
                 .When(_ => _.PleaCode.Equals(DisputeCountPleaCode.N))
                 .WithMessage("'Request Time To Pay' must not be true since disputant pleaded not guilty");
 
-            RuleFor(_ => _.RequestReduction).Must(x => x == DisputeCountRequestReduction.Y || x is null)
+            RuleFor(_ => _.RequestReduction).Must(x => x == DisputeCountRequestReduction.N || x is null)
                 .When(_ => _.PleaCode.Equals(DisputeCountPleaCode.N))
                 .WithMessage("'Request Reduction' must not be true since disputant pleaded not guilty");
 

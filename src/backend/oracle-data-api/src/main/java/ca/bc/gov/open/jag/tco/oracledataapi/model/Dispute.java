@@ -48,6 +48,13 @@ public class Dispute extends Auditable<String> {
 	@GeneratedValue
 	private Long disputeId;
 	
+	 /**
+     * The violation ticket number.
+     */
+    @Column(length = 50)
+    @Schema(nullable = false)
+    private String ticketNumber;
+	
 	/**
      * Court location.
      */

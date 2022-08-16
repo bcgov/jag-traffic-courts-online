@@ -10,6 +10,11 @@ namespace TrafficCourts.Messaging.MessageContracts
         public DisputeCountPleaCode PleaCode { get; set; }
 
         /// <summary>
+        /// Count No
+        /// </summary>
+        public short CountNo { get; set; }
+
+        /// <summary>
         /// The disputant is requesting time to pay the ticketed amount.
         /// </summary>
         public DisputeCountRequestTimeToPay RequestTimeToPay { get; set; } = DisputeCountRequestTimeToPay.N;

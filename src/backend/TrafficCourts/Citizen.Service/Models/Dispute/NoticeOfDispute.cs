@@ -11,6 +11,13 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
     public class NoticeOfDispute
     {
         /// <summary>
+        /// The violation ticket number.
+        /// </summary>
+        [JsonPropertyName("ticket_number")]
+        [MaxLength(12)]
+        public string? TicketNumber { get; set; }
+
+        /// <summary>
         /// The provincial court hearing location named on the violation ticket.
         /// </summary>
         [JsonPropertyName("court_location")]

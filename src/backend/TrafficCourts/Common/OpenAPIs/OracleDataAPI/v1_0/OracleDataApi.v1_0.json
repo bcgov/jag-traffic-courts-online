@@ -764,6 +764,7 @@
             "format": "int64",
             "readOnly": true
           },
+          "ticketNumber": { "type": "string" },
           "courtLocation": {
             "type": "string",
             "nullable": true

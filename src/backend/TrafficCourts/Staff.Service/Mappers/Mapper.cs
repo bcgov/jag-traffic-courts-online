@@ -33,6 +33,7 @@ public class Mapper
             {
                 Messaging.MessageContracts.DisputeCount disputeCount = new()
                 {
+                    CountNo = (short)violationTicketCount.DisputeCount.CountNo,
                     PleaCode = violationTicketCount.DisputeCount.PleaCode,
                     RequestCourtAppearance = violationTicketCount.DisputeCount.RequestCourtAppearance,
                     RequestReduction = violationTicketCount.DisputeCount.RequestReduction,
