@@ -11,7 +11,7 @@ public class Mapper
         DisputeApproved target = new();
         target.CitizenName = dispute.DisputantGivenName1 + " " + dispute.DisputantSurname;
         target.TicketIssuanceDate = dispute.IssuedDate?.DateTime;
-        target.TicketFileNumber = dispute.ViolationTicket.TicketNumber;
+        target.TicketFileNumber = dispute.TicketNumber;
         target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;
         target.IssuingLocation = dispute.CourtLocation;
         target.DriversLicence = dispute.DriversLicenceNumber;
@@ -29,21 +29,21 @@ public class Mapper
                 Amount = violationTicketCount.TicketedAmount
             };
 
-            if (violationTicketCount.DisputeCount != null)
-            {
-                Messaging.MessageContracts.DisputeCount disputeCount = new()
-                {
-                    CountNo = (short)violationTicketCount.DisputeCount.CountNo,
-                    PleaCode = violationTicketCount.DisputeCount.PleaCode,
-                    RequestCourtAppearance = violationTicketCount.DisputeCount.RequestCourtAppearance,
-                    RequestReduction = violationTicketCount.DisputeCount.RequestReduction,
-                    RequestTimeToPay = violationTicketCount.DisputeCount.RequestTimeToPay
-                };
-                ticketCount.DisputeCount = disputeCount;
-            }
-
             violationTicketCounts.Add(ticketCount);
         }
+
+        List<Messaging.MessageContracts.DisputeCount> disputeCounts = new();
+        foreach (var dc in dispute.DisputeCounts)
+        {
+            Messaging.MessageContracts.DisputeCount disputeCount = new()
+            {
+                CountNo = (short)dc.CountNo,
+                DisputeType = nameof(dc.PleaCode)
+            };
+
+            disputeCounts.Add(disputeCount);
+        }
+        target.DisputeCounts = disputeCounts;
         target.ViolationTicketCounts = violationTicketCounts;
         target.StreetAddress = dispute.Address;
         target.City = dispute.AddressCity;
@@ -94,8 +94,8 @@ public class Mapper
 
             sendEmail.From = template.Sender;
             sendEmail.To.Add(dispute.EmailAddress);
-            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.ViolationTicket.TicketNumber);
-            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.ViolationTicket.TicketNumber);
+            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             
         }
         return sendEmail;

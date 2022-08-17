@@ -64,6 +64,16 @@ public class MappingTests
         Assert.Equal(source.DisputantOcrIssues, target.DisputantOcrIssues);
         Assert.Equal(source.OcrViolationTicket, target.OcrViolationTicket);
 
+        List<DisputeCount> disputeCounts = new(target.DisputeCounts);
+        for (int i = 0; i < source.DisputeCounts.Count; i++)
+        {
+            Assert.Equal(source.DisputeCounts[i].CountNo, (short)(disputeCounts[i].CountNo));
+            Assert.Equal(source.DisputeCounts[i].PleaCode, disputeCounts[i].PleaCode);
+            Assert.Equal(source.DisputeCounts[i].RequestReduction, disputeCounts[i].RequestReduction);
+            Assert.Equal(source.DisputeCounts[i].RequestCourtAppearance, disputeCounts[i].RequestCourtAppearance);
+            Assert.Equal(source.DisputeCounts[i].RequestTimeToPay, disputeCounts[i].RequestTimeToPay);  
+        }
+
         Assert.Equal(source.ViolationTicket?.TicketNumber, target.ViolationTicket.TicketNumber);
         Assert.Equal(source.ViolationTicket?.DisputantSurname, target.ViolationTicket.DisputantSurname);
         Assert.Equal(source.ViolationTicket?.DisputantGivenNames, target.ViolationTicket.DisputantGivenNames);
@@ -87,10 +97,6 @@ public class MappingTests
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].TicketedAmount, ticketCounts[i].TicketedAmount);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].IsAct, ticketCounts[i].IsAct);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].IsRegulation, ticketCounts[i].IsRegulation);
-            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].DisputeCount?.PleaCode, ticketCounts[i].DisputeCount?.PleaCode);
-            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].DisputeCount?.RequestCourtAppearance, ticketCounts[i].DisputeCount?.RequestCourtAppearance);
-            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].DisputeCount?.RequestReduction, ticketCounts[i].DisputeCount?.RequestReduction);
-            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].DisputeCount?.RequestTimeToPay, ticketCounts[i].DisputeCount?.RequestTimeToPay);
         }
 
         Assert.Equal(source.LawFirmName, target.LawFirmName);

@@ -8,7 +8,8 @@ namespace TrafficCourts.Citizen.Service.Mappings
     {
         public NoticeOfDisputeToMessageContractMappingProfile()
         {
-            CreateMap<NoticeOfDispute, SubmitNoticeOfDispute>();
+            CreateMap<NoticeOfDispute, SubmitNoticeOfDispute>()
+            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts));
             CreateMap<Models.Dispute.DisputeCount, Messaging.MessageContracts.DisputeCount>();
             CreateMap<Models.Tickets.ViolationTicket, Messaging.MessageContracts.ViolationTicket>()
                 .ForMember(dest => dest.ViolationTicketCounts, opt => opt.MapFrom(src => src.Counts));

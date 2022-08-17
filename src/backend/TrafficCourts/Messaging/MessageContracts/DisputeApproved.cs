@@ -21,6 +21,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? Province { get; set; }
         public string? PostalCode { get; set; }
         public string? Email { get; set; }
+        public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
     }
 
     public class ViolationTicketCount
@@ -32,6 +33,5 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? Paragraph { get; set; }
         public string Act { get; set; } = String.Empty;
         public double? Amount { get; set; }
-        public DisputeCount? DisputeCount { get; set; }
     }
 }

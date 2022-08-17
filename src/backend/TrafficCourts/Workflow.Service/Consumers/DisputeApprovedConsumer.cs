@@ -96,20 +96,15 @@ namespace TrafficCourts.Workflow.Service.Consumers
             // Add dispute details model as part of TcoDisputeTicket model if defined in the message
             List<DisputeCount> disputeCounts = new();
 
-            if (message.ViolationTicketCounts != null && message.ViolationTicketCounts.Any())
+            if (message.DisputeCounts != null && message.DisputeCounts.Any())
             {
-                foreach (Messaging.MessageContracts.ViolationTicketCount vtc in message.ViolationTicketCounts)                    
+                foreach (Messaging.MessageContracts.DisputeCount dc in message.DisputeCounts)                    
                 {
-                    if (vtc.DisputeCount is not null)
+                    DisputeCount disputeDetail = new()
                     {
-                        DisputeCount disputeDetail = new()
-                        {
-                            Count = vtc.Count,
-                            Dispute_type = vtc.DisputeCount.DisputeType
-                        };
-
-                        disputeCounts.Add(disputeDetail);
-                    }
+                        Count = dc.CountNo,
+                        Dispute_type = dc.DisputeType
+                    };
                 }
             }
 

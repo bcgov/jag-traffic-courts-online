@@ -135,7 +135,7 @@ public class ViolationTicketCount extends Auditable<String> {
 	@JsonManagedReference
 	@OneToOne(targetEntity=DisputeCount.class, optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="violation_ticket_count_id", referencedColumnName="violationTicketCountId")
-	@Schema(nullable = true)
+	@Schema(nullable = true, hidden = true)
 	private DisputeCount disputeCount = new DisputeCount();
 	
 	public void setDisputeCount(DisputeCount disputeCount) {

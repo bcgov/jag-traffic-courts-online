@@ -48,7 +48,7 @@ public class ViolationTicket extends Auditable<String> {
      * The violation ticket number.
      */
     @Column(length = 50)
-    @Schema(nullable = false)
+    @Schema(nullable = true)
     private String ticketNumber;
     
     /**
