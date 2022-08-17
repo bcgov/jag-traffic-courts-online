@@ -32,12 +32,12 @@ public class Mapper
             violationTicketCounts.Add(ticketCount);
         }
 
-        List<Messaging.MessageContracts.DisputeCount> disputeCounts = new();
+        List<Messaging.MessageContracts.DisputedCount> disputeCounts = new();
         foreach (var dc in dispute.DisputeCounts)
         {
-            Messaging.MessageContracts.DisputeCount disputeCount = new()
+            Messaging.MessageContracts.DisputedCount disputeCount = new()
             {
-                CountNo = (short)dc.CountNo,
+                Count = dc.CountNo,
                 DisputeType = nameof(dc.PleaCode)
             };
 

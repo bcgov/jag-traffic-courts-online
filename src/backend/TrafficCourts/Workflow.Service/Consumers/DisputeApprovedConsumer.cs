@@ -98,11 +98,11 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
             if (message.DisputeCounts != null && message.DisputeCounts.Any())
             {
-                foreach (Messaging.MessageContracts.DisputeCount dc in message.DisputeCounts)                    
+                foreach (Messaging.MessageContracts.DisputedCount dc in message.DisputeCounts)                    
                 {
                     DisputeCount disputeDetail = new()
                     {
-                        Count = dc.CountNo,
+                        Count = dc.Count,
                         Dispute_type = dc.DisputeType
                     };
                 }

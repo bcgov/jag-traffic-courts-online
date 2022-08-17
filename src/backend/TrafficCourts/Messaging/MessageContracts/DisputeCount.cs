@@ -12,7 +12,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// Count No
         /// </summary>
-        public short CountNo { get; set; }
+        public int CountNo { get; set; }
 
         /// <summary>
         /// The disputant is requesting time to pay the ticketed amount.
@@ -28,7 +28,5 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// Does the want to appear in court?
         /// </summary>
         public DisputeCountRequestCourtAppearance RequestCourtAppearance { get; set; } = DisputeCountRequestCourtAppearance.N;
-
-        public string? DisputeType { get; set; }
     }
 }
