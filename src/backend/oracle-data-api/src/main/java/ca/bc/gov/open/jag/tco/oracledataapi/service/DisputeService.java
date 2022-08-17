@@ -69,7 +69,10 @@ public class DisputeService {
 				violationTicketCount.getDisputeCount().setDisputeCountId(null);
 				violationTicketCount.getDisputeCount().setDispute(dispute);
 			}
-			
+		} 
+		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
+				disputeCount.setDisputeCountId(null);
+				disputeCount.setDispute(dispute);
 		}
 		disputeRepository.save(dispute);
 	}

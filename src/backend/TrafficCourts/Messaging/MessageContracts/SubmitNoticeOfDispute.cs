@@ -12,6 +12,11 @@ public class SubmitNoticeOfDispute : IMessage
     public DisputeStatus Status { get; set; } = DisputeStatus.New;
 
     /// <summary>
+    /// The violation ticket number.
+    /// </summary>
+    public string? TicketNumber { get; set; } = null!;
+
+    /// <summary>
     /// The provincial court hearing location named on the violation ticket.
     /// </summary>
     public string? CourtLocation { get; set; }

@@ -12,6 +12,7 @@ namespace TrafficCourts.Citizen.Service.Validators
     {
         public NoticeOfDisputeValidator()
         {
+            RuleFor(_ => _.TicketNumber).NotEmpty().MaximumLength(12);
             RuleFor(_ => _.IssuedDate).NotEmpty();
             RuleFor(_ => _.DisputantSurname).NotEmpty();
             RuleFor(_ => _.DisputantGivenName1).NotEmpty();

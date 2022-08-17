@@ -15,7 +15,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// </summary>
         [JsonPropertyName("ticket_number")]
         [MaxLength(12)]
-        public string? TicketNumber { get; set; }
+        public string? TicketNumber { get; set; } = null!;
 
         /// <summary>
         /// The provincial court hearing location named on the violation ticket.
