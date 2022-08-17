@@ -23,6 +23,7 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             // Assert
             Assert.NotNull(actual);
 
+            Assert.Equal(noticeOfDispute.TicketNumber, actual.TicketNumber);
             Assert.Equal(DisputeStatus.New, actual.Status);
             Assert.Equal(noticeOfDispute.CourtLocation, actual.CourtLocation);
             Assert.Equal(noticeOfDispute.IssuedDate, actual.IssuedDate);
@@ -54,7 +55,16 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.LawyerGivenName1, actual.LawyerGivenName1);
             Assert.Equal(noticeOfDispute.LawyerGivenName2, actual.LawyerGivenName2);
             Assert.Equal(noticeOfDispute.LawyerPhoneNumber, actual.LawyerPhoneNumber);
-            Assert.NotNull(actual.LawFirmName);
+
+            foreach (var count in actual.DisputeCounts)
+            {
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => (int)_.PleaCode == (int)count.PleaCode);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.CountNo == count.CountNo);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestCourtAppearance == count.RequestCourtAppearance);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestReduction == count.RequestReduction);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestTimeToPay == count.RequestTimeToPay);
+            }
+
         }
 
         /// <summary>

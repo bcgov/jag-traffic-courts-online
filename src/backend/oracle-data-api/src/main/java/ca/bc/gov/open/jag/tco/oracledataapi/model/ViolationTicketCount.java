@@ -131,21 +131,4 @@ public class ViolationTicketCount extends Auditable<String> {
     @JoinColumn(name="violation_ticket_id", referencedColumnName="violationTicketId")
 	@Schema(hidden = true)
 	private ViolationTicket violationTicket;
-	
-	@JsonManagedReference
-	@OneToOne(targetEntity=DisputeCount.class, optional = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="violation_ticket_count_id", referencedColumnName="violationTicketCountId")
-	@Schema(nullable = true, hidden = true)
-	private DisputeCount disputeCount = new DisputeCount();
-	
-	public void setDisputeCount(DisputeCount disputeCount) {
-		if (disputeCount == null) {
-			if (this.disputeCount != null) {
-				this.disputeCount.setViolationTicketCount(null);
-			}
-		} else {
-			disputeCount.setViolationTicketCount(this);
-		}
-		this.disputeCount = disputeCount;
-	}
 }

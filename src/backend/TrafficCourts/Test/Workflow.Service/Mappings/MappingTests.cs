@@ -38,6 +38,7 @@ public class MappingTests
         Assert.NotNull(target);
 
         Assert.Equal(source.Status.ToString().ToUpper(), target.Status.ToString().ToUpper());
+        Assert.Equal(source.TicketNumber, target.TicketNumber);
         Assert.Equal(source.CourtLocation, target.CourtLocation);
         Assert.Equal(source.IssuedDate, target.IssuedDate);
         Assert.Equal(source.SubmittedDate, target.SubmittedDate);
@@ -63,17 +64,6 @@ public class MappingTests
         Assert.Equal(source.DisputantDetectedOcrIssues, target.DisputantDetectedOcrIssues);
         Assert.Equal(source.DisputantOcrIssues, target.DisputantOcrIssues);
         Assert.Equal(source.OcrViolationTicket, target.OcrViolationTicket);
-
-        List<DisputeCount> disputeCounts = new(target.DisputeCounts);
-        for (int i = 0; i < source.DisputeCounts.Count; i++)
-        {
-            Assert.Equal(source.DisputeCounts[i].CountNo, (short)(disputeCounts[i].CountNo));
-            Assert.Equal(source.DisputeCounts[i].PleaCode, disputeCounts[i].PleaCode);
-            Assert.Equal(source.DisputeCounts[i].RequestReduction, disputeCounts[i].RequestReduction);
-            Assert.Equal(source.DisputeCounts[i].RequestCourtAppearance, disputeCounts[i].RequestCourtAppearance);
-            Assert.Equal(source.DisputeCounts[i].RequestTimeToPay, disputeCounts[i].RequestTimeToPay);  
-        }
-
         Assert.Equal(source.ViolationTicket?.TicketNumber, target.ViolationTicket.TicketNumber);
         Assert.Equal(source.ViolationTicket?.DisputantSurname, target.ViolationTicket.DisputantSurname);
         Assert.Equal(source.ViolationTicket?.DisputantGivenNames, target.ViolationTicket.DisputantGivenNames);
@@ -97,6 +87,16 @@ public class MappingTests
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].TicketedAmount, ticketCounts[i].TicketedAmount);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].IsAct, ticketCounts[i].IsAct);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].IsRegulation, ticketCounts[i].IsRegulation);
+        }
+
+        List<DisputeCount> disputeCounts = new(target.DisputeCounts);
+        for (int i = 0; i < source.DisputeCounts.Count; i++)
+        {
+            Assert.Equal(source.DisputeCounts[i].CountNo, (disputeCounts[i].CountNo));
+            Assert.Equal(source.DisputeCounts[i].PleaCode, disputeCounts[i].PleaCode);
+            Assert.Equal(source.DisputeCounts[i].RequestReduction, disputeCounts[i].RequestReduction);
+            Assert.Equal(source.DisputeCounts[i].RequestCourtAppearance, disputeCounts[i].RequestCourtAppearance);
+            Assert.Equal(source.DisputeCounts[i].RequestTimeToPay, disputeCounts[i].RequestTimeToPay);
         }
 
         Assert.Equal(source.LawFirmName, target.LawFirmName);

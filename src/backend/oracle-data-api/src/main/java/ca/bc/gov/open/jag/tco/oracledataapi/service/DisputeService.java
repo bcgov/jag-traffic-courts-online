@@ -66,8 +66,6 @@ public class DisputeService {
 			dispute.getViolationTicket().setViolationTicketId(null);
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
-				violationTicketCount.getDisputeCount().setDisputeCountId(null);
-				violationTicketCount.getDisputeCount().setDispute(dispute);
 			}
 		} 
 		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {

@@ -82,14 +82,4 @@ public class DisputeCount extends Auditable<String> {
 	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
 	@Schema(hidden = true)
 	private Dispute dispute;
-
-	@JsonBackReference
-	@ManyToOne(targetEntity=ViolationTicketCount.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="violation_ticket_count_id", referencedColumnName="violationTicketCountId")
-	@Schema(hidden = true)
-	private ViolationTicketCount violationTicketCount;
-	
-	public void setDispute(Dispute dispute) {
-		this.dispute = dispute;
-	}
 }
