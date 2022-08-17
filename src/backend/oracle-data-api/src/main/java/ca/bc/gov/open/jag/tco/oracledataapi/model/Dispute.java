@@ -411,5 +411,12 @@ public class Dispute extends Auditable<String> {
 		}
 		this.violationTicket = ticket;
 	}
+	
+	public void addDisputeCounts(List<DisputeCount> disputeCounts) {
+		for (DisputeCount disputeCount : disputeCounts) {
+			disputeCount.setDispute(this);
+		}
+		this.disputeCounts.addAll(disputeCounts);
+	}
 
 }

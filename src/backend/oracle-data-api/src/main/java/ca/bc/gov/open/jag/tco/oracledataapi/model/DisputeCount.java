@@ -77,9 +77,8 @@ public class DisputeCount extends Auditable<String> {
 	@Enumerated(EnumType.STRING)
     private YesNo requestCourtAppearance;
 	
-	@JsonBackReference(value= "dispute_count_reference")
+	@JsonBackReference(value="dispute_count_reference")
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "dispute_id", referencedColumnName="disputeId")
 	@Schema(hidden = true)
 	private Dispute dispute;
 }

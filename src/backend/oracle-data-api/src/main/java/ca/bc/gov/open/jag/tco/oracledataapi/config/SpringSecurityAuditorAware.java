@@ -14,7 +14,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
 	@Override
 	public Optional<String> getCurrentAuditor() {
-		// The returned String is used to auto-populate the enteredUserId and updatedUserId fields on Entities.
+		// The returned String is used to auto-populate the createdBy and modifiedBy fields on Entities.
 		// The SecurityContextHolder holds a reference to the currently logged in user attached on the current thread - return that.
 		Object principal = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

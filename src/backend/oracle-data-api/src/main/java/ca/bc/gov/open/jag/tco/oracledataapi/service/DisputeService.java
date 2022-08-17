@@ -62,16 +62,15 @@ public class DisputeService {
 	public void save(Dispute dispute) {
 		// Ensure a new record is created, not updating an existing record. Updates are controlled by specific endpoints.
 		dispute.setDisputeId(null);
+		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
+			disputeCount.setDisputeCountId(null);
+		}
 		if (dispute.getViolationTicket() != null) {
 			dispute.getViolationTicket().setViolationTicketId(null);
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
 			}
 		} 
-		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
-				disputeCount.setDisputeCountId(null);
-				disputeCount.setDispute(dispute);
-		}
 		disputeRepository.save(dispute);
 	}
 
@@ -85,7 +84,14 @@ public class DisputeService {
 	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "violationTicket");
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts");
+		// Remove all existing dispute counts that are associated to this dispute
+		if (disputeToUpdate.getDisputeCounts() != null) {
+			disputeToUpdate.getDisputeCounts().clear();
+		}
+		// Add updated ticket counts
+		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
+		
 		return disputeRepository.save(disputeToUpdate);
 	}
 
