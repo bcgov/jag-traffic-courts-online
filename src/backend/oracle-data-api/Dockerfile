@@ -23,10 +23,10 @@ RUN mvn -B clean package \
 ### Stage where Docker is running a java process to run a service built in previous stage ###
 #############################################################################################
 FROM eclipse-temurin:11
-
+WORKDIR /app
 EXPOSE 8080
 
-COPY --from=build ./target/oracle-data-api.jar /app/service.jar
-
-CMD java $JAVA_OPTS -jar /app/service.jar
+COPY --from=build ./target/oracle-data-api.jar .
+COPY --from=build ./entrypoint.sh .
+CMD ["./entrypoint.sh", "java", "-jar", "/app/oracle-data-api.jar"]
 #############################################################################################
