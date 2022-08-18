@@ -13,7 +13,6 @@ import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
-
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
@@ -38,7 +37,7 @@ import { JJDisputeDecisionInboxComponent } from '@components/jj-dispute-decision
 import { JJDisputeAssignmentsComponent } from '@components/jj-dispute-assignments/jj-dispute-assignments.component';
 import { JJDisputeComponent } from '@components/jj-dispute/jj-dispute.component';
 import { JJCountComponent } from '@components/jj-count/jj-count.component';
-import { KeycloakAuthorizationService } from './services/keycloakAuthorization.service';
+import { AuthService } from './services/auth.service';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -122,7 +121,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
       multi: true,
       deps: [KeycloakService]
     },
-    KeycloakAuthorizationService,
+    AuthService,
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }

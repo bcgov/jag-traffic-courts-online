@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -20,24 +20,22 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   public userProfile: KeycloakProfile = {};
 
   constructor(
-    public keycloak: KeycloakService
+    private authService: AuthService
   ) {
-
   }
 
   public async ngOnInit() {
-
-    this.isLoggedIn = await this.keycloak.isLoggedIn();
-
-    if (this.isLoggedIn) {
-      this.userProfile = await this.keycloak.loadUserProfile();
-      this.fullName = this.userProfile.firstName + " " + this.userProfile.lastName;
-      this.jjAdminRole = this.keycloak.isUserInRole("admin-judicial-justice", "tco-staff-portal");
-      this.jjIDIR = this.keycloak.getUsername();
-    }
-
-
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+      this.authService.userProfile$.subscribe(userProfile => {
+        this.userProfile = userProfile;
+        this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
+        this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
+        this.jjIDIR = this.authService.userIDIR;
+      })
+    })
   }
+
   changeHeading(heading: any) {
     if (heading == "WR Inbox") this.tabSelected.setValue(1);
     else if (heading == "WR Assignments") this.tabSelected.setValue(0);

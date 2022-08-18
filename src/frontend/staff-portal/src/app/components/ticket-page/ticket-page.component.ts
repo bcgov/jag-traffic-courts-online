@@ -5,8 +5,9 @@ import { DisputeService, Dispute } from 'app/services/dispute.service';
 import { DisputeStatus } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
+import { AuthService } from 'app/services/auth.service';
+
 @Component({
   selector: 'app-ticket-page',
   templateUrl: './ticket-page.component.html',
@@ -43,17 +44,18 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   constructor(
     public disputeService: DisputeService,
     private logger: LoggerService,
-    private keycloak: KeycloakService
+    private authService: AuthService
   ) {
   }
 
   public async ngOnInit() {
-    this.isLoggedIn = await this.keycloak.isLoggedIn();
-
-    if (this.isLoggedIn) {
-      this.userProfile = await this.keycloak.loadUserProfile();
-      this.IDIRLogin = this.keycloak.getUsername().split("@")[0];
-    }
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+      this.authService.userProfile$.subscribe(userProfile => {
+        this.userProfile = userProfile;
+        this.IDIRLogin = this.authService.userIDIRLogin;
+      })
+    })
 
     // when authentication token available, get data
     this.getAllDisputes();
