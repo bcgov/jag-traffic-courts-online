@@ -6,4 +6,5 @@
 public static class Resources
 {
     public const string Dispute = "dispute";
+    public const string JJDispute = "jj-dispute";
 }

@@ -9,6 +9,9 @@ public static class Scopes
     public const string Assign = "assign";
 
     public const string Reject = "reject";
+    public const string Validate = "validate";
+    public const string Cancel = "cancel";
+    public const string Submit = "submit";
     public const string Review = "review";
 
     public const string Create = "create";
