@@ -273,20 +273,25 @@ To remove services run (all services and networking)
 docker-compose down
 ```
 
-## Services
+## Application Services
+
 
 | Service | URL      | Notes |
 | ------------------------------- | -------------------------------------------- | ----- |
 | citizen-portal | http://localhost:8080/ | |
 | citizen-api | http://localhost:5000/swagger/index.html | |
 | staff-portal | http://localhost:8081/ | |
-| oraface-api | http://localhost:5010/ | |
+| staff-api |  | |
+| oracle-data-api | http://localhost:5010/ | |
+
+## infrastructure Services
+| Service | URL      | Notes |
+| ------------------------------- | -------------------------------------------- | ----- |
 | rabbitmq | localhost:5672, localhost:15672 | |
 | minio | http://localhost:9001/login | |
 | redis | localhost:6379 | |
 | redis-commander | http://localhost:8082 | |
 | splunk | http://localhost:8000 | |
-| seq | http://localhost:8001 | |
 | jaeger | http://localhost:16686 | |
 | form-recognizer | http://localhost:5200 | |
 
