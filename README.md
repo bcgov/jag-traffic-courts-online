@@ -9,44 +9,210 @@ Welcome to Traffic Courts Online
 ## Project Structure
 
 ```
-    ├── .github                                 # Contains GitHub Related sources
-    ├── docs                                    # docs and images
-    │   └── data-model                          # Oracle designer data model
+    ├── .docker
+    │   └── keycloak-realms
+    ├── .github
+    │   └── workflows
+    ├── .gitops
+    │   ├── azure
+    │   └── charts
+    │       ├── jaeger-aio
+    │       └── traffic-court-online
+    ├── docs
+    ├── infrastructure
+    │   ├── certificates
+    │   ├── keycloak
+    │   └── openshift
     ├── splunk-dash-board
-    ├── src                                      # application source files
-    │   ├── backend                              # Backend code
-    │       └── oracle-data-interface            # An Oracle Interface API
-    │   └── frontend                             # Frontend code
-    ├── tools
+    ├── src
+    │   ├── backend
+    │   │   ├── TrafficCourts
+    │   │   └── oracle-data-api
+    │   └── frontend
+    │       ├── citizen-portal
+    │       └── staff-portal
+    └── tools
+    │   ├── form-recognizer
+    │   ├── minio
+    │   ├── network-tester
+    │   ├── performance-testing
+    │   └── ticket-generator
     ├── COMPLIANCE.yaml
     ├── CONTRIBUTING.md
     ├── docker-compose.yml
     ├── LICENSE                                  # Apache License
     └── README.md                                # This file
 ```
-## Apps
+## Configuration
 
-| Name                | Description                                  | Doc                             |
-| ------------------- | -------------------------------------------- | --------------------------------|
-| backend             | all server side services                     |                                 |
-| citizen api         | base citizen api                             | [README](src/backend/README.md)|
-| ticket search api   | ticket search api called from citizen api    | [README](src/backend/README.md)|
-| frontend            | all client side applications                 | [README](src/frontend/README.md)|
+### Configuration Sources
+The dotnet based projects can read and combine configuration from multiple sources. The configuration uses the default [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-6.0) and is summarized below. The configuration for each app is provided in the following order, from highest to lowest priority:
 
-### Citizen Service (API)
+1. Command-line arguments using the Command-line configuration provider.
+1. Non-prefixed environment variables using the Non-prefixed environment variables configuration provider.
+1. User secrets when the app runs in the Development environment.
+1. `appsettings.{Environment}.json` using the JSON configuration provider. For example, `appsettings.Production.json` and `appsettings.Development.json`.
+1. appsettings.json using the JSON configuration provider.
 
-#### Configuration
+### Translating configuration between providers
 
-| Key                             | Description                                  | Default                         |
-| ------------------------------- | -------------------------------------------- | --------------------------------|
-| RabbitMQ:Host                   |                                              |                                 |
-| RabbitMQ:Port                   |                                              |                                 |
-| RabbitMQ:Username               |                                              |                                 |
-| RabbitMQ:Password               |                                              |                                 |
-| MassTransit:Transport           | InMemory or RabbitMQ                         |                                 |
-| FormRecognizer:ApiKey           |                                              |                                 |
-| FormRecognizer:Endpoint         |                                              |                                 |
-| TicketSearchClient:Address      |                                              |                                 |
+While the rest of this document will showcase configuration examples in environment variable format, the same configuration can be expressed via any of the other configuration sources.
+For example, the serilog logging configuration in environment variable format can be expressed as:
+
+```
+Serilog__Using__0=Serilog.Sinks.Splunk
+Serilog__WriteTo__0__Name=EventCollector
+Serilog__WriteTo__0__Args__eventCollectorToken=00000000-0000-0000-0000-000000000000
+Serilog__WriteTo__0__Args__splunkHost=http://localhost:8000
+```
+Environment variables use `__`(double underscore) as the hierarchical separator.
+
+The same configuration can be expressed via structured json format in user secrets or appsettings.json files as,
+
+```json
+{
+    "Serilog": {
+        "Using": [
+          "Serilog.Sinks.Splunk"
+        ],
+        "WriteTo": [
+            { 
+                "Name": "EventCollector",
+                "Args": [
+                    "eventCollectorToken": "00000000-0000-0000-0000-000000000000",
+                    "splunkHost": "http://localhost:8000"
+                ]
+            }
+        ]
+    }
+}
+```
+
+or a flat json format,
+
+```json
+{
+    "Serilog__Using__0": "Serilog.Sinks.Splunk",
+    "Serilog__WriteTo__0__Name": "EventCollector",
+    "Serilog__WriteTo__0__Args__eventCollectorToken": "00000000-0000-0000-0000-000000000000",
+    "Serilog__WriteTo__0__Args__splunkHost": "http://localhost:8000"
+}
+```
+
+## arc-dispute-api 
+
+| Key | Secret | Description |
+| --- | ------ | ----------- |
+| ASPNETCORE_ENVIRONMENT |
+| ASPNETCORE_URLS |
+| OTEL_EXPORTER_JAEGER_ENDPOINT |
+| OTEL_EXPORTER_JAEGER_PROTOCOL |
+| Sftp__Host | Yes | 
+| Sftp__SshPrivateKey | Yes | 
+| Sftp__Username | Yes | 
+| Serilog__Using__0 |
+| Serilog__WriteTo__0__Name |
+| Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
+| Serilog__WriteTo__0__Args__splunkHost | Yes | 
+| Swagger__Enabled |
+
+## citizen-api  
+
+| Key | Secret | Description |
+| --- | ------ | ----------- |
+| ASPNETCORE_ENVIRONMENT
+| ASPNETCORE_URLS
+| FormRecognizer__ApiVersion
+| FormRecognizer__ApiKey | Yes | 
+| FormRecognizer__Endpoint | Yes | 
+| FormRecognizer__ModelId
+| ObjectStorage__AccessKey | Yes | 
+| ObjectStorage__BucketName | Yes | 
+| ObjectStorage__Endpoint | Yes | 
+| ObjectStorage__SecretKey | Yes | 
+| RabbitMQ__ClientProvidedName
+| RabbitMQ__Host
+| RabbitMQ__Password | Yes | 
+| RabbitMQ__Port
+| RabbitMQ__Username | Yes | 
+| RabbitMQ__VirtualHost
+| Redis__ConnectionString
+| OTEL_EXPORTER_JAEGER_ENDPOINT
+| OTEL_EXPORTER_JAEGER_PROTOCOL
+| Serilog__Using__0
+| Serilog__WriteTo__0__Name
+| Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
+| Serilog__WriteTo__0__Args__splunkHost | Yes | 
+| Swagger__Enabled
+| TicketStorage__Type
+| MassTransit__Transport
+
+## citizen-web
+
+?
+
+## oracle-data-api
+
+| Key | Secret | Description |
+| --- | ------ | ----------- |
+| CODETABLE_REFRESH_CRON
+| CODETABLE_REFRESH_ENABLED
+| H2_DATASOURCE
+| JAVA_OPTS
+| OTEL_EXPORTER_JAEGER_ENDPOINT
+| REDIS_HOST
+| REDIS_PORT
+| UNASSIGN_DISPUTES_CRON
+| UNASSIGN_DISPUTES_ENABLED
+
+## staff-api
+
+| Key | Secret | Description |
+| --- | ------ | ----------- |
+| ObjectStorage__AccessKey | Yes | 
+| ObjectStorage__BucketName | Yes | 
+| ObjectStorage__Endpoint | Yes | 
+| ObjectStorage__SecretKey | Yes | 
+| OTEL_EXPORTER_JAEGER_ENDPOINT
+| OTEL_EXPORTER_JAEGER_PROTOCOL
+| Serilog__Using__0
+| Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
+| Serilog__WriteTo__0__Args__splunkHost | Yes | 
+| Serilog__WriteTo__0__Name
+| Swagger__Enabled
+| TicketStorage__Type
+| MassTransit__Transport
+| Jwt__Audience
+| Jwt__Authority
+| KeycloakAdminApi__BaseUri
+| KeycloakAdminApi__Realm
+| OAuth__TokenUri
+| OAuth__ClientId
+| OAuth__ClientSecret | Yes | 
+| 
+
+## staff-web
+
+Requires 
+
+## workflow-service
+
+| Key | Secret | Description |
+| --- | ------ | ----------- |
+| OTEL_EXPORTER_JAEGER_ENDPOINT
+| OTEL_EXPORTER_JAEGER_PROTOCOL
+| RabbitMQ__ClientProvidedName
+| RabbitMQ__Host
+| RabbitMQ__Password | Yes | 
+| RabbitMQ__Port
+| RabbitMQ__Username | Yes | 
+| RabbitMQ__VirtualHost
+| Serilog__Using__0
+| Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
+| Serilog__WriteTo__0__Args__splunkHost | Yes | 
+| Serilog__WriteTo__0__Name
+| Swagger__Enabled
+| MassTransit__Transport
 
 ## Docker
 
@@ -69,7 +235,6 @@ Develop the `citizen-portal`. Run the associated API, `citizen-api`.  This start
 
 * citizen-api
 * rabbitmq
-* ticket-search
 
 ```
 docker-compose -f docker-compose.yml up -d citizen-api
@@ -108,23 +273,27 @@ To remove services run (all services and networking)
 docker-compose down
 ```
 
-## Services
+## Application Services
 
-| Service                         | URL                                          | Notes |
+
+| Service | URL      | Notes |
 | ------------------------------- | -------------------------------------------- | ----- |
-| citizen-portal                  | http://localhost:8080/                       |       |
-| citizen-api                     | http://localhost:5000/swagger/index.html     |       |
-| staff-portal                    | http://localhost:8081/                       |       |
-| ticket-search                   | n/a                                          | grpc  |
-| oraface-api                     | http://localhost:5010/                       |       |
-| rabbitmq                        | localhost:5672, localhost:15672              |       |
-| minio                           | http://localhost:9001/login                  |       |
-| redis                           | localhost:6379                               |       |
-| redis-commander                 | http://localhost:8082                        |       |
-| splunk                          | http://localhost:8000                        |       |
-| seq                             | http://localhost:8001                        |       |
-| jaeger                          | http://localhost:16686                       |       |
-| form-recognizer                 | http://localhost:5200                        |       |
+| citizen-portal | http://localhost:8080/ | |
+| citizen-api | http://localhost:5000/swagger/index.html | |
+| staff-portal | http://localhost:8081/ | |
+| staff-api |  | |
+| oracle-data-api | http://localhost:5010/ | |
+
+## infrastructure Services
+| Service | URL      | Notes |
+| ------------------------------- | -------------------------------------------- | ----- |
+| rabbitmq | localhost:5672, localhost:15672 | |
+| minio | http://localhost:9001/login | |
+| redis | localhost:6379 | |
+| redis-commander | http://localhost:8082 | |
+| splunk | http://localhost:8000 | |
+| jaeger | http://localhost:16686 | |
+| form-recognizer | http://localhost:5200 | |
 
 ### Logging
 
@@ -179,13 +348,13 @@ docker-compose -f docker-compose.yml -f .docker/docker-compose-ocr.yml up -d
 
 #### Configuration
 
-| Environment variable            | Description                                                                             | Default                         |
+| Environment variable | Description                                         | Default |
 | ------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------|
-| FORMRECOGNIZER__APIVERSION      | One of "2.1" or "2022-06-30-preview"                                                    | 2022-06-30-preview              |
-| FORMRECOGNIZER__APIKEY          | Billing key of Azure Form Recognizer (32 character GUID, excluding hypens)              |                                 |
-| FORMRECOGNIZER__BILLING_URL     | Azure endpoint for billing purposes (where the apikey is used)                          |                                 |
-| FORMRECOGNIZER__ENDPOINT        | API endpoint                                                                            |                                 |
-| FORMRECOGNIZER__MODELID         | If API version is 2.1, this is the 36 character GUID of the model id (including hypens). If API version is 2022-06-30-preview, this is the model name, ie. ViolationTicket | |
+| FORMRECOGNIZER__APIVERSION | One of "2.1" or "2022-06-30-preview"                | 2022-06-30-preview |
+| FORMRECOGNIZER__APIKEY | Billing key of Azure Form Recognizer (32 character GUID, excluding hypens) | |
+| FORMRECOGNIZER__BILLING_URL | Azure endpoint for billing purposes (where the apikey is used) | |
+| FORMRECOGNIZER__ENDPOINT | API endpoint                                        | |
+| FORMRECOGNIZER__MODELID | If API version is 2.1, this is the 36 character GUID of the model id (including hypens). If API version is 2022-06-30-preview, this is the model name, ie. ViolationTicket | |
 
 Use 2.1 as the FORMRECOGNIZER__APIVERSION to target Form Recognizer running locally in Docker (or in OpenShift).
 Use 2022-06-30-preview to target Form Recognizer running in Azure cloud (which runs the latest api version, not 2.1).
