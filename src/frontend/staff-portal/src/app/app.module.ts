@@ -52,7 +52,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
       config: {
         url: environment.keycloakUrl,
         realm: environment.keycloakRealm,
-        clientId: environment.keycloakRealm,
+        clientId: environment.keycloakClientId,
       },
       initOptions: {
         onLoad: 'check-sso',
