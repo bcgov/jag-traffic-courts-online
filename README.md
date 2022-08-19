@@ -130,12 +130,11 @@ or a flat json format,
 | ObjectStorage__BucketName | Yes | 
 | ObjectStorage__Endpoint | Yes | 
 | ObjectStorage__SecretKey | Yes | 
-| RabbitMQ__ClientProvidedName
 | RabbitMQ__Host
 | RabbitMQ__Password | Yes | 
 | RabbitMQ__Port
 | RabbitMQ__Username | Yes | 
-| RabbitMQ__VirtualHost
+| RabbitMQ__VirtualHost | | / | |
 | Redis__ConnectionString
 | OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
 | OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
