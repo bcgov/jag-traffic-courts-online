@@ -13,7 +13,7 @@
       <div *ngIf="count.__skip">
         No action at this time
       </div>
-      <div *ngIf="count.request_court_appearance == RequestCourtAppearance.Y && count.plea_cd === Plea.G">
+      <div *ngIf="count.request_court_appearance === RequestCourtAppearance.Y && count.plea_cd === Plea.G">
         Request a fine reduction and/or more time to pay
       </div>
       <div *ngIf="count.request_reduction === RequestReduction.Y">
@@ -30,7 +30,7 @@
   <div class="col-lg-3">
     <small class="d-block">I will appear in court</small>
     <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.Y"> Yes </strong>
-    <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.N || count.__skip"> No </strong>
+    <strong *ngIf="count.request_court_appearance !== RequestCourtAppearance.Y || count.__skip"> No </strong>
   </div>
 </div>
 

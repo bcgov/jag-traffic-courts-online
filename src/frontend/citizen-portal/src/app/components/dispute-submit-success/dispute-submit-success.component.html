@@ -44,7 +44,7 @@
   <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
 
   <section class="mb-2 mt-4 d-print-none">
-    <div class="row" *ngIf="countsActions.request_court_appearance.length > 0">
+    <div class="row" *ngIf="countsActions.request_court_appearance?.length > 0">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -57,7 +57,7 @@
         </app-alert>
       </div>
     </div>
-    <div class="row" *ngIf="countsActions.request_court_appearance.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
+    <div class="row" *ngIf="countsActions.request_court_appearance?.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -104,7 +104,7 @@
         </app-alert>
       </div>
     </div>
-    <div class="row" *ngIf="countsActions.request_court_appearance.length !== noticeOfDispute.dispute_counts.length">
+    <div class="row" *ngIf="countsActions.request_court_appearance?.length !== noticeOfDispute.dispute_counts?.length">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">

@@ -81,11 +81,11 @@
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
 
-        <div *ngIf="countsActions?.not_request_court_appearance?.length > 0">
-          <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
+        <div *ngIf="countsActions.not_request_court_appearance?.length > 0">
+          <ng-container *ngIf="countsActions.request_reduction?.length > 0">
             <hr />
             <strong class="fs-5">
-              <div>{{ countsActions?.request_reduction }}</div>
+              <div>{{ countsActions.request_reduction }}</div>
             </strong>
             <h3 class="mb-0 additional-info-desc">
               I do not want to attend a court hearing and want to supply written reasons.
@@ -93,33 +93,33 @@
             <small>Written reasons for <strong>fine reduction</strong> request</small>
             <div>{{ noticeOfDispute.fine_reduction_reason }}</div>
           </ng-container>
-          <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
+          <ng-container *ngIf="countsActions.request_reduction !== countsActions.request_time_to_pay">
             <hr />
             <strong class="fs-5">
-              <div>{{ countsActions?.request_time_to_pay }}</div>
+              <div>{{ countsActions.request_time_to_pay }}</div>
             </strong>
           </ng-container>
-          <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
+          <ng-container *ngIf="countsActions.request_time_to_pay?.length > 0">
             <h3 class="mb-0 additional-info-desc">I do not want to attend a court hearing and want to supply written
               reasons.</h3>
             <small>Written reasons for <strong>time to pay</strong> request</small>
             <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
           </ng-container>
         </div>
-        <div *ngIf="countsActions?.request_court_appearance?.length > 0">
+        <div *ngIf="countsActions.request_court_appearance?.length > 0">
           <hr />
-          <div *ngIf="countsActions?.guilty.length > 0">
+          <div *ngIf="countsActions.guilty?.length > 0">
             <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.guilty }}</div>
+              <div>{{ countsActions.guilty }}</div>
             </strong>
             <h3 class="mb-2 additional-info-desc">
               I want to attend a court hearing to request a fine reduction and/or time to pay.
             </h3>
             <br />
           </div>
-          <div *ngIf="countsActions?.not_guilty.length > 0">
+          <div *ngIf="countsActions.not_guilty?.length > 0">
             <strong class="fs-5 mb-3">
-              <div>{{ countsActions?.not_guilty }}</div>
+              <div>{{ countsActions.not_guilty }}</div>
             </strong>
             <h3 class="mb-2 additional-info-desc">
               I want to attend a court hearing and dispute the charge.

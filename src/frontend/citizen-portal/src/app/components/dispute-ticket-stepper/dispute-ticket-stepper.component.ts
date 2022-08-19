@@ -205,7 +205,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private getCountsActions() {
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms?.value);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -217,7 +217,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onAttendHearingChange(countForm: FormGroup, event): void {
-    countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event?.value, __skip: false });
+    console.log("attend hearing change", event);
+    countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
   }
 
   public onStepSave(): void {
@@ -261,10 +262,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   private setAdditional() {
     this.getCountsActions();
     let fields = cloneDeep(this.additionFormFields);
-    if (this.countsActions.request_reduction.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
+    if (this.countsActions.request_reduction?.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
       fields.fine_reduction_reason[1].push(Validators.required);
     }
-    if (this.countsActions.request_time_to_pay.length > 0 && fields.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
+    if (this.countsActions.request_time_to_pay?.length > 0 && fields.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
       fields.time_to_pay_reason[1].push(Validators.required);
     }
     this.additionalForm = this.formBuilder.group({
@@ -277,11 +278,11 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public isValid(countInx?): boolean {
     let countForm = this.countForms?.controls[countInx]
     if (countForm) {
-      let valid = countForm.valid || countForm?.value.__skip;
-      if (countForm?.value.request_court_appearance === this.RequestCourtAppearance.Y) {
-        valid = valid && countForm.value.plea_cd;
-      } else if (countForm?.value.request_court_appearance === this.RequestCourtAppearance.N) {
-        valid = valid && (countForm?.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm?.value.request_reduction === this.RequestReduction.Y);
+      let valid = countForm.valid || countForm.value.__skip;
+      if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
+        valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
+      } else if (countForm.value.request_court_appearance !== this.RequestCourtAppearance.Y) {
+        valid = valid && (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm?.value.request_reduction === this.RequestReduction.Y);
       }
       return valid && !this.isAllCountsSkipped;
     }

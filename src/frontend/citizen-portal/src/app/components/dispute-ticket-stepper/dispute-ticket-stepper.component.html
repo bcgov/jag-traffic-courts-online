@@ -297,7 +297,7 @@
                     </div>
                   </div>
                   <div class="row mt-4">
-                    <div [ngStyle]="{ 'display': countForm?.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
+                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance !== RequestCourtAppearance.Y ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
@@ -310,7 +310,7 @@
                         like to request time to pay on this count.</mat-checkbox>
                     </div>
 
-                    <div [ngStyle]="{ 'display': countForm?.value.request_court_appearance == RequestCourtAppearance.Y ? '' : 'none' }">
+                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance == RequestCourtAppearance.Y ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
@@ -356,7 +356,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm?.value.request_court_appearance === RequestCourtAppearance.N">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm?.value.request_court_appearance !== RequestCourtAppearance.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -383,7 +383,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4" *ngIf="countForm?.value.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
+              <div class="col mt-4" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -413,9 +413,9 @@
             </app-page-header>
 
             <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
-              <ng-container *ngIf="countsActions?.not_request_court_appearance?.length > 0">
-                <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
-                  <div>{{ countsActions?.request_reduction }}</div>
+              <ng-container *ngIf="countsActions.not_request_court_appearance?.length > 0">
+                <ng-container *ngIf="countsActions.request_reduction?.length > 0">
+                  <div>{{ countsActions.request_reduction }}</div>
                   <div class="row">
                     <div class="col-md-12">
                       <mat-form-field class="w-100">
@@ -433,10 +433,10 @@
                     </div>
                   </div>
                 </ng-container>
-                <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
-                  <div>{{ countsActions?.request_time_to_pay }}</div>
+                <ng-container *ngIf="countsActions.request_reduction !== countsActions.request_time_to_pay">
+                  <div>{{ countsActions.request_time_to_pay }}</div>
                 </ng-container>
-                <ng-container *ngIf="countsActions?.request_time_to_pay?.length > 0">
+                <ng-container *ngIf="countsActions.request_time_to_pay?.length > 0">
                   <div class="row">
                     <div class="col-md-12">
                       <mat-form-field class="w-100">

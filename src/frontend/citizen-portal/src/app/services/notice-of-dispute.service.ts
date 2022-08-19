@@ -168,8 +168,8 @@ export class NoticeOfDisputeService {
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
     countsActions.request_reduction = toCountStr(counts.filter(i => i.request_reduction === this.RequestReduction.Y));
     countsActions.request_time_to_pay = toCountStr(counts.filter(i => i.request_time_to_pay === this.RequestTimeToPay.Y));
-    countsActions.request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.Y));
-    countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.N));
+    // countsActions.request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.Y));
+    countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance !== this.RequestCourtAppearance.Y));
     countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === DisputeCountPleaCode.G));
     countsActions.not_guilty = toCountStr(counts.filter(i => i.plea_cd === DisputeCountPleaCode.N));
     return countsActions;
