@@ -15,8 +15,9 @@ RUN dotnet build "TrafficCourts.Staff.Service.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "TrafficCourts.Staff.Service.csproj" -c Release -o /app/publish
+COPY entrypoint.sh /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TrafficCourts.Staff.Service.dll"]
+ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Staff.Service.dll"]

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Staff.Service.Authentication;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
@@ -28,12 +30,14 @@ public class JJController : JJControllerBase<JJController>
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
     /// <response code="200">The JJ disputes were found.</response>
     /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of JJ dispute records</returns>
     [HttpGet("Disputes")]
     [ProducesResponseType(typeof(IList<JJDispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> GetJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving all JJ Disputes from oracle-data-api");
@@ -59,13 +63,15 @@ public class JJController : JJControllerBase<JJController>
     /// <response code="200">The JJ dispute was found.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, wrong user roles.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{JJDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> GetJJDisputeAsync(string JJDisputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving JJ Dispute from oracle-data-api");
@@ -104,15 +110,18 @@ public class JJController : JJControllerBase<JJController>
     /// <returns></returns>
     /// <response code="200">Admin resolution is submitted. The JJ Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:update permission.</response>
     /// <response code="404">The JJ Dispute to update was not found.</response>
     /// <response code="405">An invalid JJ Dispute status is provided. Update failed.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");

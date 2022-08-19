@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.Json;
 using TrafficCourts.Common.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Resources;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace TrafficCourts.Staff.Service.Authentication;
 
@@ -42,16 +45,73 @@ public static class AuthenticationExtensions
     {
         var jwtOptions = configuration.GetSection(_jwtBearerOptionsSection).Get<JwtBearerOptions>();
 
-        services.AddAuthorization(options =>
+        if (!string.IsNullOrEmpty(jwtOptions.Authority) && jwtOptions.Authority.EndsWith('/'))
         {
-            //options.AddPolicy(Policies.CanAssignDisputes, policy => policy.RequiresKeycloakEntitlement("Disputes", "Assign"));
+            jwtOptions.Authority = jwtOptions.Authority[..^1];
+        }
 
-        }).AddKeycloakAuthorization(options =>
+        services
+            .AddAuthorization(options => ApplyPolicies(options))
+            .AddKeycloakAuthorization(options =>
         {
             options.Audience = jwtOptions.Audience;
             options.TokenEndpoint = $"{jwtOptions.Authority}/protocol/openid-connect/token";
         });
 
         return services;
+    }
+
+    /// <summary>
+    /// Gets the policies defined on controllers.
+    /// </summary>
+    /// <param name="options"></param>
+    private static void ApplyPolicies(AuthorizationOptions options)
+    {
+        var policies = GetPolicies();
+
+        foreach (var authorizationPolicy in policies)
+        {
+            options.AddPolicy(authorizationPolicy.Policy!, policy => policy.RequiresKeycloakEntitlement(authorizationPolicy.Resource, authorizationPolicy.Scope));
+        }
+    }
+
+    private static IEnumerable<KeycloakAuthorizeAttribute> GetPolicies()
+    {
+        // find all controllers and public controller methods looking for KeycloakAuthorizeAttribute and apply
+        var controllerBaseType = typeof(ControllerBase);
+
+        // assume all controllers are defined in this assembly
+        IEnumerable<Type> controllers = typeof(Program)
+            .Assembly
+            .GetTypes()
+            .Where(type => controllerBaseType.IsAssignableFrom(type) && !type.IsAbstract);
+
+        // HashSet will remove any duplicates
+        HashSet<KeycloakAuthorizeAttribute> policies = new HashSet<KeycloakAuthorizeAttribute>();
+
+        foreach (var controller in controllers)
+        {
+            var attributes = controller.GetCustomAttributes<KeycloakAuthorizeAttribute>();
+            foreach (var attribute in attributes)
+            {
+                policies.Add(attribute);
+            }
+
+            var methods = controller.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var method in methods)
+            {
+                // check if the method is a action method
+                if (method.GetCustomAttribute<HttpMethodAttribute>() is not null)
+                {
+                    attributes = method.GetCustomAttributes<KeycloakAuthorizeAttribute>();
+                    foreach (var attribute in attributes)
+                    {
+                        policies.Add(attribute);
+                    }
+                }
+            }
+        }
+
+        return policies;
     }
 }

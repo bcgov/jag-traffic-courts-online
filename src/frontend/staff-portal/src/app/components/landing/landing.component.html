@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div class="header d-print-none" *ngIf="isLoggedIn==false">
+<div class="header d-print-none" *ngIf="!isLoggedIn">
   <div class="container">
     <div>
       <span>
@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<div *ngIf="isLoggedIn==true || isLoggedIn==undefined">
+<div *ngIf="isLoggedIn">
   <div class="header d-print-none">
     <div class="container">
       <div>

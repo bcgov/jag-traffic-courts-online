@@ -11,22 +11,34 @@ let routes: Routes = [
   {
     path: '',
     component: LandingComponent,
+    data: {
+      title: "Please sign in"
+    }
   },
   {
     path: AppRoutes.TICKET,
     component: StaffWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: "vtc-staff"}
+    data: {
+      expectedRole: "vtc-staff",
+      title: "Staff Workbench"
+    }
   },
   {
     path: AppRoutes.JJWORKBENCH,
     component: JjWorkbenchDashboardComponent,
     canActivate: [AuthorizationGuard],
-    data: { expectedRole: "judicial-justice" }
+    data: {
+      expectedRole: "judicial-justice",
+      title: "JJ Workbench"
+    }
   },
   {
     path: AppRoutes.UNAUTHORIZED,
     component: UnauthorizedComponent,
+    data: {
+      title: "Unauthorized"
+    }
   },
   {
     path: '**',

@@ -25,8 +25,5 @@ public class KeycloakAuthorizationRequirement : IAuthorizationRequirement
     /// <summary>
     /// Gets the name of the policy.
     /// </summary>
-    /// <value>
-    /// The name of the policy.
-    /// </value>
     public string PolicyName { get; }
 }
