@@ -227,18 +227,18 @@
         <!-- count -->
         <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
           <mat-step [completed]="isValid(i)">
-            <ng-template matStepLabel>Count {{ countForm?.value.count_no }}: Review</ng-template>
+            <ng-template matStepLabel>Count {{ countForm.value.count_no }}: Review</ng-template>
             <app-stepper-page>
               <app-page-header>
                 <ng-container subHeader>
                   <div class="row mt-2">
                     <div class="col-md-8">
                       <small class="d-block"> Description of offence </small>
-                      <strong>{{ countForm?.value.description | titlecase }}</strong>
+                      <strong>{{ countForm.value.description | titlecase }}</strong>
                     </div>
                     <div class="col-md-4">
                       <small class="d-block">Offence amount</small>
-                      <strong>{{ countForm?.value.ticketed_amount| currency:
+                      <strong>{{ countForm.value.ticketed_amount| currency:
                         "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
                     </div>
                   </div>
@@ -301,16 +301,16 @@
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
-                      <mat-checkbox [checked]="countForm?.get('request_reduction')?.value== RequestReduction.Y ? true:false"
-                      (change)="countForm?.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)" color="primary" class="w-100"> I would like
+                      <mat-checkbox [checked]="countForm.get('request_reduction').value === RequestReduction.Y ? true:false"
+                      (change)="countForm.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)" color="primary" class="w-100"> I would like
                         to request a fine reduction on this count.</mat-checkbox>
                       <p> and/or</p>
-                      <mat-checkbox [checked]="countForm?.get('request_time_to_pay')?.value== RequestTimeToPay.Y ? true:false"
+                      <mat-checkbox [checked]="countForm.get('request_time_to_pay').value== RequestTimeToPay.Y ? true:false"
                       (change)="countForm.get('request_time_to_pay').setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)" color="primary" class="w-100"> I would
                         like to request time to pay on this count.</mat-checkbox>
                     </div>
 
-                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance == RequestCourtAppearance.Y ? '' : 'none' }">
+                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
@@ -326,10 +326,10 @@
                   </div>
                   <hr />
                   <div class="row">
-                    <mat-checkbox *ngIf="countForm?.value.count_no === 1 && countForms?.controls.length > 1"
+                    <mat-checkbox *ngIf="countForm.value.count_no === 1 && countForms.controls.length > 1"
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to all counts on this violation ticket.</mat-checkbox>
-                    <mat-checkbox *ngIf="countForm?.value.count_no === 2 && countForms?.controls.length > 2"
+                    <mat-checkbox *ngIf="countForm.value.count_no === 2 && countForms.controls.length > 2"
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to remaining counts on ticket.
                     </mat-checkbox>
@@ -341,7 +341,7 @@
                 </section>
               </form>
 
-              <div class="col mt-4" *ngIf="countForm?.value.request_reduction === RequestReduction.Y || countForm?.value.request_time_to_pay === RequestTimeToPay.Y">
+              <div class="col mt-4" *ngIf="countForm.value.request_reduction === RequestReduction.Y || countForm.value.request_time_to_pay === RequestTimeToPay.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span>
@@ -356,7 +356,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm?.value.request_court_appearance !== RequestCourtAppearance.Y">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance !== RequestCourtAppearance.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -369,7 +369,7 @@
                   </ng-container>
                 </app-alert>
               </div>
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm?.value.request_court_appearance === RequestCourtAppearance.Y">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -383,7 +383,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
+              <div class="col mt-4" *ngIf="(countForm.value.request_court_appearance === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -413,9 +413,9 @@
             </app-page-header>
 
             <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
-              <ng-container *ngIf="countsActions.not_request_court_appearance?.length > 0">
-                <ng-container *ngIf="countsActions.request_reduction?.length > 0">
-                  <div>{{ countsActions.request_reduction }}</div>
+              <ng-container *ngIf="countsActions?.not_request_court_appearance?.length > 0">
+                <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
+                  <div>{{ countsActions?.request_reduction }}</div>
                   <div class="row">
                     <div class="col-md-12">
                       <mat-form-field class="w-100">
@@ -433,8 +433,8 @@
                     </div>
                   </div>
                 </ng-container>
-                <ng-container *ngIf="countsActions.request_reduction !== countsActions.request_time_to_pay">
-                  <div>{{ countsActions.request_time_to_pay }}</div>
+                <ng-container *ngIf="countsActions?.request_reduction !== countsActions.request_time_to_pay">
+                  <div>{{ countsActions?.request_time_to_pay }}</div>
                 </ng-container>
                 <ng-container *ngIf="countsActions.request_time_to_pay?.length > 0">
                   <div class="row">
@@ -456,9 +456,9 @@
                 </ng-container>
               </ng-container>
 
-              <section *ngIf="countsActions?.request_court_appearance?.length > 0">
+              <section *ngIf="countsActions.request_court_appearance?.length > 0">
                 <div>
-                  <div>{{ countsActions?.request_court_appearance }}</div>
+                  <div>{{ countsActions.request_court_appearance }}</div>
                 </div>
                 <h3 class="mt-4 mb-2 reduction-text">
                 </h3>
@@ -467,13 +467,13 @@
                     <mat-checkbox class="me-4 mb-2" color="primary" [checked]="form.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
                       (change)="form.get('represented_by_lawyer').setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
                       I intend to be represented by a lawyer in court.
-                      <span *ngIf="additionalForm?.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y" style="font-weight: lighter;">
+                      <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y" style="font-weight: lighter;">
                         Enter lawyer contact details below.
                       </span>
                     </mat-checkbox>
                   </div>
                 </div>
-                <ng-container *ngIf="additionalForm?.get('represented_by_lawyer').value === RepresentedByLawyer.Y">
+                <ng-container *ngIf="additionalForm.get('represented_by_lawyer').value === RepresentedByLawyer.Y">
                   <div [formGroup]="legalRepresentationForm">
                     <div class="row">
                       <div class="col-md-6">
@@ -535,7 +535,7 @@
                   </div>
                 </div>
 
-                <div class="row" *ngIf="additionalForm?.get('__interpreter_required')?.value">
+                <div class="row" *ngIf="additionalForm.get('__interpreter_required')?.value">
                   <div class="col interpreter-language">
                     <mat-form-field class="w-25">
                       <mat-label>

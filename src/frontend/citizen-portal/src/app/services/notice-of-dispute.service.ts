@@ -53,7 +53,7 @@ export class NoticeOfDisputeService {
   }
 
   public additionFormFields = {
-    represented_by_lawyer: [null],
+    represented_by_lawyer: [this.RepresentedByLawyer.N],
     interpreter_language: [null],
     witness_no: [0],
     fine_reduction_reason: [null, []],

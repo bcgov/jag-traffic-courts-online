@@ -228,14 +228,14 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     if (this.countIndexes?.indexOf(this.stepper.selectedIndex) > -1) {
       let countInx = this.stepper.selectedIndex - 1;
       let countForm = this.countForms.controls[countInx];
-      if (countForm?.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm?.value.request_reduction === this.RequestReduction.Y) {
+      if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
         countForm.patchValue({ plea_cd: DisputeCountPleaCode.G });
       }
-      if (countForm?.value.__skip) {
+      if (countForm.value.__skip) {
         countForm.patchValue({ ...this.getCountFormInitValue(this.ticket.counts[countInx]), __skip: true });
       }
-      if (countForm?.value.__apply_to_remaining_counts && countInx + 1 < this.countForms.length) {
-        let value = this.countForms.controls[countInx]?.value;
+      if (countForm.value.__apply_to_remaining_counts && countInx + 1 < this.countForms.length) {
+        let value = this.countForms.controls[countInx].value;
         for (let i = countInx; i < this.countForms.length; i++) {
           this.countForms.controls[i].patchValue({ ...value, ...this.ticket.counts[i], __apply_to_remaining_counts: false })
         }
@@ -249,10 +249,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
     if (isAdditional) {
       this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
-        ...this.form?.value,
-        ...this.additionalForm?.value,
-        country: this.form.get("country")?.value, // disabled field is not available in this.form.value
-        disputed_counts: this.countForms?.value
+        ...this.form.value,
+        ...this.additionalForm.value,
+        country: this.form.get("country").value, // disabled field is not available in this.form.value
+        disputed_counts: this.countForms.value
       });
     } else {
       this.noticeOfDispute = null;
@@ -262,10 +262,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   private setAdditional() {
     this.getCountsActions();
     let fields = cloneDeep(this.additionFormFields);
-    if (this.countsActions.request_reduction?.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
+    if (this.countsActions.request_reduction.length > 0 && fields.fine_reduction_reason[1].indexOf(Validators.required) < 0) {
       fields.fine_reduction_reason[1].push(Validators.required);
     }
-    if (this.countsActions.request_time_to_pay?.length > 0 && fields.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
+    if (this.countsActions.request_time_to_pay.length > 0 && fields.time_to_pay_reason[1].indexOf(Validators.required) < 0) {
       fields.time_to_pay_reason[1].push(Validators.required);
     }
     this.additionalForm = this.formBuilder.group({
@@ -311,7 +311,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     if (data) {
       let msg = "";
       this.languages.forEach(res => {
-        if (res === data?.value) {
+        if (res === data.value) {
           msg = res
         }
       })
@@ -322,7 +322,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private get isAllCountsSkipped() {
-    if (this.countForms?.value.filter(i => i.__skip).length === this.countForms.length) {
+    if (this.countForms.value.filter(i => i.__skip).length === this.countForms.length) {
       return true;
     }
     else {
