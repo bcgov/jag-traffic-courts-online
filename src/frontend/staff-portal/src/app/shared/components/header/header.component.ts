@@ -7,12 +7,14 @@ import {
   OnInit,
   OnChanges,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfigService } from 'app/services/app-config.service';
+import { AuthService } from 'app/services/auth.service';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +22,7 @@ import { KeycloakProfile } from 'keycloak-js';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class HeaderComponent implements OnInit, OnChanges {
+export class HeaderComponent implements OnInit {
   public fullName: string;
   todayDate: Date = new Date();
   @Input() public isMobile: boolean;
@@ -45,8 +47,10 @@ export class HeaderComponent implements OnInit, OnChanges {
     private appConfigService: AppConfigService,
     private translateService: TranslateService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
+    public authService: AuthService,
     public keycloak: KeycloakService,
-    ) {
+  ) {
     this.hasMobileSidemenu = false;
     this.toggle = new EventEmitter<void>();
 
@@ -57,26 +61,25 @@ export class HeaderComponent implements OnInit, OnChanges {
     this.version = this.appConfigService.version;
   }
 
-  ngOnChanges() {
-    if (this.router.url.includes("jjworkbench")) this.headingText = "JJ Workbench";
-    else if (this.router.url.includes("ticket")) this.headingText = "Staff Workbench";
-    else if (this.router.url.includes("unauthorized")) this.headingText = "Unauthorized";
-    else if (!this.isLoggedIn) this.headingText = "Please sign in";
-  }
-
   async ngOnInit() {
-    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.headingText = this.activatedRoute.snapshot?.data?.title ? this.activatedRoute.snapshot?.data?.title : "Authenticating...";
+      });
 
-    if (this.isLoggedIn) {
-      this.userProfile = await this.keycloak.loadUserProfile();
-      this.fullName = this.userProfile.firstName + " " + this.userProfile.lastName;
-
-      if (this.router.url.includes("jjworkbench")) this.headingText = "JJ Workbench";
-      else if (this.router.url.includes("ticket")) this.headingText = "Staff Workbench";
-      else if (this.router.url.includes("unauthorized")) this.headingText = "Unauthorized";
-      else if (!this.isLoggedIn) this.headingText = "Please sign in";
-
-    }
+    this.authService.checkAuth().subscribe(() => {
+      this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+        this.isLoggedIn = isLoggedIn;
+        if (this.isLoggedIn) {
+          this.authService.userProfile$.subscribe(userProfile => {
+            this.userProfile = userProfile;
+            this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
+            this.router.navigate([this.authService.getRedirectUrl()]);
+          })
+        }
+      })
+    })
   }
 
   public toggleSidenav(): void {
@@ -103,14 +106,11 @@ export class HeaderComponent implements OnInit, OnChanges {
     this.languageDesc = languageDesc;
   }
 
-  async login() {
-    await this.keycloak.login({
-      redirectUri: window.location.toString()
-    });
+  login() {
+    this.authService.login();
   }
 
   logout() {
     this.keycloak.logout();
-    this.isLoggedIn = false;
   }
 }

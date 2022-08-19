@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-staff-workbench-dashboard',
@@ -19,21 +19,20 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   public staffPage: string = "";
 
   constructor(
-    public keycloak: KeycloakService
+    private authService: AuthService
   ) {
 
   }
 
   public async ngOnInit() {
-
-    this.isLoggedIn = await this.keycloak.isLoggedIn();
-
-    if (this.isLoggedIn) {
-      this.userProfile = await this.keycloak.loadUserProfile();
-      this.fullName = this.userProfile.firstName + " " + this.userProfile.lastName;
-      this.staffIDIR = this.keycloak.getUsername();
-    }
-
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+      this.authService.userProfile$.subscribe(userProfile => {
+        this.userProfile = userProfile;
+        this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
+        this.staffIDIR = this.authService.userIDIR;
+      })
+    })
   }
 
   changeHeading(heading: any) {
@@ -41,5 +40,4 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
     else if (heading == "Decision Validation") this.tabSelected.setValue(0);
     this.staffPage = heading;
   }
-
 }
