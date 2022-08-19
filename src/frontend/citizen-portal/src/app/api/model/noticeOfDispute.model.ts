@@ -9,8 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DisputedCount } from './disputedCount.model';
-import { LegalRepresentation } from './legalRepresentation.model';
+import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
+import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
+import { DisputeCount } from './disputeCount.model';
 
 
 /**
@@ -24,7 +25,7 @@ export interface NoticeOfDispute {
     /**
      * The provincial court hearing location named on the violation ticket.
      */
-    provincial_court_hearing_location?: string | null;
+    court_location?: string | null;
     /**
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
@@ -32,15 +33,23 @@ export interface NoticeOfDispute {
     /**
      * The surname or corporate name.
      */
-    surname?: string | null;
+    disputant_surname?: string | null;
     /**
-     * The given names or corporate name continued.
+     * The first given name or corporate name continued.
      */
-    given_names?: string | null;
+    disputant_given_name1?: string | null;
+    /**
+     * The second given name
+     */
+    disputant_given_name2?: string | null;
+    /**
+     * The third given name
+     */
+    disputant_given_name3?: string | null;
     /**
      * The disputant\'s birthdate.
      */
-    birthdate?: string;
+    disputant_birthdate?: string;
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
      */
@@ -56,11 +65,11 @@ export interface NoticeOfDispute {
     /**
      * The mailing address city of the disputant.
      */
-    city?: string | null;
+    address_city?: string | null;
     /**
      * The mailing address province of the disputant.
      */
-    province?: string | null;
+    address_province?: string | null;
     /**
      * The mailing address postal code or zip code of the disputant.
      */
@@ -77,23 +86,47 @@ export interface NoticeOfDispute {
      * The disputant\'s email address.
      */
     email_address?: string | null;
+    represented_by_lawyer?: DisputeRepresentedByLawyer;
     /**
-     * The count dispute details.
+     * Name of the law firm that will represent the disputant at the hearing.
      */
-    disputed_counts?: Array<DisputedCount> | null;
+    law_firm_name?: string | null;
     /**
-     * The disputant intends to be represented by a lawyer at the hearing.
+     * Surname of the lawyer who will represent the disputant at the hearing.
      */
-    represented_by_lawyer?: boolean;
-    legal_representation?: LegalRepresentation;
+    lawyer_surname?: string | null;
+    /**
+     * Given Name 1 of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_given_name1?: string | null;
+    /**
+     * Given Name 2 of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_given_name2?: string | null;
+    /**
+     * Email address of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_email?: string | null;
+    /**
+     * Address of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_address?: string | null;
+    /**
+     * Address of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_phone_number?: string | null;
     /**
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */
     interpreter_language?: string | null;
     /**
+     * Interpreter Required
+     */
+    interprer_required?: string | null;
+    /**
      * The number of witnesses that the disputant intends to call.
      */
-    number_of_witness?: number;
+    witness_no?: number;
     /**
      * The reason that disputant declares for requesting a fine reduction.
      */
@@ -102,17 +135,22 @@ export interface NoticeOfDispute {
      * The reason that disputant declares for requesting more time to pay the amount on the violation ticket.
      */
     time_to_pay_reason?: string | null;
-    /**
-     * Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
-     */
-    disputant_detected_ocr_issues?: boolean;
+    disputant_detected_ocr_issues?: DisputeDisputantDetectedOcrIssues;
     /**
      * The description of the issue with OCR ticket if the citizen has detected any.
      */
-    disputant_ocr_issues_description?: string | null;
+    disputant_ocr_issues?: string | null;
     /**
      * The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.
      */
     ticket_id?: string | null;
+    /**
+     * Detachment Location
+     */
+    detachment_location?: string | null;
+    /**
+     * Dispute Counts
+     */
+    dispute_counts?: Array<DisputeCount> | null;
 }
 

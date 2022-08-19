@@ -35,14 +35,14 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Surname</mat-label>
-                        <input matInput formControlName="surname" />
+                        <input matInput formControlName="disputant_surname" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Given names</mat-label>
-                        <input matInput formControlName="given_names" />
+                        <input matInput formControlName="disputant_given_names" />
                         <mat-error>{{ "error.required" | translate }}</mat-error>
                       </mat-form-field>
                     </div>
@@ -85,7 +85,7 @@
                       <div class="col-md-6">
                         <mat-form-field class="w-100">
                           <mat-label>City</mat-label>
-                          <input matInput formControlName="city" />
+                          <input matInput formControlName="address_city" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
                       </div>
@@ -93,7 +93,7 @@
                         <mat-form-field class="w-100">
                           <mat-label *ngIf="form.get('country').value==='Canada'">Province</mat-label>
                           <mat-label *ngIf="form.get('country').value==='United States'">State</mat-label>
-                          <mat-select formControlName="province" *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
+                          <mat-select formControlName="address_province" *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
                             <div *ngIf="form.get('country').value === 'Canada'">
                               <mat-option value="British Columbia">British Columbia</mat-option>
                               <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
@@ -107,11 +107,11 @@
                           <mat-label
                             *ngIf="form.get('country').value!=='United States' && form.get('country').value !== 'Canada'">
                             Province/State</mat-label>
-                          <input matInput formControlName="province"
+                          <input matInput formControlName="address_province"
                             *ngIf="form.get('country').value !== 'United States' && form.get('country').value !== 'Canada'"
                             maxlength="30" />
-                          <mat-error>{{ "error.required" | translate }}</mat-error> 
-                        </mat-form-field> 
+                          <mat-error>{{ "error.required" | translate }}</mat-error>
+                        </mat-form-field>
                       </div>
                     </div>
                   </section>
@@ -142,13 +142,13 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Birthdate</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="birthdate" readonly
+                        <input matInput [matDatepicker]="picker" formControlName="disputant_birthdate" readonly
                           (click)="picker.open()" [max]="todayDate" />
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-                        <mat-error *ngIf="form.get('birthdate')?.hasError('required')">{{"error.required" |
+                        <mat-error *ngIf="form.get('disputant_birthdate')?.hasError('required')">{{"error.required" |
                           translate}}</mat-error>
-                        <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate
+                        <mat-error *ngIf="form.get('disputant_birthdate').hasError('matDatepickerMax')">No future birthdate
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -227,18 +227,18 @@
         <!-- count -->
         <ng-container *ngFor="let countForm of countForms?.controls; let i = index;">
           <mat-step [completed]="isValid(i)">
-            <ng-template matStepLabel>Count {{ countForm.value.count }}: Review</ng-template>
+            <ng-template matStepLabel>Count {{ countForm?.value.count_no }}: Review</ng-template>
             <app-stepper-page>
               <app-page-header>
                 <ng-container subHeader>
                   <div class="row mt-2">
                     <div class="col-md-8">
                       <small class="d-block"> Description of offence </small>
-                      <strong>{{ countForm.value.description | titlecase }}</strong>
+                      <strong>{{ countForm?.value.description | titlecase }}</strong>
                     </div>
                     <div class="col-md-4">
                       <small class="d-block">Offence amount</small>
-                      <strong>{{ countForm.value.ticketed_amount| currency:
+                      <strong>{{ countForm?.value.ticketed_amount| currency:
                         "CAD":"symbol-narrow":"1.2-2":defaultLanguage }}</strong>
                     </div>
                   </div>
@@ -257,7 +257,7 @@
                           court hearing.
                         </ng-container>
                       </app-alert>
-                      <mat-radio-group formControlName="appear_in_court"
+                      <mat-radio-group formControlName="request_court_appearance"
                         (change)="onAttendHearingChange(countForm, $event)">
                         <div>
                           <span style="font-weight: 600;">I <span style="text-decoration: underline;">do not</span> want
@@ -267,7 +267,7 @@
                             <mat-icon>info</mat-icon>
                           </span>
                         </div>
-                        <mat-radio-button [value]="false">
+                        <mat-radio-button [value]="RequestCourtAppearance.N">
                           <span class="wrap-mat-radio-label">
                             I agree I committed this offence and would like to request a fine reduction and/or time to
                             pay and supply written reasons to a judicial justice to review.
@@ -282,52 +282,54 @@
                             <mat-icon>info</mat-icon>
                           </span>
                         </div>
-                        <mat-radio-button [value]="true">
+                        <mat-radio-button [value]="RequestCourtAppearance.Y">
                           <span class="wrap-mat-radio-label">
                             I want to attend a court hearing in person and discuss my ticket with the police officer and
                             judicial justice.
                           </span>
                         </mat-radio-button>
-                        <mat-error *ngIf="countForm.controls.appear_in_court.touched 
-                          && countForm.controls.appear_in_court.invalid 
-                          && countForm.controls.appear_in_court.errors.required">
+                        <mat-error *ngIf="countForm.controls.request_court_appearance.touched
+                          && countForm.controls.request_court_appearance.invalid
+                          && countForm.controls.request_court_appearance.errors.required">
                           {{ "error.required" | translate }}
                         </mat-error>
                       </mat-radio-group>
                     </div>
                   </div>
                   <div class="row mt-4">
-                    <div [ngStyle]="{ 'display': countForm.value.appear_in_court === false ? '' : 'none' }">
+                    <div [ngStyle]="{ 'display': countForm?.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
-                      <mat-checkbox formControlName="request_reduction" color="primary" class="w-100"> I would like
+                      <mat-checkbox [checked]="countForm?.get('request_reduction').value== RequestReduction.Y ? true:false"
+                      (change)="countForm?.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)" color="primary" class="w-100"> I would like
                         to request a fine reduction on this count.</mat-checkbox>
                       <p> and/or</p>
-                      <mat-checkbox formControlName="request_time_to_pay" color="primary" class="w-100"> I would
+                      <mat-checkbox [checked]="countForm?.get('request_time_to_pay').value== RequestTimeToPay.Y ? true:false"
+                      (change)="countForm.get('request_time_to_pay').setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)" color="primary" class="w-100"> I would
                         like to request time to pay on this count.</mat-checkbox>
                     </div>
 
-                    <div [ngStyle]="{ 'display': countForm.value.appear_in_court ? '' : 'none' }">
+                    <div [ngStyle]="{ 'display': countForm?.value.request_court_appearance == RequestCourtAppearance.Y ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
-                      <mat-radio-group formControlName="plea">
-                        <mat-radio-button [value]="Plea.Guilty" color="primary" class="w-100"> I agree I committed this
+                      <mat-radio-group formControlName="plea_cd">
+                        <mat-radio-button [value]="Plea.G" color="primary" class="w-100"> I agree I committed this
                           offence and would like to request a fine reduction and/or time to pay on this count.
                         </mat-radio-button>
                         <p> and/or</p>
-                        <mat-radio-button [value]="Plea.NotGuilty" color="primary" class="w-100"> I do not agree I
+                        <mat-radio-button [value]="Plea.N" color="primary" class="w-100"> I do not agree I
                           committed this offence and would like to dispute this count</mat-radio-button>
                       </mat-radio-group>
                     </div>
                   </div>
                   <hr />
                   <div class="row">
-                    <mat-checkbox *ngIf="countForm.value.count === 1 && countForms?.controls.length > 1"
+                    <mat-checkbox *ngIf="countForm?.value.count_no === 1 && countForms?.controls.length > 1"
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to all counts on this violation ticket.</mat-checkbox>
-                    <mat-checkbox *ngIf="countForm.value.count === 2 && countForms?.controls.length > 2"
+                    <mat-checkbox *ngIf="countForm?.value.count_no === 2 && countForms?.controls.length > 2"
                       formControlName="__apply_to_remaining_counts" color="primary" class="w-100 mt-4">Apply this
                       selection to remaining counts on ticket.
                     </mat-checkbox>
@@ -339,7 +341,7 @@
                 </section>
               </form>
 
-              <div class="col mt-4" *ngIf="countForm.value.request_reduction || countForm.value.request_time_to_pay">
+              <div class="col mt-4" *ngIf="countForm?.value.request_reduction === RequestReduction.Y || countForm?.value.request_time_to_pay === RequestTimeToPay.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span>
@@ -354,7 +356,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appear_in_court === false">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm?.value.request_court_appearance === RequestCourtAppearance.N">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -367,7 +369,7 @@
                   </ng-container>
                 </app-alert>
               </div>
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.appear_in_court">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.N">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -381,7 +383,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4" *ngIf="countForm.value.appear_in_court && ticketType === ticketTypes.CAMERA_TICKET">
+              <div class="col mt-4" *ngIf="countForm?.value.request_court_appearance === RequestCourtAppearance.Y && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -411,7 +413,7 @@
             </app-page-header>
 
             <form *ngIf="additionalForm" [formGroup]="additionalForm" novalidate>
-              <ng-container *ngIf="countsActions?.not_appear_in_court?.length > 0">
+              <ng-container *ngIf="countsActions?.not_request_court_appearance?.length > 0">
                 <ng-container *ngIf="countsActions?.request_reduction?.length > 0">
                   <div>{{ countsActions?.request_reduction }}</div>
                   <div class="row">
@@ -421,7 +423,7 @@
                           Please enter your reasons for why you are requesting a <strong>fine reduction</strong>
                         </mat-label>
                         <input matInput formControlName="fine_reduction_reason" [errorStateMatcher]="matcher" />
-                        <mat-error *ngIf="(additionalForm.get('fine_reduction_reason')?.dirty 
+                        <mat-error *ngIf="(additionalForm.get('fine_reduction_reason')?.dirty
                         || additionalForm.get('fine_reduction_reason')?.touched)
                         && additionalForm.get('fine_reduction_reason')?.invalid
                         && additionalForm.get('fine_reduction_reason')?.hasError('required')">
@@ -454,24 +456,24 @@
                 </ng-container>
               </ng-container>
 
-              <section *ngIf="countsActions?.appear_in_court?.length > 0">
+              <section *ngIf="countsActions?.request_court_appearance?.length > 0">
                 <div>
-                  <div>{{ countsActions?.appear_in_court }}</div>
+                  <div>{{ countsActions?.request_court_appearance }}</div>
                 </div>
                 <h3 class="mt-4 mb-2 reduction-text">
                 </h3>
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" formControlName="represented_by_lawyer"
-                      (change)="onChangeRepresentedByLawyer($event)">
+                    <mat-checkbox class="me-4 mb-2" color="primary" [checked]="form.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
+                      (change)="form.get('represented_by_lawyer').setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
                       I intend to be represented by a lawyer in court.
-                      <span *ngIf="additionalForm.get('represented_by_lawyer')?.value" style="font-weight: lighter;">
+                      <span *ngIf="additionalForm?.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y" style="font-weight: lighter;">
                         Enter lawyer contact details below.
                       </span>
                     </mat-checkbox>
                   </div>
                 </div>
-                <ng-container *ngIf="additionalForm.get('legal_representation')">
+                <ng-container *ngIf="additionalForm?.get('represented_by_lawyer').value === RepresentedByLawyer.Y">
                   <div [formGroup]="legalRepresentationForm">
                     <div class="row">
                       <div class="col-md-6">
@@ -533,7 +535,7 @@
                   </div>
                 </div>
 
-                <div class="row" *ngIf="additionalForm.get('__interpreter_required')?.value">
+                <div class="row" *ngIf="additionalForm?.get('__interpreter_required')?.value">
                   <div class="col interpreter-language">
                     <mat-form-field class="w-25">
                       <mat-label>
@@ -566,14 +568,14 @@
                     <mat-form-field class="pe-4 w-25">
                       <mat-label>Number of witnesses</mat-label>
                       <input matInput type="number" [attr.min]="minWitnesses" [attr.max]="maxWitnesses"
-                        formControlName="number_of_witness" [errorStateMatcher]="matcher" />
-                      <mat-error *ngIf="additionalForm.get('number_of_witness')?.hasError('requiredIfTrue')">
+                        formControlName="witness_no" [errorStateMatcher]="matcher" />
+                      <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('requiredIfTrue')">
                         {{ "error.required" | translate }}
                       </mat-error>
-                      <mat-error *ngIf="additionalForm.get('number_of_witness')?.hasError('min')">
+                      <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('min')">
                         {{ "error.positive_number" | translate }}
                       </mat-error>
-                      <mat-error *ngIf="additionalForm.get('number_of_witness')?.hasError('max')">
+                      <mat-error *ngIf="additionalForm.get('witness_no')?.hasError('max')">
                         {{ "error.max_number" | translate }}{{ maxWitnesses + 1 }}
                       </mat-error>
                     </mat-form-field>
@@ -590,7 +592,7 @@
                     </ng-container>
                   </app-alert>
                 </div>
-                <div class="col" *ngIf="additionalForm.get('represented_by_lawyer')?.value">
+                <div class="col" *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y">
                   <app-alert type="warning" icon="warning">
                     <ng-container #alertContent class="alert-content">
                       <strong>If you want a lawyer to represent you at your hearing, you should hire a lawyer prior to

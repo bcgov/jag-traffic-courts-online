@@ -10,7 +10,7 @@ import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
 import { FileUtilsService } from "@shared/services/file-utils.service";
-import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
+import { DisputeDisputantDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { NgProgressRef } from "ngx-progressbar";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -27,7 +27,8 @@ export class ViolationTicketService {
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
   public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
-  public ocrIssueDescKey = "disputant_ocr_issues_description";
+  public ocrIssueDescKey = "disputant_ocr_issues";
+  public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   private queryParams: any;
 
   constructor(
@@ -210,7 +211,7 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
-    result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
+    result.counts = result.counts.filter(count => count.description || count.full_section || count.ticketed_amount);
 
     // set ticket_id to imageFilename returned from Ocr
     result.ticket_id = source.imageFilename;
@@ -259,7 +260,7 @@ export class ViolationTicketService {
 
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected === true ? issueDetected : false;
+    ticket[this.ocrIssueDetectedKey] = issueDetected === this.DetectedOcrIssues.Y ? issueDetected : this.DetectedOcrIssues.N;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this._ticket.next(ticket);
   }

@@ -142,26 +142,6 @@ public class ViolationTicket
     public string? detachmentLocation { get; set; }
 
     /// <summary>
-    /// The date and time the violation ticket was issue. Time must only be hours and minutes.
-    /// </summary>
-    [JsonPropertyName("issued_date")]
-    public DateTime? IssuedDate { get; set; }
-
-    /// <summary>
-    /// Issued on Road or Highway
-    /// </summary>
-    [JsonPropertyName("issued_on_road_or_highway")]
-    [MaxLength(100)]
-    public string? IssuedOnRoadOrHighway { get; set; }
-
-    /// <summary>
-    /// Issued at or near city.
-    /// </summary>
-    [JsonPropertyName("issued_at_or_near_city")]
-    [MaxLength(100)]
-    public string? IssuedAtOrNearCity { get; set; }
-
-    /// <summary>
     /// The address represents a change of address. The address on the violation would be different from the address 
     /// on the drivers licence or provided identification.
     /// </summary>
@@ -187,11 +167,24 @@ public class ViolationTicket
 
     #region Issuance date, time and location
     /// <summary>
-    /// The violation ticket was issued at or near this city or town.
+    /// The date and time the violation ticket was issue. Time must only be hours and minutes.
+    /// </summary>
+    [JsonPropertyName("issued_date")]
+    public DateTime? IssuedDate { get; set; }
+
+    /// <summary>
+    /// Issued on Road or Highway
+    /// </summary>
+    [JsonPropertyName("issued_on_road_or_highway")]
+    [MaxLength(100)]
+    public string? IssuedOnRoadOrHighway { get; set; }
+
+    /// <summary>
+    /// Issued at or near city.
     /// </summary>
     [JsonPropertyName("issued_at_or_near_city")]
     [MaxLength(100)]
-    public string? IssuedAtOrNearCityOrTown { get; set; }
+    public string? IssuedAtOrNearCity { get; set; }
     #endregion
 
     #region Offsence Details

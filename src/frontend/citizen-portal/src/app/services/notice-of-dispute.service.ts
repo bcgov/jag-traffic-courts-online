@@ -1,4 +1,5 @@
 import { DatePipe } from "@angular/common";
+import { Placeholder } from "@angular/compiler/src/i18n/i18n_ast";
 import { Injectable } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
@@ -7,7 +8,7 @@ import { FormControlValidators } from "@core/validators/form-control.validators"
 import { FormGroupValidators } from "@core/validators/form-group.validators";
 import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
-import { DisputedCount, DisputesService, NoticeOfDispute, Plea } from "app/api";
+import { DisputeCount, DisputesService, NoticeOfDispute, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { BehaviorSubject, Observable } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
@@ -19,37 +20,42 @@ export class NoticeOfDisputeService {
   private _noticeOfDispute: BehaviorSubject<NoticeOfDispute> = new BehaviorSubject<NoticeOfDispute>(null);
   private _countFormDefaultValue: any;
   private _additionFormDefaultValue: any;
+  public RepresentedByLawyer = DisputeRepresentedByLawyer;
+  public RequestTimeToPay = DisputeCountRequestTimeToPay;
+  public RequestReduction = DisputeCountRequestReduction;
+  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public PleaCode = DisputeCountPleaCode;
 
   public ticketFormFields = {
-    surname: [null, [Validators.required]],
-    given_names: [null, [Validators.required]],
+    disputant_surname: [null, [Validators.required]],
+    disputant_given_names: [null, [Validators.required]],
     address: [null, [Validators.required]],
-    city: [null, [Validators.required]],
-    province: [null, [Validators.required, Validators.maxLength(30)]],
+    address_city: [null, [Validators.required]],
+    address_province: [null, [Validators.required, Validators.maxLength(30)]],
     country: ["Canada", [Validators.required]],
     postal_code: [null, [Validators.required]],
     home_phone_number: [null, [Validators.required, FormControlValidators.phone]],
     work_phone_number: [null, [FormControlValidators.phone]], // not using now
     email_address: [null, [Validators.required, Validators.email]],
-    birthdate: [null, [Validators.required]],
+    disputant_birthdate: [null, [Validators.required]],
     drivers_licence_number: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
     drivers_licence_province: [null, [Validators.required]],
-    disputed_counts: [],
+    dispute_counts: [],
   }
 
   public countFormFields = {
-    plea: [null],
-    request_time_to_pay: [false],
-    request_reduction: [false],
-    appear_in_court: [null, [Validators.required]],
+    plea_cd: [null],
+    request_time_to_pay: this.RequestTimeToPay.N,
+    request_reduction: this.RequestReduction.N,
+    request_court_appearance: [null, [Validators.required]],
     __skip: [false],
     __apply_to_remaining_counts: [false],
   }
 
   public additionFormFields = {
-    represented_by_lawyer: [false],
+    represented_by_lawyer: this.RepresentedByLawyer.N,
     interpreter_language: [null],
-    number_of_witness: [0],
+    witness_no: [0],
     fine_reduction_reason: [null, []],
     time_to_pay_reason: [null, []],
 
@@ -59,7 +65,7 @@ export class NoticeOfDisputeService {
 
   public additionFormValidators = [
     FormGroupValidators.requiredIfTrue("__interpreter_required", "interpreter_language"),
-    FormGroupValidators.requiredIfTrue("__witness_present", "number_of_witness"),
+    FormGroupValidators.requiredIfTrue("__witness_present", "witness_no"),
   ]
 
   public legalRepresentationFields = {
@@ -98,9 +104,11 @@ export class NoticeOfDisputeService {
     return this._additionFormDefaultValue;
   }
 
-  public createNoticeOfDispute(input: NoticeOfDispute): void {
-    input.birthdate = this.datePipe.transform(input.birthdate, "yyyy-MM-dd");
+  public createNoticeOfDispute(input: NoticeOfDisputeExtended): void {
+    input.disputant_birthdate = this.datePipe.transform(input.disputant_birthdate, "yyyy-MM-dd");
     input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss");
+    input = this.splitGivenNames(input);  // break disputant names into first, second, third
+    input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
 
     const data: DialogOptions = {
       titleKey: "Submit request",
@@ -113,7 +121,7 @@ export class NoticeOfDisputeService {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: boolean) => {
         if (action) {
-          input.disputed_counts = input.disputed_counts.filter(i => i.plea);
+          input.dispute_counts = input.dispute_counts.filter(i => i.plea_cd);
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
             this._noticeOfDispute.next(input);
             this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
@@ -127,10 +135,38 @@ export class NoticeOfDisputeService {
       });
   }
 
-  public getCountsActions(counts: DisputedCount[]): any {
+  public splitGivenNames(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
+    let noticeOfDispute = noticeOfDisputeExtended;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (noticeOfDisputeExtended.disputant_given_names) {
+      let givenNames = noticeOfDisputeExtended.disputant_given_names.split(" ");
+      if (givenNames.length > 0)noticeOfDispute.disputant_given_name1 = givenNames[0];
+      if (givenNames.length > 1) noticeOfDispute.disputant_given_name2 = givenNames[1];
+      if (givenNames.length > 2) noticeOfDispute.disputant_given_name3 = givenNames[2];
+    }
+
+    return noticeOfDispute;
+  }
+
+  public splitLawyerNames(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
+    let noticeOfDispute = noticeOfDisputeExtended;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (noticeOfDisputeExtended.lawyer_full_name) {
+      let lawyerNames = noticeOfDisputeExtended.lawyer_full_name.split(" ");
+      if (lawyerNames.length > 0)noticeOfDispute.lawyer_surname = lawyerNames[lawyerNames.length - 1]; // last one
+      if (lawyerNames.length > 1) noticeOfDispute.lawyer_given_name1 = lawyerNames[0];
+      if (lawyerNames.length > 2) noticeOfDispute.lawyer_given_name2 = lawyerNames[1];
+    }
+
+    return noticeOfDispute;
+  }
+
+  public getCountsActions(counts: DisputeCount[]): any {
     let countsActions: any = {};
     let fields = Object.keys(this.countFormFields);
-    let toCountStr = (arr: DisputedCount[]) => arr.map(i => "Count " + i.count).join(", ");
+    let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
     fields.forEach(field => {
       if (counts && counts.length > 0) {
         countsActions[field] = toCountStr(counts.filter(i => i[field]));
@@ -138,9 +174,9 @@ export class NoticeOfDisputeService {
         countsActions[field] = [];
       }
     });
-    countsActions.not_appear_in_court = toCountStr(counts.filter(i => i.appear_in_court === false));
-    countsActions.guilty = toCountStr(counts.filter(i => i.plea === Plea.Guilty));
-    countsActions.not_guilty = toCountStr(counts.filter(i => i.plea === Plea.NotGuilty));
+    countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.N));
+    countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === DisputeCountPleaCode.G));
+    countsActions.not_guilty = toCountStr(counts.filter(i => i.plea_cd === DisputeCountPleaCode.N));
     return countsActions;
   }
 
@@ -149,4 +185,8 @@ export class NoticeOfDisputeService {
     // get the ticket from storage to make sure the user can't change the ticket info
     return <NoticeOfDispute>{ ...this.violationTicketService.ticket, ...formValue };
   }
+}
+export interface NoticeOfDisputeExtended extends NoticeOfDispute {
+  disputant_given_names?: string;
+  lawyer_full_name?: string;
 }

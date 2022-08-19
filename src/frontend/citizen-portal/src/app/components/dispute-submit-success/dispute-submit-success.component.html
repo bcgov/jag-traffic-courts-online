@@ -44,7 +44,7 @@
   <app-dispute-ticket-summary [noticeOfDispute]="noticeOfDispute"></app-dispute-ticket-summary>
 
   <section class="mb-2 mt-4 d-print-none">
-    <div class="row" *ngIf="countsActions.appear_in_court.length > 0">
+    <div class="row" *ngIf="countsActions.request_court_appearance.length > 0">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -57,7 +57,7 @@
         </app-alert>
       </div>
     </div>
-    <div class="row" *ngIf="countsActions.appear_in_court.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
+    <div class="row" *ngIf="countsActions.request_court_appearance.length > 0 && ticketType === ticketTypes.CAMERA_TICKET">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -70,7 +70,7 @@
   </section>
 
   <section class="mb-2 mt-4 d-print-none">
-    <div class="row" *ngIf="noticeOfDispute.legal_representation">
+    <div class="row" *ngIf="noticeOfDispute.represented_by_lawyer === RepresentedByLawyer.Y">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -92,7 +92,7 @@
         </app-alert>
       </div>
     </div>
-    <div class="row" *ngIf="noticeOfDispute.number_of_witness > 0">
+    <div class="row" *ngIf="noticeOfDispute.witness_no > 0">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">
@@ -104,7 +104,7 @@
         </app-alert>
       </div>
     </div>
-    <div class="row" *ngIf="countsActions.appear_in_court.length !== noticeOfDispute.disputed_counts.length">
+    <div class="row" *ngIf="countsActions.request_court_appearance.length !== noticeOfDispute.dispute_counts.length">
       <div class="col">
         <app-alert type="warning" icon="info">
           <ng-container #alertContent class="alert-content">

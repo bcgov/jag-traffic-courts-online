@@ -9,7 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ViolationTicketIsYoungPerson } from './violationTicketIsYoungPerson.model';
+import { ViolationTicketIsDriver } from './violationTicketIsDriver.model';
 import { ViolationTicketCount } from './violationTicketCount.model';
+import { ViolationTicketIsOwner } from './violationTicketIsOwner.model';
+import { ViolationTicketIsChangeOfAddress } from './violationTicketIsChangeOfAddress.model';
 
 
 /**
@@ -21,21 +25,26 @@ export interface ViolationTicket {
      */
     ticket_number?: string | null;
     /**
+     * Disputant Organization Name
+     */
+    disputant_organization_name?: string | null;
+    /**
      * The surname or corporate name.
      */
-    surname?: string | null;
+    disputant_surname?: string | null;
     /**
      * The given names or corporate name continued.
      */
-    given_names?: string | null;
-    /**
-     * The person issued the ticket has been identified as a young person.
-     */
-    is_young_person?: boolean | null;
+    disputant_given_names?: string | null;
+    is_young_person?: ViolationTicketIsYoungPerson;
     /**
      * The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
      */
     drivers_licence_number?: string | null;
+    /**
+     * Disputant client number
+     */
+    disputant_client_number?: string | null;
     /**
      * The province or state the drivers licence was issued by.
      */
@@ -43,7 +52,7 @@ export interface ViolationTicket {
     /**
      * The year the drivers licence was produced.
      */
-    drivers_licence_produced_year?: number | null;
+    drivers_licence_issued_year?: number | null;
     /**
      * The year the drivers licence expires.
      */
@@ -51,7 +60,7 @@ export interface ViolationTicket {
     /**
      * The birthdate of the individual the violation ticket was issued to.
      */
-    birthdate?: string | null;
+    disputant_birthdate?: string | null;
     /**
      * The address of the individual the violation ticket was issued to.
      */
@@ -59,95 +68,42 @@ export interface ViolationTicket {
     /**
      * The city of the individual the violation ticket was issued to.
      */
-    city?: string | null;
+    address_city?: string | null;
     /**
      * The province or state of the individual the violation ticket was issued to.
      */
-    province?: string | null;
+    address_province?: string | null;
     /**
      * The postal code or zip code.
      */
-    postal_code?: string | null;
+    address_postal_code?: string | null;
     /**
-     * The address represents a change of address. The address on the violation would be different from the address   on the drivers licence or provided identification.
+     * The country text
      */
-    is_change_of_address?: boolean | null;
+    address_country?: string | null;
     /**
-     * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle driver.
+     * Office Pin Text
      */
-    is_driver?: boolean | null;
+    officer_pin?: string | null;
     /**
-     * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the cyclist.
+     * Detachment Location
      */
-    is_cyclist?: boolean | null;
-    /**
-     * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle owner.
-     */
-    is_owner?: boolean | null;
-    /**
-     * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a pedestrain.
-     */
-    is_pedestrain?: boolean | null;
-    /**
-     * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a passenger.
-     */
-    is_passenger?: boolean | null;
-    /**
-     * The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a other designation.
-     */
-    is_other?: boolean | null;
-    /**
-     * If TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket.IssuedToOther is true, the other designation description.
-     */
-    other_description?: string | null;
+    detachment_location?: string | null;
     /**
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     issued_date?: string | null;
     /**
-     * The violation ticket was issued on this road or highway.
+     * Issued on Road or Highway
      */
     issued_on_road_or_highway?: string | null;
     /**
      * The violation ticket was issued at or near this city or town.
      */
     issued_at_or_near_city?: string | null;
-    /**
-     * The violation ticket was issued for offence under the Motor Vehicle Act (MVA).
-     */
-    is_mva_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for offence under the Wildlife Act (WLA).
-     */
-    is_wla_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for offence under the Liquor Control and Licencing Act (LCA).
-     */
-    is_lca_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for offence under the Motor Carrier Act (MCA).
-     */
-    is_mca_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for offence under the Firearm Act (FAA).
-     */
-    is_faa_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for offence under the Transit Conduct and Safety Regs (TCR).
-     */
-    is_tcr_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for offence under the Commercial Transport Act (CTA).
-     */
-    is_cta_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for other.
-     */
-    is_other_offence?: boolean | null;
-    /**
-     * The violation ticket was issued for other.
-     */
-    other_offence_description?: string | null;
+    is_change_of_address?: ViolationTicketIsChangeOfAddress;
+    is_driver?: ViolationTicketIsDriver;
+    is_owner?: ViolationTicketIsOwner;
     /**
      * Represents the counts identified. Must have at least one and at most three counts.
      */
@@ -155,11 +111,7 @@ export interface ViolationTicket {
     /**
      * The designated provincial court hearing location. For example, Richmond, BC.
      */
-    provincial_court_hearing_location?: string | null;
-    /**
-     * The organization or detatchment location. For example, Delta Police.
-     */
-    organization_location?: string | null;
+    court_location?: string | null;
     /**
      * A unique generated ID set by the system that is used as Redis key for retrieving the ViolationTicket from Redis cache.
      */

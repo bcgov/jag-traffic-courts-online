@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CountItemDisputeSummaryComponent } from './count-item-dispute-summary.component';
 
 describe('CountItemDisputeSummaryComponent', () => {
@@ -26,9 +25,9 @@ describe('CountItemDisputeSummaryComponent', () => {
       discountAmount: 0,
       status: 'New',
       offenceAgreementStatus: null,
-      reductionAppearInCourt: false,
-      requestReduction: false,
-      requestMoreTime: false,
+      requestCourtAppearance: 'N',
+      requestReduction: 'N',
+      requestMoreTime: 'N',
 
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,

@@ -18,7 +18,7 @@ export interface ViolationTicketCount {
     /**
      * The count number. Must be unique within an individual violation ticket.
      */
-    count?: number;
+    count_no?: number;
     /**
      * The description of the offence.
      */
@@ -26,19 +26,15 @@ export interface ViolationTicketCount {
     /**
      * The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc
      */
-    act_or_regulation?: string | null;
+    act_or_regulation_name_code?: string | null;
     /**
      * The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"
      */
-    section?: string | null;
+    full_section?: string | null;
     /**
      * The ticketed amount.
      */
     ticketed_amount?: number | null;
-    /**
-     * The amount due. Will be the same as ticketed_amount if no payments have been made on the ticket. May or may not have discount computed.
-     */
-    amount_due?: number | null;
     /**
      * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
      */

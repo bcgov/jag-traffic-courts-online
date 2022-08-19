@@ -16,12 +16,11 @@ describe('CountItemSummaryComponent', () => {
     fixture = TestBed.createComponent(CountItemSummaryComponent);
     component = fixture.componentInstance;
     component.count = {
-      count: 1,
+      count_no: 1,
       ticketed_amount: 100,
-      amount_due: 100,
       description: 'Test',
-      act_or_regulation: "test",
-      section: "test",
+      act_or_regulation_name_code: "test",
+      full_section: "test",
       is_regulation: false
     };
     fixture.detectChanges();

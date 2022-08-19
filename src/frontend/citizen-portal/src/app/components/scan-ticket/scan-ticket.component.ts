@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ViolationTicket } from 'app/api';
+import { DisputeDisputantDetectedOcrIssues, ViolationTicket } from 'app/api';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 import { Subscription } from 'rxjs';
 
@@ -22,6 +22,7 @@ export class ScanTicketComponent implements OnInit {
   public ticketFilename: string;
   public form: FormGroup;
   private ticket: ViolationTicket;
+  public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +41,7 @@ export class ScanTicketComponent implements OnInit {
       this.violationTicketService.goToFind();
       return;
     }
-   
+
     this.ticketImageSrc = inputTicketData.ticketImage;
     this.ticketFilename = inputTicketData.filename;
     this.ticketImageFile = inputTicketData.ticketFile.type
@@ -62,7 +63,7 @@ export class ScanTicketComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((response: boolean) => {
         if (response) {
-          this.violationTicketService.updateOcrIssue(this.form.value.disputant_detected_ocr_issues, this.form.value.disputant_ocr_issues_description);
+          this.violationTicketService.updateOcrIssue(this.form.value.disputant_detected_ocr_issues, this.form.value.disputant_ocr_issues);
           this.violationTicketService.goToInitiateResolution();
         }
       });

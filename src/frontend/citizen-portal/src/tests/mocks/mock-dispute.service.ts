@@ -78,7 +78,7 @@ export class MockDisputeService {
       offenceAgreementStatus: null,
       requestReduction: false,
       requestMoreTime: false,
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
       _firstOffence: true,
@@ -107,7 +107,7 @@ export class MockDisputeService {
       offenceAgreementStatus: '',
       requestReduction: false,
       requestMoreTime: false,
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
       _firstOffence: false,
@@ -169,7 +169,7 @@ export class MockDisputeService {
       interpreterRequired: true,
       interpreterLanguage: 'SPA',
       witnessPresent: true,
-      numberOfWitnesses: 3,
+      witnessNo: 3,
       requestReduction: true,
       requestMoreTime: false,
       reductionReason: '',
@@ -196,7 +196,7 @@ export class MockDisputeService {
       offenceAgreementStatus: null,
       requestReduction: false,
       requestMoreTime: false,
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
       _firstOffence: true,
@@ -222,7 +222,7 @@ export class MockDisputeService {
       offenceAgreementStatus: null,
       requestReduction: false,
       requestMoreTime: false,
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
       _firstOffence: false,
@@ -249,7 +249,7 @@ export class MockDisputeService {
       offenceAgreementStatus: null,
       requestReduction: false,
       requestMoreTime: false,
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,
       _firstOffence: false,
@@ -273,7 +273,7 @@ export class MockDisputeService {
       city: faker.address.city(),
       province: faker.address.state(),
       postalCode: 'V8R3E3',
-      birthdate: null,
+      disputantBirthdate: null,
       emailAddress: faker.internet.email(),
       driverLicenseNumber: '2342342',
       driverLicenseProvince: 'BC',
@@ -290,7 +290,7 @@ export class MockDisputeService {
       postalCode: null,
       city: null,
       province: null,
-      birthdate: null,
+      disputantBirthdate: null,
       emailAddress: null,
       driverLicenseNumber: null,
       driverLicenseProvince: null,
@@ -302,7 +302,7 @@ export class MockDisputeService {
   private createOffenceDispute(): any {
     return {
       offenceAgreementStatus: 'DISPUTE',
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
@@ -313,7 +313,7 @@ export class MockDisputeService {
   private createOffenceNothing(): any {
     return {
       offenceAgreementStatus: 'NOTHING',
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
@@ -324,7 +324,7 @@ export class MockDisputeService {
   private createOffencePay(): any {
     return {
       offenceAgreementStatus: 'PAY',
-      reductionAppearInCourt: false,
+      requestCourtAppearance: false,
       requestReduction: false,
       requestMoreTime: false,
       reductionReason: null,
@@ -335,7 +335,7 @@ export class MockDisputeService {
   private createOffenceReduction(): any {
     return {
       offenceAgreementStatus: 'REDUCTION',
-      reductionAppearInCourt: true,
+      requestCourtAppearance: true,
       requestReduction: true,
       requestMoreTime: false,
       reductionReason: 'I have been unable to work for the past 6 months.',
@@ -346,7 +346,7 @@ export class MockDisputeService {
   private createOffenceMoreTime(): any {
     return {
       offenceAgreementStatus: 'REDUCTION',
-      reductionAppearInCourt: true,
+      requestCourtAppearance: true,
       requestReduction: true,
       requestMoreTime: true,
       reductionReason:

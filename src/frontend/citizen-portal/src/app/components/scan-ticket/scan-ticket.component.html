@@ -19,7 +19,7 @@
       <span>
         <h1><strong>Ticket image</strong></h1>
         <img  *ngIf="ticketImageFile && ticketImageFile.includes('image')"  [src]="ticketImageSrc" style="width: 100%" class="img-fluid mb-4" />
-        <pdf-viewer 
+        <pdf-viewer
         *ngIf="ticketImageFile && ticketImageFile === 'application/pdf'"
         [rotation]="90"
         [original-size]="false"
@@ -71,14 +71,14 @@
                 <div class="col-lg-12">
                   <mat-form-field class="w-100">
                     <mat-label>Surname</mat-label>
-                    <input matInput formControlName="surname" />
+                    <input matInput formControlName="disputant_surname" />
                   </mat-form-field>
                 </div>
 
                 <div class="col-lg-12">
                   <mat-form-field class="w-100">
                     <mat-label>Given names</mat-label>
-                    <input matInput formControlName="given_names" />
+                    <input matInput formControlName="disputant_given_names" />
                   </mat-form-field>
                 </div>
                 <div class="col-lg-6">
@@ -98,7 +98,8 @@
                       style="color: red;">do not match </span></strong>
                   the scanned ticket details, please check the box below and describe the difference</p>
                 <p class="text-dark"><strong>Example: </strong>My Surname is spelled MacGibbens not MacGibbons.</p>
-                <mat-checkbox color="primary" class="w-100" formControlName="disputant_detected_ocr_issues">
+                <mat-checkbox color="primary" class="w-100" [checked]="form.get('disputant_detected_ocr_issues').value === DetectedOcrIssues.Y ? true:false"
+                  (change)="form.get('disputant_detected_ocr_issues').setValue($event.checked? DetectedOcrIssues.Y: DetectedOcrIssues.N)" >
                   Yes, there are differences between the information on the ticket and the information scanned above.
                 </mat-checkbox>
                 <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value">
