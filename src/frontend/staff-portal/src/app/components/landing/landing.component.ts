@@ -26,5 +26,4 @@ export class LandingComponent implements OnInit {
   public async login() {
     await this.authService.login();
   }
-  
 }
