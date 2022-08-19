@@ -205,7 +205,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private getCountsActions() {
-    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms.value);
+    this.countsActions = this.noticeOfDisputeService.getCountsActions(this.countForms?.value);
   }
 
   public onAddressAutocomplete({ countryCode, provinceCode, postalCode, address, city }: Address): void {
@@ -248,10 +248,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
 
     if (isAdditional) {
       this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
-        ...this.form.value,
+        ...this.form?.value,
         ...this.additionalForm?.value,
-        country: this.form.get("country").value, // disabled field is not available in this.form.value
-        disputed_counts: this.countForms.value
+        country: this.form.get("country")?.value, // disabled field is not available in this.form.value
+        disputed_counts: this.countForms?.value
       });
     } else {
       this.noticeOfDispute = null;
@@ -277,10 +277,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public isValid(countInx?): boolean {
     let countForm = this.countForms?.controls[countInx]
     if (countForm) {
-      let valid = countForm.valid || countForm.value.__skip;
-      if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
-        valid = valid && countForm.value.plea_cd === this.Plea.G;
-      } else if (countForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
+      let valid = countForm.valid || countForm?.value.__skip;
+      if (countForm?.value.request_court_appearance === this.RequestCourtAppearance.Y) {
+        valid = valid && countForm.value.plea_cd;
+      } else if (countForm?.value.request_court_appearance === this.RequestCourtAppearance.N) {
         valid = valid && (countForm?.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm?.value.request_reduction === this.RequestReduction.Y);
       }
       return valid && !this.isAllCountsSkipped;
@@ -310,7 +310,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     if (data) {
       let msg = "";
       this.languages.forEach(res => {
-        if (res === data.value) {
+        if (res === data?.value) {
           msg = res
         }
       })
@@ -321,7 +321,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   private get isAllCountsSkipped() {
-    if (this.countForms.value.filter(i => i.__skip).length === this.countForms.length) {
+    if (this.countForms?.value.filter(i => i.__skip).length === this.countForms.length) {
       return true;
     }
     else {

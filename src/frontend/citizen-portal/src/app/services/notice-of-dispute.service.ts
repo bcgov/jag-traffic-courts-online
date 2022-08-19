@@ -53,7 +53,7 @@ export class NoticeOfDisputeService {
   }
 
   public additionFormFields = {
-    represented_by_lawyer: this.RepresentedByLawyer.N,
+    represented_by_lawyer: [null],
     interpreter_language: [null],
     witness_no: [0],
     fine_reduction_reason: [null, []],
@@ -165,15 +165,10 @@ export class NoticeOfDisputeService {
 
   public getCountsActions(counts: DisputeCount[]): any {
     let countsActions: any = {};
-    let fields = Object.keys(this.countFormFields);
     let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.count_no).join(", ");
-    fields.forEach(field => {
-      if (counts && counts.length > 0) {
-        countsActions[field] = toCountStr(counts.filter(i => i[field]));
-      } else {
-        countsActions[field] = [];
-      }
-    });
+    countsActions.request_reduction = toCountStr(counts.filter(i => i.request_reduction === this.RequestReduction.Y));
+    countsActions.request_time_to_pay = toCountStr(counts.filter(i => i.request_time_to_pay === this.RequestTimeToPay.Y));
+    countsActions.request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.Y));
     countsActions.not_request_court_appearance = toCountStr(counts.filter(i => i.request_court_appearance === this.RequestCourtAppearance.N));
     countsActions.guilty = toCountStr(counts.filter(i => i.plea_cd === DisputeCountPleaCode.G));
     countsActions.not_guilty = toCountStr(counts.filter(i => i.plea_cd === DisputeCountPleaCode.N));
