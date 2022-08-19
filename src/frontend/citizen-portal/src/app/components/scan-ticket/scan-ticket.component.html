@@ -102,7 +102,7 @@
                   (change)="form.get('disputant_detected_ocr_issues').setValue($event.checked? DetectedOcrIssues.Y: DetectedOcrIssues.N)" >
                   Yes, there are differences between the information on the ticket and the information scanned above.
                 </mat-checkbox>
-                <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value">
+                <div class="row" *ngIf="form.get('disputant_detected_ocr_issues')?.value === DetectedOcrIssues.Y">
                   <mat-form-field>
                     <mat-label>Describe any difference between the image and scanned ticket details</mat-label>
                     <textarea class="text-dark" matInput #input formControlName="disputant_ocr_issues_description"

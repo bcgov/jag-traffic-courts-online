@@ -30,7 +30,7 @@
   <div class="col-lg-3">
     <small class="d-block">I will appear in court</small>
     <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.Y"> Yes </strong>
-    <strong *ngIf="count.request_court_appearance !== RequestCourtAppearance.Y || count.__skip"> No </strong>
+    <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.N || count.__skip"> No </strong>
   </div>
 </div>
 

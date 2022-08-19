@@ -81,7 +81,7 @@
       <div class="page-subheader pagebreak">
         <strong> Additional information </strong>
 
-        <div *ngIf="countsActions.not_request_court_appearance?.length > 0">
+        <div *ngIf="countsActions?.not_request_court_appearance?.length > 0">
           <ng-container *ngIf="countsActions.request_reduction?.length > 0">
             <hr />
             <strong class="fs-5">
@@ -106,7 +106,7 @@
             <div>{{ noticeOfDispute.time_to_pay_reason }}</div>
           </ng-container>
         </div>
-        <div *ngIf="countsActions.request_court_appearance?.length > 0">
+        <div *ngIf="countsActions?.request_court_appearance?.length > 0">
           <hr />
           <div *ngIf="countsActions.guilty?.length > 0">
             <strong class="fs-5 mb-3">

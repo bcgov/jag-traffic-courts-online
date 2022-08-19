@@ -217,7 +217,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onAttendHearingChange(countForm: FormGroup, event): void {
-    console.log("attend hearing change", event);
     countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
   }
 
@@ -251,8 +250,9 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
         ...this.form.value,
         ...this.additionalForm.value,
+        ...this.legalRepresentationForm.value,
         country: this.form.get("country").value, // disabled field is not available in this.form.value
-        disputed_counts: this.countForms.value
+        dispute_counts: this.countForms.value
       });
     } else {
       this.noticeOfDispute = null;
@@ -281,8 +281,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       let valid = countForm.valid || countForm.value.__skip;
       if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
         valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
-      } else if (countForm.value.request_court_appearance !== this.RequestCourtAppearance.Y) {
-        valid = valid && (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm?.value.request_reduction === this.RequestReduction.Y);
+      } else if (countForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
+        valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
       }
       return valid && !this.isAllCountsSkipped;
     }
@@ -290,11 +290,6 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
-    if (event.checked) { // only append if selected
-      this.additionalForm.addControl("legal_representation", this.legalRepresentationForm);
-    } else {
-      this.additionalForm.removeControl("legal_representation");
-    }
     this.additionalForm.markAsUntouched();
   }
 

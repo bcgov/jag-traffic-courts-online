@@ -260,7 +260,7 @@ export class ViolationTicketService {
 
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected === this.DetectedOcrIssues.Y ? issueDetected : this.DetectedOcrIssues.N;
+    ticket[this.ocrIssueDetectedKey] = (issueDetected === this.DetectedOcrIssues.Y) ? issueDetected : this.DetectedOcrIssues.N;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this._ticket.next(ticket);
   }

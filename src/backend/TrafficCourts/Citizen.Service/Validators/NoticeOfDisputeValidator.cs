@@ -30,7 +30,7 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.WitnessNo).InclusiveBetween(0,99);
             RuleFor(_ => _.DisputantOcrIssues).NotEmpty()
                 .When(_ => _.DisputantDetectedOcrIssues == Common.OpenAPIs.OracleDataApi.v1_0.DisputeDisputantDetectedOcrIssues.Y)
-                .WithMessage("'Disputant Ocr Issues Description' is required since disputant detected ocr issues");
+                .WithMessage("'Disputant Ocr Issues Description' is required since the disputant detected ocr issues");
 
             // Validation rules for Legal Representation
             RuleFor(_ => _.LawFirmName).NotNull()

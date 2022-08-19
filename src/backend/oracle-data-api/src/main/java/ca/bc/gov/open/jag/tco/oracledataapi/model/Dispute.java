@@ -356,7 +356,7 @@ public class Dispute extends Auditable<String> {
 	 * ticket result or not.
 	 */
 	@Column
-	@Schema(nullable = false)
+	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
     private YesNo disputantDetectedOcrIssues;
 

@@ -297,7 +297,7 @@
                     </div>
                   </div>
                   <div class="row mt-4">
-                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance !== RequestCourtAppearance.Y ? '' : 'none' }">
+                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
@@ -356,7 +356,7 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance !== RequestCourtAppearance.Y">
+              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.N">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -456,16 +456,16 @@
                 </ng-container>
               </ng-container>
 
-              <section *ngIf="countsActions.request_court_appearance?.length > 0">
+              <section *ngIf="countsActions?.request_court_appearance?.length > 0">
                 <div>
-                  <div>{{ countsActions.request_court_appearance }}</div>
+                  <div>{{ countsActions?.request_court_appearance }}</div>
                 </div>
                 <h3 class="mt-4 mb-2 reduction-text">
                 </h3>
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" [checked]="form.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
-                      (change)="form.get('represented_by_lawyer').setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
+                    <mat-checkbox class="me-4 mb-2" color="primary" [checked]="additionalForm.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
+                      (change)="additionalForm.get('represented_by_lawyer').setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
                       I intend to be represented by a lawyer in court.
                       <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y" style="font-weight: lighter;">
                         Enter lawyer contact details below.
