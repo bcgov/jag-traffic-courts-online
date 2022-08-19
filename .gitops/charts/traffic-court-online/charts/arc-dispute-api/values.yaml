@@ -1,4 +1,4 @@
-# Default values for citizen-api.
+# Default values for arc-dispute-api
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,18 +8,18 @@ replicaCount: 1
 
 image:
   registry: image-registry.openshift-image-registry.svc:5000
-  repository: 0198bb-tools/citizen-api
+  repository: 0198bb-tools/arc-dispute-api
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 
-## @param nameOverride String to partially override citizen-api.fullname template (will maintain the release name)
+## @param nameOverride String to partially override arc-dispute-api.fullname template (will maintain the release name)
 ##
 nameOverride: ""
 
-## @param fullnameOverride String to fully override citizen-api.fullname template
+## @param fullnameOverride String to fully override arc-dispute-api.fullname template
 ##
 fullnameOverride: ""
 
@@ -49,3 +49,4 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+  

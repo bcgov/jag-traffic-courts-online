@@ -2,9 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-## @param enabled Set to false to disabling rending templates in this chart. Used to dispable rendering this chart when developing other sub-charts.
-enabled: true
-
 ## @param replicaCount Number of replicas
 ##
 replicaCount: 1
@@ -27,22 +24,10 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  # The name of the service account to use, defaults to "default"
-  name: ""
-
-## @param podAnnotations Annotations for pods.
-##
-podAnnotations: {}
-
-service:
-  type: ClusterIP
-  port: 8080
+  # The name of the service account to use, defaults to "0198bb-vault"
+  name: "0198bb-vault"
 
 resources:
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 250m
     memory: 1024Mi
@@ -65,47 +50,3 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-## @param nodeSelector Node labels for pods assignment
-## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-##
-nodeSelector: {}
-
-## @param tolerations Tolerations for pods assignment
-## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-##
-tolerations: []
-
-## @param Affinity for pod assignment
-## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-##
-affinity: {}
-
-redis:
-  host: redis
-  port: 6379
-  password:
-
-jaeger:
-  enabled: false
-  exporter:
-    endpoint: http://jaeger-collector:14250
-
-## @param
-##
-splunk:
-  enabled: false
-  endpoint:
-  token:
-
-vault:
-  enabled: false
-
-jobs:
-  codeTables:
-    enabled: true
-    # run once every hour
-    cronExpression: "0 0 * * * *"
-  unassignDisputes:
-    enabled: true
-    # run once every 5 minutes
-    cronExpression: "0 0/5 * * * *"

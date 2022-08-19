@@ -1,0 +1,48 @@
+# global values
+global:
+  vault:
+    role: 0198bb-nonprod
+    path: dev/
+  env: 
+    "Swagger__Enabled": "true"
+
+arc-dispute-api:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always
+  env: 
+    "Swagger__Enabled": "true"
+
+citizen-api:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always
+  env: 
+    "Swagger__Enabled": "true"
+
+citizen-web:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always
+
+oracle-data-api:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always
+
+staff-api:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always
+  env: 
+    "Swagger__Enabled": "true"
+
+staff-web:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always
+
+workflow-service:
+  image:
+    tag: "1.41.7"
+    pullPolicy: Always

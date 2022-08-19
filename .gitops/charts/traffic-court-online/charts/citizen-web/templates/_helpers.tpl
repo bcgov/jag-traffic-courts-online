@@ -50,14 +50,6 @@ app.kubernetes.io/name: {{ include "citizen-web.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "citizen-web.serviceAccountName" -}}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-
-
 {{- define "citizen-web.tplvalues.render" -}}
     {{- if typeIs "string" .value }}
         {{- tpl .value .context }}
