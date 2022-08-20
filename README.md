@@ -101,60 +101,58 @@ or a flat json format,
 
 ## arc-dispute-api 
 
-| Key | Secret | Description |
-| --- | ------ | ----------- |
-| ASPNETCORE_ENVIRONMENT |
-| ASPNETCORE_URLS |
-| OTEL_EXPORTER_JAEGER_ENDPOINT |
-| OTEL_EXPORTER_JAEGER_PROTOCOL |
+| Key | Secret | Default | Description |
+|--- | ------ |----------- |----------- |
+| ASPNETCORE_ENVIRONMENT | | Production | |
+| ASPNETCORE_URLS | | http://\*:8080 | |
+| OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
+| OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
 | Sftp__Host | Yes | 
 | Sftp__SshPrivateKey | Yes | 
 | Sftp__Username | Yes | 
-| Serilog__Using__0 |
-| Serilog__WriteTo__0__Name |
+| Serilog__Using__0 | | Serilog.Sinks.Splunk | |
 | Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
 | Serilog__WriteTo__0__Args__splunkHost | Yes | 
+| Serilog__WriteTo__0__Name | | EventCollector | |
 | Swagger__Enabled |
 
 ## citizen-api  
 
-| Key | Secret | Description |
-| --- | ------ | ----------- |
-| ASPNETCORE_ENVIRONMENT
-| ASPNETCORE_URLS
+| Key | Secret | Default | Description |
+|--- | ------ |--------- |----------- |
+| ASPNETCORE_ENVIRONMENT | | Production | |
+| ASPNETCORE_URLS | | http://\*:8080 | |
 | FormRecognizer__ApiVersion
 | FormRecognizer__ApiKey | Yes | 
 | FormRecognizer__Endpoint | Yes | 
-| FormRecognizer__ModelId
+| FormRecognizer__ModelId | | |
 | ObjectStorage__AccessKey | Yes | 
 | ObjectStorage__BucketName | Yes | 
 | ObjectStorage__Endpoint | Yes | 
 | ObjectStorage__SecretKey | Yes | 
-| RabbitMQ__ClientProvidedName
 | RabbitMQ__Host
 | RabbitMQ__Password | Yes | 
 | RabbitMQ__Port
 | RabbitMQ__Username | Yes | 
-| RabbitMQ__VirtualHost
+| RabbitMQ__VirtualHost | | / | |
 | Redis__ConnectionString
-| OTEL_EXPORTER_JAEGER_ENDPOINT
-| OTEL_EXPORTER_JAEGER_PROTOCOL
-| Serilog__Using__0
-| Serilog__WriteTo__0__Name
+| OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
+| OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
+| Serilog__Using__0 | | Serilog.Sinks.Splunk | |
 | Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
 | Serilog__WriteTo__0__Args__splunkHost | Yes | 
-| Swagger__Enabled
-| TicketStorage__Type
-| MassTransit__Transport
+| Serilog__WriteTo__0__Name | | EventCollector | |
+| Swagger__Enabled | | false | |
+| MassTransit__Transport | | RabbitMq | MassTransit transport. If not configured, will use RabbitMq |
 
 ## citizen-web
 
-?
+app.config.json
 
 ## oracle-data-api
 
-| Key | Secret | Description |
-| --- | ------ | ----------- |
+| Key | Secret | Default | Description |
+|--- | ------ |----------- |----------- |
 | CODETABLE_REFRESH_CRON
 | CODETABLE_REFRESH_ENABLED
 | H2_DATASOURCE
@@ -162,23 +160,27 @@ or a flat json format,
 | OTEL_EXPORTER_JAEGER_ENDPOINT
 | REDIS_HOST
 | REDIS_PORT
+| SPLUNK_TOKEN | Yes | 
+| SPLUNK_URL | Yes | 
 | UNASSIGN_DISPUTES_CRON
 | UNASSIGN_DISPUTES_ENABLED
 
 ## staff-api
 
-| Key | Secret | Description |
-| --- | ------ | ----------- |
+| Key | Secret | Default | Description |
+|--- | ------ |--------- |----------- |
+| ASPNETCORE_ENVIRONMENT | | Production | |
+| ASPNETCORE_URLS | | http://\*:8080 | |
 | ObjectStorage__AccessKey | Yes | 
 | ObjectStorage__BucketName | Yes | 
 | ObjectStorage__Endpoint | Yes | 
 | ObjectStorage__SecretKey | Yes | 
-| OTEL_EXPORTER_JAEGER_ENDPOINT
-| OTEL_EXPORTER_JAEGER_PROTOCOL
-| Serilog__Using__0
+| OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
+| OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
+| Serilog__Using__0 | | Serilog.Sinks.Splunk | |
 | Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
 | Serilog__WriteTo__0__Args__splunkHost | Yes | 
-| Serilog__WriteTo__0__Name
+| Serilog__WriteTo__0__Name | | EventCollector | |
 | Swagger__Enabled
 | TicketStorage__Type
 | MassTransit__Transport
@@ -193,24 +195,26 @@ or a flat json format,
 
 ## staff-web
 
-Requires 
+keycloak.config.json
 
 ## workflow-service
 
-| Key | Secret | Description |
-| --- | ------ | ----------- |
-| OTEL_EXPORTER_JAEGER_ENDPOINT
-| OTEL_EXPORTER_JAEGER_PROTOCOL
+| Key | Secret | Default | Description |
+|--- | ------ |--------- |----------- |
+| ASPNETCORE_ENVIRONMENT | | Production | |
+| ASPNETCORE_URLS | | http://\*:8080 | |
+| OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
+| OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
 | RabbitMQ__ClientProvidedName
 | RabbitMQ__Host
 | RabbitMQ__Password | Yes | 
 | RabbitMQ__Port
 | RabbitMQ__Username | Yes | 
 | RabbitMQ__VirtualHost
-| Serilog__Using__0
+| Serilog__Using__0 | | Serilog.Sinks.Splunk | |
 | Serilog__WriteTo__0__Args__eventCollectorToken | Yes | 
 | Serilog__WriteTo__0__Args__splunkHost | Yes | 
-| Serilog__WriteTo__0__Name
+| Serilog__WriteTo__0__Name | | EventCollector | |
 | Swagger__Enabled
 | MassTransit__Transport
 
