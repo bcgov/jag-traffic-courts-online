@@ -49,3 +49,4 @@ Selector labels
 app.kubernetes.io/name: {{ include "staff-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+

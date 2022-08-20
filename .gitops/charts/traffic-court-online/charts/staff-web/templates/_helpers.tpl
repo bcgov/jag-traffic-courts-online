@@ -49,3 +49,15 @@ Selector labels
 app.kubernetes.io/name: {{ include "staff-web.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "staff-web.tplvalues.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
+{{- end -}}
+
+{{- define "staff-web.keycloakConfigConfigmapName" -}}
+    {{- printf "%s-keycloak-configuration" (include "staff-web.fullname" .) -}}
+{{- end }}

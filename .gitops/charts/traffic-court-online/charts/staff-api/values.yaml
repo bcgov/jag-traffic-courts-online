@@ -23,10 +23,6 @@ nameOverride: ""
 ##
 fullnameOverride: ""
 
-serviceAccount:
-  # The name of the service account to use, defaults to "0198bb-vault"
-  name: "0198bb-vault"
-
 resources:
   limits:
     cpu: 100m
@@ -49,56 +45,3 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
-## @param
-##
-auth:
-  authority:
-  audience:
-  metadataAddress:
-
-## @param
-## Todo: move rabbitmq.password to secret
-##
-rabbitmq:
-  host: rabbitmq
-  port: "5672"
-  username: guest
-  password: guest
-
-## @param
-##
-redis:
-  connectionString: ""
-  host: ""
-  port: 6379
-
-## @param
-##
-jaeger:
-  enabled: false
-  exporter:
-    endpoint: http://jaeger-collector:14268/api/traces
-    protocol: "http/thrift.binary"
-
-## @param
-##
-oracleApi:
-  url: 
-  
-## @param 
-## objectStorage.accessKey The username used to access the bucket 
-## objectStorage.secretKey The password used to access the bucket
-objectStorage:
-  endpoint: 
-  bucketName: 
-  accessKey:
-  secretKey:  
-
-## @param
-##
-swagger:
-  enabled: false
-
-vault:
-  enabled: false

@@ -23,10 +23,6 @@ nameOverride: ""
 ##
 fullnameOverride: ""
 
-serviceAccount:
-  # The name of the service account to use, defaults to "0198bb-vault"
-  name: "0198bb-vault"
-
 resources:
   limits:
     cpu: 100m
@@ -49,44 +45,3 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
-## @param rabbitmq
-## Todo: move rabbitmq.password to secret
-##
-rabbitmq:
-  host: rabbitmq
-  port: "5672"
-  username: guest
-  password: guest
-
-retry:
-  times: 5
-  interval: 2
-  concurrencyLimit: 2
-
-smtp:
-  host: apps.smtp.gov.bc.ca
-  port: 25
-
-email:
-  sender:
-  allowed:
-
-arc:
-  host: arc-dispute-api
-  port: 8080
-
-oracle:
-  host: oracle-data-api
-  port: 8080
-
-## @param jaeger
-##
-jaeger:
-  enabled: false
-  exporter:
-    endpoint: http://jaeger-collector:14268/api/traces
-    protocol: "http/thrift.binary"
-
-vault:
-  enabled: false

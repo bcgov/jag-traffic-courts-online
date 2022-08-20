@@ -1,5 +1,9 @@
 # Helm Charts
 
+## Testing Traffic Court Helm Charts
+
+`helm template traffic-court-online --values traffic-court-dev-values.yaml`
+
 ## Keycloak
 
 Install Keycloak with Helm. Note the value

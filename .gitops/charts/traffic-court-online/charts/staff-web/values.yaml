@@ -23,10 +23,6 @@ nameOverride: ""
 ##
 fullnameOverride: ""
 
-serviceAccount:
-  # The name of the service account to use, defaults to "0198bb-vault"
-  name: "0198bb-vault"
-
 resources:
   limits:
     cpu: 150m
@@ -49,3 +45,19 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+## @param keycloakConfig keycloak configuration file
+## keycloakConfig: |-
+##    {
+##      "config": {
+##        "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
+##        "realm": "traffic-court",
+##        "clientId": "staff-portal"
+##      },
+##      "initOptions": {
+##        "onLoad": "check-sso",
+##        "silentCheckSsoRedirectUri": "/assets/silent-check-sso.html"
+##      }
+##    }
+##
+keycloakConfig: ""

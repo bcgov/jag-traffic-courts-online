@@ -3,46 +3,71 @@ global:
   vault:
     role: 0198bb-nonprod
     path: dev/
-  env: 
-    "Swagger__Enabled": "true"
 
 arc-dispute-api:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-web:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always
+
+  appConfig: |  
+    {
+        "production": false,
+        "environment": "Dev",
+        "version": "1.33.0",
+        "useMockServices": false,
+        "apiBaseUrl": "/api",
+        "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
+        "paymentOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/pay-ticket",
+        "resolutionOptionsLink": "https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket",
+        "features": {
+          "dispute":true
+        }
+      }
 
 oracle-data-api:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always
 
 staff-api:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 staff-web:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always
+  keycloakConfig: |
+    {
+      "config": {
+        "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
+        "realm": "traffic-court",
+        "clientId": "staff-portal"
+      },
+      "initOptions": {
+        "onLoad": "check-sso",
+        "silentCheckSsoRedirectUri": "/assets/silent-check-sso.html"
+      }
+    }
 
 workflow-service:
   image:
-    tag: "1.41.7"
+    tag: "1.42.0"
     pullPolicy: Always

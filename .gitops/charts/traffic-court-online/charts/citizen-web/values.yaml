@@ -23,10 +23,6 @@ nameOverride: ""
 ##
 fullnameOverride: ""
 
-serviceAccount:
-  # The name of the service account to use, defaults to "0198bb-vault"
-  name: "0198bb-vault"
-
 resources:
   limits:
     cpu: 150m

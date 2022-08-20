@@ -1,7 +1,7 @@
 
-References
-- https://github.com/bcgov/how-to-workshops/blob/master/vault/README.md
-- https://github.com/BCDevOps/openshift-wiki/blob/master/docs/Vault/VaultGettingStarted.md
+# Vault Secret Templates
+
+This directory has a json template file for each service's secrets that are stored in Vault. To use these templates
 
 We organized our secrets as follows:
 
@@ -32,3 +32,9 @@ We organized our secrets as follows:
 # Apply secrets to Vault
 
 vault kv put 0198bb-nonprod/%ENV%/%~nS @%S
+
+# Vault References
+- https://github.com/bcgov/how-to-workshops/blob/master/vault/README.md
+- https://github.com/BCDevOps/openshift-wiki/blob/master/docs/Vault/VaultGettingStarted.md
+- https://www.vaultproject.io/docs/platform/k8s/injector/annotations
+

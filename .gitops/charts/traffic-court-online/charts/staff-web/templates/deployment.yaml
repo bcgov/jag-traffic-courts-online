@@ -31,3 +31,15 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: keycloak-config
+              mountPath: /usr/share/nginx/html/assets/config/keycloak.config.json
+              readOnly: true
+              subPath: keycloak.config.json
+      volumes:
+        - name: keycloak-config
+          configMap:
+            name: {{ include "staff-web.keycloakConfigConfigmapName" . }}
+            items:
+              - key: keycloak.config.json
+                path: keycloak.config.json
