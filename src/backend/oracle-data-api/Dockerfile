@@ -28,5 +28,6 @@ EXPOSE 8080
 
 COPY --from=build ./target/oracle-data-api.jar .
 COPY --from=build ./entrypoint.sh .
+RUN chown 1001:0 ./entrypoint.sh && chmod 550 ./entrypoint.sh
 CMD ["./entrypoint.sh", "java", "-jar", "/app/oracle-data-api.jar"]
 #############################################################################################

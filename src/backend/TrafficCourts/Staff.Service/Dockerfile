@@ -20,4 +20,5 @@ COPY entrypoint.sh /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN chown 1001:0 ./entrypoint.sh && chmod 550 ./entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Staff.Service.dll"]
