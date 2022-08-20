@@ -1,0 +1,14 @@
+{
+    "FormRecognizer__ApiKey": "",
+    "FormRecognizer__Endpoint": "",
+    "ObjectStorage__AccessKey": "",
+    "ObjectStorage__BucketName": "",
+    "ObjectStorage__Endpoint": "",
+    "ObjectStorage__SecretKey": "",
+    "RabbitMQ__Password": "",
+    "RabbitMQ__Username": "",
+    "Redis__ConnectionString": "",
+    "Serilog__WriteTo__0__Args__eventCollectorToken": "",
+    "Serilog__WriteTo__0__Args__splunkHost": ""
+  }
+  

@@ -49,10 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "traffic-court-online.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "traffic-court-online.serviceAccountName" -}}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
