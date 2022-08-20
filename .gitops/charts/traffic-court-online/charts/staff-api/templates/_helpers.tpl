@@ -50,9 +50,3 @@ app.kubernetes.io/name: {{ include "staff-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "staff-api.serviceAccountName" -}}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}

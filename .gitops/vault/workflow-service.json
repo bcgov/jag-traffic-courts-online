@@ -1,0 +1,10 @@
+{
+    "EmailConfiguration__Sender": "",
+    "RabbitMq__Password": "",
+    "RabbitMq__Username": "",
+    "Serilog__WriteTo__0__Args__eventCollectorToken": "",
+    "Serilog__WriteTo__0__Args__splunkHost": "",
+    "SmtpConfiguration__Host": "",
+    "SmtpConfiguration__Port": ""
+  }
+  
