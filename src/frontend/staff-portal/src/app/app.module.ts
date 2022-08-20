@@ -1,17 +1,17 @@
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
-import { Configuration } from './api';
 import { SharedModule, } from './shared/shared.module';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { environment } from "../environments/environment";
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
@@ -42,29 +42,15 @@ import { AuthService } from './services/auth.service';
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
 
-// export function appInit(appConfigService: AppConfigService) {
-//   return () => {
-//     return appConfigService.loadAppConfig();
-//   };
-// }
-
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
-  return async() => {
-    await keycloak.init({
-      config: {
-        url: 'https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca',
-        realm: 'traffic-court',
-        clientId: 'staff-portal',
-      },
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-      }
-    });
+  return async () => {
+    const response = await fetch('./assets/config/keycloak.config.json');
+    const config = await response.json();
+    await keycloak.init(config);
   }
 }
 

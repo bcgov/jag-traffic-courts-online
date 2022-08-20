@@ -10,6 +10,7 @@ import {
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { AuthService } from 'app/services/auth.service';
 import { KeycloakService } from 'keycloak-angular';
@@ -62,6 +63,7 @@ export class HeaderComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.headingText = this.activatedRoute.snapshot?.data?.title ? this.activatedRoute.snapshot?.data?.title : "Authenticating...";
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -77,6 +79,8 @@ export class HeaderComponent implements OnInit {
             this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
             this.router.navigate([this.authService.getRedirectUrl()]);
           })
+        } else {
+          this.router.navigate(["/"]);
         }
       })
     })
