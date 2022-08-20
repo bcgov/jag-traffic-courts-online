@@ -15,5 +15,5 @@ FROM registry.access.redhat.com/ubi8/dotnet-60-runtime AS base
 WORKDIR /opt/app-root/app
 EXPOSE 8080
 COPY --from=publish /app/publish .
-RUN chown 1001:0 ./entrypoint.sh && chmod 550 ./entrypoint.sh
+RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Staff.Service.dll"]
