@@ -47,18 +47,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
-  return async() => {
-    await keycloak.init({
-      config: {
-        url: environment.keycloakUrl,
-        realm: environment.keycloakRealm,
-        clientId: environment.keycloakClientId,
-      },
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-      }
-    });
+  return async () => {
+    const response = await fetch('./assets/config/keycloak.config.json');
+    const config = await response.json();
+    await keycloak.init(config);
   }
 }
 
