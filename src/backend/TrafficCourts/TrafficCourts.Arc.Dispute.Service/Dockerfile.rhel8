@@ -19,5 +19,8 @@ COPY entrypoint.sh /app/publish
 FROM base AS final
 WORKDIR /opt/app-root/app
 COPY --from=publish /app/publish .
+USER root
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
+# Run container by default as user with id 1001 (default)
+USER 1001
 ENTRYPOINT ["./entrypoint.sh", "dotnet", "TrafficCourts.Arc.Dispute.Service.dll"]
