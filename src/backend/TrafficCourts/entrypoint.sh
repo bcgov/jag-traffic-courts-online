@@ -19,7 +19,7 @@ VAULT_SECRETS_DIR=/vault/secrets
 
 if [ -d ${VAULT_SECRETS_DIR} ]; then
   set -a # enable mark variables which are modified or created for export
-  for i in ${VAULT_SECRETS_DIR}/*; do
+  for i in ${VAULT_SECRETS_DIR}/*.env; do
     echo "[entrypoint] Adding environment variables from ${i}"
     source ${i}
   done
