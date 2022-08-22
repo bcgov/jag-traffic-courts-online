@@ -21,9 +21,9 @@ spec:
         vault.hashicorp.com/auth-path: auth/k8s-silver
         vault.hashicorp.com/namespace: platform-services
         vault.hashicorp.com/role: {{ .Values.global.vault.role }}  # licenseplate-nonprod or licenseplate-prod are your options
-        vault.hashicorp.com/agent-inject-secret-secrets.env: {{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}staff-api
+        vault.hashicorp.com/agent-inject-secret-secrets.env: {{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}workflow-service
         vault.hashicorp.com/agent-inject-template-secrets.env: |
-          {{`{{- with secret `}}"{{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}staff-api"{{` }}
+          {{`{{- with secret `}}"{{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}workflow-service"{{` }}
           {{- range $k, $v := .Data.data }}
           {{ $k }}={{ $v }}{{ end -}}
           {{- end `}} }}
@@ -42,8 +42,14 @@ spec:
           - name: {{ $k | quote }}
             value: {{ $v | quote }}
           {{- end }}
-          - name: DOTNET_DiagnosticPorts
-            value: /diag/port.sock
+          - name: OracleDataApi__Host
+            value: {{ .Release.Name }}-oracle-data-api
+          - name: OracleDataApi__Port
+            value: "8080"
+          - name: ArcApiConfiguration__Host
+            value: {{ .Release.Name }}-arc-dispute-api
+          - name: ArcApiConfiguration__Port
+            value: "8080"
           - name: DOTNET_DiagnosticPorts
             value: /diag/port.sock
           name: {{ .Chart.Name }}

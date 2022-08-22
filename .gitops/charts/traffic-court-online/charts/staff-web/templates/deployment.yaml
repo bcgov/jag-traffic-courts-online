@@ -32,14 +32,20 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: keycloak-config
+            - name: configuration
               mountPath: /usr/share/nginx/html/assets/config/keycloak.config.json
               readOnly: true
               subPath: keycloak.config.json
+            - name: configuration
+              mountPath: /opt/app-root/etc/nginx.default.d/nginx-api-proxy-pass.conf
+              readOnly: true
+              subPath: nginx-api-proxy-pass.conf
       volumes:
-        - name: keycloak-config
+        - name: configuration
           configMap:
             name: {{ include "staff-web.keycloakConfigConfigmapName" . }}
             items:
               - key: keycloak.config.json
                 path: keycloak.config.json
+              - key: nginx-api-proxy-pass.conf
+                path: nginx-api-proxy-pass.conf
