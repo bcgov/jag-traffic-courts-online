@@ -121,7 +121,7 @@ public class JJController : JJControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
     public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
