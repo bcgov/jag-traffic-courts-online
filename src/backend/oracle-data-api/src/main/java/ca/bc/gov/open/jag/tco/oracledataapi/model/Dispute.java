@@ -146,6 +146,7 @@ public class Dispute extends Auditable<String> {
 	 * The disputant's home phone number.
 	 */
 	@Column
+	@Schema(nullable = true)
 	private String homePhoneNumber;
 
 	/**
@@ -159,6 +160,7 @@ public class Dispute extends Auditable<String> {
 	 * The disputant's email address.
 	 */
 	@Column
+	@Schema(nullable = true)
 	@Email(regexp = ".+@.+\\..+")
 	private String emailAddress;
 
