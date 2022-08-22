@@ -27,7 +27,7 @@ citizen-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.33.0",
+        "version": "1.42.0",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -49,6 +49,11 @@ staff-api:
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
+    "Jwt__Authority": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/auth/realms/traffic-court"
+    "Jwt__Audience": "staff-portal"
+    "OAuth__TokenUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/admin/realms/"
+    "KeycloakAdminApi__Realm": "traffic-court"
 
 staff-web:
   image:

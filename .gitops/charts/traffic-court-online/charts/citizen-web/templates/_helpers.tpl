@@ -58,10 +58,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
     {{- end }}
 {{- end -}}
 
-{{- define "citizen-web.appConfigConfigmapName" -}}
-{{- if .Values.existingAppConfigConfigmap -}}
-    {{- printf "%s" (tpl .Values.existingAppConfigConfigmap $) -}}
-{{- else -}}
+{{- define "citizen-web.configmapName" -}}
     {{- printf "%s-configuration" (include "citizen-web.fullname" .) -}}
-{{- end -}}
 {{- end -}}
