@@ -1,4 +1,3 @@
-{{- if .Values.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,10 +15,6 @@ spec:
     type: Recreate
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "oracle-data-api.selectorLabels" . | nindent 8 }}
     spec:
@@ -27,44 +22,14 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "oracle-data-api.serviceAccountName" . }}
+      serviceAccountName: {{ .Values.global.licenseplate }}-vault
       containers:
         - env:
-          - name: H2_DATASOURCE
-            value: jdbc:h2:file:./data/h2-v2
-          {{- if .Values.splunk.enabled }}
-          # Logging - Splunk
-          - name: SPLUNK_URL
-            value: "{{ required "A valid .Values.splunk.endpoint required!" .Values.splunk.endpoint }}"
-          - name: SPLUNK_TOKEN
-            value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
+          {{- $env := merge (.Values.env | default dict) (.Values.global.env | default dict) -}}
+          {{ range $k, $v := $env }}
+            - name: {{ $k | quote }}
+              value: {{ $v | quote }}
           {{- end }}
-          {{- if .Values.jaeger.enabled }}
-          # OpenTelemetry Jaeger
-          - name: SPRING_SLEUTH_ENABLED
-            value: true
-          - name: OTEL_EXPORTER_JAEGER_ENDPOINT
-            value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
-          {{- end }}
-          # Redis
-          - name: REDIS_HOST
-            value: "{{ .Values.redis.host }}"
-          - name: REDIS_PORT
-            value: "{{ .Values.redis.port }}"
-          {{- if .Values.redis.password }}
-          - name: REDIS_PASSWORD
-            value: "{{ .Values.redis.password }}"
-          {{- end }}
-          # Code table refresh (todo: will be moved to openshift cron)
-          - name: CODETABLE_REFRESH_ENABLED
-            value: "{{ .Values.jobs.codeTables.enabled }}"
-          - name: CODETABLE_REFRESH_CRON
-            value: "{{ .Values.jobs.codeTables.cronExpression }}"
-          # Unassign Disputes (todo: will be moved to openshift cron) - unassign any Dispute that has been idle for more than 1 hour, cron job to run every 5 minutes
-          - name: UNASSIGN_DISPUTES_ENABLED
-            value: "{{ .Values.jobs.unassignDisputes.enabled }}"
-          - name: UNASSIGN_DISPUTES_CRON
-            value: "{{ .Values.jobs.unassignDisputes.cronExpression }}"
           name: "{{ .Chart.Name }}"
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -77,20 +42,7 @@ spec:
           volumeMounts:
           - mountPath: /data
             name: {{ include "oracle-data-api.fullname" . }}-data
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       volumes:
       - name: {{ include "oracle-data-api.fullname" . }}-data
         persistentVolumeClaim:
           claimName: {{ include "oracle-data-api.fullname" . }}-data
-{{- end }}

@@ -49,10 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "arc-dispute-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "arc-dispute-api.serviceAccountName" -}}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}

@@ -41,5 +41,4 @@ export class JjWorkbenchDashboardComponent implements OnInit {
     else if (heading == "WR Assignments") this.tabSelected.setValue(0);
     this.jjPage = heading;
   }
-
 }

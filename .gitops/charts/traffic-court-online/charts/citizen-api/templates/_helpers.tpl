@@ -49,10 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "citizen-api.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "citizen-api.serviceAccountName" -}}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}

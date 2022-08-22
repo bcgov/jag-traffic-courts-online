@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "staff-web.fullname" . }}-keycloak-configuration
+  labels: {{- include "staff-web.labels" . | nindent 4 }}
+data:
+  keycloak.config.json: |-
+{{ include "staff-web.tplvalues.render" ( dict "value" .Values.keycloakConfig "context" $ ) | indent 4 }}

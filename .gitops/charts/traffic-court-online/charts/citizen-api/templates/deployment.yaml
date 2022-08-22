@@ -1,4 +1,3 @@
-{{- if .Values.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,10 +13,20 @@ spec:
       {{- include "citizen-api.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: "52325"
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/agent-inject-token: 'true'
+        vault.hashicorp.com/auth-path: auth/k8s-silver
+        vault.hashicorp.com/namespace: platform-services
+        vault.hashicorp.com/role: {{ .Values.global.vault.role }}  # licenseplate-nonprod or licenseplate-prod are your options
+        vault.hashicorp.com/agent-inject-secret-secrets.env: {{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}citizen-api
+        vault.hashicorp.com/agent-inject-template-secrets.env: |
+          {{`{{- with secret `}}"{{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}citizen-api"{{` }}
+          {{- range $k, $v := .Data.data }}
+          {{ $k }}={{ $v }}{{ end -}}
+          {{- end `}} }}
       labels:
         {{- include "citizen-api.selectorLabels" . | nindent 8 }}
     spec:
@@ -25,88 +34,30 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "citizen-api.serviceAccountName" . }}
-      serviceAccount: {{ include "citizen-api.serviceAccountName" . }}
+      serviceAccountName: {{ .Values.global.licenseplate }}-vault
       containers:
         - env:
-          # change to value
-          - name: Serilog__MinimumLevel__Default
-            value: Debug
-          # Form Recognizer
-          - name: FormRecognizer__Endpoint
-            value: "{{ .Values.formRecognizer.endpoint }}"
-          {{- /* TODO: FormRecognizer__ApiKey from secrets */}}
-          - name: FormRecognizer__ApiKey
-            value: "{{ .Values.formRecognizer.apiKey }}"
-          {{- if .Values.formRecognizer.model }}
-          - name: FormRecognizer__ModelId
-            value: "{{ .Values.formRecognizer.model }}"
+          {{- $env := merge (.Values.env | default dict) (.Values.global.env | default dict) -}}
+          {{ range $k, $v := $env }}
+          - name: {{ $k | quote }}
+            value: {{ $v | quote }}
           {{- end }}
-          # RabbitMQ
-          - name: RabbitMQ__Host
-            value: "{{ .Values.rabbitmq.host }}"
-          - name: RabbitMQ__Port
-            value: "{{ .Values.rabbitmq.port }}"
-          # TODO: RabbitMQ__Password from secrets
-          - name: RabbitMQ__Username
-            value: "{{ .Values.rabbitmq.username }}"
-          - name: RabbitMQ__Password
-            value: "{{ .Values.rabbitmq.password }}"
-          # Object Storage
-          - name: ObjectStorage__AccessKey
-            value: "{{ .Values.objectStorage.accessKey }}"
-          - name: ObjectStorage__BucketName
-            value: "{{ .Values.objectStorage.bucketName }}"
-          - name: ObjectStorage__Endpoint
-            value: "{{ .Values.objectStorage.endpoint }}"
-          - name: ObjectStorage__SecretKey
-            value: "{{ .Values.objectStorage.secretKey }}"
-          # Redis
-          - name: Redis__ConnectionString
-            value: "{{ .Values.redis.connectionString }}"
-          {{- if .Values.splunk.enabled }}
-          # Logging - Splunk
-          - name: Serilog__Using__0
-            value: "Serilog.Sinks.Splunk"
-          - name: Serilog__WriteTo__0__Name
-            value: "EventCollector"
-          - name: Serilog__WriteTo__0__Args__splunkHost
-            value: "{{ required "A valid .Values.splunk.endpoint required!" .Values.splunk.endpoint }}"
-          - name: Serilog__WriteTo__0__Args__eventCollectorToken
-            value: "{{ required "A valid .Values.splunk.token required!" .Values.splunk.token }}"
-          {{- end }}
-          {{- if .Values.jaeger.enabled }}
-          # OpenTelemetry jaeger
-          - name: OTEL_EXPORTER_JAEGER_ENDPOINT
-            value: "{{ required "jaeger.exporter.endpoint is required" .Values.jaeger.exporter.endpoint }}"
-          {{- if .Values.jaeger.exporter.protocol }}
-          - name: OTEL_EXPORTER_JAEGER_PROTOCOL
-            value: "{{ .Values.jaeger.exporter.protocol }}"
-          {{- end }}
-          {{- end }}
-          {{- if .Values.metrics.enabled }}
           - name: DOTNET_DiagnosticPorts
             value: /diag/port.sock
-          {{- end }}
-          {{- if .Values.swagger.enabled }}
-          - name: Swagger__Enabled
-            value: "true"
-          {{- end }}
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # command: ["/bin/sh"]
+          # args: ["-c", "while true; do echo hello; sleep 10;done"]          
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.metrics.enabled }}
           volumeMounts:
           - mountPath: /diag
             name: diagnostics
-          {{- end }}
-        {{- if .Values.metrics.enabled }}
         - name: dotnet-monitor
           image: mcr.microsoft.com/dotnet/monitor
           # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
@@ -134,22 +85,6 @@ spec:
             limits:
               cpu: 250m
               memory: 256Mi
-        {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if .Values.metrics.enabled }}
       volumes:
       - name: diagnostics
         emptyDir: {}      
-      {{- end }}
-{{- end }}
