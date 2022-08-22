@@ -43,7 +43,7 @@ spec:
       volumes:
         - name: configuration
           configMap:
-            name: {{ include "staff-web.keycloakConfigConfigmapName" . }}
+            name: {{ include "staff-web.configmapName" . }}
             items:
               - key: keycloak.config.json
                 path: keycloak.config.json

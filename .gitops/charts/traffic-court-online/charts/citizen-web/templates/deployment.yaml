@@ -43,10 +43,9 @@ spec:
               readOnly: true
               subPath: nginx-api-proxy-pass.conf
       volumes:
-        {{- if or .Values.appConfig .Values.existingAppConfigConfigmap }}
         - name: configuration
           configMap:
-            name: {{ include "citizen-web.appConfigConfigmapName" . }}
+            name: {{ include "citizen-web.configmapName" . }}
             items:
             {{- if or .Values.appConfig }}
               - key: app.config.json
@@ -54,4 +53,3 @@ spec:
             {{- end }}
               - key: nginx-api-proxy-pass.conf
                 path: nginx-api-proxy-pass.conf
-        {{- end }}
