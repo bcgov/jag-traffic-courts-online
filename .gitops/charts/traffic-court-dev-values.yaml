@@ -1,5 +1,6 @@
 # global values
 global:
+  namespace: 0198bb-dev
   vault:
     role: 0198bb-nonprod
     path: dev/
@@ -9,9 +10,6 @@ arc-dispute-api:
     tag: "1.42.0"
     pullPolicy: Always
   env: 
-    "Serilog__WriteTo__1__Name": "Console"
-    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
-    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
     "Swagger__Enabled": "true"
 
 citizen-api:
@@ -19,10 +17,6 @@ citizen-api:
     tag: "1.42.0"
     pullPolicy: Always
   env: 
-    "RabbitMq__Host": "rabbitmq"
-    "Serilog__WriteTo__1__Name": "Console"
-    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
-    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
     "Swagger__Enabled": "true"
 
 citizen-web:
@@ -56,15 +50,10 @@ staff-api:
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
-    "Jwt__Authority": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/auth/realms/traffic-court"
-    "Jwt__MetadataAddress": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/.well-known/openid-configuration"
+    "Jwt__Authority": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court"
     "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/admin/realms/"
     "KeycloakAdminApi__Realm": "traffic-court"
     "OAuth__TokenUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
-    "RabbitMq__Host": "rabbitmq"
-    "Serilog__WriteTo__1__Name": "Console"
-    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
-    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
     "Swagger__Enabled": "true"
 
 staff-web:
@@ -86,8 +75,3 @@ workflow-service:
   image:
     tag: "1.42.0"
     pullPolicy: Always
-  env:    
-    "RabbitMq__Host": "rabbitmq"
-    "Serilog__WriteTo__1__Name": "Console"
-    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
-    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"

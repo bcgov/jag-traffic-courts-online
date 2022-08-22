@@ -1,28 +1,31 @@
 # global values
 global:
   licenseplate: 0198bb
+  namespace:
   vault:
     # licenseplate-nonprod or licenseplate-prod
     role: ''
     # 'dev/', 'test/' or ''
     path: ''
+  env:
 
-  env: 
- 
 arc-dispute-api:
   image:
     registry: image-registry.openshift-image-registry.svc:5000
     repository: 0198bb-tools/arc-dispute-api
     tag: ""
     pullPolicy: IfNotPresent
-
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
     "ASPNETCORE_URLS": "http://*:8080"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
     "Serilog__Using__0": "Serilog.Sinks.Splunk"
+    "Serilog__Using__1": "Serilog.Sinks.Console"
     "Serilog__WriteTo__0__Name": "EventCollector"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
 
 citizen-api:
   image:
@@ -30,14 +33,18 @@ citizen-api:
     repository: 0198bb-tools/citizen-api
     tag: ""
     pullPolicy: IfNotPresent
-
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
     "ASPNETCORE_URLS": "http://*:8080"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
+    "RabbitMq__Host": "rabbitmq"
     "Serilog__Using__0": "Serilog.Sinks.Splunk"
+    "Serilog__Using__1": "Serilog.Sinks.Console"
     "Serilog__WriteTo__0__Name": "EventCollector"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
 
 citizen-web:
   image:
@@ -52,7 +59,6 @@ oracle-data-api:
     repository: 0198bb-tools/oracle-data-api
     tag: ""
     pullPolicy: IfNotPresent
-
   env:
     "CODETABLE_REFRESH_CRON": "0 0 * * * *"
     "CODETABLE_REFRESH_ENABLED": "true"
@@ -70,14 +76,18 @@ staff-api:
     repository: 0198bb-tools/staff-api
     tag: ""
     pullPolicy: IfNotPresent
-
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
     "ASPNETCORE_URLS": "http://*:8080"
-    "Serilog__Using__0": "Serilog.Sinks.Splunk"
-    "Serilog__WriteTo__0__Name": "EventCollector"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
+    "RabbitMq__Host": "rabbitmq"
+    "Serilog__Using__0": "Serilog.Sinks.Splunk"
+    "Serilog__Using__1": "Serilog.Sinks.Console"
+    "Serilog__WriteTo__0__Name": "EventCollector"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
 
 staff-web:
   image:
@@ -92,12 +102,14 @@ workflow-service:
     repository: 0198bb-tools/workflow-service
     tag: ""
     pullPolicy: IfNotPresent
-
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
     "ASPNETCORE_URLS": "http://*:8080"
-    "Serilog__Using__0": "Serilog.Sinks.Splunk"
-    "Serilog__WriteTo__0__Name": "EventCollector"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
-
+    "Serilog__Using__0": "Serilog.Sinks.Splunk"
+    "Serilog__Using__1": "Serilog.Sinks.Console"
+    "Serilog__WriteTo__0__Name": "EventCollector"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
