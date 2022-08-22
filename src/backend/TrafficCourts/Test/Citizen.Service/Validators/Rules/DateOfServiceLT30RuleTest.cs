@@ -69,10 +69,10 @@ public class DateOfServiceLT30RuleTest
         public TestData()
         {
             DateTime now = DateTime.Now;
-            for (int i = -32; i < 3; i++)
+            for (int i = -32; i < 1; i++)
             {
                 // Valid date values are from 30 days ago to today. 
-                // If the DateOfService is in the future then we must have mis-read it - considered invalid
+                // Future DateOfService dates are not permitted (TCVP-1676)
                 string dateStr = now.AddDays(i).ToString("yyyy MM dd");
                 bool isValid = i >= -30 && i <= 0;
                 Add(dateStr, isValid);
