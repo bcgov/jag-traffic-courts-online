@@ -810,12 +810,18 @@
             "minLength": 0,
             "type": "string"
           },
-          "homePhoneNumber": { "type": "string" },
+          "homePhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
           "workPhoneNumber": {
             "type": "string",
             "nullable": true
           },
-          "emailAddress": { "type": "string" },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
           "filingDate": {
             "type": "string",
             "format": "date-time",

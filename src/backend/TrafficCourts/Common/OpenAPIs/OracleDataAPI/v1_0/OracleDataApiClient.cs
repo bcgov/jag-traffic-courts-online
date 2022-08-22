@@ -2243,13 +2243,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [System.ComponentModel.DataAnnotations.StringLength(6)]
         public string PostalCode { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("homePhoneNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("homePhoneNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string HomePhoneNumber { get; set; }
 
         [Newtonsoft.Json.JsonProperty("workPhoneNumber", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string WorkPhoneNumber { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("emailAddress", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("emailAddress", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string EmailAddress { get; set; }
 
         [Newtonsoft.Json.JsonProperty("filingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
