@@ -9,6 +9,9 @@ arc-dispute-api:
     tag: "1.42.0"
     pullPolicy: Always
   env: 
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
     "Swagger__Enabled": "true"
 
 citizen-api:
@@ -16,6 +19,10 @@ citizen-api:
     tag: "1.42.0"
     pullPolicy: Always
   env: 
+    "RabbitMq__Host": "rabbitmq"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
     "Swagger__Enabled": "true"
 
 citizen-web:
@@ -47,13 +54,18 @@ staff-api:
   image:
     tag: "1.42.0"
     pullPolicy: Always
-  env: 
-    "Swagger__Enabled": "true"
+  env:    
+    "Jwt__Audience": "staff-api"
     "Jwt__Authority": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/auth/realms/traffic-court"
-    "Jwt__Audience": "staff-portal"
-    "OAuth__TokenUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "Jwt__MetadataAddress": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/.well-known/openid-configuration"
     "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/admin/realms/"
     "KeycloakAdminApi__Realm": "traffic-court"
+    "OAuth__TokenUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "RabbitMq__Host": "rabbitmq"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
+    "Swagger__Enabled": "true"
 
 staff-web:
   image:
@@ -62,13 +74,11 @@ staff-web:
   keycloakConfig: |
     {
       "config": {
-        "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
+        "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/",
         "realm": "traffic-court",
         "clientId": "staff-portal"
       },
       "initOptions": {
-        "onLoad": "check-sso",
-        "silentCheckSsoRedirectUri": "/assets/silent-check-sso.html"
       }
     }
 
@@ -76,3 +86,8 @@ workflow-service:
   image:
     tag: "1.42.0"
     pullPolicy: Always
+  env:    
+    "RabbitMq__Host": "rabbitmq"
+    "Serilog__WriteTo__1__Name": "Console"
+    "Serilog__WriteTo__1__Args__theme": "Serilog.Sinks.SystemConsole.Themes.ConsoleTheme::None, Serilog.Sinks.Console"
+    "Serilog__WriteTo__1__Args__outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
