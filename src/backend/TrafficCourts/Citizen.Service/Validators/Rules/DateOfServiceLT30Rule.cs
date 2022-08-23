@@ -31,8 +31,8 @@ public class DateOfServiceLT30Rule : ValidationRule
             DateTime now = new(dateTime.Year, dateTime.Month, dateTime.Day);
             if (dateOfService > now)
             {
-                // Date of Service is in the future ... we must have mis-read it.  Consider this invalid.
-                AddValidationError(String.Format(ValidationMessages.DateFutureInvalid, Field.TagName, Field.Value));
+                // TCVP-1676 Ticket is now permitted to be future dated
+                //AddValidationError(String.Format(ValidationMessages.DateFutureInvalid, Field.TagName, Field.Value));
             }
             else if (dateOfService < (now.AddDays(-30)))
             {
