@@ -10,7 +10,6 @@ data:
 {{- end }}
   nginx-api-proxy-pass.conf: |-
     location /api {
-      resolver kube-dns.kube-system.svc.cluster.local;
       proxy_pass http://{{ .Release.Name }}-citizen-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
       client_max_body_size 10M;
     }
