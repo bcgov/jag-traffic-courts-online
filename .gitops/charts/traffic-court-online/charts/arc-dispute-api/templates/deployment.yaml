@@ -42,6 +42,8 @@ spec:
           - name: {{ $k | quote }}
             value: {{ $v | quote }}
           {{- end }}
+          - name: TZ
+            value: America/Vancouver
           - name: DOTNET_DiagnosticPorts
             value: /diag/port.sock
           name: {{ .Chart.Name }}

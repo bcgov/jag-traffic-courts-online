@@ -1,9 +1,9 @@
 # global values
 global:
-  namespace: 0198bb-dev
+  namespace: 0198bb-test
   vault:
     role: 0198bb-nonprod
-    path: dev/
+    path: test/
 
 arc-dispute-api:
   image:
@@ -27,7 +27,7 @@ citizen-web:
   appConfig: |  
     {
         "production": false,
-        "environment": "Dev",
+        "environment": "Test",
         "version": "1.42.0",
         "useMockServices": false,
         "apiBaseUrl": "/api",
@@ -50,10 +50,10 @@ staff-api:
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
-    "Jwt__Authority": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court"
-    "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/admin/realms/"
+    "Jwt__Authority": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court"
+    "KeycloakAdminApi__BaseUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/admin/realms/"
     "KeycloakAdminApi__Realm": "traffic-court"
-    "OAuth__TokenUri": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
+    "OAuth__TokenUri": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token"
     "Swagger__Enabled": "true"
 
 staff-web:
@@ -63,7 +63,7 @@ staff-web:
   keycloakConfig: |
     {
       "config": {
-        "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/",
+        "url": "https://oidc-0198bb-test.apps.silver.devops.gov.bc.ca/",
         "realm": "traffic-court",
         "clientId": "staff-portal"
       },

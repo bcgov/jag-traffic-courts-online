@@ -42,12 +42,14 @@ spec:
           - name: {{ $k | quote }}
             value: {{ $v | quote }}
           {{- end }}
+          - name: TZ
+            value: America/Vancouver
           - name: OracleDataApi__Host
-            value: {{ .Release.Name }}-oracle-data-api
+            value: {{ .Release.Name }}-oracle-data-api.{{ .Values.global.namespace }}.svc.cluster.local
           - name: OracleDataApi__Port
             value: "8080"
           - name: ArcApiConfiguration__Host
-            value: {{ .Release.Name }}-arc-dispute-api
+            value: {{ .Release.Name }}-arc-dispute-api.{{ .Values.global.namespace }}.svc.cluster.local
           - name: ArcApiConfiguration__Port
             value: "8080"
           - name: DOTNET_DiagnosticPorts
