@@ -9,7 +9,9 @@ data:
 {{ include "citizen-web.tplvalues.render" ( dict "value" .Values.appConfig "context" $ ) | indent 4 }}
 {{- end }}
   nginx-api-proxy-pass.conf: |-
-    location /api/ {
-      proxy_pass http://{{ .Release.Name }}-citizen-api:8080;
+    location /api {
+      resolver kube-dns.kube-system.svc.cluster.local;
+      proxy_pass http://{{ .Release.Name }}-citizen-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
       client_max_body_size 10M;
     }
+    error_log stderr warn;

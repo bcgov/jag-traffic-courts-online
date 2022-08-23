@@ -8,6 +8,8 @@ data:
 {{ include "staff-web.tplvalues.render" ( dict "value" .Values.keycloakConfig "context" $ ) | indent 4 }}
   nginx-api-proxy-pass.conf: |-
     location /api {
-      proxy_pass http://{{ .Release.Name }}-staff-api:8080/api;
+      resolver kube-dns.kube-system.svc.cluster.local;
+      proxy_pass http://{{ .Release.Name }}-staff-api.{{ .Values.global.namespace }}.svc.cluster.local:8080/api;
       client_max_body_size 10M;
     }
+    error_log stderr warn;
