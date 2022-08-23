@@ -26,6 +26,8 @@ model/problemDetails.model.ts
 model/statute.model.ts
 model/violationTicket.model.ts
 model/violationTicketCount.model.ts
+model/violationTicketCountIsAct.model.ts
+model/violationTicketCountIsRegulation.model.ts
 model/violationTicketIsChangeOfAddress.model.ts
 model/violationTicketIsDriver.model.ts
 model/violationTicketIsOwner.model.ts

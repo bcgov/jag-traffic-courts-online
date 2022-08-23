@@ -9,6 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ViolationTicketCountIsAct } from './violationTicketCountIsAct.model';
+import { ViolationTicketCountIsRegulation } from './violationTicketCountIsRegulation.model';
 
 
 /**
@@ -35,13 +37,7 @@ export interface ViolationTicketCount {
      * The ticketed amount.
      */
     ticketed_amount?: number | null;
-    /**
-     * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
-     */
-    is_act?: boolean | null;
-    /**
-     * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
-     */
-    is_regulation?: boolean | null;
+    is_act?: ViolationTicketCountIsAct;
+    is_regulation?: ViolationTicketCountIsRegulation;
 }
 

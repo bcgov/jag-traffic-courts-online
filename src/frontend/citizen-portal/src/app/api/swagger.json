@@ -746,6 +746,15 @@
             "description": "Detachment Location",
             "nullable": true
           },
+          "is_change_of_address": {
+            "$ref": "#/components/schemas/ViolationTicketIsChangeOfAddress"
+          },
+          "is_driver": {
+            "$ref": "#/components/schemas/ViolationTicketIsDriver"
+          },
+          "is_owner": {
+            "$ref": "#/components/schemas/ViolationTicketIsOwner"
+          },
           "issued_date": {
             "type": "string",
             "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
@@ -761,17 +770,8 @@
           "issued_at_or_near_city": {
             "maxLength": 100,
             "type": "string",
-            "description": "The violation ticket was issued at or near this city or town.",
+            "description": "Issued at or near city.",
             "nullable": true
-          },
-          "is_change_of_address": {
-            "$ref": "#/components/schemas/ViolationTicketIsChangeOfAddress"
-          },
-          "is_driver": {
-            "$ref": "#/components/schemas/ViolationTicketIsDriver"
-          },
-          "is_owner": {
-            "$ref": "#/components/schemas/ViolationTicketIsOwner"
           },
           "counts": {
             "type": "array",
@@ -832,18 +832,28 @@
             "nullable": true
           },
           "is_act": {
-            "type": "boolean",
-            "description": "The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.",
-            "nullable": true
+            "$ref": "#/components/schemas/ViolationTicketCountIsAct"
           },
           "is_regulation": {
-            "type": "boolean",
-            "description": "The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.",
-            "nullable": true
+            "$ref": "#/components/schemas/ViolationTicketCountIsRegulation"
           }
         },
         "additionalProperties": false,
         "description": "Represents a violation ticket count."
+      },
+      "ViolationTicketCountIsAct": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketCountIsRegulation": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
       },
       "ViolationTicketIsChangeOfAddress": {
         "enum": [

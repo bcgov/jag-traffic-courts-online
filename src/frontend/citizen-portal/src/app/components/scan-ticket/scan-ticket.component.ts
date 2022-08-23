@@ -48,7 +48,7 @@ export class ScanTicketComponent implements OnInit {
     this.form = this.formBuilder.group(this.ticket); // can add control
     this.form.disable();
     this.form.controls.disputant_detected_ocr_issues.enable();
-    this.form.controls.disputant_ocr_issues_description.enable();
+    this.form.controls.disputant_ocr_issues.enable();
   }
 
   public onSubmit(): void {

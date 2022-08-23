@@ -14,6 +14,8 @@ export * from './problemDetails.model';
 export * from './statute.model';
 export * from './violationTicket.model';
 export * from './violationTicketCount.model';
+export * from './violationTicketCountIsAct.model';
+export * from './violationTicketCountIsRegulation.model';
 export * from './violationTicketIsChangeOfAddress.model';
 export * from './violationTicketIsDriver.model';
 export * from './violationTicketIsOwner.model';

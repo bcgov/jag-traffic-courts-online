@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Tickets;
 
@@ -48,11 +49,11 @@ public class ViolationTicketCount
     /// The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
     /// </summary>
     [JsonPropertyName("is_act")]
-    public bool? IsAct { get; set; }
+    public ViolationTicketCountIsAct? IsAct { get; set; }
 
     /// <summary>
     /// The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
     /// </summary>
     [JsonPropertyName("is_regulation")]
-    public bool? IsRegulation { get; set; }
+    public ViolationTicketCountIsRegulation? IsRegulation { get; set; }
 }

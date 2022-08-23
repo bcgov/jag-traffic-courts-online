@@ -122,7 +122,6 @@ export class NoticeOfDisputeService {
       .subscribe((action: boolean) => {
         if (action) {
           input.dispute_counts = input.dispute_counts.filter(i => i.plea_cd);
-          console.log("about to submit", input);
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
             this._noticeOfDispute.next(input);
             this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {

@@ -89,6 +89,9 @@ export interface ViolationTicket {
      * Detachment Location
      */
     detachment_location?: string | null;
+    is_change_of_address?: ViolationTicketIsChangeOfAddress;
+    is_driver?: ViolationTicketIsDriver;
+    is_owner?: ViolationTicketIsOwner;
     /**
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
@@ -98,12 +101,9 @@ export interface ViolationTicket {
      */
     issued_on_road_or_highway?: string | null;
     /**
-     * The violation ticket was issued at or near this city or town.
+     * Issued at or near city.
      */
     issued_at_or_near_city?: string | null;
-    is_change_of_address?: ViolationTicketIsChangeOfAddress;
-    is_driver?: ViolationTicketIsDriver;
-    is_owner?: ViolationTicketIsOwner;
     /**
      * Represents the counts identified. Must have at least one and at most three counts.
      */

@@ -45,13 +45,13 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The second given name
         /// </summary>
         [JsonPropertyName("disputant_given_name2")]
-        public string DisputantGivenName2 { get; set; } = null!;
+        public string? DisputantGivenName2 { get; set; } = null!;
 
         /// <summary>
         /// The third given name 
         /// </summary>
         [JsonPropertyName("disputant_given_name3")]
-        public string DisputantGivenName3 { get; set; } = null!;
+        public string? DisputantGivenName3 { get; set; } = null!;
 
         /// <summary>
         /// The disputant's birthdate.

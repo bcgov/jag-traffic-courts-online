@@ -183,12 +183,12 @@ export class ViolationTicketService {
         let value = this.getValue(arrayKey, <Field>source.fields[arrayKey]);
         let keySplit = arrayKey.split(".");
 
-        let temp = keySplit[1].split("_"); // e.g. count_1
-        let idKey = temp.length > 1 ? temp[0] : "id";
-        let id = temp.length > 1 ? parseInt(temp[1]) : parseInt(temp[0]);
+        let idpos = keySplit[1].lastIndexOf("_");
+        let id = keySplit[1].substring(idpos + 1);
+        let idKey = keySplit[1].substring(0,idpos) ? keySplit[1].substring(0,idpos) : "id";
 
         let arrKey = keySplit[0];
-        let index = id - 1;
+        let index = +id - 1;
         let key = keySplit[2];
 
         if (index >= 0) {
@@ -197,7 +197,7 @@ export class ViolationTicketService {
           }
           if (!result[arrKey][index]) {
             result[arrKey][index] = {};
-            result[arrKey][index][idKey] = id;
+            result[arrKey][index][idKey] = +id;
           }
           result[arrKey][index][key] = value;
         }
@@ -219,6 +219,7 @@ export class ViolationTicketService {
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
+
     return result;
   }
 
