@@ -1,0 +1,27 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: azure-cognitive-service-cleanup-logs
+  namespace: 0198bb-dev
+spec:
+  schedule: '@daily'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: forms-recognizer-logs
+              persistentVolumeClaim:
+                claimName: forms-recognizer-logs
+          containers:
+            - name: azure-cognitive-service-cleanup-logs
+              image: alpine:3.14
+              args:
+                - /bin/sh
+                - '-c'
+                - "LC_ALL=C find /logs -mtime +30 -delete;"
+              volumeMounts:
+                - name: forms-recognizer-logs
+                  mountPath: /logs
+          restartPolicy: OnFailure
