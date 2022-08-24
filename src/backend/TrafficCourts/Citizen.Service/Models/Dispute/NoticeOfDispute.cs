@@ -100,7 +100,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The disputant's home phone number.
         /// </summary>
         [JsonPropertyName("home_phone_number")]
-        public string HomePhoneNumber { get; set; } = null!;
+        public string? HomePhoneNumber { get; set; } = null!;
 
         /// <summary>
         /// The disputant's work phone number.
@@ -112,7 +112,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The disputant's email address.
         /// </summary>
         [JsonPropertyName("email_address")]
-        public string EmailAddress { get; set; } = null!;
+        public string? EmailAddress { get; set; } = null!;
 
         /// <summary>
         /// The disputant intends to be represented by a lawyer at the hearing.

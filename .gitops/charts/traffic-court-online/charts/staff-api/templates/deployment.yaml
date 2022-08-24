@@ -42,6 +42,8 @@ spec:
           - name: {{ $k | quote }}
             value: {{ $v | quote }}
           {{- end }}
+          - name: OracleDataApi__BaseUrl
+            value: http://{{ .Release.Name }}-oracle-data-api:8080
           - name: DOTNET_DiagnosticPorts
             value: /diag/port.sock
           name: {{ .Chart.Name }}

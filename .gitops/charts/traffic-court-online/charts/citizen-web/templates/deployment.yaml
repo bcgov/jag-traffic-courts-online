@@ -33,19 +33,23 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             {{- if or .Values.appConfig .Values.existingAppConfigConfigmap }}
-            - name: app-config
+            - name: configuration
               mountPath: /usr/share/nginx/html/assets/app.config.json
               readOnly: true
               subPath: app.config.json
             {{- end }}
+            - name: configuration
+              mountPath: /opt/app-root/etc/nginx.default.d/nginx-api-proxy-pass.conf
+              readOnly: true
+              subPath: nginx-api-proxy-pass.conf
       volumes:
-        {{- if or .Values.appConfig .Values.existingAppConfigConfigmap }}
-        - name: app-config
+        - name: configuration
           configMap:
-            name: {{ include "citizen-web.appConfigConfigmapName" . }}
-            {{- if or .Values.appConfig }}
+            name: {{ include "citizen-web.configmapName" . }}
             items:
+            {{- if or .Values.appConfig }}
               - key: app.config.json
                 path: app.config.json
             {{- end }}
-        {{- end }}
+              - key: nginx-api-proxy-pass.conf
+                path: nginx-api-proxy-pass.conf

@@ -1,10 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "citizen-web.fullname" . }}-configuration
+  name: {{ include "citizen-web.configmapName" . }}
   labels: {{- include "citizen-web.labels" . | nindent 4 }}
 data:
 {{- if and .Values.appConfig (not .Values.existingAppConfigConfigmap) }}
   app.config.json: |-
 {{ include "citizen-web.tplvalues.render" ( dict "value" .Values.appConfig "context" $ ) | indent 4 }}
 {{- end }}
+  nginx-api-proxy-pass.conf: |-
+    location /api/ {
+      proxy_pass http://{{ .Release.Name }}-citizen-api:8080;
+      client_max_body_size 10M;
+    }

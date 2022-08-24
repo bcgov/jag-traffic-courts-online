@@ -58,6 +58,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
     {{- end }}
 {{- end -}}
 
-{{- define "staff-web.keycloakConfigConfigmapName" -}}
-    {{- printf "%s-keycloak-configuration" (include "staff-web.fullname" .) -}}
+{{- define "staff-web.configmapName" -}}
+    {{- printf "%s-configuration" (include "staff-web.fullname" .) -}}
 {{- end }}

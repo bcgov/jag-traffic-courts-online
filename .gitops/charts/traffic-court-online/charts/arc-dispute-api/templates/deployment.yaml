@@ -25,7 +25,7 @@ spec:
         vault.hashicorp.com/agent-inject-template-secrets.env: |
           {{`{{- with secret `}}"{{ .Values.global.vault.role }}/{{ .Values.global.vault.path }}arc-dispute-api"{{` }}
           {{- range $k, $v := .Data.data }}
-          {{ $k }}="{{ $v | replaceAll "\n" "\\n" }}"{{ end -}}
+          {{ $k }}='{{ $v }}'{{ end -}}
           {{- end `}} }}
       labels:
         {{- include "arc-dispute-api.selectorLabels" . | nindent 8 }}

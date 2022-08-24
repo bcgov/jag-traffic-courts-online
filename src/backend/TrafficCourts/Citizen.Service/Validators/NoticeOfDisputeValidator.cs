@@ -23,9 +23,11 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.AddressCity).NotEmpty();
             RuleFor(_ => _.AddressProvince).MaximumLength(30);
             RuleFor(_ => _.PostalCode).MaximumLength(6);
+            RuleFor(_ => _.HomePhoneNumber)
+                .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"));
             RuleFor(_ => _.WorkPhoneNumber)
                 .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"));
-            RuleFor(_ => _.EmailAddress).NotEmpty().EmailAddress();
+            RuleFor(_ => _.EmailAddress).EmailAddress();
             RuleFor(_ => _.TicketId).NotEmpty();
             RuleFor(_ => _.WitnessNo).InclusiveBetween(0,99);
             RuleFor(_ => _.DisputantOcrIssues).NotEmpty()
