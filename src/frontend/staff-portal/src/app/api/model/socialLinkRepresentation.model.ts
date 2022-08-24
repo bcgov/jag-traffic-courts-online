@@ -11,10 +11,10 @@
  */
 
 
-export type JJDisputedCountPlea = 'G' | 'N';
-
-export const JJDisputedCountPlea = {
-    G: 'G' as JJDisputedCountPlea,
-    N: 'N' as JJDisputedCountPlea
-};
+export interface SocialLinkRepresentation { 
+    socialProvider?: string | null;
+    socialUserId?: string | null;
+    socialUsername?: string | null;
+    additionalProperties?: { [key: string]: any; } | null;
+}
 

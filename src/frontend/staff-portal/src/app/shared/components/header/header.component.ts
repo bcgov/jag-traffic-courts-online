@@ -77,6 +77,7 @@ export class HeaderComponent implements OnInit {
           this.authService.userProfile$.subscribe(userProfile => {
             this.userProfile = userProfile;
             this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
+            console.log(this.activatedRoute);
             this.router.navigate([this.authService.getRedirectUrl()]);
           })
         } else {

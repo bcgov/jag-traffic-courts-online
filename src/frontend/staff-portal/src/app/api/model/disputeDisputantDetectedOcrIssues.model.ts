@@ -11,10 +11,10 @@
  */
 
 
-export type JJDisputedCountPlea = 'G' | 'N';
+export type DisputeDisputantDetectedOcrIssues = 'Y' | 'N';
 
-export const JJDisputedCountPlea = {
-    G: 'G' as JJDisputedCountPlea,
-    N: 'N' as JJDisputedCountPlea
+export const DisputeDisputantDetectedOcrIssues = {
+    Y: 'Y' as DisputeDisputantDetectedOcrIssues,
+    N: 'N' as DisputeDisputantDetectedOcrIssues
 };
 

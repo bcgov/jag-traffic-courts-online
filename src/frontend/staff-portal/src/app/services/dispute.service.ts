@@ -1,24 +1,24 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute as DisputeApiModel } from 'app/api';
+import { DisputeService as DisputeApiService, Dispute} from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 export interface IDisputeService {
-  disputes$: Observable<Dispute[]>;
-  disputes: DisputeApiModel[];
-  getDisputes(): Observable<Dispute[]>;
+  disputes$: Observable<DisputeExtended[]>;
+  disputes: DisputeExtended[];
+  getDisputes(): Observable<DisputeExtended[]>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class DisputeService implements IDisputeService {
-  private _disputes: BehaviorSubject<Dispute[]>;
-  private _dispute: BehaviorSubject<Dispute>;
+  private _disputes: BehaviorSubject<DisputeExtended[]>;
+  private _dispute: BehaviorSubject<DisputeExtended>;
 
 
   constructor(
@@ -28,7 +28,7 @@ export class DisputeService implements IDisputeService {
     private disputeApiService: DisputeApiService,
     private datePipe:DatePipe
   ) {
-    this._disputes = new BehaviorSubject<Dispute[]>(null);
+    this._disputes = new BehaviorSubject<DisputeExtended[]>(null);
   }
 
   /**
@@ -36,12 +36,17 @@ export class DisputeService implements IDisputeService {
      *
      * @param none
      */
-  public getDisputes(): Observable<Dispute[]> {
+  public getDisputes(): Observable<DisputeExtended[]> {
     return this.disputeApiService.apiDisputeDisputesGet("CANCELLED")
       .pipe(
-        map((response: Dispute[]) => {
+        map((response: DisputeExtended[]) => {
           this.logger.info('DisputeService::getDisputes', response);
           this._disputes.next(response);
+          response.forEach(dispute => {
+            dispute = this.joinGivenNames(dispute);
+            dispute = this.joinLawyerNames(dispute);
+          });
+
           return response;
         }),
         catchError((error: any) => {
@@ -55,11 +60,11 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public get disputes$(): Observable<Dispute[]> {
+  public get disputes$(): Observable<DisputeExtended[]> {
     return this._disputes.asObservable();
   }
 
-  public get disputes(): Dispute[] {
+  public get disputes(): DisputeExtended[] {
     return this._disputes.value;
   }
 
@@ -68,12 +73,16 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public getDispute(disputeId: number): Observable<Dispute> {
+  public getDispute(disputeId: number): Observable<DisputeExtended> {
 
     return this.disputeApiService.apiDisputeDisputeIdGet(disputeId)
       .pipe(
-        map((response: Dispute) => {
+        map((response: DisputeExtended) => {
           this.logger.info('DisputeService::getDispute', response)
+          if (response) {
+            response = this.joinGivenNames(response);
+            response = this.joinLawyerNames(response);
+          }
           return response ? response : null
         }),
         catchError((error: any) => {
@@ -88,11 +97,11 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public get dispute$(): Observable<Dispute> {
+  public get dispute$(): Observable<DisputeExtended> {
     return this._dispute.asObservable();
   }
 
-  public get dispute(): Dispute {
+  public get dispute(): DisputeExtended {
     return this._dispute.value;
   }
 
@@ -101,14 +110,16 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public putDispute(disputeId: number, dispute: Dispute): Observable<Dispute> {
+  public putDispute(disputeId: number, dispute: DisputeExtended): Observable<DisputeExtended> {
 
-     dispute.birthdate = this.datePipe.transform(dispute?.birthdate, "yyyy-MM-dd");
+     dispute.disputantBirthdate = this.datePipe.transform(dispute?.disputantBirthdate, "yyyy-MM-dd");
      dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate,"yyyy-MM-ddTHH:mm:ss");
+     dispute = this.splitGivenNames(dispute);
+     dispute = this.splitLawyerNames(dispute);
     //  dispute.violationTicket =
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
-        map((response: Dispute) => {
+        map((response: DisputeExtended) => {
           this.logger.info('DisputeService::putDispute', response)
           return response ? response : null
         }),
@@ -130,7 +141,7 @@ export class DisputeService implements IDisputeService {
      *
      * @param disputeId
      */
-  public cancelDispute(disputeId: number): Observable<Dispute> {
+  public cancelDispute(disputeId: number): Observable<DisputeExtended> {
 
     return this.disputeApiService.apiDisputeDisputeIdCancelPut(disputeId)
       .pipe(
@@ -156,7 +167,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public validateDispute(disputeId: number): Observable<Dispute> {
+  public validateDispute(disputeId: number): Observable<DisputeExtended> {
 
     return this.disputeApiService.apiDisputeDisputeIdValidatePut(disputeId)
       .pipe(
@@ -183,7 +194,7 @@ export class DisputeService implements IDisputeService {
    *
    * @param disputeId
    */
-  public rejectDispute(disputeId: number, rejectedReason: string): Observable<Dispute> {
+  public rejectDispute(disputeId: number, rejectedReason: string): Observable<DisputeExtended> {
 
     return this.disputeApiService.apiDisputeDisputeIdRejectPut(disputeId, rejectedReason)
       .pipe(
@@ -210,7 +221,7 @@ export class DisputeService implements IDisputeService {
  *
  * @param disputeId
  */
-  public submitDispute(disputeId: number): Observable<Dispute> {
+  public submitDispute(disputeId: number): Observable<DisputeExtended> {
 
     return this.disputeApiService.apiDisputeDisputeIdSubmitPut(disputeId)
       .pipe(
@@ -230,12 +241,62 @@ export class DisputeService implements IDisputeService {
         })
       );
   }
+
+  public splitGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
+    let dispute = disputeExtended;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (disputeExtended.disputantGivenNames) {
+      let givenNames = disputeExtended.disputantGivenNames.split(" ");
+      if (givenNames.length > 0) dispute.disputantGivenName1 = givenNames[0];
+      if (givenNames.length > 1) dispute.disputantGivenName2 = givenNames[1];
+      if (givenNames.length > 2) dispute.disputantGivenName3 = givenNames[2];
+    }
+
+    return dispute;
+  }
+
+  public joinGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
+    let dispute = disputeExtended;
+
+    dispute.disputantGivenNames = disputeExtended.disputantGivenName1;
+    if (disputeExtended.disputantGivenName2 ) dispute.disputantGivenNames = disputeExtended.disputantGivenNames + " " + disputeExtended.disputantGivenName2;
+    if (disputeExtended.disputantGivenName3 ) dispute.disputantGivenNames = disputeExtended.disputantGivenNames + " " + disputeExtended.disputantGivenName3;
+
+    return dispute;
+  }
+
+  public splitLawyerNames(disputeExtended: DisputeExtended):DisputeExtended {
+    let dispute = disputeExtended;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (disputeExtended.lawyerFullName) {
+      let lawyerNames = disputeExtended.lawyerFullName.split(" ");
+      if (lawyerNames.length > 0) dispute.lawyerSurname = lawyerNames[lawyerNames.length - 1]; // last one
+      if (lawyerNames.length > 1) dispute.lawyerGivenName1 = lawyerNames[0];
+      if (lawyerNames.length > 2) dispute.lawyerGivenName2 = lawyerNames[1];
+    }
+
+    return dispute;
+  }
+
+  public joinLawyerNames(disputeExtended: DisputeExtended):DisputeExtended {
+    let dispute = disputeExtended;
+
+    dispute.lawyerFullName = dispute.lawyerGivenName1;
+    if (dispute.lawyerGivenName2) dispute.lawyerFullName = dispute.lawyerFullName + " " + dispute.lawyerGivenName2;
+    if (dispute.lawyerSurname) dispute.lawyerFullName = dispute.lawyerFullName + " " + dispute.lawyerSurname;
+
+    return dispute;
+  }
 }
 
-export interface Dispute extends DisputeApiModel {
+export interface DisputeExtended extends Dispute {
+  disputantGivenNames?: string;
+  lawyerFullName?: string;
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined
   __CourtHearing: boolean, // if at least one count requests court hearing
-  __AssignedTs?: Date,
+  __UserAssignedTs?: Date,
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DisputeService, Dispute } from 'app/services/dispute.service';
-import { DisputeStatus } from 'app/api';
+import { DisputeService, DisputeExtended } from 'app/services/dispute.service';
+import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { KeycloakProfile } from 'keycloak-js';
@@ -19,24 +19,27 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   public IDIRLogin: string = "";
   public decidePopup = '';
-  public disputeInfo: Dispute;
+  public disputeInfo: DisputeExtended;
   busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
     '__DateSubmitted',
     'ticketNumber',
-    'surname',
+    'disputantSurname',
     'givenNames',
     'status',
     '__FilingDate',
     '__CourtHearing',
     'disputantDetectedOcrIssues',
     'systemDetectedOcrIssues',
-    'assignedTo',
+    'userAssignedTo',
   ];
-  disputes: Dispute[] = [];
+  disputes: DisputeExtended[] = [];
   public userProfile: KeycloakProfile = {};
   public isLoggedIn: boolean = false;
+  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public DisputantDetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
+  public SystemDetectedOcrIssues = DisputeSystemDetectedOcrIssues;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -61,7 +64,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.getAllDisputes();
   }
 
-  isNew(d: Dispute): boolean {
+  isNew(d: DisputeExtended): boolean {
     return d.status == DisputeStatus.New;
   }
 
@@ -73,10 +76,10 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.disputes;
 
     // initially sort data by Date Submitted
-    this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
+    this.dataSource.data = this.dataSource.data.sort((a: DisputeExtended, b: DisputeExtended) => { if (a.__DateSubmitted > b.__DateSubmitted) { return -1; } else { return 1 } });
 
     // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-    this.dataSource.filterPredicate = function (record: Dispute, filter) {
+    this.dataSource.filterPredicate = function (record: DisputeExtended, filter) {
       return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
     }
 
@@ -90,28 +93,27 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
         if (d.status != "CANCELLED") { // do not show cancelled
           var newDispute = {
             ticketNumber: d.ticketNumber,
-            surname: d.surname,
-            givenNames: d.givenNames,
-            jjAssigned: d.jjAssigned,
-            id: d.id,
-            assignedTo: d.assignedTo,
+            surname: d.disputantSurname,
+            givenNames: d.disputantGivenNames,
+            id: d.disputeId,
+            userAssignedTo: d.userAssignedTo,
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
             systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
             __CourtHearing: false,
             __DateSubmitted: new Date(d.submittedDate),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
-            __AssignedTs: d.assignedTs != null ? new Date(d.assignedTs) : null,
+            __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
-            provincialCourtHearingLocation: d.provincialCourtHearingLocation,
+            courtLocation: d.courtLocation,
             status: d.status,
             __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
-            assignedTs: d.assignedTs
+            userAssignedTs: d.userAssignedTs
           }
 
           // set court hearing to true if its true for any one of the three possible counts
           // otherwise false
-          if (d.disputedCounts) d.disputedCounts.forEach(c => {
-            if (c.appearInCourt == true) {
+          if (d.disputeCounts) d.disputeCounts.forEach(c => {
+            if (c.requestCourtAppearance === this.RequestCourtAppearance.Y) {
               newDispute.__CourtHearing = true;
             }
           });
@@ -122,10 +124,10 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: Dispute, b: Dispute) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: DisputeExtended, b: DisputeExtended) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
-      this.dataSource.filterPredicate = function (record: Dispute, filter) {
+      this.dataSource.filterPredicate = function (record: DisputeExtended, filter) {
         return record.ticketNumber.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
       }
     });
@@ -135,75 +137,67 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   // which has a property ViolationTicket
   // which has a property ocrViolationTicket
   // which is the JSON string for the Azure OCR'd version of a paper ticket
-  // systemDetectedOcrIssues should be set to true if any OCR'd field has less than 80% confidence
+  // systemDetectedOcrIssues should be set to Y if any OCR'd field has less than 80% confidence
   // so this routine will exit with true at the first field of the fields collection that has an OCR error
-  getSystemDetectedOcrIssues(ocrViolationTicket?: string): boolean {
+  getSystemDetectedOcrIssues(ocrViolationTicket?: string): DisputeSystemDetectedOcrIssues {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
 
     let fields = objOcrViolationTicket?.Fields;
     if (fields) {
 
-      if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return true; }
-      if (this.getOcrViolationErrors(fields.ticket_number)) { return true; }
-      if (this.getOcrViolationErrors(fields.surname)) { return true; }
-      if (this.getOcrViolationErrors(fields.given_names)) { return true; }
-      if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return true; }
-      if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return true; }
-      if (this.getOcrViolationErrors(fields.violation_time)) { return true; }
-      if (this.getOcrViolationErrors(fields.violation_date)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_mva_offence)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_mca_offence)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_cta_offence)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_wla_offence)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_faa_offence)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_lca_offense)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_tcr_offence)) { return true; }
-      if (this.getOcrViolationErrors(fields.is_other_offence)) { return true; }
+      if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.ticket_number)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.disputant_surname)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.given_names)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.violation_time)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.violation_date)) { return this.SystemDetectedOcrIssues.Y; }
 
       // seems like a goofy way to process these but this is how the JSON parse returns it
       // count 1
-      if (this.getOcrViolationErrors(fields["counts.count_1.description"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.act_or_regulation"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.is_act"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.is_regulation"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.section"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_1.ticketed_amount"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.description"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
       // count 2
-      if (this.getOcrViolationErrors(fields["counts.count_2.description"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.act_or_regulation"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.is_act"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.is_regulation"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.section"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_2.ticketed_amount"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.description"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
       // count 3
-      if (this.getOcrViolationErrors(fields["counts.count_3.description"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.act_or_regulation"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.is_act"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.is_regulation"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.section"])) { return true; }
-      if (this.getOcrViolationErrors(fields["counts.count_3.ticketed_amount"])) { return true; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.description"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
-      if (this.getOcrViolationErrors(fields.provincial_court_hearing_location)) { return true; }
-      if (this.getOcrViolationErrors(fields.organization_location)) { return true; }
+      if (this.getOcrViolationErrors(fields.court_location)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.detachment_location)) { return this.SystemDetectedOcrIssues.Y; }
     }
 
     // step through fields in deserialized object and look for validation errors
-    return false;
+    return this.SystemDetectedOcrIssues.N;
   }
 
   // return number of validation errors
-  getOcrViolationErrors(field?: RecognizedField): boolean {
-    if (field == undefined || field == null) return false;
+  getOcrViolationErrors(field?: RecognizedField): DisputeSystemDetectedOcrIssues {
+    if (field == undefined || field == null) return this.SystemDetectedOcrIssues.N;
     if (field.FieldConfidence && field.FieldConfidence < 0.8) {
-      return true;
-    } else return false;
+      return this.SystemDetectedOcrIssues.Y;
+    } else return this.SystemDetectedOcrIssues.N;
   }
 
   countNewTickets(): number {
-    if (this.dataSource.data.filter((x: Dispute) => x.status == DisputeStatus.New))
-      return this.dataSource.data.filter((x: Dispute) => x.status == DisputeStatus.New).length;
+    if (this.dataSource.data.filter((x: DisputeExtended) => x.status == DisputeStatus.New))
+      return this.dataSource.data.filter((x: DisputeExtended) => x.status == DisputeStatus.New).length;
     else return 0;
   }
 
@@ -252,7 +246,7 @@ export interface Point {
 
 export interface OcrCount {
   description?: RecognizedField;
-  act_or_regulation?: RecognizedField;
+  act_or_regulation_name_code?: RecognizedField;
   is_act?: RecognizedField;
   is_regulation?: RecognizedField;
   section?: RecognizedField;

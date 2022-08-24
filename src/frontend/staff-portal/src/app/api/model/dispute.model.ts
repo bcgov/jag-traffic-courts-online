@@ -9,10 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
+import { DisputeSystemDetectedOcrIssues } from './disputeSystemDetectedOcrIssues.model';
+import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { DisputeStatus } from './disputeStatus.model';
-import { DisputedCount } from './disputedCount.model';
+import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
 import { ViolationTicket } from './violationTicket.model';
-import { LegalRepresentation } from './legalRepresentation.model';
+import { DisputeCount } from './disputeCount.model';
 
 
 export interface Dispute { 
@@ -20,41 +23,54 @@ export interface Dispute {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    id?: number;
-    status?: DisputeStatus;
+    disputeId?: number;
     ticketNumber?: string | null;
-    provincialCourtHearingLocation?: string | null;
-    issuedDate?: string;
+    courtLocation?: string | null;
+    issuedDate?: string | null;
     submittedDate?: string | null;
-    surname?: string | null;
-    givenNames?: string | null;
-    birthdate?: string;
+    disputantSurname?: string | null;
+    disputantGivenName1?: string | null;
+    disputantGivenName2?: string | null;
+    disputantGivenName3?: string | null;
+    disputantBirthdate?: string | null;
     driversLicenceNumber?: string | null;
+    disputantOrganization?: string | null;
+    disputantClientId?: string | null;
     driversLicenceProvince?: string | null;
+    status?: DisputeStatus;
     address?: string | null;
-    city?: string | null;
-    province?: string | null;
+    addressCity?: string | null;
+    addressProvince?: string | null;
     postalCode?: string | null;
     homePhoneNumber?: string | null;
     workPhoneNumber?: string | null;
     emailAddress?: string | null;
     filingDate?: string | null;
-    disputedCounts?: Array<DisputedCount> | null;
-    representedByLawyer?: boolean;
-    legalRepresentation?: LegalRepresentation;
+    representedByLawyer?: DisputeRepresentedByLawyer;
+    lawFirmName?: string | null;
+    lawyerSurname?: string | null;
+    lawyerGivenName1?: string | null;
+    lawyerGivenName2?: string | null;
+    lawyerAddress?: string | null;
+    lawyerPhoneNumber?: string | null;
+    lawyerEmail?: string | null;
+    officerPin?: string | null;
+    detachmentLocation?: string | null;
     interpreterLanguage?: string | null;
-    numberOfWitness?: number | null;
+    interpreterRequired?: DisputeInterpreterRequired;
+    witnessNo?: number | null;
     fineReductionReason?: string | null;
     timeToPayReason?: string | null;
+    disputantComment?: string | null;
     rejectedReason?: string | null;
-    disputantDetectedOcrIssues?: boolean;
-    disputantOcrIssuesDescription?: string | null;
-    systemDetectedOcrIssues?: boolean;
-    jjAssigned?: string | null;
+    userAssignedTo?: string | null;
+    userAssignedTs?: string | null;
+    disputantDetectedOcrIssues?: DisputeDisputantDetectedOcrIssues;
+    disputantOcrIssues?: string | null;
+    systemDetectedOcrIssues?: DisputeSystemDetectedOcrIssues;
     ocrViolationTicket?: string | null;
-    assignedTo?: string | null;
-    assignedTs?: string | null;
     violationTicket?: ViolationTicket;
+    disputeCounts?: Array<DisputeCount> | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

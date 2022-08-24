@@ -10,8 +10,12 @@
  * Do not edit the class manually.
  */
 import { OcrViolationTicket } from './ocrViolationTicket.model';
+import { ViolationTicketIsYoungPerson } from './violationTicketIsYoungPerson.model';
+import { ViolationTicketIsDriver } from './violationTicketIsDriver.model';
 import { ViolationTicketImage } from './violationTicketImage.model';
 import { ViolationTicketCount } from './violationTicketCount.model';
+import { ViolationTicketIsOwner } from './violationTicketIsOwner.model';
+import { ViolationTicketIsChangeOfAddress } from './violationTicketIsChangeOfAddress.model';
 
 
 export interface ViolationTicket { 
@@ -21,41 +25,32 @@ export interface ViolationTicket {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    id?: number;
+    violationTicketId?: number;
     ticketNumber?: string | null;
-    surname?: string | null;
-    givenNames?: string | null;
-    isYoungPerson?: boolean | null;
-    driversLicenceNumber?: string | null;
+    disputantOrganizationName?: string | null;
+    disputantSurname?: string | null;
+    disputantGivenNames?: string | null;
+    isYoungPerson?: ViolationTicketIsYoungPerson;
+    disputantDriversLicenceNumber?: string | null;
+    disputantClientNumber?: string | null;
     driversLicenceProvince?: string | null;
-    driversLicenceProducedYear?: number | null;
+    driversLicenceIssuedYear?: number | null;
     driversLicenceExpiryYear?: number | null;
-    birthdate?: string | null;
+    disputantBirthdate?: string | null;
     address?: string | null;
-    city?: string | null;
-    province?: string | null;
-    postalCode?: string | null;
-    isChangeOfAddress?: boolean | null;
-    isDriver?: boolean | null;
-    isCyclist?: boolean | null;
-    isOwner?: boolean | null;
-    isPedestrian?: boolean | null;
-    isPassenger?: boolean | null;
-    isOther?: boolean | null;
-    otherDescription?: string | null;
+    addressCity?: string | null;
+    addressProvince?: string | null;
+    addressPostalCode?: string | null;
+    addressCountry?: string | null;
+    officerPin?: string | null;
+    detachmentLocation?: string | null;
     issuedDate?: string | null;
     issuedOnRoadOrHighway?: string | null;
     issuedAtOrNearCity?: string | null;
-    isMvaOffence?: boolean | null;
-    isWlaOffence?: boolean | null;
-    isLcaOffence?: boolean | null;
-    isMcaOffence?: boolean | null;
-    isFaaOffence?: boolean | null;
-    isTcrOffence?: boolean | null;
-    isCtaOffence?: boolean | null;
-    isOtherOffence?: boolean | null;
-    otherOffenceDescription?: string | null;
-    organizationLocation?: string | null;
+    isChangeOfAddress?: ViolationTicketIsChangeOfAddress;
+    isDriver?: ViolationTicketIsDriver;
+    isOwner?: ViolationTicketIsOwner;
+    courtLocation?: string | null;
     violationTicketCounts?: Array<ViolationTicketCount> | null;
     additionalProperties?: { [key: string]: any; } | null;
 }

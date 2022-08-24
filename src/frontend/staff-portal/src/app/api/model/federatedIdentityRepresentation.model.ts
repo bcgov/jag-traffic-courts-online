@@ -11,10 +11,10 @@
  */
 
 
-export type JJDisputedCountPlea = 'G' | 'N';
-
-export const JJDisputedCountPlea = {
-    G: 'G' as JJDisputedCountPlea,
-    N: 'N' as JJDisputedCountPlea
-};
+export interface FederatedIdentityRepresentation { 
+    identityProvider?: string | null;
+    userId?: string | null;
+    userName?: string | null;
+    additionalProperties?: { [key: string]: any; } | null;
+}
 
