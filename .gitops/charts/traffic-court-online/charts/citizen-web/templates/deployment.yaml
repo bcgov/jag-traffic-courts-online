@@ -22,7 +22,10 @@ spec:
       {{- end }}
       serviceAccountName: {{ .Values.global.licenseplate }}-vault
       containers:
-        - name: {{ .Chart.Name }}
+        - env:
+          - name: TZ
+            value: America/Vancouver
+          name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

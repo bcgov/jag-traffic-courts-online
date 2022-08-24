@@ -20,8 +20,26 @@ services:
       - form-rec-layout
       - form-rec-custom-api
       - form-rec-custom-supervised
+      - form-rec-cron
     ports:
       - "5200:5200"
+
+  form-rec-cron:
+    container_name: azure-cognitive-service-custom-cron
+    image: alpine:3.14
+    entrypoint: >
+      /bin/sh -c "
+      LC_ALL=C find /shared/formrecognizer/.__custom__.virtualdir/.__requests__.virtualdir/.__default__.virtualdir -mmin +60 -delete;
+      LC_ALL=C find /logs -mtime +30 -delete;
+      exit 0;
+      "
+    volumes:
+      - type: bind
+        source: ./tools/form-recognizer/shared
+        target: /shared
+      - type: bind
+        source: ./tools/form-recognizer/logs
+        target: /logs
 
   form-rec-layout:
     container_name: azure-cognitive-service-custom-layout

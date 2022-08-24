@@ -42,8 +42,10 @@ spec:
           - name: {{ $k | quote }}
             value: {{ $v | quote }}
           {{- end }}
+          - name: TZ
+            value: America/Vancouver
           - name: OracleDataApi__BaseUrl
-            value: http://{{ .Release.Name }}-oracle-data-api:8080
+            value: http://{{ .Release.Name }}-oracle-data-api.{{ .Values.global.namespace }}.svc.cluster.local:8080
           - name: DOTNET_DiagnosticPorts
             value: /diag/port.sock
           name: {{ .Chart.Name }}
