@@ -70,12 +70,12 @@
                     </td>
                   </ng-container>
 
-                  <ng-container matColumnDef="givenNames">
+                  <ng-container matColumnDef="disputantGivenNames">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                       Given Name(s)
                     </th>
                     <td mat-cell *matCellDef="let element">
-                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.givenNames}} </span>
+                      <span [style.font-weight]="isNew(element) ? 'bold' : 'none'">{{ element.disputantGivenNames}} </span>
                     </td>
                   </ng-container>
 

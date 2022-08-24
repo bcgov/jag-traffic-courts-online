@@ -125,9 +125,9 @@
                       <!-- Violation Ticket Given names -->
                       <div class="col-lg-6">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('given_names'), 'overErrThreshold': applyOverErrThreshold('given_names')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_given_names'), 'overErrThreshold': applyOverErrThreshold('disputant_given_names')}">
                           <mat-label>Given name(s)</mat-label>
-                          <input matInput formControlName="givenNames"
+                          <input matInput formControlName="disputantGivenNames"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
@@ -413,7 +413,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>Given name(s)</mat-label>
-                    <input matInput formControlName="givenNames" />
+                    <input matInput formControlName="disputantGivenNames" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>

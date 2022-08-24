@@ -63,7 +63,7 @@ export class ContactInfoComponent implements OnInit {
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
       emailAddress: [null, [Validators.email, Validators.required]],
       disputantSurname: [null, [Validators.required]],
-      givenNames: [null, [Validators.required]],
+      disputantGivenNames: [null, [Validators.required]],
       disputantBirthdate: [null, [Validators.required]],
       address: [null, [Validators.required]],
       addressCity: [null, [Validators.required]],

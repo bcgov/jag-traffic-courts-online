@@ -98,7 +98,7 @@ export class TicketInfoComponent implements OnInit {
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
       emailAddress: [null, [Validators.email, Validators.required]],
       disputantSurname: [null, [Validators.required]],
-      givenNames: [null, [Validators.required]],
+      disputantGivenNames: [null, [Validators.required]],
       country: [null, [Validators.required]],
       disputantBirthdate: [null, [Validators.required]], // Optional
       address: [null, [Validators.required]],
@@ -113,7 +113,7 @@ export class TicketInfoComponent implements OnInit {
         ticketNumber: [null, Validators.required],
         courtLocation: [null, [Validators.required]],
         disputantSurname: [null, Validators.required],
-        givenNames: [null, Validators.required],
+        disputantGivenNames: [null, Validators.required],
         disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
         issuedDate: [null, Validators.required],
@@ -272,7 +272,7 @@ export class TicketInfoComponent implements OnInit {
 
     putDispute.violationTicket.ticketNumber = this.form.get('violationTicket').get('ticketNumber').value;
     putDispute.violationTicket.disputantSurname = this.form.get('violationTicket').get('disputantSurname').value;
-    putDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('givenNames').value;
+    putDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('disputantGivenNames').value;
     putDispute.violationTicket.disputantDriversLicenceNumber = this.form.get('violationTicket').get('disputantDriversLicenceNumber').value;
     putDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
 
@@ -324,7 +324,7 @@ export class TicketInfoComponent implements OnInit {
     let putDispute = this.lastUpdatedDispute;
 
     putDispute.disputantSurname = this.form.get('disputantSurname').value;
-    putDispute.disputantGivenNames = this.form.get('givenNames').value;
+    putDispute.disputantGivenNames = this.form.get('disputantGivenNames').value;
     putDispute.driversLicenceNumber = this.form.get('driversLicenceNumber').value;
     putDispute.driversLicenceProvince = this.form.get('driversLicenceProvince').value;
     putDispute.homePhoneNumber = this.form.get('homePhoneNumber').value;
@@ -350,7 +350,7 @@ export class TicketInfoComponent implements OnInit {
 
       // markAsUntouched notice of dispute fields
       this.form.get('disputantSurname').markAsUntouched();
-      this.form.get('givenNames').markAsUntouched();
+      this.form.get('disputantGivenNames').markAsUntouched();
       this.form.get('driversLicenceNumber').markAsUntouched();
       this.form.get('driversLicenceProvince').markAsUntouched();
       this.form.get('homePhoneNumber').markAsUntouched();
@@ -443,7 +443,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('emailAddress').invalid) return false;
     if (this.form.get('homePhoneNumber').invalid) return false;
     if (this.form.get('disputantSurname').invalid) return false;
-    if (this.form.get('givenNames').invalid) return false;
+    if (this.form.get('disputantGivenNames').invalid) return false;
     if (this.form.get('country').invalid) return false;
     if (this.form.get('disputantBirthdate').invalid) return false;
     if (this.form.get('address').invalid) return false;
@@ -458,7 +458,7 @@ export class TicketInfoComponent implements OnInit {
     if (this.form.get('emailAddress').touched) return true;
     if (this.form.get('homePhoneNumber').touched) return true;
     if (this.form.get('disputantSurname').touched) return true;
-    if (this.form.get('givenNames').touched) return true;
+    if (this.form.get('disputantGivenNames').touched) return true;
     if (this.form.get('country').touched) return true;
     if (this.form.get('disputantBirthdate').touched) return true;
     if (this.form.get('address').touched) return true;

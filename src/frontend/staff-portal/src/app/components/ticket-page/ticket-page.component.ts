@@ -26,7 +26,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     '__DateSubmitted',
     'ticketNumber',
     'disputantSurname',
-    'givenNames',
+    'disputantGivenNames',
     'status',
     '__FilingDate',
     '__CourtHearing',
@@ -91,11 +91,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
       response.forEach(d => {
         if (d.status != "CANCELLED") { // do not show cancelled
-          var newDispute = {
+          var newDispute: DisputeExtended = {
             ticketNumber: d.ticketNumber,
-            surname: d.disputantSurname,
-            givenNames: d.disputantGivenNames,
-            id: d.disputeId,
+            disputantSurname: d.disputantSurname,
+            disputantGivenNames: d.disputantGivenNames,
+            disputeId: d.disputeId,
             userAssignedTo: d.userAssignedTo,
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
             systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
@@ -148,7 +148,9 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.ticket_number)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.disputant_surname)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.given_names)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.disputant_given_name1)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.disputant_given_name2)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.disputant_given_name3)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.violation_time)) { return this.SystemDetectedOcrIssues.Y; }
