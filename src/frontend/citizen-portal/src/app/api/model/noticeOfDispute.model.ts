@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { DisputeRepresentedByLawyer } from './disputeRepresentedByLawyer.model';
+import { DisputeInterpreterRequired } from './disputeInterpreterRequired.model';
 import { DisputeDisputantDetectedOcrIssues } from './disputeDisputantDetectedOcrIssues.model';
 import { DisputeCount } from './disputeCount.model';
 
@@ -119,10 +120,7 @@ export interface NoticeOfDispute {
      * The disputant requires spoken language interpreter. The language name is indicated in this field.
      */
     interpreter_language?: string | null;
-    /**
-     * Interpreter Required
-     */
-    interprer_required?: string | null;
+    interprer_required?: DisputeInterpreterRequired;
     /**
      * The number of witnesses that the disputant intends to call.
      */

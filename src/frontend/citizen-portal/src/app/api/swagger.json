@@ -320,6 +320,13 @@
         ],
         "type": "string"
       },
+      "DisputeInterpreterRequired": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
       "DisputeRepresentedByLawyer": {
         "enum": [
           "Y",
@@ -494,9 +501,7 @@
             "nullable": true
           },
           "interprer_required": {
-            "type": "string",
-            "description": "Interpreter Required",
-            "nullable": true
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
           },
           "witness_no": {
             "type": "integer",

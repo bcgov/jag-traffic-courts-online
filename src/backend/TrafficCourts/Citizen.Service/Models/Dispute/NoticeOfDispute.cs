@@ -124,43 +124,43 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// Name of the law firm that will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("law_firm_name")]
-        public string LawFirmName { get; set; } = String.Empty;
+        public string? LawFirmName { get; set; } = String.Empty;
 
         /// <summary>
         /// Surname of the lawyer who will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("lawyer_surname")]
-        public string LawyerSurname { get; set; } = String.Empty;
+        public string? LawyerSurname { get; set; } = String.Empty;
 
         /// <summary>
         /// Given Name 1 of the lawyer who will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("lawyer_given_name1")]
-        public string LawyerGivenName1 { get; set; } = String.Empty;
+        public string? LawyerGivenName1 { get; set; } = String.Empty;
 
         /// <summary>
         /// Given Name 2 of the lawyer who will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("lawyer_given_name2")]
-        public string LawyerGivenName2 { get; set; } = String.Empty;
+        public string? LawyerGivenName2 { get; set; } = String.Empty;
 
         /// <summary>
         /// Email address of the lawyer who will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("lawyer_email")]
-        public string LawyerEmail { get; set; } = String.Empty;
+        public string? LawyerEmail { get; set; } = String.Empty;
 
         /// <summary>
         /// Address of the lawyer who will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("lawyer_address")]
-        public string LawyerAddress { get; set; } = String.Empty;
+        public string? LawyerAddress { get; set; } = String.Empty;
 
         /// <summary>
         /// Address of the lawyer who will represent the disputant at the hearing.
         /// </summary>
         [JsonPropertyName("lawyer_phone_number")]
-        public string LawyerPhoneNumber { get; set; } = String.Empty;
+        public string? LawyerPhoneNumber { get; set; } = String.Empty;
 
         /// <summary>
         /// The disputant requires spoken language interpreter. The language name is indicated in this field.
@@ -172,7 +172,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// Interpreter Required
         /// </summary>
         [JsonPropertyName("interprer_required")]
-        public string? InterpreterRequired { get; set; } = String.Empty;
+        public DisputeInterpreterRequired? InterpreterRequired { get; set; } = DisputeInterpreterRequired.N;
 
         /// <summary>
         /// The number of witnesses that the disputant intends to call.
@@ -196,7 +196,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
         /// </summary>
         [JsonPropertyName("disputant_detected_ocr_issues")]
-        public DisputeDisputantDetectedOcrIssues? DisputantDetectedOcrIssues { get; set; }
+        public DisputeDisputantDetectedOcrIssues? DisputantDetectedOcrIssues { get; set; } = DisputeDisputantDetectedOcrIssues.N;
 
         /// <summary>
         /// The description of the issue with OCR ticket if the citizen has detected any.

@@ -5,6 +5,7 @@ export * from './disputeCountRequestCourtAppearance.model';
 export * from './disputeCountRequestReduction.model';
 export * from './disputeCountRequestTimeToPay.model';
 export * from './disputeDisputantDetectedOcrIssues.model';
+export * from './disputeInterpreterRequired.model';
 export * from './disputeRepresentedByLawyer.model';
 export * from './field.model';
 export * from './noticeOfDispute.model';
