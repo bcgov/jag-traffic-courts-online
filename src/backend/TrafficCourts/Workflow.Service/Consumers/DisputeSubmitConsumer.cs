@@ -35,7 +35,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 Dispute dispute = _mapper.Map<Dispute>(context.Message);
 
-                _logger.LogTrace("TRY CREATING DISPUTE: {Dispute}", dispute);
+                _logger.LogTrace("TRY CREATING DISPUTE: {@Dispute}", dispute);
 
                 var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
