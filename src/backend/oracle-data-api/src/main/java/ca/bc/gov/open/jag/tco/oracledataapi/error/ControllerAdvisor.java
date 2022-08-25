@@ -59,30 +59,30 @@ public class ControllerAdvisor {
 	 * Returns an API HTTP error code of 400 if there are validation errors.
 	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 		logger.debug("handleMethodArgumentNotValidException", ex);
-		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Validation Failed", ex);
+		return getResponse(HttpStatus.BAD_REQUEST, "Validation Failed", ex);
 	}
 
 	/**
 	 * Returns an API HTTP error code of 400 if there are validation errors.
 	 */
 	@ExceptionHandler(ConstraintViolationException.class)
-	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
 		logger.debug("handleConstraintViolationException", ex);
-		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Validation Failed", ex);
+		return getResponse(HttpStatus.BAD_REQUEST, "Validation Failed", ex);
 	}
 
 	/**
 	 * Returns an API HTTP error code of 400 if there are validation errors.
 	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
 		logger.debug("handleHttpMessageNotReadableException", ex);
-		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Validation Failed", ex);
+		return getResponse(HttpStatus.BAD_REQUEST, "Validation Failed", ex);
 	}
 
 	/**
