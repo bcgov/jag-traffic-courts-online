@@ -43,4 +43,11 @@ catch (SettingsValidationException exception)
         throw; // see the error in the IDE
     }
 }
-
+catch (Exception exception)
+{
+    logger.Fatal(exception, "Exception occured causing application termination");
+}
+finally
+{
+    Serilog.Log.CloseAndFlush();
+}
