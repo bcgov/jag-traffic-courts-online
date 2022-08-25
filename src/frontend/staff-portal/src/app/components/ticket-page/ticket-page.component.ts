@@ -143,6 +143,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
 
     let fields = objOcrViolationTicket?.Fields;
+    console.log(fields);
     if (fields) {
 
       if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
