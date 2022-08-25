@@ -45,6 +45,8 @@ oracle-data-api:
   image:
     tag: "1.42.3"
     pullPolicy: Always
+  env:
+    "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG"
 
 staff-api:
   image:
