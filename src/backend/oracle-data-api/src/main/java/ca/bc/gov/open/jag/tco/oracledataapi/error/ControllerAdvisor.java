@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 
 import javax.validation.ConstraintViolationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ControllerAdvisor {
 
+	private Logger logger = LoggerFactory.getLogger(ControllerAdvisor.class);
+
 	/**
 	 * Returns an API HTTP error code of 404 if NoSuchElementException is thrown (typically when trying to GET a Dispute for a non-existent record).
 	 */
 	@ExceptionHandler(NoSuchElementException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
+		logger.debug("handleNoSuchElementException", ex);
 		return getResponse(HttpStatus.NOT_FOUND, "Record Not Found", ex);
 	}
 
@@ -36,6 +41,7 @@ public class ControllerAdvisor {
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex) {
+		logger.debug("handleEmptyResultDataAccessException", ex);
 		return getResponse(HttpStatus.BAD_REQUEST, "Record Not Found", ex);
 	}
 
@@ -45,6 +51,7 @@ public class ControllerAdvisor {
 	@ExceptionHandler(NotAllowedException.class)
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	public ResponseEntity<Object> handleNotAllowedException(NotAllowedException ex) {
+		logger.debug("handleNotAllowedException", ex);
 		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Operation Not Permitted", ex);
 	}
 
@@ -54,6 +61,7 @@ public class ControllerAdvisor {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+		logger.debug("handleMethodArgumentNotValidException", ex);
 		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Validation Failed", ex);
 	}
 
@@ -63,6 +71,7 @@ public class ControllerAdvisor {
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+		logger.debug("handleConstraintViolationException", ex);
 		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Validation Failed", ex);
 	}
 
@@ -72,6 +81,7 @@ public class ControllerAdvisor {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+		logger.debug("handleHttpMessageNotReadableException", ex);
 		return getResponse(HttpStatus.METHOD_NOT_ALLOWED, "Validation Failed", ex);
 	}
 
