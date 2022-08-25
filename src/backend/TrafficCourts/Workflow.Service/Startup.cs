@@ -8,6 +8,9 @@ using TrafficCourts.Common.Configuration;
 using TrafficCourts.Workflow.Service.Mappings;
 using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -32,6 +35,12 @@ public static class Startup
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
+
+        builder.Services.AddHttpClient<IOracleDataApiClient, OracleDataApiClient>((serviceProvider, client) =>
+        {
+            var options = serviceProvider.GetRequiredService<OracleDataApiConfiguration>();
+            client.BaseAddress = new Uri(options.BaseUrl);
+        });
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
 

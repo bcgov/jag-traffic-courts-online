@@ -1,18 +1,14 @@
-﻿using Microsoft.Extensions.Options;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Workflow.Service.Configuration;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Workflow.Service.Services;
 
 public class OracleDataApiService : IOracleDataApiService
 {
-    private readonly ILogger<OracleDataApiService> _logger;
-    private readonly OracleDataApiConfiguration _oracleDataApiConfiguration;
+    private readonly IOracleDataApiClient _oracleDataApiClient;
 
-    public OracleDataApiService(ILogger<OracleDataApiService> logger, IOptions<OracleDataApiConfiguration> oracleDataApiConfiguration)
+    public OracleDataApiService(IOracleDataApiClient oracleDataApiClient)
     {
-        _logger = logger;
-        _oracleDataApiConfiguration = oracleDataApiConfiguration.Value;
+        _oracleDataApiClient = oracleDataApiClient ?? throw new ArgumentNullException(nameof(oracleDataApiClient));
     }
 
     public async Task<long> CreateDisputeAsync(Dispute dispute)
@@ -21,21 +17,10 @@ public class OracleDataApiService : IOracleDataApiService
         if (!string.IsNullOrEmpty(dispute.OcrViolationTicket))
         {
             dispute.ViolationTicket = new();
-            
+
             // TODO: initialize ViolationTicket with data from OCR 
         }
 
-        return await GetOracleDataApi().SaveDisputeAsync(dispute);
-    }
-
-    /// <summary>
-    /// Returns a new inialized instance of the OracleDataApi_v1_0Client
-    /// </summary>
-    /// <returns></returns>
-    private OracleDataApiClient GetOracleDataApi()
-    {
-        var httpClient = new HttpClient { BaseAddress = new Uri(_oracleDataApiConfiguration.BaseUrl) };
-        OracleDataApiClient client = new(httpClient);
-        return client;
+        return await _oracleDataApiClient.SaveDisputeAsync(dispute);
     }
 }
