@@ -174,7 +174,8 @@ app.config.json
 | ObjectStorage__AccessKey | Yes | 
 | ObjectStorage__BucketName | Yes | 
 | ObjectStorage__Endpoint | Yes | 
-| ObjectStorage__SecretKey | Yes | 
+| ObjectStorage__SecretKey | Yes |
+| OracleDataApi__BaseUrl | |
 | OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
 | OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
 | Serilog__Using__0 | | Serilog.Sinks.Splunk | |
@@ -203,6 +204,7 @@ keycloak.config.json
 |--- | ------ |--------- |----------- |
 | ASPNETCORE_ENVIRONMENT | | Production | |
 | ASPNETCORE_URLS | | http://\*:8080 | |
+| OracleDataApi__BaseUrl | |
 | OTEL_EXPORTER_JAEGER_ENDPOINT | | http://jaeger-collector:14268/api/traces | |
 | OTEL_EXPORTER_JAEGER_PROTOCOL | | http/thrift.binary | |
 | RabbitMQ__ClientProvidedName
