@@ -17,7 +17,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -165,12 +164,12 @@ public class JJDispute extends Auditable<String>{
 	private String timeToPayReason;
 	
 	/**
-	 * A note/free form text field that is for internal use of JJs.
+	 * All the remarks for this jj dispute that are for internal use of JJs.
 	 */
-	@Size(max = 500)
-	@Column(length = 500)
-	@Schema(nullable = true, maxLength = 500)
-	private String remarks;
+	@JsonManagedReference
+	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
+	@Builder.Default
+	private List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
 	
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "jjDispute")
@@ -188,6 +187,13 @@ public class JJDispute extends Auditable<String>{
 			disputedCount.setJjDispute(this);
 		}
 		this.jjDisputedCounts.addAll(disputedCounts);
+	}
+	
+	public void addRemarks(List<JJDisputeRemark> remarks) {
+		for (JJDisputeRemark remark : remarks) {
+			remark.setJjDispute(this);
+		}
+		this.remarks.addAll(remarks);
 	}
 
 }

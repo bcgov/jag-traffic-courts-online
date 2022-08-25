@@ -84,18 +84,18 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	public void testUpdateJJDispute() {
 		// Create a single JJ Dispute with a specified remark
 		JJDispute jjDispute = RandomUtil.createJJDispute();
-		jjDispute.setRemarks("This is a remark from a JJ");
+		jjDispute.setCourthouseLocation("Vancouver");
 		jjDisputeRepository.save(jjDispute);
 
 		// Create a new JJ Dispute with different remark value and update the existing JJ Dispute
 		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
-		updatedJJDispute.setRemarks("This is another remark from another JJ");
+		updatedJJDispute.setCourthouseLocation("Victoria");
 		updatedJJDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
 		jjDisputeController.updateJJDispute(jjDispute.getTicketNumber(), updatedJJDispute);
 
 		// Assert db contains only the updated JJ Dispute record.
 		jjDispute = jjDisputeController.getJJDispute(jjDispute.getTicketNumber());
-		assertEquals("This is another remark from another JJ", jjDispute.getRemarks());
+		assertEquals("Victoria", jjDispute.getCourthouseLocation());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
