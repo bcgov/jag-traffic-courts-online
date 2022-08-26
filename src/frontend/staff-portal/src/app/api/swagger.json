@@ -1581,7 +1581,15 @@
           "status": {
             "$ref": "#/components/schemas/DisputeStatus"
           },
-          "address": {
+          "addressLine1": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine3": {
             "type": "string",
             "nullable": true
           },
@@ -1634,6 +1642,10 @@
             "nullable": true
           },
           "lawyerGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName3": {
             "type": "string",
             "nullable": true
           },
@@ -2617,10 +2629,6 @@
           },
           "isRegulation": {
             "$ref": "#/components/schemas/ViolationTicketCountIsRegulation"
-          },
-          "fullSection": {
-            "type": "string",
-            "nullable": true
           },
           "section": {
             "type": "string",

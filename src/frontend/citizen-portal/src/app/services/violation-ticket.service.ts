@@ -211,7 +211,7 @@ export class ViolationTicketService {
     if (isDateFound) {
       result[this.ocrTicketDateKey] = this.datePipe.transform(result[this.ocrTicketDateKey], "MMM dd, YYYY");
     }
-    result.counts = result.counts.filter(count => count.description || count.full_section || count.ticketed_amount);
+    result.counts = result.counts.filter(count => count.description || count.section || count.ticketed_amount);
 
     // set ticket_id to imageFilename returned from Ocr
     result.ticket_id = source.imageFilename;

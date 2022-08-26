@@ -37,10 +37,10 @@ namespace TrafficCourts.Arc.Dispute.Service.Models
     {
         [JsonRequired, JsonProperty("count")]
         public int Count { get; set; } = 0;
-        [JsonProperty("full_section")]
-        public string FullSection { get; set; } = String.Empty;
+        [JsonProperty("subparagraph")]
+        public string? Subparagraph { get; set; }
         [JsonProperty("section")]
-        public string? Section { get; set; }
+        public string Section { get; set; } = String.Empty;
         [JsonProperty("subsection")]
         public string? Subsection { get; set; }
         [JsonProperty("paragraph")]

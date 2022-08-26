@@ -422,7 +422,17 @@
             "description": "The province or state the drivers licence was issued by.",
             "nullable": true
           },
-          "address": {
+          "address_line1": {
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line2": {
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
             "type": "string",
             "description": "The mailing address of the disputant.",
             "nullable": true
@@ -478,6 +488,11 @@
           "lawyer_given_name2": {
             "type": "string",
             "description": "Given Name 2 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name3": {
+            "type": "string",
+            "description": "Given Name 3 of the lawyer who will represent the disputant at the hearing.",
             "nullable": true
           },
           "lawyer_email": {
@@ -822,10 +837,28 @@
             "description": "The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc",
             "nullable": true
           },
-          "full_section": {
+          "section": {
             "maxLength": 20,
             "type": "string",
             "description": "The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "subsection": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "paragraph": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "subparagraph": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
             "nullable": true
           },
           "ticketed_amount": {

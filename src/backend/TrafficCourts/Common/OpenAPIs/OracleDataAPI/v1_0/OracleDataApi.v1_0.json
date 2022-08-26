@@ -822,7 +822,15 @@
             "type": "string",
             "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
           },
-          "address": {
+          "addressLine1": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine2": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressLine3": {
             "type": "string",
             "nullable": true
           },
@@ -876,6 +884,10 @@
             "nullable": true
           },
           "lawyerGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName3": {
             "type": "string",
             "nullable": true
           },
@@ -1183,10 +1195,6 @@
             "type": "string",
             "nullable": true,
             "enum": [ "Y", "N" ]
-          },
-          "fullSection": {
-            "type": "string",
-            "nullable": true
           },
           "section": {
             "type": "string",

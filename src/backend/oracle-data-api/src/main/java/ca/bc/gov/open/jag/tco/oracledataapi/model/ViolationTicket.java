@@ -151,7 +151,7 @@ public class ViolationTicket extends Auditable<String> {
     private String addressPostalCode;
     
     /**
-     * The postal code or zip code.
+     * The address country.
      */
     @Column(length = 100)
     @Schema(nullable = true)

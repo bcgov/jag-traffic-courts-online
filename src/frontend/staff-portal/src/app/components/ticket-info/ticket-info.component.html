@@ -186,7 +186,7 @@
                       <!-- Violation Ticket Count 1 Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.full_section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.full_section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto"
                             (keyup)="onFullDescription1Keyup()"
@@ -224,7 +224,7 @@
                       <!-- Violation Ticket Count 2 Full Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.full_section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.full_section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
@@ -262,7 +262,7 @@
                       <!-- ViolationTicket Count 3 Full Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.full_section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.full_section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"

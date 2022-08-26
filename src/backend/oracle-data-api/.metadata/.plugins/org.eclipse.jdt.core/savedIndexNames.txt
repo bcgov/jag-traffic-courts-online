@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\dev\jag-traffic-courts-online\src\backend\oracle-data-api\.metadata\.plugins\org.eclipse.jdt.core
+1067094681.index
+3047020252.index
+1865797976.index

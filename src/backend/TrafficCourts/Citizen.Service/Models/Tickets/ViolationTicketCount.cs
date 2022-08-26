@@ -33,9 +33,30 @@ public class ViolationTicketCount
     /// <summary>
     /// The full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
     /// </summary>
-    [JsonPropertyName("full_section")]
+    [JsonPropertyName("section")]
     [MaxLength(20)]
-    public string? FullSection { get; set; }
+    public string? Section { get; set; }
+
+    /// <summary>
+    /// Part of the full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+    /// </summary>
+    [JsonPropertyName("subsection")]
+    [MaxLength(20)]
+    public string? Subsection { get; set; }
+
+    /// <summary>
+    /// Part of the full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+    /// </summary>
+    [JsonPropertyName("paragraph")]
+    [MaxLength(20)]
+    public string? Paragraph { get; set; }
+
+    /// <summary>
+    /// Part of the full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+    /// </summary>
+    [JsonPropertyName("subparagraph")]
+    [MaxLength(20)]
+    public string? Subparagraph { get; set; }
 
     /// <summary>
     /// The ticketed amount.

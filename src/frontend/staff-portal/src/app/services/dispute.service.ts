@@ -45,6 +45,7 @@ export class DisputeService implements IDisputeService {
           response.forEach(dispute => {
             dispute = this.joinGivenNames(dispute);
             dispute = this.joinLawyerNames(dispute);
+            dispute = this.joinAddressLines(dispute);
           });
 
           return response;
@@ -82,6 +83,7 @@ export class DisputeService implements IDisputeService {
           if (response) {
             response = this.joinGivenNames(response);
             response = this.joinLawyerNames(response);
+            response = this.joinAddressLines(response);
           }
           return response ? response : null
         }),
@@ -116,6 +118,7 @@ export class DisputeService implements IDisputeService {
      dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate,"yyyy-MM-ddTHH:mm:ss");
      dispute = this.splitGivenNames(dispute);
      dispute = this.splitLawyerNames(dispute);
+     dispute = this.splitAddressLines(dispute);
     //  dispute.violationTicket =
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
@@ -275,6 +278,7 @@ export class DisputeService implements IDisputeService {
       if (lawyerNames.length > 0) dispute.lawyerSurname = lawyerNames[lawyerNames.length - 1]; // last one
       if (lawyerNames.length > 1) dispute.lawyerGivenName1 = lawyerNames[0];
       if (lawyerNames.length > 2) dispute.lawyerGivenName2 = lawyerNames[1];
+      if (lawyerNames.length > 3) dispute.lawyerGivenName3 = lawyerNames[2];
     }
 
     return dispute;
@@ -285,7 +289,32 @@ export class DisputeService implements IDisputeService {
 
     dispute.lawyerFullName = dispute.lawyerGivenName1;
     if (dispute.lawyerGivenName2) dispute.lawyerFullName = dispute.lawyerFullName + " " + dispute.lawyerGivenName2;
+    if (dispute.lawyerGivenName3) dispute.lawyerFullName = dispute.lawyerFullName + " " + dispute.lawyerGivenName3;
     if (dispute.lawyerSurname) dispute.lawyerFullName = dispute.lawyerFullName + " " + dispute.lawyerSurname;
+
+    return dispute;
+  }
+
+  public splitAddressLines(disputeExtended: DisputeExtended):DisputeExtended {
+    let dispute = disputeExtended;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (disputeExtended.address) {
+      let addressLines = disputeExtended.address.split(",");
+      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0];
+      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1];
+      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2];
+    }
+
+    return dispute;
+  }
+
+  public joinAddressLines(disputeExtended: DisputeExtended):DisputeExtended {
+    let dispute = disputeExtended;
+
+    dispute.address = dispute.addressLine1;
+    if (dispute.addressLine2) dispute.address = dispute.address + "," + dispute.addressLine2;
+    if (dispute.addressLine3) dispute.address = dispute.address + "," + dispute.addressLine3;
 
     return dispute;
   }
@@ -294,6 +323,7 @@ export class DisputeService implements IDisputeService {
 export interface DisputeExtended extends Dispute {
   disputantGivenNames?: string;
   lawyerFullName?: string;
+  address?: string;
   __DateSubmitted?: Date,
   __RedGreenAlert?: string,
   __FilingDate?: Date, // extends citizen portal, set in staff portal, initially undefined

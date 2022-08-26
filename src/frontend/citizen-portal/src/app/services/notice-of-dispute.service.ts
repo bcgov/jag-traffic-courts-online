@@ -109,6 +109,7 @@ export class NoticeOfDisputeService {
     input.issued_date = this.datePipe.transform(input.issued_date, "yyyy-MM-ddTHH:mm:ss");
     input = this.splitGivenNames(input);  // break disputant names into first, second, third
     input = this.splitLawyerNames(input); // break lawyer names into first, second, surname
+    input = this.splitAddressLines(input); // break address into line 1,2,3 by comma
 
     const data: DialogOptions = {
       titleKey: "Submit request",
@@ -135,6 +136,20 @@ export class NoticeOfDisputeService {
       });
   }
 
+  public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
+    let noticeOfDispute = noticeOfDisputeExtended;
+
+    // split up where spaces occur and stuff in given names 1,2,3
+    if (noticeOfDisputeExtended.address) {
+      let addressLines = noticeOfDisputeExtended.address.split(",");
+      if (addressLines.length > 0)noticeOfDispute.address_line1 = addressLines[0];
+      if (addressLines.length > 1) noticeOfDispute.address_line2 = addressLines[1];
+      if (addressLines.length > 2) noticeOfDispute.address_line3 = addressLines[2];
+    }
+
+    return noticeOfDispute;
+  }
+
   public splitGivenNames(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
     let noticeOfDispute = noticeOfDisputeExtended;
 
@@ -155,9 +170,10 @@ export class NoticeOfDisputeService {
     // split up where spaces occur and stuff in given names 1,2,3
     if (noticeOfDisputeExtended.lawyer_full_name) {
       let lawyerNames = noticeOfDisputeExtended.lawyer_full_name.split(" ");
-      if (lawyerNames.length > 0)noticeOfDispute.lawyer_surname = lawyerNames[lawyerNames.length - 1]; // last one
+      if (lawyerNames.length > 0) noticeOfDispute.lawyer_surname = lawyerNames[lawyerNames.length - 1]; // last one
       if (lawyerNames.length > 1) noticeOfDispute.lawyer_given_name1 = lawyerNames[0];
       if (lawyerNames.length > 2) noticeOfDispute.lawyer_given_name2 = lawyerNames[1];
+      if (lawyerNames.length > 3) noticeOfDispute.lawyer_given_name3 = lawyerNames[2];
     }
 
     return noticeOfDispute;
@@ -184,4 +200,5 @@ export class NoticeOfDisputeService {
 export interface NoticeOfDisputeExtended extends NoticeOfDispute {
   disputant_given_names?: string;
   lawyer_full_name?: string;
+  address?: string;
 }

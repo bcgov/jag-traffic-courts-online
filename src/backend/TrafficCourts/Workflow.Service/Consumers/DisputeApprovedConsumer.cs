@@ -73,7 +73,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     var ticketDetail = new TicketCount
                     {
                         Count = ticketCount.Count,
-                        Full_section = ticketCount.FullSection,
+                        Subparagraph = ticketCount.Subparagraph,
                         Section = ticketCount.Section,
                         Subsection = ticketCount.Subsection,
                         Paragraph = ticketCount.Paragraph,

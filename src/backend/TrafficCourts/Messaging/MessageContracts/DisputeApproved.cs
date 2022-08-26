@@ -27,8 +27,8 @@ namespace TrafficCourts.Messaging.MessageContracts
     public class ViolationTicketCount
     {
         public int Count { get; set; } = 0;
-        public string FullSection { get; set; } = String.Empty;
-        public string? Section { get; set; }
+        public string? Subparagraph { get; set; }
+        public string Section { get; set; } = String.Empty;
         public string? Subsection { get; set; }
         public string? Paragraph { get; set; }
         public string Act { get; set; } = String.Empty;

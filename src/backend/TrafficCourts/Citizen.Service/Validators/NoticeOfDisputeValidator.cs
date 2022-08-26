@@ -20,7 +20,7 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.DisputantBirthdate).NotEmpty();
             RuleFor(_ => _.DriversLicenceNumber).MaximumLength(20);
             RuleFor(_ => _.DriversLicenceProvince).MaximumLength(30);
-            RuleFor(_ => _.Address).NotEmpty();
+            RuleFor(_ => _.AddressLine1).NotEmpty();
             RuleFor(_ => _.AddressCity).NotEmpty();
             RuleFor(_ => _.AddressProvince).MaximumLength(30);
             RuleFor(_ => _.PostalCode).MaximumLength(6);

@@ -38,7 +38,9 @@ export interface Dispute {
     disputantClientId?: string | null;
     driversLicenceProvince?: string | null;
     status?: DisputeStatus;
-    address?: string | null;
+    addressLine1?: string | null;
+    addressLine2?: string | null;
+    addressLine3?: string | null;
     addressCity?: string | null;
     addressProvince?: string | null;
     postalCode?: string | null;
@@ -51,6 +53,7 @@ export interface Dispute {
     lawyerSurname?: string | null;
     lawyerGivenName1?: string | null;
     lawyerGivenName2?: string | null;
+    lawyerGivenName3?: string | null;
     lawyerAddress?: string | null;
     lawyerPhoneNumber?: string | null;
     lawyerEmail?: string | null;

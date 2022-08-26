@@ -24,7 +24,6 @@ export interface ViolationTicketCount {
     actOrRegulationNameCode?: string | null;
     isAct?: ViolationTicketCountIsAct;
     isRegulation?: ViolationTicketCountIsRegulation;
-    fullSection?: string | null;
     section?: string | null;
     subsection?: string | null;
     paragraph?: string | null;

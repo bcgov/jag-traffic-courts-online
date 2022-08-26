@@ -49,7 +49,9 @@ public class MappingTests
         Assert.Equal(source.DisputantBirthdate, target.DisputantBirthdate);
         Assert.Equal(source.DriversLicenceNumber, target.DriversLicenceNumber);
         Assert.Equal(source.DriversLicenceProvince, target.DriversLicenceProvince);
-        Assert.Equal(source.Address, target.Address);
+        Assert.Equal(source.AddressLine1, target.AddressLine1);
+        Assert.Equal(source.AddressLine2, target.AddressLine2);
+        Assert.Equal(source.AddressLine3, target.AddressLine3);
         Assert.Equal(source.AddressCity, target.AddressCity);
         Assert.Equal(source.AddressProvince, target.AddressProvince);
         Assert.Equal(source.PostalCode, target.PostalCode);
@@ -82,7 +84,10 @@ public class MappingTests
         {
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].CountNo.ToString(), ticketCounts[i].CountNo.ToString());
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].Description, ticketCounts[i].Description);
-            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].FullSection, ticketCounts[i].FullSection);
+            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].Section, ticketCounts[i].Section);
+            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].Subsection, ticketCounts[i].Subsection);
+            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].Paragraph, ticketCounts[i].Paragraph);
+            Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].Subparagraph, ticketCounts[i].Subparagraph);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].ActOrRegulationNameCode, ticketCounts[i].ActOrRegulationNameCode);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].TicketedAmount, ticketCounts[i].TicketedAmount);
             Assert.Equal(source.ViolationTicket?.ViolationTicketCounts[i].IsAct, ticketCounts[i].IsAct);
@@ -103,6 +108,7 @@ public class MappingTests
         Assert.Equal(source.LawyerSurname, target.LawyerSurname);
         Assert.Equal(source.LawyerGivenName1, target.LawyerGivenName1);
         Assert.Equal(source.LawyerGivenName2, target.LawyerGivenName2);
+        Assert.Equal(source.LawyerGivenName3, target.LawyerGivenName3);
         Assert.Equal(source.LawyerEmail, target.LawyerEmail);
         Assert.Equal(source.LawyerAddress, target.LawyerAddress);
         Assert.Equal(source.LawyerPhoneNumber, target.LawyerPhoneNumber);

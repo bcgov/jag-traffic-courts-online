@@ -75,8 +75,20 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// <summary>
         /// The mailing address of the disputant.
         /// </summary>
-        [JsonPropertyName("address")]
-        public string Address { get; set; } = null!;
+        [JsonPropertyName("address_line1")]
+        public string AddressLine1 { get; set; } = null!;
+
+        /// <summary>
+        /// The mailing address of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_line2")]
+        public string AddressLine2 { get; set; } = null!;
+
+        /// <summary>
+        /// The mailing address of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_line3")]
+        public string AddressLine3 { get; set; } = null!;
 
         /// <summary>
         /// The mailing address city of the disputant.
@@ -143,6 +155,12 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// </summary>
         [JsonPropertyName("lawyer_given_name2")]
         public string? LawyerGivenName2 { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Given Name 3 of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_given_name3")]
+        public string? LawyerGivenName3 { get; set; } = String.Empty;
 
         /// <summary>
         /// Email address of the lawyer who will represent the disputant at the hearing.

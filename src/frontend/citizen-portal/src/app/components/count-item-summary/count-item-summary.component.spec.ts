@@ -20,8 +20,8 @@ describe('CountItemSummaryComponent', () => {
       ticketed_amount: 100,
       description: 'Test',
       act_or_regulation_name_code: "test",
-      full_section: "test",
-      is_regulation: false
+      section: "test",
+      is_regulation: "N"
     };
     fixture.detectChanges();
   });

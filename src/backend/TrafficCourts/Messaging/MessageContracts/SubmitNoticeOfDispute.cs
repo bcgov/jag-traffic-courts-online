@@ -67,9 +67,18 @@ public class SubmitNoticeOfDispute : IMessage
     public string DriversLicenceProvince { get; set; } = null!;
 
     /// <summary>
-    /// The mailing address of the disputant.
+    /// The mailing address line one of the disputant.
     /// </summary>
-    public string Address { get; set; } = null!;
+    public string AddressLine1 { get; set; } = null!;
+
+    /// <summary>
+    /// The mailing address line two of the disputant.
+    /// </summary>
+    public string AddressLine2 { get; set; } = null!;
+    /// <summary>
+    /// The mailing address line three of the disputant.
+    /// </summary>
+    public string AddressLine3 { get; set; } = null!;
 
     /// <summary>
     /// The mailing address city of the disputant.
@@ -125,6 +134,11 @@ public class SubmitNoticeOfDispute : IMessage
     /// Given name2 of the lawyer who will represent the disputant at the hearing.
     /// </summary>
     public string LawyerGivenName2 { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Given name3 of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerGivenName3 { get; set; } = String.Empty;
 
     /// <summary>
     /// Email address of the lawyer who will represent the disputant at the hearing.

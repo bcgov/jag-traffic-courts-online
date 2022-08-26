@@ -25,6 +25,7 @@
         public string Section { get; set; } = String.Empty;
         public string Subsection { get; set; } = String.Empty;
         public string Paragraph { get; set; } = String.Empty;
+        public string Subparagraph { get; set; } = String.Empty;
         public string Act { get; set; } = String.Empty;
         public double OriginalAmount { get; set; }
         public string Organization { get; set; } = String.Empty;

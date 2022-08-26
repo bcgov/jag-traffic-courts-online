@@ -85,13 +85,6 @@ public class ViolationTicketCount extends Auditable<String> {
     private YesNo isRegulation;
 	
 	/**
-	 * The full section of the act or regulation represented in a single string. For example, "127(1)(a)(ii)" which means "fail to yield to pedestrian"
-	 */
-	@Column(length = 50)
-	@Schema(nullable = true)
-    private String fullSection;
-
-	/**
 	 * The section part of the full section. For example, "127"
 	 */
 	@Column

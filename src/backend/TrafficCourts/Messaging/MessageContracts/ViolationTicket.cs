@@ -32,7 +32,10 @@ namespace TrafficCourts.Messaging.MessageContracts
     {
         public short CountNo { get; set; }
         public string? Description { get; set; }
-        public string? FullSection { get; set; }
+        public string? Section { get; set; }
+        public string? Subsection { get; set; }
+        public string? Paragraph { get; set; }
+        public string? Subparagraph { get; set; }
         public string? ActOrRegulationNameCode { get; set; }
         public float? TicketedAmount { get; set; }
         public ViolationTicketCountIsAct? IsAct { get; set; }

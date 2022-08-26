@@ -39,21 +39,23 @@ namespace TrafficCourts.Arc.Dispute.Service.Mappings
                     adnotated.Section = ticket.Section.ToUpper();
                     adnotated.Subsection = ticket.Subsection?.ToUpper() ?? String.Empty;
                     adnotated.Paragraph = ticket.Paragraph?.ToUpper() ?? String.Empty;
+                    adnotated.Subparagraph = ticket.Subparagraph?.ToUpper() ?? String.Empty;
                 } 
                 else
                 {
                     LegalSection? legalSection = null;
 
-                    if (ticket.FullSection is not null)
+                    if (ticket.Section is not null)
                     {
                         // really doesn't matter if this is true or false, will default
                         // to empty string could not be parsed.
-                        LegalSection.TryParse(ticket.FullSection, out legalSection);
+                        LegalSection.TryParse(ticket.Section, out legalSection);
                     }
 
                     adnotated.Section = legalSection?.Section.ToUpper() ?? String.Empty;
                     adnotated.Subsection = legalSection?.Subsection.ToUpper() ?? String.Empty;
                     adnotated.Paragraph = legalSection?.Paragraph.ToUpper() ?? String.Empty;
+                    adnotated.Subparagraph = legalSection?.Subparagrah.ToUpper() ?? String.Empty;
                 }
 
                 adnotated.Act = ticket.Act?.ToUpper() ?? "MVA";

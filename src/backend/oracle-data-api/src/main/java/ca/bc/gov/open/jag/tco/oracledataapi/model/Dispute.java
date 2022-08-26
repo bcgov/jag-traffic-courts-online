@@ -149,11 +149,25 @@ public class Dispute extends Auditable<String> {
 	private DisputeStatus status;
 
 	/**
-	 * The mailing address of the disputant.
+	 * The mailing address line one of the disputant.
 	 */
 	@Column(length = 500)
 	@Schema(nullable = true)
-	private String address;
+	private String addressLine1;
+
+	/**
+	 * The mailing address line two of the disputant.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String addressLine2;
+
+	/**
+	 * The mailing address line three of the disputant.
+	 */
+	@Column(length = 500)
+	@Schema(nullable = true)
+	private String addressLine3;
 
 	/**
 	 * The mailing address city of the disputant.
@@ -241,6 +255,13 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String lawyerGivenName2;
+	
+	/**
+	 * Third given name of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerGivenName3;
 	
 	
 	/**

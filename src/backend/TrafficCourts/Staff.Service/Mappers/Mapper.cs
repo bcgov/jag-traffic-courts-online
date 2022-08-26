@@ -21,7 +21,7 @@ public class Mapper
             Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
             {
                 Count = violationTicketCount.CountNo,
-                FullSection = violationTicketCount.FullSection,
+                Subparagraph = violationTicketCount.Subparagraph,
                 Section = violationTicketCount.Section,
                 Subsection = violationTicketCount.Subsection,
                 Paragraph = violationTicketCount.Paragraph,
@@ -45,7 +45,7 @@ public class Mapper
         }
         target.DisputeCounts = disputeCounts;
         target.ViolationTicketCounts = violationTicketCounts;
-        target.StreetAddress = dispute.Address;
+        target.StreetAddress = dispute.AddressLine1 + ((dispute.AddressLine2 is null) ? "" : ", " + dispute.AddressLine2) + ((dispute.AddressLine3 is null) ? "" : ", " + dispute.AddressLine3);
         target.City = dispute.AddressCity;
         target.Province = dispute.AddressProvince;
         target.PostalCode = dispute.PostalCode;

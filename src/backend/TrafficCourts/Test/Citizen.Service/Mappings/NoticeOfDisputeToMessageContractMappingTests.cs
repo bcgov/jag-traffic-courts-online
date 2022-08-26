@@ -34,7 +34,9 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.DisputantBirthdate, actual.DisputantBirthdate);
             Assert.Equal(noticeOfDispute.DriversLicenceNumber, actual.DriversLicenceNumber);
             Assert.Equal(noticeOfDispute.DriversLicenceProvince, actual.DriversLicenceProvince);
-            Assert.Equal(noticeOfDispute.Address, actual.Address);
+            Assert.Equal(noticeOfDispute.AddressLine1, actual.AddressLine1);
+            Assert.Equal(noticeOfDispute.AddressLine2, actual.AddressLine2);
+            Assert.Equal(noticeOfDispute.AddressLine3, actual.AddressLine3);
             Assert.Equal(noticeOfDispute.AddressCity, actual.AddressCity);
             Assert.Equal(noticeOfDispute.AddressProvince, actual.AddressProvince);
             Assert.Equal(noticeOfDispute.PostalCode, actual.PostalCode);
@@ -54,6 +56,7 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.Equal(noticeOfDispute.LawyerSurname, actual.LawyerSurname);
             Assert.Equal(noticeOfDispute.LawyerGivenName1, actual.LawyerGivenName1);
             Assert.Equal(noticeOfDispute.LawyerGivenName2, actual.LawyerGivenName2);
+            Assert.Equal(noticeOfDispute.LawyerGivenName3, actual.LawyerGivenName3);
             Assert.Equal(noticeOfDispute.LawyerPhoneNumber, actual.LawyerPhoneNumber);
 
             foreach (var count in actual.DisputeCounts)

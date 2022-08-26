@@ -62,7 +62,15 @@ export interface NoticeOfDispute {
     /**
      * The mailing address of the disputant.
      */
-    address?: string | null;
+    address_line1?: string | null;
+    /**
+     * The mailing address of the disputant.
+     */
+    address_line2?: string | null;
+    /**
+     * The mailing address of the disputant.
+     */
+    address_line3?: string | null;
     /**
      * The mailing address city of the disputant.
      */
@@ -104,6 +112,10 @@ export interface NoticeOfDispute {
      * Given Name 2 of the lawyer who will represent the disputant at the hearing.
      */
     lawyer_given_name2?: string | null;
+    /**
+     * Given Name 3 of the lawyer who will represent the disputant at the hearing.
+     */
+    lawyer_given_name3?: string | null;
     /**
      * Email address of the lawyer who will represent the disputant at the hearing.
      */

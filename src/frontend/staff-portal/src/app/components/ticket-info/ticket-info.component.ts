@@ -120,7 +120,7 @@ export class TicketInfoComponent implements OnInit {
         violationTicketCount1: this.formBuilder.group({
           description: [null],
           actOrRegulationNameCode: [null],
-          fullSection: [null],
+          subparagraph: [null],
           section: [null],
           subsection: [null],
           paragraph: [null],
@@ -130,7 +130,7 @@ export class TicketInfoComponent implements OnInit {
         violationTicketCount2: this.formBuilder.group({
           description: [null],
           actOrRegulationNameCode: [null],
-          fullSection: [null],
+          subparagraph: [null],
           section: [null],
           subsection: [null],
           paragraph: [null],
@@ -140,7 +140,7 @@ export class TicketInfoComponent implements OnInit {
         violationTicketCount3: this.formBuilder.group({
           description: [null],
           actOrRegulationNameCode: [null],
-          fullSection: [null],
+          subparagraph: [null],
           section: [null],
           subsection: [null],
           paragraph: [null],
@@ -365,27 +365,27 @@ export class TicketInfoComponent implements OnInit {
     });
   }
 
-  // decompose string into fullsection, section, subsection, paragraph
-  public unLegalParagraph(statuteLegalParagraphing: string): { fullSection: string, section: string, subsection: string, paragraph: string } {
+  // decompose string into subparagraph, section, subsection, paragraph
+  public unLegalParagraph(statuteLegalParagraphing: string): { subparagraph: string, section: string, subsection: string, paragraph: string } {
     let allParts = statuteLegalParagraphing.split("(");
-    let fullSection = "";
+    let subparagraph = "";
     let section = "";
     let subsection = "";
     let paragraph = "";
 
-    // parts are fullSection(section)(subsection)(paragraph) if all are present
+    // parts are section(section)(subsection)(paragraph)(subparagraph) if all are present
     // extract substrings but dont include final ')' of each part
-    if (allParts.length > 0) fullSection = allParts[0].substring(0, allParts[0].length);
-    if (allParts.length > 1) section = allParts[1].substring(0, allParts[1].length - 1);
-    if (allParts.length > 2) subsection = allParts[2].substring(0, allParts[2].length - 1);
-    if (allParts.length > 3) paragraph = allParts[3].substring(0, allParts[3].length - 1);
+    if (allParts.length > 0) section = allParts[0].substring(0, allParts[0].length);
+    if (allParts.length > 1) subsection = allParts[1].substring(0, allParts[1].length - 1);
+    if (allParts.length > 2) paragraph = allParts[2].substring(0, allParts[2].length - 1);
+    if (allParts.length > 3) subparagraph = allParts[3].substring(0, allParts[3].length - 1);
 
-    return { fullSection: fullSection, section: section, subsection: subsection, paragraph: paragraph };
+    return { subparagraph: subparagraph, section: section, subsection: subsection, paragraph: paragraph };
   }
 
   public constructViolationTicketCount(__statuteString: string, count: number): ViolationTicketCount {
 
-    this.tempViolationTicketCount = { description: "", ticketedAmount: null, actOrRegulationNameCode: "", isAct: this.IsAct.N, isRegulation: this.IsRegulation.N, paragraph: "", fullSection: "", subsection: "", subparagraph: "", section: "" };
+    this.tempViolationTicketCount = { description: "", ticketedAmount: null, actOrRegulationNameCode: "", isAct: this.IsAct.N, isRegulation: this.IsRegulation.N, paragraph: "", subparagraph: "", subsection: "", section: "" };
     this.tempViolationTicketCount.countNo = count;
     if (!__statuteString) return this.tempViolationTicketCount;
 
@@ -395,7 +395,7 @@ export class TicketInfoComponent implements OnInit {
       this.tempViolationTicketCount.description = statute[0].description;
       this.tempViolationTicketCount.actOrRegulationNameCode = statute[0].act; // to do break down legal paragraphing
       let parts = this.unLegalParagraph(statute[0].section);
-      this.tempViolationTicketCount.fullSection = parts.fullSection;
+      this.tempViolationTicketCount.subparagraph = parts.subparagraph;
       this.tempViolationTicketCount.section = parts.section;
       this.tempViolationTicketCount.subsection = parts.subsection;
       this.tempViolationTicketCount.paragraph = parts.paragraph;
@@ -412,7 +412,7 @@ export class TicketInfoComponent implements OnInit {
     if (__statuteStringParts.length > 2) {
       this.tempViolationTicketCount.actOrRegulationNameCode = __statuteStringParts[0];
       let parts = this.unLegalParagraph(__statuteStringParts[1]);
-      this.tempViolationTicketCount.fullSection = parts.fullSection;
+      this.tempViolationTicketCount.subparagraph = parts.subparagraph;
       this.tempViolationTicketCount.section = parts.section;
       this.tempViolationTicketCount.subsection = parts.subsection;
       this.tempViolationTicketCount.paragraph = parts.paragraph;
@@ -424,13 +424,13 @@ export class TicketInfoComponent implements OnInit {
     // two parts hmm....
     else if (__statuteStringParts.length > 1) {
       this.tempViolationTicketCount.actOrRegulationNameCode = "";
-      this.tempViolationTicketCount.fullSection = __statuteStringParts[0];
+      this.tempViolationTicketCount.section = __statuteStringParts[0];
       this.tempViolationTicketCount.description = __statuteString.substring(__statuteString.indexOf(__statuteStringParts[1]));
 
       // yuk shove it in description field
     } else {
       this.tempViolationTicketCount.actOrRegulationNameCode = "";
-      this.tempViolationTicketCount.fullSection = "";
+      this.tempViolationTicketCount.section = "";
       this.tempViolationTicketCount.description = __statuteString;
     }
 

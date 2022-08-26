@@ -32,7 +32,19 @@ export interface ViolationTicketCount {
     /**
      * The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"
      */
-    full_section?: string | null;
+    section?: string | null;
+    /**
+     * Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"
+     */
+    subsection?: string | null;
+    /**
+     * Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"
+     */
+    paragraph?: string | null;
+    /**
+     * Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"
+     */
+    subparagraph?: string | null;
     /**
      * The ticketed amount.
      */
