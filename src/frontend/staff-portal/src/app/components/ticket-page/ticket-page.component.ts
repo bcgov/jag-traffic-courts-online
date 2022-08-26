@@ -143,15 +143,12 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
 
     let fields = objOcrViolationTicket?.Fields;
-    console.log(fields);
     if (fields) {
 
       if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.ticket_number)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.disputant_surname)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.disputant_given_name1)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.disputant_given_name2)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.disputant_given_name3)) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields.disputant_given_names)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields.violation_time)) { return this.SystemDetectedOcrIssues.Y; }
@@ -163,7 +160,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_1.full_section"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
       // count 2
@@ -171,7 +168,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_2.full_section"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
       // count 3
@@ -179,7 +176,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
       if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return this.SystemDetectedOcrIssues.Y; }
+      if (this.getOcrViolationErrors(fields["counts.count_no_3.full_section"])) { return this.SystemDetectedOcrIssues.Y; }
       if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
       if (this.getOcrViolationErrors(fields.court_location)) { return this.SystemDetectedOcrIssues.Y; }

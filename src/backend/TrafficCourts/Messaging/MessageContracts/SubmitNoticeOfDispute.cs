@@ -7,9 +7,9 @@ namespace TrafficCourts.Messaging.MessageContracts;
 public class SubmitNoticeOfDispute : IMessage
 {
     /// <summary>
-    /// The status of the dispute. Defaults to <see cref="DisputeStatus.New"/>.
+    /// The status of the dispute. Defaults to <see cref="DisputeStatus.NEW"/>.
     /// </summary>
-    public DisputeStatus Status { get; set; } = DisputeStatus.New;
+    public DisputeStatus Status { get; set; } = DisputeStatus.NEW;
 
     /// <summary>
     /// The violation ticket number.

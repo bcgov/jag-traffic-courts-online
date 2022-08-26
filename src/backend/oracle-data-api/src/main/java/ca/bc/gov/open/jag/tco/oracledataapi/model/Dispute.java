@@ -197,7 +197,6 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Email(regexp = ".+@.+\\..+")
 	private String emailAddress;
 
 	@Column
@@ -263,7 +262,6 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	@Schema(nullable = true)
-	@Email(regexp = ".+@.+\\..+" )	
 	private String lawyerEmail;
 	
 	// End of Legal Representation Section

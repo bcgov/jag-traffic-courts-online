@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Validators;
 using System.Text.RegularExpressions;
 using TrafficCourts.Citizen.Service.Models.Dispute;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -28,6 +29,7 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.WorkPhoneNumber)
                 .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"));
             RuleFor(_ => _.EmailAddress).EmailAddress();
+            RuleFor(_ => _.EmailAddress).EmailAddress(EmailValidationMode.Net4xRegex);
             RuleFor(_ => _.TicketId).NotEmpty();
             RuleFor(_ => _.WitnessNo).InclusiveBetween(0,99);
             RuleFor(_ => _.DisputantOcrIssues).NotEmpty()

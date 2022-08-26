@@ -92,11 +92,11 @@ public class MappingTests
         List<DisputeCount> disputeCounts = new(target.DisputeCounts);
         for (int i = 0; i < source.DisputeCounts.Count; i++)
         {
-            Assert.Equal(source.DisputeCounts[i].CountNo, (disputeCounts[i].CountNo));
-            Assert.Equal(source.DisputeCounts[i].PleaCode, disputeCounts[i].PleaCode);
-            Assert.Equal(source.DisputeCounts[i].RequestReduction, disputeCounts[i].RequestReduction);
-            Assert.Equal(source.DisputeCounts[i].RequestCourtAppearance, disputeCounts[i].RequestCourtAppearance);
-            Assert.Equal(source.DisputeCounts[i].RequestTimeToPay, disputeCounts[i].RequestTimeToPay);
+            Assert.Equal(source.DisputeCounts?[i].CountNo, (disputeCounts[i].CountNo));
+            Assert.Equal(source.DisputeCounts?[i].PleaCode, disputeCounts[i].PleaCode);
+            Assert.Equal(source.DisputeCounts?[i].RequestReduction, disputeCounts[i].RequestReduction);
+            Assert.Equal(source.DisputeCounts?[i].RequestCourtAppearance, disputeCounts[i].RequestCourtAppearance);
+            Assert.Equal(source.DisputeCounts?[i].RequestTimeToPay, disputeCounts[i].RequestTimeToPay);
         }
 
         Assert.Equal(source.LawFirmName, target.LawFirmName);

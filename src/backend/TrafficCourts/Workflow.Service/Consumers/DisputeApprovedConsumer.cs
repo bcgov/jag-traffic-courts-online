@@ -80,7 +80,6 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         Act = ticketCount.Act,
                         Amount = ticketCount.Amount.Value
                     };
-
                     ticketDetails.Add(ticketDetail);
                 }
             }

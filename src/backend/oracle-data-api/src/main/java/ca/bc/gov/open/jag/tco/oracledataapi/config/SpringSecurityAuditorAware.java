@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * A class to extract the current user of the application. This data is used to auto-populate the enteredUser and updatedUser audit fields on entity
+ * A class to extract the current user of the application. This data is used to auto-populate the createdBy and modifiedBy audit fields on entity
  * records.
  */
 public class SpringSecurityAuditorAware implements AuditorAware<String> {

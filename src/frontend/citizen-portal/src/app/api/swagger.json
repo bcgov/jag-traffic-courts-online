@@ -270,7 +270,7 @@
           },
           "count_no": {
             "type": "integer",
-            "description": "CountNo",
+            "description": "The count number. Must be unique within an individual dispute.",
             "format": "int32"
           },
           "request_time_to_pay": {

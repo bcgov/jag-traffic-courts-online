@@ -114,7 +114,7 @@ export class TicketInfoComponent implements OnInit {
         courtLocation: [null, [Validators.required]],
         disputantSurname: [null, Validators.required],
         disputantGivenNames: [null, Validators.required],
-        disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
+        driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
         issuedDate: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
@@ -676,10 +676,10 @@ export class TicketInfoComponent implements OnInit {
         this.form.get('violationTicket').get('courtLocation').setValue(
           this.form.get('courtLocation').value
         );
+        console.log(this.initialDisputeValues, response, this.lastUpdatedDispute, this.form);
 
         // set counts 1,2,3 of violation ticket
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {
-
           let countForm = this.form.get('violationTicket').get('violationTicketCount' + violationTicketCount.countNo.toString());
           countForm.patchValue(violationTicketCount);
           if (!violationTicketCount.ticketedAmount)
@@ -698,6 +698,7 @@ export class TicketInfoComponent implements OnInit {
           key: "court_location",
           fieldConfidence: this.lastUpdatedDispute.violationTicket.ocrViolationTicket?.fields["court_location"]?.fieldConfidence
         };
+        console.log(this.lastUpdatedDispute, this.courtLocationFlag);
 
         // update validation rule for drivers licence number
         // set country from province

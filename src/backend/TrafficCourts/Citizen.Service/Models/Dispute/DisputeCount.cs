@@ -13,7 +13,7 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public DisputeCountPleaCode PleaCode { get; set; }
 
         /// <summary>
-        /// CountNo
+        /// The count number. Must be unique within an individual dispute.
         /// </summary>
         [JsonPropertyName("count_no")]
         public short CountNo { get; set; }

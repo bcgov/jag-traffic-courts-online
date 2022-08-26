@@ -18,7 +18,7 @@ import { DisputeCountRequestReduction } from './disputeCountRequestReduction.mod
 export interface DisputeCount { 
     plea_cd?: DisputeCountPleaCode;
     /**
-     * CountNo
+     * The count number. Must be unique within an individual dispute.
      */
     count_no?: number;
     request_time_to_pay?: DisputeCountRequestTimeToPay;

@@ -14,7 +14,7 @@ public class ViolationTicketCount
     /// </summary>
     [JsonPropertyName("count_no")]
     [Range(1, 3)]
-    public short CountNo { get; set; }
+    public short CountNo { get; set; }    
 
     /// <summary>
     /// The description of the offence.
