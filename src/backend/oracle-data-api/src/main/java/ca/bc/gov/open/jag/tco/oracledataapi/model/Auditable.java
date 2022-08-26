@@ -1,5 +1,4 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
-
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.util.Date;
@@ -14,7 +13,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 

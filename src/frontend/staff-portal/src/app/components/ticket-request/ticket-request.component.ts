@@ -66,7 +66,7 @@ export class TicketRequestComponent implements OnInit {
     const disputeCountForm = this.formBuilder.group({
       count: count,
       requestType: requestType,
-      Code: disputeCount?.pleaCode,
+      pleaCode: disputeCount?.pleaCode,
       requestTimeToPay: disputeCount?.requestTimeToPay,
       requestReduction: disputeCount?.requestReduction,
       section: violationTicketCount ? this.violationTicketService.getLegalParagraphing(violationTicketCount) : undefined,

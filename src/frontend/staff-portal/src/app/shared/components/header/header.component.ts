@@ -8,7 +8,6 @@ import {
   OnChanges,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { LandingComponent } from '@components/landing/landing.component';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppRoutes } from 'app/app.routes';
@@ -78,7 +77,10 @@ export class HeaderComponent implements OnInit {
           this.authService.userProfile$.subscribe(userProfile => {
             this.userProfile = userProfile;
             this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
+            this.router.navigate([this.authService.getRedirectUrl()]);
           })
+        } else {
+          this.router.navigate(["/"]);
         }
       })
     })

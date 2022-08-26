@@ -104,6 +104,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                         Count = dc.Count,
                         Dispute_type = dc.DisputeType
                     };
+
+                    disputeCounts.Add(disputeDetail);
                 }
             }
 
