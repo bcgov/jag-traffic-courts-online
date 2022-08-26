@@ -367,6 +367,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Submit)]
+
     public async Task<IActionResult> SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the Dispute status to {Status}", "PROCESSING");

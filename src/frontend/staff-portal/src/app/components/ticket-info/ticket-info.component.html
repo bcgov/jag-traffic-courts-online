@@ -114,7 +114,7 @@
                       <!-- Violation Ticket Surname -->
                       <div class="col-lg-6">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputantSurname'), 'overErrThreshold': applyOverErrThreshold('disputantSurname')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_surname'), 'overErrThreshold': applyOverErrThreshold('disputant_surname')}">
                           <mat-label>Surname</mat-label>
                           <input matInput formControlName="disputantSurname"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
@@ -186,7 +186,7 @@
                       <!-- Violation Ticket Count 1 Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.full_section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.full_section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto"
                             (keyup)="onFullDescription1Keyup()"
@@ -224,7 +224,7 @@
                       <!-- Violation Ticket Count 2 Full Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.full_section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.full_section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
@@ -262,7 +262,7 @@
                       <!-- ViolationTicket Count 3 Full Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.full_section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.full_section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"
@@ -369,12 +369,12 @@
                     | percent:'1.1-1' }}</span>-<span
                     [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
                 </p><br />
-                <!-- <p class="systemFlagList"><span
+                <p class="systemFlagList"><span
                     [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
                       [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{courtLocationFlag.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
                     [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{courtLocationFlag.heading}}</span>
-                </p><br /> -->
+                </p><br />
               </div>
             </form>
           </section>

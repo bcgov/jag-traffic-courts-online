@@ -53,7 +53,8 @@ export class ViolationTicketService implements IViolationTicketService {
   public getLegalParagraphing(violationTicketCount: ViolationTicketCount): string {
     if (!violationTicketCount) return "";
     let ticketDesc = (violationTicketCount.actOrRegulationNameCode ? violationTicketCount.actOrRegulationNameCode : "") + " ";
-    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + violationTicketCount.section;
+    if (violationTicketCount.fullSection && violationTicketCount.fullSection.length > 0) ticketDesc = ticketDesc + violationTicketCount.fullSection;
+    if (violationTicketCount.section && violationTicketCount.section.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.section + ")";
     if (violationTicketCount.subsection && violationTicketCount.subsection.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.subsection + ")";
     if (violationTicketCount.paragraph && violationTicketCount.paragraph.length > 0) ticketDesc = ticketDesc + "(" + violationTicketCount.paragraph + ")";
     return ticketDesc;
@@ -153,7 +154,7 @@ export class ViolationTicketService implements IViolationTicketService {
           if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = ocrViolationTicket?.fields["counts.count_no_3.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
           let violationTicketCount = {
-            count: 3,
+            countNo: 3,
             description: ocrViolationTicket?.fields["counts.count_no_3.description"].value,
             actOrRegulationNameCode: ocrViolationTicket?.fields["counts.count_no_3.act_or_regulation_name_code"].value,
             section: ocrViolationTicket?.fields["counts.count_no_3.full_section"].value,

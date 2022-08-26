@@ -52,8 +52,8 @@ export class TicketRequestComponent implements OnInit {
 
     let requestType = "";
     if (disputeCount) {
-      if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.Y) {
-        requestType = disputeCount.requestTimeToPay == this.RequestTimeToPay.Y ? "Time to pay" : "";
+      if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.N) {
+        requestType = disputeCount.requestTimeToPay === this.RequestTimeToPay.Y ? "Time to pay" : "";
         requestType = requestType.concat(disputeCount.requestTimeToPay === this.RequestTimeToPay.Y && disputeCount.requestReduction === this.RequestReduction.Y ? " + " : "");
         requestType = requestType.concat(disputeCount.requestReduction === this.RequestReduction.Y ? "Fine reduction" : "");
       } else if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.Y) {
