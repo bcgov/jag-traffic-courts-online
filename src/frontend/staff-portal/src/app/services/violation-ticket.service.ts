@@ -86,7 +86,6 @@ export class ViolationTicketService implements IViolationTicketService {
   public setViolationTicketFromJSON(ocrViolationTicket: OcrViolationTicket, violationTicket: ViolationTicket): ViolationTicket {
 
     if (ocrViolationTicket) {
-      console.log(ocrViolationTicket);
 
       if (!violationTicket.ticketNumber) violationTicket.ticketNumber = ocrViolationTicket?.fields["ticket_number"].value;
       if (!violationTicket.disputantSurname) violationTicket.disputantSurname = ocrViolationTicket?.fields["disputant_surname"].value;
