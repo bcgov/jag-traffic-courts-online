@@ -232,7 +232,8 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The description of the issue with OCR ticket if the citizen has detected any.
 	 */
-	@Column
+	@Size(max = 255)
+	@Column(length = 255)
 	@Schema(nullable = true)
 	private String disputantOcrIssuesDescription;
 
