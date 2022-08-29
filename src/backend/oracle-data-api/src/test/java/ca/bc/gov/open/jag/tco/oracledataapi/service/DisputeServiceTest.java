@@ -11,6 +11,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatusType;
 
 class DisputeServiceTest extends BaseTestSuite {
 
@@ -101,7 +102,7 @@ class DisputeServiceTest extends BaseTestSuite {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(disputeStatus);
 
-		return disputeRepository.save(dispute).getId();
+		return disputeRepository.save(dispute).getDisputeId();
 	}
 
 }

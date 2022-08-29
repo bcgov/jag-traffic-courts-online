@@ -212,7 +212,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.get<JJDispute>(`${this.configuration.basePath}/api/jj/${encodeURIComponent(String(jJDisputeId))}`,
+        return this.httpClient.get<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "jJDisputeId", value: jJDisputeId, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -290,7 +290,7 @@ export class JJService {
             }
         }
 
-        return this.httpClient.put<JJDispute>(`${this.configuration.basePath}/api/jj/${encodeURIComponent(String(ticketNumber))}`,
+        return this.httpClient.put<JJDispute>(`${this.configuration.basePath}/api/jj/${this.configuration.encodeParam({name: "ticketNumber", value: ticketNumber, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`,
             jJDispute,
             {
                 context: localVarHttpContext,

@@ -57,6 +57,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
                     Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Section?.ToUpper() == actualAdnotatedTicket.Section);
                     Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subsection?.ToUpper() == actualAdnotatedTicket.Subsection);
                     Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Paragraph?.ToUpper() == actualAdnotatedTicket.Paragraph);
+                    Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Subparagraph?.ToUpper() == actualAdnotatedTicket.Subparagraph);
                     Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Act.ToUpper() == actualAdnotatedTicket.Act);
                     Assert.Contains(tcoDisputeTicket.TicketDetails, _ => _.Amount == actualAdnotatedTicket.OriginalAmount);
                     Assert.Equal(tcoDisputeTicket.IssuingOrganization.ToUpper(), actualAdnotatedTicket.Organization);

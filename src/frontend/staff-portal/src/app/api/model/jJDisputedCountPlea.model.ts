@@ -11,10 +11,10 @@
  */
 
 
-export type JJDisputedCountPlea = 'GUILTY' | 'NOT_GUILTY';
+export type JJDisputedCountPlea = 'G' | 'N';
 
 export const JJDisputedCountPlea = {
-    Guilty: 'GUILTY' as JJDisputedCountPlea,
-    NotGuilty: 'NOT_GUILTY' as JJDisputedCountPlea
+    G: 'G' as JJDisputedCountPlea,
+    N: 'N' as JJDisputedCountPlea
 };
 

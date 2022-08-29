@@ -10,7 +10,7 @@ import { TicketNotFoundDialogComponent } from "@shared/dialogs/ticket-not-found-
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { TicketTypePipe } from "@shared/pipes/ticket-type.pipe";
 import { FileUtilsService } from "@shared/services/file-utils.service";
-import { Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
+import { DisputeDisputantDetectedOcrIssues, Field, OcrViolationTicket, TicketsService, ViolationTicket } from "app/api";
 import { AppRoutes } from "app/app.routes";
 import { NgProgressRef } from "ngx-progressbar";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -27,7 +27,8 @@ export class ViolationTicketService {
   public ocrTicketDateKey = "violation_date";
   public ocrTicketTimeKey = "violation_time";
   public ocrIssueDetectedKey = "disputant_detected_ocr_issues";
-  public ocrIssueDescKey = "disputant_ocr_issues_description";
+  public ocrIssueDescKey = "disputant_ocr_issues";
+  public DetectedOcrIssues = DisputeDisputantDetectedOcrIssues;
   private queryParams: any;
 
   constructor(
@@ -182,12 +183,12 @@ export class ViolationTicketService {
         let value = this.getValue(arrayKey, <Field>source.fields[arrayKey]);
         let keySplit = arrayKey.split(".");
 
-        let temp = keySplit[1].split("_"); // e.g. count_1
-        let idKey = temp.length > 1 ? temp[0] : "id";
-        let id = temp.length > 1 ? parseInt(temp[1]) : parseInt(temp[0]);
+        let idpos = keySplit[1].lastIndexOf("_");
+        let id = keySplit[1].substring(idpos + 1);
+        let idKey = keySplit[1].substring(0,idpos) ? keySplit[1].substring(0,idpos) : "id";
 
         let arrKey = keySplit[0];
-        let index = id - 1;
+        let index = +id - 1;
         let key = keySplit[2];
 
         if (index >= 0) {
@@ -196,7 +197,7 @@ export class ViolationTicketService {
           }
           if (!result[arrKey][index]) {
             result[arrKey][index] = {};
-            result[arrKey][index][idKey] = id;
+            result[arrKey][index][idKey] = +id;
           }
           result[arrKey][index][key] = value;
         }
@@ -218,6 +219,7 @@ export class ViolationTicketService {
     // add extra fields for notcie of dispute
     result[this.ocrIssueDetectedKey] = null;
     result[this.ocrIssueDescKey] = null;
+
     return result;
   }
 
@@ -259,7 +261,7 @@ export class ViolationTicketService {
 
   public updateOcrIssue(issueDetected, issuseDesc): void {
     let ticket = this.ticket;
-    ticket[this.ocrIssueDetectedKey] = issueDetected === true ? issueDetected : false;
+    ticket[this.ocrIssueDetectedKey] = (issueDetected === this.DetectedOcrIssues.Y) ? issueDetected : this.DetectedOcrIssues.N;
     ticket[this.ocrIssueDescKey] = issuseDesc;
     this._ticket.next(ticket);
   }

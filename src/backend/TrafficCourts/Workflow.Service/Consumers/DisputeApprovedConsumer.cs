@@ -73,7 +73,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     var ticketDetail = new TicketCount
                     {
                         Count = ticketCount.Count,
-                        Full_section = ticketCount.FullSection,
+                        Subparagraph = ticketCount.Subparagraph,
                         Section = ticketCount.Section,
                         Subsection = ticketCount.Subsection,
                         Paragraph = ticketCount.Paragraph,
@@ -97,7 +97,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
             if (message.DisputeCounts != null && message.DisputeCounts.Any())
             {
-                foreach (Messaging.MessageContracts.DisputeCount dc in message.DisputeCounts)
+                foreach (Messaging.MessageContracts.DisputedCount dc in message.DisputeCounts)                    
                 {
                     DisputeCount disputeDetail = new()
                     {

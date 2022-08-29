@@ -2,7 +2,7 @@
   <div class="col-lg-2">
     <div style="display: flex">
       <span class="h2">
-        <strong>Count {{ count.count }}</strong>
+        <strong>Count {{ count.count_no }}</strong>
       </span>
     </div>
   </div>
@@ -13,24 +13,24 @@
       <div *ngIf="count.__skip">
         No action at this time
       </div>
-      <div *ngIf="count.appear_in_court && count.plea === Plea.Guilty">
+      <div *ngIf="count.request_court_appearance === RequestCourtAppearance.Y && count.plea_cd === Plea.G">
         Request a fine reduction and/or more time to pay
       </div>
-      <div *ngIf="count.request_reduction">
+      <div *ngIf="count.request_reduction === RequestReduction.Y">
         Request a fine reduction
       </div>
-      <div *ngIf="count.request_time_to_pay">
+      <div *ngIf="count.request_time_to_pay === RequestTimeToPay.Y">
         Request more time to pay
       </div>
-      <div *ngIf="count.plea === Plea.NotGuilty">
+      <div *ngIf="count.plea_cd === Plea.N">
         Dispute the charge
       </div>
     </strong>
   </div>
   <div class="col-lg-3">
     <small class="d-block">I will appear in court</small>
-    <strong *ngIf="count.appear_in_court"> Yes </strong>
-    <strong *ngIf="count.appear_in_court === false || count.__skip"> No </strong>
+    <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.Y"> Yes </strong>
+    <strong *ngIf="count.request_court_appearance === RequestCourtAppearance.N || count.__skip"> No </strong>
   </div>
 </div>
 

@@ -9,13 +9,12 @@ namespace TrafficCourts.Citizen.Service.Mappings
         public NoticeOfDisputeToMessageContractMappingProfile()
         {
             CreateMap<NoticeOfDispute, SubmitNoticeOfDispute>()
-                .ForMember(dest => dest.DisputedCounts, opt => opt.MapFrom(src => src.DisputedCounts));
-            CreateMap<Models.Dispute.DisputedCount, Messaging.MessageContracts.DisputedCount>();
+            .ForMember(dest => dest.DisputeCounts, opt => opt.MapFrom(src => src.DisputeCounts));
+            CreateMap<Models.Dispute.DisputeCount, Messaging.MessageContracts.DisputeCount>();
             CreateMap<Models.Tickets.ViolationTicket, Messaging.MessageContracts.ViolationTicket>()
                 .ForMember(dest => dest.ViolationTicketCounts, opt => opt.MapFrom(src => src.Counts));
             CreateMap<Models.Tickets.ViolationTicketCount, Messaging.MessageContracts.TicketCount>()
-                .ForMember(dest => dest.FullSection, opt => opt.MapFrom(src => src.Section));
-            CreateMap<Models.Dispute.LegalRepresentation, Messaging.MessageContracts.LegalRepresentation>();
+                .ForMember(dest => dest.Section, opt => opt.MapFrom(src => src.Section));
         }
     }
 }

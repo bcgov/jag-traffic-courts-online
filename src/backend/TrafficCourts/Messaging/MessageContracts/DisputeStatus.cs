@@ -8,26 +8,26 @@
         /// <summary>
         /// The dispute is new.
         /// </summary>
-        New,
+        NEW,
         
         /// <summary>
         /// The dispute is being processed.
         /// </summary>
-        Processing,
+        PROCESSING,
 
         /// <summary>
         /// The dispute was rejected by the VTC.
         /// </summary>
-        Rejected,
+        REJECTED,
         
         /// <summary>
         /// The dispute was cancelled by the disputant.
         /// </summary>
-        Cancelled,
+        CANCELLED,
 
         /// <summary>
         /// The dispute was validated by the VTC.
         /// </summary>
-        Validated
+        VALIDATED
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Tickets;
 
@@ -11,9 +12,9 @@ public class ViolationTicketCount
     /// <summary>
     /// The count number. Must be unique within an individual violation ticket.
     /// </summary>
-    [JsonPropertyName("count")]
+    [JsonPropertyName("count_no")]
     [Range(1, 3)]
-    public short Count { get; set; }
+    public short CountNo { get; set; }    
 
     /// <summary>
     /// The description of the offence.
@@ -25,9 +26,9 @@ public class ViolationTicketCount
     /// <summary>
     /// The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc
     /// </summary>
-    [JsonPropertyName("act_or_regulation")]
+    [JsonPropertyName("act_or_regulation_name_code")]
     [MaxLength(3)]
-    public string? ActRegulation { get; set; }
+    public string? ActOrRegulationNameCode { get; set; }
 
     /// <summary>
     /// The full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
@@ -35,6 +36,27 @@ public class ViolationTicketCount
     [JsonPropertyName("section")]
     [MaxLength(20)]
     public string? Section { get; set; }
+
+    /// <summary>
+    /// Part of the full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+    /// </summary>
+    [JsonPropertyName("subsection")]
+    [MaxLength(20)]
+    public string? Subsection { get; set; }
+
+    /// <summary>
+    /// Part of the full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+    /// </summary>
+    [JsonPropertyName("paragraph")]
+    [MaxLength(20)]
+    public string? Paragraph { get; set; }
+
+    /// <summary>
+    /// Part of the full section designation of the act or regulation. For example, "147(1)" which means "Speed in school zone"
+    /// </summary>
+    [JsonPropertyName("subparagraph")]
+    [MaxLength(20)]
+    public string? Subparagraph { get; set; }
 
     /// <summary>
     /// The ticketed amount.
@@ -45,23 +67,14 @@ public class ViolationTicketCount
     public decimal? TicketedAmount { get; set; }
 
     /// <summary>
-    /// The amount due. Will be the same as ticketed_amount if no payments have been made on the ticket. May or may not have discount computed.
-    /// </summary>
-    /// <remarks>This field is for display purposes only. If not set, it would default to the <see cref="TicketedAmount"/></remarks>
-    /// <remarks>The upper bound arbitrarily set to just under one million.</remarks>
-    [JsonPropertyName("amount_due")]
-    [Range(1f, 999_999f)]
-    public decimal? AmountDue { get; set; }
-
-    /// <summary>
     /// The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
     /// </summary>
     [JsonPropertyName("is_act")]
-    public bool? IsAct { get; set; }
+    public ViolationTicketCountIsAct? IsAct { get; set; }
 
     /// <summary>
     /// The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
     /// </summary>
     [JsonPropertyName("is_regulation")]
-    public bool? IsRegulation { get; set; }
+    public ViolationTicketCountIsRegulation? IsRegulation { get; set; }
 }

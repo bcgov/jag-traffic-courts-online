@@ -19,9 +19,5 @@ public interface DisputeRepository extends CrudRepository<Dispute, Long> {
     public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
 	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
-    public Iterable<Dispute> findByAssignedTsBefore(Date olderThan);
-    
-    /** Fetch all records which have the specified jjAssigned. */
-    public List<Dispute> findByJjAssignedIgnoreCase(String jjAssigned);
-
+    public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan);
 }

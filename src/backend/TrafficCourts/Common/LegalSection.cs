@@ -15,9 +15,14 @@ namespace TrafficCourts.Common
         public string Section { get; private set; } = String.Empty;
         public string Subsection { get; private set; } = String.Empty;
         public string Paragraph { get; private set; } = String.Empty;
+        public string Subparagrah { get; private set; } = String.Empty;
 
         public override string ToString()
         {
+            if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph) && !string.IsNullOrEmpty(Subparagrah))
+            {
+                return $"{Section}({Subsection})({Paragraph})({Subparagrah})";
+            }
             if (!string.IsNullOrEmpty(Section) && !string.IsNullOrEmpty(Subsection) && !string.IsNullOrEmpty(Paragraph))
             {
                 return $"{Section}({Subsection})({Paragraph})";
@@ -68,6 +73,9 @@ namespace TrafficCourts.Common
                             if (parts.Length >= 3)
                             {
                                 result.Paragraph = parts[2];
+
+                                if (parts.Length >= 4)
+                                    result.Subparagrah = parts[3];
                             }
                         }
 

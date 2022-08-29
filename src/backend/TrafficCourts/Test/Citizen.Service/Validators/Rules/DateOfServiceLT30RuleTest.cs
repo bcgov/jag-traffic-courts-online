@@ -68,7 +68,9 @@ public class DateOfServiceLT30RuleTest
     {
         public TestData()
         {
-            DateTime now = DateTime.Now;
+            DateTime dateTime = DateTime.Now;
+            // remove time portion (which may affect the below calculations)
+            DateTime now = new(dateTime.Year, dateTime.Month, dateTime.Day);
             for (int i = -32; i < 1; i++)
             {
                 // Valid date values are from 30 days ago to today. 

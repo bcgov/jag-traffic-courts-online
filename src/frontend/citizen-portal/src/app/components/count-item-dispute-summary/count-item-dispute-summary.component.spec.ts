@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CountItemDisputeSummaryComponent } from './count-item-dispute-summary.component';
 
 describe('CountItemDisputeSummaryComponent', () => {
@@ -24,11 +23,11 @@ describe('CountItemDisputeSummaryComponent', () => {
       invoiceType: 'Traffic Violation Ticket',
       vehicleDescription: 'Toyota Prius',
       discountAmount: 0,
-      status: 'New',
+      status: 'NEW',
       offenceAgreementStatus: null,
-      reductionAppearInCourt: false,
-      requestReduction: false,
-      requestMoreTime: false,
+      requestCourtAppearance: 'N',
+      requestReduction: 'N',
+      requestMoreTime: 'N',
 
       _applyToAllCounts: false,
       _allowApplyToAllCounts: false,

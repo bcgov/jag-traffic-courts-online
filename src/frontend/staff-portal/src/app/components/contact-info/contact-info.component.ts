@@ -8,7 +8,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { ProvinceConfig } from '@config/config.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { Dispute, DisputeService } from '../../services/dispute.service';
+import { DisputeExtended, DisputeService } from '../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmReasonDialogComponent } from '@shared/dialogs/confirm-reason-dialog/confirm-reason-dialog.component';
@@ -19,15 +19,15 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
   styleUrls: ['./contact-info.component.scss', '../../app.component.scss']
 })
 export class ContactInfoComponent implements OnInit {
-  @Input() public disputeInfo: Dispute;
+  @Input() public disputeInfo: DisputeExtended;
   @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
   public busy: Subscription;
-  public initialDisputeValues: Dispute;
+  public initialDisputeValues: DisputeExtended;
   public todayDate: Date = new Date();
-  public lastUpdatedDispute: Dispute;
+  public lastUpdatedDispute: DisputeExtended;
   public retrieving: boolean = true;
   public violationDate: string = "";
   public violationTime: string = "";
@@ -62,12 +62,12 @@ export class ContactInfoComponent implements OnInit {
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
       emailAddress: [null, [Validators.email, Validators.required]],
-      surname: [null, [Validators.required]],
-      givenNames: [null, [Validators.required]],
-      birthdate: [null, [Validators.required]],
+      disputantSurname: [null, [Validators.required]],
+      disputantGivenNames: [null, [Validators.required]],
+      disputantBirthdate: [null, [Validators.required]],
       address: [null, [Validators.required]],
-      city: [null, [Validators.required]],
-      province: [null, [Validators.required, Validators.maxLength(30)]],
+      addressCity: [null, [Validators.required]],
+      addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
       country: [null, [Validators.required]],
       postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]],
@@ -80,12 +80,12 @@ export class ContactInfoComponent implements OnInit {
   public onCountryChange(country) {
     setTimeout(() => {
       this.form.get('postalCode').setValidators([Validators.maxLength(6)]);
-      this.form.get('province').setValidators([Validators.maxLength(30)]);
+      this.form.get('addressProvince').setValidators([Validators.maxLength(30)]);
       this.form.get('homePhoneNumber').setValidators([Validators.maxLength(20)]);
       this.form.get('driversLicenceProvince').setValidators([Validators.maxLength(30)]);
 
       if (country == 'Canada' || country == 'United States') {
-        this.form.get('province').addValidators([Validators.required]);
+        this.form.get('addressProvince').addValidators([Validators.required]);
         this.form.get('postalCode').addValidators([Validators.required]);
         this.form.get('homePhoneNumber').addValidators([Validators.required, FormControlValidators.phone]);
         this.form.get('driversLicenceProvince').addValidators([Validators.required]);
@@ -96,7 +96,7 @@ export class ContactInfoComponent implements OnInit {
       }
 
       this.form.get('postalCode').updateValueAndValidity();
-      this.form.get('province').updateValueAndValidity();
+      this.form.get('addressProvince').updateValueAndValidity();
       this.form.get('homePhoneNumber').updateValueAndValidity();
       this.form.get('driversLicenceProvince').updateValueAndValidity();
       this.onDLProvinceChange(this.form.get('driversLicenceProvince').value);
@@ -137,7 +137,7 @@ export class ContactInfoComponent implements OnInit {
       .subscribe((action: any) => {
         if (action) {
           // submit dispute and return to TRM home
-          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.id).subscribe({
+          this.busy = this.disputeService.submitDispute(this.lastUpdatedDispute.disputeId).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = 'PROCESSING';
               this.onBack();
@@ -167,7 +167,7 @@ export class ContactInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, reject dispute and return to TRM home
-          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute.rejectedReason).subscribe({
+          this.busy = this.disputeService.rejectDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute.rejectedReason).subscribe({
             next: response => {
               this.lastUpdatedDispute.status = 'REJECTED';
               this.lastUpdatedDispute.rejectedReason = action.output.reason;
@@ -198,9 +198,9 @@ export class ContactInfoComponent implements OnInit {
           this.lastUpdatedDispute.rejectedReason = action.output.reason; // update to send back on put
 
           // udate the reason entered, cancel dispute and return to TRM home since this will be filtered out
-          this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.id, this.lastUpdatedDispute).subscribe({
+          this.busy = this.disputeService.putDispute(this.lastUpdatedDispute.disputeId, this.lastUpdatedDispute).subscribe({
             next: response => {
-              this.disputeService.cancelDispute(this.lastUpdatedDispute.id).subscribe({
+              this.disputeService.cancelDispute(this.lastUpdatedDispute.disputeId).subscribe({
                 next: response => {
                   this.lastUpdatedDispute.status = 'CANCELLED';
                   this.lastUpdatedDispute.rejectedReason = action.output.reason;
@@ -229,10 +229,10 @@ export class ContactInfoComponent implements OnInit {
   }
 
   // put dispute by id
-  putDispute(dispute: Dispute): void {
+  putDispute(dispute: DisputeExtended): void {
     this.logger.log('TicketInfoComponent::putDispute', dispute);
 
-    this.busy = this.disputeService.putDispute(dispute.id, dispute).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.putDispute(dispute.disputeId, dispute).subscribe((response: DisputeExtended) => {
       this.logger.info(
         'TicketInfoComponent::putDispute response',
         response
@@ -248,7 +248,7 @@ export class ContactInfoComponent implements OnInit {
   getDispute(): void {
     this.logger.log('TicketInfoComponent::getDispute');
 
-    this.busy = this.disputeService.getDispute(this.disputeInfo.id).subscribe((response: Dispute) => {
+    this.busy = this.disputeService.getDispute(this.disputeInfo.disputeId).subscribe((response: DisputeExtended) => {
       this.retrieving = false;
       this.logger.info(
         'TicketInfoComponent::getDispute response',
@@ -270,8 +270,8 @@ export class ContactInfoComponent implements OnInit {
 
 
       // set country from province
-      if (this.provinces.filter(x => x.name == this.lastUpdatedDispute.province || this.lastUpdatedDispute.province == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
-      else if (this.states.filter(x => x.name == this.initialDisputeValues.province).length > 0) this.form.get('country').setValue("United States");
+      if (this.provinces.filter(x => x.name == this.lastUpdatedDispute.addressProvince || this.lastUpdatedDispute.addressProvince == "British Columbia").length > 0) this.form.get('country').setValue("Canada");
+      else if (this.states.filter(x => x.name == this.initialDisputeValues.addressProvince).length > 0) this.form.get('country').setValue("United States");
       else this.form.get('country').setValue("International");
 
       this.onCountryChange(this.form.get('country').value);

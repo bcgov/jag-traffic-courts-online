@@ -105,7 +105,7 @@ public class DisputeController {
 	public Long saveDispute(@RequestBody Dispute dispute) {
 		logger.debug("POST /dispute called");
 		disputeService.save(dispute);
-		return dispute.getId();
+		return dispute.getDisputeId();
 	}
 
 	/**

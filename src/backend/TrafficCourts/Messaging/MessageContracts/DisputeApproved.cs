@@ -21,21 +21,21 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? Province { get; set; }
         public string? PostalCode { get; set; }
         public string? Email { get; set; }
-        public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
+        public IList<DisputedCount> DisputeCounts { get; set; } = new List<DisputedCount>();
     }
 
     public class ViolationTicketCount
     {
         public int Count { get; set; } = 0;
-        public string FullSection { get; set; } = String.Empty;
-        public string? Section { get; set; }
+        public string? Subparagraph { get; set; }
+        public string Section { get; set; } = String.Empty;
         public string? Subsection { get; set; }
         public string? Paragraph { get; set; }
         public string Act { get; set; } = String.Empty;
         public double? Amount { get; set; }
     }
 
-    public class DisputeCount
+    public class DisputedCount
     {
         public int Count { get; set; } = 0;
         public string? DisputeType { get; set; }
