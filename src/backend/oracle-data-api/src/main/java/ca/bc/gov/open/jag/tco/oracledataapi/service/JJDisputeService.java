@@ -107,13 +107,20 @@ public class JJDisputeService {
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
-		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts");
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks");
 		// Remove all existing jj disputed counts that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
 			jjDisputeToUpdate.getJjDisputedCounts().clear();
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
+		
+		// Remove all existing remarks that are associated to this jj dispute
+		if (jjDisputeToUpdate.getRemarks() != null) {
+			jjDisputeToUpdate.getRemarks().clear();
+		}
+		// Add updated remarks
+		jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
 
 		return jjDisputeRepository.save(jjDisputeToUpdate);
 	}
