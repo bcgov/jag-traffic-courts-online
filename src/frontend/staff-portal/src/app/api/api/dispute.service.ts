@@ -157,7 +157,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/cancel`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/cancel`,
             null,
             {
                 context: localVarHttpContext,
@@ -224,7 +224,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.get<Dispute>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}`,
+        return this.httpClient.get<Dispute>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -302,7 +302,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<Dispute>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}`,
+        return this.httpClient.put<Dispute>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`,
             dispute,
             {
                 context: localVarHttpContext,
@@ -322,10 +322,10 @@ export class DisputeService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputeDisputeIdRejectPut(disputeId: number, rejectedReason: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (disputeId === null || disputeId === undefined) {
             throw new Error('Required parameter disputeId was null or undefined when calling apiDisputeDisputeIdRejectPut.');
         }
@@ -346,6 +346,9 @@ export class DisputeService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'text/plain',
+                'application/json',
+                'text/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -389,7 +392,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/reject`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/reject`,
             localVarConvertFormParamsToString ? localVarFormParams.toString() : localVarFormParams,
             {
                 context: localVarHttpContext,
@@ -456,7 +459,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/submit`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/submit`,
             null,
             {
                 context: localVarHttpContext,
@@ -523,7 +526,7 @@ export class DisputeService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${encodeURIComponent(String(disputeId))}/validate`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/dispute/${this.configuration.encodeParam({name: "disputeId", value: disputeId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/validate`,
             null,
             {
                 context: localVarHttpContext,

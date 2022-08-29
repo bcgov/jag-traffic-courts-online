@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputedCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
@@ -45,16 +45,6 @@ public class DisputeService {
 	}
 
 	/**
-	 * Retrieves all {@link Dispute} records that are assigned to the provided JJ, delegating to CrudRepository
-	 * @param jjAssigned, will filter the result set to those having this jjAssigned.
-	 *
-	 * @return
-	 */
-	public List<Dispute> getAllDisputesByJjAssigned(String jjAssigned) {
-		return disputeRepository.findByJjAssignedIgnoreCase(jjAssigned);
-	}
-
-	/**
 	 * Retrieves a specific {@link Dispute} by using the method findById() of CrudRepository
 	 *
 	 * @param id of the Dispute to be returned
@@ -71,19 +61,16 @@ public class DisputeService {
 	 */
 	public void save(Dispute dispute) {
 		// Ensure a new record is created, not updating an existing record. Updates are controlled by specific endpoints.
-		dispute.setId(null);
-		for (DisputedCount disputedCount : dispute.getDisputedCounts()) {
-			disputedCount.setId(null);
-		}
-		if (dispute.getLegalRepresentation() != null) {
-			dispute.getLegalRepresentation().setId(null);
+		dispute.setDisputeId(null);
+		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
+			disputeCount.setDisputeCountId(null);
 		}
 		if (dispute.getViolationTicket() != null) {
-			dispute.getViolationTicket().setId(null);
+			dispute.getViolationTicket().setViolationTicketId(null);
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
-				violationTicketCount.setId(null);
+				violationTicketCount.setViolationTicketCountId(null);
 			}
-		}
+		} 
 		disputeRepository.save(dispute);
 	}
 
@@ -97,14 +84,14 @@ public class DisputeService {
 	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "id", "disputedCounts");
-		// Remove all existing ticket counts that are associated to this dispute
-		if (disputeToUpdate.getDisputedCounts() != null) {
-			disputeToUpdate.getDisputedCounts().clear();
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts");
+		// Remove all existing dispute counts that are associated to this dispute
+		if (disputeToUpdate.getDisputeCounts() != null) {
+			disputeToUpdate.getDisputeCounts().clear();
 		}
 		// Add updated ticket counts
-		disputeToUpdate.addDisputedCounts(dispute.getDisputedCounts());
-
+		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
+		
 		return disputeRepository.save(disputeToUpdate);
 	}
 
@@ -200,10 +187,10 @@ public class DisputeService {
 		// Find the dispute to be assigned to the username
 		Dispute dispute = disputeRepository.findById(id).orElseThrow();
 
-		if (StringUtils.isBlank(dispute.getAssignedTo()) || dispute.getAssignedTo().equals(principal.getName())) {
+		if (StringUtils.isBlank(dispute.getUserAssignedTo()) || dispute.getUserAssignedTo().equals(principal.getName())) {
 
-			dispute.setAssignedTo(principal.getName());
-			dispute.setAssignedTs(new Date());
+			dispute.setUserAssignedTo(principal.getName());
+			dispute.setUserAssignedTs(new Date());
 			disputeRepository.save(dispute);
 
 			logger.debug("Dispute with id {} has been assigned to {}", id, principal.getName());
@@ -224,9 +211,9 @@ public class DisputeService {
 		// Find all Disputes with an assignedTs older than 1 hour ago.
 		Date hourAgo = DateUtils.addHours(new Date(), -1);
 		logger.debug("Unassigning all disputes older than {}", hourAgo.toInstant());
-		for (Dispute dispute : disputeRepository.findByAssignedTsBefore(hourAgo)) {
-			dispute.setAssignedTo(null);
-			dispute.setAssignedTs(null);
+		for (Dispute dispute : disputeRepository.findByUserAssignedTsBefore(hourAgo)) {
+			dispute.setUserAssignedTo(null);
+			dispute.setUserAssignedTs(null);
 			disputeRepository.save(dispute);
 			count++;
 		}

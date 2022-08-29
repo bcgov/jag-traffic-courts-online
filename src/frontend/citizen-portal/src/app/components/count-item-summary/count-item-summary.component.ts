@@ -33,13 +33,13 @@ export class CountItemSummaryComponent implements OnInit {
     }
 
     return {
-      offenceNumber: this.count.count,
-      amount: this.count.amount_due,
+      offenceNumber: this.count.count_no,
+      amount: this.count.ticketed_amount,
       selected,
     };
   }
 
   public get showCheckbox(): boolean {
-    return this.selectView && this.count.amount_due > 0;
+    return this.selectView && this.count.ticketed_amount > 0;
   }
 }

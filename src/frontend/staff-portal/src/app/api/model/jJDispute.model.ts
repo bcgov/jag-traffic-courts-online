@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputedCount } from './jJDisputedCount.model';
 import { DisputantContactInformation } from './disputantContactInformation.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
@@ -36,7 +37,7 @@ export interface JJDispute {
     vtcAssignedTs?: string | null;
     fineReductionReason?: string | null;
     timeToPayReason?: string | null;
-    remarks?: string | null;
+    remarks?: Array<JJDisputeRemark> | null;
     contactInformation?: DisputantContactInformation;
     jjDisputedCounts?: Array<JJDisputedCount> | null;
     additionalProperties?: { [key: string]: any; } | null;

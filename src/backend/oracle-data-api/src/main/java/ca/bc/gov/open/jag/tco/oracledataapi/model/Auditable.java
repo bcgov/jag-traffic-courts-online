@@ -1,5 +1,4 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
-
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.util.Date;

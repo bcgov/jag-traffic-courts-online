@@ -160,8 +160,8 @@ public class RandomUtil {
 	public static Dispute createDispute() {
 		Dispute dispute = new Dispute();
 		dispute.setStatus(DisputeStatus.NEW);
-		dispute.setGivenNames(randomGivenName());
-		dispute.setSurname(randomSurname());
+		dispute.setDisputantGivenName1(randomGivenName());
+		dispute.setDisputantSurname(randomSurname());
 		return dispute;
 	}
 

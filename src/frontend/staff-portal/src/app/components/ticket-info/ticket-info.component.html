@@ -114,9 +114,9 @@
                       <!-- Violation Ticket Surname -->
                       <div class="col-lg-6">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('surname'), 'overErrThreshold': applyOverErrThreshold('surname')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputantSurname'), 'overErrThreshold': applyOverErrThreshold('disputantSurname')}">
                           <mat-label>Surname</mat-label>
-                          <input matInput formControlName="surname"
+                          <input matInput formControlName="disputantSurname"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
@@ -125,9 +125,9 @@
                       <!-- Violation Ticket Given names -->
                       <div class="col-lg-6">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('given_names'), 'overErrThreshold': applyOverErrThreshold('given_names')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_given_names'), 'overErrThreshold': applyOverErrThreshold('disputant_given_names')}">
                           <mat-label>Given name(s)</mat-label>
-                          <input matInput formControlName="givenNames"
+                          <input matInput formControlName="disputantGivenNames"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-error>{{ "error.required" | translate }}</mat-error>
                         </mat-form-field>
@@ -157,19 +157,19 @@
                         <mat-form-field class="w-100"
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('drivers_licence_number'), 'overErrThreshold': applyOverErrThreshold('drivers_licence_number')}">
                           <mat-label>DL number</mat-label>
-                          <input matInput formControlName="driversLicenceNumber" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
+                          <input matInput formControlName="disputantDriversLicenceNumber" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
                             autocomplete="off" [readonly]="lastUpdatedDispute.status === 'VALIDATED'"
                             *ngIf="form.get('violationTicket').get('driversLicenceProvince').value === 'BC'" />
-                          <input matInput formControlName="driversLicenceNumber" autocomplete="off"
+                          <input matInput formControlName="disputantDriversLicenceNumber" autocomplete="off"
                             *ngIf="form.get('violationTicket').get('driversLicenceProvince').value !== 'BC'"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
                           <mat-error
-                            *ngIf="form.get('violationTicket').get('driversLicenceNumber').hasError('required')">{{
+                            *ngIf="form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('required')">{{
                             "error.required" |
                             translate }}</mat-error>
                           <mat-error *ngIf="
-                            form.get('violationTicket').get('driversLicenceNumber')?.errors?.minlength ||
-                            form.get('violationTicket').get('driversLicenceNumber').hasError('maxlength')">
+                            form.get('violationTicket').get('disputantDriversLicenceNumber')?.errors?.minlength ||
+                            form.get('violationTicket').get('disputantDriversLicenceNumber').hasError('maxlength')">
                             Must be a valid BC driver's licence number of seven to nine digits
                           </mat-error>
                         </mat-form-field>
@@ -186,7 +186,7 @@
                       <!-- Violation Ticket Count 1 Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_1.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_1.section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto"
                             (keyup)="onFullDescription1Keyup()"
@@ -205,7 +205,7 @@
                       <!-- Violation Ticket Count 1 Fine Amount -->
                       <div class="col-lg-4">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_1.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_1.ticketed_amount')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_1.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_1.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
@@ -224,7 +224,7 @@
                       <!-- Violation Ticket Count 2 Full Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_2.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_2.section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto2"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount2').get('fullDescription').value"
@@ -243,7 +243,7 @@
                       <!-- Violation Ticket Count 2 Fine Amount -->
                       <div class="col-lg-4">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_2.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_2.ticketed_amount')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_2.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_2.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
@@ -262,7 +262,7 @@
                       <!-- ViolationTicket Count 3 Full Description -->
                       <div class="col-lg-8">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_3.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_3.section')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.section'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.section')}">
                           <mat-label>Act/Sect/Desc </mat-label>
                           <input matInput formControlName="fullDescription" [matAutocomplete]="auto3"
                             [matTooltip]="form.get('violationTicket').get('violationTicketCount3').get('fullDescription').value"
@@ -281,7 +281,7 @@
                       <!-- Violation Ticket Count 3 Ticketed Amount -->
                       <div class="col-lg-4">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_3.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_3.ticketed_amount')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('counts.count_no_3.ticketed_amount'), 'overErrThreshold': applyOverErrThreshold('counts.count_no_3.ticketed_amount')}">
                           <mat-label>Fine amount ($)</mat-label>
                           <input matInput formControlName="ticketedAmount"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
@@ -300,11 +300,11 @@
                       <!-- Provincial Court Hearing Location -->
                       <div class="col-lg-9">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('provincial_court_hearing_location'), 'overErrThreshold': applyOverErrThreshold('provincial_court_hearing_location')}">
-                          <mat-select [formControl]="form.get('violationTicket').get('provincialCourtHearingLocation')"
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('court_location'), 'overErrThreshold': applyOverErrThreshold('court_location')}">
+                          <mat-select [formControl]="form.get('violationTicket').get('courtLocation')"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'">
-                            <mat-option [value]="initialDisputeValues.provincialCourtHearingLocation">{{
-                              initialDisputeValues.provincialCourtHearingLocation }}</mat-option>
+                            <mat-option [value]="initialDisputeValues.courtLocation">{{
+                              initialDisputeValues.courtLocation }}</mat-option>
                             <mat-option *ngFor="let courtLocation of courtLocations" [value]="courtLocation.name">{{
                               courtLocation.name }}</mat-option>
                           </mat-select>
@@ -334,8 +334,8 @@
                 <h3>Citizen flags</h3>
               </ng-container>
               <div class="col-lg-12 mat-form-field-flex.ng" style="background-color: rgba(0,0,0,0.04)">
-                {{ flagsForm.get('disputantOcrIssuesDescription').value ?
-                flagsForm.get('disputantOcrIssuesDescription').value : 'None' }}
+                {{ flagsForm.get('disputantOcrIssues').value ?
+                flagsForm.get('disputantOcrIssues').value : 'None' }}
               </div><br /><br />
               <ng-container subHeader *ngIf="lastUpdatedDispute.status == 'NEW'">
                 <h3>System flags</h3>
@@ -369,12 +369,12 @@
                     | percent:'1.1-1' }}</span>-<span
                     [ngClass]="systemFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{systemFlag.heading}}</span>
                 </p><br />
-                <p class="systemFlagList"><span
-                    [ngClass]="provincialCourtHearingLocationFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
-                      [ngClass]="provincialCourtHearingLocationFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{provincialCourtHearingLocationFlag.fieldConfidence
+                <!-- <p class="systemFlagList"><span
+                    [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'fail' : 'success'"><span
+                      [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'dot-fail' : 'dot'"></span>{{courtLocationFlag.fieldConfidence
                     | percent:'1.1-1' }}</span>-<span
-                    [ngClass]="provincialCourtHearingLocationFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{provincialCourtHearingLocationFlag.heading}}</span>
-                </p><br />
+                    [ngClass]="courtLocationFlag.fieldConfidence < errorThreshold ? 'fail-font-weight' : 'success-font-weight'">{{courtLocationFlag.heading}}</span>
+                </p><br /> -->
               </div>
             </form>
           </section>
@@ -404,7 +404,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>Surname</mat-label>
-                    <input matInput formControlName="surname" />
+                    <input matInput formControlName="disputantSurname" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -413,7 +413,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>Given name(s)</mat-label>
-                    <input matInput formControlName="givenNames" />
+                    <input matInput formControlName="disputantGivenNames" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -450,7 +450,7 @@
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
                       <mat-label>City</mat-label>
-                      <input matInput formControlName="city" />
+                      <input matInput formControlName="addressCity" />
                       <mat-error>{{ "error.required" | translate }}</mat-error>
                     </mat-form-field>
                   </div>
@@ -460,7 +460,7 @@
                     <mat-form-field class="w-100">
                       <mat-label *ngIf="form.get('country').value==='Canada'">Province</mat-label>
                       <mat-label *ngIf="form.get('country').value==='United States'">State</mat-label>
-                      <mat-select formControlName="province"
+                      <mat-select formControlName="addressProvince"
                         *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
                         <div *ngIf="form.get('country').value === 'Canada'">
                           <mat-option value="British Columbia">British Columbia</mat-option>
@@ -475,7 +475,7 @@
                       <mat-label
                         *ngIf="form.get('country').value!=='United States' && form.get('country').value !== 'Canada'">
                         Province/State</mat-label>
-                      <input matInput formControlName="province"
+                      <input matInput formControlName="addressProvince"
                         *ngIf="form.get('country').value !== 'United States' && form.get('country').value !== 'Canada'"
                         maxlength="30" />
                       <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -513,12 +513,12 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>Birthdate</mat-label>
-                    <input matInput [matDatepicker]="picker" formControlName="birthdate" (click)="picker.open()"
+                    <input matInput [matDatepicker]="picker" formControlName="disputantBirthdate" (click)="picker.open()"
                       [max]="todayDate" />
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-                    <mat-error *ngIf="form.get('birthdate').hasError('required')">Valid birthdate required</mat-error>
-                    <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate
+                    <mat-error *ngIf="form.get('disputantBirthdate').hasError('required')">Valid birthdate required</mat-error>
+                    <mat-error *ngIf="form.get('disputantBirthdate').hasError('matDatepickerMax')">No future birthdate
                     </mat-error>
                   </mat-form-field>
                 </div>

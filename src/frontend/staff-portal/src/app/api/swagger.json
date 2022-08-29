@@ -52,14 +52,31 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden, requires dispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "500": {
             "description": "There was a server error that prevented the search from completing successfully or no data found."
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -123,6 +140,26 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden, requires dispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -168,9 +205,6 @@
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       },
@@ -252,8 +286,48 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden, requires dispute:update permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "The Dispute to update was not found.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -277,9 +351,6 @@
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -331,22 +402,110 @@
             "description": "The Dispute is updated."
           },
           "400": {
-            "description": "The request was not well formed. Check the parameters."
-          },
-          "401": {
-            "description": "Unauthenticated."
+            "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Forbidden, wrong user roles."
+            "description": "Forbidden, requires dispute:reject permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Dispute record not found. Update failed."
+            "description": "Dispute record not found. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be <= 256 characters. Update failed."
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be <= 256 characters. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
+          },
+          "401": {
+            "description": "Unauthenticated."
           }
         }
       }
@@ -375,6 +534,26 @@
           },
           "400": {
             "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires dispute:validate permission.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -433,14 +612,31 @@
               }
             }
           },
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -469,6 +665,26 @@
           },
           "400": {
             "description": "The request was not well formed. Check the parameters.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden, requires dispute:cancel permission.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -527,14 +743,31 @@
               }
             }
           },
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -602,7 +835,7 @@
             }
           },
           "403": {
-            "description": "Forbidden, wrong user roles.",
+            "description": "Forbidden, requires dispute:submit permission.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -643,6 +876,26 @@
           },
           "405": {
             "description": "A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -713,14 +966,31 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden, requires jj-dispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "500": {
             "description": "There was a server error that prevented the search from completing successfully or no data found."
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -783,6 +1053,26 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden, requires jj-dispute:read permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -808,9 +1098,6 @@
           },
           "401": {
             "description": "Unauthenticated."
-          },
-          "403": {
-            "description": "Forbidden, wrong user roles."
           }
         }
       }
@@ -893,6 +1180,26 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden, requires jj-dispute:update permission.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "404": {
             "description": "The JJ Dispute to update was not found.",
             "content": {
@@ -935,6 +1242,59 @@
           },
           "500": {
             "description": "There was a server error that prevented the update from completing successfully."
+          }
+        }
+      }
+    },
+    "/api/keycloak/{groupName}/users": {
+      "get": {
+        "tags": [
+          "Keycloak"
+        ],
+        "summary": "Returns all Users with the given group name.",
+        "parameters": [
+          {
+            "name": "groupName",
+            "in": "path",
+            "description": "A unique group name to query.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRepresentation"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRepresentation"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRepresentation"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -983,6 +1343,91 @@
             "items": {
               "$ref": "#/components/schemas/Point"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CredentialRepresentation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "userLabel": {
+            "type": "string",
+            "nullable": true
+          },
+          "secretData": {
+            "type": "string",
+            "nullable": true
+          },
+          "credentialData": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "temporary": {
+            "type": "boolean"
+          },
+          "device": {
+            "type": "string",
+            "nullable": true
+          },
+          "hashedSaltedValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "salt": {
+            "type": "string",
+            "nullable": true
+          },
+          "hashIterations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "counter": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "algorithm": {
+            "type": "string",
+            "nullable": true
+          },
+          "digits": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "period": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "config": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -1070,45 +1515,60 @@
             "type": "string",
             "format": "date-time"
           },
-          "id": {
+          "disputeId": {
             "type": "integer",
             "format": "int64"
-          },
-          "status": {
-            "$ref": "#/components/schemas/DisputeStatus"
           },
           "ticketNumber": {
             "type": "string",
             "nullable": true
           },
-          "provincialCourtHearingLocation": {
+          "courtLocation": {
             "type": "string",
             "nullable": true
           },
           "issuedDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "submittedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "surname": {
+          "disputantSurname": {
             "type": "string",
             "nullable": true
           },
-          "givenNames": {
+          "disputantGivenName1": {
             "type": "string",
             "nullable": true
           },
-          "birthdate": {
+          "disputantGivenName2": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
+          },
+          "disputantGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantBirthdate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "driversLicenceNumber": {
-            "maxLength": 20,
+            "maxLength": 30,
             "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "disputantOrganization": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantClientId": {
             "type": "string",
             "nullable": true
           },
@@ -1118,22 +1578,33 @@
             "type": "string",
             "nullable": true
           },
-          "address": {
+          "status": {
+            "$ref": "#/components/schemas/DisputeStatus"
+          },
+          "addressLine1": {
             "type": "string",
             "nullable": true
           },
-          "city": {
+          "addressLine2": {
             "type": "string",
             "nullable": true
           },
-          "province": {
+          "addressLine3": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "addressProvince": {
             "maxLength": 30,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "postalCode": {
-            "maxLength": 6,
+            "maxLength": 10,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -1155,24 +1626,57 @@
             "format": "date-time",
             "nullable": true
           },
-          "disputedCounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DisputedCount"
-            },
+          "representedByLawyer": {
+            "$ref": "#/components/schemas/DisputeRepresentedByLawyer"
+          },
+          "lawFirmName": {
+            "type": "string",
             "nullable": true
           },
-          "representedByLawyer": {
-            "type": "boolean"
+          "lawyerSurname": {
+            "type": "string",
+            "nullable": true
           },
-          "legalRepresentation": {
-            "$ref": "#/components/schemas/LegalRepresentation"
+          "lawyerGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "officerPin": {
+            "type": "string",
+            "nullable": true
+          },
+          "detachmentLocation": {
+            "type": "string",
+            "nullable": true
           },
           "interpreterLanguage": {
             "type": "string",
             "nullable": true
           },
-          "numberOfWitness": {
+          "interpreterRequired": {
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
+          },
+          "witnessNo": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1185,39 +1689,46 @@
             "type": "string",
             "nullable": true
           },
+          "disputantComment": {
+            "type": "string",
+            "nullable": true
+          },
           "rejectedReason": {
             "type": "string",
             "nullable": true
           },
-          "disputantDetectedOcrIssues": {
-            "type": "boolean"
+          "userAssignedTo": {
+            "type": "string",
+            "nullable": true
           },
-          "disputantOcrIssuesDescription": {
+          "userAssignedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "disputantDetectedOcrIssues": {
+            "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
+          },
+          "disputantOcrIssues": {
             "type": "string",
             "nullable": true
           },
           "systemDetectedOcrIssues": {
-            "type": "boolean"
-          },
-          "jjAssigned": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/DisputeSystemDetectedOcrIssues"
           },
           "ocrViolationTicket": {
             "type": "string",
             "nullable": true
           },
-          "assignedTo": {
-            "type": "string",
-            "nullable": true
-          },
-          "assignedTs": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
           "violationTicket": {
             "$ref": "#/components/schemas/ViolationTicket"
+          },
+          "disputeCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DisputeCount"
+            },
+            "nullable": true
           },
           "additionalProperties": {
             "type": "object",
@@ -1227,17 +1738,7 @@
         },
         "additionalProperties": false
       },
-      "DisputeStatus": {
-        "enum": [
-          "NEW",
-          "VALIDATED",
-          "PROCESSING",
-          "REJECTED",
-          "CANCELLED"
-        ],
-        "type": "string"
-      },
-      "DisputedCount": {
+      "DisputeCount": {
         "type": "object",
         "properties": {
           "createdBy": {
@@ -1256,27 +1757,27 @@
             "type": "string",
             "format": "date-time"
           },
-          "id": {
+          "disputeCountId": {
             "type": "integer",
             "format": "int64"
           },
-          "plea": {
-            "$ref": "#/components/schemas/DisputedCountPlea"
-          },
-          "count": {
+          "countNo": {
             "maximum": 3,
             "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
+          "pleaCode": {
+            "$ref": "#/components/schemas/DisputeCountPleaCode"
+          },
           "requestTimeToPay": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/DisputeCountRequestTimeToPay"
           },
           "requestReduction": {
-            "type": "boolean"
+            "$ref": "#/components/schemas/DisputeCountRequestReduction"
           },
-          "appearInCourt": {
-            "type": "boolean"
+          "requestCourtAppearance": {
+            "$ref": "#/components/schemas/DisputeCountRequestCourtAppearance"
           },
           "additionalProperties": {
             "type": "object",
@@ -1286,10 +1787,69 @@
         },
         "additionalProperties": false
       },
-      "DisputedCountPlea": {
+      "DisputeCountPleaCode": {
         "enum": [
-          "GUILTY",
-          "NOT_GUILTY"
+          "G",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestCourtAppearance": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestReduction": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestTimeToPay": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeDisputantDetectedOcrIssues": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeInterpreterRequired": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeRepresentedByLawyer": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeStatus": {
+        "enum": [
+          "NEW",
+          "VALIDATED",
+          "PROCESSING",
+          "REJECTED",
+          "CANCELLED"
+        ],
+        "type": "string"
+      },
+      "DisputeSystemDetectedOcrIssues": {
+        "enum": [
+          "Y",
+          "N"
         ],
         "type": "string"
       },
@@ -1302,6 +1862,29 @@
           "CANCELLED"
         ],
         "type": "string"
+      },
+      "FederatedIdentityRepresentation": {
+        "type": "object",
+        "properties": {
+          "identityProvider": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "Field": {
         "type": "object",
@@ -1428,9 +2011,10 @@
             "nullable": true
           },
           "remarks": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JJDisputeRemark"
+            },
             "nullable": true
           },
           "contactInformation": {
@@ -1441,6 +2025,47 @@
             "items": {
               "$ref": "#/components/schemas/JJDisputedCount"
             },
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputeRemark": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userFullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "note": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
             "nullable": true
           },
           "additionalProperties": {
@@ -1552,61 +2177,10 @@
       },
       "JJDisputedCountPlea": {
         "enum": [
-          "GUILTY",
-          "NOT_GUILTY"
+          "G",
+          "N"
         ],
         "type": "string"
-      },
-      "LegalRepresentation": {
-        "type": "object",
-        "properties": {
-          "createdBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "lawFirmName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerFullName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerEmail": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerAddress": {
-            "type": "string",
-            "nullable": true
-          },
-          "lawyerPhoneNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": { },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
       },
       "OcrViolationTicket": {
         "type": "object",
@@ -1670,6 +2244,29 @@
         },
         "additionalProperties": { }
       },
+      "SocialLinkRepresentation": {
+        "type": "object",
+        "properties": {
+          "socialProvider": {
+            "type": "string",
+            "nullable": true
+          },
+          "socialUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "socialUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Statute": {
         "type": "object",
         "properties": {
@@ -1687,6 +2284,200 @@
           },
           "description": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserConsentRepresentation": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "grantedClientScopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastUpdatedDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "grantedRealmRoles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserRepresentation": {
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "totp": {
+            "type": "boolean"
+          },
+          "emailVerified": {
+            "type": "boolean"
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "credentials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CredentialRepresentation"
+            },
+            "nullable": true
+          },
+          "requiredActions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "federatedIdentities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FederatedIdentityRepresentation"
+            },
+            "nullable": true
+          },
+          "socialLinks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SocialLinkRepresentation"
+            },
+            "nullable": true
+          },
+          "realmRoles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "clientRoles": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "clientConsents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserConsentRepresentation"
+            },
+            "nullable": true
+          },
+          "notBefore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "applicationRoles": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "federationLink": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceAccountClientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "origin": {
+            "type": "string",
+            "nullable": true
+          },
+          "disableableCredentialTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "access": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
             "nullable": true
           }
         },
@@ -1717,7 +2508,7 @@
             "type": "string",
             "format": "date-time"
           },
-          "id": {
+          "violationTicketId": {
             "type": "integer",
             "format": "int64"
           },
@@ -1725,21 +2516,28 @@
             "type": "string",
             "nullable": true
           },
-          "surname": {
+          "disputantOrganizationName": {
             "type": "string",
             "nullable": true
           },
-          "givenNames": {
+          "disputantSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "disputantGivenNames": {
             "type": "string",
             "nullable": true
           },
           "isYoungPerson": {
-            "type": "boolean",
-            "nullable": true
+            "$ref": "#/components/schemas/ViolationTicketIsYoungPerson"
           },
-          "driversLicenceNumber": {
+          "disputantDriversLicenceNumber": {
             "maxLength": 30,
             "minLength": 7,
+            "type": "string",
+            "nullable": true
+          },
+          "disputantClientNumber": {
             "type": "string",
             "nullable": true
           },
@@ -1747,7 +2545,7 @@
             "type": "string",
             "nullable": true
           },
-          "driversLicenceProducedYear": {
+          "driversLicenceIssuedYear": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1757,7 +2555,7 @@
             "format": "int32",
             "nullable": true
           },
-          "birthdate": {
+          "disputantBirthdate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -1766,47 +2564,27 @@
             "type": "string",
             "nullable": true
           },
-          "city": {
+          "addressCity": {
             "type": "string",
             "nullable": true
           },
-          "province": {
+          "addressProvince": {
             "type": "string",
             "nullable": true
           },
-          "postalCode": {
+          "addressPostalCode": {
             "type": "string",
             "nullable": true
           },
-          "isChangeOfAddress": {
-            "type": "boolean",
+          "addressCountry": {
+            "type": "string",
             "nullable": true
           },
-          "isDriver": {
-            "type": "boolean",
+          "officerPin": {
+            "type": "string",
             "nullable": true
           },
-          "isCyclist": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isOwner": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isPedestrian": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isPassenger": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isOther": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "otherDescription": {
+          "detachmentLocation": {
             "type": "string",
             "nullable": true
           },
@@ -1823,43 +2601,16 @@
             "type": "string",
             "nullable": true
           },
-          "isMvaOffence": {
-            "type": "boolean",
-            "nullable": true
+          "isChangeOfAddress": {
+            "$ref": "#/components/schemas/ViolationTicketIsChangeOfAddress"
           },
-          "isWlaOffence": {
-            "type": "boolean",
-            "nullable": true
+          "isDriver": {
+            "$ref": "#/components/schemas/ViolationTicketIsDriver"
           },
-          "isLcaOffence": {
-            "type": "boolean",
-            "nullable": true
+          "isOwner": {
+            "$ref": "#/components/schemas/ViolationTicketIsOwner"
           },
-          "isMcaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isFaaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isTcrOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isCtaOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isOtherOffence": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "otherOffenceDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "organizationLocation": {
+          "courtLocation": {
             "type": "string",
             "nullable": true
           },
@@ -1897,11 +2648,11 @@
             "type": "string",
             "format": "date-time"
           },
-          "id": {
+          "violationTicketCountId": {
             "type": "integer",
             "format": "int64"
           },
-          "count": {
+          "countNo": {
             "maximum": 3,
             "minimum": 1,
             "type": "integer",
@@ -1911,13 +2662,15 @@
             "type": "string",
             "nullable": true
           },
-          "actRegulation": {
+          "actOrRegulationNameCode": {
             "type": "string",
             "nullable": true
           },
-          "fullSection": {
-            "type": "string",
-            "nullable": true
+          "isAct": {
+            "$ref": "#/components/schemas/ViolationTicketCountIsAct"
+          },
+          "isRegulation": {
+            "$ref": "#/components/schemas/ViolationTicketCountIsRegulation"
           },
           "section": {
             "type": "string",
@@ -1940,14 +2693,6 @@
             "format": "float",
             "nullable": true
           },
-          "isAct": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "isRegulation": {
-            "type": "boolean",
-            "nullable": true
-          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
@@ -1955,6 +2700,20 @@
           }
         },
         "additionalProperties": false
+      },
+      "ViolationTicketCountIsAct": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketCountIsRegulation": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
       },
       "ViolationTicketImage": {
         "type": "object",
@@ -1970,6 +2729,34 @@
           }
         },
         "additionalProperties": false
+      },
+      "ViolationTicketIsChangeOfAddress": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsDriver": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsOwner": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsYoungPerson": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
       }
     },
     "securitySchemes": {

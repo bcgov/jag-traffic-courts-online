@@ -28,9 +28,9 @@ public class DisputeControllerTest
 
         // Arrange
         Dispute dispute1 = new();
-        dispute1.Id = 1;
+        dispute1.DisputeId = 1;
         Dispute dispute2 = new();
-        dispute2.Id =2;
+        dispute2.DisputeId =2;
         List<Dispute> disputes = new() { dispute1, dispute2 };
         var disputeService = new Mock<IDisputeService>();
         disputeService
@@ -58,7 +58,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
@@ -82,7 +82,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
@@ -106,7 +106,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.GetDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))
@@ -130,7 +130,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
@@ -154,7 +154,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.UpdateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<Dispute>(), It.IsAny<CancellationToken>()))
@@ -178,7 +178,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         long updatedId = 2;
         disputeService
@@ -203,7 +203,7 @@ public class DisputeControllerTest
         // Arrange
         Dispute dispute = new();
         long id = 1;
-        dispute.Id = id;
+        dispute.DisputeId = id;
         var disputeService = new Mock<IDisputeService>();
         disputeService
             .Setup(_ => _.ValidateDisputeAsync(It.Is<long>(v => v == id), It.IsAny<CancellationToken>()))

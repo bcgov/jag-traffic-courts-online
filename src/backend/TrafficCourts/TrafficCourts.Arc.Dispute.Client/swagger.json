@@ -260,7 +260,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "full_section": {
+          "subparagraph": {
             "type": "string",
             "nullable": true
           },
