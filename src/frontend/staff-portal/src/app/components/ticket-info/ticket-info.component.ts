@@ -114,7 +114,7 @@ export class TicketInfoComponent implements OnInit {
         courtLocation: [null, [Validators.required]],
         disputantSurname: [null, Validators.required],
         disputantGivenNames: [null, Validators.required],
-        driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
+        disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
         issuedDate: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({

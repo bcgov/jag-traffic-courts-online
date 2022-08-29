@@ -154,7 +154,7 @@ export class ViolationTicketService implements IViolationTicketService {
           if (!foundViolationTicketCount3[0].isRegulation) foundViolationTicketCount3[0].isRegulation = ocrViolationTicket?.fields["counts.count_no_3.is_regulation"].value == "selected" ? this.IsRegulation.Y : this.IsRegulation.N;
         } else {
           let violationTicketCount = {
-            count: 3,
+            countNo: 3,
             description: ocrViolationTicket?.fields["counts.count_no_3.description"].value,
             actOrRegulationNameCode: ocrViolationTicket?.fields["counts.count_no_3.act_or_regulation_name_code"].value,
             section: ocrViolationTicket?.fields["counts.count_no_3.section"].value,

@@ -114,7 +114,7 @@
                       <!-- Violation Ticket Surname -->
                       <div class="col-lg-6">
                         <mat-form-field class="w-100"
-                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputantSurname'), 'overErrThreshold': applyOverErrThreshold('disputantSurname')}">
+                          [ngClass]="{'underErrThreshold': applyUnderErrThreshold('disputant_surname'), 'overErrThreshold': applyOverErrThreshold('disputant_surname')}">
                           <mat-label>Surname</mat-label>
                           <input matInput formControlName="disputantSurname"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'" />
