@@ -262,34 +262,77 @@
         },
         "additionalProperties": false
       },
-      "DisputedCount": {
+      "DisputeCount": {
         "type": "object",
         "properties": {
-          "plea": {
-            "$ref": "#/components/schemas/Plea"
+          "plea_cd": {
+            "$ref": "#/components/schemas/DisputeCountPleaCode"
           },
-          "count": {
+          "count_no": {
             "type": "integer",
             "description": "The count number. Must be unique within an individual dispute.",
             "format": "int32"
           },
           "request_time_to_pay": {
-            "type": "boolean",
-            "description": "The disputant is requesting time to pay the ticketed amount.",
-            "nullable": true
+            "$ref": "#/components/schemas/DisputeCountRequestTimeToPay"
           },
           "request_reduction": {
-            "type": "boolean",
-            "description": "The disputant is requesting a reduction of the ticketed amount.",
-            "nullable": true
+            "$ref": "#/components/schemas/DisputeCountRequestReduction"
           },
-          "appear_in_court": {
-            "type": "boolean",
-            "description": "Does the want to appear in court?",
-            "nullable": true
+          "request_court_appearance": {
+            "$ref": "#/components/schemas/DisputeCountRequestCourtAppearance"
           }
         },
         "additionalProperties": false
+      },
+      "DisputeCountPleaCode": {
+        "enum": [
+          "G",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestCourtAppearance": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestReduction": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeCountRequestTimeToPay": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeDisputantDetectedOcrIssues": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeInterpreterRequired": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "DisputeRepresentedByLawyer": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
       },
       "Field": {
         "type": "object",
@@ -325,46 +368,16 @@
         },
         "additionalProperties": false
       },
-      "LegalRepresentation": {
-        "type": "object",
-        "properties": {
-          "law_firm_name": {
-            "type": "string",
-            "description": "Name of the law firm that will represent the disputant at the hearing.",
-            "nullable": true
-          },
-          "lawyer_full_name": {
-            "type": "string",
-            "description": "Full name of the lawyer who will represent the disputant at the hearing.",
-            "nullable": true
-          },
-          "lawyer_email": {
-            "type": "string",
-            "description": "Email address of the lawyer who will represent the disputant at the hearing.",
-            "nullable": true
-          },
-          "lawyer_address": {
-            "type": "string",
-            "description": "Address of the lawyer who will represent the disputant at the hearing.",
-            "nullable": true
-          },
-          "lawyer_phone_number": {
-            "type": "string",
-            "description": "Address of the lawyer who will represent the disputant at the hearing.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "NoticeOfDispute": {
         "type": "object",
         "properties": {
           "ticket_number": {
+            "maxLength": 12,
             "type": "string",
             "description": "The violation ticket number.",
             "nullable": true
           },
-          "provincial_court_hearing_location": {
+          "court_location": {
             "type": "string",
             "description": "The provincial court hearing location named on the violation ticket.",
             "nullable": true
@@ -374,17 +387,27 @@
             "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",
             "format": "date-time"
           },
-          "surname": {
+          "disputant_surname": {
             "type": "string",
             "description": "The surname or corporate name.",
             "nullable": true
           },
-          "given_names": {
+          "disputant_given_name1": {
             "type": "string",
-            "description": "The given names or corporate name continued.",
+            "description": "The first given name or corporate name continued.",
             "nullable": true
           },
-          "birthdate": {
+          "disputant_given_name2": {
+            "type": "string",
+            "description": "The second given name",
+            "nullable": true
+          },
+          "disputant_given_name3": {
+            "type": "string",
+            "description": "The third given name",
+            "nullable": true
+          },
+          "disputant_birthdate": {
             "type": "string",
             "description": "The disputant's birthdate.",
             "format": "date-time"
@@ -399,17 +422,27 @@
             "description": "The province or state the drivers licence was issued by.",
             "nullable": true
           },
-          "address": {
+          "address_line1": {
             "type": "string",
             "description": "The mailing address of the disputant.",
             "nullable": true
           },
-          "city": {
+          "address_line2": {
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_line3": {
+            "type": "string",
+            "description": "The mailing address of the disputant.",
+            "nullable": true
+          },
+          "address_city": {
             "type": "string",
             "description": "The mailing address city of the disputant.",
             "nullable": true
           },
-          "province": {
+          "address_province": {
             "type": "string",
             "description": "The mailing address province of the disputant.",
             "nullable": true
@@ -434,27 +467,58 @@
             "description": "The disputant's email address.",
             "nullable": true
           },
-          "disputed_counts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DisputedCount"
-            },
-            "description": "The count dispute details.",
+          "represented_by_lawyer": {
+            "$ref": "#/components/schemas/DisputeRepresentedByLawyer"
+          },
+          "law_firm_name": {
+            "type": "string",
+            "description": "Name of the law firm that will represent the disputant at the hearing.",
             "nullable": true
           },
-          "represented_by_lawyer": {
-            "type": "boolean",
-            "description": "The disputant intends to be represented by a lawyer at the hearing."
+          "lawyer_surname": {
+            "type": "string",
+            "description": "Surname of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
           },
-          "legal_representation": {
-            "$ref": "#/components/schemas/LegalRepresentation"
+          "lawyer_given_name1": {
+            "type": "string",
+            "description": "Given Name 1 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name2": {
+            "type": "string",
+            "description": "Given Name 2 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_given_name3": {
+            "type": "string",
+            "description": "Given Name 3 of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_email": {
+            "type": "string",
+            "description": "Email address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_address": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
+          },
+          "lawyer_phone_number": {
+            "type": "string",
+            "description": "Address of the lawyer who will represent the disputant at the hearing.",
+            "nullable": true
           },
           "interpreter_language": {
             "type": "string",
             "description": "The disputant requires spoken language interpreter. The language name is indicated in this field.",
             "nullable": true
           },
-          "number_of_witness": {
+          "interprer_required": {
+            "$ref": "#/components/schemas/DisputeInterpreterRequired"
+          },
+          "witness_no": {
             "type": "integer",
             "description": "The number of witnesses that the disputant intends to call.",
             "format": "int32"
@@ -470,10 +534,9 @@
             "nullable": true
           },
           "disputant_detected_ocr_issues": {
-            "type": "boolean",
-            "description": "Identifier for whether the citizen has detected any issues with the OCR ticket result or not."
+            "$ref": "#/components/schemas/DisputeDisputantDetectedOcrIssues"
           },
-          "disputant_ocr_issues_description": {
+          "disputant_ocr_issues": {
             "type": "string",
             "description": "The description of the issue with OCR ticket if the citizen has detected any.",
             "nullable": true
@@ -481,6 +544,19 @@
           "ticket_id": {
             "type": "string",
             "description": "The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.",
+            "nullable": true
+          },
+          "detachment_location": {
+            "type": "string",
+            "description": "Detachment Location",
+            "nullable": true
+          },
+          "dispute_counts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DisputeCount"
+            },
+            "description": "Dispute Counts",
             "nullable": true
           }
         },
@@ -511,14 +587,6 @@
         },
         "additionalProperties": false,
         "description": "A model representation of the extracted OCR results."
-      },
-      "Plea": {
-        "enum": [
-          "Guilty",
-          "NotGuilty"
-        ],
-        "type": "string",
-        "description": "An enumeration of Plea Type on a DisputedCount record."
       },
       "Point": {
         "type": "object",
@@ -595,27 +663,37 @@
             "description": "The violation ticket number.",
             "nullable": true
           },
-          "surname": {
+          "disputant_organization_name": {
+            "maxLength": 150,
+            "type": "string",
+            "description": "Disputant Organization Name",
+            "nullable": true
+          },
+          "disputant_surname": {
             "maxLength": 30,
             "type": "string",
             "description": "The surname or corporate name.",
             "nullable": true
           },
-          "given_names": {
-            "maxLength": 30,
+          "disputant_given_names": {
+            "maxLength": 100,
             "type": "string",
             "description": "The given names or corporate name continued.",
             "nullable": true
           },
           "is_young_person": {
-            "type": "boolean",
-            "description": "The person issued the ticket has been identified as a young person.",
-            "nullable": true
+            "$ref": "#/components/schemas/ViolationTicketIsYoungPerson"
           },
           "drivers_licence_number": {
             "maxLength": 20,
             "type": "string",
             "description": "The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.",
+            "nullable": true
+          },
+          "disputant_client_number": {
+            "maxLength": 30,
+            "type": "string",
+            "description": "Disputant client number",
             "nullable": true
           },
           "drivers_licence_province": {
@@ -624,7 +702,7 @@
             "description": "The province or state the drivers licence was issued by.",
             "nullable": true
           },
-          "drivers_licence_produced_year": {
+          "drivers_licence_issued_year": {
             "maximum": 2100,
             "minimum": 1900,
             "type": "integer",
@@ -640,7 +718,7 @@
             "format": "int32",
             "nullable": true
           },
-          "birthdate": {
+          "disputant_birthdate": {
             "type": "string",
             "description": "The birthdate of the individual the violation ticket was issued to.",
             "format": "date",
@@ -652,64 +730,50 @@
             "description": "The address of the individual the violation ticket was issued to.",
             "nullable": true
           },
-          "city": {
+          "address_city": {
             "maxLength": 30,
             "type": "string",
             "description": "The city of the individual the violation ticket was issued to.",
             "nullable": true
           },
-          "province": {
+          "address_province": {
             "maxLength": 30,
             "type": "string",
             "description": "The province or state of the individual the violation ticket was issued to.",
             "nullable": true
           },
-          "postal_code": {
+          "address_postal_code": {
             "maxLength": 6,
             "type": "string",
             "description": "The postal code or zip code.",
             "nullable": true
           },
-          "is_change_of_address": {
-            "type": "boolean",
-            "description": "The address represents a change of address. The address on the violation would be different from the address \r\non the drivers licence or provided identification.",
-            "nullable": true
-          },
-          "is_driver": {
-            "type": "boolean",
-            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle driver.",
-            "nullable": true
-          },
-          "is_cyclist": {
-            "type": "boolean",
-            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the cyclist.",
-            "nullable": true
-          },
-          "is_owner": {
-            "type": "boolean",
-            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as the vehicle owner.",
-            "nullable": true
-          },
-          "is_pedestrain": {
-            "type": "boolean",
-            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a pedestrain.",
-            "nullable": true
-          },
-          "is_passenger": {
-            "type": "boolean",
-            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a passenger.",
-            "nullable": true
-          },
-          "is_other": {
-            "type": "boolean",
-            "description": "The enforcement officer says that he or she has reasonable grounds to believe, and does believe, that the above named as a other designation.",
-            "nullable": true
-          },
-          "other_description": {
+          "address_country": {
             "maxLength": 100,
             "type": "string",
-            "description": "If TrafficCourts.Citizen.Service.Models.Tickets.ViolationTicket.IssuedToOther is true, the other designation description.",
+            "description": "The country text",
             "nullable": true
+          },
+          "officer_pin": {
+            "maxLength": 10,
+            "type": "string",
+            "description": "Office Pin Text",
+            "nullable": true
+          },
+          "detachment_location": {
+            "maxLength": 150,
+            "type": "string",
+            "description": "Detachment Location",
+            "nullable": true
+          },
+          "is_change_of_address": {
+            "$ref": "#/components/schemas/ViolationTicketIsChangeOfAddress"
+          },
+          "is_driver": {
+            "$ref": "#/components/schemas/ViolationTicketIsDriver"
+          },
+          "is_owner": {
+            "$ref": "#/components/schemas/ViolationTicketIsOwner"
           },
           "issued_date": {
             "type": "string",
@@ -720,59 +784,13 @@
           "issued_on_road_or_highway": {
             "maxLength": 100,
             "type": "string",
-            "description": "The violation ticket was issued on this road or highway.",
+            "description": "Issued on Road or Highway",
             "nullable": true
           },
           "issued_at_or_near_city": {
             "maxLength": 100,
             "type": "string",
-            "description": "The violation ticket was issued at or near this city or town.",
-            "nullable": true
-          },
-          "is_mva_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Motor Vehicle Act (MVA).",
-            "nullable": true
-          },
-          "is_wla_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Wildlife Act (WLA).",
-            "nullable": true
-          },
-          "is_lca_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Liquor Control and Licencing Act (LCA).",
-            "nullable": true
-          },
-          "is_mca_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Motor Carrier Act (MCA).",
-            "nullable": true
-          },
-          "is_faa_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Firearm Act (FAA).",
-            "nullable": true
-          },
-          "is_tcr_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Transit Conduct and Safety Regs (TCR).",
-            "nullable": true
-          },
-          "is_cta_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for offence under the Commercial Transport Act (CTA).",
-            "nullable": true
-          },
-          "is_other_offence": {
-            "type": "boolean",
-            "description": "The violation ticket was issued for other.",
-            "nullable": true
-          },
-          "other_offence_description": {
-            "maxLength": 100,
-            "type": "string",
-            "description": "The violation ticket was issued for other.",
+            "description": "Issued at or near city.",
             "nullable": true
           },
           "counts": {
@@ -782,16 +800,10 @@
             },
             "description": "Represents the counts identified. Must have at least one and at most three counts."
           },
-          "provincial_court_hearing_location": {
+          "court_location": {
             "maxLength": 100,
             "type": "string",
             "description": "The designated provincial court hearing location. For example, Richmond, BC.",
-            "nullable": true
-          },
-          "organization_location": {
-            "maxLength": 100,
-            "type": "string",
-            "description": "The organization or detatchment location. For example, Delta Police.",
             "nullable": true
           },
           "ticket_id": {
@@ -806,7 +818,7 @@
       "ViolationTicketCount": {
         "type": "object",
         "properties": {
-          "count": {
+          "count_no": {
             "maximum": 3,
             "minimum": 1,
             "type": "integer",
@@ -819,7 +831,7 @@
             "description": "The description of the offence.",
             "nullable": true
           },
-          "act_or_regulation": {
+          "act_or_regulation_name_code": {
             "maxLength": 3,
             "type": "string",
             "description": "The act or regulation code the violation occurred against. For example, MVA, WLA, TCR, etc",
@@ -831,6 +843,24 @@
             "description": "The full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
             "nullable": true
           },
+          "subsection": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "paragraph": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
+          "subparagraph": {
+            "maxLength": 20,
+            "type": "string",
+            "description": "Part of the full section designation of the act or regulation. For example, \"147(1)\" which means \"Speed in school zone\"",
+            "nullable": true
+          },
           "ticketed_amount": {
             "maximum": 999999,
             "minimum": 1,
@@ -839,27 +869,57 @@
             "format": "double",
             "nullable": true
           },
-          "amount_due": {
-            "maximum": 999999,
-            "minimum": 1,
-            "type": "number",
-            "description": "The amount due. Will be the same as ticketed_amount if no payments have been made on the ticket. May or may not have discount computed.",
-            "format": "double",
-            "nullable": true
-          },
           "is_act": {
-            "type": "boolean",
-            "description": "The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.",
-            "nullable": true
+            "$ref": "#/components/schemas/ViolationTicketCountIsAct"
           },
           "is_regulation": {
-            "type": "boolean",
-            "description": "The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.",
-            "nullable": true
+            "$ref": "#/components/schemas/ViolationTicketCountIsRegulation"
           }
         },
         "additionalProperties": false,
         "description": "Represents a violation ticket count."
+      },
+      "ViolationTicketCountIsAct": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketCountIsRegulation": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsChangeOfAddress": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsDriver": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsOwner": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "ViolationTicketIsYoungPerson": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
       }
     }
   }

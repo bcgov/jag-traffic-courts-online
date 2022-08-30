@@ -57,7 +57,7 @@
             <div class="col-lg-2 pe-0">
               <div style="display: flex">
                 <span class="h2">
-                  <strong>Count {{ violationCount.count }}</strong>
+                  <strong>Count {{ violationCount.countNo }}</strong>
                 </span>
               </div>
             </div>
@@ -96,7 +96,7 @@
               <div class="col-md-6">
                 <mat-form-field class="w-100">
                   <mat-label>Surname</mat-label>
-                  <input matInput formControlName="surname" />
+                  <input matInput formControlName="disputantSurname" />
                   <mat-error>{{ "error.required" | translate }}</mat-error>
                 </mat-form-field>
               </div>
@@ -105,7 +105,7 @@
               <div class="col-md-6">
                 <mat-form-field class="w-100">
                   <mat-label>Given name(s)</mat-label>
-                  <input matInput formControlName="givenNames" />
+                  <input matInput formControlName="disputantGivenNames" />
                   <mat-error>{{ "error.required" | translate }}</mat-error>
                 </mat-form-field>
               </div>
@@ -144,7 +144,7 @@
                 <div class="col-md-6">
                   <mat-form-field class="w-100">
                     <mat-label>City</mat-label>
-                    <input matInput formControlName="city" />
+                    <input matInput formControlName="addressCity" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
                   </mat-form-field>
                 </div>
@@ -155,7 +155,7 @@
                   <mat-form-field class="w-100">
                     <mat-label *ngIf="form.get('country').value==='Canada'">Province</mat-label>
                     <mat-label *ngIf="form.get('country').value==='United States'">State</mat-label>
-                    <mat-select formControlName="province"
+                    <mat-select formControlName="addressProvince"
                       *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
                       <div *ngIf="form.get('country').value === 'Canada'">
                         <mat-option value="British Columbia">British Columbia</mat-option>
@@ -207,12 +207,12 @@
               <div class="col-md-6">
                 <mat-form-field class="w-100">
                   <mat-label>Birthdate</mat-label>
-                  <input matInput [matDatepicker]="picker" formControlName="birthdate" (click)="picker.open()"
+                  <input matInput [matDatepicker]="picker" formControlName="disputantBirthdate" (click)="picker.open()"
                     [max]="todayDate" />
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
-                  <mat-error *ngIf="form.get('birthdate').hasError('required')">Valid birthdate required</mat-error>
-                  <mat-error *ngIf="form.get('birthdate').hasError('matDatepickerMax')">No future birthdate</mat-error>
+                  <mat-error *ngIf="form.get('disputantBirthdate').hasError('required')">Valid birthdate required</mat-error>
+                  <mat-error *ngIf="form.get('disputantBirthdate').hasError('matDatepickerMax')">No future birthdate</mat-error>
                 </mat-form-field>
               </div>
             </div>

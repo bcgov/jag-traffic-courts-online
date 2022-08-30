@@ -1,24 +1,25 @@
 ﻿using System.Text.Json.Serialization;
 using TrafficCourts.Common.Converters;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Messaging.MessageContracts;
 
 public class SubmitNoticeOfDispute : IMessage
 {
     /// <summary>
-    /// The status of the dispute. Defaults to <see cref="DisputeStatus.New"/>.
+    /// The status of the dispute. Defaults to <see cref="DisputeStatus.NEW"/>.
     /// </summary>
-    public DisputeStatus Status { get; set; } = DisputeStatus.New;
+    public DisputeStatus Status { get; set; } = DisputeStatus.NEW;
 
     /// <summary>
     /// The violation ticket number.
     /// </summary>
-    public string TicketNumber { get; set; } = null!;
+    public string? TicketNumber { get; set; } = null!;
 
     /// <summary>
     /// The provincial court hearing location named on the violation ticket.
     /// </summary>
-    public string? ProvincialCourtHearingLocation { get; set; }
+    public string? CourtLocation { get; set; }
 
     /// <summary>
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
@@ -33,17 +34,27 @@ public class SubmitNoticeOfDispute : IMessage
     /// <summary>
     /// The surname or corporate name.
     /// </summary>
-    public string Surname { get; set; } = null!;
+    public string DisputantSurname { get; set; } = null!;
 
     /// <summary>
     /// The given names or corporate name continued.
     /// </summary>
-    public string GivenNames { get; set; } = null!;
+    public string DisputantGivenName1 { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string DisputantGivenName2 { get; set; } = null!;
+
+    /// <summary>
+    /// The given names or corporate name continued.
+    /// </summary>
+    public string DisputantGivenName3 { get; set; } = null!;
 
     /// <summary>
     /// The disputant's birthdate.
     /// </summary>
-    public DateTime Birthdate { get; set; }
+    public DateTime DisputantBirthdate { get; set; }
 
     /// <summary>
     /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
@@ -56,19 +67,28 @@ public class SubmitNoticeOfDispute : IMessage
     public string DriversLicenceProvince { get; set; } = null!;
 
     /// <summary>
-    /// The mailing address of the disputant.
+    /// The mailing address line one of the disputant.
     /// </summary>
-    public string Address { get; set; } = null!;
+    public string AddressLine1 { get; set; } = null!;
+
+    /// <summary>
+    /// The mailing address line two of the disputant.
+    /// </summary>
+    public string AddressLine2 { get; set; } = null!;
+    /// <summary>
+    /// The mailing address line three of the disputant.
+    /// </summary>
+    public string AddressLine3 { get; set; } = null!;
 
     /// <summary>
     /// The mailing address city of the disputant.
     /// </summary>
-    public string City { get; set; } = null!;
+    public string AddressCity { get; set; } = null!;
 
     /// <summary>
     /// The mailing address province of the disputant.
     /// </summary>
-    public string Province { get; set; } = null!;
+    public string AddressProvince { get; set; } = null!;
 
     /// <summary>
     /// The mailing address postal code or zip code of the disputant.
@@ -91,19 +111,54 @@ public class SubmitNoticeOfDispute : IMessage
     public string EmailAddress { get; set; } = null!;
 
     /// <summary>
-    /// The count dispute details.
-    /// </summary>
-    public List<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
-
-    /// <summary>
     /// The disputant intends to be represented by a lawyer at the hearing.
     /// </summary>
-    public bool RepresentedByLawyer { get; set; }
+    public DisputeRepresentedByLawyer RepresentedByLawyer { get; set; }
 
     /// <summary>
-    /// The details of the lawyer who represents the disputant at the hearing.
+    /// Name of the law firm that will represent the disputant at the hearing.
     /// </summary>
-    public LegalRepresentation? LegalRepresentation { get; set; }
+    public string LawFirmName { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Surname of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerSurname { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Given name1 of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerGivenName1 { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Given name2 of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerGivenName2 { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Given name3 of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerGivenName3 { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Email address of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerEmail { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Address of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerAddress { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Address of the lawyer who will represent the disputant at the hearing.
+    /// </summary>
+    public string LawyerPhoneNumber { get; set; } = String.Empty;
+
+    /// <summary>
+    /// Detachment Location
+    /// </summary>
+    public string? DetachmentLocation { get; set; }
 
     /// <summary>
     /// The disputant requires spoken language interpreter. The language name is indicated in this field.
@@ -111,9 +166,14 @@ public class SubmitNoticeOfDispute : IMessage
     public string? InterpreterLanguage { get; set; }
 
     /// <summary>
+    /// Interpreter required?
+    /// </summary>
+    public DisputeInterpreterRequired InterpreterRequired { get; set; } = DisputeInterpreterRequired.N;
+
+    /// <summary>
     /// The number of witnesses that the disputant intends to call.
     /// </summary>
-    public int NumberOfWitness { get; set; }
+    public int WitnessNo { get; set; }
 
     /// <summary>
     /// The reason that disputant declares for requesting a fine reduction.
@@ -128,12 +188,12 @@ public class SubmitNoticeOfDispute : IMessage
     /// <summary>
     /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
     /// </summary>
-    public bool DisputantDetectedOcrIssues { get; set; }
+    public DisputeDisputantDetectedOcrIssues DisputantDetectedOcrIssues { get; set; }
 
     /// <summary>
     /// The description of the issue with OCR ticket if the citizen has detected any.
     /// </summary>
-    public string? DisputantOcrIssuesDescription { get; set; }
+    public string? DisputantOcrIssues { get; set; }
 
     /// <summary>
     /// Violation Ticket details
@@ -144,4 +204,6 @@ public class SubmitNoticeOfDispute : IMessage
     /// JSON serialized OCR data.
     /// </summary>
     public string? OcrViolationTicket { get; set; }
+
+    public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 }

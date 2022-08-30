@@ -1,39 +1,40 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
-    public class DisputedCount
+    public class DisputeCount
     {
         /// <summary>
         /// Represents the dispuant plea on count.
         /// </summary>
-        [JsonPropertyName("plea")]
-        public Plea Plea { get; set; }
+        [JsonPropertyName("plea_cd")]
+        public DisputeCountPleaCode PleaCode { get; set; }
 
         /// <summary>
         /// The count number. Must be unique within an individual dispute.
         /// </summary>
-        [JsonPropertyName("count")]
-        public int Count { get; set; }
+        [JsonPropertyName("count_no")]
+        public short CountNo { get; set; }
 
         /// <summary>
         /// The disputant is requesting time to pay the ticketed amount.
         /// </summary>
         [JsonPropertyName("request_time_to_pay")]
-        public bool? RequestTimeToPay { get; set; }
+        public DisputeCountRequestTimeToPay? RequestTimeToPay { get; set; }
 
         /// <summary>
         /// The disputant is requesting a reduction of the ticketed amount.
         /// </summary>
         [JsonPropertyName("request_reduction")]
-        public bool? RequestReduction { get; set; }
+        public DisputeCountRequestReduction? RequestReduction { get; set; }
 
         /// <summary>
         /// Does the want to appear in court?
         /// </summary>
-        [JsonPropertyName("appear_in_court")]
-        public bool? AppearInCourt { get; set; }
+        [JsonPropertyName("request_court_appearance")]
+        public DisputeCountRequestCourtAppearance? RequestCourtAppearance { get; set; }
     }
 
 }

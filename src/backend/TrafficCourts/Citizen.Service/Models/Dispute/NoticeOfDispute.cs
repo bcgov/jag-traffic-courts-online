@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Models.Dispute
 {
@@ -13,13 +14,14 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// The violation ticket number.
         /// </summary>
         [JsonPropertyName("ticket_number")]
-        public string TicketNumber { get; set; } = null!;
+        [MaxLength(12)]
+        public string? TicketNumber { get; set; } = null!;
 
         /// <summary>
         /// The provincial court hearing location named on the violation ticket.
         /// </summary>
-        [JsonPropertyName("provincial_court_hearing_location")]
-        public string? ProvincialCourtHearingLocation { get; set; }
+        [JsonPropertyName("court_location")]
+        public string? CourtLocation { get; set; }
 
         /// <summary>
         /// The date and time the violation ticket was issue. Time must only be hours and minutes.
@@ -30,21 +32,33 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// <summary>
         /// The surname or corporate name.
         /// </summary>
-        [JsonPropertyName("surname")]
-        public string Surname { get; set; } = null!;
+        [JsonPropertyName("disputant_surname")]
+        public string DisputantSurname { get; set; } = null!;
 
         /// <summary>
-        /// The given names or corporate name continued.
+        /// The first given name or corporate name continued.
         /// </summary>
-        [JsonPropertyName("given_names")]
-        public string GivenNames { get; set; } = null!;
+        [JsonPropertyName("disputant_given_name1")]
+        public string DisputantGivenName1 { get; set; } = null!;
+
+        /// <summary>
+        /// The second given name
+        /// </summary>
+        [JsonPropertyName("disputant_given_name2")]
+        public string? DisputantGivenName2 { get; set; } = null!;
+
+        /// <summary>
+        /// The third given name 
+        /// </summary>
+        [JsonPropertyName("disputant_given_name3")]
+        public string? DisputantGivenName3 { get; set; } = null!;
 
         /// <summary>
         /// The disputant's birthdate.
         /// </summary>
-        [JsonPropertyName("birthdate")]
+        [JsonPropertyName("disputant_birthdate")]
         [SwaggerSchema(Format = "date")]
-        public DateTime Birthdate { get; set; }
+        public DateTime DisputantBirthdate { get; set; }
 
         /// <summary>
         /// The drivers licence number. Note not all jurisdictions will use numeric drivers licence numbers.
@@ -61,20 +75,32 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// <summary>
         /// The mailing address of the disputant.
         /// </summary>
-        [JsonPropertyName("address")]
-        public string Address { get; set; } = null!;
+        [JsonPropertyName("address_line1")]
+        public string AddressLine1 { get; set; } = null!;
+
+        /// <summary>
+        /// The mailing address of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_line2")]
+        public string? AddressLine2 { get; set; } = null!;
+
+        /// <summary>
+        /// The mailing address of the disputant.
+        /// </summary>
+        [JsonPropertyName("address_line3")]
+        public string? AddressLine3 { get; set; } = null!;
 
         /// <summary>
         /// The mailing address city of the disputant.
         /// </summary>
-        [JsonPropertyName("city")]
-        public string City { get; set; } = null!;
+        [JsonPropertyName("address_city")]
+        public string AddressCity { get; set; } = null!;
 
         /// <summary>
         /// The mailing address province of the disputant.
         /// </summary>
-        [JsonPropertyName("province")]
-        public string Province { get; set; } = null!;
+        [JsonPropertyName("address_province")]
+        public string AddressProvince { get; set; } = null!;
 
         /// <summary>
         /// The mailing address postal code or zip code of the disputant.
@@ -101,22 +127,58 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string? EmailAddress { get; set; } = null!;
 
         /// <summary>
-        /// The count dispute details.
-        /// </summary>
-        [JsonPropertyName("disputed_counts")]
-        public List<DisputedCount> DisputedCounts { get; set; } = new List<DisputedCount>();
-
-        /// <summary>
         /// The disputant intends to be represented by a lawyer at the hearing.
         /// </summary>
         [JsonPropertyName("represented_by_lawyer")]
-        public bool RepresentedByLawyer { get; set; }
+        public DisputeRepresentedByLawyer RepresentedByLawyer { get; set; } = DisputeRepresentedByLawyer.N;
 
         /// <summary>
-        /// The details of the lawyer who represents the disputant at the hearing.
+        /// Name of the law firm that will represent the disputant at the hearing.
         /// </summary>
-        [JsonPropertyName("legal_representation")]
-        public LegalRepresentation? LegalRepresentation { get; set; }
+        [JsonPropertyName("law_firm_name")]
+        public string? LawFirmName { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Surname of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_surname")]
+        public string? LawyerSurname { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Given Name 1 of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_given_name1")]
+        public string? LawyerGivenName1 { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Given Name 2 of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_given_name2")]
+        public string? LawyerGivenName2 { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Given Name 3 of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_given_name3")]
+        public string? LawyerGivenName3 { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Email address of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_email")]
+        public string? LawyerEmail { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Address of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_address")]
+        public string? LawyerAddress { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Address of the lawyer who will represent the disputant at the hearing.
+        /// </summary>
+        [JsonPropertyName("lawyer_phone_number")]
+        public string? LawyerPhoneNumber { get; set; } = String.Empty;
 
         /// <summary>
         /// The disputant requires spoken language interpreter. The language name is indicated in this field.
@@ -125,10 +187,16 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string? InterpreterLanguage { get; set; }
 
         /// <summary>
+        /// Interpreter Required
+        /// </summary>
+        [JsonPropertyName("interprer_required")]
+        public DisputeInterpreterRequired? InterpreterRequired { get; set; } = DisputeInterpreterRequired.N;
+
+        /// <summary>
         /// The number of witnesses that the disputant intends to call.
         /// </summary>
-        [JsonPropertyName("number_of_witness")]
-        public int NumberOfWitness { get; set; }
+        [JsonPropertyName("witness_no")]
+        public int WitnessNo { get; set; }
 
         /// <summary>
         /// The reason that disputant declares for requesting a fine reduction.
@@ -146,19 +214,31 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         /// Identifier for whether the citizen has detected any issues with the OCR ticket result or not.
         /// </summary>
         [JsonPropertyName("disputant_detected_ocr_issues")]
-        public bool DisputantDetectedOcrIssues { get; set; }
+        public DisputeDisputantDetectedOcrIssues? DisputantDetectedOcrIssues { get; set; } = DisputeDisputantDetectedOcrIssues.N;
 
         /// <summary>
         /// The description of the issue with OCR ticket if the citizen has detected any.
         /// </summary>
-        [JsonPropertyName("disputant_ocr_issues_description")]
-        public string? DisputantOcrIssuesDescription { get; set; }
+        [JsonPropertyName("disputant_ocr_issues")]
+        public string? DisputantOcrIssues { get; set; }
 
         /// <summary>
         /// The unique identifier for the Violation Ticket (OCR or looked up) for this dispute.
         /// </summary>
         [JsonPropertyName("ticket_id")]
         public string TicketId { get; set; } = null!;
+
+        /// <summary>
+        /// Detachment Location
+        /// </summary>
+        [JsonPropertyName("detachment_location")]
+        public string? DetachmentLocation { get; set; } = null!;
+
+        /// <summary>
+        /// Dispute Counts
+        /// </summary>
+        [JsonPropertyName("dispute_counts")]
+        public ICollection<DisputeCount>? DisputeCounts { get; set; }
     }
 
 }

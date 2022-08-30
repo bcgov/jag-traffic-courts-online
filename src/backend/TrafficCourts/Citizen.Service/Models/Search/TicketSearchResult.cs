@@ -35,13 +35,12 @@ namespace TrafficCourts.Citizen.Service.Models.Search
 
             Offences = violationTicket
                 .Counts
-                .OrderBy(_ => _.Count)
+                .OrderBy(_ => _.CountNo)
                 .Where(_ => _.TicketedAmount is not null)
                 .Select(_ => new TicketOffence
                 {
-                    OffenceNumber = _.Count,
+                    OffenceNumber = _.CountNo,
                     TicketedAmount = _.TicketedAmount!.Value,
-                    AmountDue = _.AmountDue ?? _.TicketedAmount.Value,
                     OffenceDescription = _.Description,
                     VehicleDescription = string.Empty,
                     InvoiceType = "Traffic Violation Ticket"

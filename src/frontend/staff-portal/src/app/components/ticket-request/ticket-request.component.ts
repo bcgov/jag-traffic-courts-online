@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Dispute, DisputedCount, DisputedCountPlea } from 'app/api';
+import { DisputeCount, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeCountRequestReduction, DisputeCountRequestTimeToPay, DisputeRepresentedByLawyer } from 'app/api';
+import { DisputeExtended } from 'app/services/dispute.service';
 import { ViolationTicketService } from 'app/services/violation-ticket.service';
 
 @Component({
@@ -9,24 +10,29 @@ import { ViolationTicketService } from 'app/services/violation-ticket.service';
   styleUrls: ['./ticket-request.component.scss']
 })
 export class TicketRequestComponent implements OnInit {
-  @Input() disputeInfo: Dispute;
+  @Input() disputeInfo: DisputeExtended;
   public countsActions: any;
   public collapseObj: any = {
     contactInformation: true
   }
   public form: FormGroup;
   public countFormFields = {
-    plea: [null],
+    pleaCode: [null],
     count: [null],
     requestTimeToPay: [null],
     requestReduction: [null],
-    appearInCourt: [null, [Validators.required]],
-    notAppearInCourt: [null, [Validators.required]],
+    requestCourtAppearance: [null, [Validators.required]],
+    notrequestCourtAppearance: [null, [Validators.required]],
     courtGuilty: [null, [Validators.required]],
     courtNotGuilty: [null, [Validators.required]],
     noCourtGuilty: [null, [Validators.required]],
     noCourtNotGuilty: [null, [Validators.required]]
   }
+  public RepresentedByLawyer = DisputeRepresentedByLawyer;
+  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public PleaCode = DisputeCountPleaCode;
+  public RequestTimeToPay = DisputeCountRequestTimeToPay;
+  public RequestReduction = DisputeCountRequestReduction;
 
   constructor(
     protected formBuilder: FormBuilder,
@@ -35,66 +41,66 @@ export class TicketRequestComponent implements OnInit {
     this.form = this.formBuilder.group({
       timeToPayReason: null,
       fineReductionReason: null,
-      disputedCounts: this.formBuilder.array([])
+      disputeCounts: this.formBuilder.array([])
     });
   }
 
-  setDisputedCount(count: number) {
+  setDisputeCount(count: number) {
     // set disputed count information
-    let disputedCount = this.disputeInfo.disputedCounts.filter(x => x.count == count)[0];
-    let violationTicketCount = this.disputeInfo.violationTicket.violationTicketCounts.filter(x => x.count == count)[0];
+    let disputeCount = this.disputeInfo.disputeCounts.filter(x => x.countNo == count)[0];
+    let violationTicketCount = this.disputeInfo.violationTicket.violationTicketCounts.filter(x => x.countNo == count)[0];
 
     let requestType = "";
-    if (disputedCount) {
-      if (disputedCount.plea == DisputedCountPlea.Guilty && disputedCount.appearInCourt == false) {
-        requestType = disputedCount.requestTimeToPay == true ? "Time to pay" : "";
-        requestType = requestType.concat(disputedCount.requestTimeToPay == true && disputedCount.requestReduction == true ? " + " : "");
-        requestType = requestType.concat(disputedCount.requestReduction == true ? "Fine reduction" : "");
-      } else if (disputedCount.plea == DisputedCountPlea.Guilty && disputedCount.appearInCourt == true) {
+    if (disputeCount) {
+      if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.N) {
+        requestType = disputeCount.requestTimeToPay === this.RequestTimeToPay.Y ? "Time to pay" : "";
+        requestType = requestType.concat(disputeCount.requestTimeToPay === this.RequestTimeToPay.Y && disputeCount.requestReduction === this.RequestReduction.Y ? " + " : "");
+        requestType = requestType.concat(disputeCount.requestReduction === this.RequestReduction.Y ? "Fine reduction" : "");
+      } else if (disputeCount.pleaCode === this.PleaCode.G && disputeCount.requestCourtAppearance === this.RequestCourtAppearance.Y) {
         requestType = 'Time to pay and/or fine reduction';
-      } else if (disputedCount.plea == DisputedCountPlea.NotGuilty) {
+      } else if (disputeCount.pleaCode === this.PleaCode.N) {
         requestType = "Dispute offence";
       }
     }
 
-    const disputedCountForm = this.formBuilder.group({
+    const disputeCountForm = this.formBuilder.group({
       count: count,
       requestType: requestType,
-      plea: disputedCount?.plea,
-      requestTimeToPay: disputedCount?.requestTimeToPay,
-      requestReduction: disputedCount?.requestReduction,
+      pleaCode: disputeCount?.pleaCode,
+      requestTimeToPay: disputeCount?.requestTimeToPay,
+      requestReduction: disputeCount?.requestReduction,
       section: violationTicketCount ? this.violationTicketService.getLegalParagraphing(violationTicketCount) : undefined,
       description: violationTicketCount?.description,
       ticketedAmount: violationTicketCount?.ticketedAmount,
-      appearInCourt: disputedCount?.appearInCourt,
-      notAppearInCourt: !(disputedCount?.appearInCourt)
+      requestCourtAppearance: disputeCount?.requestCourtAppearance,
+      notrequestCourtAppearance: !(disputeCount?.requestCourtAppearance)
     });
 
-    if (violationTicketCount?.description) this.disputedCounts.push(disputedCountForm);
+    if (violationTicketCount?.description) this.disputeCounts.push(disputeCountForm);
   }
 
-  get disputedCounts() {
-    return this.form.controls["disputedCounts"] as FormArray;
+  get disputeCounts() {
+    return this.form.controls["disputeCounts"] as FormArray;
   }
 
   ngOnInit(): void {
     this.form.patchValue(this.disputeInfo);
-    this.setDisputedCount(1);
-    this.setDisputedCount(2);
-    this.setDisputedCount(3);
+    this.setDisputeCount(1);
+    this.setDisputeCount(2);
+    this.setDisputeCount(3);
 
-    this.countsActions = this.getCountsActions(this.disputeInfo.disputedCounts);
+    this.countsActions = this.getCountsActions(this.disputeInfo.disputeCounts);
   }
 
   public handleCollapse(name: string) {
     this.collapseObj[name] = !this.collapseObj[name]
   }
 
-  public getCountsActions(counts: DisputedCount[]): any {
+  public getCountsActions(counts: DisputeCount[]): any {
     let countsActions: any = {};
 
     let fields = Object.keys(this.countFormFields);
-    let toCountStr = (arr: DisputedCount[]) => arr.map(i => "Count " + i.count).join(", ");
+    let toCountStr = (arr: DisputeCount[]) => arr.map(i => "Count " + i.countNo).join(", ");
     fields.forEach(field => {
       if (counts && counts.length > 0) {
         countsActions[field] = toCountStr(counts.filter(i => i[field]));
@@ -102,11 +108,11 @@ export class TicketRequestComponent implements OnInit {
         countsActions[field] = [];
       }
     });
-    countsActions.notAppearInCourt = counts.filter(i => i.appearInCourt === false).map(i => "Count " + i.count).join(", ");
-    countsActions.courtGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.Guilty && i.appearInCourt == true));
-    countsActions.courtNotGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.NotGuilty && i.appearInCourt == true));
-    countsActions.noCourtGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.Guilty && i.appearInCourt == false));
-    countsActions.noCourtNotGuilty = toCountStr(counts.filter(i => i.plea === DisputedCountPlea.NotGuilty && i.appearInCourt == false));
+    countsActions.notrequestCourtAppearance = counts.filter(i => i.requestCourtAppearance === this.RequestCourtAppearance.N).map(i => "Count " + i.countNo).join(", ");
+    countsActions.courtGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && i.requestCourtAppearance === this.RequestCourtAppearance.Y));
+    countsActions.courtNotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N && i.requestCourtAppearance === this.RequestCourtAppearance.Y));
+    countsActions.noCourtGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && i.requestCourtAppearance === this.RequestCourtAppearance.N));
+    countsActions.noCourtNotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N && i.requestCourtAppearance == this.RequestCourtAppearance.N));
     return countsActions;
   }
 }

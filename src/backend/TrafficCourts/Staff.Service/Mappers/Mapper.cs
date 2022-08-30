@@ -9,46 +9,47 @@ public class Mapper
     public static DisputeApproved ToDisputeApproved(Dispute dispute)
     {
         DisputeApproved target = new();
-        target.CitizenName = dispute.GivenNames + " " + dispute.Surname;
-        target.TicketIssuanceDate = dispute.IssuedDate.DateTime;
+        target.CitizenName = dispute.DisputantGivenName1 + " " + (dispute.DisputantGivenName2 is not null ? (dispute.DisputantGivenName2 + " ") : "") + (dispute.DisputantGivenName3 is not null ? (dispute.DisputantGivenName3 + " ") : "") + dispute.DisputantSurname;
+        target.TicketIssuanceDate = dispute.IssuedDate?.DateTime;
         target.TicketFileNumber = dispute.TicketNumber;
-        target.IssuingOrganization = dispute.ViolationTicket.OrganizationLocation;
-        target.IssuingLocation = dispute.ProvincialCourtHearingLocation;
+        target.IssuingOrganization = dispute.ViolationTicket.DetachmentLocation;
+        target.IssuingLocation = dispute.CourtLocation;
         target.DriversLicence = dispute.DriversLicenceNumber;
         List <Messaging.MessageContracts.ViolationTicketCount> violationTicketCounts = new();
         foreach (var violationTicketCount in dispute.ViolationTicket.ViolationTicketCounts)
         {
             Messaging.MessageContracts.ViolationTicketCount ticketCount = new()
             {
-                Count = violationTicketCount.Count,
-                FullSection = violationTicketCount.FullSection,
+                Count = violationTicketCount.CountNo,
+                Subparagraph = violationTicketCount.Subparagraph,
                 Section = violationTicketCount.Section,
                 Subsection = violationTicketCount.Subsection,
                 Paragraph = violationTicketCount.Paragraph,
-                Act = violationTicketCount.ActRegulation,
+                Act = violationTicketCount.ActOrRegulationNameCode,
                 Amount = violationTicketCount.TicketedAmount
             };
 
             violationTicketCounts.Add(ticketCount);
         }
-        target.ViolationTicketCounts = violationTicketCounts;
-        target.StreetAddress = dispute.Address;
-        target.City = dispute.City;
-        target.Province = dispute.Province;
-        target.PostalCode = dispute.PostalCode;
-        target.Email = dispute.EmailAddress;
-        List<Messaging.MessageContracts.DisputeCount> disputeCounts = new();
-        foreach (var dc in dispute.DisputedCounts)
+
+        List<Messaging.MessageContracts.DisputedCount> disputeCounts = new();
+        foreach (var dc in dispute.DisputeCounts)
         {
-            Messaging.MessageContracts.DisputeCount disputeCount = new()
+            Messaging.MessageContracts.DisputedCount disputeCount = new()
             {
-                Count = dc.Count,
-                DisputeType = nameof(dc.Plea)
+                Count = dc.CountNo,
+                DisputeType = nameof(dc.PleaCode)
             };
 
             disputeCounts.Add(disputeCount);
         }
         target.DisputeCounts = disputeCounts;
+        target.ViolationTicketCounts = violationTicketCounts;
+        target.StreetAddress = dispute.AddressLine1 + ((dispute.AddressLine2 is null) ? "" : ", " + dispute.AddressLine2) + ((dispute.AddressLine3 is null) ? "" : ", " + dispute.AddressLine3);
+        target.City = dispute.AddressCity;
+        target.Province = dispute.AddressProvince;
+        target.PostalCode = dispute.PostalCode;
+        target.Email = dispute.EmailAddress;
 
         return target;
     }
@@ -63,7 +64,7 @@ public class Mapper
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
         DisputeCancelled disputeCancelled = new();
-        disputeCancelled.Id = dispute.Id;
+        disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
         return disputeCancelled;
     }

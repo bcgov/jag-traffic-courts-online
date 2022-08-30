@@ -9,6 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ViolationTicketCountIsAct } from './violationTicketCountIsAct.model';
+import { ViolationTicketCountIsRegulation } from './violationTicketCountIsRegulation.model';
 
 
 export interface ViolationTicketCount { 
@@ -16,18 +18,17 @@ export interface ViolationTicketCount {
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
-    id?: number;
-    count?: number;
+    violationTicketCountId?: number;
+    countNo?: number;
     description?: string | null;
-    actRegulation?: string | null;
-    fullSection?: string | null;
+    actOrRegulationNameCode?: string | null;
+    isAct?: ViolationTicketCountIsAct;
+    isRegulation?: ViolationTicketCountIsRegulation;
     section?: string | null;
     subsection?: string | null;
     paragraph?: string | null;
     subparagraph?: string | null;
     ticketedAmount?: number | null;
-    isAct?: boolean | null;
-    isRegulation?: boolean | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

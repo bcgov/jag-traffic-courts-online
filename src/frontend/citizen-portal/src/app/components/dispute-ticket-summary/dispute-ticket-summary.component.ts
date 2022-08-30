@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { NoticeOfDispute } from "app/api";
-import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
+import { DisputeRepresentedByLawyer } from "app/api";
+import { NoticeOfDisputeService, NoticeOfDisputeExtended } from "app/services/notice-of-dispute.service";
 
 @Component({
   selector: "app-dispute-ticket-summary",
@@ -8,8 +8,9 @@ import { NoticeOfDisputeService } from "app/services/notice-of-dispute.service";
   styleUrls: ["./dispute-ticket-summary.component.scss"],
 })
 export class DisputeTicketSummaryComponent implements OnInit {
-  @Input() public noticeOfDispute: NoticeOfDispute;
+  @Input() public noticeOfDispute: NoticeOfDisputeExtended;
   public countsActions: any;
+  public RepresentedByLawyer = DisputeRepresentedByLawyer;
 
   constructor(
     protected noticeOfDisputeService: NoticeOfDisputeService,
@@ -18,7 +19,7 @@ export class DisputeTicketSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.noticeOfDispute) {
-      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.disputed_counts);
+      this.countsActions = this.noticeOfDisputeService.getCountsActions(this.noticeOfDispute.dispute_counts);
     }
   }
 }

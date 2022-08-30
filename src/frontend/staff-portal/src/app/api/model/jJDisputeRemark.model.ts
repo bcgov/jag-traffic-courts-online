@@ -11,17 +11,14 @@
  */
 
 
-export interface LegalRepresentation { 
+export interface JJDisputeRemark { 
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
     modifiedTs?: string;
     id?: number;
-    lawFirmName?: string | null;
-    lawyerFullName?: string | null;
-    lawyerEmail?: string | null;
-    lawyerAddress?: string | null;
-    lawyerPhoneNumber?: string | null;
+    userFullName?: string | null;
+    note?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

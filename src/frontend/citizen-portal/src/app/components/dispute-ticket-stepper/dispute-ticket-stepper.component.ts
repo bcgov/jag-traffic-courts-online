@@ -7,7 +7,7 @@ import { UtilsService } from "@core/services/utils.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Address } from "@shared/models/address.model";
 import { FormControlValidators } from "@core/validators/form-control.validators";
-import { NoticeOfDispute, ViolationTicket, Plea } from "app/api";
+import { NoticeOfDispute, ViolationTicket, DisputeCountPleaCode, DisputeRepresentedByLawyer, DisputeCountRequestCourtAppearance, DisputeCountRequestTimeToPay, DisputeCountRequestReduction } from "app/api";
 import { ticketTypes } from "@shared/enums/ticket-type.enum";
 import { ViolationTicketService } from "app/services/violation-ticket.service";
 import { Subscription } from "rxjs";
@@ -39,7 +39,11 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public defaultLanguage: string;
   public ticketTypes = ticketTypes;
   public todayDate: Date = new Date();
-  public Plea = Plea;
+  public Plea = DisputeCountPleaCode;
+  public RepresentedByLawyer = DisputeRepresentedByLawyer;
+  public RequestCourtAppearance = DisputeCountRequestCourtAppearance;
+  public RequestTimeToPay = DisputeCountRequestTimeToPay;
+  public RequestReduction = DisputeCountRequestReduction;
   public selected = null;
 
   public form: FormGroup;
@@ -128,7 +132,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     this.ticket.drivers_licence_number && this.form.controls["drivers_licence_number"].setValue(this.ticket.drivers_licence_number.toString());
     this.legalRepresentationForm = this.formBuilder.group(this.legalRepresentationFields);
 
-    this.countIndexes = this.ticket.counts.map(i => i.count);
+    this.countIndexes = this.ticket.counts.map(i => i.count_no);
     let lastCountInx = this.countIndexes[this.countIndexes.length - 1]
     this.additionalIndex = lastCountInx + 1;
   }
@@ -160,13 +164,13 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   public onCountryChange(country) {
     setTimeout(() => {
       this.form.get("postal_code").setValidators([Validators.maxLength(6)]);
-      this.form.get("province").setValidators([Validators.maxLength(30)]);
+      this.form.get("address_province").setValidators([Validators.maxLength(30)]);
       this.form.get("home_phone_number").setValidators([Validators.maxLength(20)]);
       this.form.get("drivers_licence_number").setValidators([Validators.maxLength(20)]);
       this.form.get("drivers_licence_province").setValidators([Validators.maxLength(30)]);
 
       if (country === "Canada" || country === "United States") {
-        this.form.get("province").addValidators([Validators.required]);
+        this.form.get("address_province").addValidators([Validators.required]);
         this.form.get("postal_code").addValidators([Validators.required]);
         this.form.get("home_phone_number").addValidators([Validators.required, FormControlValidators.phone]);
         this.form.get("drivers_licence_number").addValidators([Validators.required]);
@@ -174,7 +178,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       }
 
       this.form.get("postal_code").updateValueAndValidity();
-      this.form.get("province").updateValueAndValidity();
+      this.form.get("address_province").updateValueAndValidity();
       this.form.get("home_phone_number").updateValueAndValidity();
       this.form.get("drivers_licence_number").updateValueAndValidity();
       this.form.get("drivers_licence_province").updateValueAndValidity();
@@ -213,7 +217,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onAttendHearingChange(countForm: FormGroup, event): void {
-    countForm.patchValue({ ...this.countFormDefaultValue, appear_in_court: event.value, __skip: false });
+    countForm.patchValue({ ...this.countFormDefaultValue, request_court_appearance: event.value, __skip: false });
   }
 
   public onStepSave(): void {
@@ -223,8 +227,8 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     if (this.countIndexes?.indexOf(this.stepper.selectedIndex) > -1) {
       let countInx = this.stepper.selectedIndex - 1;
       let countForm = this.countForms.controls[countInx];
-      if (countForm.value.request_time_to_pay || countForm.value.request_reduction) {
-        countForm.patchValue({ plea: Plea.Guilty });
+      if (countForm.value.request_time_to_pay === this.RequestTimeToPay.Y || countForm.value.request_reduction === this.RequestReduction.Y) {
+        countForm.patchValue({ plea_cd: DisputeCountPleaCode.G });
       }
       if (countForm.value.__skip) {
         countForm.patchValue({ ...this.getCountFormInitValue(this.ticket.counts[countInx]), __skip: true });
@@ -246,8 +250,9 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
       this.noticeOfDispute = this.noticeOfDisputeService.getNoticeOfDispute({
         ...this.form.value,
         ...this.additionalForm.value,
+        ...this.legalRepresentationForm.value,
         country: this.form.get("country").value, // disabled field is not available in this.form.value
-        disputed_counts: this.countForms.value
+        dispute_counts: this.countForms.value
       });
     } else {
       this.noticeOfDispute = null;
@@ -274,10 +279,10 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
     let countForm = this.countForms?.controls[countInx]
     if (countForm) {
       let valid = countForm.valid || countForm.value.__skip;
-      if (countForm.value.appear_in_court) {
-        valid = valid && countForm.value.plea;
-      } else if (countForm.value.appear_in_court === false) {
-        valid = valid && (countForm.value.request_time_to_pay || countForm.value.request_reduction);
+      if (countForm.value.request_court_appearance === this.RequestCourtAppearance.Y) {
+        valid = valid && (countForm.value.plea_cd === this.Plea.G || countForm.value.plea_cd === this.Plea.N);
+      } else if (countForm.value.request_court_appearance === this.RequestCourtAppearance.N) {
+        valid = valid && ((countForm.value.request_time_to_pay === this.RequestTimeToPay.Y) || (countForm.value.request_reduction === this.RequestReduction.Y));
       }
       return valid && !this.isAllCountsSkipped;
     }
@@ -285,20 +290,15 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   }
 
   public onChangeRepresentedByLawyer(event: MatCheckboxChange) {
-    if (event.checked) { // only append if selected
-      this.additionalForm.addControl("legal_representation", this.legalRepresentationForm);
-    } else {
-      this.additionalForm.removeControl("legal_representation");
-    }
     this.additionalForm.markAsUntouched();
   }
 
   public onChangeWitnessPresent(event: MatCheckboxChange) {
     if (event.checked) {
-      this.additionalForm.controls.number_of_witness.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
+      this.additionalForm.controls.witness_no.setValidators([Validators.min(this.minWitnesses), Validators.max(this.maxWitnesses), Validators.required]);
     } else {
-      this.additionalForm.controls.number_of_witness.clearValidators();
-      this.additionalForm.controls.number_of_witness.updateValueAndValidity();
+      this.additionalForm.controls.witness_no.clearValidators();
+      this.additionalForm.controls.witness_no.updateValueAndValidity();
     }
   }
 

@@ -1,8 +1,9 @@
 {
-  "config": {
-    "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
-    "realm": "traffic-court",
-    "clientId": "staff-portal"
-  },
-  "initOptions": {}
-}
+    "config": {
+      "url": "https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca",
+      "realm": "traffic-court",
+      "clientId": "staff-portal"
+    },
+    "initOptions": {
+    }
+  }

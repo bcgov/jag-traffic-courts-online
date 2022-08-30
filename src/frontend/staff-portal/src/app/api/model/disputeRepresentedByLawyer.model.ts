@@ -11,10 +11,10 @@
  */
 
 
-export type DisputedCountPlea = 'GUILTY' | 'NOT_GUILTY';
+export type DisputeRepresentedByLawyer = 'Y' | 'N';
 
-export const DisputedCountPlea = {
-    Guilty: 'GUILTY' as DisputedCountPlea,
-    NotGuilty: 'NOT_GUILTY' as DisputedCountPlea
+export const DisputeRepresentedByLawyer = {
+    Y: 'Y' as DisputeRepresentedByLawyer,
+    N: 'N' as DisputeRepresentedByLawyer
 };
 

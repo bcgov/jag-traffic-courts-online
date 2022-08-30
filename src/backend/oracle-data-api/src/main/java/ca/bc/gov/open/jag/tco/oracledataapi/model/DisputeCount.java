@@ -2,9 +2,13 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -24,47 +28,57 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DisputedCount extends Auditable<String> {
-
+public class DisputeCount extends Auditable<String> {
+	
+	/**
+	 * Primary key
+	 */
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
-    private Long id;
-
-	/**
-	 * Represents the disputant plea on count.
-	 */
-	@Column
-	private Plea plea;
-
+	private Long disputeCountId;
+	
 	/**
 	 * The count number.
 	 */
 	@Column
 	@Min(1) @Max(3)
-	private int count;
+	private int countNo;
+	
+	/**
+	 * Represents the disputant plea on count.
+	 */
+	@Column(length = 3)
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Plea pleaCode;
 
 	/**
 	 * The disputant is requesting time to pay the ticketed amount.
 	 */
 	@Column
-	private boolean requestTimeToPay;
-
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+    private YesNo requestTimeToPay;
+	
 	/**
 	 * The disputant is requesting a reduction of the ticketed amount.
 	 */
 	@Column
-	private boolean requestReduction;
-
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+    private YesNo requestReduction;
+	
 	/**
-	 * Does the want to appear in court?
+	 * Does the disputant want to appear in court?
 	 */
 	@Column
-	private boolean appearInCourt;
-
-	@JsonBackReference
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+    private YesNo requestCourtAppearance;
+	
+	@JsonBackReference(value="dispute_count_reference")
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
 	private Dispute dispute;
-
 }

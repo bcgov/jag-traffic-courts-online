@@ -24,60 +24,50 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             Assert.NotNull(actual);
 
             Assert.Equal(noticeOfDispute.TicketNumber, actual.TicketNumber);
-            Assert.Equal(DisputeStatus.New, actual.Status);
-            Assert.Equal(noticeOfDispute.ProvincialCourtHearingLocation, actual.ProvincialCourtHearingLocation);
+            Assert.Equal(DisputeStatus.NEW, actual.Status);
+            Assert.Equal(noticeOfDispute.CourtLocation, actual.CourtLocation);
             Assert.Equal(noticeOfDispute.IssuedDate, actual.IssuedDate);
-            Assert.Equal(noticeOfDispute.Surname, actual.Surname);
-            Assert.Equal(noticeOfDispute.GivenNames, actual.GivenNames);
-            Assert.Equal(noticeOfDispute.Birthdate, actual.Birthdate);
+            Assert.Equal(noticeOfDispute.DisputantSurname, actual.DisputantSurname);
+            Assert.Equal(noticeOfDispute.DisputantGivenName1, actual.DisputantGivenName1);
+            Assert.Equal(noticeOfDispute.DisputantGivenName2, actual.DisputantGivenName2);
+            Assert.Equal(noticeOfDispute.DisputantGivenName3, actual.DisputantGivenName3);
+            Assert.Equal(noticeOfDispute.DisputantBirthdate, actual.DisputantBirthdate);
             Assert.Equal(noticeOfDispute.DriversLicenceNumber, actual.DriversLicenceNumber);
             Assert.Equal(noticeOfDispute.DriversLicenceProvince, actual.DriversLicenceProvince);
-            Assert.Equal(noticeOfDispute.Address, actual.Address);
-            Assert.Equal(noticeOfDispute.City, actual.City);
-            Assert.Equal(noticeOfDispute.Province, actual.Province);
+            Assert.Equal(noticeOfDispute.AddressLine1, actual.AddressLine1);
+            Assert.Equal(noticeOfDispute.AddressLine2, actual.AddressLine2);
+            Assert.Equal(noticeOfDispute.AddressLine3, actual.AddressLine3);
+            Assert.Equal(noticeOfDispute.AddressCity, actual.AddressCity);
+            Assert.Equal(noticeOfDispute.AddressProvince, actual.AddressProvince);
             Assert.Equal(noticeOfDispute.PostalCode, actual.PostalCode);
             Assert.Equal(noticeOfDispute.HomePhoneNumber, actual.HomePhoneNumber);
             Assert.Equal(noticeOfDispute.WorkPhoneNumber, actual.WorkPhoneNumber);
             Assert.Equal(noticeOfDispute.EmailAddress, actual.EmailAddress);
             Assert.Equal(noticeOfDispute.RepresentedByLawyer, actual.RepresentedByLawyer);
             Assert.Equal(noticeOfDispute.InterpreterLanguage, actual.InterpreterLanguage);
-            Assert.Equal(noticeOfDispute.NumberOfWitness, actual.NumberOfWitness);
+            Assert.Equal(noticeOfDispute.WitnessNo, actual.WitnessNo);
             Assert.Equal(noticeOfDispute.FineReductionReason, actual.FineReductionReason);
             Assert.Equal(noticeOfDispute.TimeToPayReason, actual.TimeToPayReason);
             Assert.Equal(noticeOfDispute.DisputantDetectedOcrIssues, actual.DisputantDetectedOcrIssues);
-            Assert.Equal(noticeOfDispute.DisputantOcrIssuesDescription, actual.DisputantOcrIssuesDescription);
+            Assert.Equal(noticeOfDispute.DisputantOcrIssues, actual.DisputantOcrIssues);
+            Assert.Equal(noticeOfDispute.LawFirmName, actual.LawFirmName);
+            Assert.Equal(noticeOfDispute.LawyerAddress, actual.LawyerAddress);
+            Assert.Equal(noticeOfDispute.LawyerEmail, actual.LawyerEmail);
+            Assert.Equal(noticeOfDispute.LawyerSurname, actual.LawyerSurname);
+            Assert.Equal(noticeOfDispute.LawyerGivenName1, actual.LawyerGivenName1);
+            Assert.Equal(noticeOfDispute.LawyerGivenName2, actual.LawyerGivenName2);
+            Assert.Equal(noticeOfDispute.LawyerGivenName3, actual.LawyerGivenName3);
+            Assert.Equal(noticeOfDispute.LawyerPhoneNumber, actual.LawyerPhoneNumber);
 
-            foreach (var count in actual.DisputedCounts)
+            foreach (var count in actual.DisputeCounts)
             {
-                Assert.Contains(noticeOfDispute.DisputedCounts, _ => (int)_.Plea == (int)count.Plea);
-                Assert.Contains(noticeOfDispute.DisputedCounts, _ => _.Count == count.Count);
-                Assert.Contains(noticeOfDispute.DisputedCounts, _ => _.AppearInCourt == count.AppearInCourt);
-                Assert.Contains(noticeOfDispute.DisputedCounts, _ => _.RequestReduction == count.RequestReduction);
-                Assert.Contains(noticeOfDispute.DisputedCounts, _ => _.RequestTimeToPay == count.RequestTimeToPay);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => (int)_.PleaCode == (int)count.PleaCode);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.CountNo == count.CountNo);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestCourtAppearance == count.RequestCourtAppearance);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestReduction == count.RequestReduction);
+                Assert.Contains(noticeOfDispute.DisputeCounts, _ => _.RequestTimeToPay == count.RequestTimeToPay);
             }
 
-            Assert.NotNull(actual.LegalRepresentation);
-        }
-
-
-        /// <summary>
-        /// Checks to ensure each field is mapped correctly on <see cref="LegalRepresentation"/>
-        /// </summary>
-        [Fact]
-        public void LegalRepresentation_is_mapped_correctly()
-        {
-            var fixture = new Fixture();
-            var mapper = CreateMapper();
-
-            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Dispute.LegalRepresentation>();
-
-            var actual = mapper.Map<Messaging.MessageContracts.LegalRepresentation>(expected);
-
-            Assert.Equal(expected.LawFirmName, actual.LawFirmName);
-            Assert.Equal(expected.LawyerAddress, actual.LawyerAddress);
-            Assert.Equal(expected.LawyerEmail, actual.LawyerEmail);
-            Assert.Equal(expected.LawyerFullName, actual.LawyerFullName);
-            Assert.Equal(expected.LawyerPhoneNumber, actual.LawyerPhoneNumber);
         }
 
         /// <summary>
@@ -89,15 +79,14 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
             var fixture = new Fixture();
             var mapper = CreateMapper();
 
-            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Dispute.DisputedCount>();
+            var expected = fixture.Create<TrafficCourts.Citizen.Service.Models.Dispute.DisputeCount>();
 
-            var actual = mapper.Map<Messaging.MessageContracts.DisputedCount>(expected);
+            var actual = mapper.Map<Messaging.MessageContracts.DisputeCount>(expected);
 
-            Assert.Equal(expected.Plea.ToString(), actual.Plea.ToString());
-            Assert.Equal(expected.Count, actual.Count);
+            Assert.Equal(expected.PleaCode, actual.PleaCode);
             Assert.Equal(expected.RequestTimeToPay, actual.RequestTimeToPay);
             Assert.Equal(expected.RequestReduction, actual.RequestReduction);
-            Assert.Equal(expected.AppearInCourt, actual.AppearInCourt);
+            Assert.Equal(expected.RequestCourtAppearance, actual.RequestCourtAppearance);
         }
 
         /// <summary>
