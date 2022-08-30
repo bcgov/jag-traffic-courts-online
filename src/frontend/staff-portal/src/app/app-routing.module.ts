@@ -9,7 +9,7 @@ import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench-da
 
 let routes: Routes = [
   {
-    path: '',
+    path: AppRoutes.LANDING,
     component: LandingComponent,
     data: {
       title: "Please sign in"

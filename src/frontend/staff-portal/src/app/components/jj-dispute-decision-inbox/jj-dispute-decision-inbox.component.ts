@@ -22,7 +22,6 @@ export class JJDisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   public courtLocations: CourthouseConfig[];
   currentTeam: string = "All";
   jjDisputeInfo: JJDispute;
-  public isLoggedIn = false;
   data = [] as JJDisputeView[];
   showDispute: boolean = false;
   dataSource = new MatTableDataSource();

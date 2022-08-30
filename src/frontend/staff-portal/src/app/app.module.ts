@@ -11,7 +11,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { environment } from "../environments/environment";
 
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
