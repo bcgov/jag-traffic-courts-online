@@ -12,7 +12,6 @@ import { AuthService } from 'app/services/auth.service';
 export class StaffWorkbenchDashboardComponent implements OnInit {
   busy: Subscription;
   tabSelected = new FormControl(0);
-  public isLoggedIn = false;
   public fullName: string = "Loading...";
   public staffIDIR: string = "";
   public userProfile: KeycloakProfile = {};
@@ -25,13 +24,12 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   }
 
   public async ngOnInit() {
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-      this.authService.userProfile$.subscribe(userProfile => {
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
         this.userProfile = userProfile;
         this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
         this.staffIDIR = this.authService.userIDIR;
-      })
+      }
     })
   }
 

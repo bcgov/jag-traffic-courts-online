@@ -12,7 +12,6 @@ import { AuthService } from 'app/services/auth.service';
 export class JjWorkbenchDashboardComponent implements OnInit {
   busy: Subscription;
   tabSelected = new FormControl(0);
-  public isLoggedIn = false;
   public jjAdminRole: boolean = false;
   jjPage: string = "WR Assignments";
   public fullName: string = "Loading...";
@@ -25,14 +24,13 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   }
 
   public async ngOnInit() {
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-      this.authService.userProfile$.subscribe(userProfile => {
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
         this.userProfile = userProfile;
         this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
         this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
         this.jjIDIR = this.authService.userIDIR;
-      })
+      }
     })
   }
 

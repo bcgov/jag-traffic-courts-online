@@ -36,7 +36,6 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   ];
   disputes: Dispute[] = [];
   public userProfile: KeycloakProfile = {};
-  public isLoggedIn: boolean = false;
 
   @ViewChild('tickTbSort') tickTbSort = new MatSort();
   public showTicket = false
@@ -49,12 +48,11 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   public async ngOnInit() {
-    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-      this.authService.userProfile$.subscribe(userProfile => {
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
         this.userProfile = userProfile;
         this.IDIRLogin = this.authService.userIDIRLogin;
-      })
+      }
     })
 
     // when authentication token available, get data

@@ -1,16 +1,7 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  Input,
-  OnInit,
-  OnChanges,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AppRoutes } from 'app/app.routes';
 import { AppConfigService } from 'app/services/app-config.service';
 import { AuthService } from 'app/services/auth.service';
 import { KeycloakService } from 'keycloak-angular';
@@ -73,15 +64,6 @@ export class HeaderComponent implements OnInit {
     this.authService.checkAuth().subscribe(() => {
       this.authService.isLoggedIn$.subscribe(isLoggedIn => {
         this.isLoggedIn = isLoggedIn;
-        if (this.isLoggedIn) {
-          this.authService.userProfile$.subscribe(userProfile => {
-            this.userProfile = userProfile;
-            this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
-            this.router.navigate([this.authService.getRedirectUrl()]);
-          })
-        } else {
-          this.router.navigate(["/"]);
-        }
       })
     })
   }
