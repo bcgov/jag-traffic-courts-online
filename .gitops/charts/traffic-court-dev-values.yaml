@@ -30,7 +30,7 @@ citizen-web:
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.42.0",
+        "version": "1.43.0",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
