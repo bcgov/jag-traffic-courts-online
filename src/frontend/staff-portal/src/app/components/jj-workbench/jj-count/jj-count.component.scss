@@ -1,0 +1,151 @@
+@import "palette.scss";
+
+h3 {
+  font-weight: bold;
+  color: #1d4a77 !important;
+}
+
+.text {
+  font-weight: 700;
+  line-height: 1.5em;
+  color: black;
+}
+
+.section {
+  background-color: gray !important;
+}
+
+.section-grid-cell {
+  border:none;
+  padding-left: 5px;
+  padding-bottom: 15px;
+}
+
+.section-jj-grid-cell {
+  border-right-width: 2px;
+  border-right-style: solid;
+  border-right-color: #e4f2ff;
+  padding-left: 5px;
+  padding-bottom: 15px;
+}
+.section-grid-header {
+  font-size:small;
+  color: #707070;
+  font-weight: bold;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.small-note {
+  font-size:small !important;
+  color: #707070;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-grid-text {
+  font-size:small;
+  font-weight: bold;
+  color: #003366 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-jj-grid-text2 {
+  font-size: small;
+  color: #bcd9f3 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-jj-grid-text {
+  font-size:small;
+  color: #003366 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+p {
+  line-height: 1.1;
+}
+
+.count-text {
+  color: #1d4a77 !important;
+}
+
+.disputre {
+  width: 100%;
+}
+
+.button {
+  padding: 10px;
+  background-color: #c2c2c2;
+  color: #fff;
+}
+
+.count-list{
+  border-left: 15px solid #3b6288;
+  padding: 15px;
+  color: #07396a;
+  background-color: #f3f3f3;
+  }
+
+.mat-flat-button {
+  float: right;
+  margin-top: 1em;
+  margin-right: 10px;
+
+  &.large {
+    height: 46px;
+    font-size: 1.125em;
+    font-weight: bold;
+  }
+
+  &.light {
+    background-color: theme-palette(blue, bg);
+    color: white;
+  }
+}
+
+.mat-flat-button[disabled] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.contact-info {
+  border: 1px black;
+  margin-bottom: 12%;
+  .contact-info {
+    // margin-bottom: 60px;
+    .contact-body{
+        margin-top: 20px;
+    }
+    button {
+      width: 167px;
+      border-radius: inherit;
+    }
+    // :host
+  }
+
+  mat-expansion-panel {
+    box-shadow: none !important;
+    padding-bottom: 1em;
+    border-bottom: 1px solid theme-palette(grey, light);
+  }
+
+  mat-expansion-panel-header {
+    padding-left: 0;
+    padding-right: 0.5em;
+  }
+}
+::ng-deep {
+  .mat-expansion-indicator {
+    display: none !important;
+  }
+  .heading-hr {
+    width: 700% !important;
+  }
+  .subheader span{
+    font-weight: 600;
+    color: #1d4a77;
+  }
+}

@@ -1,0 +1,144 @@
+<div class="contact-info">
+  <a (click)="onBack()" style="color: #48afe5">
+    <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
+  </a>
+  <div *ngIf="retrieving === true">
+    <span>
+      <h3>Retrieving ticket information...</h3>
+    </span>
+  </div>
+  <div *ngIf="lastUpdatedJJDispute && retrieving === false">
+    <div style="float:inline">
+      <span style="float:left"><h1><b>Written Reasons Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}</b></h1></span>
+      <span style="float:right"><h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1></span>
+    </div> <br /><br />
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Ticket Information / Dispute History</h3>
+        </span>
+      </ng-container>
+      <div style="display: grid; grid-template-columns: auto auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Surname</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.surname }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Given Name(s)</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.givenNames }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Location of Offence</p>
+          <p class="section-grid-text"> {{ lastUpdatedJJDispute.offenceLocation }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Organization/Detachment/Location</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.policeDetachment }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Violation Date</p>
+          <p class="section-grid-text">{{ violationDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Violation Time</p>
+          <p class="section-grid-text">{{ violationTime }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Online Submission Date</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.submittedDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Date Received from ICBC</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
+        </span>
+      </div>
+    </section><br />
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Contact Information</h3>
+        </span>
+      </ng-container>
+      <div style="display: grid; grid-template-columns: auto auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Surname</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.surname }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Given Name(s)</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.givenNames }}</p>
+        </span>
+        <span class="section-grid-cell" style="grid-column: span 2">
+          <p class="section-grid-header">Address</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.address }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Birthdate</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.birthdate | date: "MMM dd, yyyy" }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Prov / State of DL</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.province }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Driver's Licence #</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.driversLicenceNumber }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Email</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.emailAddress }}</p>
+        </span>
+      </div>
+    </section><br />
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Written Reasons</h3>
+        </span>
+      </ng-container>
+      <div>
+        <h4><b>Fine Reduction</b><span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span></h4>
+        <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
+        <br /><br />
+      </div>
+      <div>
+        <h4><b>Time to Pay</b><span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading }}</span></h4>
+        <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
+    </div>
+    </section><br />
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Count(s)</h3>
+        </span>
+      </ng-container>
+      <div style="display: grid; grid-template-columns: 33% 33% 33%">
+        <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
+          <app-jj-count
+            [count]="i"
+            [jjDisputeInfo]="lastUpdatedJJDispute"
+            [jjDisputedCount]="getJJDisputedCount(i)"
+            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)"></app-jj-count>
+        </span>
+      </div>
+    </section><br />
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Add Remarks<br/>
+          <span class="small-note"><i><span style="color:red;">*</span> This is for internal use only</i></span>
+        </h3>
+        </span>
+      </ng-container>
+      <textarea matInput [(ngModel)]="lastUpdatedJJDispute.remarks" maxlength="1500" rows="6" style="background: #fffee6;"></textarea>
+    </section><br />
+    <div style="float: right; width: 100%;">
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+        Submit
+      </button>
+      <button class="large" mat-flat-button type="button" color="primary" (click)="onSave()"  [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+        Save & Finish Later
+      </button>
+    </div><br/><br/>
+  </div>
+</div>

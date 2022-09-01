@@ -1,0 +1,47 @@
+<div class="contact-info">
+  <a (click)="onBack()" style="color: #48afe5">
+    <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
+  </a>
+  <!-- <div *ngIf="retrieving === true">
+    <span>
+      <h3>Retrieving ticket information...</h3>
+    </span>
+  </div> -->
+  <!-- <div *ngIf="lastUpdatedJJDispute && retrieving === false"> -->
+    <section>
+      <ng-container subHeader>
+        <span>
+          <h3>Ticket Information / Dispute History</h3>
+        </span>
+      </ng-container>
+    </section><br />
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <app-page-header>
+            <ng-container subHeader>
+              <span>Uploaded Documents </span>
+            </ng-container>
+          </app-page-header>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <app-page-header>
+            <ng-container subHeader>
+              <span>File History </span>
+            </ng-container>
+          </app-page-header>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <app-page-header>
+            <ng-container subHeader>
+              <span>File Remarks </span>
+            </ng-container>
+          </app-page-header>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
+  <!-- </div> -->
