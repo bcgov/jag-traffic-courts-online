@@ -13,14 +13,11 @@ import { JJDisputeStatus } from 'app/api';
   styleUrls: ['./jj-dispute-inbox.component.scss'],
 })
 export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
-  @Output() public jjPage: EventEmitter<string> = new EventEmitter();
+  @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @Input() public jjIDIR: string;
 
   busy: Subscription;
-  jjDisputeInfo: JJDispute;
-
   data = [] as JJDispute[];
-  showDispute: boolean = false;
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
   displayedColumns: string[] = [
@@ -46,19 +43,8 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  backTicketList(element) {
-    this.showDispute = !this.showDispute;
-    if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("WR Inbox");
-    this.jjDisputeInfo = element;
-    if (!this.showDispute) this.getAll();  // refresh list
-  }
-
-  backTicketpage() {
-    this.showDispute = !this.showDispute;
-    if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("WR Inbox");
-    if (!this.showDispute) this.getAll(); // refresh list
+  backWorkbench(element) {
+    this.jjDisputeInfo.emit(element);
   }
 
   getAll(): void {

@@ -1,4 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { JJDispute } from 'app/api';
 
 @Component({
   selector: 'app-dispute-decision-info',
@@ -6,16 +7,16 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./dispute-decision-info.component.scss']
 })
 export class DisputeDecisionInfoComponent implements OnInit {
-  @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
+  @Output() public backInbox: EventEmitter<any> = new EventEmitter();
+  @Input() public jjDisputeInfo: JJDispute;
 
   constructor() { }
 
   ngOnInit(): void {
+    console.log("Dispute Decision Details");
   }
 
   public onBack() {
-    this.backTicketList.emit();
+    this.backInbox.emit();
   }
-
-
 }

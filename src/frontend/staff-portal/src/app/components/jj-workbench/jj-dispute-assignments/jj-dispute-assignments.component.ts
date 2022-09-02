@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
@@ -15,15 +15,13 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./jj-dispute-assignments.component.scss'],
 })
 export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
-  @Output() public jjPage: EventEmitter<string> = new EventEmitter();
+  @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
+  @Input() public IDIR: string;
 
   busy: Subscription;
-  jjDisputeInfo: JJDispute;
-
   data = [] as JJDisputeView[];
   public courtLocations: CourthouseConfig[];
   public currentTeam: string = "A";
-  showDispute: boolean = false;
   public bulkjjAssignedTo: string = "unassigned";
   public teamCounts: teamCounts[] = [];
   assignedDataSource = new MatTableDataSource();
@@ -67,19 +65,8 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.assignedDataSource.sort = this.sort;
   }
 
-  backTicketList(element) {
-    this.showDispute = !this.showDispute;
-    if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("WR Assignments");
-    this.jjDisputeInfo = element;
-    if (!this.showDispute) this.getAll(this.currentTeam);  // refresh list
-  }
-
-  backTicketpage() {
-    this.showDispute = !this.showDispute;
-    if (this.showDispute) this.jjPage.emit("Dispute Details");
-    else this.jjPage.emit("WR Assignments");
-    if (!this.showDispute) this.getAll(this.currentTeam); // refresh list
+  backWorkbench(element) {
+    this.jjDisputeInfo.emit(element);
   }
 
   getType(element: JJDispute): string {

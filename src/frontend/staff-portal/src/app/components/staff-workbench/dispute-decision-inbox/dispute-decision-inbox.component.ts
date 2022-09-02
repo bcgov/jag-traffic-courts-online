@@ -15,15 +15,13 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
   styleUrls: ['./dispute-decision-inbox.component.scss'],
 })
 export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
-  @Output() public staffPage: EventEmitter<string> = new EventEmitter();
+  @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @Input() public IDIR: string;
 
   busy: Subscription;
   public courtLocations: CourthouseConfig[];
   currentTeam: string = "All";
-  jjDisputeInfo: JJDispute;
   data = [] as JJDisputeView[];
-  showDispute: boolean = false;
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
   displayedColumns: string[] = [
@@ -59,19 +57,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  backTicketList(element) {
-    this.showDispute = !this.showDispute;
-    if (this.showDispute) this.staffPage.emit("Dispute Details");
-    else this.staffPage.emit("Decision Validation");
-    this.jjDisputeInfo = element;
-    if (!this.showDispute) this.getAll();  // refresh list
-  }
-
-  backTicketpage() {
-    this.showDispute = !this.showDispute;
-    if (this.showDispute) this.staffPage.emit("Dispute Details");
-    else this.staffPage.emit("Decision Validation");
-    if (!this.showDispute) this.getAll(); // refresh list
+  backWorkbench(element) {
+    this.jjDisputeInfo.emit(element);
   }
 
   getAll(): void {

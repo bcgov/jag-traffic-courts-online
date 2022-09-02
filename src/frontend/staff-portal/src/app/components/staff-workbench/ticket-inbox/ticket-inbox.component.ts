@@ -9,17 +9,17 @@ import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'app/services/auth.service';
 
 @Component({
-  selector: 'app-ticket-page',
-  templateUrl: './ticket-page.component.html',
-  styleUrls: ['./ticket-page.component.scss', '../../app.component.scss'],
+  selector: 'app-ticket-inbox',
+  templateUrl: './ticket-inbox.component.html',
+  styleUrls: ['../../../app.component.scss', './ticket-inbox.component.scss'],
 })
-export class TicketPageComponent implements OnInit, AfterViewInit {
-  @Output() public staffPage: EventEmitter<string> = new EventEmitter();
+export class TicketInboxComponent implements OnInit, AfterViewInit {
+  @Input() public IDIR: string;
+  @Output() public disputeInfo: EventEmitter<DisputeExtended> = new EventEmitter();
 
   dataSource = new MatTableDataSource();
   public IDIRLogin: string = "";
-  public decidePopup = '';
-  public disputeInfo: DisputeExtended;
+  // public decidePopup = '';
   busy: Subscription;
   displayedColumns: string[] = [
     '__RedGreenAlert',
@@ -67,7 +67,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
   }
 
   getAllDisputes(): void {
-    this.logger.log('TicketPageComponent::getAllDisputes');
+    this.logger.log('TicketInboxComponent::getAllDisputes');
 
     this.disputes = [];
 
@@ -83,7 +83,7 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
 
     this.busy = this.disputeService.getDisputes().subscribe((response) => {
       this.logger.info(
-        'TicketPageComponent::getAllDisputes response',
+        'TicketInboxComponent::getAllDisputes response',
         response
       );
 
@@ -209,25 +209,10 @@ export class TicketPageComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  backTicketList(element) {
-    this.disputeInfo = element;
-    if (element.ticketNumber[0] == 'A') {
-      this.decidePopup = 'E'
-    } else {
-      this.decidePopup = "A"
-    }
-    this.showTicket = !this.showTicket;
-    if (this.showTicket) this.staffPage.emit("Dispute Details");
-    else this.staffPage.emit("Ticket Validation");
-    if (!this.showTicket) this.getAllDisputes();  // refresh list
+  backWorkbench(element) {
+    this.disputeInfo.emit(element);
   }
 
-  backTicketpage() {
-    this.showTicket = !this.showTicket;
-    if (this.showTicket) this.staffPage.emit("Dispute Details");
-    else this.staffPage.emit("Ticket Validation");
-    if (!this.showTicket) this.getAllDisputes(); // refresh list
-  }
 }
 export interface RecognizedField {
   Value?: any;

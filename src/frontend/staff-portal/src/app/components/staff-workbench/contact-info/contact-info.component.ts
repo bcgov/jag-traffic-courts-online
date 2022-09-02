@@ -20,7 +20,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 })
 export class ContactInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeExtended;
-  @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
+  @Output() public backInbox: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public provinces: ProvinceConfig[];
   public states: ProvinceConfig[];
@@ -279,7 +279,7 @@ export class ContactInfoComponent implements OnInit {
   }
 
   public onBack() {
-    window.location.reload();
+    this.backInbox.emit();
   }
 
   public handleCollapse(name: string) {

@@ -1,7 +1,10 @@
 <div class="contact-info">
-  <a (click)="onBack()" style="color: #48afe5">
-    <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
-  </a>
+  <div style="background-color: #e8e5e5; height:40px; vertical-align: middle;">
+    <p style="text-align:left;">
+    <span style="vertical-align:middle;font-size:larger"><a (click)="onBack()" style="height:100%; vertical-align:middle">&nbsp;&nbsp;< Back</a></span>
+    <span style="float:right;">Buttons</span>
+    </p>
+  </div><br />
   <!-- <div *ngIf="retrieving === true">
     <span>
       <h3>Retrieving ticket information...</h3>
@@ -9,39 +12,24 @@
   </div> -->
   <!-- <div *ngIf="lastUpdatedJJDispute && retrieving === false"> -->
     <section>
-      <ng-container subHeader>
-        <span>
-          <h3>Ticket Information / Dispute History</h3>
-        </span>
-      </ng-container>
+      Under Construction
     </section><br />
-    <mat-accordion>
+    <mat-accordion multi [togglePosition]="'before'">
       <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header>
-          <app-page-header>
-            <ng-container subHeader>
-              <span>Uploaded Documents </span>
-            </ng-container>
-          </app-page-header>
+          <b>Uploaded Documents </b>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
       <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header>
-          <app-page-header>
-            <ng-container subHeader>
-              <span>File History </span>
-            </ng-container>
-          </app-page-header>
+          <b>File History </b>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
       <mat-expansion-panel [expanded]="true">
         <mat-expansion-panel-header>
-          <app-page-header>
-            <ng-container subHeader>
-              <span>File Remarks </span>
-            </ng-container>
-          </app-page-header>
+          <b>File Remarks </b>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
     </mat-accordion>
   <!-- </div> -->
+</div>

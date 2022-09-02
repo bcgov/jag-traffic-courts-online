@@ -24,7 +24,8 @@ import { ViolationTicketService, OCRMessageToDisplay } from 'app/services/violat
 })
 export class TicketInfoComponent implements OnInit {
   @Input() public disputeInfo: DisputeExtended;
-  @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
+  @Output() public backInbox: EventEmitter<any> = new EventEmitter();
+
   public isMobile: boolean;
   public previousButtonIcon = 'keyboard_arrow_left';
 
@@ -205,7 +206,7 @@ export class TicketInfoComponent implements OnInit {
   }
 
   public onBack() {
-    window.location.reload();
+    this.backInbox.emit();
   }
 
   // violation ticket borders only for new status

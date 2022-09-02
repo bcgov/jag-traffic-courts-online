@@ -16,7 +16,8 @@ import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
 })
 export class JJDisputeComponent implements OnInit {
   @Input() public jjDisputeInfo: JJDispute
-  @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
+  @Output() public backInbox: EventEmitter<any> = new EventEmitter();
+
   public isMobile: boolean;
   public busy: Subscription;
   public lastUpdatedJJDispute: JJDispute;
@@ -115,8 +116,9 @@ export class JJDisputeComponent implements OnInit {
     });
   }
 
+
   public onBack() {
-    this.backTicketList.emit();
+    this.backInbox.emit();
   }
 }
 

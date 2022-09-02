@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'app/services/auth.service';
+import { DisputeExtended } from 'app/services/dispute.service';
+import { JJDisputeView } from '@components/jj-workbench/jj-dispute-assignments/jj-dispute-assignments.component';
+import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute-decision-inbox.component';
+import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';
 
 @Component({
   selector: 'app-staff-workbench-dashboard',
@@ -11,11 +15,17 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class StaffWorkbenchDashboardComponent implements OnInit {
   busy: Subscription;
-  tabSelected = new FormControl(0);
+  public tabSelected = new FormControl(0);
   public fullName: string = "Loading...";
   public staffIDIR: string = "";
   public userProfile: KeycloakProfile = {};
-  public staffPage: string = "";
+  public showTicket: boolean = false;
+  public decidePopup = '';
+  public disputeInfo: DisputeExtended;
+  public jjDisputeInfo: JJDisputeView;
+
+  @ViewChild(DisputeDecisionInboxComponent) public disputeChild: DisputeDecisionInboxComponent;
+  @ViewChild(TicketInboxComponent) public ticketChild: TicketInboxComponent;
 
   constructor(
     private authService: AuthService
@@ -33,9 +43,24 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
     })
   }
 
-  changeHeading(heading: any) {
-    if (heading == "Ticket Validation") this.tabSelected.setValue(1);
-    else if (heading == "Decision Validation") this.tabSelected.setValue(0);
-    this.staffPage = heading;
+  changeDispute(dispute: DisputeExtended) {
+    this.disputeInfo = dispute;
+    if (dispute.ticketNumber[0] == 'A') {
+      this.decidePopup = 'E'
+    } else {
+      this.decidePopup = "A"
+    }
+    this.showTicket = true;
+  }
+
+  changeJJDispute(jjDispute: JJDisputeView) {
+    this.jjDisputeInfo = jjDispute;
+    this.showTicket = true;
+  }
+
+  backInbox() {
+    this.showTicket = false;
+    this.disputeChild.getAll();
+    this.ticketChild.getAllDisputes();
   }
 }
