@@ -6,6 +6,7 @@ using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Security.Claims;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -46,6 +47,8 @@ public class JJDisputeService : IJJDisputeService
         var user = _httpContextAccessor.HttpContext?.User;
 
         var username = user?.Claims?.FirstOrDefault(_ => _.Type == "preferred_username")?.Value;
+        var fullName = user?.Claims?.FirstOrDefault(_ => _.Type == ClaimTypes.Name)?.Value;
+
         if (username is not null && !string.IsNullOrWhiteSpace(username))
         {
             // we expect the username to be of the form: someone@domain
@@ -57,6 +60,11 @@ public class JJDisputeService : IJJDisputeService
 
             HttpRequestHeaders requestHeaders = httpClient.DefaultRequestHeaders;
             requestHeaders.Add("x-username", username);
+
+            if (fullName is not null && !string.IsNullOrWhiteSpace(fullName))
+            {
+                requestHeaders.Add("fullName", fullName);
+            }
         }
         else
         {

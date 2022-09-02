@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,9 +78,9 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
 	@PutMapping("/dispute/{ticketNumber}")
-	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute) {
+	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute, @AuthenticationPrincipal User user) {
 		logger.debug("PUT /dispute/{ticketNumber} called");
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, (CustomUserDetails) user), HttpStatus.OK);
 	}
 }

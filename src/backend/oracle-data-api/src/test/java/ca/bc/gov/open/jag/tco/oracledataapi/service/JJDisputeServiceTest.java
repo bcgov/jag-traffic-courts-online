@@ -22,7 +22,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToIN_PROGRESS_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.IN_PROGRESS);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -31,7 +31,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.IN_PROGRESS);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 	
@@ -40,7 +40,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToREVIEW_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REVIEW);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -49,7 +49,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REVIEW);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 	
@@ -58,7 +58,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToCONFIRMED_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.CONFIRMED);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -67,7 +67,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.CONFIRMED);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 
@@ -76,7 +76,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToNEW_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.NEW);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -85,7 +85,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.NEW);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 
@@ -94,7 +94,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToDATA_UPDATE_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.DATA_UPDATE);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -103,7 +103,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.DATA_UPDATE);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 	@ParameterizedTest
@@ -111,7 +111,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToREQUIRE_COURT_HEARING_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REQUIRE_COURT_HEARING);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -120,7 +120,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REQUIRE_COURT_HEARING);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 	@ParameterizedTest
@@ -128,7 +128,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToREQUIRE_MORE_INFO_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REQUIRE_MORE_INFO);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -137,7 +137,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.REQUIRE_MORE_INFO);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 	@ParameterizedTest
@@ -145,7 +145,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 	void testSetStatusToACCEPTED_200(JJDisputeStatus jjDisputeStatus) {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.ACCEPTED);
-		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+		jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 	}
 
 	@ParameterizedTest
@@ -154,7 +154,7 @@ class JJDisputeServiceTest extends BaseTestSuite {
 		JJDispute jjDisputeToUpdate = saveDispute(jjDisputeStatus);
 		JJDispute jjDisputeWithUpdatedStatus = saveDispute(JJDisputeStatus.ACCEPTED);
 		assertThrows(NotAllowedException.class, () -> {
-			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus);
+			jjDisputeService.updateJJDispute(jjDisputeToUpdate.getTicketNumber(), jjDisputeWithUpdatedStatus, null);
 		});
 	}
 	private JJDispute saveDispute(JJDisputeStatus jjDisputeStatus) {

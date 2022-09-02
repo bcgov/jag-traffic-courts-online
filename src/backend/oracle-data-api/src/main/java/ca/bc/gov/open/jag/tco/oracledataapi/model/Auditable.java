@@ -3,6 +3,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
@@ -28,11 +29,13 @@ public abstract class Auditable<U> {
 
 	/** The username of the individual (or system) who created this record. */
 	@CreatedBy
+	@Column(updatable = false)
 	private U createdBy;
 
 	/** The timestamp this record was created. */
 	@CreatedDate
 	@Temporal(TIMESTAMP)
+	@Column(updatable = false)
 	private Date createdTs;
 
 	/** The username of the individual (or system) who modified this record. */
