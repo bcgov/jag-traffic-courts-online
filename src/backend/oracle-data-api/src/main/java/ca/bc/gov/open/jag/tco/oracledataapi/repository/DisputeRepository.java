@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository;
 
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
@@ -20,4 +21,8 @@ public interface DisputeRepository extends CrudRepository<Dispute, Long> {
 
 	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
     public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan);
+
+    /** Fetch all records that matches the emailVerificationToken. */
+    public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
+
 }
