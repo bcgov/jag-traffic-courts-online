@@ -1,10 +1,22 @@
+<div style="height:40px; vertical-align: middle">
+  <p style="text-align:left;">
+  <span style="vertical-align:middle;font-size:larger"><a (click)="onBack()" style="height:100%; vertical-align:middle">&nbsp;&nbsp;< Back</a></span>
+  <span style="float:right;">
+    <button mat-button [matMenuTriggerFor]="printMenu">Print Options</button>
+      <mat-menu #printMenu="matMenu" yPosition="below">
+      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item>Item 2</button>
+    </mat-menu>
+    <button mat-button>Print</button>
+    <button mat-button [matMenuTriggerFor]="gotoMenu">Print Options</button>
+      <mat-menu #gotoMenu="matMenu" yPosition="below">
+      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item>Item 2</button>
+    </mat-menu>
+  </span>
+  </p>
+</div><br />
 <div class="contact-info">
-  <div style="background-color: #e8e5e5; height:40px; vertical-align: middle;">
-    <p style="text-align:left;">
-    <span style="vertical-align:middle;font-size:larger"><a (click)="onBack()" style="height:100%; vertical-align:middle">&nbsp;&nbsp;< Back</a></span>
-    <span style="float:right;">Buttons</span>
-    </p>
-  </div><br />
   <!-- <div *ngIf="retrieving === true">
     <span>
       <h3>Retrieving ticket information...</h3>
@@ -16,18 +28,24 @@
     </section><br />
     <mat-accordion multi [togglePosition]="'before'">
       <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <b>Uploaded Documents </b>
+        <mat-expansion-panel-header class="dispute-decision-info-panel-header">
+          <mat-panel-title>
+            <span style="color: black;"><b>Uploaded Documents </b></span>
+          </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
       <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <b>File History </b>
+        <mat-expansion-panel-header class="dispute-decision-info-panel-header">
+          <mat-panel-title>
+            <span style="color: black;"><b>File History </b></span>
+          </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
       <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <b>File Remarks </b>
+        <mat-expansion-panel-header class="dispute-decision-info-panel-header">
+          <mat-panel-title>
+            <span style="color: black;"><b>File Remarks </b></span>
+          </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
     </mat-accordion>

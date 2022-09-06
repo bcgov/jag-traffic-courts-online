@@ -7,6 +7,7 @@ import { DisputeExtended } from 'app/services/dispute.service';
 import { JJDisputeView } from '@components/jj-workbench/jj-dispute-assignments/jj-dispute-assignments.component';
 import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute-decision-inbox.component';
 import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';
+import { DisputeService } from 'app/services/dispute.service';
 
 @Component({
   selector: 'app-staff-workbench-dashboard',
@@ -28,7 +29,8 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
   @ViewChild(TicketInboxComponent) public ticketChild: TicketInboxComponent;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private disputeService: DisputeService
   ) {
 
   }
@@ -60,7 +62,6 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
 
   backInbox() {
     this.showTicket = false;
-    this.disputeChild.getAll();
-    this.ticketChild.getAllDisputes();
+    this.disputeService.refreshDisputes.emit();
   }
 }

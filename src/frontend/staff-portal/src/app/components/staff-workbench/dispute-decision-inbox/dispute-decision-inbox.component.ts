@@ -42,6 +42,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     if (this.mockConfigService.courtLocations) {
       this.courtLocations = this.mockConfigService.courtLocations;
     }
+    this.jjDisputeService.refreshDisputes.subscribe(x => {this.getAll();})
   }
 
   filterByTeam(team: string) {

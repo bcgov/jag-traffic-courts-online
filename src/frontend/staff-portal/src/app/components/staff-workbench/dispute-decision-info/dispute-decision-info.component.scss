@@ -152,3 +152,9 @@ div.container {
     }
   }
 }
+
+::ng-deep {
+  .dispute-decision-info-panel-header > .mat-expansion-indicator:after {
+    color: black;
+  }
+}

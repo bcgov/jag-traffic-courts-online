@@ -33,7 +33,12 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   constructor(
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
-  ) { }
+  ) {
+    // listen for when to refresh from db
+    this.jjDisputeService.refreshDisputes.subscribe(x => {
+      this.getAll();
+    });
+  }
 
   ngOnInit(): void {
     this.getAll();

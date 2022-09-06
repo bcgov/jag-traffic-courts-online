@@ -46,8 +46,9 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   constructor(
     public disputeService: DisputeService,
     private logger: LoggerService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {
+    this.disputeService.refreshDisputes.subscribe(x => {this.getAllDisputes();})
   }
 
   public async ngOnInit() {

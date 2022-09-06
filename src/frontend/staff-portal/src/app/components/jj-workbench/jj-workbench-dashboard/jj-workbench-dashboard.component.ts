@@ -5,6 +5,7 @@ import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'app/services/auth.service';
 import { JJDisputeAssignmentsComponent, JJDisputeView } from '../jj-dispute-assignments/jj-dispute-assignments.component';
 import { JJDisputeInboxComponent } from '../jj-dispute-inbox/jj-dispute-inbox.component';
+import { JJDisputeService } from 'app/services/jj-dispute.service';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -25,9 +26,9 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   @ViewChild(JJDisputeAssignmentsComponent) public assignmentsChild: JJDisputeAssignmentsComponent;
   @ViewChild(JJDisputeInboxComponent) public inboxChild: JJDisputeInboxComponent;
 
-
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private jjDisputeService: JJDisputeService
   ) {
   }
 
@@ -49,7 +50,6 @@ export class JjWorkbenchDashboardComponent implements OnInit {
 
   backInbox() {
     this.showDispute = false;
-    this.assignmentsChild.getAll('A');
-    this.inboxChild.getAll();
+    this.jjDisputeService.refreshDisputes.emit();
   }
 }

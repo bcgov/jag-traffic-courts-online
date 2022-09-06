@@ -49,6 +49,12 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     if (this.mockConfigService.courtLocations) {
       this.courtLocations = this.mockConfigService.courtLocations;
     }
+
+    // listen for when to refresh from db
+    this.jjDisputeService.refreshDisputes.subscribe(x => {
+      this.getAll("A");
+    });
+
    }
 
   ngOnInit(): void {
