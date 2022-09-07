@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'app/services/auth.service';
-import { JJDisputeAssignmentsComponent, JJDisputeView } from '../jj-dispute-assignments/jj-dispute-assignments.component';
-import { JJDisputeInboxComponent } from '../jj-dispute-inbox/jj-dispute-inbox.component';
+import { JJDisputeView } from '../jj-dispute-assignments/jj-dispute-assignments.component';
 import { JJDisputeService } from 'app/services/jj-dispute.service';
 
 @Component({
@@ -23,8 +22,6 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   public userProfile: KeycloakProfile = {};
   public jjDisputeInfo: JJDisputeView;
 
-  @ViewChild(JJDisputeAssignmentsComponent) public assignmentsChild: JJDisputeAssignmentsComponent;
-  @ViewChild(JJDisputeInboxComponent) public inboxChild: JJDisputeInboxComponent;
 
   constructor(
     private authService: AuthService,
