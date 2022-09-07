@@ -1,0 +1,57 @@
+<div style="height:40px; vertical-align: middle">
+  <p style="text-align:left;">
+  <span style="vertical-align:middle;font-size:larger"><a (click)="onBack()" style="height:100%; vertical-align:middle">&nbsp;&nbsp;< Back</a></span>
+  <span style="float:right;">
+    <button mat-raised-button [matMenuTriggerFor]="printMenu">Print Options</button>&nbsp;
+      <mat-menu #printMenu="matMenu" yPosition="below">
+        <button mat-menu-item (click)="printDispute=!printDispute"><mat-icon *ngIf="printDispute">check</mat-icon><mat-icon *ngIf="!printDispute">close</mat-icon>Dispute Details</button>
+        <button mat-menu-item (click)="printUploadedDocuments=!printUploadedDocuments"><mat-icon *ngIf="printUploadedDocuments">check</mat-icon><mat-icon *ngIf="!printUploadedDocuments">close</mat-icon>Uploaded Documents</button>
+        <button mat-menu-item (click)="printFileHistory=!printFileHistory"><mat-icon *ngIf="printFileHistory">check</mat-icon><mat-icon *ngIf="!printFileHistory">close</mat-icon>File History</button>
+        <button mat-menu-item (click)="printFileRemarks=!printFileRemarks"><mat-icon *ngIf="printFileRemarks">check</mat-icon><mat-icon *ngIf="!printFileRemarks">close</mat-icon>File Remarks</button>
+      </mat-menu>
+    <button mat-raised-button>Print</button>&nbsp;
+    <button mat-raised-button [matMenuTriggerFor]="gotoMenu">Go to</button>
+      <mat-menu #gotoMenu="matMenu" yPosition="below">
+        <button mat-menu-item (click)="goTo('dispute-details')">Dispute Details</button>
+        <button mat-menu-item (click)="goTo('uploaded-documents')">Uploaded Documents</button>
+        <button mat-menu-item (click)="goTo('file-history')">File History</button>
+        <button mat-menu-item (click)="goTo('file-remarks')">File Remarks</button>
+    </mat-menu>
+  </span>
+  </p>
+</div><br />
+<div class="contact-info">
+  <!-- <div *ngIf="retrieving === true">
+    <span>
+      <h3>Retrieving ticket information...</h3>
+    </span>
+  </div> -->
+  <!-- <div *ngIf="lastUpdatedJJDispute && retrieving === false"> -->
+    <section>
+      <a id="dispute-details">Dispute Details</a>
+    </section><br />
+    <mat-accordion multi [togglePosition]="'before'">
+      <mat-expansion-panel [expanded]="true" id="uploaded-documents">
+        <mat-expansion-panel-header class="dispute-decision-info-panel-header">
+          <mat-panel-title>
+            <span style="color: black;"><b>Uploaded Documents </b></span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true" id="file-history">
+        <mat-expansion-panel-header class="dispute-decision-info-panel-header">
+          <mat-panel-title>
+            <span style="color: black;"><b>File History </b></span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="true" id="file-remarks">
+        <mat-expansion-panel-header class="dispute-decision-info-panel-header">
+          <mat-panel-title>
+            <span style="color: black;"><b>File Remarks </b></span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
+  <!-- </div> -->
+</div>

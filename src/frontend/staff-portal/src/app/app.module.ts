@@ -22,20 +22,21 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TicketPageComponent } from '@components/ticket-page/ticket-page.component';
+import { TicketInboxComponent } from '@components/staff-workbench/ticket-inbox/ticket-inbox.component';
 import { UnauthorizedComponent } from '@components/error/unauthorized/unauthorized.component';
-import { TicketInfoComponent } from '@components/ticket-info/ticket-info.component';
+import { TicketInfoComponent } from '@components/staff-workbench/ticket-info/ticket-info.component';
+import { DisputeDecisionInfoComponent } from '@components/staff-workbench/dispute-decision-info/dispute-decision-info.component';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { ContactInfoComponent } from './components/contact-info/contact-info.component';
-import { TicketStatusComponent } from './components/ticket-status/ticket-status.component';
-import { TicketRequestComponent } from '@components/ticket-request/ticket-request.component';
-import { JjWorkbenchDashboardComponent } from '@components/jj-workbench-dashboard/jj-workbench-dashboard.component';
-import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench-dashboard/staff-workbench-dashboard.component';
-import { JJDisputeInboxComponent } from '@components/jj-dispute-inbox/jj-dispute-inbox.component';
-import { JJDisputeDecisionInboxComponent } from '@components/jj-dispute-decision-inbox/jj-dispute-decision-inbox.component';
-import { JJDisputeAssignmentsComponent } from '@components/jj-dispute-assignments/jj-dispute-assignments.component';
-import { JJDisputeComponent } from '@components/jj-dispute/jj-dispute.component';
-import { JJCountComponent } from '@components/jj-count/jj-count.component';
+import { ContactInfoComponent } from './components/staff-workbench/contact-info/contact-info.component';
+import { TicketStatusComponent } from './components/staff-workbench/ticket-status/ticket-status.component';
+import { TicketRequestComponent } from '@components/staff-workbench/ticket-request/ticket-request.component';
+import { JjWorkbenchDashboardComponent } from '@components/jj-workbench/jj-workbench-dashboard/jj-workbench-dashboard.component';
+import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench/staff-workbench-dashboard/staff-workbench-dashboard.component';
+import { JJDisputeInboxComponent } from '@components/jj-workbench/jj-dispute-inbox/jj-dispute-inbox.component';
+import { DisputeDecisionInboxComponent } from '@components/staff-workbench/dispute-decision-inbox/dispute-decision-inbox.component';
+import { JJDisputeAssignmentsComponent } from '@components/jj-workbench/jj-dispute-assignments/jj-dispute-assignments.component';
+import { JJDisputeComponent } from '@components/jj-workbench/jj-dispute/jj-dispute.component';
+import { JJCountComponent } from '@components/jj-workbench/jj-count/jj-count.component';
 import { AuthService } from './services/auth.service';
 
 registerLocaleData(localeEn, 'en');
@@ -57,16 +58,17 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
   declarations: [
     AppComponent,
     LandingComponent,
-    TicketPageComponent,
+    TicketInboxComponent,
     UnauthorizedComponent,
     TicketInfoComponent,
+    DisputeDecisionInfoComponent,
     ContactInfoComponent,
     TicketStatusComponent,
     TicketRequestComponent,
     JjWorkbenchDashboardComponent,
     StaffWorkbenchDashboardComponent,
     JJDisputeInboxComponent,
-    JJDisputeDecisionInboxComponent,
+    DisputeDecisionInboxComponent,
     JJDisputeAssignmentsComponent,
     JJDisputeComponent,
     JJCountComponent
