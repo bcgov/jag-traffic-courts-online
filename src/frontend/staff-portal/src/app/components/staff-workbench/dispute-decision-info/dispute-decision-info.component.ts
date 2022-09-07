@@ -10,6 +10,11 @@ export class DisputeDecisionInfoComponent implements OnInit {
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
   @Input() public jjDisputeInfo: JJDispute;
 
+  public printDispute: boolean = true;
+  public printUploadedDocuments: boolean = true;
+  public printFileHistory: boolean = true;
+  public printFileRemarks: boolean = true;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -18,5 +23,9 @@ export class DisputeDecisionInfoComponent implements OnInit {
 
   public onBack() {
     this.backInbox.emit();
+  }
+
+  public goTo(id: string) {
+    document.getElementById(id)?.scrollIntoView();
   }
 }
