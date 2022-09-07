@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class DisputeService {
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
 			}
-		} 
+		}
 		disputeRepository.save(dispute);
 	}
 
@@ -91,7 +92,7 @@ public class DisputeService {
 		}
 		// Add updated ticket counts
 		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
-		
+
 		return disputeRepository.save(disputeToUpdate);
 	}
 
@@ -219,6 +220,18 @@ public class DisputeService {
 		}
 
 		logger.debug("Unassigned {} record(s)", count);
+	}
+
+	/**
+	 * Flips the Dispute.emailAddressVerified flag to true where Dispute.emailVerificationToken matches the given parameter
+	 * @param token the Dispute record to update
+	 */
+	public void validateEmail(String emailVerificationToken) {
+		List<Dispute> emailVerificationTokens = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
+		for (Dispute dispute : emailVerificationTokens) {
+			dispute.setEmailAddressVerified(Boolean.TRUE);
+			disputeRepository.save(dispute);
+		}
 	}
 
 }
