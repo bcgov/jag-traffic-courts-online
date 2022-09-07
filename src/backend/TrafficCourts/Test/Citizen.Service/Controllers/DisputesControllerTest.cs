@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -19,7 +20,8 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockTicketDispute = new Mock<NoticeOfDispute>();
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<DisputesController>>();
-            var disputeController = new DisputesController(mockMediator.Object, mockLogger.Object);
+            var mockBus = new Mock<IBus>();
+            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object);
             var request = new Create.Request(mockTicketDispute.Object);
             var createResponse = new Create.Response();
 

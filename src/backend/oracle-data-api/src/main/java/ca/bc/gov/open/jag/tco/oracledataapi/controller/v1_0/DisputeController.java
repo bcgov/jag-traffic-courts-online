@@ -165,9 +165,9 @@ public class DisputeController {
 		@ApiResponse(responseCode = "200", description = "Ok. Email verified."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
-	@PutMapping("/dispute/{uuid}/email/validate")
+	@PutMapping("/dispute/email/{uuid}/validate")
 	public ResponseEntity<String> validateDisputeEmail(@PathVariable(name="uuid") @Parameter(description = "The emailVerificationToken of the Dispute to update.") String emailVerificationToken) {
-		logger.debug("PUT /dispute/{id}/email/validate called");
+		logger.debug("PUT /dispute/email/{uuid}/validate called");
 		try {
 			disputeService.validateEmail(emailVerificationToken);
 		} catch (Exception e) {
