@@ -76,7 +76,14 @@ export class JJDisputeComponent implements OnInit {
       this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
         .subscribe((action: any) => {
           if (action) {
-            // TODO: fill in to do actions depending on choice
+            this.lastUpdatedJJDispute.status = JJDisputeStatus.Accepted;
+            this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+              this.lastUpdatedJJDispute = response;
+              this.logger.info(
+                'JJDisputeComponent::putJJDispute response',
+                response
+              );
+            });
           }
         });
     }
@@ -108,7 +115,14 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          // TODO: fill in to do actions depending on choice
+          this.lastUpdatedJJDispute.status = JJDisputeStatus.Review;
+          this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+            this.lastUpdatedJJDispute = response;
+            this.logger.info(
+              'JJDisputeComponent::putJJDispute response',
+              response
+            );
+          });
         }
       });
   }
