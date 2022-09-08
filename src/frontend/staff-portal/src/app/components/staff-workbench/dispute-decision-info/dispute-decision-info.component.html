@@ -29,7 +29,8 @@
   <!-- <div *ngIf="lastUpdatedJJDispute && retrieving === false"> -->
     <section>
       <a id="dispute-details">Dispute Details</a>
-    </section><br />
+      <app-jj-dispute (backInbox)="onBack()" [jjDisputeInfo]="jjDisputeInfo" [type]="'ticket'"></app-jj-dispute>
+    </section>
     <mat-accordion multi [togglePosition]="'before'">
       <mat-expansion-panel [expanded]="true" id="uploaded-documents">
         <mat-expansion-panel-header class="dispute-decision-info-panel-header">
@@ -53,5 +54,30 @@
         </mat-expansion-panel-header>
       </mat-expansion-panel>
     </mat-accordion>
-  <!-- </div> -->
+    <div fxLayout="row">
+      <div fxFlex="40" fxLayout="row">
+        <div style="margin-right: 1rem;">
+          <mat-form-field class="select-box-only">
+            <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
+              <mat-option [value]=""></mat-option>
+              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>JJ {{ jj.name }}</i></mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex>
+          <button fxFlex class="large" mat-flat-button type="button" color="primary" (click)="returnToJJ()"
+            [disabled]="!selectedJJ">
+            Return to JJ
+          </button>
+        </div>
+      </div>
+      <div fxFlex>
+      </div>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()"
+        [disabled]="jjDisputeInfo.status != 'NEW' && jjDisputeInfo.status != 'IN_PROGRESS'">
+        Submit
+      </button>
+    </div>
+    <br /><br />
+    <br /><br />
 </div>

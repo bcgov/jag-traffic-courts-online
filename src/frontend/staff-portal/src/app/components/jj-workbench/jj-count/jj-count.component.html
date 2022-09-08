@@ -161,7 +161,7 @@
     </form>
     <br />
   </section>
-  <div fxLayout="column" style="padding: 0 0.2rem;">
+  <div *ngIf="type === 'ticket'" fxLayout="column" style="padding: 0 0.2rem;">
     <h3 style="padding-left: 0.2rem;">JJ decision</h3>
 
     <div class="section-grid-header">Fine calculation</div>
