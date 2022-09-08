@@ -160,6 +160,23 @@ public class DisputeController {
 		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.VALIDATED), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Updates the emailVerification flag of a particular Dispute to true.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Email verified."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/email/{uuid}/validate")
+	public ResponseEntity<String> validateDisputeEmail(@PathVariable(name="uuid") @Parameter(description = "The emailVerificationToken of the Dispute to update.") String emailVerificationToken) {
+		logger.debug("PUT /dispute/email/{uuid}/validate called");
+		try {
+			disputeService.validateEmail(emailVerificationToken);
+		} catch (Exception e) {
+			logger.error("ERROR validating email for uuid {}", emailVerificationToken, e);
+			return ResponseEntity.internalServerError().body("ERROR validating email");
+		}
+		return ResponseEntity.ok().body("Email verified");
+	}
+
 	/**
 	 * PUT endpoint that updates the dispute detail, setting the status to CANCELLED.
 	 *

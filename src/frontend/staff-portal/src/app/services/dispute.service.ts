@@ -4,7 +4,7 @@ import { ToastService } from '@core/services/toast.service';
 import { DisputeService as DisputeApiService, Dispute } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 export interface IDisputeService {
@@ -19,6 +19,7 @@ export interface IDisputeService {
 export class DisputeService implements IDisputeService {
   private _disputes: BehaviorSubject<DisputeExtended[]>;
   private _dispute: BehaviorSubject<DisputeExtended>;
+  public refreshDisputes: EventEmitter<any> = new EventEmitter();
 
 
   constructor(

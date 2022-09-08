@@ -362,7 +362,7 @@ export class ViolationTicketService {
   private dateDiff(givenDate: string) {
     var diffYear = (new Date().getTime() - new Date(givenDate).getTime()) / 1000;
     diffYear /= (60 * 60 * 24);
-    return Math.abs(Math.round(diffYear));
+    return Math.round(diffYear);
   }
 
   private checkSize(fileSize: number) {

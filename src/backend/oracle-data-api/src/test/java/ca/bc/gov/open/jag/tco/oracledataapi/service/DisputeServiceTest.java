@@ -105,13 +105,13 @@ class DisputeServiceTest extends BaseTestSuite {
 
 	@Test
 	void testEmailVerification() {
-		String emailVerificationToken = Long.valueOf(Long.MAX_VALUE).toString() + "-" + UUID.randomUUID();
+		String emailVerificationToken = UUID.randomUUID().toString();
 		Dispute dispute = new Dispute();
 		dispute.setEmailVerificationToken(emailVerificationToken);
 
 		assertNotNull(dispute.getEmailAddressVerified());
 		assertFalse(dispute.getEmailAddressVerified().booleanValue(), "emailAddressVerified should default to false");
-		assertEquals(56, emailVerificationToken.length(), "expect emailVerificationToken to have a max length of 56 characters");
+		assertEquals(36, emailVerificationToken.length(), "expect emailVerificationToken to have a max length of 36 characters");
 
 		// Try persisting and loading
 		Long id = disputeRepository.save(dispute).getDisputeId();

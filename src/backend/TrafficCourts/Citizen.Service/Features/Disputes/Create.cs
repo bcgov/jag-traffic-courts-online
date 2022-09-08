@@ -37,7 +37,13 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             }
 
+            public Response(string? emailVerificationToken)
+            {
+                EmailVerificationToken = emailVerificationToken;
+            }
+
             public Exception? Exception { get; init; }
+            public string? EmailVerificationToken { get; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -144,6 +150,14 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
                     submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
+
+                    // TCVP-1686 Generate new email verification token here. The Dispute hasn't been saved yet so we don't yet have a DisputeId.
+                    //   This token is returned to the UI so the user can click a button to resend the verification email.
+                    if (!string.IsNullOrEmpty(submitNoticeOfDispute.EmailAddress))
+                    {
+                        submitNoticeOfDispute.EmailVerificationToken = Guid.NewGuid().ToString();
+                    }
+
                     if (lookedUpViolationTicket != null)
                     {
                         submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
@@ -157,7 +171,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                     // success, return true
                     activity?.SetStatus(ActivityStatusCode.Ok);
-                    return new Response();
+                    return new Response(submitNoticeOfDispute.EmailVerificationToken);
                 }
                 catch (Exception exception)
                 {

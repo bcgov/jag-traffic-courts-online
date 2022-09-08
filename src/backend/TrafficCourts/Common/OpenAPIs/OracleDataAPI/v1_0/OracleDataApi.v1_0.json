@@ -30,16 +30,16 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "JJDispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
             "description": "An invalid JJ Dispute status is provided. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -324,6 +324,44 @@
           "409": {
             "description": "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          }
+        }
+      }
+    },
+    "/api/v1.0/dispute/email/{uuid}/validate": {
+      "put": {
+        "tags": [ "dispute-controller" ],
+        "summary": "Updates the emailVerification flag of a particular Dispute to true.",
+        "operationId": "validateDisputeEmail",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The emailVerificationToken of the Dispute to update.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "string" } } }
+          },
+          "200": {
+            "description": "Ok. Email verified.",
+            "content": { "*/*": { "schema": { "type": "string" } } }
           }
         }
       }
@@ -886,6 +924,8 @@
             "type": "string",
             "nullable": true
           },
+          "emailAddressVerified": { "type": "boolean" },
+          "emailVerificationToken": { "type": "string" },
           "filingDate": {
             "type": "string",
             "format": "date-time",

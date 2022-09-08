@@ -111,6 +111,11 @@ public class SubmitNoticeOfDispute : IMessage
     public string EmailAddress { get; set; } = null!;
 
     /// <summary>
+    /// The disputant's email address.
+    /// </summary>
+    public string? EmailVerificationToken { get; set; }
+
+    /// <summary>
     /// The disputant intends to be represented by a lawyer at the hearing.
     /// </summary>
     public DisputeRepresentedByLawyer RepresentedByLawyer { get; set; }

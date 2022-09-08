@@ -18,8 +18,6 @@ if (swagger.Enabled)
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
