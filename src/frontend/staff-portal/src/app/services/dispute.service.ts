@@ -1,7 +1,7 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { DisputeService as DisputeApiService, Dispute} from 'app/api';
+import { DisputeService as DisputeApiService, Dispute } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
@@ -27,7 +27,7 @@ export class DisputeService implements IDisputeService {
     private logger: LoggerService,
     private configService: ConfigService,
     private disputeApiService: DisputeApiService,
-    private datePipe:DatePipe
+    private datePipe: DatePipe
   ) {
     this._disputes = new BehaviorSubject<DisputeExtended[]>(null);
   }
@@ -89,7 +89,7 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.logger.error(
             'DisputeService::getDispute error has occurred: ',
@@ -115,11 +115,11 @@ export class DisputeService implements IDisputeService {
      */
   public putDispute(disputeId: number, dispute: DisputeExtended): Observable<DisputeExtended> {
 
-     dispute.disputantBirthdate = this.datePipe.transform(dispute?.disputantBirthdate, "yyyy-MM-dd");
-     dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate,"yyyy-MM-ddTHH:mm:ss");
-     dispute = this.splitGivenNames(dispute);
-     dispute = this.splitLawyerNames(dispute);
-     dispute = this.splitAddressLines(dispute);
+    dispute.disputantBirthdate = this.datePipe.transform(dispute?.disputantBirthdate, "yyyy-MM-dd");
+    dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate, "yyyy-MM-ddTHH:mm:ss");
+    dispute = this.splitGivenNames(dispute);
+    dispute = this.splitLawyerNames(dispute);
+    dispute = this.splitAddressLines(dispute);
     //  dispute.violationTicket =
     return this.disputeApiService.apiDisputeDisputeIdPut(disputeId, dispute)
       .pipe(
@@ -128,7 +128,7 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
@@ -154,13 +154,10 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
-          this.logger.error(
-            'DisputeService::cancelDispute error has occurred: ',
-            error
-          );
+          this.logger.error('DisputeService::cancelDispute error has occurred: ', error);
           throw error;
         })
       );
@@ -181,7 +178,7 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
@@ -208,7 +205,7 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
@@ -234,7 +231,7 @@ export class DisputeService implements IDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
@@ -246,7 +243,7 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public splitGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
+  public splitGivenNames(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -260,17 +257,17 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public joinGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
+  public joinGivenNames(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
     dispute.disputantGivenNames = disputeExtended.disputantGivenName1;
-    if (disputeExtended.disputantGivenName2 ) dispute.disputantGivenNames = disputeExtended.disputantGivenNames + " " + disputeExtended.disputantGivenName2;
-    if (disputeExtended.disputantGivenName3 ) dispute.disputantGivenNames = disputeExtended.disputantGivenNames + " " + disputeExtended.disputantGivenName3;
+    if (disputeExtended.disputantGivenName2) dispute.disputantGivenNames = disputeExtended.disputantGivenNames + " " + disputeExtended.disputantGivenName2;
+    if (disputeExtended.disputantGivenName3) dispute.disputantGivenNames = disputeExtended.disputantGivenNames + " " + disputeExtended.disputantGivenName3;
 
     return dispute;
   }
 
-  public splitLawyerNames(disputeExtended: DisputeExtended):DisputeExtended {
+  public splitLawyerNames(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -285,7 +282,7 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public joinLawyerNames(disputeExtended: DisputeExtended):DisputeExtended {
+  public joinLawyerNames(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
     dispute.lawyerFullName = dispute.lawyerGivenName1;
@@ -296,7 +293,7 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public splitAddressLines(disputeExtended: DisputeExtended):DisputeExtended {
+  public splitAddressLines(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -310,7 +307,7 @@ export class DisputeService implements IDisputeService {
     return dispute;
   }
 
-  public joinAddressLines(disputeExtended: DisputeExtended):DisputeExtended {
+  public joinAddressLines(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
     dispute.address = dispute.addressLine1;
