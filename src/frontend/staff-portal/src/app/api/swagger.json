@@ -1621,6 +1621,13 @@
             "type": "string",
             "nullable": true
           },
+          "emailAddressVerified": {
+            "type": "boolean"
+          },
+          "emailVerificationToken": {
+            "type": "string",
+            "nullable": true
+          },
           "filingDate": {
             "type": "string",
             "format": "date-time",
