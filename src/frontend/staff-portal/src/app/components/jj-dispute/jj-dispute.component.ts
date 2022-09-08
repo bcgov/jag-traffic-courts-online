@@ -8,6 +8,9 @@ import { JJDisputeService } from '../../services/jj-dispute.service';
 import { JJDispute } from '../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -16,6 +19,7 @@ import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
 })
 export class JJDisputeComponent implements OnInit {
   @Input() public jjDisputeInfo: JJDispute
+  @Input() public type: string;
   @Output() public backTicketList: EventEmitter<any> = new EventEmitter();
   public isMobile: boolean;
   public busy: Subscription;
@@ -26,6 +30,8 @@ export class JJDisputeComponent implements OnInit {
   public violationTime: string = "";
   public timeToPayCountsHeading: string = "";
   public fineReductionCountsHeading: string = "";
+  public jjList;
+  public selectedJJ;
 
   constructor(
     protected route: ActivatedRoute,
@@ -33,6 +39,7 @@ export class JJDisputeComponent implements OnInit {
     public mockConfigService: MockConfigService,
     private datePipe: DatePipe,
     private jjDisputeService: JJDisputeService,
+    private dialog: MatDialog,
     private logger: LoggerService,
     @Inject(Router) private router,
   ) {
@@ -41,25 +48,45 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.jjList = this.jjDisputeService.jjList;
     this.getJJDispute();
   }
 
   public onSubmit(): void {
-    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
-    this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
-      this.lastUpdatedJJDispute = response;
-      this.logger.info(
-        'JJDisputeComponent::putJJDispute response',
-        response
-      );
-      this.onBack();
-    });
+    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Confirmed) {
+      this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
+      this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
+      this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+        this.lastUpdatedJJDispute = response;
+        this.logger.info(
+          'JJDisputeComponent::putJJDispute response',
+          response
+        );
+        this.onBack();
+      });
+    } else {
+      const data: DialogOptions = {
+        titleKey: "Submit to JUSTIN?",
+        messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",
+        actionTextKey: "Submit",
+        actionType: "primary",
+        cancelTextKey: "Go back",
+        icon: ""
+      };
+      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+        .subscribe((action: any) => {
+          if (action) {
+            // TODO: fill in to do actions depending on choice
+          }
+        });
+    }
   }
 
   public onSave(): void {
     // Update status to in progress unless status is set to review in which case do not change
-    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review)  this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review) {
+      this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    }
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
@@ -67,6 +94,23 @@ export class JJDisputeComponent implements OnInit {
         response
       );
     });
+  }
+
+  returnToJJ(): void {
+    const data: DialogOptions = {
+      titleKey: "Return to Judicial Justice?",
+      messageKey: "Are you sure you want to send this dispute decision to the selected judicial justice?",
+      actionTextKey: "Send to jj",
+      actionType: "primary",
+      cancelTextKey: "Go back",
+      icon: ""
+    };
+    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
+      .subscribe((action: any) => {
+        if (action) {
+          // TODO: fill in to do actions depending on choice
+        }
+      });
   }
 
   // get dispute by id

@@ -16,13 +16,13 @@ p {
 }
 
 .section-grid-cell {
-  border:1px solid black;
+  border: 1px solid black;
   padding-left: 5px;
   padding-bottom: 5px;
 }
 
 .section-grid-header {
-  font-size:small;
+  font-size: small;
   font-weight: bold;
   margin: 5px 0 0 0 !important;
   color: #707070;
@@ -30,7 +30,7 @@ p {
 }
 
 .section-grid-text {
-  font-size:small;
+  font-size: small;
   margin: 0 0 5px 0 !important;
   color: #003366;
   font-weight: bold;
@@ -42,42 +42,41 @@ p {
 }
 
 .small-note {
-  font-size:small;
+  font-size: small;
   color: #707070;
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.count-list{
+.count-list {
   border-left: 15px solid #3b6288;
   padding: 15px;
   color: #07396a;
   background-color: #f3f3f3;
+}
+
+.button {
+  padding: 20px;
+  background-color: #c2c2c2;
+  color: #fff;
+}
+
+.mat-flat-button {
+  min-width: 30% !important;
+  margin-top: 1em;
+  margin-right: 20px;
+
+  &.large {
+    height: 46px;
+    font-size: 1.125em;
+    font-weight: bold;
   }
 
-  .button {
-    padding: 20px;
-    background-color: #c2c2c2;
-    color: #fff;
+  &.light {
+    background-color: theme-palette(blue, bg);
+    color: white;
   }
-
-  .mat-flat-button {
-    width: 30% !important;
-    float: right;
-    margin-top: 1em;
-    margin-right: 20px;
-
-    &.large {
-      height: 46px;
-      font-size: 1.125em;
-      font-weight: bold;
-    }
-
-    &.light {
-      background-color: theme-palette(blue, bg);
-      color: white;
-    }
-  }
+}
 
 .mat-flat-button[disabled] {
   background-color: rgba(0, 0, 0, 0.04) !important;
@@ -85,15 +84,19 @@ p {
 
 .contact-info {
   margin-bottom: 12%;
+
   .contact-info {
+
     // margin-bottom: 60px;
-    .contact-body{
-        margin-top: 20px;
+    .contact-body {
+      margin-top: 20px;
     }
+
     button {
       width: 167px;
       border-radius: inherit;
     }
+
     // :host
   }
 
@@ -108,15 +111,43 @@ p {
     padding-right: 0.5em;
   }
 }
+
 ::ng-deep {
   .mat-expansion-indicator {
     display: none !important;
   }
+
   .heading-hr {
     width: 700% !important;
   }
-  .subheader span{
+
+  .subheader span {
     font-weight: 600;
     color: #1d4a77;
+  }
+
+  .select-box-only {
+    margin-top: 1em;
+    margin-bottom: 0 !important;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+
+      .mat-form-field-flex {
+        padding-top: 0 !important;
+      }
+
+      .mat-select-trigger .mat-select-arrow-wrapper {
+        transform: none !important;
+      }
+    }
+
+    .mat-form-field-underline {
+      bottom: 0;
+    }
+
+    .mat-form-field-subscript-wrapper {
+      display: none;
+    }
   }
 }

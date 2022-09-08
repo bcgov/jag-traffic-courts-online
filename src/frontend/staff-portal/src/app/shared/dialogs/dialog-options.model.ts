@@ -9,7 +9,7 @@ export interface DialogOptions {
 
   // title?: string;
   message?: string;
-  actionType?: 'primary' | 'accent' | 'warn';
+  actionType?: 'primary' | 'accent' | 'warn' | 'green';
   // actionText?: string;
   actionHide?: boolean;
   actionLink?: {

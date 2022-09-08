@@ -24,7 +24,7 @@ export class JJDisputeService {
     { idir: "kneufeld@idir", name: "Kevin Neufeld" },
     { idir: "cohiggins@idir", name: "Colm O'Higgins" },
     { idir: "bkarahan@idir", name: "Burak Karahan" },
-    { idir: "twong@idir", name: "Tsunwai Wong" },
+    { idir: "twwong@idir", name: "Tsunwai Wong" },
     { idir: "ewong@idir", name: "Elaine Wong" },
     { idir: "jmoffet@idir", name: "Jeffrey Moffet" },
     { idir: "rspress@idir", name: "Roberta Press" },
@@ -100,7 +100,7 @@ export class JJDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
@@ -133,7 +133,7 @@ export class JJDisputeService {
           return response ? response : null
         }),
         catchError((error: any) => {
-          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
           this.toastService.openErrorToast(errorMsg);
           this.logger.error(
             'jj-DisputeService::getJJDispute error has occurred: ',

@@ -10,6 +10,7 @@ import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 import localeEn from '@angular/common/locales/en';
@@ -84,6 +85,7 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     BrowserAnimationsModule,
     NgxMaterialTimepickerModule,
     FormsModule,
+    FlexLayoutModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

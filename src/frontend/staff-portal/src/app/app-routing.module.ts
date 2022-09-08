@@ -42,7 +42,7 @@ let routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/',
+    redirectTo: AppRoutes.LANDING,
     pathMatch: 'full',
   },
 ];

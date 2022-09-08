@@ -6,6 +6,7 @@ import { JJDispute } from '../../api/model/jJDispute.model';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { JJDisputeStatus } from 'app/api';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-dispute-inbox',
@@ -36,10 +37,16 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   constructor(
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.getAll();
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
+        this.jjIDIR = this.authService.userIDIR;
+        this.getAll();
+      }
+    })
   }
 
   ngAfterViewInit() {
