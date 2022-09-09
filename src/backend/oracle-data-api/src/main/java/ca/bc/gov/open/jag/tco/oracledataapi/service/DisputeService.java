@@ -56,16 +56,6 @@ public class DisputeService {
 	}
 
 	/**
-	 * Retrieves a specific {@link Dispute} by using the method findByEmailVerificationToken() delegating to CrudRepository
-	 *
-	 * @param emailVerificationToken of the Disputes to be returned
-	 * @return
-	 */
-	public Iterable<Dispute> getDisputesByEmailVerificationToken(String emailVerificationToken) {
-		return disputeRepository.findByEmailVerificationToken(emailVerificationToken);
-	}
-
-	/**
 	 * Create a new {@link Dispute} by using the method save() of CrudRepository
 	 *
 	 * @param dispute to be saved

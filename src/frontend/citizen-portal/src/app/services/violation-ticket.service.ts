@@ -282,7 +282,6 @@ export class ViolationTicketService {
           queryParams: params,
         });
       } else {
-        console.log(dateDiff);
         this.openInValidTicketDateDialog();
       }
     } else {

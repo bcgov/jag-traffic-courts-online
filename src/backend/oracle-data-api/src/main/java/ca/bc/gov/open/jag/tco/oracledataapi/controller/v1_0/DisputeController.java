@@ -85,21 +85,6 @@ public class DisputeController {
 	}
 
 	/**
-	 * GET endpoint that retrieves the detail of specific disputes by email verification token
-	 *
-	 * @param emailVerificationToken
-	 * @param principal the logged-in user
-	 * @return {list of all Disputes matching}
-	 */
-	@GetMapping("/disputesByEmailVerificationToken/{emailVerificationToken}")
-	public List<Dispute> getDisputesByEmailVerificationToken(@PathVariable String emailVerificationToken, Principal principal) {
-		logger.debug("GET /disputesByEmailVerificationToken/{emailVerificationToken} called");
-		Iterable<Dispute> allDisputes = disputeService.getDisputesByEmailVerificationToken(emailVerificationToken);
-		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
-		return IterableUtils.toList(allDisputes);
-	}
-
-	/**
 	 * DELETE endpoint that deletes a specified dispute
 	 *
 	 * @param id of the {@link Dispute} to be deleted
