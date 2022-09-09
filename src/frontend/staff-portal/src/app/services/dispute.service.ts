@@ -248,9 +248,8 @@ export class DisputeService implements IDisputeService {
  *
  * @param emailVerificationToken
  */
-  public resendEmailVerification(emailVerificationToken: string): Observable<any> {
-
-    return this.disputeApiService.apiDisputeEmailUuidResendPut(emailVerificationToken)
+  public resendEmailVerification(disputeId: number): Observable<string> {
+    return this.disputeApiService.apiDisputeDisputeIdResendemailverifyPut(disputeId, window.location.hostname)
       .pipe(
         map((response: any) => {
           this.logger.info('DisputeService::resendEmailVerification', response)
@@ -268,6 +267,7 @@ export class DisputeService implements IDisputeService {
         })
       );
   }
+
   public splitGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
     let dispute = disputeExtended;
 

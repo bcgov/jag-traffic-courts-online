@@ -19,7 +19,6 @@ public class DisputeService : IDisputeService
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private static readonly string _resendVerificationEmailTemplateName = "ResendingVerificationEmailTemplate";
 
 
     public DisputeService(
@@ -227,20 +226,19 @@ public class DisputeService : IDisputeService
         await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
     }
 
-    public async Task ResendEmailVerificationAsync(Guid uuid, CancellationToken cancellationToken)
+    public async Task<string> ResendEmailVerificationAsync(long disputeId, string host, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Email verification sent");
 
-        // Look up dispute by uuid
-        ICollection<Dispute> disputes = await GetOracleDataApi().GetDisputesByEmailVerificationTokenAsync(uuid.ToString(), cancellationToken);
-        if (disputes.Count == 0) throw new BadHttpRequestException("Email Verification Not Found.");
-        if (disputes.Count > 1) throw new BadHttpRequestException("More than one dispute found with the same email verification token.");
+        Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
-        EmailSendValidation emailVerificationSentEvent = Mapper.ToEmailSendValidation(uuid);
+        EmailSendValidation emailVerificationSentEvent = Mapper.ToEmailSendValidation(new Guid(dispute.EmailVerificationToken));
         await _bus.Publish(emailVerificationSentEvent, cancellationToken);
 
-        SendEmail emailVerificationEmail = Mapper.ToResendEmailVerification(disputes.First());
+        SendEmail emailVerificationEmail = Mapper.ToResendEmailVerification(dispute, host);
         await _bus.Publish(emailVerificationEmail, cancellationToken);
+
+        return emailVerificationEmail.HtmlContent is not null ? emailVerificationEmail.HtmlContent : "";
     }
 }

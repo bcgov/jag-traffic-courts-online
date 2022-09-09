@@ -346,30 +346,31 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <summary>
     /// An endpoint for resending an email to a Disputant.
     /// </summary>
-    /// <param name="uuid"></param>
+    /// <param name="disputeId"></param>
+    /// <param name="host"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>
-    /// <response code="202">Resend acknowledged.</response>
+    /// <response code="200">OK.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, requires dispute:submit permission.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     /// </returns>
-    [HttpPut("email/{uuid}/resend")]
-    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [HttpPut("{disputeId}/resendEmailVerify")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
-    public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
+    public async Task<IActionResult> ResendEmailAsync(long disputeId, string host, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Resending Email Verification");
 
         try
         {
-            await _disputeService.ResendEmailVerificationAsync(uuid, cancellationToken);
-            return Accepted();
+            string email = await _disputeService.ResendEmailVerificationAsync(disputeId, host, cancellationToken);
+            return Ok(email);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
         {

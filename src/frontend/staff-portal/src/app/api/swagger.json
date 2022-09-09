@@ -772,7 +772,7 @@
         }
       }
     },
-    "/api/dispute/email/{uuid}/resend": {
+    "/api/dispute/{disputeId}/resendemailverify": {
       "put": {
         "tags": [
           "Dispute"
@@ -780,19 +780,44 @@
         "summary": "An endpoint for resending an email to a Disputant.",
         "parameters": [
           {
-            "name": "uuid",
+            "name": "disputeId",
             "in": "path",
             "description": "",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "host",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "202": {
-            "description": "Accepted"
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",

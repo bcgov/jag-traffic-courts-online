@@ -206,19 +206,21 @@ export class TicketInfoComponent implements OnInit {
   }
 
   resendEmailVerification() {
-    this.disputeService.resendEmailVerification(this.lastUpdatedDispute.emailVerificationToken);
-    const data: DialogOptions = {
-      titleKey: "Email Verification Resent",
-      icon: "check",
-      actionType: "green",
-      messageKey:
-        "The email verification has been resent to the contact email address provided.",
-      actionTextKey: "Ok",
-      cancelHide: true
-    };
-    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
-      .subscribe((action: any) => {
-      });
+    this.disputeService.resendEmailVerification(this.lastUpdatedDispute.disputeId)
+    .subscribe(email => {
+      const data: DialogOptions = {
+        titleKey: "Email Verification Resent",
+        icon: "email",
+        actionType: "green",
+        messageKey:
+          "The email verification has been resent to the contact email address provided.\n\n" + this.lastUpdatedDispute.emailAddress,
+        actionTextKey: "Ok",
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+        .subscribe((action: any) => {
+        });
+    })
   }
 
 

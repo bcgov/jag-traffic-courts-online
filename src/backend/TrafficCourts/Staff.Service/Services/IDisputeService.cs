@@ -70,11 +70,12 @@ public interface IDisputeService
     Task DeleteDisputeAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>Resends email verification to consumer.</summary>
-    /// <param name="uuid">Uuid for dispute to resend email.</param>
+    /// <param name="disputeId">Dispute Id for dispute to resend email.</param>
+    /// <param name="host">Host for dispute to resend email.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task ResendEmailVerificationAsync(Guid uuid, CancellationToken cancellationToken);
+    Task<string> ResendEmailVerificationAsync(long disputeId, string host, CancellationToken cancellationToken);
 
 
 }
