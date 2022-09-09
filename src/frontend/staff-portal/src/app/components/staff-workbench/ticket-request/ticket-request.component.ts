@@ -108,7 +108,7 @@ export class TicketRequestComponent implements OnInit {
         countsActions[field] = [];
       }
     });
-    countsActions.notrequestCourtAppearance = counts.filter(i => i.requestCourtAppearance === this.RequestCourtAppearance.N).map(i => "Count " + i.countNo).join(", ");
+    countsActions.notRequestCourtAppearance = counts.filter(i => i.requestCourtAppearance === this.RequestCourtAppearance.N).map(i => "Count " + i.countNo).join(", ");
     countsActions.courtGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && i.requestCourtAppearance === this.RequestCourtAppearance.Y));
     countsActions.courtNotGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.N && i.requestCourtAppearance === this.RequestCourtAppearance.Y));
     countsActions.noCourtGuilty = toCountStr(counts.filter(i => i.pleaCode === this.PleaCode.G && i.requestCourtAppearance === this.RequestCourtAppearance.N));

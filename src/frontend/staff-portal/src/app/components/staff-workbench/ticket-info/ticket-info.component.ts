@@ -205,7 +205,7 @@ export class TicketInfoComponent implements OnInit {
     return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
   }
 
-  resendEmailVerification() {
+  public resendEmailVerification() {
     this.disputeService.resendEmailVerification(this.lastUpdatedDispute.disputeId)
     .subscribe(email => {
       const data: DialogOptions = {
@@ -222,7 +222,6 @@ export class TicketInfoComponent implements OnInit {
         });
     })
   }
-
 
   public onBack() {
     this.backInbox.emit();

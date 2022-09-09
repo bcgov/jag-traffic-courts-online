@@ -114,11 +114,12 @@ public class Mapper
         var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == messageTemplateName);
         if (template is not null)
         {
+
             sendEmail.From = template.Sender;
             sendEmail.To.Add(dispute.EmailAddress);
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+
         }
         return sendEmail;
 
