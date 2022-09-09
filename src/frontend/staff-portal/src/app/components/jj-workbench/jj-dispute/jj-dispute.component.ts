@@ -8,6 +8,9 @@ import { JJDisputeService } from '../../../services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
+import { DialogOptions } from '@shared/dialogs/dialog-options.model';
+import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -16,6 +19,7 @@ import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
 })
 export class JJDisputeComponent implements OnInit {
   @Input() public jjDisputeInfo: JJDispute
+  @Input() public type: string;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
 
   public isMobile: boolean;
@@ -34,6 +38,7 @@ export class JJDisputeComponent implements OnInit {
     public mockConfigService: MockConfigService,
     private datePipe: DatePipe,
     private jjDisputeService: JJDisputeService,
+    private dialog: MatDialog,
     private logger: LoggerService,
     @Inject(Router) private router,
   ) {
@@ -60,7 +65,9 @@ export class JJDisputeComponent implements OnInit {
 
   public onSave(): void {
     // Update status to in progress unless status is set to review in which case do not change
-    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review)  this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review) {
+      this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
+    }
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(

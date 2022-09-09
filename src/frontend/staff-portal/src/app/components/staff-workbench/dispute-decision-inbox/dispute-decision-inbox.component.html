@@ -1,24 +1,30 @@
 <div style="float:inline; width:97%">
-  <span style="float:left"><h2><b>Dispute Decision Inbox</b>&nbsp;<span style="font-size:normal;">(No Hearing, {{ dataSource.data.length }} results)</span></h2></span>
+  <span style="float:left">
+    <h2><b>Dispute Decision Inbox</b>&nbsp;<span style="font-size:normal;">
+        (No Hearing, {{ dataSource.data.length }} results)
+      </span></h2>
+  </span>
   <span style="float:right; background-color: #f9f2f2;">
-      <mat-select [value]="currentTeam" (selectionChange)="filterByTeam($event.value)" style="background-color:#f9f2f2; width:200px; font-size:large; margin:10px; padding:auto;">
-        <mat-option value="All">All</mat-option>
-        <mat-option value="A">Team A</mat-option>
-        <mat-option value="B">Team B</mat-option>
-        <mat-option value="C">Team C</mat-option>
-        <mat-option value="D">Team D</mat-option>
-      </mat-select>
+    <mat-select [value]="currentTeam" (selectionChange)="filterByTeam($event.value)"
+      style="background-color:#f9f2f2; width:200px; font-size:large; margin:10px; padding:auto;">
+      <mat-option value="All">All</mat-option>
+      <mat-option value="A">Team A</mat-option>
+      <mat-option value="B">Team B</mat-option>
+      <mat-option value="C">Team C</mat-option>
+      <mat-option value="D">Team D</mat-option>
+    </mat-select>
   </span>
 </div>
 <br /><br />
-
 <table mat-table [dataSource]="dataSource" style="margin-bottom:30px; width:97%" class="mat-elevation-z8" matSort>
   <ng-container matColumnDef="ticketNumber">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>
       VT NUMBER
     </th>
     <td mat-cell *matCellDef="let element">
-      <span><a (click)="backWorkbench(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+      <span><a (click)="backWorkbench(element)" href="javascript:void()">
+          {{ element.ticketNumber }}
+        </a></span>
     </td>
   </ng-container>
 

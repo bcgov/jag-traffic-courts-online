@@ -1,5 +1,5 @@
-<div class="contact-info">
-  <a (click)="onBack()" style="color: #48afe5">
+<div [ngClass]="{'contact-info' : type !== 'ticket'}">
+  <a *ngIf="type !== 'ticket'" (click)="onBack()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
   </a>
   <div *ngIf="retrieving === true">
@@ -9,8 +9,13 @@
   </div>
   <div *ngIf="lastUpdatedJJDispute && retrieving === false">
     <div style="float:inline">
-      <span style="float:left"><h1><b>Written Reasons Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}</b></h1></span>
-      <span style="float:right"><h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1></span>
+      <span style="float:left">
+        <h1><b>Written Reasons Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{
+            lastUpdatedJJDispute.surname}}</b></h1>
+      </span>
+      <span style="float:right">
+        <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
+      </span>
     </div> <br /><br />
     <section>
       <ng-container subHeader>
@@ -51,6 +56,16 @@
           <p class="section-grid-header">Date Received from ICBC</p>
           <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
         </span>
+        <ng-container *ngIf="type === 'ticket'">
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Court Location Code</p>
+            <p class="section-grid-text">20491</p>
+          </span>
+          <span class="section-grid-cell">
+            <p class="section-grid-header">Court Location</p>
+            <p class="section-grid-text">{{ lastUpdatedJJDispute.courthouseLocation }}</p>
+          </span>
+        </ng-container>
       </div>
     </section><br />
     <section>
@@ -74,7 +89,8 @@
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Birthdate</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.birthdate | date: "MMM dd, yyyy" }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.contactInformation.birthdate | date: "MMM dd, yyyy" }}
+          </p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Prov / State of DL</p>
@@ -97,14 +113,16 @@
         </span>
       </ng-container>
       <div>
-        <h4><b>Fine Reduction</b><span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span></h4>
+        <h4><b>Fine Reduction</b><span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{
+            fineReductionCountsHeading }}</span></h4>
         <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
         <br /><br />
       </div>
       <div>
-        <h4><b>Time to Pay</b><span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading }}</span></h4>
+        <h4><b>Time to Pay</b><span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading
+            }}</span></h4>
         <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
-    </div>
+      </div>
     </section><br />
     <section>
       <ng-container subHeader>
@@ -114,31 +132,72 @@
       </ng-container>
       <div style="display: grid; grid-template-columns: 33% 33% 33%">
         <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
-          <app-jj-count
-            [count]="i"
-            [jjDisputeInfo]="lastUpdatedJJDispute"
-            [jjDisputedCount]="getJJDisputedCount(i)"
-            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)"></app-jj-count>
+          <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
+            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type"></app-jj-count>
         </span>
       </div>
     </section><br />
-    <section>
+    <section *ngIf="type !== 'ticket'">
       <ng-container subHeader>
         <span>
-          <h3>Add Remarks<br/>
-          <span class="small-note"><i><span style="color:red;">*</span> This is for internal use only</i></span>
-        </h3>
+          <h3>Add Remarks<br />
+            <span class="small-note"><i><span style="color:red;">*</span> This is for internal use only</i></span>
+          </h3>
         </span>
       </ng-container>
-      <textarea matInput [(ngModel)]="lastUpdatedJJDispute.remarks" maxlength="1500" rows="6" style="background: #fffee6;"></textarea>
-    </section><br />
-    <div style="float: right; width: 100%;">
-      <button class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()" [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
-        Submit
-      </button>
-      <button class="large" mat-flat-button type="button" color="primary" (click)="onSave()"  [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+      <textarea matInput [(ngModel)]="lastUpdatedJJDispute.remarks" maxlength="1500" rows="6"
+        style="background: #fffee6;"></textarea>
+    </section>
+    <ng-container *ngIf="type === 'ticket'">
+      <section>
+        <ng-container subHeader>
+          <span>
+            <h3>JJ Remarks</h3>
+          </span>
+        </ng-container>
+        <div>{{ lastUpdatedJJDispute.remarks }}</div>
+      </section>
+      <br />
+      <div fxLayout="row">
+        <div fxFlex="40">
+          <div fxFlex>
+            <h3>Signed By</h3>
+            <div>{{ lastUpdatedJJDispute.jjAssignedTo }}</div>
+          </div>
+          <div fxFlex></div>
+          <div fxFlex>
+            <h3>Date Signed</h3>
+            <div>{{ lastUpdatedJJDispute.jjDecisionDate | date: "MMM dd, yyyy" }}</div>
+          </div>
+        </div>
+      </div>
+      <section style="padding-top: 2rem;">
+        <ng-container subHeader>
+          <span>
+            <h3>Add Remarks<br />
+              <span class="small-note">
+                <i><span style="color:red;">*</span>
+                  Remarks will be sent to the JJ if you need toreturn this dispute decision</i>
+              </span>
+            </h3>
+          </span>
+        </ng-container>
+        <textarea matInput maxlength="1500" rows="6" style="background: #fffee6;"></textarea>
+      </section>
+    </ng-container>
+    <br />
+    <div *ngIf="type !== 'ticket'" fxLayout="row">
+      <div fxFlex>
+      </div>
+      <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
+        (click)="onSave()"
+        [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
         Save & Finish Later
       </button>
-    </div><br/><br/>
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()"
+        [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+        Submit
+      </button>
+    </div><br /><br />
   </div>
 </div>

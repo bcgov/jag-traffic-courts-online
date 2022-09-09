@@ -209,9 +209,12 @@ export class TicketInfoComponent implements OnInit {
     this.disputeService.resendEmailVerification(this.lastUpdatedDispute.emailVerificationToken);
     const data: DialogOptions = {
       titleKey: "Email Verification Resent",
+      icon: "check",
+      actionType: "green",
       messageKey:
         "The email verification has been resent to the contact email address provided.",
       actionTextKey: "Ok",
+      cancelHide: true
     };
     this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
       .subscribe((action: any) => {
@@ -553,7 +556,7 @@ export class TicketInfoComponent implements OnInit {
       messageKey:
         "Once you approve this request, the information will be sent to ICBC. Are you sure you are ready to approve and submit this request to ARC?",
       actionTextKey: "Approve and send request",
-      actionType: "warn",
+      actionType: "green",
       cancelTextKey: "Go back",
       icon: "error_outline",
     };

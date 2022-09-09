@@ -32,11 +32,11 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     "disputantName",
     "courthouseLocation",
     "vtcAssignedTo"
-    ];
+  ];
 
   constructor(
-    public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
+    public jjDisputeService: JJDisputeService,
     public mockConfigService: MockConfigService,
   ) {
     if (this.mockConfigService.courtLocations) {
@@ -50,7 +50,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
     this.dataSource.data = this.data.filter(x => teamCourthouses.filter(y => y.name === x.courthouseLocation).length > 0);
   }
 
-  public async ngOnInit() {
+  public ngOnInit() {
     this.getAll();
   }
 
@@ -76,13 +76,13 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
       });
 
       // initially sort by decision date within status
-      this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) =>
-        {
-          if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
-        });
+      this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) => {
+        if (a.jjDecisionDate > b.jjDecisionDate) { return 1; } else { return -1; }
+      });
     });
   }
 }
+
 export interface JJDisputeView extends JJDispute {
   vtcAssignedToName: string;
   jjAssignedToName: string;

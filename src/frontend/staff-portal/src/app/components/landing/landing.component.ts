@@ -18,20 +18,18 @@ export class LandingComponent implements OnInit {
   ) {
   }
 
-  public async ngOnInit() {
+  public ngOnInit() {
     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
       if (this.isLoggedIn) {
         this.authService.userProfile$.subscribe(() => {
           this.router.navigate([this.authService.getRedirectUrl()]);
         })
-      } else {
-        this.router.navigate([AppRoutes.LANDING]);
       }
     })
   }
 
-  public async login() {
-    await this.authService.login();
+  public login() {
+    this.authService.login();
   }
 }
