@@ -31,8 +31,6 @@ export class JJDisputeComponent implements OnInit {
   public violationTime: string = "";
   public timeToPayCountsHeading: string = "";
   public fineReductionCountsHeading: string = "";
-  public jjList;
-  public selectedJJ;
 
   constructor(
     protected route: ActivatedRoute,
@@ -49,45 +47,20 @@ export class JJDisputeComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.jjList = this.jjDisputeService.jjList;
     this.getJJDispute();
   }
 
   public onSubmit(): void {
-    if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Confirmed) {
-      this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
-      this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-      this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
-        this.lastUpdatedJJDispute = response;
-        this.logger.info(
-          'JJDisputeComponent::putJJDispute response',
-          response
-        );
-        this.onBack();
-      });
-    } else {
-      const data: DialogOptions = {
-        titleKey: "Submit to JUSTIN?",
-        messageKey: "Are you sure this dispute is ready to be submitted to JUSTIN?",
-        actionTextKey: "Submit",
-        actionType: "primary",
-        cancelTextKey: "Go back",
-        icon: ""
-      };
-      this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
-        .subscribe((action: any) => {
-          if (action) {
-            this.lastUpdatedJJDispute.status = JJDisputeStatus.Accepted;
-            this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
-              this.lastUpdatedJJDispute = response;
-              this.logger.info(
-                'JJDisputeComponent::putJJDispute response',
-                response
-              );
-            });
-          }
-        });
-    }
+    this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
+    this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
+    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+      this.lastUpdatedJJDispute = response;
+      this.logger.info(
+        'JJDisputeComponent::putJJDispute response',
+        response
+      );
+      this.onBack();
+    });
   }
 
   public onSave(): void {
@@ -102,30 +75,6 @@ export class JJDisputeComponent implements OnInit {
         response
       );
     });
-  }
-
-  returnToJJ(): void {
-    const data: DialogOptions = {
-      titleKey: "Return to Judicial Justice?",
-      messageKey: "Are you sure you want to send this dispute decision to the selected judicial justice?",
-      actionTextKey: "Send to jj",
-      actionType: "primary",
-      cancelTextKey: "Go back",
-      icon: ""
-    };
-    this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
-      .subscribe((action: any) => {
-        if (action) {
-          this.lastUpdatedJJDispute.status = JJDisputeStatus.Review;
-          this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
-            this.lastUpdatedJJDispute = response;
-            this.logger.info(
-              'JJDisputeComponent::putJJDispute response',
-              response
-            );
-          });
-        }
-      });
   }
 
   // get dispute by id
