@@ -19,6 +19,8 @@ public class DisputeService : IDisputeService
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private static readonly string _resendVerificationEmailTemplateName = "ResendingVerificationEmailTemplate";
+
 
     public DisputeService(
         OracleDataApiConfiguration oracleDataApiConfiguration,
@@ -223,5 +225,22 @@ public class DisputeService : IDisputeService
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
+    }
+
+    public async Task ResendEmailVerificationAsync(Guid uuid, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Email verification sent");
+
+        // Look up dispute by uuid
+        ICollection<Dispute> disputes = await GetOracleDataApi().GetDisputesByEmailVerificationTokenAsync(uuid.ToString(), cancellationToken);
+        if (disputes.Count == 0) throw new BadHttpRequestException("Email Verification Not Found.");
+        if (disputes.Count > 1) throw new BadHttpRequestException("More than one dispute found with the same email verification token.");
+
+        // Publish submit event (consumer(s) will generate email, etc)
+        EmailSendValidation emailVerificationSentEvent = Mapper.ToEmailSendValidation(uuid);
+        await _bus.Publish(emailVerificationSentEvent, cancellationToken);
+
+        SendEmail emailVerificationEmail = Mapper.ToResendEmailVerification(disputes.First());
+        await _bus.Publish(emailVerificationEmail, cancellationToken);
     }
 }

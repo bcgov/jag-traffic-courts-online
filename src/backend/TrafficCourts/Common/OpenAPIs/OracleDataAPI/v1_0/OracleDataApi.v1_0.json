@@ -30,16 +30,16 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
             "description": "An invalid JJ Dispute status is provided. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "404": {
-            "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -343,16 +343,16 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
             "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "404": {
-            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
@@ -500,6 +500,45 @@
               "enum": [ "NEW", "VALIDATED", "PROCESSING", "REJECTED", "CANCELLED" ]
             },
             "example": "CANCELLED"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Dispute" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1.0/disputesByEmailVerificationToken/{emailVerificationToken}": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "operationId": "getDisputesByEmailVerificationToken",
+        "parameters": [
+          {
+            "name": "emailVerificationToken",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
           }
         ],
         "responses": {

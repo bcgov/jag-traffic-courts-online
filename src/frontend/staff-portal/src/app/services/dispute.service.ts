@@ -246,6 +246,31 @@ export class DisputeService implements IDisputeService {
       );
   }
 
+ /**
+ * Put to Resend Email Verification
+ *
+ * @param emailVerificationToken
+ */
+  public resendEmailVerification(emailVerificationToken: string): Observable<any> {
+
+    return this.disputeApiService.apiDisputeEmailUuidResendPut(emailVerificationToken)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('DisputeService::resendEmailVerification', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::resendEmailVerification error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
   public splitGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
     let dispute = disputeExtended;
 

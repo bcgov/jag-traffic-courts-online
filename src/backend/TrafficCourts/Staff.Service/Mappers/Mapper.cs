@@ -61,12 +61,22 @@ public class Mapper
         return disputeRejected;
     }
 
+    public static EmailSendValidation ToEmailSendValidation(Guid uuid)
+    {
+        EmailSendValidation emailSendValidation = new(uuid);
+        return emailSendValidation;
+    }
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
         DisputeCancelled disputeCancelled = new();
         disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
         return disputeCancelled;
+    }
+
+    public static SendEmail ToResendEmailVerification(Dispute dispute)
+    {
+        return ToSendEmail(dispute, "ResendEmailVerificationTemplate");
     }
 
     public static SendEmail ToCancelSendEmail(Dispute dispute)
@@ -91,12 +101,12 @@ public class Mapper
         var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == messageTemplateName);
         if (template is not null)
         {
-
             sendEmail.From = template.Sender;
             sendEmail.To.Add(dispute.EmailAddress);
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            
+            sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
         }
         return sendEmail;
 

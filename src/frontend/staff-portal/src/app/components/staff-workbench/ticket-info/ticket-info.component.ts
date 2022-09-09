@@ -97,7 +97,7 @@ export class TicketInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-      emailAddress: [null, [Validators.email, Validators.required]],
+      emailAddress: [null, [Validators.email]],
       disputantSurname: [null, [Validators.required]],
       disputantGivenNames: [null, [Validators.required]],
       country: [null, [Validators.required]],
@@ -204,6 +204,20 @@ export class TicketInfoComponent implements OnInit {
     if (!this.lookupsService.statutes || this.lookupsService.statutes.length == 0) return [];
     return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
   }
+
+  resendEmailVerification() {
+    this.disputeService.resendEmailVerification(this.lastUpdatedDispute.emailVerificationToken);
+    const data: DialogOptions = {
+      titleKey: "Email Verification Resent",
+      messageKey:
+        "The email verification has been resent to the contact email address provided.",
+      actionTextKey: "Ok",
+    };
+    this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+      .subscribe((action: any) => {
+      });
+  }
+
 
   public onBack() {
     this.backInbox.emit();
