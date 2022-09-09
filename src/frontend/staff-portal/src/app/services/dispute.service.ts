@@ -249,7 +249,7 @@ export class DisputeService implements IDisputeService {
  * @param emailVerificationToken
  */
   public resendEmailVerification(disputeId: number): Observable<string> {
-    return this.disputeApiService.apiDisputeDisputeIdResendemailverifyPut(disputeId, window.location.hostname)
+    return this.disputeApiService.apiDisputeDisputeIdResendemailverifyPut(disputeId, window.location.host)
       .pipe(
         map((response: any) => {
           this.logger.info('DisputeService::resendEmailVerification', response)
