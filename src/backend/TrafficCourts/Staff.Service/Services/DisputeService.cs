@@ -21,6 +21,7 @@ public class DisputeService : IDisputeService
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
+
     public DisputeService(
         OracleDataApiConfiguration oracleDataApiConfiguration,
         IBus bus,
@@ -231,5 +232,21 @@ public class DisputeService : IDisputeService
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
+    }
+
+    public async Task<string> ResendEmailVerificationAsync(long disputeId, string host, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Email verification sent");
+
+        Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
+
+        // Publish submit event (consumer(s) will generate email, etc)
+        EmailSendValidation emailVerificationSentEvent = Mapper.ToEmailSendValidation(new Guid(dispute.EmailVerificationToken));
+        await _bus.Publish(emailVerificationSentEvent, cancellationToken);
+
+        SendEmail emailVerificationEmail = Mapper.ToResendEmailVerification(dispute, host);
+        await _bus.Publish(emailVerificationEmail, cancellationToken);
+
+        return emailVerificationEmail.HtmlContent is not null ? emailVerificationEmail.HtmlContent : "";
     }
 }

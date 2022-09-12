@@ -47,6 +47,8 @@ export interface Dispute {
     homePhoneNumber?: string | null;
     workPhoneNumber?: string | null;
     emailAddress?: string | null;
+    emailAddressVerified?: boolean;
+    emailVerificationToken?: string | null;
     filingDate?: string | null;
     representedByLawyer?: DisputeRepresentedByLawyer;
     lawFirmName?: string | null;

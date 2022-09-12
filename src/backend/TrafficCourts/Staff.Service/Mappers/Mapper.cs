@@ -61,12 +61,35 @@ public class Mapper
         return disputeRejected;
     }
 
+    public static EmailSendValidation ToEmailSendValidation(Guid uuid)
+    {
+        EmailSendValidation emailSendValidation = new(uuid);
+        return emailSendValidation;
+    }
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
         DisputeCancelled disputeCancelled = new();
         disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
         return disputeCancelled;
+    }
+
+    public static SendEmail ToResendEmailVerification(Dispute dispute, string host)
+    {
+        SendEmail sendEmail = new();
+        // Send email message to the submitter's entered email
+        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ResendEmailVerificationTemplate");
+        if (template is not null)
+        {
+            sendEmail.From = template.Sender;
+            sendEmail.To.Add(dispute.EmailAddress);
+            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.HtmlContent =template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
+            sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
+        }
+        return sendEmail;
     }
 
     public static SendEmail ToCancelSendEmail(Dispute dispute)
@@ -96,7 +119,7 @@ public class Mapper
             sendEmail.To.Add(dispute.EmailAddress);
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            
+
         }
         return sendEmail;
 

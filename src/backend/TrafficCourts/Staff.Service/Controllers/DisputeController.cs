@@ -344,6 +344,60 @@ public class DisputeController : VTCControllerBase<DisputeController>
     }
 
     /// <summary>
+    /// An endpoint for resending an email to a Disputant.
+    /// </summary>
+    /// <param name="disputeId"></param>
+    /// <param name="host"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires dispute:submit permission.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    /// </returns>
+    [HttpPut("{disputeId}/resendEmailVerify")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
+    public async Task<IActionResult> ResendEmailAsync(long disputeId, string host, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Resending Email Verification");
+
+        try
+        {
+            string email = await _disputeService.ResendEmailVerificationAsync(disputeId, host, cancellationToken);
+            return Ok(email);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error resending email verification");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (BadHttpRequestException e)
+        {
+            _logger.LogError(e, "Error resending email verification. " + e.Message);
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error resending email verification");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Submits a Dispute record, setting it's status to PROCESSING
     /// </summary>
     /// <param name="disputeId">Unique identifier for a specific Dispute record to submit.</param>
