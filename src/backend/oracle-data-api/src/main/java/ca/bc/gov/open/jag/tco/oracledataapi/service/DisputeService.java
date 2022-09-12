@@ -4,6 +4,10 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -26,6 +30,9 @@ public class DisputeService {
 
 	@Autowired
 	DisputeRepository disputeRepository;
+	
+	@PersistenceContext
+    private EntityManager entityManager;
 
 	/**
 	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
@@ -71,8 +78,8 @@ public class DisputeService {
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
 			}
-		}
-		disputeRepository.save(dispute);
+		} 
+		disputeRepository.saveAndFlush(dispute);
 	}
 
 	/**
@@ -82,6 +89,7 @@ public class DisputeService {
 	 * @param {@link Dispute}
 	 * @return
 	 */
+	@Transactional
 	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
 
@@ -92,8 +100,12 @@ public class DisputeService {
 		}
 		// Add updated ticket counts
 		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
-
-		return disputeRepository.save(disputeToUpdate);
+		
+		Dispute updatedDispute = disputeRepository.saveAndFlush(disputeToUpdate);
+		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistance 
+		entityManager.refresh(updatedDispute);
+		
+		return updatedDispute;
 	}
 
 	/**
@@ -170,7 +182,7 @@ public class DisputeService {
 
 		dispute.setStatus(disputeStatus);
 		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
-		return disputeRepository.save(dispute);
+		return disputeRepository.saveAndFlush(dispute);
 	}
 
 	/**
@@ -192,7 +204,7 @@ public class DisputeService {
 
 			dispute.setUserAssignedTo(principal.getName());
 			dispute.setUserAssignedTs(new Date());
-			disputeRepository.save(dispute);
+			disputeRepository.saveAndFlush(dispute);
 
 			logger.debug("Dispute with id {} has been assigned to {}", id, principal.getName());
 
@@ -215,7 +227,7 @@ public class DisputeService {
 		for (Dispute dispute : disputeRepository.findByUserAssignedTsBefore(hourAgo)) {
 			dispute.setUserAssignedTo(null);
 			dispute.setUserAssignedTs(null);
-			disputeRepository.save(dispute);
+			disputeRepository.saveAndFlush(dispute);
 			count++;
 		}
 

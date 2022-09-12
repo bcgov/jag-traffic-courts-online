@@ -61,7 +61,7 @@ export class ContactInfoComponent implements OnInit {
     this.form = this.formBuilder.group({
       ticketNumber: [null, [Validators.required]],
       homePhoneNumber: [null, [Validators.required, Validators.maxLength(20)]],
-      emailAddress: [null, [Validators.email, Validators.required]],
+      emailAddress: [null, [Validators.email]],
       disputantSurname: [null, [Validators.required]],
       disputantGivenNames: [null, [Validators.required]],
       disputantBirthdate: [null, [Validators.required]],
@@ -147,6 +147,25 @@ export class ContactInfoComponent implements OnInit {
           });
         }
       });
+  }
+
+  public resendEmailVerification() {
+    this.disputeService.resendEmailVerification(this.lastUpdatedDispute.disputeId)
+    .subscribe(email => {
+      console.log(email);
+      const data: DialogOptions = {
+        titleKey: "Email Verification Resent",
+        icon: "email",
+        actionType: "green",
+        messageKey:
+          "The email verification has been resent to the contact email address provided.\n\n" + this.lastUpdatedDispute.emailAddress,
+        actionTextKey: "Ok",
+        cancelHide: true
+      };
+      this.dialog.open(ConfirmDialogComponent, { data }).afterClosed()
+        .subscribe((action: any) => {
+        });
+    })
   }
 
   public reject(): void {

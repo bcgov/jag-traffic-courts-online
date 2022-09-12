@@ -64,7 +64,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   isNew(d: DisputeExtended): boolean {
-    return d.status == DisputeStatus.New;
+    return d.status == DisputeStatus.New && (d.emailAddressVerified === true || !d.emailAddress);
   }
 
   getAllDisputes(): void {
@@ -97,6 +97,8 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             disputeId: d.disputeId,
             userAssignedTo: d.userAssignedTo,
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
+            emailAddressVerified: d.emailAddressVerified,
+            emailAddress: d.emailAddress,
             systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
             __CourtHearing: false,
             __DateSubmitted: new Date(d.submittedDate),

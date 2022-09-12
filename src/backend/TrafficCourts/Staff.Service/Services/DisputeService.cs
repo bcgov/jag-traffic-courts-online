@@ -6,6 +6,7 @@ using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Security.Claims;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -19,6 +20,7 @@ public class DisputeService : IDisputeService
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+
 
     public DisputeService(
         OracleDataApiConfiguration oracleDataApiConfiguration,
@@ -46,6 +48,8 @@ public class DisputeService : IDisputeService
         var user = _httpContextAccessor.HttpContext?.User;
 
         var username = user?.Claims?.FirstOrDefault(_ => _.Type == "preferred_username")?.Value;
+        var fullName = user?.Claims?.FirstOrDefault(_ => _.Type == ClaimTypes.Name)?.Value;
+
         if (username is not null && !string.IsNullOrWhiteSpace(username))
         {
             // we expect the username to be of the form: someone@domain
@@ -57,6 +61,11 @@ public class DisputeService : IDisputeService
 
             HttpRequestHeaders requestHeaders = httpClient.DefaultRequestHeaders;
             requestHeaders.Add("x-username", username);
+
+            if (fullName is not null && !string.IsNullOrWhiteSpace(fullName))
+            {
+                requestHeaders.Add("x-fullName", fullName);
+            }
         }
         else
         {
@@ -223,5 +232,21 @@ public class DisputeService : IDisputeService
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
+    }
+
+    public async Task<string> ResendEmailVerificationAsync(long disputeId, string host, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Email verification sent");
+
+        Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
+
+        // Publish submit event (consumer(s) will generate email, etc)
+        EmailSendValidation emailVerificationSentEvent = Mapper.ToEmailSendValidation(new Guid(dispute.EmailVerificationToken));
+        await _bus.Publish(emailVerificationSentEvent, cancellationToken);
+
+        SendEmail emailVerificationEmail = Mapper.ToResendEmailVerification(dispute, host);
+        await _bus.Publish(emailVerificationEmail, cancellationToken);
+
+        return emailVerificationEmail.HtmlContent is not null ? emailVerificationEmail.HtmlContent : "";
     }
 }

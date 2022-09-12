@@ -243,7 +243,32 @@ export class DisputeService implements IDisputeService {
       );
   }
 
-  public splitGivenNames(disputeExtended: DisputeExtended): DisputeExtended {
+ /**
+ * Put to Resend Email Verification
+ *
+ * @param emailVerificationToken
+ */
+  public resendEmailVerification(disputeId: number): Observable<string> {
+    return this.disputeApiService.apiDisputeDisputeIdResendemailverifyPut(disputeId, window.location.host)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('DisputeService::resendEmailVerification', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'DisputeService::resendEmailVerification error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  public splitGivenNames(disputeExtended: DisputeExtended):DisputeExtended {
     let dispute = disputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3

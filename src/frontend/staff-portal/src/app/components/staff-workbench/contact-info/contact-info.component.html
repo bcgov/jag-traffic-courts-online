@@ -19,7 +19,7 @@
     </span>
   </div>
   <div class="contact-info" *ngIf="initialDisputeValues && conflict === false">
-    <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel [expanded]="true" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">
       <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
         <app-page-header>
           <ng-container subHeader>
@@ -79,7 +79,8 @@
       <mat-expansion-panel-header (click)="handleCollapse('contactInformation')">
         <app-page-header>
           <ng-container subHeader>
-            <span>Contact Information </span>
+            <span *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">Contact Information </span>
+            <span *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress">Contact Information -- Email Address Not Verified </span>
             <i *ngIf="collapseObj?.contactInformation" class="fa fa-minus-circle"
               style="font-size:18px; color:#009cde"></i>
             <i *ngIf="!collapseObj?.contactInformation" class="fa fa-plus-circle"
@@ -240,15 +241,16 @@
                 <mat-form-field class="w-100">
                   <mat-label>Email address</mat-label>
                   <input matInput formControlName="emailAddress" autocomplete="off" />
-                  <mat-error *ngIf="form.get('emailAddress').hasError('required')">{{
-                    "error.required" | translate
-                    }}</mat-error>
+                  <mat-hint *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress" style="color:red">
+                    The contact email address has not been verified by the disputant.  To opt them out of email communications, set the email address to blank and Save.  Alternatively you can resend the email verification to the disputant.
+                  </mat-hint>
                   <mat-error *ngIf="form.get('emailAddress').hasError('email')">{{
                     "error.email_address" | translate
                     }}</mat-error>
                 </mat-form-field>
               </div>
             </div>
+            <br /><br />
             <div class="row">
 
               <!-- Notice of dispute drivers licence province -->
@@ -285,6 +287,9 @@
               </div>
             </div>
             <div style="float: right; width: 100%;">
+              <button class="large" mat-flat-button type="button" color="primary" (click)="resendEmailVerification()" *ngIf="lastUpdatedDispute.emailAddressVerified === false && lastUpdatedDispute.emailAddress">
+                Resend Email Verification
+              </button>
               <button class="large" mat-flat-button type="submit" color="primary"
                 [disabled]="!form.touched || form.invalid">
                 Save
@@ -294,7 +299,7 @@
         </form>
       </div>
     </mat-expansion-panel>
-    <app-ticket-request [disputeInfo]="lastUpdatedDispute"></app-ticket-request>
+    <app-ticket-request [disputeInfo]="lastUpdatedDispute" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)"></app-ticket-request>
     <!-- Notes to be added in a future enhancement -->
     <!-- <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header (click)="handleCollapse('notes')">
@@ -311,7 +316,7 @@
           </textarea>
       </mat-form-field>
     </mat-expansion-panel> -->
-    <div style="float: right; width: 100%;">
+    <div style="float: right; width: 100%;" *ngIf="lastUpdatedDispute.emailAddressVerified === true || !(lastUpdatedDispute.emailAddress)">
       <button class="large" mat-flat-button type="button" color="primary"
         [disabled]="(lastUpdatedDispute.status !== 'NEW' && lastUpdatedDispute.status !== 'REJECTED') || this.form.invalid || this.form.touched"
         (click)="approve()" style="background-color:  #2ba242;">
