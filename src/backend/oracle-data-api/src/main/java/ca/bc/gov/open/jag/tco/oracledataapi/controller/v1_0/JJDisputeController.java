@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -37,12 +38,22 @@ public class JJDisputeController {
 	 * @return a single jj dispute
 	 */
 	@GetMapping("/dispute/{id}")
-	public JJDispute getJJDispute(
+	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
-			String id) {
+			String id,
+			@RequestParam(required = false)
+			@Parameter(description = "Optionally the VTC User this will be assigned to")
+			Principal principal) {
 		logger.debug("getJJDispute called");
+		
+		/* Only check assignment if principal is passed in */
+		if (principal != null) {
+			if (!jjDisputeService.assignJJDisputeToVtc(id, principal)) {
+				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+			}
+		}
 
-		return jjDisputeService.getJJDisputeById(id);
+		return new ResponseEntity<JJDispute>(jjDisputeService.getJJDisputeById(id), HttpStatus.OK);
 	}
 
 	/**
@@ -75,8 +86,15 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
 	@PutMapping("/dispute/{ticketNumber}")
-	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute) {
+	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestParam(required = false) Principal principal, @RequestBody JJDispute jjDispute) {
 		logger.debug("PUT /dispute/{ticketNumber} called");
+		
+		/* Only check VTC assignment if principal is passed in */
+		if (principal != null) {
+			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+			}
+		}
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute), HttpStatus.OK);
 	}

@@ -1,14 +1,21 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
@@ -39,6 +46,59 @@ public class JJDisputeService {
 		if (jjAssignedTo == null) {
 			return (List<JJDispute>) jjDisputeRepository.findAll();
 		} else return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
+	}
+	
+	/**
+	 * Assigns a specific {@link Dispute} to the IDIR username of the Staff with a timestamp
+	 *
+	 * @param ticketNumber
+	 * @param principal the current user of the system
+	 */
+	public boolean assignJJDisputeToVtc(String ticketNumber, Principal principal) {
+		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
+			logger.error("Attempting to set JJDispute to null username - bad method call.");
+			throw new NotAllowedException("Cannot set assigned user to null");
+		}
+
+		// Find the jj-dispute to be assigned to the username
+		JJDispute jjDispute = jjDisputeRepository.findByTicketNumber(ticketNumber).orElseThrow();
+		if (jjDispute == null) {
+			logger.error("Cant find JJDispute for setting vtc assigned - bad method call.");
+			throw new NotAllowedException("Cannot set vtc assigned for ticket not found.");
+		}
+
+		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
+
+			jjDispute.setVtcAssignedTo(principal.getName());
+			jjDispute.setVtcAssignedTs(new Date());
+			jjDisputeRepository.save(jjDispute);
+
+			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
+
+			return true;
+		}
+
+		return false;
+	}
+	
+	/**
+	 * Unassigns all JJDisputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
+	 * @return number of records modified.
+	 */
+	public void unassignJJDisputes() {
+		int count = 0;
+
+		// Find all Disputes with an assignedTs older than 1 hour ago.
+		Date hourAgo = DateUtils.addHours(new Date(), -1);
+		logger.debug("Unassigning all jj-disputes older than {}", hourAgo.toInstant());
+		for (JJDispute jjdispute : jjDisputeRepository.findByVtcAssignedTsBefore(hourAgo)) {
+			jjdispute.setVtcAssignedTo(null);
+			jjdispute.setVtcAssignedTs(null);
+			jjDisputeRepository.save(jjdispute);
+			count++;
+		}
+
+		logger.debug("Unassigned {} record(s)", count);
 	}
 	
 	/**
