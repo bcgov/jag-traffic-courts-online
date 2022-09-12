@@ -1,6 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -41,19 +40,29 @@ public class JJDisputeController {
 	 * @return a single jj dispute
 	 */
 	@GetMapping("/dispute/{id}")
-	public ResponseEntity<JJDispute> getJJDispute(
+	public JJDispute getJJDispute(
+			@Parameter(description = "The primary key of the jj dispute to retrieve")
+			String id) {
+		logger.debug("getJJDispute called");
+		return jjDisputeService.getJJDisputeById(id);
+	}
+
+	/**
+	 * GET endpoint that retrieves a jj dispute by id from the database
+	 * @param ticketNumber the primary key of the jj dispute to retrieve.
+	 * @return a single jj dispute
+	 */
+	@GetMapping("/dispute/getJJDisputeToReview/{id}")
+	public ResponseEntity<JJDispute> getJJDisputeToReview(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
 			String id,
-			@RequestParam(required = false)
-			@Parameter(description = "Optionally the VTC User this will be assigned to")
-			Principal principal) {
+			@Parameter(description = "The VTC User this will be assigned to")
+			@AuthenticationPrincipal User user) {
 		logger.debug("getJJDispute called");
 		
-		/* Only check assignment if principal is passed in */
-		if (principal != null) {
-			if (!jjDisputeService.assignJJDisputeToVtc(id, principal)) {
-				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-			}
+		/* Assign VTC User */
+		if (!jjDisputeService.assignJJDisputeToVtc(id, user)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.getJJDisputeById(id), HttpStatus.OK);
@@ -89,14 +98,32 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
 	@PutMapping("/dispute/{ticketNumber}")
-	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute, @AuthenticationPrincipal User user) {
+	public JJDispute updateJJDispute(@PathVariable String ticketNumber, JJDispute jjDispute, @AuthenticationPrincipal User user) {
 		logger.debug("PUT /dispute/{ticketNumber} called");
+		return jjDisputeService.updateJJDispute(ticketNumber, jjDispute, (CustomUserDetails) user);
+	}
+	
+	/**
+	 * PUT endpoint that updates the JJ Dispute status for a JJ Disputed Count by a VTC, setting the new value for the fields passed in the body.
+	 *
+	 * @param jj dispute to be updated
+	 * @param id (ticket number) of the saved {@link JJDispute} to update
+	 * @return updated {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJ Dispute record based on the given values.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
+	})
+	@PutMapping("/dispute/reviewJJDecision/{ticketNumber}")
+	public ResponseEntity<JJDispute> reviewJJDecision(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute, @AuthenticationPrincipal User user) {
+		logger.debug("PUT /dispute/reviewJJDecision/{ticketNumber} called");
 		
-		/* Only check VTC assignment if principal is passed in */
-		if (principal != null) {
-			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
-				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-			}
+		/* Can only be updated by assigned VTC */
+		if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, user)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 
 		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, (CustomUserDetails) user), HttpStatus.OK);

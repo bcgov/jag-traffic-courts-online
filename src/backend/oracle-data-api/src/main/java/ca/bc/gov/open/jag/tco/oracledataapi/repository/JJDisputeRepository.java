@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 
 public interface JJDisputeRepository extends JpaRepository<JJDispute, String>{

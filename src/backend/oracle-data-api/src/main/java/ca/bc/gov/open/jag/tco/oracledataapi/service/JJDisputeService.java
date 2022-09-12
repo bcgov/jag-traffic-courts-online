@@ -1,6 +1,5 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
-import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -9,20 +8,19 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
-<<<<<<< HEAD
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
-=======
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
->>>>>>> origin/main
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
@@ -65,8 +63,8 @@ public class JJDisputeService {
 	 * @param ticketNumber
 	 * @param principal the current user of the system
 	 */
-	public boolean assignJJDisputeToVtc(String ticketNumber, Principal principal) {
-		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
+	public boolean assignJJDisputeToVtc(String ticketNumber, @AuthenticationPrincipal User user) {
+		if (user == null || user.getUsername() == null || user.getUsername().isEmpty()) {
 			logger.error("Attempting to set JJDispute to null username - bad method call.");
 			throw new NotAllowedException("Cannot set assigned user to null");
 		}
@@ -78,13 +76,13 @@ public class JJDisputeService {
 			throw new NotAllowedException("Cannot set vtc assigned for ticket not found.");
 		}
 
-		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
+		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(user.getUsername())) {
 
-			jjDispute.setVtcAssignedTo(principal.getName());
+			jjDispute.setVtcAssignedTo(user.getUsername());
 			jjDispute.setVtcAssignedTs(new Date());
 			jjDisputeRepository.save(jjDispute);
 
-			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, principal.getName());
+			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, user.getUsername());
 
 			return true;
 		}
@@ -120,7 +118,7 @@ public class JJDisputeService {
 	 * @return
 	 */
 	@Transactional
-	public JJDispute updateJJDispute(String id, JJDispute jjDispute, CustomUserDetails user) {
+	public JJDispute updateJJDispute(String id, JJDispute jjDispute, @Nullable CustomUserDetails user) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
 		
 		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
