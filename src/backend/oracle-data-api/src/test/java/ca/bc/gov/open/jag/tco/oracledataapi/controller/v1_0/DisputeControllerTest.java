@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -214,33 +214,23 @@ class DisputeControllerTest extends BaseTestSuite {
 		
 		Dispute dispute2 = RandomUtil.createDispute();
 		dispute2.setStatus(DisputeStatus.PROCESSING);
-		Long dispute2Id = disputeController.saveDispute(dispute2);
-		dispute2.setCreatedTs(DateUtils.addDays(now, -2));
-		disputeController.updateDispute(dispute2Id, dispute2, principal);
+		disputeController.saveDispute(dispute2);
 		
 		Dispute dispute3 = RandomUtil.createDispute();
 		dispute3.setStatus(DisputeStatus.CANCELLED);
-		Long dispute3Id = disputeController.saveDispute(dispute3);
-		dispute3.setCreatedTs(DateUtils.addDays(now, -3));
-		disputeController.updateDispute(dispute3Id, dispute3, principal);
+		disputeController.saveDispute(dispute3);
 
 		// Assert controller returns all the disputes that were saved if no parameters passed.
 		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null, null);
 		assertEquals(3, IterableUtils.size(allDisputes));
 		
-		// Assert controller returns all disputes which do not have the specified type and older than specified date.
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		List<Dispute> allDisputesWithStatusAndOlderThan = disputeController.getAllDisputes(sdf.parse(sdf.format(DateUtils.addDays(now, -1))), DisputeStatus.CANCELLED);
-		assertEquals(1, IterableUtils.size(allDisputesWithStatusAndOlderThan));
-		assertEquals(allDisputesWithStatusAndOlderThan.get(0).getStatus(), DisputeStatus.PROCESSING);
+		// Assert controller returns all disputes which do not have the specified type.
+		List<Dispute> allDisputesWithStatusAndOlderThan = disputeController.getAllDisputes(null, DisputeStatus.CANCELLED);
+		assertEquals(2, IterableUtils.size(allDisputesWithStatusAndOlderThan));
 		
 		// Assert controller returns all disputes which do not have the specified type.
 		Iterable<Dispute> allDisputesWithStatus = disputeController.getAllDisputes(null, DisputeStatus.PROCESSING);
 		assertEquals(2, IterableUtils.size(allDisputesWithStatus));
-		
-		// Assert controller returns all disputes older than specified date.
-		Iterable<Dispute> allDisputesWithOlderThan = disputeController.getAllDisputes(sdf.parse(sdf.format(DateUtils.addDays(now, -2))), null);
-		assertEquals(1, IterableUtils.size(allDisputesWithOlderThan));
 	}
 
 	// Helper method to return an instance of Principal
