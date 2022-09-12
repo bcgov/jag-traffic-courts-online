@@ -63,7 +63,7 @@ public class DisputeService : IDisputeService
 
             if (fullName is not null && !string.IsNullOrWhiteSpace(fullName))
             {
-                requestHeaders.Add("fullName", fullName);
+                requestHeaders.Add("x-fullName", fullName);
             }
         }
         else

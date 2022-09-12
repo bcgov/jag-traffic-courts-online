@@ -34,7 +34,7 @@ public class PreAuthenticatedTokenFilter implements Filter {
 		// Extract username and full name from the custom headers added via the staff-api (this user has already been authenticated by the staff-api using keycloak)
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String username = httpRequest.getHeader("x-username");
-		String fullName = httpRequest.getHeader("fullName");
+		String fullName = httpRequest.getHeader("x-fullName");
 		
 		// Add the required authority role
 		List<GrantedAuthority> authority = new ArrayList<>();
