@@ -30,7 +30,6 @@ export class DisputeDecisionInfoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("Dispute Decision Details");
     this.jjList = this.jjDisputeService.jjList;
   }
 
