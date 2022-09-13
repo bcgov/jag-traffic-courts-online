@@ -295,9 +295,10 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("body");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/dispute/{ticketNumber}/{checkVTCAssigned}");
+            urlBuilder_.Append("api/v1.0/jj/dispute/{ticketNumber}?");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Replace("{checkVTCAssigned}", System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;

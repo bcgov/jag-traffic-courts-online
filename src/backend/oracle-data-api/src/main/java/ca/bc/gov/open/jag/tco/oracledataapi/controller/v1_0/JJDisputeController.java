@@ -88,10 +88,10 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
-	@PutMapping("/dispute/{ticketNumber}/{checkVTCAssigned}")
+	@PutMapping("/dispute/{ticketNumber}")
 	public ResponseEntity<JJDispute> updateJJDispute(
 			@PathVariable("ticketNumber") String ticketNumber, 
-			@PathVariable("checkVTCAssigned") boolean checkVTCAssigned,
+			boolean checkVTCAssigned,
 			Principal principal,
 			@RequestBody JJDispute jjDispute) {
 		logger.debug("PUT /dispute/{ticketNumber}/{checkVTCAssigned} called");
