@@ -66,6 +66,7 @@ public class Mapper
         EmailSendValidation emailSendValidation = new(uuid);
         return emailSendValidation;
     }
+
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)
     {
         DisputeCancelled disputeCancelled = new();
@@ -105,6 +106,11 @@ public class Mapper
     public static SendEmail ToProcessingSendEmail(Dispute dispute)
     {
         return ToSendEmail(dispute, "ProcessingDisputeTemplate");
+    }
+
+    public static SendEmail ToVerificationSendEmail(Dispute dispute)
+    {
+        return ToSendEmail(dispute, "VerificationEmailTemplate");
     }
 
     private static SendEmail ToSendEmail(Dispute dispute, string messageTemplateName)

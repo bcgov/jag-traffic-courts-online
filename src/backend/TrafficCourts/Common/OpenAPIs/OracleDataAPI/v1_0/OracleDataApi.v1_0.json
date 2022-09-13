@@ -71,16 +71,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -109,16 +109,16 @@
           "required": true
         },
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "409": {
@@ -146,16 +146,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -179,16 +179,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
+          "405": {
+            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -219,16 +219,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
+          "405": {
+            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -271,16 +271,16 @@
           "required": true
         },
         "responses": {
-          "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
+          "405": {
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -311,16 +311,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Dispute record not found. Update failed.",
+          "405": {
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -349,16 +349,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
@@ -381,16 +381,16 @@
           "required": true
         },
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -421,16 +421,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -467,16 +467,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -515,16 +515,16 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -548,19 +548,57 @@
         "description": "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour.",
         "operationId": "unassignDisputes",
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
+        }
+      }
+    },
+    "/api/v1.0/dispute/email/{uuid}": {
+      "get": {
+        "tags": [ "dispute-controller" ],
+        "summary": "Retrieves Dispute by the emailVerificationToken (UUID).",
+        "operationId": "getDisputeByEmailVerificationToken",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "The emailVerificationToken of the Dispute to retreive.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Dispute could not be found.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok. Dispute retrieved.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/Dispute" } } }
+          }
         }
       }
     },
@@ -571,16 +609,16 @@
         "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
         "operationId": "codeTableRefresh",
         "responses": {
-          "405": {
-            "description": "Method Not Allowed",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "400": {
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
