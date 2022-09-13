@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class DisputeService {
 
 	@Autowired
 	DisputeRepository disputeRepository;
-	
+
 	@PersistenceContext
     private EntityManager entityManager;
 
@@ -78,7 +79,7 @@ public class DisputeService {
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
 			}
-		} 
+		}
 		disputeRepository.saveAndFlush(dispute);
 	}
 
@@ -100,11 +101,11 @@ public class DisputeService {
 		}
 		// Add updated ticket counts
 		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
-		
+
 		Dispute updatedDispute = disputeRepository.saveAndFlush(disputeToUpdate);
-		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistance 
+		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistance
 		entityManager.refresh(updatedDispute);
-		
+
 		return updatedDispute;
 	}
 
@@ -242,8 +243,22 @@ public class DisputeService {
 		List<Dispute> emailVerificationTokens = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
 		for (Dispute dispute : emailVerificationTokens) {
 			dispute.setEmailAddressVerified(Boolean.TRUE);
+			dispute.setEmailVerificationToken(null); // once verified, clear token
 			disputeRepository.save(dispute);
 		}
+	}
+
+	/**
+	 * Finds a Dispute by emailVerificationToken (UUID) or null if not found.
+	 */
+	public Dispute getDisputeByEmailVerificationToken(String emailVerificationToken) {
+		List<Dispute> findByEmailVerificationToken = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
+		if (CollectionUtils.isEmpty(findByEmailVerificationToken)) {
+			String msg = String.format("Dispute could not be found with emailVerificationToken: {1}", emailVerificationToken);
+			logger.error(msg);
+			return null;
+		}
+		return findByEmailVerificationToken.get(0);
 	}
 
 }

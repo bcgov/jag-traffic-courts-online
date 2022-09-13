@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\TrafficCourts.Common.csproj" />
     <ProjectReference Include="..\Messaging\TrafficCourts.Messaging.csproj" />
+    <ProjectReference Include="..\Staff.Service\TrafficCourts.Staff.Service.csproj" />
     <ProjectReference Include="..\TrafficCourts.Arc.Dispute.Client\TrafficCourts.Arc.Dispute.Client.csproj" />
   </ItemGroup>
 </Project>

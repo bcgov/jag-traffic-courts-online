@@ -43,6 +43,15 @@ namespace TrafficCourts.Common.Features.Mail.Model
             },
         new MailTemplate()
             {
+                TemplateName = "VerificationEmailTemplate",
+                Sender = "DoNotReply@tickets.gov.bc.ca",
+                SubjectTemplate = "Verify your email for traffic violation ticket <ticketid>.",
+                HtmlContentTemplate = "In order to confirm submission of your intent to dispute traffic violation ticket <ticketid> click on the following link." +
+                    "<br/><br/><a href='http://<baseref>/email?uuid=<emailverificationtoken>'>http://<baseref>/email?uuid=<emailverificationtoken></a>" +
+                    "<br/><br/>If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8026, open weekdays 9am to 4pm."
+            },
+        new MailTemplate()
+            {
                 TemplateName = "ResendEmailVerificationTemplate",
                 Sender = "DoNotReply@tickets.gov.bc.ca",
                 SubjectTemplate = "Verify your email for traffic violation ticket <ticketid>.",

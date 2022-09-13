@@ -5,5 +5,6 @@ namespace TrafficCourts.Workflow.Service.Services
     public interface IOracleDataApiService
     {
         Task<long> CreateDisputeAsync(Dispute disputeToSubmit);
+        Task<Dispute> GetDisputeByEmailVerificationTokenAsync(string emailVerificationToken);
     }
 }

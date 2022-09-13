@@ -23,4 +23,9 @@ public class OracleDataApiService : IOracleDataApiService
 
         return await _oracleDataApiClient.SaveDisputeAsync(dispute);
     }
+
+    public async Task<Dispute> GetDisputeByEmailVerificationTokenAsync(string emailVerificationToken)
+    {
+        return await _oracleDataApiClient.GetDisputeByEmailVerificationTokenAsync(emailVerificationToken);
+    }
 }
