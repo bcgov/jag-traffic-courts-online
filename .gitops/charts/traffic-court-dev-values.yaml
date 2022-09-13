@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always
   env: 
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
@@ -23,14 +23,14 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always
 
   appConfig: |  
     {
         "production": false,
         "environment": "Dev",
-        "version": "1.44.2",
+        "version": "1.44.4",
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -43,14 +43,14 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always
   env:
     "JAVA_OPTS": "-Dlogging.level.ca.bc.gov.open.jag.tco.oracledataapi=DEBUG -Dlogging.level.org.hibernate.SQL=DEBUG"
 
 staff-api:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -62,7 +62,7 @@ staff-api:
 
 staff-web:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always
   keycloakConfig: |
     {
@@ -74,8 +74,19 @@ staff-web:
       "initOptions": {
       }
     }
+  appConfig: |  
+    {
+        "production": false,
+        "environment": "Dev",
+        "version": "1.44.4",
+        "useMockServices": false,
+        "apiBaseUrl": "/api",
+        "features": {
+          "dispute":true
+        }
+      }
 
 workflow-service:
   image:
-    tag: "1.44.2"
+    tag: "1.44.4"
     pullPolicy: Always

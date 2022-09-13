@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,16 +38,16 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(0, allDisputes.size());
 
 		// Create a couple of JJDisputes
-		 JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
-		 JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute());
-
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());			
+		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute());
+		 
 		// Assert request returns one record
-		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber());
+		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
 		assertNotNull(jjDispute);
 		assertNotEquals(dispute1.getTicketNumber(), jjDispute.getTicketNumber());
 		assertEquals(dispute2.getTicketNumber(), jjDispute.getTicketNumber());
 	}
-
+	
 	@Test
 	public void testGetAllJJDisputes() {
 		// Assert db is empty and clean
@@ -84,21 +85,37 @@ class JJDisputeControllerTest extends BaseTestSuite {
 	public void testUpdateJJDispute() {
 		// Create a single JJ Dispute with a specified remark
 		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		Principal principal = getPrincipal("testUser");
 		jjDispute.setCourthouseLocation("Vancouver");
 		jjDisputeRepository.save(jjDispute);
+
+		// Retrieve it from the controller's endpoint to do assignment
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, true, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
 
 		// Create a new JJ Dispute with different remark value and update the existing JJ Dispute
 		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
 		updatedJJDispute.setCourthouseLocation("Victoria");
 		updatedJJDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
-		jjDisputeController.updateJJDispute(jjDispute.getTicketNumber(), updatedJJDispute, null);
+		jjDisputeController.updateJJDispute(ticketNumber, false, null, updatedJJDispute);
 
 		// Assert db contains only the updated JJ Dispute record.
-		jjDispute = jjDisputeController.getJJDispute(jjDispute.getTicketNumber());
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, null).getBody();
 		assertEquals("Victoria", jjDispute.getCourthouseLocation());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
 	}
+	
+	// Helper method to return an instance of Principal
+		private Principal getPrincipal(String name) {
+			return new Principal() {
+				@Override
+				public String getName() {
+					return name;
+				}
+			};
+		}
 
 }

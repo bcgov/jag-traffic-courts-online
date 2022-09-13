@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -36,18 +37,26 @@ public class JJDisputeController {
 
 	/**
 	 * GET endpoint that retrieves a jj dispute by id from the database
-	 * @param ticketNumber the primary key of the jj dispute to retrieve.
+	 * without assigning it to a VTC for review
+	 * @param ticketNumber the primary key of the jj dispute to retrieve
+	 * @param VTC principal logged in user to assign
 	 * @return a single jj dispute
 	 */
-	@GetMapping("/dispute/{id}")
-	public JJDispute getJJDispute(
+	@GetMapping("/dispute/{id}/{assignVTC}")
+	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
-			String id) {
+			@PathVariable("id") String ticketNumber,
+			@PathVariable("assignVTC") boolean assignVTC,
+			Principal vtcPrincipal) {
 		logger.debug("getJJDispute called");
-
-		return jjDisputeService.getJJDisputeById(id);
+		if (assignVTC == true) {
+			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, vtcPrincipal)) {
+				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+			}
+		}
+		return new ResponseEntity<JJDispute>(jjDisputeService.getJJDisputeById(ticketNumber), HttpStatus.OK);
 	}
-
+	
 	/**
 	 * GET endpoint that retrieves all the jj disputes optionally filtered by jjAssignedTo from the database
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
@@ -68,6 +77,8 @@ public class JJDisputeController {
 	 *
 	 * @param jj dispute to be updated
 	 * @param id (ticket number) of the saved {@link JJDispute} to update
+	 * @param principal user doing the updating
+	 * @param boolean (optional) check assignment to VTC
 	 * @return updated {@link JJDispute}
 	 */
 	@Operation(summary = "Updates the properties of a particular JJ Dispute record based on the given values.")
@@ -78,9 +89,17 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
 	@PutMapping("/dispute/{ticketNumber}")
-	public ResponseEntity<JJDispute> updateJJDispute(@PathVariable String ticketNumber, @RequestBody JJDispute jjDispute, @AuthenticationPrincipal User user) {
-		logger.debug("PUT /dispute/{ticketNumber} called");
-
-		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, (CustomUserDetails) user), HttpStatus.OK);
+	public ResponseEntity<JJDispute> updateJJDispute(
+			@PathVariable("ticketNumber") String ticketNumber, 
+			boolean checkVTCAssigned,
+			Principal principal,
+			@RequestBody JJDispute jjDispute) {
+		logger.debug("PUT /dispute/{ticketNumber}/{checkVTCAssigned} called");
+		if (checkVTCAssigned == true) {
+			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+			}	
+		}
+		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, principal), HttpStatus.OK);
 	}
 }

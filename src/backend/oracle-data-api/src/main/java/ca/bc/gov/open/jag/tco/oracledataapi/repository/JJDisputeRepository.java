@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,7 @@ public interface JJDisputeRepository extends JpaRepository<JJDispute, String>{
 
 	/** Fetch all records which have the specified jjAssigned. */
     public List<JJDispute> findByJjAssignedToIgnoreCase(String jjAssigned);
+
+    /** Fetch all records whose assignedTs has a timestamp older than the given date. */
+    public Iterable<JJDispute> findByVtcAssignedTsBefore(Date olderThan);
 }

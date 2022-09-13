@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { CourthouseConfig } from '@config/config.model';
 import { JJDisputeStatus } from 'app/api';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-dispute-decision-inbox',
@@ -16,10 +17,10 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 })
 export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
-  @Input() public IDIR: string;
 
   busy: Subscription;
   public courtLocations: CourthouseConfig[];
+  public IDIR: string = "";
   currentTeam: string = "All";
   data = [] as JJDisputeView[];
   dataSource = new MatTableDataSource();
@@ -37,6 +38,7 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   constructor(
     private logger: LoggerService,
     public jjDisputeService: JJDisputeService,
+    private authService: AuthService,
     public mockConfigService: MockConfigService,
   ) {
     if (this.mockConfigService.courtLocations) {
@@ -51,6 +53,11 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit() {
+    this.authService.userProfile$.subscribe(userProfile => {
+      if (userProfile) {
+        this.IDIR = this.authService.userIDIRLogin;
+      }
+    });
     this.getAll();
   }
 

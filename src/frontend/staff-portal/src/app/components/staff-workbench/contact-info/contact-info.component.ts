@@ -152,7 +152,6 @@ export class ContactInfoComponent implements OnInit {
   public resendEmailVerification() {
     this.disputeService.resendEmailVerification(this.lastUpdatedDispute.disputeId)
     .subscribe(email => {
-      console.log(email);
       const data: DialogOptions = {
         titleKey: "Email Verification Resent",
         icon: "email",

@@ -91,3 +91,10 @@ cronjob:
       enabled: ${UNASSIGN_DISPUTES_ENABLED:false}
       # A cron-like expression (defaulting to once every 5 minutes), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week.
       cron: ${UNASSIGN_DISPUTES_CRON:0 */5 * * * *}
+      
+  jj-dispute:
+    # If enabled, this unassign cronjob will clear the assignedTo and assignedTs fields on all jj-Disputes whose assignedTs is older than 1 hour
+    unassign:
+      enabled: ${UNASSIGN_DISPUTES_ENABLED:false}
+      # A cron-like expression (defaulting to once every 5 minutes), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week.
+      cron: ${UNASSIGN_JJDISPUTES_CRON:0 */5 * * * *}
