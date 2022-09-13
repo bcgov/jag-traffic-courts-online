@@ -92,9 +92,9 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-   public putJJDispute(ticketNumber: string, jjDispute: JJDispute): Observable<JJDispute> {
+   public putJJDispute(ticketNumber: string, jjDispute: JJDispute, checkVTC: boolean): Observable<JJDispute> {
 
-    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, jjDispute)
+    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, checkVTC, jjDispute)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::putJJDispute', response)
@@ -126,8 +126,8 @@ export class JJDisputeService {
    *
    * @param disputeId
    */
-  public getJJDispute(disputeId: string): Observable<JJDispute> {
-    return this.jjApiService.apiJjJJDisputeIdGet(disputeId)
+  public getJJDispute(disputeId: string, assignVTC: boolean): Observable<JJDispute> {
+    return this.jjApiService.apiJjJJDisputeIdGet(disputeId, assignVTC)
       .pipe(
         map((response: JJDispute) => {
           this.logger.info('jj-DisputeService::getJJDispute', response)

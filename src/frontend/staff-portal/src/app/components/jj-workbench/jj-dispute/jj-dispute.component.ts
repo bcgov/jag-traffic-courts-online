@@ -18,7 +18,6 @@ import { MatDialog } from '@angular/material/dialog';
 export class JJDisputeComponent implements OnInit {
   @Input() public jjDisputeInfo: JJDispute
   @Input() public type: string;
-  @Input() public IDIR: string;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
 
   public isMobile: boolean;
@@ -52,7 +51,7 @@ export class JJDisputeComponent implements OnInit {
   public onSubmit(): void {
     this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
     this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type==="ticket").subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
         'JJDisputeComponent::putJJDispute response',
@@ -67,7 +66,7 @@ export class JJDisputeComponent implements OnInit {
     if (this.lastUpdatedJJDispute.status !== JJDisputeStatus.Review) {
       this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
     }
-    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type==="ticket").subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
         'JJDisputeComponent::putJJDispute response',
@@ -80,7 +79,7 @@ export class JJDisputeComponent implements OnInit {
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
 
-    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber, IDIR).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber, this.type && this.type==="ticket").subscribe((response: JJDispute) => {
       this.retrieving = false;
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',

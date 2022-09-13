@@ -148,7 +148,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     let updateDispute = this.data.filter(x => x.ticketNumber === element.ticketNumber)[0];
     if (element.jjAssignedTo === "unassigned") updateDispute.jjAssignedTo = null;
     else updateDispute.jjAssignedTo = element.jjAssignedTo;
-    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
       this.resetAssignedUnassigned();
       this.logger.info(
         'JJDisputeAssignmentsComponent::putJJDispute response',
@@ -177,7 +177,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
       updateDispute.jjAssignedTo = this.bulkjjAssignedTo;
     }
 
-    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
       this.logger.info(
         'JJDisputeAssignmentsComponent::putJJDispute response',
         response

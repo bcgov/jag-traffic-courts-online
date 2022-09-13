@@ -1123,6 +1123,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "assignVTC",
+            "in": "query",
+            "description": "boolean to indicate need to assign VTC.",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -1249,6 +1257,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "checkVTC",
+            "in": "query",
+            "description": "boolean to indicate need to check VTC assigned.",
+            "schema": {
+              "type": "boolean"
             }
           }
         ],

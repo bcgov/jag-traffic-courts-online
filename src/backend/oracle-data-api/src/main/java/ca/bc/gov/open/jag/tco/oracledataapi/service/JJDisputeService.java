@@ -63,7 +63,7 @@ public class JJDisputeService {
 	public boolean assignJJDisputeToVtc(String id, Principal principal) {
 		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
 			logger.error("Attempting to set JJDispute to null username - bad method call.");
-			throw new NotAllowedException("Cannot set assigned user to null");
+			throw new NotAllowedException("Cannot set vtc assigned user to null");
 		}
 
 		// Find the jj-dispute to be assigned to the username
@@ -115,7 +115,7 @@ public class JJDisputeService {
 	 * @return
 	 */
 	@Transactional
-	public JJDispute updateJJDispute(String id, JJDispute jjDispute, CustomUserDetails user) {
+	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
 		
 		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
@@ -184,7 +184,7 @@ public class JJDisputeService {
 		
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 			
-			if (user == null || user.getFullName() == null || user.getFullName().isBlank()) {
+			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
 				logger.error("Attempting to save a remark with no user data - bad method call.");
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
@@ -195,7 +195,7 @@ public class JJDisputeService {
 			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
 			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
 				if(StringUtils.isBlank(remark.getUserFullName()))
-					remark.setUserFullName(user.getFullName());
+					remark.setUserFullName(principal.getName());
 			}
 			
 			// Add updated remarks

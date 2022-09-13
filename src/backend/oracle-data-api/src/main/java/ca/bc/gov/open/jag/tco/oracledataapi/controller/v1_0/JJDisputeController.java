@@ -45,9 +45,8 @@ public class JJDisputeController {
 	@GetMapping("/dispute/{id}/{assignVTC}")
 	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
-			String ticketNumber,
-			boolean assignVTC,
-			@RequestParam(required = false)
+			@PathVariable("id") String ticketNumber,
+			@PathVariable("assignVTC") boolean assignVTC,
 			Principal vtcPrincipal) {
 		logger.debug("getJJDispute called");
 		if (assignVTC == true) {
@@ -78,7 +77,7 @@ public class JJDisputeController {
 	 *
 	 * @param jj dispute to be updated
 	 * @param id (ticket number) of the saved {@link JJDispute} to update
-	 * @param user doing the updating
+	 * @param principal user doing the updating
 	 * @param boolean (optional) check assignment to VTC
 	 * @return updated {@link JJDispute}
 	 */
@@ -91,27 +90,16 @@ public class JJDisputeController {
 	})
 	@PutMapping("/dispute/{ticketNumber}/{checkVTCAssigned}")
 	public ResponseEntity<JJDispute> updateJJDispute(
-			@PathVariable String ticketNumber, 
-			@PathVariable boolean checkVTCAssigned,
-			@RequestBody JJDispute jjDispute, 
-			@AuthenticationPrincipal User user) {
+			@PathVariable("ticketNumber") String ticketNumber, 
+			@PathVariable("checkVTCAssigned") boolean checkVTCAssigned,
+			Principal principal,
+			@RequestBody JJDispute jjDispute) {
 		logger.debug("PUT /dispute/{ticketNumber}/{checkVTCAssigned} called");
 		if (checkVTCAssigned == true) {
-			Principal principal = getPrincipal(user.getUsername());
 			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
-			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 			}	
 		}
-		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, (CustomUserDetails) user), HttpStatus.OK);
-	}
-	
-	// Helper method to return an instance of Principal
-	private Principal getPrincipal(String name) {
-		return new Principal() {
-			@Override
-			public String getName() {
-				return name;
-			}
-		};
+		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, principal), HttpStatus.OK);
 	}
 }

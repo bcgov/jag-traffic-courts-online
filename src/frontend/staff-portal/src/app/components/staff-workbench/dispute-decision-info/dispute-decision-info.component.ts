@@ -72,7 +72,7 @@ export class DisputeDecisionInfoComponent implements OnInit {
   }
 
   private putJJDispute() : void {
-    this.jjDisputeService.putJJDispute(this.jjDisputeInfo.ticketNumber, this.jjDisputeInfo).subscribe((response: JJDispute) => {
+    this.jjDisputeService.putJJDispute(this.jjDisputeInfo.ticketNumber, this.jjDisputeInfo, true).subscribe((response: JJDispute) => {
       this.jjDisputeInfo = response;
       this.logger.info(
         'DisputeDecisionInfoComponent::putJJDispute response',
