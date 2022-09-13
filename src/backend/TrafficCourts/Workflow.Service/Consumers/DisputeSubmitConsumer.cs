@@ -14,12 +14,15 @@ namespace TrafficCourts.Workflow.Service.Consumers
         private readonly ILogger<DisputeSubmitConsumer> _logger;
         private readonly IOracleDataApiService _oracleDataApiService;
         private readonly IMapper _mapper;
+        private readonly IBus _bus;
 
-        public DisputeSubmitConsumer(ILogger<DisputeSubmitConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
+        public DisputeSubmitConsumer(ILogger<DisputeSubmitConsumer> logger, IOracleDataApiService oracleDataApiService, IMapper mapper, IBus bus)
         {
+            ArgumentNullException.ThrowIfNull(bus);
             _logger = logger;
             _oracleDataApiService = oracleDataApiService;
             _mapper = mapper;
+            _bus = bus;
         }
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
@@ -42,6 +45,10 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 if (disputeId > 0)
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
+
+                    // TCVP-1529 Saving a dispute should also send a verification email to the Disputant.
+                    SendEmail sendEmail = TrafficCourts.Staff.Service.Mappers.Mapper.ToVerificationSendEmail(dispute);
+                    await _bus.Publish(sendEmail);
 
                     await context.RespondAsync<DisputeSubmitted>(new
                     {
