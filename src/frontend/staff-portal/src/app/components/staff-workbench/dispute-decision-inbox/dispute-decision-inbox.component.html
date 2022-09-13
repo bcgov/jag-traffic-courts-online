@@ -22,9 +22,8 @@
       VT NUMBER
     </th>
     <td mat-cell *matCellDef="let element">
-      <span><a (click)="backWorkbench(element)" href="javascript:void()">
-          {{ element.ticketNumber }}
-        </a></span>
+      <span *ngIf="element.vtcAssignedTo === IDIR || !(element.vtcAssignedTo)"><a (click)="backWorkbench(element)" href="javascript:void()">{{ element.ticketNumber }}</a></span>
+      <span *ngIf="element.vtcAssignedTo !== IDIR && element.vtcAssignedTo">{{ element.ticketNumber }}</span>
     </td>
   </ng-container>
 

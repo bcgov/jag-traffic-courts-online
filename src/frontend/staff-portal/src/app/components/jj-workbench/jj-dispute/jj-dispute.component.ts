@@ -8,8 +8,6 @@ import { JJDisputeService } from '../../../services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
-import { DialogOptions } from '@shared/dialogs/dialog-options.model';
-import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -20,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class JJDisputeComponent implements OnInit {
   @Input() public jjDisputeInfo: JJDispute
   @Input() public type: string;
+  @Input() public IDIR: string;
   @Output() public backInbox: EventEmitter<any> = new EventEmitter();
 
   public isMobile: boolean;
@@ -81,7 +80,7 @@ export class JJDisputeComponent implements OnInit {
   getJJDispute(): void {
     this.logger.log('JJDisputeComponent::getJJDispute');
 
-    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber).subscribe((response: JJDispute) => {
+    this.busy = this.jjDisputeService.getJJDispute(this.jjDisputeInfo.ticketNumber, IDIR).subscribe((response: JJDispute) => {
       this.retrieving = false;
       this.logger.info(
         'JJDisputeComponent::getJJDispute response',

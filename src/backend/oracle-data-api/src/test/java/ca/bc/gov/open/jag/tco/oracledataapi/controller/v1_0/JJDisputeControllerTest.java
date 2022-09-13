@@ -42,7 +42,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute());
 		 
 		// Assert request returns one record
-		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), null).getBody();
+		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
 		assertNotNull(jjDispute);
 		assertNotEquals(dispute1.getTicketNumber(), jjDispute.getTicketNumber());
 		assertEquals(dispute2.getTicketNumber(), jjDispute.getTicketNumber());
@@ -91,17 +91,17 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDisputeRepository.save(jjDispute);
 
 		// Retrieve it from the controller's endpoint to do assignment
-		jjDispute = jjDisputeController.getJJDispute(ticketNumber, principal).getBody();
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, true, principal).getBody();
 		assertEquals(ticketNumber, jjDispute.getTicketNumber());
 
 		// Create a new JJ Dispute with different remark value and update the existing JJ Dispute
 		JJDispute updatedJJDispute = RandomUtil.createJJDispute();
 		updatedJJDispute.setCourthouseLocation("Victoria");
 		updatedJJDispute.setStatus(JJDisputeStatus.IN_PROGRESS);
-		jjDisputeController.updateJJDispute(ticketNumber, updatedJJDispute, principal, null);
+		jjDisputeController.updateJJDispute(ticketNumber, false, updatedJJDispute, null);
 
 		// Assert db contains only the updated JJ Dispute record.
-		jjDispute = jjDisputeController.getJJDispute(ticketNumber, null).getBody();
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, null).getBody();
 		assertEquals("Victoria", jjDispute.getCourthouseLocation());
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);

@@ -58,27 +58,30 @@ public class JJController : JJControllerBase<JJController>
     /// Returns a single JJ Dispute with the given identifier from the Oracle Data API.
     /// </summary>
     /// <param name="JJDisputeId">Unique identifier for a specific JJ dispute record.</param>
+    /// <param name="assignVTC">boolean to indicate need to assign VTC.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A single JJ dispute record</returns>
     /// <response code="200">The JJ dispute was found.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
+    /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{JJDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
-    public async Task<IActionResult> GetJJDisputeAsync(string JJDisputeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetJJDisputeAsync(string JJDisputeId, bool assignVTC, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving JJ Dispute from oracle-data-api");
 
         try
         {
-            JJDispute JJDispute = await _JJDisputeService.GetJJDisputeAsync(JJDisputeId, cancellationToken);
+            JJDispute JJDispute = await _JJDisputeService.GetJJDisputeAsync(JJDisputeId, assignVTC, cancellationToken);
             return Ok(JJDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
@@ -88,6 +91,19 @@ public class JJController : JJControllerBase<JJController>
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
         {
             return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status409Conflict)
+        {
+            ProblemDetails pd = new ProblemDetails
+            {
+                Title = "JJ Dispute Already Assigned",
+                Detail = "The selected JJ dispute record is already assigned",
+                Status = e.StatusCode,
+                Instance = HttpContext?.Request?.Path,
+            };
+            pd.Extensions.Add("errors", e.Message);
+
+            return new ObjectResult(pd);
         }
         catch (ApiException e)
         {
@@ -105,6 +121,7 @@ public class JJController : JJControllerBase<JJController>
     /// Updates a single JJ Dispute through the Oracle Data Interface API based on unique violation ticket number and the jj dispute data being passed in the body.
     /// </summary>
     /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
     /// <param name="jjDispute"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
@@ -122,13 +139,13 @@ public class JJController : JJControllerBase<JJController>
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Update)]
-    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<IActionResult> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Updating the JJ Dispute in oracle-data-api");
 
         try
         {
-            await _JJDisputeService.SubmitAdminResolutionAsync(ticketNumber, jjDispute, cancellationToken);
+            await _JJDisputeService.SubmitAdminResolutionAsync(ticketNumber, checkVTC, jjDispute, cancellationToken);
             return Ok(jjDispute);
         }
         catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)

@@ -46,10 +46,11 @@ public class JJDisputeController {
 	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
 			String ticketNumber,
+			boolean assignVTC,
 			@RequestParam(required = false)
 			Principal vtcPrincipal) {
 		logger.debug("getJJDispute called");
-		if (vtcPrincipal != null) {
+		if (assignVTC == true) {
 			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, vtcPrincipal)) {
 				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 			}
@@ -78,7 +79,7 @@ public class JJDisputeController {
 	 * @param jj dispute to be updated
 	 * @param id (ticket number) of the saved {@link JJDispute} to update
 	 * @param principal user doing the updating
-	 * @param vtcPrincipal (optional) vtc user to check assignment
+	 * @param boolean (optional) check assignment to VTC
 	 * @return updated {@link JJDispute}
 	 */
 	@Operation(summary = "Updates the properties of a particular JJ Dispute record based on the given values.")
@@ -91,15 +92,26 @@ public class JJDisputeController {
 	@PutMapping("/dispute/{ticketNumber}")
 	public ResponseEntity<JJDispute> updateJJDispute(
 			@PathVariable String ticketNumber, 
+			boolean checkVTCAssigned,
 			@RequestBody JJDispute jjDispute, 
-			Principal principal,
-			@RequestParam(required = false) Principal vtcPrincipal) {
+			@AuthenticationPrincipal User user) {
 		logger.debug("PUT /dispute/{ticketNumber} called");
-		if (vtcPrincipal != null) {
-			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, vtcPrincipal)) {
+		if (checkVTCAssigned == true) {
+			Principal principal = getPrincipal(user.getUsername());
+			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 			}	
 		}
-		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, principal), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, (CustomUserDetails) user), HttpStatus.OK);
+	}
+	
+	// Helper method to return an instance of Principal
+	private Principal getPrincipal(String name) {
+		return new Principal() {
+			@Override
+			public String getName() {
+				return name;
+			}
+		};
 	}
 }

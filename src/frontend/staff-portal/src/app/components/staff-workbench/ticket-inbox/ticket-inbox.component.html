@@ -77,7 +77,7 @@
         Status
       </th>
       <td mat-cell *matCellDef="let element">
-        <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="element.emailAddressVerified === true || !(element.emailAddress)">{{ element.status }}{{ element.emailAddressVerified }}{{ !(element.emailAddress) }}</span>
+        <span [style.font-weight]="isNew(element) ? 'bold' : 'none'" *ngIf="element.emailAddressVerified === true || !(element.emailAddress)">{{ element.status }}</span>
         <span *ngIf="element.emailAddressVerified === false && element.emailAddress">Email Address Not Verified</span>
       </td>
     </ng-container>

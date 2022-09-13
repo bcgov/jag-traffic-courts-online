@@ -115,7 +115,7 @@ public class JJDisputeService {
 	 * @return
 	 */
 	@Transactional
-	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
+	public JJDispute updateJJDispute(String id, JJDispute jjDispute, CustomUserDetails user) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
 		
 		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
@@ -184,7 +184,7 @@ public class JJDisputeService {
 		
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 			
-			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
+			if (user == null || user.getFullName() == null || user.getFullName().isBlank()) {
 				logger.error("Attempting to save a remark with no user data - bad method call.");
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
@@ -195,7 +195,7 @@ public class JJDisputeService {
 			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
 			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
 				if(StringUtils.isBlank(remark.getUserFullName()))
-					remark.setUserFullName(principal.getName());
+					remark.setUserFullName(user.getFullName());
 			}
 			
 			// Add updated remarks

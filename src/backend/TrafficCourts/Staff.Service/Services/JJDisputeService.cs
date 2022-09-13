@@ -92,16 +92,16 @@ public class JJDisputeService : IJJDisputeService
         return await GetOracleDataApi().GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
     }
 
-    public async Task<JJDispute> GetJJDisputeAsync(string disputeId, CancellationToken cancellationToken)
+    public async Task<JJDispute> GetJJDisputeAsync(string disputeId, bool assignVTC, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await GetOracleDataApi().GetJJDisputeAsync(disputeId, cancellationToken);
+        JJDispute dispute = await GetOracleDataApi().GetJJDisputeAsync(disputeId, assignVTC, cancellationToken);
 
         return dispute;
     }
 
-    public async Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, JJDispute jjDispute, CancellationToken cancellationToken)
+    public async Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken)
     {
-        JJDispute dispute = await GetOracleDataApi().UpdateJJDisputeAsync(ticketNumber, jjDispute, cancellationToken);
+        JJDispute dispute = await GetOracleDataApi().UpdateJJDisputeAsync(ticketNumber, checkVTC, jjDispute, cancellationToken);
 
         return dispute;
     }
