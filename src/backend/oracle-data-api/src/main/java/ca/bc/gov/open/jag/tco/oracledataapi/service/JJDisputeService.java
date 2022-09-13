@@ -1,5 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -13,13 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
@@ -63,26 +60,26 @@ public class JJDisputeService {
 	 * @param ticketNumber
 	 * @param principal the current user of the system
 	 */
-	public boolean assignJJDisputeToVtc(String ticketNumber, @AuthenticationPrincipal User user) {
-		if (user == null || user.getUsername() == null || user.getUsername().isEmpty()) {
+	public boolean assignJJDisputeToVtc(String id, Principal principal) {
+		if (principal == null || principal.getName() == null || principal.getName().isEmpty()) {
 			logger.error("Attempting to set JJDispute to null username - bad method call.");
 			throw new NotAllowedException("Cannot set assigned user to null");
 		}
 
 		// Find the jj-dispute to be assigned to the username
-		JJDispute jjDispute = jjDisputeRepository.findByTicketNumber(ticketNumber).orElseThrow();
+		JJDispute jjDispute = jjDisputeRepository.findById(id).orElseThrow();
 		if (jjDispute == null) {
 			logger.error("Cant find JJDispute for setting vtc assigned - bad method call.");
 			throw new NotAllowedException("Cannot set vtc assigned for ticket not found.");
 		}
 
-		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(user.getUsername())) {
+		if (StringUtils.isBlank(jjDispute.getVtcAssignedTo()) || jjDispute.getVtcAssignedTo().equals(principal.getName())) {
 
-			jjDispute.setVtcAssignedTo(user.getUsername());
+			jjDispute.setVtcAssignedTo(principal.getName());
 			jjDispute.setVtcAssignedTs(new Date());
 			jjDisputeRepository.save(jjDispute);
 
-			logger.debug("JJDispute with ticket Number {} has been assigned to {}", ticketNumber, user.getUsername());
+			logger.debug("JJDispute with ticket Number {} has been assigned to {}", id, principal.getName());
 
 			return true;
 		}
@@ -118,7 +115,7 @@ public class JJDisputeService {
 	 * @return
 	 */
 	@Transactional
-	public JJDispute updateJJDispute(String id, JJDispute jjDispute, @Nullable CustomUserDetails user) {
+	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
 		
 		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
@@ -187,7 +184,7 @@ public class JJDisputeService {
 		
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 			
-			if (user == null || user.getFullName() == null || user.getFullName().isBlank()) {
+			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
 				logger.error("Attempting to save a remark with no user data - bad method call.");
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
@@ -198,7 +195,7 @@ public class JJDisputeService {
 			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
 			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
 				if(StringUtils.isBlank(remark.getUserFullName()))
-					remark.setUserFullName(user.getFullName());
+					remark.setUserFullName(principal.getName());
 			}
 			
 			// Add updated remarks
