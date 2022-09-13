@@ -42,7 +42,7 @@ public class JJDisputeController {
 	 * @param VTC principal logged in user to assign
 	 * @return a single jj dispute
 	 */
-	@GetMapping("/dispute/{id}")
+	@GetMapping("/dispute/{id}/{assignVTC}")
 	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
 			String ticketNumber,
@@ -78,7 +78,7 @@ public class JJDisputeController {
 	 *
 	 * @param jj dispute to be updated
 	 * @param id (ticket number) of the saved {@link JJDispute} to update
-	 * @param principal user doing the updating
+	 * @param user doing the updating
 	 * @param boolean (optional) check assignment to VTC
 	 * @return updated {@link JJDispute}
 	 */
@@ -89,13 +89,13 @@ public class JJDisputeController {
 		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
 		@ApiResponse(responseCode = "405", description = "An invalid JJ Dispute status is provided. Update failed.")
 	})
-	@PutMapping("/dispute/{ticketNumber}")
+	@PutMapping("/dispute/{ticketNumber}/{checkVTCAssigned}")
 	public ResponseEntity<JJDispute> updateJJDispute(
 			@PathVariable String ticketNumber, 
-			boolean checkVTCAssigned,
+			@PathVariable boolean checkVTCAssigned,
 			@RequestBody JJDispute jjDispute, 
 			@AuthenticationPrincipal User user) {
-		logger.debug("PUT /dispute/{ticketNumber} called");
+		logger.debug("PUT /dispute/{ticketNumber}/{checkVTCAssigned} called");
 		if (checkVTCAssigned == true) {
 			Principal principal = getPrincipal(user.getUsername());
 			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {

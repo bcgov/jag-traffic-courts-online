@@ -278,10 +278,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("body");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/dispute/{ticketNumber}?");
+            urlBuilder_.Append("api/v1.0/jj/dispute/{ticketNumber}/{checkVTCAssigned}");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
-            urlBuilder_.Append(System.Uri.EscapeDataString("checkVTCAssigned") + "=").Append(System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Length--;
+            urlBuilder_.Replace("{checkVTCAssigned}", System.Uri.EscapeDataString(ConvertToString(checkVTCAssigned, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1589,7 +1588,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("assignVTC");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/dispute/{id}?");
+            urlBuilder_.Append("api/v1.0/jj/dispute/{id}/{assignVTC}?");
             urlBuilder_.Append(System.Uri.EscapeDataString("ticketNumber") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Append(System.Uri.EscapeDataString("assignVTC") + "=").Append(System.Uri.EscapeDataString(ConvertToString(assignVTC, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;

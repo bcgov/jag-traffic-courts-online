@@ -12,7 +12,7 @@
   ],
   "security": [ { "x-username": [] } ],
   "paths": {
-    "/api/v1.0/jj/dispute/{ticketNumber}": {
+    "/api/v1.0/jj/dispute/{ticketNumber}/{checkVTCAssigned}": {
       "put": {
         "tags": [ "jj-dispute-controller" ],
         "summary": "Updates the properties of a particular JJ Dispute record based on the given values.",
@@ -26,7 +26,7 @@
           },
           {
             "name": "checkVTCAssigned",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": { "type": "boolean" }
           }
@@ -457,7 +457,7 @@
         }
       }
     },
-    "/api/v1.0/jj/dispute/{id}": {
+    "/api/v1.0/jj/dispute/{id}/{assignVTC}": {
       "get": {
         "tags": [ "jj-dispute-controller" ],
         "operationId": "getJJDispute",

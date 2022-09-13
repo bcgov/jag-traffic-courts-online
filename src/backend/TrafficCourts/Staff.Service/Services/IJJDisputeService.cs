@@ -26,5 +26,5 @@ public interface IJJDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The submitted/updated JJ Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, System.Threading.CancellationToken cancellationToken);
+    Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken);
 }
