@@ -18,6 +18,8 @@ class EmailHistoryControllerTest extends BaseTestSuite {
 	@Autowired
 	@Qualifier("EmailHistoryControllerV1_0")
 	private EmailHistoryController emailHistoryController;
+	
+	@Autowired
 	private EmailHistoryRepository emailHistoryRepository;
 
 	@Test
@@ -34,7 +36,7 @@ class EmailHistoryControllerTest extends BaseTestSuite {
 		allEmailHistory = emailHistoryRepository.findAll(); 
 		assertEquals(1, allEmailHistory.size());
 		assertEquals(emailHistoryId, allEmailHistory.get(0).getEmailHistoryId());
-		assertEquals(emailHistory.getRecipients(), allEmailHistory.get(0).getRecipients());
+		assertEquals(emailHistory.getRecipientEmailAddress(), allEmailHistory.get(0).getRecipientEmailAddress());
 
 		// Delete record
 		emailHistoryRepository.deleteById(emailHistoryId);

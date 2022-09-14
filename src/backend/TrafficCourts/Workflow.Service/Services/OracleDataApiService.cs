@@ -23,6 +23,11 @@ public class OracleDataApiService : IOracleDataApiService
 
         return await _oracleDataApiClient.SaveDisputeAsync(dispute);
     }
+    public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory)
+    {
+        return await _oracleDataApiClient.InsertEmailHistoryAsync(emailHistory.TicketNumber, emailHistory);
+    }
+
 
     public async Task<Dispute> GetDisputeByEmailVerificationTokenAsync(string emailVerificationToken)
     {

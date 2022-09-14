@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Configuration;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using MimeKit;
 using MimeKit.Text;
 
@@ -11,12 +12,15 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly ILogger<EmailSenderService> _logger;
         private readonly EmailConfiguration _emailConfiguration;
         private readonly ISmtpClientFactory _smptClientFactory;
+        private readonly IOracleDataApiService _oracleDataApiService;
 
-        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory)
+
+        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailConfiguration = emailConfiguration.Value;
             _smptClientFactory = stmpClientFactory;
+            _oracleDataApiService = oracleDataApiService;
         }
 
         /// <summary>
@@ -35,8 +39,6 @@ namespace TrafficCourts.Workflow.Service.Services
 
                 // 
                 bool toAdded = AddRecipients(emailMessage.To, email.To);
-                bool ccAdded = AddRecipients(emailMessage.Cc, email.Cc);
-                bool bccAdded = AddRecipients(emailMessage.Bcc, email.Bcc);
 
                 if (IsAllowedListConfigured)
                 {
@@ -77,6 +79,17 @@ namespace TrafficCourts.Workflow.Service.Services
                 var smtp = await _smptClientFactory.CreateAsync(cancellationToken);
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
+
+                // save email in history table after no exception thrown (success)
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.HtmlContent = emailMessage.HtmlContent;
+                emailHistory.PlainTextContent = emailMessage.PlainTextContent;
+                emailHistory.FromEmailAddress = emailMessage.From;
+                emailHistory.RecipientEmailAddress = emailMessage.To[0];
+                emailHistory.EmailSubject = emailMessage.Subject;
+                emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
+                emailHistory.TicketNumber = emailMessage.TicketNumber;
+                await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
             }
             catch (ArgumentNullException ane)
             {

@@ -13,10 +13,9 @@ namespace TrafficCourts.Messaging.MessageContracts
     {
         public string? From { get; set; }
         public IList<string> To { get; set; } = new List<string>();
-        public IList<string> Cc { get; set; } = new List<string>();
-        public IList<string> Bcc { get; set; } = new List<string>();
         public string Subject { get; set; } = String.Empty;
         public string? PlainTextContent { get; set; }
         public string? HtmlContent { get; set; }
+        public string TicketNumber { get; set; } = String.Empty;
     }
 }

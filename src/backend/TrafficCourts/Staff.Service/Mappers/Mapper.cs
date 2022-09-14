@@ -89,6 +89,7 @@ public class Mapper
             sendEmail.HtmlContent =template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
             sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
+            sendEmail.TicketNumber = dispute.TicketNumber;
         }
         return sendEmail;
     }
@@ -125,6 +126,7 @@ public class Mapper
             sendEmail.To.Add(dispute.EmailAddress);
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+            sendEmail.TicketNumber = dispute.TicketNumber;
 
         }
         return sendEmail;

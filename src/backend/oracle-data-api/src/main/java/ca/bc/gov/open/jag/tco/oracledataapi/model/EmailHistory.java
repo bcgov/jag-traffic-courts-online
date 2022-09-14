@@ -4,15 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -37,25 +31,39 @@ public class EmailHistory extends Auditable<String> {
 	private Long emailHistoryId;
 	
 	/**
-	 * From.
+	 * FromEmailAddress.
 	 */
 	@Column(length = 500)
 	@Schema(nullable = false)
-	private String from;
+	private String fromEmailAddress;
 	
 	/**
-	 * To.
+	 * ToEmailAddress.
 	 */
 	@Column(length = 500)
 	@Schema(nullable = false)
-	private String recipients;
+	private String recipientEmailAddress;
 	
 	/**
-	 * Body
+	 * Subject
+	 */
+	@Column(length = 500)
+	@Schema(nullable = false)
+	private String emailSubject;
+		
+	/**
+	 * Body if HTML
 	 */
 	@Column(length = 4000)
-	@Schema(nullable = false)
-	private String emailBody;
+	@Schema(nullable = true)
+	private String htmlContent;
+		
+	/**
+	 * Body if Plain text
+	 */
+	@Column(length = 4000)
+	@Schema(nullable = true)
+	private String plainTextContent;
 		
 	/**
 	 * Has the email been successfully sent?
