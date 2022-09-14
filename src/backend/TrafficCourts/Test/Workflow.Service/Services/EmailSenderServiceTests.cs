@@ -48,7 +48,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
                 _mockLogger.Object,
                 options,
                 _mockSmtpClientFactory.Object,
-                (IOracleDataApiService) _mockOracleDataApiService);
+                _mockOracleDataApiService.Object);
         }
 
         // Scenarios:

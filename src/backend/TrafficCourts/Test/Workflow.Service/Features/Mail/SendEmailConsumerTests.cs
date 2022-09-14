@@ -29,7 +29,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             _mockSenderLogger = new Mock<ILogger<EmailSenderService>>();
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
-            _mockOracleDataApiService = new Mock<IOracleDataApiService>();  
+            _mockOracleDataApiService = new Mock<IOracleDataApiService>();
         }
 
         private EmailSenderService CreateService()
@@ -46,7 +46,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                 _mockSenderLogger.Object,
                 options,
                 _mockSmtpClientFactory.Object,
-                (IOracleDataApiService)_mockOracleDataApiService);
+                _mockOracleDataApiService.Object);
         }
 
         private SendEmailConsumer CreateConsumer(EmailSenderService senderService)
@@ -158,7 +158,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                         To = { "mail@test.com" },
                         Subject = template.SubjectTemplate,
                         PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01"),
-                        TicketNumber = string.Empty
+                        TicketNumber = "TestTicket01"
                     };
                     Assert.NotNull(sendEmail);
                 }
@@ -204,7 +204,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                     sendEmail.To.Add("mail@test.com");
                     sendEmail.Subject = template.SubjectTemplate;
                     sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01");
-                    sendEmail.TicketNumber = string.Empty;
+                    sendEmail.TicketNumber = "TestTicket01";
 
                     await harness.InputQueueSendEndpoint.Send<SendEmail>(sendEmail);
 
