@@ -7,8 +7,10 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 
 public class RandomUtil {
 
@@ -100,6 +102,15 @@ public class RandomUtil {
 			"Wilson",
 			"Young"
 	};
+	
+	public final static String[] COMMON_EMAIL_ADDRESSES = new String[] {
+		"1@1.com",
+		"2@2.ca",
+		"3@3.com",
+		"Lucas@4.com",
+		"Stacy@5.com",
+		"Arlington@6.com"
+	};
 
 	public final static String[] COMMON_CITY_NAMES = new String[] {
 			"Arlington",
@@ -176,6 +187,21 @@ public class RandomUtil {
 		dispute.setJjAssignedTo(randomName());
 		dispute.setViolationDate(randomDate(DateUtils.addDays(new Date(), -30), new Date())); // random date in the last 30 days
 		return dispute;
+	}
+	
+	public static EmailHistory createEmailHistory() {
+		EmailHistory emailHistory = new EmailHistory();
+		emailHistory.setTicketNumber(UUID.randomUUID().toString());
+		emailHistory.setEmailBody(UUID.randomUUID().toString());
+		emailHistory.setSuccessfullySent(YesNo.N);
+		emailHistory.setFrom(randomEmailAddress());
+		emailHistory.setRecipients(randomEmailAddress());
+		return emailHistory;
+	}
+	
+	public static String randomEmailAddress() {
+    	int index = randomInt(0, COMMON_EMAIL_ADDRESSES.length-1);
+    	return COMMON_EMAIL_ADDRESSES[index];		
 	}
 
 	public static int randomInt(int min, int max) {
