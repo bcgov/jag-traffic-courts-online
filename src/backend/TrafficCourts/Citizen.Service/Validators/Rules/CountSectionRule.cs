@@ -21,7 +21,7 @@ public class CountSectionRule : ValidationRule
     {
         if (!String.IsNullOrEmpty(Field.Value))
         {
-            Field.Value = Regex.Replace(Field.Value, @"\s+", ""); // remove whitespace
+            Field.Value = Field.Value.Trim(); // remove whitespace only from beginning and end
             Field.Value = Regex.Replace(Field.Value, @"^\$$", ""); // remove $ if it's the only character.
             if (!String.IsNullOrEmpty(Field.Value))
             {
