@@ -16,7 +16,7 @@ namespace TrafficCourts.Common.Features.Lookups
         {
             var values = await GetListAsync();
 
-            var sections = values.Where(_ => _.Section == section).ToList();
+            var sections = values.Where(_ => _.StatCode == section).ToList();
             if (sections.Count == 0)
             {
                 return null;
