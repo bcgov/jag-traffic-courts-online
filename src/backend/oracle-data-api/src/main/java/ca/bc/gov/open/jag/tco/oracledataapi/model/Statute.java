@@ -1,9 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import org.springframework.data.annotation.Id;
-
-import com.opencsv.bean.CsvBindByPosition;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,19 +11,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Statute {
 
-	@Id
-	@CsvBindByPosition(position = 0)
-	private Integer code;
+	private String statId;
 
-	@CsvBindByPosition(position = 1)
-	private String act;
+	private String actCd;
 
-	@CsvBindByPosition(position = 2)
-	private String section;
+	private String statSectionTxt;
 
-	@CsvBindByPosition(position = 3)
-	private String description;
+	private String statSubSectionTxt;
+	
+	private String statParagraphTxt;
+	
+	private String statSubParagraphTxt;
+	
+	private String statCode;
+	
+	private String statShortDescriptionTxt;
+	
+	private String statDescriptionTxt;
 
 }

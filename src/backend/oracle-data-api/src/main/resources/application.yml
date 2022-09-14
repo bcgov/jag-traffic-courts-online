@@ -98,3 +98,14 @@ cronjob:
       enabled: ${UNASSIGN_DISPUTES_ENABLED:false}
       # A cron-like expression (defaulting to once every 5 minutes), extending the usual UN*X definition to include triggers on the second, minute, hour, day of month, month, and day of week.
       cron: ${UNASSIGN_JJDISPUTES_CRON:0 */5 * * * *}
+
+# ORDS CLIENT properties
+ords:
+  rest-api:
+    url: ${ORDS_API_URL:localhost}
+    timeout: ${ORDS_API_TIMEOUT:2000}
+    retry:
+      # The maximum number of retry attempts to allow
+      count: ${ORDS_API_RETRY_COUNT:3}
+      # The Duration of the fixed delays
+      delay: ${ORDS_API_RETRY_DELAY:5}
