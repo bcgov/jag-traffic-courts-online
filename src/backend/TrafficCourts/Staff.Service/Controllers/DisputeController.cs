@@ -363,9 +363,10 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Update)]
-    public async Task<IActionResult> ResendEmailAsync(long disputeId, string host, CancellationToken cancellationToken)
+    public async Task<IActionResult> ResendEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Resending Email Verification");
+        string host = this.HttpContext.Request.Host.Value;
 
         try
         {
