@@ -109,25 +109,6 @@ public class Mapper
         return ToSendEmail(dispute, "ProcessingDisputeTemplate");
     }
 
-    public static SendEmail ToVerificationSendEmail(Dispute dispute, string host)
-    {
-        SendEmail sendEmail = new();
-        // Send email message to the submitter's entered email
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "VerificationEmailTemplate");
-        if (template is not null)
-        {
-            sendEmail.From = template.Sender;
-            sendEmail.To.Add(dispute.EmailAddress);
-            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
-            sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
-            sendEmail.TicketNumber = dispute.TicketNumber;
-        }
-        return sendEmail;
-    }
-
     private static SendEmail ToSendEmail(Dispute dispute, string messageTemplateName)
     {
         SendEmail sendEmail = new();
