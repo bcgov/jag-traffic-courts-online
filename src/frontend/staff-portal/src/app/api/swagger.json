@@ -788,14 +788,6 @@
               "type": "integer",
               "format": "int64"
             }
-          },
-          {
-            "name": "host",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {

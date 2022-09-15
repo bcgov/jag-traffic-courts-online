@@ -22,12 +22,14 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
         private readonly Mock<ILogger<EmailSenderService>> _mockSenderLogger;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
+        private readonly Mock<IOracleDataApiService> _mockOracleDataApiService;
 
         public SendEmailConsumerTests()
         {
             _mockSenderLogger = new Mock<ILogger<EmailSenderService>>();
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
+            _mockOracleDataApiService = new Mock<IOracleDataApiService>();
         }
 
         private EmailSenderService CreateService()
@@ -43,7 +45,8 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             return new EmailSenderService(
                 _mockSenderLogger.Object,
                 options,
-                _mockSmtpClientFactory.Object);
+                _mockSmtpClientFactory.Object,
+                _mockOracleDataApiService.Object);
         }
 
         private SendEmailConsumer CreateConsumer(EmailSenderService senderService)
@@ -154,7 +157,8 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                         From = template.Sender,
                         To = { "mail@test.com" },
                         Subject = template.SubjectTemplate,
-                        PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01")
+                        PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01"),
+                        TicketNumber = "TestTicket01"
                     };
                     Assert.NotNull(sendEmail);
                 }
@@ -200,6 +204,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                     sendEmail.To.Add("mail@test.com");
                     sendEmail.Subject = template.SubjectTemplate;
                     sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01");
+                    sendEmail.TicketNumber = "TestTicket01";
 
                     await harness.InputQueueSendEndpoint.Send<SendEmail>(sendEmail);
 

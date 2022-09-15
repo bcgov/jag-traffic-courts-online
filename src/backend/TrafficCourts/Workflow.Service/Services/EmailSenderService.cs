@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Configuration;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using MimeKit;
 using MimeKit.Text;
+using TrafficCourts.Common.Features.Mail.Model;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -11,12 +13,15 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly ILogger<EmailSenderService> _logger;
         private readonly EmailConfiguration _emailConfiguration;
         private readonly ISmtpClientFactory _smptClientFactory;
+        private readonly IOracleDataApiService _oracleDataApiService;
 
-        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory)
+
+        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailConfiguration = emailConfiguration.Value;
             _smptClientFactory = stmpClientFactory;
+            _oracleDataApiService = oracleDataApiService;
         }
 
         /// <summary>
@@ -29,14 +34,21 @@ namespace TrafficCourts.Workflow.Service.Services
         {
             try
             {
+                // prepare email history record
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.HtmlContent = emailMessage.HtmlContent;
+                emailHistory.PlainTextContent = emailMessage.PlainTextContent;
+                emailHistory.FromEmailAddress = emailMessage.From;
+                emailHistory.RecipientEmailAddress = emailMessage.To[0];
+                emailHistory.EmailSubject = emailMessage.Subject;
+                emailHistory.TicketNumber = emailMessage.TicketNumber;
+
                 // create email message
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(emailMessage.From ?? _emailConfiguration.Sender));
 
                 // 
                 bool toAdded = AddRecipients(emailMessage.To, email.To);
-                bool ccAdded = AddRecipients(emailMessage.Cc, email.Cc);
-                bool bccAdded = AddRecipients(emailMessage.Bcc, email.Bcc);
 
                 if (IsAllowedListConfigured)
                 {
@@ -46,6 +58,8 @@ namespace TrafficCourts.Workflow.Service.Services
                     {
                         // there is a valid to address, however, non of them are allowed, note we are really using only CC and BCC emails
                         _logger.LogInformation("Not sending email because none of the valid email addresses are allowed to be set to. See configuration AllowList");
+                        emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
+                        await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                         return;
                     }
                 }
@@ -65,11 +79,15 @@ namespace TrafficCourts.Workflow.Service.Services
                 if (String.IsNullOrEmpty(emailMessage.Subject) || email.Body is null)
                 {
                     _logger.LogError("No subject or message body provided.");
+                    emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
+                    await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                     throw new InvalidEmailMessageException("No subject or message body provided");
                 }
                 else if (email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)
                 {
                     _logger.LogError("Missing recipient info.  No To, Cc or Bcc provided");
+                    emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
+                    await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                     throw new InvalidEmailMessageException("Missing recipient info");
                 }
 
@@ -77,6 +95,9 @@ namespace TrafficCourts.Workflow.Service.Services
                 var smtp = await _smptClientFactory.CreateAsync(cancellationToken);
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
+
+                emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
+                await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
             }
             catch (ArgumentNullException ane)
             {
@@ -185,6 +206,25 @@ namespace TrafficCourts.Workflow.Service.Services
             }
 
             return false;
+        }
+
+        public SendEmail ToVerificationSendEmail(Dispute dispute, string host)
+        {
+            SendEmail sendEmail = new();
+            // Send email message to the submitter's entered email
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "VerificationEmailTemplate");
+            if (template is not null)
+            {
+                sendEmail.From = template.Sender;
+                sendEmail.To.Add(dispute.EmailAddress);
+                sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
+                sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+                sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
+                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
+                sendEmail.TicketNumber = dispute.TicketNumber;
+            }
+            return sendEmail;
         }
 
         /// <summary>

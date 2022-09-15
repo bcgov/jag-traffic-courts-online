@@ -22,7 +22,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var mockBus = new Mock<IBus>();
             var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object);
-            var request = new Create.Request(mockTicketDispute.Object);
+            var request = new Create.Request(mockTicketDispute.Object, "localhost");
             var createResponse = new Create.Response();
 
             mockMediator

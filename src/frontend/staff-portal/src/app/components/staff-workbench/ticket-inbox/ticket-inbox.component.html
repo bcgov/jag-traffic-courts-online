@@ -30,8 +30,8 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell  *matCellDef="let element">
       <mat-icon [ngStyle]="{ 'color':'red' }" *ngIf="element.__RedGreenAlert =='Red'">cancel</mat-icon>
-      <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="element.__RedGreenAlert =='Green' && (element.emailAddressVerified === false && element.emailAdddress)">check_circle</mat-icon>
-      <mat-icon [ngStyle]="{ 'color':'grey' }" *ngIf="element.__RedGreenAlert =='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))">check_circle</mat-icon>
+      <mat-icon [ngStyle]="{ 'color':'grey' }" *ngIf="element.__RedGreenAlert =='Green' && (element.emailAddressVerified === false && element.emailAdddress)">check_circle</mat-icon>
+      <mat-icon [ngStyle]="{ 'color':'green' }" *ngIf="element.__RedGreenAlert =='Green' && (element.emailAddressVerified === true || !(element.emailAdddress))">check_circle</mat-icon>
     </td>
   </ng-container>
 

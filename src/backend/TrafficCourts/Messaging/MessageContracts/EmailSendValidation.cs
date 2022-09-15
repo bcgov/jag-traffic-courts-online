@@ -12,10 +12,12 @@ namespace TrafficCourts.Messaging.MessageContracts;
 [EndpointConvention("email-send-validation")]
 public class EmailSendValidation : IMessage
 {
-    public EmailSendValidation(Guid emailValidationToken)
+    public EmailSendValidation(Guid emailValidationToken, String host)
     {
         EmailValidationToken = emailValidationToken;
+        Host = host;
     }
 
     public Guid EmailValidationToken { get; set; }
+    public string Host { get; set; }
 }

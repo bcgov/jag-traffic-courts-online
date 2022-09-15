@@ -431,7 +431,7 @@ public class Dispute extends Auditable<String> {
     @OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="dispute_id", referencedColumnName="disputeId")
     private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
-
+    
 	public void setViolationTicket(ViolationTicket ticket) {
 		if (ticket == null) {
 			if (this.violationTicket != null) {
@@ -449,5 +449,4 @@ public class Dispute extends Auditable<String> {
 		}
 		this.disputeCounts.addAll(disputeCounts);
 	}
-
 }

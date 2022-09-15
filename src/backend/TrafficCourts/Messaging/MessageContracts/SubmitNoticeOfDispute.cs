@@ -210,5 +210,10 @@ public class SubmitNoticeOfDispute : IMessage
     /// </summary>
     public string? OcrViolationTicket { get; set; }
 
+    /// <summary>
+    /// Origin of request for sending email verification
+    /// </summary>
+    public string Host { get; set; } = String.Empty;
+
     public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 }

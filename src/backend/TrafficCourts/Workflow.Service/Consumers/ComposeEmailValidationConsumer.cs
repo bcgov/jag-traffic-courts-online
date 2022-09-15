@@ -3,7 +3,6 @@ using System.Threading;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Staff.Service.Mappers;
 using TrafficCourts.Workflow.Service.Services;
 using ApiException = TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0.ApiException;
 
@@ -17,13 +16,16 @@ public class ComposeEmailValidationConsumer : IConsumer<EmailSendValidation>
     private readonly ILogger<ComposeEmailValidationConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
     private readonly IBus _bus;
+    private readonly IEmailSenderService _emailSenderService;
 
-    public ComposeEmailValidationConsumer(ILogger<ComposeEmailValidationConsumer> logger, IOracleDataApiService oracleDataApiService, IBus bus)
+    public ComposeEmailValidationConsumer(ILogger<ComposeEmailValidationConsumer> logger, IOracleDataApiService oracleDataApiService, IBus bus, IEmailSenderService emailSenderService)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         ArgumentNullException.ThrowIfNull(oracleDataApiService);
         _oracleDataApiService = (oracleDataApiService);
         ArgumentNullException.ThrowIfNull(bus);
+        _emailSenderService = (emailSenderService);
+        ArgumentNullException.ThrowIfNull(emailSenderService);
         _bus = bus;
     }
 
@@ -37,7 +39,7 @@ public class ComposeEmailValidationConsumer : IConsumer<EmailSendValidation>
         try
         {
             Dispute dispute = await _oracleDataApiService.GetDisputeByEmailVerificationTokenAsync(message.EmailValidationToken.ToString());
-            SendEmail sendEmail = Mapper.ToVerificationSendEmail(dispute);
+            SendEmail sendEmail = _emailSenderService.ToVerificationSendEmail(dispute, context.Message.Host);
             await _bus.Publish(sendEmail);
         }
         catch (ApiException ex) when (ex.StatusCode == StatusCodes.Status404NotFound)

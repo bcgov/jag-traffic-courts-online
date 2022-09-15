@@ -36,7 +36,8 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     From = template.Sender,
                     To = { context.Message.Email! },
                     Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber)
+                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
+                    TicketNumber = context.Message.TicketFileNumber
                 };
 
                 await context.Publish(emailMessage);
