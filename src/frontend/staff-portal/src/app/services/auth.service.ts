@@ -64,6 +64,10 @@ export class AuthService {
     return this._userProfile.value;
   }
 
+  public get userFullName(): string {
+    return this.userProfile?.firstName + " " + this.userProfile?.lastName;;
+  }
+
   public login() {
     this.keycloak.login({ redirectUri: window.location.toString() });
   }

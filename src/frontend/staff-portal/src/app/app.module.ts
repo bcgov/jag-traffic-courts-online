@@ -36,8 +36,9 @@ import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench/st
 import { JJDisputeInboxComponent } from '@components/jj-workbench/jj-dispute-inbox/jj-dispute-inbox.component';
 import { DisputeDecisionInboxComponent } from '@components/staff-workbench/dispute-decision-inbox/dispute-decision-inbox.component';
 import { JJDisputeAssignmentsComponent } from '@components/jj-workbench/jj-dispute-assignments/jj-dispute-assignments.component';
-import { JJDisputeComponent } from '@components/jj-workbench/jj-dispute/jj-dispute.component';
-import { JJCountComponent } from '@components/jj-workbench/jj-count/jj-count.component';
+import { JJDisputeComponent } from '@components/jj-dispute-info/jj-dispute/jj-dispute.component';
+import { JJCountComponent } from '@components/jj-dispute-info/jj-count/jj-count.component';
+import { JJDisputeRemarksComponent } from '@components/jj-dispute-info/jj-dispute-remarks/jj-dispute-remarks.component';
 import { AuthService } from './services/auth.service';
 
 registerLocaleData(localeEn, 'en');
@@ -72,7 +73,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     DisputeDecisionInboxComponent,
     JJDisputeAssignmentsComponent,
     JJDisputeComponent,
-    JJCountComponent
+    JJCountComponent,
+    JJDisputeRemarksComponent
   ],
   imports: [
     CommonModule,

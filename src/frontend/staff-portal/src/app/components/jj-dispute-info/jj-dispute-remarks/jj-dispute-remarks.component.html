@@ -1,0 +1,31 @@
+<table fxFlex mat-table [dataSource]="dataSource" style="margin-bottom:30px;" class="mat-elevation-z8" matSort>
+  <ng-container matColumnDef="createdTs">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 140px;">
+      DATE
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{ element.createdTs | date: "dd-MMM-yyyy" }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="userFullName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      USER
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{ element.userFullName }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="note">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      NOTE
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span>{{ element.note }}</span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

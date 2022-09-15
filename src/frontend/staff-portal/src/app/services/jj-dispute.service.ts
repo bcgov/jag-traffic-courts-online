@@ -4,7 +4,8 @@ import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute, JJDisputeStatus } from 'app/api';
+import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark } from 'app/api';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +37,8 @@ export class JJDisputeService {
     private logger: LoggerService,
     private configService: ConfigService,
     private jjApiService: JJService,
-  ) {
+    private authService: AuthService
+    ) {
   }
 
   /**
@@ -151,6 +153,18 @@ export class JJDisputeService {
 
   public get JJDispute(): JJDispute {
     return this._JJDispute.value;
+  }
+
+  public addRemarks(jJDispute: JJDispute, remarksText: string): JJDispute {
+    if(!jJDispute.remarks) {
+      jJDispute.remarks = [];
+    }
+    let remarks: JJDisputeRemark = {
+      userFullName: this.authService.userFullName,
+      note: remarksText
+    }
+    jJDispute.remarks.push(remarks);
+    return jJDispute;
   }
 
   public addDays(initialDate: string, numDays: number): Date {
