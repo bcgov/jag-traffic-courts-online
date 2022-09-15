@@ -17,10 +17,12 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
         public class Request : IRequest<Response>
         {
             public NoticeOfDispute Dispute { get; init; }
+            public string Host { get; set; }
 
-            public Request(Models.Dispute.NoticeOfDispute dispute)
+            public Request(Models.Dispute.NoticeOfDispute dispute, string host)
             {
                 Dispute = dispute ?? throw new ArgumentNullException(nameof(dispute));
+                Host = host ?? throw new ArgumentNullException(nameof(host));
             }
         }
         public class Response
@@ -156,6 +158,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     if (!string.IsNullOrEmpty(submitNoticeOfDispute.EmailAddress))
                     {
                         submitNoticeOfDispute.EmailVerificationToken = Guid.NewGuid().ToString();
+                        submitNoticeOfDispute.Host = request.Host;
                     }
 
                     if (lookedUpViolationTicket != null)

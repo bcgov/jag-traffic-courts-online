@@ -45,7 +45,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
-        Create.Request request = new Create.Request(dispute);
+        Create.Request request = new Create.Request(dispute, HttpContext.Request.Host.Value);
         Create.Response response = await _mediator.Send(request, cancellationToken);
 
         if (response.Exception is not null)
@@ -72,7 +72,8 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
-        EmailSendValidation emailSendValidation = new(uuid);
+        string host = HttpContext.Request.Host.Value;
+        EmailSendValidation emailSendValidation = new(uuid, host);
         await _bus.Publish(emailSendValidation, cancellationToken);
         return Accepted();
     }

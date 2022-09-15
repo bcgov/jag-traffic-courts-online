@@ -61,9 +61,9 @@ public class Mapper
         return disputeRejected;
     }
 
-    public static EmailSendValidation ToEmailSendValidation(Guid uuid)
+    public static EmailSendValidation ToEmailSendValidation(Guid uuid, string host)
     {
-        EmailSendValidation emailSendValidation = new(uuid);
+        EmailSendValidation emailSendValidation = new(uuid, host);
         return emailSendValidation;
     }
 
@@ -113,7 +113,7 @@ public class Mapper
     {
         SendEmail sendEmail = new();
         // Send email message to the submitter's entered email
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ResendEmailVerificationTemplate");
+        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "VerificationEmailTemplate");
         if (template is not null)
         {
             sendEmail.From = template.Sender;

@@ -56,7 +56,8 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
-            var request = new Create.Request(dispute);
+            string host = "localhost";
+            var request = new Create.Request(dispute, host);
 
             // Act
             Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);

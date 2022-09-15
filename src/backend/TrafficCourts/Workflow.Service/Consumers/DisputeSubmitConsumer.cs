@@ -37,6 +37,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 _logger.LogDebug("Consuming message");
 
                 Dispute dispute = _mapper.Map<Dispute>(context.Message);
+                string host = context.Message.Host; // part of link in verification email
 
                 _logger.LogTrace("TRY CREATING DISPUTE: {@Dispute}", dispute);
 
@@ -47,7 +48,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
                     // TCVP-1529 Saving a dispute should also send a verification email to the Disputant.
-                    SendEmail sendEmail = TrafficCourts.Staff.Service.Mappers.Mapper.ToVerificationSendEmail(dispute);
+                    SendEmail sendEmail = TrafficCourts.Staff.Service.Mappers.Mapper.ToVerificationSendEmail(dispute, host);
                     await _bus.Publish(sendEmail);
 
                     await context.RespondAsync<DisputeSubmitted>(new
