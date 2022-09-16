@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.dto.StatuteDTO;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.StatuteMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.GetStatutesListServiceResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import io.swagger.v3.core.util.Json;
@@ -32,7 +34,9 @@ public class LookupService {
 		log.debug("Refreshing code tables in redis.");
 
 		try {
-			List<Statute> statutes = getAllStatutes();
+			// Get all statutes from the ORDS webclient service and convert them to DTO using Mapstruct
+			List<StatuteDTO> statutes = StatuteMapper.INSTANCE.convertStatutes(getAllStatutes());
+			
 			String json = Json.pretty(statutes);
 
 			// replace the Statutes key with a new json-serialized version of the statutes list.

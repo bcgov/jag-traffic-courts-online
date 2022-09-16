@@ -19,6 +19,8 @@
 		<log4j2.version>2.17.1</log4j2.version>
 		<release.train.version>2021.0.3</release.train.version>
   		<spring-cloud-sleuth-otel.version>1.1.0-M7</spring-cloud-sleuth-otel.version>
+  		<org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
+  		<org.projectlombok.version>1.18.24</org.projectlombok.version>
 	</properties>
 	
 	<dependencyManagement>
@@ -147,6 +149,13 @@
 	    	<groupId>io.opentelemetry</groupId>
 	    	<artifactId>opentelemetry-exporter-jaeger</artifactId>
 	  	</dependency>
+	  	
+	  	<!-- Mapstruct dependencies -->
+	  	<dependency>
+	         <groupId>org.mapstruct</groupId>
+	         <artifactId>mapstruct</artifactId>
+	         <version>${org.mapstruct.version}</version>
+	     </dependency>
 	</dependencies>
 
 	<build>
@@ -187,6 +196,35 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<!-- Needed for compiling Mapstruct with Lombok -->
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-compiler-plugin</artifactId>
+			    <configuration>
+			        <source>${java.version}</source>
+			        <target>${java.version}</target>
+			        <annotationProcessorPaths>
+			            <path>
+			                <groupId>org.projectlombok</groupId>
+			                <artifactId>lombok</artifactId>
+			                <version>${org.projectlombok.version}</version>
+			            </path>
+			            <!-- This is needed when using Lombok 1.18.16 and above -->
+			            <path>
+			                <groupId>org.projectlombok</groupId>
+			                <artifactId>lombok-mapstruct-binding</artifactId>
+			                <version>0.2.0</version>
+			            </path>
+			            <!-- Mapstruct should follow the lombok path(s) -->
+			            <path>
+			                <groupId>org.mapstruct</groupId>
+			                <artifactId>mapstruct-processor</artifactId>
+			                <version>${org.mapstruct.version}</version>
+			            </path>
+			        </annotationProcessorPaths>
+			    </configuration>
 			</plugin>
 		</plugins>
 	</build>
