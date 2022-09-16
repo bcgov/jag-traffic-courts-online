@@ -1434,7 +1434,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("ticketNumber");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/fileHistory/{ticketNumber}");
+            urlBuilder_.Append("api/v1.0/fileHistory/{ticketNumber}");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -1551,7 +1551,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("body");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/fileHistory/{ticketNumber}");
+            urlBuilder_.Append("api/v1.0/fileHistory/{ticketNumber}");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -1664,7 +1664,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("ticketNumber");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/emailHistory/{ticketNumber}");
+            urlBuilder_.Append("api/v1.0/emailHistory/{ticketNumber}");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -1781,7 +1781,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
                 throw new System.ArgumentNullException("body");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/jj/emailHistory/{ticketNumber}");
+            urlBuilder_.Append("api/v1.0/emailHistory/{ticketNumber}");
             urlBuilder_.Replace("{ticketNumber}", System.Uri.EscapeDataString(ConvertToString(ticketNumber, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;

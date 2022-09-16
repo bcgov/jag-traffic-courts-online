@@ -372,7 +372,7 @@
         }
       }
     },
-    "/api/v1.0/jj/fileHistory/{ticketNumber}": {
+    "/api/v1.0/fileHistory/{ticketNumber}": {
       "get": {
         "tags": [ "file-history-controller" ],
         "operationId": "getFileHistoryByTicketNumber",
@@ -454,7 +454,7 @@
         }
       }
     },
-    "/api/v1.0/jj/emailHistory/{ticketNumber}": {
+    "/api/v1.0/emailHistory/{ticketNumber}": {
       "get": {
         "tags": [ "email-history-controller" ],
         "operationId": "getEmailHistoryByTicketNumber",

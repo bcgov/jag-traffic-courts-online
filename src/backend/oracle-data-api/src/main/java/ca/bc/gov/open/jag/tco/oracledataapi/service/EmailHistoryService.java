@@ -1,6 +1,8 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +17,9 @@ public class EmailHistoryService {
 
 	@Autowired
 	EmailHistoryRepository emailHistoryRepository;
+	
+	@PersistenceContext
+    private EntityManager entityManager;
 	
 	/**
 	 * Retrieves {@link EmailHistory} records by Ticket Number, delegating to CrudRepository
