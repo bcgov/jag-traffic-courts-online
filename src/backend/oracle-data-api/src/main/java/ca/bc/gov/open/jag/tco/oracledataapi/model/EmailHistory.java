@@ -4,9 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -80,6 +86,15 @@ public class EmailHistory extends Auditable<String> {
      */
     @Column(length = 50)
     @Schema(nullable = false)
-    private String ticketNumber;
+    private String ticketNumber;	
+    
+    /**
+     * Related file history event if any
+     */
+    @JsonBackReference
+	@OneToOne
+	@JoinColumn(name = "file_history_id", referencedColumnName = "fileHistoryId")
+	@Schema(hidden = true)
+	private FileHistory fileHistory;
     
 }
