@@ -207,7 +207,7 @@ namespace TrafficCourts.Workflow.Service.Services
                     fileHistory.Description = "Email Could Not be Sent:" + emailMessage.Subject;
                 }
                 fileHistory.TicketNumber = emailMessage.TicketNumber;
-                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory);
+                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory.EmailHistory);
                 return Id;
             } catch(Exception ex) {
                 _logger.LogError(ex, "Exception saving file history.");

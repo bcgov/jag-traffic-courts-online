@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
-import ca.bc.gov.open.jag.tco.oracledataapi.service.EmailHistoryService;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.FileHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
