@@ -14,14 +14,18 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly EmailConfiguration _emailConfiguration;
         private readonly ISmtpClientFactory _smptClientFactory;
         private readonly IOracleDataApiService _oracleDataApiService;
+        private readonly IFileHistoryService _fileHistoryService;
 
 
-        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
+        public EmailSenderService(ILogger<EmailSenderService> logger, 
+            IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory, 
+            IOracleDataApiService oracleDataApiService, IFileHistoryService fileHistoryService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailConfiguration = emailConfiguration.Value;
             _smptClientFactory = stmpClientFactory;
             _oracleDataApiService = oracleDataApiService;
+            _fileHistoryService = fileHistoryService;
         }
 
         /// <summary>
@@ -32,22 +36,14 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <exception cref="EmailSendFailedException"></exception>
         public async Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken)
         {
+            bool emailSentSuccessfully = false;
             try
             {
-                // prepare email history record
-                EmailHistory emailHistory = new EmailHistory();
-                emailHistory.HtmlContent = emailMessage.HtmlContent;
-                emailHistory.PlainTextContent = emailMessage.PlainTextContent;
-                emailHistory.FromEmailAddress = emailMessage.From;
-                emailHistory.RecipientEmailAddress = emailMessage.To[0];
-                emailHistory.EmailSubject = emailMessage.Subject;
-                emailHistory.TicketNumber = emailMessage.TicketNumber;
-
                 // create email message
                 var email = new MimeMessage();
                 email.From.Add(MailboxAddress.Parse(emailMessage.From ?? _emailConfiguration.Sender));
 
-                // 
+                // add recipients
                 bool toAdded = AddRecipients(emailMessage.To, email.To);
 
                 if (IsAllowedListConfigured)
@@ -58,8 +54,6 @@ namespace TrafficCourts.Workflow.Service.Services
                     {
                         // there is a valid to address, however, non of them are allowed, note we are really using only CC and BCC emails
                         _logger.LogInformation("Not sending email because none of the valid email addresses are allowed to be set to. See configuration AllowList");
-                        emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                        await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                         return;
                     }
                 }
@@ -79,15 +73,11 @@ namespace TrafficCourts.Workflow.Service.Services
                 if (String.IsNullOrEmpty(emailMessage.Subject) || email.Body is null)
                 {
                     _logger.LogError("No subject or message body provided.");
-                    emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                    await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                     throw new InvalidEmailMessageException("No subject or message body provided");
                 }
                 else if (email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)
                 {
                     _logger.LogError("Missing recipient info.  No To, Cc or Bcc provided");
-                    emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                    await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                     throw new InvalidEmailMessageException("Missing recipient info");
                 }
 
@@ -96,8 +86,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
 
-                emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
-                await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
+                emailSentSuccessfully = true;
             }
             catch (ArgumentNullException ane)
             {
@@ -160,6 +149,24 @@ namespace TrafficCourts.Workflow.Service.Services
                 // An error connecting to the the SMTP Server
                 _logger.LogError(scfe, "An error connecting to the the SMTP Server");
                 throw new EmailSendFailedException("An error connecting to the the SMTP Server", scfe);
+            }
+            finally
+            {
+                // prepare file history record
+                FileHistory fileHistory = new FileHistory();
+                EmailHistory emailHistory = new EmailHistory();
+                emailHistory.HtmlContent = emailMessage.HtmlContent;
+                emailHistory.PlainTextContent = emailMessage.PlainTextContent;
+                emailHistory.FromEmailAddress = emailMessage.From;
+                emailHistory.RecipientEmailAddress = emailMessage.To[0];
+                emailHistory.EmailSubject = emailMessage.Subject;
+                emailHistory.TicketNumber = emailMessage.TicketNumber;
+                if (emailSentSuccessfully) emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
+                else emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
+                fileHistory.EmailHistory = emailHistory;
+                fileHistory.Description = emailHistory.EmailSubject;
+                fileHistory.TicketNumber = emailHistory.TicketNumber;
+                await _fileHistoryService.SaveFileHistoryAsync(fileHistory, cancellationToken);
             }
         }
 

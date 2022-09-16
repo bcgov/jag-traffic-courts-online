@@ -1,11 +1,11 @@
 ﻿using MassTransit;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Staff.Service.Configuration;
+using TrafficCourts.Workflow.Service.Configuration;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
-namespace TrafficCourts.Staff.Service.Services;
+namespace TrafficCourts.Workflow.Service.Services;
 
 /// <summary>
 /// Summary description for FileHistoryService
@@ -83,11 +83,6 @@ public class FileHistoryService : IFileHistoryService
         }
 
         return client;
-    }
-
-    public async Task<ICollection<FileHistory>> GetFileHistoryForTicketAsync(String ticketNumber, CancellationToken cancellationToken)
-    {
-        return await GetOracleDataApi().GetFileHistoryByTicketNumberAsync(ticketNumber, cancellationToken);
     }
 
     public async Task<long> SaveFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)

@@ -49,6 +49,7 @@ public static class Startup
 
         builder.Services.AddTransient<ISmtpClientFactory, SmtpClientFactory>();
         builder.Services.AddTransient<IEmailSenderService, EmailSenderService>();
+        builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
 
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger, config => config.AddConsumers(assembly));
 

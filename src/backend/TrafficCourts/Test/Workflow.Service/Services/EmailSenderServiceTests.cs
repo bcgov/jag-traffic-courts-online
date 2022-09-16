@@ -21,6 +21,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
         private readonly Mock<IOracleDataApiService> _mockOracleDataApiService;
+        private readonly Mock<IFileHistoryService> _mockFileHistoryService; 
 
         public EmailSenderServiceTests()
         {
@@ -28,6 +29,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
             _mockOracleDataApiService = new Mock<IOracleDataApiService>();
+            _mockFileHistoryService = new Mock<IFileHistoryService>();
         }
 
         /// <summary>
@@ -48,7 +50,8 @@ namespace TrafficCourts.Test.Workflow.Service.Services
                 _mockLogger.Object,
                 options,
                 _mockSmtpClientFactory.Object,
-                _mockOracleDataApiService.Object);
+                _mockOracleDataApiService.Object,
+                _mockFileHistoryService.Object);
         }
 
         // Scenarios:

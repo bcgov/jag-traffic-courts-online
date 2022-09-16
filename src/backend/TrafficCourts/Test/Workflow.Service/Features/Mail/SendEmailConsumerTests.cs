@@ -23,6 +23,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
         private readonly Mock<ISmtpClient> _mockSmtpClient;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<IOracleDataApiService> _mockOracleDataApiService;
+        private readonly Mock<IFileHistoryService> _mockFileHistoryService;
 
         public SendEmailConsumerTests()
         {
@@ -30,6 +31,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
             _mockOracleDataApiService = new Mock<IOracleDataApiService>();
+            _mockFileHistoryService = new Mock<IFileHistoryService>();
         }
 
         private EmailSenderService CreateService()
@@ -46,7 +48,8 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                 _mockSenderLogger.Object,
                 options,
                 _mockSmtpClientFactory.Object,
-                _mockOracleDataApiService.Object);
+                _mockOracleDataApiService.Object,
+                _mockFileHistoryService.Object);
         }
 
         private SendEmailConsumer CreateConsumer(EmailSenderService senderService)
