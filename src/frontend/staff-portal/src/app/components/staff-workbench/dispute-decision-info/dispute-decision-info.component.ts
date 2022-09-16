@@ -19,7 +19,6 @@ export class DisputeDecisionInfoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("Dispute Decision Details");
   }
 
   public onBack() {

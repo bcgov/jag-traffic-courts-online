@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
 import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark } from 'app/api';
 import { AuthService } from './auth.service';
+import { cloneDeep } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ import { AuthService } from './auth.service';
 export class JJDisputeService {
   private _JJDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
   private _JJDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
-  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted ];
+  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
   public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress];
   public JJDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
@@ -38,7 +39,7 @@ export class JJDisputeService {
     private configService: ConfigService,
     private jjApiService: JJService,
     private authService: AuthService
-    ) {
+  ) {
   }
 
   /**
@@ -65,37 +66,40 @@ export class JJDisputeService {
       );
   }
 
-    /**
-     * Get the JJ disputes from RSI by IDIR
-     *
-     * @param none
-     */
-     public getJJDisputesByIDIR(idir: string): Observable<JJDispute[]> {
-      return this.jjApiService.apiJjDisputesGet(idir)
-        .pipe(
-          map((response: JJDispute[]) => {
-            this.logger.info('jj-DisputeService::getJJDisputes', response);
-            this._JJDisputes.next(response);
-            return response;
-          }),
-          catchError((error: any) => {
-            this.toastService.openErrorToast(this.configService.dispute_error);
-            this.logger.error(
-              'jj-DisputeService::getJJDisputes error has occurred: ',
-              error
-            );
-            throw error;
-          })
-        );
-    }
+  /**
+   * Get the JJ disputes from RSI by IDIR
+   *
+   * @param none
+   */
+  public getJJDisputesByIDIR(idir: string): Observable<JJDispute[]> {
+    return this.jjApiService.apiJjDisputesGet(idir)
+      .pipe(
+        map((response: JJDispute[]) => {
+          this.logger.info('jj-DisputeService::getJJDisputes', response);
+          this._JJDisputes.next(response);
+          return response;
+        }),
+        catchError((error: any) => {
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::getJJDisputes error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
 
   /**
      * Put the JJ dispute to RSI by Id.
      *
      * @param ticketNumber, jjDispute
      */
-   public putJJDispute(ticketNumber: string, jjDispute: JJDispute, checkVTC: boolean): Observable<JJDispute> {
-
+  public putJJDispute(ticketNumber: string, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
+    let input = cloneDeep(jjDispute);
+    if (remarks) {
+      this.addRemarks(input, remarks);
+    }
     return this.jjApiService.apiJjTicketNumberPut(ticketNumber, checkVTC, jjDispute)
       .pipe(
         map((response: any) => {
@@ -156,7 +160,7 @@ export class JJDisputeService {
   }
 
   public addRemarks(jJDispute: JJDispute, remarksText: string): JJDispute {
-    if(!jJDispute.remarks) {
+    if (!jJDispute.remarks) {
       jJDispute.remarks = [];
     }
     let remarks: JJDisputeRemark = {
