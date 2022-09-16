@@ -23,9 +23,15 @@ public class OracleDataApiService : IOracleDataApiService
 
         return await _oracleDataApiClient.SaveDisputeAsync(dispute);
     }
-    public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory)
+    public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory)
     {
-        return await _oracleDataApiClient.InsertEmailHistoryAsync(emailHistory.TicketNumber, emailHistory);
+        try
+        {
+            return await _oracleDataApiClient.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory);
+        } catch (Exception ex)
+        {
+            throw;
+        }
     }
 
 

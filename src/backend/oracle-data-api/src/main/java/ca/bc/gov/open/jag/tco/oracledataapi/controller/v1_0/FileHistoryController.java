@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController(value = "FileHistoryControllerV1_0")
-@RequestMapping("/api/v1.0/jj")
+@RequestMapping("/api/v1.0")
 public class FileHistoryController {
 
 	@Autowired

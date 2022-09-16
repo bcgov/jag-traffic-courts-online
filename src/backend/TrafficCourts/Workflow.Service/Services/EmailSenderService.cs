@@ -14,18 +14,16 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly EmailConfiguration _emailConfiguration;
         private readonly ISmtpClientFactory _smptClientFactory;
         private readonly IOracleDataApiService _oracleDataApiService;
-        private readonly IFileHistoryService _fileHistoryService;
 
 
         public EmailSenderService(ILogger<EmailSenderService> logger, 
             IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory, 
-            IOracleDataApiService oracleDataApiService, IFileHistoryService fileHistoryService)
+            IOracleDataApiService oracleDataApiService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailConfiguration = emailConfiguration.Value;
             _smptClientFactory = stmpClientFactory;
             _oracleDataApiService = oracleDataApiService;
-            _fileHistoryService = fileHistoryService;
         }
 
         /// <summary>
@@ -36,7 +34,7 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <exception cref="EmailSendFailedException"></exception>
         public async Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken)
         {
-            bool emailSentSuccessfully = false;
+            bool sentSuccessfully = false;
             try
             {
                 // create email message
@@ -86,7 +84,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
 
-                emailSentSuccessfully = true;
+                sentSuccessfully = true;
             }
             catch (ArgumentNullException ane)
             {
@@ -152,21 +150,7 @@ namespace TrafficCourts.Workflow.Service.Services
             }
             finally
             {
-                // prepare file history record
-                FileHistory fileHistory = new FileHistory();
-                EmailHistory emailHistory = new EmailHistory();
-                emailHistory.HtmlContent = emailMessage.HtmlContent;
-                emailHistory.PlainTextContent = emailMessage.PlainTextContent;
-                emailHistory.FromEmailAddress = emailMessage.From;
-                emailHistory.RecipientEmailAddress = emailMessage.To[0];
-                emailHistory.EmailSubject = emailMessage.Subject;
-                emailHistory.TicketNumber = emailMessage.TicketNumber;
-                if (emailSentSuccessfully) emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
-                else emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                fileHistory.EmailHistory = emailHistory;
-                fileHistory.Description = emailHistory.EmailSubject;
-                fileHistory.TicketNumber = emailHistory.TicketNumber;
-                await _fileHistoryService.SaveFileHistoryAsync(fileHistory, cancellationToken);
+                await SaveEmailtoFileHistory(emailMessage, sentSuccessfully);
             }
         }
 
@@ -192,6 +176,43 @@ namespace TrafficCourts.Workflow.Service.Services
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Determines if any of the recipients are valid email addresses and are allowed to be set to.
+        /// </summary>
+        /// <param name="recipients"></param>
+        /// <returns><c>true</c> if there is a valid email address and is allowed to be set to, otherwise <c>false</c>.</returns>
+        private async Task<long> SaveEmailtoFileHistory(SendEmail emailMessage, bool sentSuccessfully)
+        {
+            try
+            {
+                // prepare file history record
+                FileHistory fileHistory = new FileHistory();
+                fileHistory.EmailHistory = new EmailHistory();
+                fileHistory.EmailHistory.HtmlContent = emailMessage.HtmlContent;
+                fileHistory.EmailHistory.PlainTextContent = emailMessage.PlainTextContent;
+                fileHistory.EmailHistory.FromEmailAddress = emailMessage.From;
+                fileHistory.EmailHistory.RecipientEmailAddress = emailMessage.To[0];
+                fileHistory.EmailHistory.EmailSubject = emailMessage.Subject;
+                fileHistory.EmailHistory.TicketNumber = emailMessage.TicketNumber;
+                if (sentSuccessfully)
+                {
+                    fileHistory.EmailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
+                    fileHistory.Description = "Email Sent:" + emailMessage.Subject;
+                }
+                else
+                {
+                    fileHistory.EmailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
+                    fileHistory.Description = "Email Could Not be Sent:" + emailMessage.Subject;
+                }
+                fileHistory.TicketNumber = emailMessage.TicketNumber;
+                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory);
+                return Id;
+            } catch(Exception ex) {
+                _logger.LogError(ex, "Exception saving file history.");
+                throw;
+            }
         }
 
         /// <summary>
