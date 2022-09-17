@@ -52,26 +52,5 @@ public class FileHistory extends Auditable<String> {
 	 */
 	@Column(length = 500)
 	@Schema(nullable = true)
-	private String description;
-    
-	/**
-	 * optional related email
-	 */
-	@JsonManagedReference
-	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "fileHistory")
-	@Schema(nullable = true)
-	@JoinColumn(name = "file_history_id", referencedColumnName="fileHistoryId")
-	private EmailHistory emailHistory;
-	
-	public void setEmailHistory(EmailHistory emailHistory) {
-		if (emailHistory == null) {
-			if (this.emailHistory != null) {
-				this.emailHistory.setFileHistory(null);
-			}
-		} else {
-			emailHistory.setFileHistory(this);
-		}
-		this.emailHistory = emailHistory;
-	}
-    
+	private String description;    
 }

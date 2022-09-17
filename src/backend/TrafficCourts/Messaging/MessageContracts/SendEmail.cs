@@ -13,7 +13,7 @@ namespace TrafficCourts.Messaging.MessageContracts
     public class SendEmail : IMessage
     {
         public string? FromEmailAddress { get; set; }
-        public string? ToEmailAddress { get; set; } = String.Empty;
+        public string? ToEmailAddress { get; set; } 
         public string Subject { get; set; } = String.Empty;
         public string? PlainTextContent { get; set; }
         public string? HtmlContent { get; set; }

@@ -45,13 +45,13 @@ namespace TrafficCourts.Workflow.Service.Services
                 email.From.Add(MailboxAddress.Parse(emailMessage.FromEmailAddress ?? _emailConfiguration.Sender));
 
                 // add recipients
-                bool toAdded = AddRecipient(emailMessage.ToEmailAddress, email.To);
+                bool toAdded = AddRecipient(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty, email.To);
 
                 if (IsAllowedListConfigured)
                 {
                     // in development, some addresses many not allowed, add AddRecipients will filter out any unallowed email address
                     // we need to exit before an exception is thrown below due to noone left in the "To" address list.
-                    if (!toAdded && IsEmailValid(emailMessage.ToEmailAddress) && !IsEmailAllowed(emailMessage.ToEmailAddress))
+                    if (!toAdded && IsEmailValid(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty) && !IsEmailAllowed(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty))
                     {
                         // there is a valid to address, however, non of them are allowed, note we are really using only CC and BCC emails
                         _logger.LogInformation("Not sending email because none of the valid email addresses are allowed to be set to. See configuration AllowList");
@@ -153,7 +153,7 @@ namespace TrafficCourts.Workflow.Service.Services
             }
             finally
             {
-                await SaveEmailtoFileHistory(emailMessage, sentSuccessfully);
+                await SaveEmailtoHistory(emailMessage, sentSuccessfully);
             }
         }
 
@@ -179,33 +179,27 @@ namespace TrafficCourts.Workflow.Service.Services
         }
 
         /// <summary>
-        /// Saves an email to file history and record of emails sent
+        /// Saves an email to record of emails sent
         /// </summary>
         /// <param name="emailMessage"></param>
         /// <param name="sentSuccessfully"></param>
-        /// <returns>returns id of new file history record</returns>
-        private async Task<long> SaveEmailtoFileHistory(SendEmail emailMessage, bool sentSuccessfully)
+        /// <returns>returns id of new email history record</returns>
+        private async Task<long> SaveEmailtoHistory(SendEmail emailMessage, bool sentSuccessfully)
         {
             try
             {
                 // prepare file history record
-                FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
                 if (sentSuccessfully)
                 {
                     emailMessage.SuccessfullySent = EmailHistorySuccessfullySent.Y;
-                    fileHistoryRecord.Description = "Email Sent:" + emailMessage.Subject;
                 }
                 else
                 {
                     emailMessage.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                    fileHistoryRecord.Description = "Email Could Not be Sent:" + emailMessage.Subject;
                 }
-                fileHistoryRecord.TicketNumber = emailMessage.TicketNumber;
-                FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
                 EmailHistory emailHistory = _mapper.Map<EmailHistory>(emailMessage);
-                fileHistory.EmailHistory = emailHistory;
 
-                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory);
+                long Id = await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                 return Id;
             } catch(Exception ex) {
                 _logger.LogError(ex, "Exception saving file history.");

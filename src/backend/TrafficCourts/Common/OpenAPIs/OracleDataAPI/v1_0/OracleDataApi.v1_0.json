@@ -1502,6 +1502,32 @@
           }
         }
       },
+      "FileHistory": {
+        "type": "object",
+        "properties": {
+          "createdBy": { "type": "string" },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": { "type": "string" },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fileHistoryId": {
+            "type": "integer",
+            "description": "ID",
+            "format": "int64",
+            "readOnly": true
+          },
+          "ticketNumber": { "type": "string" },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "EmailHistory": {
         "type": "object",
         "properties": {
@@ -1537,34 +1563,6 @@
             "enum": [ "Y", "N" ]
           },
           "ticketNumber": { "type": "string" }
-        },
-        "nullable": true
-      },
-      "FileHistory": {
-        "type": "object",
-        "properties": {
-          "createdBy": { "type": "string" },
-          "createdTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedBy": { "type": "string" },
-          "modifiedTs": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "fileHistoryId": {
-            "type": "integer",
-            "description": "ID",
-            "format": "int64",
-            "readOnly": true
-          },
-          "ticketNumber": { "type": "string" },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "emailHistory": { "$ref": "#/components/schemas/EmailHistory" }
         }
       }
     },

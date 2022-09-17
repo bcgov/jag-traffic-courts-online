@@ -222,7 +222,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             // Arrange
             var emailMessage = new SendEmail
             {
-                ToEmailAddress = "works@test.com, test@test.com",
+                ToEmailAddress = "works@test.com",
                 Subject = "Test message",
                 PlainTextContent = "plain old message",
                 TicketNumber = "TestTicket01",
