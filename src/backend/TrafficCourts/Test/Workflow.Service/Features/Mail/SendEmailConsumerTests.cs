@@ -5,10 +5,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Moq;
+using AutoMapper;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Workflow.Service.Features.Mail;
@@ -23,6 +25,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
         private readonly Mock<ISmtpClient> _mockSmtpClient;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<IOracleDataApiService> _mockOracleDataApiService;
+        private readonly Mock<IMapper> _mockMapper;
 
         public SendEmailConsumerTests()
         {
@@ -30,6 +33,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
             _mockOracleDataApiService = new Mock<IOracleDataApiService>();
+            _mockMapper = new Mock<IMapper>();
         }
 
         private EmailSenderService CreateService()
@@ -46,7 +50,8 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                 _mockSenderLogger.Object,
                 options,
                 _mockSmtpClientFactory.Object,
-                _mockOracleDataApiService.Object);
+                _mockOracleDataApiService.Object,
+                _mockMapper.Object);
         }
 
         private SendEmailConsumer CreateConsumer(EmailSenderService senderService)
@@ -81,10 +86,12 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
             {
                 await harness.InputQueueSendEndpoint.Send<SendEmail>(new
                 {
-                    From = "mail@test.com",
-                    To = new string[] { "something@test.com" },
+                    FromEmailAddress = "mail@test.com",
+                    ToEmailAddress = "something@test.com",
                     Subject = "Test message",
-                    PlainTextContent = "plain old message"
+                    PlainTextContent = "plain old message",
+                    TicketNumber = "TestTicket01",
+                    SuccessfullySent = EmailHistorySuccessfullySent.N
                 }, c => c.RequestId = NewId.NextGuid());
 
                 Assert.True(emailConsumer.Consumed.Select<SendEmail>().Any());
@@ -154,11 +161,12 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                 {
                     sendEmail = new SendEmail()
                     {
-                        From = template.Sender,
-                        To = { "mail@test.com" },
+                        FromEmailAddress = template.Sender,
+                        ToEmailAddress = "mail@test.com",
                         Subject = template.SubjectTemplate,
                         PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01"),
-                        TicketNumber = "TestTicket01"
+                        TicketNumber = "TestTicket01",
+                        SuccessfullySent = EmailHistorySuccessfullySent.N
                     };
                     Assert.NotNull(sendEmail);
                 }
@@ -200,11 +208,12 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
                 var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "UnknownTemplate");
                 if (template is not null)
                 {
-                    sendEmail.From = template.Sender;
-                    sendEmail.To.Add("mail@test.com");
+                    sendEmail.FromEmailAddress = template.Sender;
+                    sendEmail.ToEmailAddress = "mail@test.com";
                     sendEmail.Subject = template.SubjectTemplate;
                     sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", "TestTicket01");
                     sendEmail.TicketNumber = "TestTicket01";
+                    sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
 
                     await harness.InputQueueSendEndpoint.Send<SendEmail>(sendEmail);
 

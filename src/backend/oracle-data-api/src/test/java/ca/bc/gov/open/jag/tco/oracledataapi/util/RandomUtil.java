@@ -193,11 +193,11 @@ public class RandomUtil {
 	public static EmailHistory createEmailHistory() {
 		EmailHistory emailHistory = new EmailHistory();
 		emailHistory.setTicketNumber(UUID.randomUUID().toString());
-		emailHistory.setEmailSubject(UUID.randomUUID().toString());
+		emailHistory.setSubject(UUID.randomUUID().toString());
 		emailHistory.setPlainTextContent(UUID.randomUUID().toString());
 		emailHistory.setSuccessfullySent(YesNo.N);
 		emailHistory.setFromEmailAddress(randomEmailAddress());
-		emailHistory.setRecipientEmailAddress(randomEmailAddress());
+		emailHistory.setToEmailAddress(randomEmailAddress());
 		return emailHistory;
 	}
 	

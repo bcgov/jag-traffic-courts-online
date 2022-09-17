@@ -82,14 +82,15 @@ public class Mapper
         var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "ResendEmailVerificationTemplate");
         if (template is not null)
         {
-            sendEmail.From = template.Sender;
-            sendEmail.To.Add(dispute.EmailAddress);
+            sendEmail.FromEmailAddress = template.Sender;
+            sendEmail.ToEmailAddress = (dispute.EmailAddress);
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.HtmlContent =template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
             sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
             sendEmail.TicketNumber = dispute.TicketNumber;
+            sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
         }
         return sendEmail;
     }
@@ -117,13 +118,13 @@ public class Mapper
         if (template is not null)
         {
 
-            sendEmail.From = template.Sender;
-            sendEmail.To.Add(dispute.EmailAddress);
+            sendEmail.FromEmailAddress = template.Sender;
+            sendEmail.ToEmailAddress = dispute.EmailAddress;
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.TicketNumber = dispute.TicketNumber;
-
+            sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
         }
         return sendEmail;
 

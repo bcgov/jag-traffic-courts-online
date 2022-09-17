@@ -1522,8 +1522,8 @@
             "readOnly": true
           },
           "fromEmailAddress": { "type": "string" },
-          "recipientEmailAddress": { "type": "string" },
-          "emailSubject": { "type": "string" },
+          "toEmailAddress": { "type": "string" },
+          "subject": { "type": "string" },
           "htmlContent": {
             "type": "string",
             "nullable": true

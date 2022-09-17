@@ -39,11 +39,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 // TODO: there is future ability to opt-out of e-mails... may need to add check to skip over this, if disputant choses so.
                 var emailMessage = new SendEmail()
                 {
-                    From = template.Sender,
-                    To = { dispute!.EmailAddress! },
+                    FromEmailAddress = template.Sender,
+                    ToEmailAddress = dispute!.EmailAddress! ,
                     Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber),
                     PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber),
                     TicketNumber = dispute.TicketNumber,
+                    SuccessfullySent = EmailHistorySuccessfullySent.N
                 };
 
                 await context.Publish(emailMessage);

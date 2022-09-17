@@ -48,14 +48,14 @@ public class EmailHistory extends Auditable<String> {
 	 */
 	@Column(length = 500)
 	@Schema(nullable = false)
-	private String recipientEmailAddress;
+	private String toEmailAddress;
 	
 	/**
 	 * Subject
 	 */
 	@Column(length = 500)
 	@Schema(nullable = false)
-	private String emailSubject;
+	private String subject;
 		
 	/**
 	 * Body if HTML
