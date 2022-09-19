@@ -7,14 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
   env:
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
@@ -23,7 +23,7 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
 
   appConfig: |  
@@ -43,7 +43,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
   env:
     "ORDS_API_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam/v1"
@@ -51,7 +51,7 @@ oracle-data-api:
 
 staff-api:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -63,7 +63,7 @@ staff-api:
 
 staff-web:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
   keycloakConfig: |
     {
@@ -89,5 +89,5 @@ staff-web:
 
 workflow-service:
   image:
-    tag: "1.44.4"
+    tag: "1.44.6"
     pullPolicy: Always
