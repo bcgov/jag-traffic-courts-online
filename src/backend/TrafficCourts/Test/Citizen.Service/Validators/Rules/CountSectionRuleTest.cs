@@ -13,11 +13,10 @@ namespace TrafficCourts.Test.Citizen.Service.Validators.Rules;
 public class CountSectionRuleTest
 {
     [Theory]
-    [InlineData("24(1)", true)]
+    [InlineData("MVA 100(1) ai", true)]
     [InlineData("23(1)", false)]
-    [InlineData("24(1) ", true)]
-    [InlineData(" 24(1)", true)]
-    [InlineData("24 (1)", true)]
+    [InlineData("MVA 100(1) ai ", true)]
+    [InlineData(" MVA 100(1) ai", true)]
     [InlineData("224(1)", false)]
     [InlineData("", true)] 
     [InlineData("$", true)] // treat as blank (must have pulled this character from the adjacent Ticket Amount field).
@@ -25,8 +24,8 @@ public class CountSectionRuleTest
     {
         // Given
         var lookupService = new Mock<IStatuteLookupService>();
-        var expected = new Statute((decimal) 18886, "MVA", "24(1)", "drive without licence");
-        lookupService.Setup(_ => _.GetBySectionAsync("24(1)")).Returns(Task.FromResult(expected));
+        var expected = new Statute("19588", "MVA", "100", "1", "a", "i", "MVA 100(1) ai", "Fail to stop/police pursuit", "Fail to stop/police pursuit");
+        lookupService.Setup(_ => _.GetBySectionAsync("MVA 100(1) ai")).Returns(Task.FromResult(expected));
 
         Field field = new();
         field.TagName = Count1Section;

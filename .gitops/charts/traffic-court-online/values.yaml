@@ -68,6 +68,9 @@ oracle-data-api:
     "REDIS_PORT": "6379"
     "UNASSIGN_DISPUTES_CRON": "0 0/5 * * * *"
     "UNASSIGN_DISPUTES_ENABLED": "true"
+    "ORDS_API_TIMEOUT_MS": "2000"
+    "ORDS_API_RETRY_COUNT": "3"
+    "ORDS_API_RETRY_DELAY_SEC": "5"
 
 staff-api:
   image:

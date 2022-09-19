@@ -1,3 +1,13 @@
 ﻿namespace TrafficCourts.Common.Models;
 
-public record Statute(decimal Code, string Act, string Section, string Description);
+public record Statute(
+    string Id, 
+    string ActCode, 
+    string SectionText, 
+    string SubsectionText,
+    string ParagraphText, 
+    string SubparagraphText, 
+    string Code, 
+    string ShortDescriptionText, 
+    string DescriptionText
+);

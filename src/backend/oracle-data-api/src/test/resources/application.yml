@@ -12,3 +12,14 @@ spring:
   sql:
     init:
       mode: never
+      
+# ORDS CLIENT properties
+ords:
+  rest-api:
+    url: localhost
+    timeout: 2000
+    retry:
+      # The maximum number of retry attempts to allow
+      count: 3
+      # The Duration of the fixed delays
+      delay: 5
