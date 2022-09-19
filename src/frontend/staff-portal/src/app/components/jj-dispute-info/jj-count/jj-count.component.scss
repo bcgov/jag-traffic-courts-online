@@ -2,11 +2,7 @@
 
 h3 {
   font-weight: bold;
-  color: black !important;
-}
-
-p {
-  line-height: 1.1;
+  color: #1d4a77 !important;
 }
 
 .text {
@@ -15,37 +11,77 @@ p {
   color: black;
 }
 
+.section {
+  background-color: gray !important;
+}
+
 .section-grid-cell {
-  border: 1px solid black;
+  border: none;
   padding-left: 5px;
-  padding-bottom: 5px;
+  padding-bottom: 15px;
+}
+
+.section-jj-grid-cell {
+  border-right-width: 2px;
+  border-right-style: solid;
+  border-right-color: #e4f2ff;
+  padding-left: 5px;
+  padding-bottom: 15px;
 }
 
 .section-grid-header {
   font-size: small;
-  font-weight: bold;
-  margin: 5px 0 0 0 !important;
   color: #707070;
+  font-weight: bold;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.small-note {
+  font-size: small !important;
+  color: #707070;
+  margin: 0 !important;
   padding: 0 !important;
 }
 
 .section-grid-text {
   font-size: small;
-  margin: 0 0 5px 0 !important;
-  color: #003366;
   font-weight: bold;
+  color: #003366 !important;
+  margin: 0 !important;
   padding: 0 !important;
+}
+
+.section-jj-grid-text2 {
+  font-size: small;
+  color: #bcd9f3 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.section-jj-grid-text {
+  font-size: small;
+  color: #003366 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+p {
+  line-height: 1.1;
+}
+
+.count-text {
+  color: #1d4a77 !important;
 }
 
 .disputre {
   width: 100%;
 }
 
-.small-note {
-  font-size: small;
-  color: #707070;
-  margin: 0 !important;
-  padding: 0 !important;
+.button {
+  padding: 10px;
+  background-color: #c2c2c2;
+  color: #fff;
 }
 
 .count-list {
@@ -55,16 +91,10 @@ p {
   background-color: #f3f3f3;
 }
 
-.button {
-  padding: 20px;
-  background-color: #c2c2c2;
-  color: #fff;
-}
-
 .mat-flat-button {
-  min-width: 30% !important;
+  float: right;
   margin-top: 1em;
-  margin-right: 20px;
+  margin-right: 10px;
 
   &.large {
     height: 46px;
@@ -83,6 +113,7 @@ p {
 }
 
 .contact-info {
+  border: 1px black;
   margin-bottom: 12%;
 
   .contact-info {
@@ -109,45 +140,5 @@ p {
   mat-expansion-panel-header {
     padding-left: 0;
     padding-right: 0.5em;
-  }
-}
-
-::ng-deep {
-  .mat-expansion-indicator {
-    display: none !important;
-  }
-
-  .heading-hr {
-    width: 700% !important;
-  }
-
-  .subheader span {
-    font-weight: 600;
-    color: #1d4a77;
-  }
-
-  .select-box-only {
-    margin-top: 1em;
-    margin-bottom: 0 !important;
-
-    .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
-
-      .mat-form-field-flex {
-        padding-top: 0 !important;
-      }
-
-      .mat-select-trigger .mat-select-arrow-wrapper {
-        transform: none !important;
-      }
-    }
-
-    .mat-form-field-underline {
-      bottom: 0;
-    }
-
-    .mat-form-field-subscript-wrapper {
-      display: none;
-    }
   }
 }
