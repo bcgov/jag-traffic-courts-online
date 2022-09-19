@@ -1,5 +1,5 @@
-<div [ngClass]="{'contact-info' : type !== 'ticket'}">
-  <a *ngIf="type !== 'ticket'" (click)="onBackClicked()" style="color: #48afe5">
+<div [ngClass]="{'contact-info' : type === 'ticket'}" style="padding-top: 2rem;">
+  <a *ngIf="type === 'ticket'" (click)="onBackClicked()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
   </a>
   <div *ngIf="retrieving === true">
@@ -56,7 +56,7 @@
           <p class="section-grid-header">Date Received from ICBC</p>
           <p class="section-grid-text">{{ lastUpdatedJJDispute.icbcReceivedDate | date: "MMM dd, yyyy" }}</p>
         </span>
-        <ng-container *ngIf="type === 'ticket'">
+        <ng-container *ngIf="type !== 'ticket'">
           <span class="section-grid-cell">
             <p class="section-grid-header">Court Location Code</p>
             <p class="section-grid-text">20491</p>
@@ -137,7 +137,7 @@
         </span>
       </div>
     </section><br />
-    <div fxLayout="row" *ngIf="type !== 'ticket'" style="padding-bottom: 2rem;">
+    <div fxLayout="row" *ngIf="type === 'ticket'" style="padding-bottom: 2rem;">
       <div fxFlex="40">
         <div fxFlex>
           <h3>Signed By</h3>
@@ -151,14 +151,14 @@
       </div>
     </div>
     <mat-accordion multi [togglePosition]="'before'" class="info-expansion-panel">
-      <mat-expansion-panel *ngIf="type !== 'ticket'" [expanded]="true" id="uploaded-documents" hideToggle>
+      <mat-expansion-panel *ngIf="type === 'ticket'" [expanded]="true" id="uploaded-documents" hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
             <span style="color: black;"><b>Uploaded Documents </b></span>
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
-      <mat-expansion-panel *ngIf="type !== 'ticket'" [expanded]="true" id="file-history" hideToggle>
+      <mat-expansion-panel *ngIf="type === 'ticket'" [expanded]="true" id="file-history" hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
             <span style="color: black;"><b>File History </b></span>
@@ -186,16 +186,17 @@
       <ng-container subHeader>
         <span>
           <h3>Add Remarks<br />
-            <span *ngIf="type === 'ticket'" class="small-note">
+            <span *ngIf="type !== 'ticket'" class="small-note">
               <i><span style="color:red;">*</span> This is for internal use only</i>
             </span>
           </h3>
         </span>
       </ng-container>
-      <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6" style="background: #fffee6;"></textarea>
+      <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6"
+        style="background: #fffee6; width: 100%"></textarea>
     </section>
     <div fxLayout="row">
-      <div *ngIf="type !== 'ticket'" fxFlex="40" fxLayout="row">
+      <div *ngIf="type === 'ticket'" fxFlex="40" fxLayout="row">
         <div style="margin-right: 1rem;">
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
@@ -213,19 +214,17 @@
       </div>
       <div fxFlex>
       </div>
-      <button fxFlex="30" *ngIf="type === 'ticket'" class="large" mat-flat-button type="button" color="primary"
-        (click)="onSave()"
-        [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+      <button fxFlex="30" *ngIf="type !== 'ticket'" class="large" mat-flat-button type="button" color="primary"
+        style="margin-right: 20px;" (click)="onSave()">
         Save & Finish Later
       </button>
-      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()"
-        [disabled]="lastUpdatedJJDispute.status != 'NEW' && lastUpdatedJJDispute.status != 'IN_PROGRESS'">
+      <button fxFlex="20" class="large" mat-flat-button type="button" color="primary" (click)="onSubmit()">
         Submit
       </button>
     </div><br /><br />
   </div>
   <br />
-  <div *ngIf="type !== 'ticket'" fxLayout="row">
+  <div *ngIf="type === 'ticket'" fxLayout="row">
 
   </div>
 </div>

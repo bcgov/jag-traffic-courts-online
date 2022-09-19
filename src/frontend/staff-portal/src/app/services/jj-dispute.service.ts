@@ -100,7 +100,7 @@ export class JJDisputeService {
     if (remarks) {
       this.addRemarks(input, remarks);
     }
-    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, checkVTC, jjDispute)
+    return this.jjApiService.apiJjTicketNumberPut(ticketNumber, checkVTC, input)
       .pipe(
         map((response: any) => {
           this.logger.info('jj-DisputeService::putJJDispute', response)
