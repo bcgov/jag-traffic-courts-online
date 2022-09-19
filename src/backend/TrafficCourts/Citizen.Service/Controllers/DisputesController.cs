@@ -74,8 +74,8 @@ public class DisputesController : ControllerBase
     public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
         string host = HttpContext.Request.Host.Value;
-        EmailSendValidation emailSendValidation = new(uuid, host);
-        await _bus.Publish(emailSendValidation, cancellationToken);
+        EmailVerificationSend emailVerificationSend = new(uuid, host);
+        await _bus.Publish(emailVerificationSend, cancellationToken);
         return Accepted();
     }
 
@@ -94,8 +94,8 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ValidateEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
-        EmailReceivedValidation emailReceiveValidation = new(uuid);
-        await _bus.Publish(emailReceiveValidation, cancellationToken);
+        EmailVerificationReceived emailVerificationReceived = new(uuid);
+        await _bus.Publish(emailVerificationReceived, cancellationToken);
         return Accepted();
     }
 }

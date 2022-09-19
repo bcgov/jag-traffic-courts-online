@@ -61,9 +61,9 @@ public class Mapper
         return disputeRejected;
     }
 
-    public static EmailSendValidation ToEmailSendValidation(Guid uuid, string host)
+    public static EmailVerificationSend ToEmailSendValidation(Guid uuid, string host)
     {
-        EmailSendValidation emailSendValidation = new(uuid, host);
+        EmailVerificationSend emailSendValidation = new(uuid, host);
         return emailSendValidation;
     }
 
