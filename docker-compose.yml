@@ -126,6 +126,8 @@ services:
       RETRYCONFIGURATION__RETRYINTERVAL: ${RETRYCONFIGURATION__RETRYINTERVAL:-2}
       RETRYCONFIGURATION__CONCURRENCYLIMIT: ${RETRYCONFIGURATION__CONCURRENCYLIMIT:-2}
       ORACLEDATAAPI__BASEURL: ${ORACLEDATAAPI__BASEURL:-http://oracle-data-api:8080/}
+      SMTPCONFIGURATION__HOST: ${SMTPCONFIGURATION__HOST:-smtp-server}
+      SMTPCONFIGURATION__PORT: ${SMTPCONFIGURATION__PORT:-5025}
     ports:
       - "5020:8080"
     restart: always
@@ -264,6 +266,19 @@ services:
       - redis
     ports:
       - 8082:8081
+      
+  #############################################################################################
+  ###                                 Fake Email server                                     ###
+  #############################################################################################
+  smtp-server:
+    container_name: smtp-server
+    image: gessnerfl/fake-smtp-server
+    environment:
+      - "SERVER-PORT=5080"
+      - "SMTP_PORT=5025"
+    ports:
+      - "5080:5080"
+      - "5025:5025"
 
 volumes:
   data-rabbit:
