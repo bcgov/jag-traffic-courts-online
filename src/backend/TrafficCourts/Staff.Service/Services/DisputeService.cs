@@ -241,7 +241,7 @@ public class DisputeService : IDisputeService
         Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
-        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailSendValidation(new Guid(dispute.EmailVerificationToken), host);
+        EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.EmailVerificationToken), host);
         await _bus.Publish(emailVerificationSentEvent, cancellationToken);
 
         SendEmail emailVerificationEmail = Mapper.ToResendEmailVerification(dispute, host);

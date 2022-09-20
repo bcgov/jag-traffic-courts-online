@@ -61,10 +61,10 @@ public class Mapper
         return disputeRejected;
     }
 
-    public static EmailVerificationSend ToEmailSendValidation(Guid uuid, string host)
+    public static EmailVerificationSend ToEmailVerification(Guid uuid, string host)
     {
-        EmailVerificationSend emailSendValidation = new(uuid, host);
-        return emailSendValidation;
+        EmailVerificationSend emailVerificationSend = new(uuid, host);
+        return emailVerificationSend;
     }
 
     public static DisputeCancelled ToDisputeCancelled(Dispute dispute)

@@ -136,7 +136,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="uuid">The emailVerificationToken of the Dispute to update.</param>
         /// <returns>Ok. Email verified.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task ValidateDisputeEmailAsync(string uuid);
+        System.Threading.Tasks.Task VerifyDisputeEmailAsync(string uuid);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -145,7 +145,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="uuid">The emailVerificationToken of the Dispute to update.</param>
         /// <returns>Ok. Email verified.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task ValidateDisputeEmailAsync(string uuid, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task VerifyDisputeEmailAsync(string uuid, System.Threading.CancellationToken cancellationToken);
 
         /// <param name="ticketNumber">Ticket number to retrieve related emails.</param>
         /// <returns>OK</returns>
@@ -1269,9 +1269,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="uuid">The emailVerificationToken of the Dispute to update.</param>
         /// <returns>Ok. Email verified.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task ValidateDisputeEmailAsync(string uuid)
+        public virtual System.Threading.Tasks.Task VerifyDisputeEmailAsync(string uuid)
         {
-            return ValidateDisputeEmailAsync(uuid, System.Threading.CancellationToken.None);
+            return VerifyDisputeEmailAsync(uuid, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -1281,13 +1281,13 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <param name="uuid">The emailVerificationToken of the Dispute to update.</param>
         /// <returns>Ok. Email verified.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task ValidateDisputeEmailAsync(string uuid, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task VerifyDisputeEmailAsync(string uuid, System.Threading.CancellationToken cancellationToken)
         {
             if (uuid == null)
                 throw new System.ArgumentNullException("uuid");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1.0/dispute/email/{uuid}/validate");
+            urlBuilder_.Append("api/v1.0/dispute/email/{uuid}/verify");
             urlBuilder_.Replace("{uuid}", System.Uri.EscapeDataString(ConvertToString(uuid, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
