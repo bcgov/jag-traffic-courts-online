@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<log4j2.version>2.17.1</log4j2.version>
-		<release.train.version>2021.0.3</release.train.version>
+		<release.train.version>2021.0.4</release.train.version>
   		<spring-cloud-sleuth-otel.version>1.1.0-M7</spring-cloud-sleuth-otel.version>
   		<org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
   		<org.projectlombok.version>1.18.24</org.projectlombok.version>
