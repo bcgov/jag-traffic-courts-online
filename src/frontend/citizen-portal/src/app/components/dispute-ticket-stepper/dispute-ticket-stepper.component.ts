@@ -58,6 +58,7 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
   // Disputant
   public showManualButton: boolean = true;
   public showAddressFields: boolean = true; // temporary preset for testing
+  public optOut: boolean = false;
 
   // Count
   public countIndexes: number[];
@@ -335,6 +336,15 @@ export class DisputeTicketStepperComponent implements OnInit, AfterViewInit {
         cancelHide: true
       };
       this.dialog.open(ConfirmDialogComponent, { data });
+    }
+  }
+
+  onOptOut() {
+    if (this.optOut) {
+      this.form.get("email_address").setValue(null);
+      this.form.get("email_address").disable();
+    } else {
+      this.form.get("email_address").enable();
     }
   }
 

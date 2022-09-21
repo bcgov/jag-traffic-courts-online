@@ -1,5 +1,5 @@
 <div [ngClass]="{'contact-info' : type === 'ticket'}" style="padding-top: 2rem;">
-  <a *ngIf="type === 'ticket'" (click)="onBackClicked()" style="color: #48afe5">
+  <a (click)="onBackClicked()" style="color: #48afe5">
     <mat-icon inline="true">arrow_back</mat-icon> Back<br /><br />
   </a>
   <div *ngIf="retrieving === true">

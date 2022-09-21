@@ -73,7 +73,8 @@
                           <mat-select formControlName="country" (selectionChange)="onCountryChange($event.value)">
                             <mat-option value="Canada">Canada</mat-option>
                             <mat-option value="United States">United States</mat-option>
-                            <mat-option *ngFor="let country of config.countries" [value]="country.name">{{ country.name }}
+                            <mat-option *ngFor="let country of config.countries" [value]="country.name">{{ country.name
+                              }}
                             </mat-option>
                           </mat-select>
                           <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -93,7 +94,8 @@
                         <mat-form-field class="w-100">
                           <mat-label *ngIf="form.get('country').value==='Canada'">Province</mat-label>
                           <mat-label *ngIf="form.get('country').value==='United States'">State</mat-label>
-                          <mat-select formControlName="address_province" *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
+                          <mat-select formControlName="address_province"
+                            *ngIf="form.get('country').value === 'Canada' || form.get('country').value === 'United States'">
                             <div *ngIf="form.get('country').value === 'Canada'">
                               <mat-option value="British Columbia">British Columbia</mat-option>
                               <mat-option *ngFor="let province of provinces" [value]="province.name">{{ province.name }}
@@ -148,7 +150,8 @@
                         <mat-datepicker #picker [touchUi]="isMobile" startView="multi-year"></mat-datepicker>
                         <mat-error *ngIf="form.get('disputant_birthdate')?.hasError('required')">{{"error.required" |
                           translate}}</mat-error>
-                        <mat-error *ngIf="form.get('disputant_birthdate').hasError('matDatepickerMax')">No future birthdate
+                        <mat-error *ngIf="form.get('disputant_birthdate').hasError('matDatepickerMax')">No future
+                          birthdate
                         </mat-error>
                       </mat-form-field>
                     </div>
@@ -197,7 +200,8 @@
                     <div class="col-md-6">
                       <mat-form-field class="w-100">
                         <mat-label>Driver's licence number</mat-label>
-                        <input matInput formControlName="drivers_licence_number" (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
+                        <input matInput formControlName="drivers_licence_number"
+                          (keypress)="($event.charCode >= 48 && $event.charCode < 58)" minlength="7" maxlength="9"
                           *ngIf="form.get('drivers_licence_province').value === 'BC'" />
                         <input matInput formControlName="drivers_licence_number" maxlength="20"
                           *ngIf="form.get('drivers_licence_province').value !== 'BC'" />
@@ -209,6 +213,16 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
+                  </div>
+                  <div class="row">
+                    <mat-checkbox color="primary" [(ngModel)]="optOut" [ngModelOptions]="{standalone: true}"
+                      (change)="onOptOut()">
+                      I prefer to be contacted by regular mail.
+                    </mat-checkbox>
+                    <mat-error *ngIf="optOut">
+                      You have chosen to not be contacted by email about this dispute. It is recommended that you use
+                      email for online ticket disputes so that you can receive more information about your dispute.
+                    </mat-error>
                   </div>
                 </section>
               </form>
@@ -297,20 +311,26 @@
                     </div>
                   </div>
                   <div class="row mt-4">
-                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
+                    <div
+                      [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.N ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
-                      <mat-checkbox [checked]="countForm.get('request_reduction').value === RequestReduction.Y ? true:false"
-                      (change)="countForm.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)" color="primary" class="w-100"> I would like
+                      <mat-checkbox
+                        [checked]="countForm.get('request_reduction').value === RequestReduction.Y ? true:false"
+                        (change)="countForm.get('request_reduction').setValue($event.checked? RequestReduction.Y: RequestReduction.N)"
+                        color="primary" class="w-100"> I would like
                         to request a fine reduction on this count.</mat-checkbox>
                       <p> and/or</p>
-                      <mat-checkbox [checked]="countForm.get('request_time_to_pay').value === RequestTimeToPay.Y ? true:false"
-                      (change)="countForm.get('request_time_to_pay').setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)" color="primary" class="w-100"> I would
+                      <mat-checkbox
+                        [checked]="countForm.get('request_time_to_pay').value === RequestTimeToPay.Y ? true:false"
+                        (change)="countForm.get('request_time_to_pay').setValue($event.checked? RequestTimeToPay.Y: RequestTimeToPay.N)"
+                        color="primary" class="w-100"> I would
                         like to request time to pay on this count.</mat-checkbox>
                     </div>
 
-                    <div [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
+                    <div
+                      [ngStyle]="{ 'display': countForm.value.request_court_appearance === RequestCourtAppearance.Y ? '' : 'none' }">
                       <label class="w-100">
                         Please provide additional selections below:
                       </label>
@@ -341,7 +361,8 @@
                 </section>
               </form>
 
-              <div class="col mt-4" *ngIf="countForm.value.request_reduction === RequestReduction.Y || countForm.value.request_time_to_pay === RequestTimeToPay.Y">
+              <div class="col mt-4"
+                *ngIf="countForm.value.request_reduction === RequestReduction.Y || countForm.value.request_time_to_pay === RequestTimeToPay.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span>
@@ -356,7 +377,8 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.N">
+              <div class="col mt-4 alert-info-text-color"
+                *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.N">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -369,7 +391,8 @@
                   </ng-container>
                 </app-alert>
               </div>
-              <div class="col mt-4 alert-info-text-color" *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y">
+              <div class="col mt-4 alert-info-text-color"
+                *ngIf="countForm.value.request_court_appearance === RequestCourtAppearance.Y">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <span class="text-dark">
@@ -383,7 +406,8 @@
                 </app-alert>
               </div>
 
-              <div class="col mt-4" *ngIf="(countForm.value.request_court_appearance === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
+              <div class="col mt-4"
+                *ngIf="(countForm.value.request_court_appearance === RequestCourtAppearance.Y) && ticketType === ticketTypes.CAMERA_TICKET">
                 <app-alert type="warning" icon="info">
                   <ng-container #alertContent class="alert-content">
                     <strong>If you dispute the ticket, an intersection safety camera officer will always appear in court
@@ -464,10 +488,12 @@
                 </h3>
                 <div class="row">
                   <div class="col">
-                    <mat-checkbox class="me-4 mb-2" color="primary" [checked]="additionalForm.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
+                    <mat-checkbox class="me-4 mb-2" color="primary"
+                      [checked]="additionalForm.get('represented_by_lawyer').value === RepresentedByLawyer.Y ? true:false"
                       (change)="additionalForm.get('represented_by_lawyer').setValue($event.checked? RepresentedByLawyer.Y : RepresentedByLawyer.N); onChangeRepresentedByLawyer($event)">
                       I intend to be represented by a lawyer in court.
-                      <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y" style="font-weight: lighter;">
+                      <span *ngIf="additionalForm.get('represented_by_lawyer')?.value === RepresentedByLawyer.Y"
+                        style="font-weight: lighter;">
                         Enter lawyer contact details below.
                       </span>
                     </mat-checkbox>
