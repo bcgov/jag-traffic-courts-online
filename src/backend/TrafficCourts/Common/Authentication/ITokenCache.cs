@@ -14,7 +14,7 @@ public interface ITokenCache<in TKey, TToken>
     /// </summary>
     /// <param name="key">The key of the token.</param>
     /// <returns>The token or <c>null</c> if the token does not exist or is expired.</returns>
-    TToken GetToken(TKey key);
+    TToken? GetToken(TKey key);
 
     /// <summary>
     /// Saves the security token to the cache. The security token will be cached until it expires.

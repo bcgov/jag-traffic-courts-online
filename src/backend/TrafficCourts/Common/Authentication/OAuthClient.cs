@@ -14,14 +14,19 @@ public class OAuthClient : IOAuthClient
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<Token> GetTokenAsync(OAuthOptions options, CancellationToken cancellationToken)
+    public async Task<Token?> GetTokenAsync(OAuthOptions options, CancellationToken cancellationToken)
     {
+        if (options is null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
         var data = new Dictionary<string, string>
                 {
-                    {"client_id", options.ClientId},
-                    {"client_secret", options.ClientSecret},
+                    {"client_id", options.ClientId!},
+                    {"client_secret", options.ClientSecret!},
                     {"scope", "openid"},
                     {"grant_type", "client_credentials"}
                 };
@@ -55,6 +60,11 @@ public class OAuthClient : IOAuthClient
             .ReadAsStreamAsync(cancellationToken);
 
         var token = await JsonSerializer.DeserializeAsync<Token>(stream, cancellationToken: cancellationToken);
+        if (token is null)
+        {
+            _logger.LogError("Error deserializing OAuth token");
+        }
+
         return token;
     }
 }

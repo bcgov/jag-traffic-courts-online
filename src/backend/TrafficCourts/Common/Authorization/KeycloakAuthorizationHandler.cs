@@ -195,10 +195,10 @@ internal class DecisionResponse
 internal class DecisionResponseError
 {
     [JsonPropertyName("error")]
-    public string Code { get; set; }
+    public string Code { get; set; } = String.Empty;
 
     [JsonPropertyName("error_description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = String.Empty;
 }
 
 [ExcludeFromCodeCoverage]

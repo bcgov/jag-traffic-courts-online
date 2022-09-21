@@ -37,6 +37,16 @@ namespace TrafficCourts.Common.Authorization
         /// <param name="audience">The audience.</param>
         public KeycloakRolesClaimsTransformation(string roleClaimType, string audience)
         {
+            if (string.IsNullOrEmpty(roleClaimType))
+            {
+                throw new ArgumentException($"'{nameof(roleClaimType)}' cannot be null or empty.", nameof(roleClaimType));
+            }
+
+            if (string.IsNullOrEmpty(audience))
+            {
+                throw new ArgumentException($"'{nameof(audience)}' cannot be null or empty.", nameof(audience));
+            }
+
             _roleClaimType = roleClaimType;
             _audience = audience;
         }

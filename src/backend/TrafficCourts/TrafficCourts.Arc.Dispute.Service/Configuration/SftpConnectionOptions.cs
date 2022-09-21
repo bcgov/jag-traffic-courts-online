@@ -40,7 +40,7 @@ namespace TrafficCourts.Arc.Dispute.Service.Configuration
         /// </summary>
         public string? SshPrivateKeyPath { get; set; }
 
-        public string SshPrivateKey { get; set; }
+        public string? SshPrivateKey { get; set; }
 
         public void Validate()
         {
