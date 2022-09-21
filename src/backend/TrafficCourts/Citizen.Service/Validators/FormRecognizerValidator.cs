@@ -18,7 +18,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
         _lookupService = lookupService;
     }
 
-    public void ValidateViolationTicket(OcrViolationTicket violationTicket)
+    public async Task ValidateViolationTicketAsync(OcrViolationTicket violationTicket)
     {
         ApplyGlobalRules(violationTicket);
         // abort validation if this is not a valid Violation Ticket.
@@ -27,7 +27,7 @@ public class FormRecognizerValidator : IFormRecognizerValidator
             return;
         }
 
-        ApplyFieldRules(violationTicket);
+        await ApplyFieldRules(violationTicket);
 
         // TCVP-932 Reject ticket if certain fields have a low confidence value (this is determined after all the fields have been validated and their datatype confirmed)
         LowConfidenceGlobalRule.Run(violationTicket);
