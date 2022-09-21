@@ -28,7 +28,7 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
             using (var csvFile = new StreamReader(_fileName))
             {
                 csvFile.ReadLine(); // Headings Row. Comment out if not used
-                string line;
+                string? line;
                 while ((line = csvFile.ReadLine()) != null)
                 {
                     var row = line.Split(',');

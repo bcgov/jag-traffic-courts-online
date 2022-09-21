@@ -27,9 +27,10 @@ namespace TrafficCourts.Arc.Dispute.Client.Test
             IArcDisputeClient actual = serviceProvider.GetRequiredService<IArcDisputeClient>();
 
             // make sure the client has the correct base address
-            HttpClient httpClient = GetHttpClientFrom(actual);
+            HttpClient? httpClient = GetHttpClientFrom(actual);
 
-            Assert.Equal(clientConfiguration.Uri, httpClient.BaseAddress);
+            Assert.NotNull(httpClient);
+            Assert.Equal(clientConfiguration.Uri, httpClient!.BaseAddress);
         }
 
         private IConfiguration BuildConfiguration(string section, Configuration configuration)
@@ -37,7 +38,7 @@ namespace TrafficCourts.Arc.Dispute.Client.Test
             var items = new Dictionary<string, string>
             {
                 { $"{section}:{nameof(Configuration.Scheme)}", configuration.Scheme },
-                { $"{section}:{nameof(Configuration.Host)}", configuration.Host },
+                { $"{section}:{nameof(Configuration.Host)}", configuration.Host! },
                 { $"{section}:{nameof(Configuration.Port)}", configuration.Port.ToString() }
             };
 
@@ -54,14 +55,14 @@ namespace TrafficCourts.Arc.Dispute.Client.Test
             return configuration;
         }
 
-        private HttpClient GetHttpClientFrom(IArcDisputeClient client)
+        private HttpClient? GetHttpClientFrom(IArcDisputeClient client)
         {
             FieldInfo? field = typeof(ArcDisputeClient)
                 .GetField("_httpClient", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Assert.NotNull(field);
 
-            HttpClient httpClient = field.GetValue(client) as HttpClient;
+            HttpClient? httpClient = field!.GetValue(client) as HttpClient;
             return httpClient;
         }
     }

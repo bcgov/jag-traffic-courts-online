@@ -10,7 +10,9 @@ namespace TrafficCourts.Common.Test.Authorization
     {
         private readonly string _constructorParameterName;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public KeycloakAuthorizationRequirementTest()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             // grab the contructor parameter name
             var constructor = typeof(KeycloakAuthorizationRequirement).GetConstructor(new[] { typeof(string) });

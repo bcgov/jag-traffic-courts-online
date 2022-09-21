@@ -56,7 +56,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             Assert.NotNull(actual);
 
-            Assert.Equal(filename, actual.TicketId);
+            Assert.Equal(filename, actual!.TicketId);
             Assert.Equal(testData.TicketNumber, actual.TicketNumber);
         }
 
@@ -108,7 +108,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
             var actual = await redisCacheService.GetFileRecordAsync(filename);
 
             Assert.NotNull(actual);
-            Assert.True(actual.CanRead);
+            Assert.True(actual!.CanRead);
             byte[] data = actual.ToArray();
 
             Assert.Equal(expectedStream, data);
@@ -158,7 +158,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
 
             RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
 
-            var actualFilename = await redisCacheService.SetFileRecordAsync(null, fileStream);
+            var actualFilename = await redisCacheService.SetFileRecordAsync(null!, fileStream);
 
             Assert.Equal(string.Empty,actualFilename);
         }
@@ -185,7 +185,7 @@ namespace TrafficCourts.Test.Citizen.Service.Services
             RedisCacheService redisCacheService = new RedisCacheService(_redisMock.Object, _memoryStreamManager, _loggerMock.Object);
             _redisDbAsyncMock.Setup(_ => _.KeyDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>())).Returns(Task.FromResult(true));
 
-            var result = await redisCacheService.DeleteRecordAsync(null);
+            var result = await redisCacheService.DeleteRecordAsync(null!);
             Assert.False(result);
         }
     }

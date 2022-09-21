@@ -26,7 +26,7 @@ public class GetMimeTypeTest
         FileMimeType? fileMimeType = stream.GetMimeType();
 
         Assert.NotNull(fileMimeType);
-        Assert.Equal(extension, fileMimeType.Extension);
+        Assert.Equal(extension, fileMimeType!.Extension);
         Assert.Equal(mimeType, fileMimeType.MimeType);
         Assert.Equal(streamPosition, stream.Position); // ensure file position is reset
     }
