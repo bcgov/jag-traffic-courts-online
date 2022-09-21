@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -101,5 +98,29 @@ public class JJDisputeController {
 			}	
 		}
 		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, principal), HttpStatus.OK);
+	}
+	
+	/**
+	 * PUT endpoint that updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.
+	 *
+	 * @param ID(s) (ticket number) of JJ Dispute(s) to be updated/assigned
+	 * @param IDIR username of the JJ that JJ Dispute(s) will be assigned to, if specified. Otherwise JJ Disputes will be unassigned
+	 */
+	@Operation(summary = "Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok"),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record(s) not found. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/assign")
+	public ResponseEntity<Void> assignJJDisputesToJJ(
+			@RequestParam("ticketNumbers") List<String> ticketNumberList,
+			@RequestParam(required = false, name = "jjUsername") String jjUsername) {
+		logger.debug("PUT /dispute/assign called");
+
+		jjDisputeService.assignJJDisputesToJJ(ticketNumberList, jjUsername);
+		
+		return ResponseEntity.ok().build();
 	}
 }

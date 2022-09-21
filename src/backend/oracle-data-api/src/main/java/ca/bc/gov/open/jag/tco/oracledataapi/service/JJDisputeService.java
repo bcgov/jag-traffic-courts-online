@@ -3,10 +3,12 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -207,5 +209,40 @@ public class JJDisputeService {
 		entityManager.refresh(updatedJJDispute);
 
 		return updatedJJDispute;
+	}
+	
+	/**
+	 * Assigns a one or more {@link JJDispute} to the IDIR username of the JJ, or unassigns them if username not specified
+	 *
+	 * @param List of ticketNumber
+	 * @param IDIR username of the JJ
+	 */
+	public void assignJJDisputesToJJ(List<String> ids, String username) {
+		if (ids == null || ids.isEmpty()) {
+			logger.error("No JJDispute ids (ticket numbers) passed to assign to a username - bad method call.");
+			throw new ConstraintViolationException("Cannot set empty list of ticket numbers to username - bad method call.", null);
+		}
+		
+		for (String id : ids) {
+			// Find the jj-dispute to be assigned to the username
+			JJDispute jjDispute = jjDisputeRepository.findById(id).orElseThrow();
+			if (jjDispute == null) {
+				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id + " - element not found.");
+				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id);
+			}
+			
+			if (!StringUtils.isBlank(username)) {
+				
+				jjDispute.setJjAssignedTo(username);
+				jjDisputeRepository.save(jjDispute);
+				
+				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", id, username);
+			} else {
+				jjDispute.setJjAssignedTo(null);
+				jjDisputeRepository.save(jjDispute);
+				
+				logger.debug("Unassigned JJDispute with ticket number {} ", id);
+			}
+		}
 	}
 }
