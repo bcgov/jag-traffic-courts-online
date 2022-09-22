@@ -36,12 +36,12 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -52,6 +52,46 @@
             "description": "Ok",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
           }
+        }
+      }
+    },
+    "/api/v1.0/jj/dispute/assign": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.",
+        "operationId": "assignJJDisputesToJJ",
+        "parameters": [
+          {
+            "name": "ticketNumbers",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          {
+            "name": "jjUsername",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "JJDispute record(s) not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "Ok" },
+          "500": { "description": "Internal server error occured." }
         }
       }
     },
@@ -71,12 +111,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -109,12 +149,12 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -146,12 +186,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -179,12 +219,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -219,12 +259,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -271,12 +311,12 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -311,12 +351,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Dispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -349,12 +389,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -380,12 +420,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -422,12 +462,12 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "An invalid email history record provided. Insert failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -457,12 +497,12 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -497,12 +537,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -543,12 +583,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -591,12 +631,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -624,12 +664,12 @@
         "description": "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour.",
         "operationId": "unassignDisputes",
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -655,12 +695,12 @@
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Dispute could not be found.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -685,12 +725,12 @@
         "description": "The codetables in redis are cached copies of data pulled from Oracle to ensure TCO remains stable. This data is periodically refreshed, but can be forced by hitting this endpoint.",
         "operationId": "codeTableRefresh",
         "responses": {
-          "400": {
-            "description": "Bad Request",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "404": {
             "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {

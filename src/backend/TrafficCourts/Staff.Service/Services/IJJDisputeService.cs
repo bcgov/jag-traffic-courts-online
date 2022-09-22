@@ -27,4 +27,12 @@ public interface IJJDisputeService
     /// <returns>The submitted/updated JJ Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken);
+
+    /// <summary>Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.</summary>
+    /// <param name="ticketNumbers">List of Unique identifiers for JJ Dispute records to be assigend/unassigned.</param>
+    /// <param name="username">IDIR username of the JJ that JJ Dispute(s) will be assigned to, if specified. Otherwise JJ Disputes will be unassigned.</param>    
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, CancellationToken cancellationToken);
 }

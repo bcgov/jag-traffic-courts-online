@@ -37,4 +37,9 @@ public class JJDisputeService : IJJDisputeService
 
         return dispute;
     }
+
+    public async Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, CancellationToken cancellationToken)
+    {
+        await GetOracleDataApi().AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
+    }
 }
