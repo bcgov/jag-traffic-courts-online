@@ -10,7 +10,7 @@ import { ConfirmDialogComponent } from "@shared/dialogs/confirm-dialog/confirm-d
 import { DialogOptions } from "@shared/dialogs/dialog-options.model";
 import { DisputeCount, DisputesService, NoticeOfDispute, DisputeCountPleaCode, DisputeCountRequestCourtAppearance, DisputeRepresentedByLawyer, DisputeCountRequestTimeToPay, DisputeCountRequestReduction } from "app/api";
 import { AppRoutes } from "app/app.routes";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, map, Observable } from "rxjs";
 import { ViolationTicketService } from "./violation-ticket.service";
 
 @Injectable({
@@ -125,24 +125,38 @@ export class NoticeOfDisputeService {
           input.dispute_counts = input.dispute_counts.filter(i => i.plea_cd);
           return this.disputesService.apiDisputesCreatePost(input).subscribe(res => {
             this._noticeOfDispute.next(input);
-            this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
-              queryParams: {
-                ticketNumber: input.ticket_number,
-                time: this.datePipe.transform(input.issued_date, "HH:mm"),
-              },
-            });
+            if (input.email_address) {
+              this.router.navigate([AppRoutes.disputePath(AppRoutes.EMAILVERIFICATIONREQUIRED)], {
+                queryParams: {
+                  email: input.email_address,
+                  token: res.emailVerificationToken
+                },
+              });
+            }
+            else {
+              this.router.navigate([AppRoutes.disputePath(AppRoutes.SUBMIT_SUCCESS)], {
+                queryParams: {
+                  ticketNumber: input.ticket_number,
+                  time: this.datePipe.transform(input.issued_date, "HH:mm"),
+                },
+              });
+            }
           })
         }
       });
   }
 
-  public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
+  public resendVerificationEmail(uuid: string): Observable<any> {
+    return this.disputesService.apiDisputesEmailUuidResendPut(uuid).pipe(map(res => res));
+  }
+
+  public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {
     let noticeOfDispute = noticeOfDisputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3
     if (noticeOfDisputeExtended.address) {
       let addressLines = noticeOfDisputeExtended.address.split(",");
-      if (addressLines.length > 0)noticeOfDispute.address_line1 = addressLines[0];
+      if (addressLines.length > 0) noticeOfDispute.address_line1 = addressLines[0];
       if (addressLines.length > 1) noticeOfDispute.address_line2 = addressLines[1];
       if (addressLines.length > 2) noticeOfDispute.address_line3 = addressLines[2];
     }
@@ -150,13 +164,13 @@ export class NoticeOfDisputeService {
     return noticeOfDispute;
   }
 
-  public splitGivenNames(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
+  public splitGivenNames(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {
     let noticeOfDispute = noticeOfDisputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3
     if (noticeOfDisputeExtended.disputant_given_names) {
       let givenNames = noticeOfDisputeExtended.disputant_given_names.split(" ");
-      if (givenNames.length > 0)noticeOfDispute.disputant_given_name1 = givenNames[0];
+      if (givenNames.length > 0) noticeOfDispute.disputant_given_name1 = givenNames[0];
       if (givenNames.length > 1) noticeOfDispute.disputant_given_name2 = givenNames[1];
       if (givenNames.length > 2) noticeOfDispute.disputant_given_name3 = givenNames[2];
     }
@@ -164,7 +178,7 @@ export class NoticeOfDisputeService {
     return noticeOfDispute;
   }
 
-  public splitLawyerNames(noticeOfDisputeExtended: NoticeOfDisputeExtended):NoticeOfDisputeExtended {
+  public splitLawyerNames(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {
     let noticeOfDispute = noticeOfDisputeExtended;
 
     // split up where spaces occur and stuff in given names 1,2,3
@@ -197,6 +211,7 @@ export class NoticeOfDisputeService {
     return <NoticeOfDispute>{ ...this.violationTicketService.ticket, ...formValue };
   }
 }
+
 export interface NoticeOfDisputeExtended extends NoticeOfDispute {
   disputant_given_names?: string;
   lawyer_full_name?: string;
