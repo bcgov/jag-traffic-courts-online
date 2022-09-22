@@ -40,7 +40,7 @@ public class EmailVerificationReceivedConsumer : IConsumer<EmailVerificationRece
             string token = message.EmailVerificationToken.ToString();
             Dispute dispute = await _oracleDataApiService.GetDisputeByEmailVerificationTokenAsync(token);
 
-            await _oracleDataApiService.ValidateDisputeEmailAsync(token);
+            await _oracleDataApiService.VerifyDisputeEmailAsync(token);
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             SendEmail email = _emailSenderService.ToConfirmationEmail(dispute);

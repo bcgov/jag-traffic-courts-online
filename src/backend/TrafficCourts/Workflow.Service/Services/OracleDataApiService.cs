@@ -33,8 +33,8 @@ public class OracleDataApiService : IOracleDataApiService
         return await _oracleDataApiClient.GetDisputeByEmailVerificationTokenAsync(emailVerificationToken);
     }
 
-    public async Task ValidateDisputeEmailAsync(string emailVerificationToken)
+    public async Task VerifyDisputeEmailAsync(string emailVerificationToken)
     {
-        await _oracleDataApiClient.ValidateDisputeEmailAsync(emailVerificationToken);
+        await _oracleDataApiClient.VerifyDisputeEmailAsync(emailVerificationToken);
     }
 }

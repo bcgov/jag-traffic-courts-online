@@ -334,11 +334,11 @@
         }
       }
     },
-    "/api/v1.0/dispute/email/{uuid}/validate": {
+    "/api/v1.0/dispute/email/{uuid}/verify": {
       "put": {
         "tags": [ "dispute-controller" ],
         "summary": "Updates the emailVerification flag of a particular Dispute to true.",
-        "operationId": "validateDisputeEmail",
+        "operationId": "verifyDisputeEmail",
         "parameters": [
           {
             "name": "uuid",
