@@ -11,5 +11,5 @@ public interface ITokenService
     /// <param name="configuration">The configuration.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    Task<Token> GetTokenAsync(OAuthOptions configuration, CancellationToken cancellationToken = default(CancellationToken));
+    Task<Token?> GetTokenAsync(OAuthOptions configuration, CancellationToken cancellationToken = default(CancellationToken));
 }

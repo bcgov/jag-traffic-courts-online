@@ -85,7 +85,9 @@ namespace TrafficCourts.Test.Arc.Dispute.Service.Mappings
         /// <param name="description"></param>
         [Theory]
         [CsvData(@"../../../Arc.Dispute.Service/Data/statutes-test.csv")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void can_parse_LegalSection(int code, string act, string section, string description)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             bool actual = LegalSection.TryParse(section, out LegalSection? legalSection);
 

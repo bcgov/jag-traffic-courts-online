@@ -347,7 +347,6 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// An endpoint for resending an email to a Disputant.
     /// </summary>
     /// <param name="disputeId"></param>
-    /// <param name="host"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>
     /// <response code="200">OK.</response>

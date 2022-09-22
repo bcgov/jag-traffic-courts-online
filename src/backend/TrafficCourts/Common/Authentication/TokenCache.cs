@@ -37,7 +37,7 @@ public abstract class TokenCache<TKey, TToken> : ITokenCache<TKey, TToken>
         _instancePrefix = NewInstancePrefix();
     }
 
-    public TToken GetToken(TKey key)
+    public TToken? GetToken(TKey key)
     {
         if (key == null) throw new ArgumentNullException(nameof(key));
 

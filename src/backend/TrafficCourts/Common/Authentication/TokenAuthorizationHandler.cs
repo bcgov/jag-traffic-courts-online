@@ -19,7 +19,11 @@ public class TokenAuthorizationHandler : DelegatingHandler
     {
         // get the access token and add it to the Authorization header of the request 
         var token = await _tokenService.GetTokenAsync(_options, cancellationToken);
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+        if (token is not null)
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+        }
 
         return await base.SendAsync(request, cancellationToken);
     }

@@ -2,5 +2,5 @@
 
 public interface IOAuthClient
 {
-    Task<Token> GetTokenAsync(OAuthOptions options, CancellationToken cancellationToken);
+    Task<Token?> GetTokenAsync(OAuthOptions options, CancellationToken cancellationToken);
 }
