@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -106,6 +107,37 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
+	}
+	
+	@Test
+	@Transactional
+	public void testAssignJJDisputesToJJ() {
+		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());			
+		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
+				 .jjAssignedTo("Tony Stark")
+				 .build());
+
+		// Get the ids of the jj disputes and call the AssignJJ endpoint to assign all jj disputes to a new JJ
+		List<String> ticketNumbers = new ArrayList<>();
+		ticketNumbers.add(dispute1.getTicketNumber());
+		ticketNumbers.add(dispute2.getTicketNumber());
+		jjDisputeController.assignJJDisputesToJJ(ticketNumbers, "Steven Strange");
+
+		// Assert JJ disputes updated with new assigned JJ
+		JJDispute jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
+		assertEquals("Steven Strange", jjDispute1.getJjAssignedTo());
+		JJDispute jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
+		assertEquals("Steven Strange", jjDispute2.getJjAssignedTo());
+		
+		// Unassign all disputes by calling the AssignJJ endpoint with null username
+		jjDisputeController.assignJJDisputesToJJ(ticketNumbers, null);
+		
+		// Assert JJ disputes are unassigned
+		jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
+		assertEquals(null, jjDispute1.getJjAssignedTo());
+		jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
+		assertEquals(null, jjDispute2.getJjAssignedTo());
 	}
 	
 	// Helper method to return an instance of Principal
