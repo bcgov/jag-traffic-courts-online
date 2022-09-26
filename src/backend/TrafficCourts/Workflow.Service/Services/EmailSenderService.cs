@@ -252,8 +252,8 @@ namespace TrafficCourts.Workflow.Service.Services
             var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
             if (template is not null)
             {
-                sendEmail.From = template.Sender;
-                sendEmail.To.Add(dispute.EmailAddress);
+                sendEmail.FromEmailAddress = template.Sender;
+                sendEmail.ToEmailAddress = dispute.EmailAddress;
                 sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
                 sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
                 sendEmail.TicketNumber = dispute.TicketNumber;
