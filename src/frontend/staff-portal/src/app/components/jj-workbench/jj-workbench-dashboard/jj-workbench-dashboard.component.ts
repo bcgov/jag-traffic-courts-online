@@ -33,7 +33,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
         this.userProfile = userProfile;
-        this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
+        this.fullName = this.authService.userFullName;
         this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
         this.jjIDIR = this.authService.userIDIR;
       }

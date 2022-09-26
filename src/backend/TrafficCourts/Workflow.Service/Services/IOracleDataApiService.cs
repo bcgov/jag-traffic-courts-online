@@ -6,6 +6,7 @@ namespace TrafficCourts.Workflow.Service.Services
     {
         Task<long> CreateDisputeAsync(Dispute disputeToSubmit);
         Task<Dispute> GetDisputeByEmailVerificationTokenAsync(string emailVerificationToken);
+        Task VerifyDisputeEmailAsync(string emailVerificationToken);
         Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory);
         Task<long> CreateFileHistoryAsync(FileHistory fileHistory);
     }

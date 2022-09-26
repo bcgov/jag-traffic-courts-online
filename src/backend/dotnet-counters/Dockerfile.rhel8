@@ -1,6 +1,0 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 as tools
-RUN dotnet tool install --tool-path /tools dotnet-counters
-
-FROM registry.access.redhat.com/ubi8/dotnet-60-runtime
-WORKDIR /opt/app-root/app
-COPY --from=tools /tools .

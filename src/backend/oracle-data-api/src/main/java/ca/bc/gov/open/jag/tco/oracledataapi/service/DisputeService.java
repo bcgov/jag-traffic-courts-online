@@ -239,7 +239,7 @@ public class DisputeService {
 	 * Flips the Dispute.emailAddressVerified flag to true where Dispute.emailVerificationToken matches the given parameter
 	 * @param token the Dispute record to update
 	 */
-	public void validateEmail(String emailVerificationToken) {
+	public void verifyEmail(String emailVerificationToken) {
 		List<Dispute> emailVerificationTokens = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
 		for (Dispute dispute : emailVerificationTokens) {
 			dispute.setEmailAddressVerified(Boolean.TRUE);

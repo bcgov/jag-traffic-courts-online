@@ -2,10 +2,6 @@
 using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using TrafficCourts.Arc.Dispute.Service.Mappings;
-using TrafficCourts.Arc.Dispute.Service.Models;
-using TrafficCourts.Common;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Mappings;
@@ -96,7 +92,7 @@ public class MappingTests
         }
 
         List<DisputeCount> disputeCounts = new(target.DisputeCounts);
-        for (int i = 0; i < source.DisputeCounts.Count; i++)
+        for (int i = 0; i < source.DisputeCounts!.Count; i++)
         {
             Assert.Equal(source.DisputeCounts?[i].CountNo, (disputeCounts[i].CountNo));
             Assert.Equal(source.DisputeCounts?[i].PleaCode, disputeCounts[i].PleaCode);

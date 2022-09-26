@@ -45,9 +45,11 @@ public class DisputeControllerTest
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.NotNull(okResult.Value);
-        Assert.Equal(2, ((List<Dispute>)okResult.Value).Count);
-        Assert.Equal(dispute1, ((List<Dispute>)okResult.Value)[0]);
-        Assert.Equal(dispute2, ((List<Dispute>)okResult.Value)[1]);
+        var actual = okResult.Value as List<Dispute>;
+        Assert.NotNull(actual);
+        Assert.Equal(2, actual!.Count);
+        Assert.Equal(dispute1, actual[0]);
+        Assert.Equal(dispute2, actual[1]);
     }
 
     [Fact]
@@ -229,11 +231,13 @@ public class DisputeControllerTest
         var assembly = Assembly.GetAssembly(typeof(DisputeController));
         var allControllers = AllTypes.From(assembly).ThatDeriveFrom<VTCControllerBase<DisputeController>>();
 
-        foreach (Type t in allControllers)
+        foreach (Type type in allControllers)
         {
-            var mInfos = t.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => x.DeclaringType.Equals(t)).ToList();
+            var mInfos = type.GetMethods(BindingFlags.Public | BindingFlags.Instance).Where(x => x.DeclaringType!.Equals(type));
             foreach (MethodInfo mInfo in mInfos)
-                _endpoints.Add((t, mInfo));
+            {
+                _endpoints.Add((type, mInfo));
+            }
         }
 
         // Act

@@ -225,7 +225,7 @@ namespace TrafficCourts.Workflow.Service.Services
             return false;
         }
 
-        public SendEmail ToVerificationSendEmail(Dispute dispute, string host)
+        public SendEmail ToVerificationEmail(Dispute dispute, string host)
         {
             SendEmail sendEmail = new();
             // Send email message to the submitter's entered email
@@ -241,6 +241,22 @@ namespace TrafficCourts.Workflow.Service.Services
                 sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
                 sendEmail.TicketNumber = dispute.TicketNumber;
                 sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
+            }
+            return sendEmail;
+        }
+
+        public SendEmail ToConfirmationEmail(Dispute dispute)
+        {
+            SendEmail sendEmail = new();
+            // Send email message to the submitter's entered email
+            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
+            if (template is not null)
+            {
+                sendEmail.From = template.Sender;
+                sendEmail.To.Add(dispute.EmailAddress);
+                sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
+                sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
+                sendEmail.TicketNumber = dispute.TicketNumber;
             }
             return sendEmail;
         }

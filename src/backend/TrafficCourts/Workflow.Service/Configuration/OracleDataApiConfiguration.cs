@@ -7,7 +7,7 @@ namespace TrafficCourts.Workflow.Service.Configuration
     {
         public const string Section = "OracleDataApi";
 
-        public string? BaseUrl { get; set; }
+        public string BaseUrl { get; set; } = String.Empty;
 
         public void Validate()
         {

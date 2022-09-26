@@ -29,13 +29,13 @@ public class InMemoryFilePersistenceService : FilePersistenceService
         return Task.FromResult(stream);
     }
 
-    public override async Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken)
+    public override Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken)
     {
         var mimeType = data.GetMimeType();
         if (mimeType is null)
         {
             _logger.LogInformation("Could not determine mime type for file, file cannot be saved");
-            return string.Empty;
+            return Task.FromResult(string.Empty);
         }
 
         var filename = GetFileName(mimeType);
@@ -43,7 +43,7 @@ public class InMemoryFilePersistenceService : FilePersistenceService
         var buffer = data.ToArray();
         _cache.Set(filename, buffer);
 
-        return filename;
+        return Task.FromResult(string.Empty);
     }
 
 }

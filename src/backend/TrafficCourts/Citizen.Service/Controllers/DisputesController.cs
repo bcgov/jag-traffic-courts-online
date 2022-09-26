@@ -73,29 +73,31 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
+        // FIXME: this is wrong. The "Host" in this case resolves to the citizen-api. This should be the hostname of citizen-web (not api) in any of the environments (local, dev, test, or prod).
         string host = HttpContext.Request.Host.Value;
-        EmailSendValidation emailSendValidation = new(uuid, host);
-        await _bus.Publish(emailSendValidation, cancellationToken);
+
+        EmailVerificationSend emailVerificationSend = new(uuid, host);
+        await _bus.Publish(emailVerificationSend, cancellationToken);
         return Accepted();
     }
 
     /// <summary>
-    /// An endpoint for validating an email sent to a Disputant.
+    /// An endpoint for verifying an email sent to a Disputant.
     /// </summary>
     /// <param name="uuid"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>
-    /// <response code="202">Validate email acknowledged.</response>
+    /// <response code="202">Verify email acknowledged.</response>
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="500">There was a internal server error when triggering a received email message.</response>
     /// </returns>
-    [HttpPut("/api/disputes/email/{uuid}/validate")]
+    [HttpPut("/api/disputes/email/{uuid}/verify")]
     [ProducesResponseType((int)HttpStatusCode.Accepted)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> ValidateEmailAsync(Guid uuid, CancellationToken cancellationToken)
+    public async Task<IActionResult> VerifyEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
-        EmailReceivedValidation emailReceiveValidation = new(uuid);
-        await _bus.Publish(emailReceiveValidation, cancellationToken);
+        EmailVerificationReceived emailVerificationReceived = new(uuid);
+        await _bus.Publish(emailVerificationReceived, cancellationToken);
         return Accepted();
     }
 }

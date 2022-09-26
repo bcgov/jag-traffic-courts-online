@@ -41,10 +41,8 @@ export class StaffWorkbenchDashboardComponent implements OnInit {
         this.userProfile = userProfile;
         this.fullName = this.userProfile?.firstName + " " + this.userProfile?.lastName;
         this.staffIDIR = this.authService.userIDIR;
-        console.log(this.staffIDIR, "staff workbench IDIR subscribe");
       }
     })
-    console.log(this.staffIDIR, "staff workbench IDIR outside subscribe");
   }
 
   changeDispute(dispute: DisputeExtended) {

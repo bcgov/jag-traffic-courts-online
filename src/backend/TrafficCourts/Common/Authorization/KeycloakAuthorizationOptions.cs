@@ -21,7 +21,7 @@ public class KeycloakAuthorizationOptions
     /// <value>
     /// The token endpoint.
     /// </value>
-    public string TokenEndpoint { get; set; }
+    public string TokenEndpoint { get; set; } = String.Empty;
 
     /// <summary>
     /// Gets or sets the audience.
@@ -29,5 +29,5 @@ public class KeycloakAuthorizationOptions
     /// <value>
     /// The audience.
     /// </value>
-    public string Audience { get; set; }
+    public string Audience { get; set; } = String.Empty;
 }

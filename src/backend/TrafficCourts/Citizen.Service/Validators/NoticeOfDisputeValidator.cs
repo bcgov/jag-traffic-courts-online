@@ -29,7 +29,9 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.WorkPhoneNumber)
                 .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"));
             RuleFor(_ => _.EmailAddress).EmailAddress();
-            RuleFor(_ => _.EmailAddress).EmailAddress(EmailValidationMode.Net4xRegex);
+#pragma warning disable CS0618 // Type or member is obsolete
+            RuleFor(_ => _.EmailAddress).EmailAddress(EmailValidationMode.Net4xRegex); // TODO: change validator
+#pragma warning restore CS0618 // Type or member is obsolete
             RuleFor(_ => _.TicketId).NotEmpty();
             RuleFor(_ => _.WitnessNo).InclusiveBetween(0,99);
             RuleFor(_ => _.DisputantOcrIssues).NotEmpty()
@@ -61,7 +63,7 @@ namespace TrafficCourts.Citizen.Service.Validators
             RuleFor(_ => _.DisputeCounts)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Must(_ => _.Count > 0 && _.Count < 4)
+                .Must(_ => _!.Count > 0 && _.Count < 4)
                 .WithMessage("At least 1 and maximum 3 Disputed Counts required");
 
             // Legal Representation Validators

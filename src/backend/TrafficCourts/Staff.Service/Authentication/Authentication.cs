@@ -30,7 +30,7 @@ public static class AuthenticationExtensions
 
              });
 
-        services.AddTransient<IClaimsTransformation>(_ => new KeycloakRolesClaimsTransformation(_roleClaimType, jwtOptions.Audience));
+        services.AddTransient<IClaimsTransformation>(_ => new KeycloakRolesClaimsTransformation(_roleClaimType, jwtOptions.Audience!));
 
         return services;
     }
@@ -54,7 +54,7 @@ public static class AuthenticationExtensions
             .AddAuthorization(options => ApplyPolicies(options))
             .AddKeycloakAuthorization(options =>
         {
-            options.Audience = jwtOptions.Audience;
+            options.Audience = jwtOptions.Audience!; // Audience is required configuration
             options.TokenEndpoint = $"{jwtOptions.Authority}/protocol/openid-connect/token";
         });
 

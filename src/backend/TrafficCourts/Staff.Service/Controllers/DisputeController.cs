@@ -365,6 +365,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     public async Task<IActionResult> ResendEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Resending Email Verification");
+        // FIXME: this is wrong. The "Host" in this case resolves to the staff-api. This should be the hostname of citizen-web in any of the environments (local, dev, test, or prod).
         string host = this.HttpContext.Request.Host.Value;
 
         try

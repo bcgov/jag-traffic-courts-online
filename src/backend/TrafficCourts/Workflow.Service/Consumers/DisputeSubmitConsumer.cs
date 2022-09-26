@@ -50,7 +50,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
                     // TCVP-1529 Saving a dispute should also send a verification email to the Disputant.
-                    SendEmail sendEmail = _emailSenderService.ToVerificationSendEmail(dispute, host);
+                    SendEmail sendEmail = _emailSenderService.ToVerificationEmail(dispute, host);
                     await _bus.Publish(sendEmail);
 
                     await context.RespondAsync<DisputeSubmitted>(new

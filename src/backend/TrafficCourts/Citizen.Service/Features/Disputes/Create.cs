@@ -158,6 +158,8 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     if (!string.IsNullOrEmpty(submitNoticeOfDispute.EmailAddress))
                     {
                         submitNoticeOfDispute.EmailVerificationToken = Guid.NewGuid().ToString();
+                        
+                        // FIXME: this is wrong. The "Host" in this case resolves to the citizen-api. This should be the hostname of citizen-web (not api) in any of the environments (local, dev, test, or prod).
                         submitNoticeOfDispute.Host = request.Host;
                     }
 

@@ -21,10 +21,10 @@ public class OAuthTokenService : ITokenService
     /// <param name="configuration">The configuration.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns></returns>
-    public async Task<Token> GetTokenAsync(OAuthOptions configuration, CancellationToken cancellationToken)
+    public async Task<Token?> GetTokenAsync(OAuthOptions configuration, CancellationToken cancellationToken)
     {
-        Token token = _tokenCache.GetToken(configuration);
-        if (token != null && !token.IsAccessTokenExpired)
+        Token? token = _tokenCache.GetToken(configuration);
+        if (token is not null && !token.IsAccessTokenExpired)
         {
             return token;
         }
@@ -32,7 +32,10 @@ public class OAuthTokenService : ITokenService
         // TODO: use refresh token if available 
         token = await _client.GetTokenAsync(configuration, cancellationToken);
 
-        _tokenCache.SaveToken(configuration, token, token.AccessTokenExpiresAtUtc);
+        if (token is not null)
+        {
+            _tokenCache.SaveToken(configuration, token, token.AccessTokenExpiresAtUtc);
+        }
 
         return token;
     }
