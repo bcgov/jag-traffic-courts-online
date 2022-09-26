@@ -12,9 +12,14 @@
 
 
 export interface Statute { 
-    code?: number;
-    act?: string | null;
-    section?: string | null;
-    description?: string | null;
+    id?: string | null;
+    actCode?: string | null;
+    sectionText?: string | null;
+    subsectionText?: string | null;
+    paragraphText?: string | null;
+    subparagraphText?: string | null;
+    code?: string | null;
+    shortDescriptionText?: string | null;
+    descriptionText?: string | null;
 }
 

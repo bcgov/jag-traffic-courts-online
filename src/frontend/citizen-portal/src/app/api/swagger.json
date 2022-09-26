@@ -162,7 +162,7 @@
           {
             "name": "section",
             "in": "query",
-            "description": "Motor vehicle act Section text to query by, ie \"13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "description": "Motor vehicle act Section text to query by, ie \"MVA 13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
             "schema": {
               "type": "string"
             }
@@ -722,19 +722,39 @@
       "Statute": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "actCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "subsectionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "paragraphText": {
+            "type": "string",
+            "nullable": true
+          },
+          "subparagraphText": {
+            "type": "string",
+            "nullable": true
+          },
           "code": {
-            "type": "number",
-            "format": "double"
-          },
-          "act": {
             "type": "string",
             "nullable": true
           },
-          "section": {
+          "shortDescriptionText": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "descriptionText": {
             "type": "string",
             "nullable": true
           }
