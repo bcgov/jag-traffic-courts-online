@@ -8,6 +8,7 @@ export class AppRoutes {
   public static PAYMENT = 'payment';
   public static STEPPER = 'stepper';
   public static PHOTO = 'photo';
+  public static EMAILVERIFICATIONREQUIRED = 'emailVerificationRequired';
 
   public static MODULE_PATH = AppRoutes.TICKET;
 

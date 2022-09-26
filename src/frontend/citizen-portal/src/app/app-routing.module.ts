@@ -8,6 +8,7 @@ import { AppRoutes } from './app.routes';
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
+import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
 import { LandingComponent } from './components/landing/landing.component';
 
 const routes: Routes = [
@@ -36,6 +37,10 @@ const routes: Routes = [
       {
         path: AppRoutes.STEPPER,
         component: DisputeTicketStepperComponent,
+      },
+      {
+        path: AppRoutes.EMAILVERIFICATIONREQUIRED,
+        component: EmailVerificationRequiredComponent,
       },
       {
         path: '',

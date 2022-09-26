@@ -1,0 +1,32 @@
+<app-page>
+  <app-tco-page-header>
+    <ng-container header>Ticket resolution request email verification</ng-container>
+  </app-tco-page-header>
+  <div class="col my-3">
+    <app-alert type="warning" icon="info">
+      <ng-container #alertContent class="alert-content">
+        <div class="d-flex justify-content-between d-print-none">
+          <span>
+            <h1 style="margin: 0;">Email verification required</h1>
+          </span>
+        </div>
+      </ng-container>
+    </app-alert>
+    <hr>
+    <div>
+      <h2 class="mb-3" style="font-weight:bold;">Next Step</h2>
+      <div class="mb-3 text-body">We need to verify your email address before we can proceed.</div>
+      <div class="mb-3"><span class="text-body">A confirmation email was sent to : </span><b>{{ email }}</b></div>
+      <div class="mb-3 text-body">Please click on the link in the email to complete your registration.</div>
+    </div>
+    <hr>
+    <div class="mb-4 text-body">Didn't receive the email? Please check your junk mailbox or resend the verification
+      using the button below.
+    </div>
+    <div style="text-align:center;">
+      <button type="button" mat-stroked-button (click)="resendEmail()">Re-send verification email</button>
+    </div>
+  </div>
+
+  <app-resolution-footer></app-resolution-footer>
+</app-page>

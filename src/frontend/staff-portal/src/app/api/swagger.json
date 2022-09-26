@@ -2418,19 +2418,39 @@
       "Statute": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "actCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "subsectionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "paragraphText": {
+            "type": "string",
+            "nullable": true
+          },
+          "subparagraphText": {
+            "type": "string",
+            "nullable": true
+          },
           "code": {
-            "type": "number",
-            "format": "double"
-          },
-          "act": {
             "type": "string",
             "nullable": true
           },
-          "section": {
+          "shortDescriptionText": {
             "type": "string",
             "nullable": true
           },
-          "description": {
+          "descriptionText": {
             "type": "string",
             "nullable": true
           }

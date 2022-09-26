@@ -20,6 +20,7 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
+import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -67,6 +68,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CountSummaryComponent,
     CountItemSummaryComponent,
     CountItemDisputeSummaryComponent,
+    EmailVerificationRequiredComponent,
   ],
   imports: [
     CommonModule,
