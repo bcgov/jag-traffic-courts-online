@@ -33,7 +33,7 @@ public static class Startup
         AddSwagger(builder, assembly, logger);
 
         builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
-        builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetSection(EmailConfiguration.Section));
+        builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetRequiredSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
 
         builder.Services.AddHttpClient<IOracleDataApiClient, OracleDataApiClient>((serviceProvider, client) =>

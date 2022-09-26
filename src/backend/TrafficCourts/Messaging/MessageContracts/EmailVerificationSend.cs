@@ -12,12 +12,10 @@ namespace TrafficCourts.Messaging.MessageContracts;
 [EndpointConvention("email-verification-send")]
 public class EmailVerificationSend : IMessage
 {
-    public EmailVerificationSend(Guid emailVerificationToken, String host)
+    public EmailVerificationSend(Guid emailVerificationToken)
     {
         EmailVerificationToken = emailVerificationToken;
-        Host = host;
     }
 
     public Guid EmailVerificationToken { get; set; }
-    public string Host { get; set; }
 }
