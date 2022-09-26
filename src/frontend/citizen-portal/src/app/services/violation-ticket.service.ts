@@ -130,10 +130,15 @@ export class ViolationTicketService {
         .subscribe({
           next: res => {
             if (res) {
-              this._ocrTicket.next(res);
-              this._ticket.next(this.fromOCR(res));
-              this._inputTicketData.next(input);
-              this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
+              try {
+                this._ocrTicket.next(res);
+                this._ticket.next(this.fromOCR(res));
+                this._inputTicketData.next(input);
+                this.router.navigate([AppRoutes.disputePath(AppRoutes.SCAN)]);
+              }
+              catch {
+                this.onError();
+              }
             }
             else {
               this.onError();
@@ -185,7 +190,7 @@ export class ViolationTicketService {
 
         let idpos = keySplit[1].lastIndexOf("_");
         let id = keySplit[1].substring(idpos + 1);
-        let idKey = keySplit[1].substring(0,idpos) ? keySplit[1].substring(0,idpos) : "id";
+        let idKey = keySplit[1].substring(0, idpos) ? keySplit[1].substring(0, idpos) : "id";
 
         let arrKey = keySplit[0];
         let index = +id - 1;
