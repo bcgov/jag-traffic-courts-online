@@ -150,6 +150,10 @@ export class NoticeOfDisputeService {
     return this.disputesService.apiDisputesEmailUuidResendPut(uuid).pipe(map(res => res));
   }
 
+  public verifyEmail(uuid: string): Observable<any> {
+    return this.disputesService.apiDisputesEmailUuidValidatePut(uuid).pipe(map(res => res));
+  }
+
   public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {
     let noticeOfDispute = noticeOfDisputeExtended;
 
