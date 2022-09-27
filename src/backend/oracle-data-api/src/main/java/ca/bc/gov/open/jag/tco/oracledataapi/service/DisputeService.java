@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.dto.ViolationTicketDTO;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
@@ -34,6 +36,13 @@ public class DisputeService {
 
 	@PersistenceContext
     private EntityManager entityManager;
+	
+	private final WebClient webClient;
+	
+	public DisputeService(WebClient webClient) {
+		super();
+		this.webClient = webClient;
+	}
 
 	/**
 	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
@@ -61,6 +70,20 @@ public class DisputeService {
 	 */
 	public Dispute getDisputeById(Long id) {
 		return disputeRepository.findById(id).orElseThrow();
+	}
+	
+	public ViolationTicketDTO getViolationTicketById(Long id) {
+		ViolationTicketDTO response = 
+				webClient
+                .get()
+                .uri("/violationTicket?violationTicketId=" + id)
+                .retrieve()
+                .bodyToMono(ViolationTicketDTO.class)
+                .doOnSuccess(resp -> logger.debug("Successfully returned the violation ticket {}, from ORDS", resp))
+                .doOnError(exception -> logger.error("Failed to return violation ticket from ORDS", exception))
+                .block();
+		
+		return response;
 	}
 
 	/**

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.dto.ViolationTicketDTO;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
@@ -82,6 +83,20 @@ public class DisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
+	}
+	
+	/**
+	 * GET endpoint that retrieves the detail of a specific dispute
+	 *
+	 * @param id
+	 * @param principal the logged-in user
+	 * @return {@link Dispute}
+	 */
+	@GetMapping("/dispute/dto/{id}")
+	public ResponseEntity<ViolationTicketDTO> getDisputeDTO(@PathVariable Long id, Principal principal) {
+		logger.debug("GET /disputes/dto/{id} called");
+
+		return new ResponseEntity<ViolationTicketDTO>(disputeService.getViolationTicketById(id), HttpStatus.OK);
 	}
 
 	/**
