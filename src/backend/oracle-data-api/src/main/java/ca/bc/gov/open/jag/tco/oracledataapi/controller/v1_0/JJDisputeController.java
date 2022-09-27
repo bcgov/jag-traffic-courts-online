@@ -3,6 +3,10 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import java.security.Principal;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -122,5 +129,30 @@ public class JJDisputeController {
 		jjDisputeService.assignJJDisputesToJJ(ticketNumberList, jjUsername);
 		
 		return ResponseEntity.ok().build();
+	}
+	
+	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to REVIEW.
+	 *
+	 * @param jj dispute to be updated
+	 * @param id of the saved {@link JJDispute} to update
+	 * @param remark, the note explaining why the status was set to REVIEW.
+	 * @param principal the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to REVIEW.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed."),
+		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
+	})
+	@PutMapping("/dispute/{id}/review")
+	public ResponseEntity<JJDispute> reviewDispute(@PathVariable Long id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String remark,
+			Principal principal) {
+		logger.debug("PUT /dispute/{id}/review called");
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(id, JJDisputeStatus.REVIEW, remark), HttpStatus.OK);
 	}
 }
