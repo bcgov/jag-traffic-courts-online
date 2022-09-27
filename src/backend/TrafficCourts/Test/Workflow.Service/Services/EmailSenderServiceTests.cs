@@ -6,12 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
-using TrafficCourts.Workflow.Service.Configuration;
 using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
 using Moq;
 using Xunit;
+using TrafficCourts.Common.Configuration;
+using TrafficCourts.Workflow.Service.Configuration;
 
 namespace TrafficCourts.Test.Workflow.Service.Services
 {
@@ -46,7 +47,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
 
             return new EmailSenderService(
                 _mockLogger.Object,
-                options,
+                options.Value,
                 _mockSmtpClientFactory.Object,
                 _mockOracleDataApiService.Object);
         }

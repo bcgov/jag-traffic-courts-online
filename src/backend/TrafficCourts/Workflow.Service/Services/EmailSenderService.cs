@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Workflow.Service.Configuration;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using MimeKit;
 using MimeKit.Text;
 using TrafficCourts.Common.Features.Mail.Model;
+using TrafficCourts.Common.Configuration;
+using TrafficCourts.Workflow.Service.Configuration;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -16,10 +17,10 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly IOracleDataApiService _oracleDataApiService;
 
 
-        public EmailSenderService(ILogger<EmailSenderService> logger, IOptions<EmailConfiguration> emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
+        public EmailSenderService(ILogger<EmailSenderService> logger, EmailConfiguration emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _emailConfiguration = emailConfiguration.Value;
+            _emailConfiguration = emailConfiguration;
             _smptClientFactory = stmpClientFactory;
             _oracleDataApiService = oracleDataApiService;
         }
@@ -208,7 +209,7 @@ namespace TrafficCourts.Workflow.Service.Services
             return false;
         }
 
-        public SendEmail ToVerificationEmail(Dispute dispute, string host)
+        public SendEmail ToVerificationEmail(Dispute dispute)
         {
             SendEmail sendEmail = new();
             // Send email message to the submitter's entered email
@@ -217,11 +218,11 @@ namespace TrafficCourts.Workflow.Service.Services
             {
                 sendEmail.From = template.Sender;
                 sendEmail.To.Add(dispute.EmailAddress);
-                sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
-                sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-                sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<emailverificationtoken>", dispute.EmailVerificationToken);
-                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("<baseref>", host);
+                sendEmail.Subject = template.SubjectTemplate.Replace("{ticketid}", dispute.TicketNumber);
+                sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("{ticketid}", dispute.TicketNumber);
+                sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("{ticketid}", dispute.TicketNumber);
+                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("{emailVerificationToken}", dispute.EmailVerificationToken);
+                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("{emailVerificationUrl}", _emailConfiguration.EmailVerificationUrl);
                 sendEmail.TicketNumber = dispute.TicketNumber;
             }
             return sendEmail;

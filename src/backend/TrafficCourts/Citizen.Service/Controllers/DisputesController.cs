@@ -73,10 +73,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
-        // FIXME: this is wrong. The "Host" in this case resolves to the citizen-api. This should be the hostname of citizen-web (not api) in any of the environments (local, dev, test, or prod).
-        string host = HttpContext.Request.Host.Value;
-
-        EmailVerificationSend emailVerificationSend = new(uuid, host);
+        EmailVerificationSend emailVerificationSend = new(uuid);
         await _bus.Publish(emailVerificationSend, cancellationToken);
         return Accepted();
     }

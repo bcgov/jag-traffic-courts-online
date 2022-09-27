@@ -6,8 +6,7 @@ namespace TrafficCourts.Workflow.Service.Services
     public interface IEmailSenderService
     {
         Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken);
-        SendEmail ToVerificationEmail(Dispute dispute, string host);
+        SendEmail ToVerificationEmail(Dispute dispute);
         SendEmail ToConfirmationEmail(Dispute dispute);
-
     }
 }
