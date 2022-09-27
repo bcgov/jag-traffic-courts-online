@@ -15,7 +15,9 @@ export class EmailVerificationComponent {
   ) {
     this.route.queryParams.subscribe((params) => {
       this.token = params.token;
-      this.noticeOfDisputeService.verifyEmail(this.token).subscribe(() => {});
+      this.noticeOfDisputeService.verifyEmail(this.token).subscribe(() => {
+        // TODO: add page redirect here
+      });
     });
   }
 }
