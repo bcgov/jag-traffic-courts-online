@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
@@ -30,7 +30,7 @@ public class JJDisputeService {
 
 	@Autowired
 	JJDisputeRepository jjDisputeRepository;
-	
+
 	@PersistenceContext
     private EntityManager entityManager;
 
@@ -53,7 +53,7 @@ public class JJDisputeService {
 			return (List<JJDispute>) jjDisputeRepository.findAll();
 		} else return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
 	}
-	
+
 	/**
 	 * Assigns a specific {@link Dispute} to the IDIR username of the Staff with a timestamp
 	 *
@@ -86,7 +86,7 @@ public class JJDisputeService {
 
 		return false;
 	}
-	
+
 	/**
 	 * Unassigns all JJDisputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
 	 * @return number of records modified.
@@ -106,7 +106,7 @@ public class JJDisputeService {
 
 		logger.debug("Unassigned {} record(s)", count);
 	}
-	
+
 	/**
 	 * Updates the properties of a specific {@link JJDispute}
 	 *
@@ -117,9 +117,9 @@ public class JJDisputeService {
 	@Transactional
 	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
-		
+
 		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
-		
+
 		// TCVP-1435 - business rules
 		// - current status must be NEW, IN_PROGRESS to change to IN_PROGRESS
 		// - current status must be CONFIRMED, REVIEW to change to REVIEW
@@ -181,27 +181,27 @@ public class JJDisputeService {
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
-		
+
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
-			
+
 			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
 				logger.error("Attempting to save a remark with no user data - bad method call.");
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
-			
+
 			// Remove all existing remarks that are associated to this jj dispute
 			jjDisputeToUpdate.getRemarks().clear();
-			
+
 			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
 			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
 				if(StringUtils.isBlank(remark.getUserFullName()))
 					remark.setUserFullName(principal.getName());
 			}
-			
+
 			// Add updated remarks
 			jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
 		}
-		
+
 		JJDispute updatedJJDispute = jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistence
 		entityManager.refresh(updatedJJDispute);
