@@ -1,4 +1,4 @@
-﻿using MailKit.Net.Smtp;
+using MailKit.Net.Smtp;
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.Logging;
@@ -44,7 +44,7 @@ namespace TrafficCourts.Test.Workflow.Service.Features.Mail
 
             return new EmailSenderService(
                 _mockSenderLogger.Object,
-                options,
+                options.Value,
                 _mockSmtpClientFactory.Object,
                 _mockOracleDataApiService.Object);
         }

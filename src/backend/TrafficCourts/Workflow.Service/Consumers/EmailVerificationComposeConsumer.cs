@@ -37,7 +37,7 @@ public class EmailVerificationComposeConsumer : IConsumer<EmailVerificationSend>
         try
         {
             Dispute dispute = await _oracleDataApiService.GetDisputeByEmailVerificationTokenAsync(message.EmailVerificationToken.ToString());
-            SendEmail sendEmail = _emailSenderService.ToVerificationEmail(dispute, context.Message.Host);
+            SendEmail sendEmail = _emailSenderService.ToVerificationEmail(dispute);
             await _bus.Publish(sendEmail);
         }
         catch (ApiException ex) when (ex.StatusCode == StatusCodes.Status404NotFound)

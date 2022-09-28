@@ -71,11 +71,10 @@ public interface IDisputeService
 
     /// <summary>Resends email verification to consumer.</summary>
     /// <param name="disputeId">Dispute Id for dispute to resend email.</param>
-    /// <param name="host">Host for dispute to resend email.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
-    Task<string> ResendEmailVerificationAsync(long disputeId, string host, CancellationToken cancellationToken);
+    Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken);
 
 
 }
