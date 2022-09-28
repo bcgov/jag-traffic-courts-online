@@ -12,10 +12,19 @@
       "uris": [],
       "scopes": [
         {
+          "name": "accept"
+        },
+        {
           "name": "read"
         },
         {
           "name": "update"
+        },
+        {
+          "name": "review"
+        },
+        {
+          "name": "assign"
         }
       ]
     },
@@ -94,6 +103,18 @@
       "decisionStrategy": "UNANIMOUS",
       "config": {
         "roles": "[{\"id\":\"staff-api/judicial-justice\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "f92168bf-af54-4543-9097-1dad0bc13195",
+      "name": "can accept jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"accept\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
       }
     },
     {
@@ -191,6 +212,30 @@
         "scopes": "[\"update\"]",
         "applyPolicies": "[\"has role vtc-staff\",\"has role admin-judicial-justice\",\"has role admin-vtc-staff\",\"has role judicial-justice\"]"
       }
+    },
+    {
+      "id": "7ce63336-84b3-4f2d-ae3b-fb0f1bf66a2a",
+      "name": "can assign jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"assign\"]",
+        "applyPolicies": "[\"has role admin-judicial-justice\"]"
+      }
+    },
+    {
+      "id": "7436e778-1bf7-423c-ad02-69584c53024a",
+      "name": "can review jj-dispute",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "resources": "[\"jj-dispute\"]",
+        "scopes": "[\"review\"]",
+        "applyPolicies": "[\"has role vtc-staff\",\"has role admin-vtc-staff\"]"
+      }
     }
   ],
   "scopes": [
@@ -227,6 +272,18 @@
       "id": "9b2024a3-bf81-4fe6-874d-efef71b5a530",
       "name": "cancel",
       "displayName": "cancel"
+    },
+    {
+      "id": "1d7a2e88-1641-4b72-93d1-8888a818ae30",
+      "name": "assign"
+    },
+    {
+      "id": "eb4ef3f1-704d-4e1a-8222-69b6f05528e3",
+      "name": "review"
+    },
+    {
+      "id": "f85d84cd-223e-4e1e-9747-afbbcd4da2c2",
+      "name": "accept"
     }
   ],
   "decisionStrategy": "UNANIMOUS"

@@ -42,4 +42,18 @@ public class JJDisputeService : IJJDisputeService
     {
         await GetOracleDataApi().AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
     }
+
+    public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, CancellationToken cancellationToken)
+    {
+        JJDispute dispute = await GetOracleDataApi().ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
+
+        return dispute;
+    }
+
+    public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken)
+    {
+        JJDispute dispute = await GetOracleDataApi().AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+
+        return dispute;
+    }
 }

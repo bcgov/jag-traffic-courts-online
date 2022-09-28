@@ -35,4 +35,21 @@ public interface IJJDisputeService
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
     Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, CancellationToken cancellationToken);
+
+    /// <summary>Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.</summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, CancellationToken cancellationToken);
+
+    /// <summary>Updates the status of a particular JJDispute record to ACCEPTED.</summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ApiException">A server side error occurred.</exception>
+    Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken);
 }
