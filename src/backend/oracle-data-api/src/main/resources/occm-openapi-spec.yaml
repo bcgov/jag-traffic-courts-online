@@ -5,21 +5,114 @@ info:
   version: 1.0.0
 servers:
   - description: local
-    url: 'http://ords-0198bb-dev.apps.silver.devops.gov.bc.ca'
+    url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca'
 paths:
-  /v1/statutes:
+  /v1/ping:
     get:
-      operationId: getStatutes
-      summary: Get all statutes
+      operationId: ping
+      summary: Pings the server to test the connection
       responses:
         '200':
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StatuteCodeValues'
+                $ref: '#/components/schemas/PingResult'
       tags:
-        - statute
+        - Health
+  /v1/languages:
+    get:
+      operationId: LanguagesList
+      summary: Gets a list of languages
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LanguageListResult'
+      tags:
+        - Lookup Values
+  /v1/agencies:
+    get:
+      operationId: AgenciesList
+      summary: Gets a list of agencies
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenciesListResult'
+      tags:
+        - Lookup Values
+  /v1/countries:
+    get:
+      operationId: CountriesList
+      summary: Gets a list of countries
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountriesListResult'
+      tags:
+        - Lookup Values
+  /v1/provinces:
+    get:
+      operationId: ProvincesList
+      summary: Gets a list of provinces
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvincesListResult'
+      tags:
+        - Lookup Values
+  /v1/cities:
+    get:
+      operationId: CitiesList
+      summary: Gets a list of cities
+      parameters:
+        - name: countryId
+          in: query
+          description: The country id.
+          required: true
+          schema:
+            type: string
+            pattern: ^\d+$
+        - name: provSeqNo
+          in: query
+          description: The province sequence number.
+          required: true
+          schema:
+            type: string
+            pattern: ^\d+$
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitiesListResult'
+      tags:
+        - Lookup Values
+  /v1/statutes:
+    get:
+      operationId: StatutesList
+      summary: Gets a list of statutes
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatutesListResult'
+      tags:
+        - Lookup Values
   /v1/violationTicket:
     get:
       parameters:
@@ -40,12 +133,135 @@ paths:
         - Violation Ticket
 components:
   schemas:
+    AgenciesListResult:
+      type: object
+      properties:
+        agencyCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agency'
+      required:
+        - agencyCodeValues
+    Agency:
+      type: object
+      properties:
+        agenId:
+          type: string
+          example: 83.0001
+        agenAgencyNm:
+          type: string
+          example: Kelowna Law Courts
+        cdatAgencyTypeCd:
+          type: string
+          example: CTH
+    CountriesListResult:
+      type: object
+      properties:
+        countryCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Country'
+      required:
+        - agencyCodeValues
+    Country:
+      type: object
+      properties:
+        ctryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        ctryLongNm:
+          type: string
+          example: Canada
+    ProvincesListResult:
+      type: object
+      properties:
+        provinceCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Province'
+      required:
+        - provinceCodeValues
+    Province:
+      type: object
+      properties:
+        ctryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        provSeqNo:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        provNm:
+          type: string
+          example: British Columbia
+        provAbbreviationCd:
+          type: string
+          example: BC
+    CitiesListResult:
+      type: object
+      properties:
+        cityCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/City'
+      required:
+        - cityCodeValues
+    City:
+      type: object
+      properties:
+        ctryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        citySeqNo:
+          type: string
+          example: 123
+          pattern: ^\d+$
+        cityLongNm:
+          type: string
+          example: Kelowna
+        provCtryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        provSeqNo:
+          type: string
+          example: 1
+          pattern: ^\d+$
+    LanguageListResult:
+      type: object
+      properties:
+        languageCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+      required:
+        - languageCodeValues
+    Language:
+      type: object
+      properties:
+        cdlnLanguageCd:
+          type: string
+          example: ENG
+        cdlnLanguageDsc:
+          type: string
+          example: English
+    PingResult:
+      type: object
+      properties:
+        status:
+          type: string
+        currentTimestamp:
+          type: string
+          format: date-time
     AuditBase:
       type: object
       properties:
         entDtm:
           type: string
-          format: "date-time"
+          format: date-time
         entUserId:
           type: string
         updDtm:
@@ -53,11 +269,8 @@ components:
         updUserId:
           type: string
           format: nullable
-
     Dispute:
       type: object
-      allOf:
-        - $ref: '#/components/schemas/AuditBase'
       properties:
         addressCityCtryId:
           type: string
@@ -241,9 +454,9 @@ components:
         workPhoneNumberTxt:
           type: string
           format: nullable
-    DisputeCount:
       allOf:
         - $ref: '#/components/schemas/AuditBase'
+    DisputeCount:
       type: object
       properties:
         pleaCd:
@@ -254,6 +467,8 @@ components:
           type: string
         requestTimeToPayYn:
           type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
     Statute:
       type: object
       properties:
@@ -297,7 +512,7 @@ components:
           format: nullable
           example: 1
           maxLength: 4
-    StatuteCodeValues:
+    StatutesListResult:
       type: object
       properties:
         statuteCodeValues:
@@ -307,8 +522,6 @@ components:
       required:
         - statuteCodeValues
     ViolationTicket:
-      allOf:
-        - $ref: '#/components/schemas/AuditBase'
       properties:
         addressCityTxt:
           type: string
@@ -376,11 +589,11 @@ components:
           type: string
         violationTicketCounts:
           type: array
-          items: 
+          items:
             $ref: '#/components/schemas/ViolationTicketCount'
-    ViolationTicketCount:
       allOf:
         - $ref: '#/components/schemas/AuditBase'
+    ViolationTicketCount:
       type: object
       properties:
         actOrRegulationNameCd:
@@ -410,3 +623,5 @@ components:
           type: string
         violationTicketCountId:
           type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
