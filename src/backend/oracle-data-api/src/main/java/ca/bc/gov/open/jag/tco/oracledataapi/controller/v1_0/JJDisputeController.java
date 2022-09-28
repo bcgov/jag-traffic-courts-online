@@ -3,8 +3,6 @@ package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 import java.security.Principal;
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.slf4j.Logger;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.JJDisputeService;
@@ -43,21 +39,22 @@ public class JJDisputeController {
 	 * GET endpoint that retrieves a jj dispute by id from the database
 	 * without assigning it to a VTC for review
 	 * @param ticketNumber the primary key of the jj dispute to retrieve
-	 * @param VTC principal logged in user to assign
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal logged in user to assign
 	 * @return a single jj dispute
 	 */
 	@GetMapping("/dispute/{id}/{assignVTC}")
 	public ResponseEntity<JJDispute> getJJDispute(
 			@Parameter(description = "The primary key of the jj dispute to retrieve")
 			@PathVariable("id") String ticketNumber,
-			@PathVariable("assignVTC") boolean assignVTC,
-			Principal vtcPrincipal) {
+			@PathVariable("assignVTC") boolean checkVTCAssigned,
+			Principal principal) {
 		logger.debug("getJJDispute called");
-		if (assignVTC == true) {
-			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, vtcPrincipal)) {
-				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-			}
+
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
+
 		return new ResponseEntity<JJDispute>(jjDisputeService.getJJDisputeById(ticketNumber), HttpStatus.OK);
 	}
 	
@@ -99,11 +96,11 @@ public class JJDisputeController {
 			Principal principal,
 			@RequestBody JJDispute jjDispute) {
 		logger.debug("PUT /dispute/{ticketNumber}/{checkVTCAssigned} called");
-		if (checkVTCAssigned == true) {
-			if (!jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
-				return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-			}	
+		
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
+		
 		return new ResponseEntity<JJDispute>(jjDisputeService.updateJJDispute(ticketNumber, jjDispute, principal), HttpStatus.OK);
 	}
 	
@@ -134,25 +131,58 @@ public class JJDisputeController {
 	/**
 	 * PUT endpoint that updates the JJDispute, setting the status to REVIEW.
 	 *
-	 * @param jj dispute to be updated
-	 * @param id of the saved {@link JJDispute} to update
+	 * @param ticketNumber, id of the saved {@link JJDispute} to update
 	 * @param remark, the note explaining why the status was set to REVIEW.
-	 * @param principal the logged-in user
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal, the logged-in user
 	 * @return {@link JJDispute}
 	 */
 	@Operation(summary = "Updates the status of a particular JJDispute record to REVIEW.")
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Ok. Updated Dispute record returned."),
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "Dispute record not found. Update failed."),
-		@ApiResponse(responseCode = "405", description = "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed."),
-		@ApiResponse(responseCode = "409", description = "The Dispute has already been assigned to a different user. Dispute cannot be modified until assigned time expires.")
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
-	@PutMapping("/dispute/{id}/review")
-	public ResponseEntity<JJDispute> reviewDispute(@PathVariable Long id, @Valid @RequestBody @NotBlank @Size(min = 1, max = 256) String remark,
+	@PutMapping("/dispute/{ticketNumber}/review")
+	public ResponseEntity<JJDispute> reviewJJDispute(@PathVariable String ticketNumber, 
+			@RequestBody @Size(max = 256) String remark,
+			boolean checkVTCAssigned,
 			Principal principal) {
 		logger.debug("PUT /dispute/{id}/review called");
+		
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
 
-		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(id, JJDisputeStatus.REVIEW, remark), HttpStatus.OK);
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.REVIEW, principal, remark), HttpStatus.OK);
+	}
+	
+	/**
+	 * PUT endpoint that updates the JJDispute, setting the status to ACCEPTED.
+	 *
+	 * @param ticketNumber, id of the saved {@link JJDispute} to update
+	 * @param checkVTCAssigned, boolean (optional) check assignment to VTC
+	 * @param principal, the logged-in user
+	 * @return {@link JJDispute}
+	 */
+	@Operation(summary = "Updates the status of a particular JJDispute record to REVIEW.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Updated JJDispute record returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "JJDispute record not found. Update failed."),
+		@ApiResponse(responseCode = "405", description = "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed."),
+		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
+	})
+	@PutMapping("/dispute/{ticketNumber}/accept")
+	public ResponseEntity<JJDispute> acceptJJDispute(@PathVariable String ticketNumber, boolean checkVTCAssigned, Principal principal) {
+		logger.debug("PUT /dispute/{id}/accept called");
+		
+		if (checkVTCAssigned && !jjDisputeService.assignJJDisputeToVtc(ticketNumber, principal)) {
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+
+		return new ResponseEntity<JJDispute>(jjDisputeService.setStatus(ticketNumber, JJDisputeStatus.ACCEPTED, principal, null), HttpStatus.OK);
 	}
 }
