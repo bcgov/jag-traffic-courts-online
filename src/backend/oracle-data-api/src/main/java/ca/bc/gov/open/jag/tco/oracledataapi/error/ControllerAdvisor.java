@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import javax.validation.ConstraintViolationException;
 
+import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -83,6 +84,16 @@ public class ControllerAdvisor {
 	public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
 		logger.debug("handleHttpMessageNotReadableException", ex);
 		return getResponse(HttpStatus.BAD_REQUEST, "Validation Failed", ex);
+	}
+
+	/**
+	 * Returns an API HTTP error code of 500 if a NotYetImplementedException is thrown.
+	 */
+	@ExceptionHandler(NotYetImplementedException.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<Object> handleNotYetImplementedException(NotYetImplementedException ex) {
+		logger.debug("handleNotYetImplementedException", ex);
+		return getResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex);
 	}
 
 	/**

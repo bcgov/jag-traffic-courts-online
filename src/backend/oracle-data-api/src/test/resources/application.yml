@@ -15,6 +15,7 @@ spring:
       
 # ORDS CLIENT properties
 ords:
+  enabled: false
   rest-api:
     url: localhost
     timeout: 2000
