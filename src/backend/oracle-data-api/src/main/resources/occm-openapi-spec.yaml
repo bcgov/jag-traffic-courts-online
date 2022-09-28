@@ -140,8 +140,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Agency'
-      required:
-        - agencyCodeValues
     Agency:
       type: object
       properties:
@@ -161,8 +159,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Country'
-      required:
-        - agencyCodeValues
     Country:
       type: object
       properties:
@@ -180,8 +176,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Province'
-      required:
-        - provinceCodeValues
     Province:
       type: object
       properties:
@@ -206,8 +200,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/City'
-      required:
-        - cityCodeValues
     City:
       type: object
       properties:
@@ -237,8 +229,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Language'
-      required:
-        - languageCodeValues
     Language:
       type: object
       properties:
@@ -519,8 +509,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Statute'
-      required:
-        - statuteCodeValues
     ViolationTicket:
       properties:
         addressCityTxt:
