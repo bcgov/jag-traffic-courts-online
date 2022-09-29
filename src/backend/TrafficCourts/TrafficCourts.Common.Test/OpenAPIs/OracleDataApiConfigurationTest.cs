@@ -46,7 +46,7 @@ namespace TrafficCourts.Common.Test.OpenAPIs
 
         private string GetExceptionMessage(string message)
         {
-            return $"Settings were invalid: {OracleDataApiConfiguration.Section}.{nameof(OracleDataApiConfiguration.BaseUrl)} {message}. \r\n\r\nCheck that your configuration has been loaded correctly, and all necessary values are set in the configuration files.";
+            return $"Settings were invalid: {OracleDataApiConfiguration.Section}.{nameof(OracleDataApiConfiguration.BaseUrl)} {message}. Check that your configuration has been loaded correctly, and all necessary values are set in the configuration files.";
         }
     }
 }
