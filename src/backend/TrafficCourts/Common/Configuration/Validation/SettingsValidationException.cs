@@ -21,9 +21,7 @@ namespace TrafficCourts.Common.Configuration.Validation
 
         private static string GetMessage(string className, string propertyName, string message)
         {
-            return $@"Settings were invalid: {className}.{propertyName} {message}. 
-
-Check that your configuration has been loaded correctly, and all necessary values are set in the configuration files.";
+            return $@"Settings were invalid: {className}.{propertyName} {message}. Check that your configuration has been loaded correctly, and all necessary values are set in the configuration files.";
         }
 
         /// <summary>
