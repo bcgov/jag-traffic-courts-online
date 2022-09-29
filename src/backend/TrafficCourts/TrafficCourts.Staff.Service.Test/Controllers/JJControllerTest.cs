@@ -81,13 +81,13 @@ public class JJControllerTest
         dispute.TicketNumber = ticketnumber;
         var jjDisputeService = new Mock<IJJDisputeService>();
         jjDisputeService
-            .Setup(_ => _.AssignJJDisputesToJJ(null, "Bruce Wayne", It.IsAny<CancellationToken>()))
+            .Setup(_ => _.AssignJJDisputesToJJ(null!, "Bruce Wayne", It.IsAny<CancellationToken>()))
             .Throws(new ApiException("msg", StatusCodes.Status400BadRequest, "rsp", null, null));
         var mockLogger = new Mock<ILogger<JJController>>();
         JJController jjDisputeController = new(jjDisputeService.Object, mockLogger.Object);
 
         // Act
-        IActionResult? result = await jjDisputeController.AssignJJDisputesToJJ(null, "Bruce Wayne", CancellationToken.None);
+        IActionResult? result = await jjDisputeController.AssignJJDisputesToJJ(null!, "Bruce Wayne", CancellationToken.None);
 
         // Assert
         var badRequestResult = Assert.IsType<HttpError>(result);

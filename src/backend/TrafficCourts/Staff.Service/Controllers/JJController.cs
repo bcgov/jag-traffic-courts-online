@@ -236,7 +236,7 @@ public class JJController : JJControllerBase<JJController>
     /// <response code="401">Unauthenticated.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
-    /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("{ticketNumber}/review")]

@@ -17,6 +17,7 @@ public interface IJJDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>OK</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if id is null</exception>
     Task<JJDispute> GetJJDisputeAsync(string id, bool assignVTC, CancellationToken cancellationToken);
 
     /// <summary>Updates the properties of a particular JJ Dispute record based on the given values.</summary>
@@ -26,6 +27,7 @@ public interface IJJDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>The submitted/updated JJ Dispute record.</returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> SubmitAdminResolutionAsync(string ticketNumber, bool checkVTC, JJDispute jjDispute, CancellationToken cancellationToken);
 
     /// <summary>Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.</summary>
@@ -34,6 +36,7 @@ public interface IJJDisputeService
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumbers is null</exception>
     Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.</summary>
@@ -43,6 +46,7 @@ public interface IJJDisputeService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, CancellationToken cancellationToken);
 
     /// <summary>Updates the status of a particular JJDispute record to ACCEPTED.</summary>
@@ -51,5 +55,6 @@ public interface IJJDisputeService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="ApiException">A server side error occurred.</exception>
+    /// <exception cref="ArgumentNullException">Thrown if ticketNumber is null</exception>
     Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken);
 }
