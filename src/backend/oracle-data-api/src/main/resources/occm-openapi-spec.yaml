@@ -1,0 +1,615 @@
+openapi: 3.0.0
+info:
+  description: This is an Oracle REST Data Services (ORDS) service for the Online Court Case Management solution.
+  title: Online Court Case Management
+  version: 1.0.0
+servers:
+  - description: local
+    url: 'https://ords-0198bb-dev.apps.silver.devops.gov.bc.ca'
+paths:
+  /v1/ping:
+    get:
+      operationId: ping
+      summary: Pings the server to test the connection
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResult'
+      tags:
+        - Health
+  /v1/languages:
+    get:
+      operationId: LanguagesList
+      summary: Gets a list of languages
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LanguageListResult'
+      tags:
+        - Lookup Values
+  /v1/agencies:
+    get:
+      operationId: AgenciesList
+      summary: Gets a list of agencies
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgenciesListResult'
+      tags:
+        - Lookup Values
+  /v1/countries:
+    get:
+      operationId: CountriesList
+      summary: Gets a list of countries
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountriesListResult'
+      tags:
+        - Lookup Values
+  /v1/provinces:
+    get:
+      operationId: ProvincesList
+      summary: Gets a list of provinces
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProvincesListResult'
+      tags:
+        - Lookup Values
+  /v1/cities:
+    get:
+      operationId: CitiesList
+      summary: Gets a list of cities
+      parameters:
+        - name: countryId
+          in: query
+          description: The country id.
+          required: true
+          schema:
+            type: string
+            pattern: ^\d+$
+        - name: provSeqNo
+          in: query
+          description: The province sequence number.
+          required: true
+          schema:
+            type: string
+            pattern: ^\d+$
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitiesListResult'
+      tags:
+        - Lookup Values
+  /v1/statutes:
+    get:
+      operationId: StatutesList
+      summary: Gets a list of statutes
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatutesListResult'
+      tags:
+        - Lookup Values
+  /v1/violationTicket:
+    get:
+      parameters:
+        - name: violationTicketId
+          in: query
+          description: ''
+          schema:
+            type: string
+            pattern: ^\d+$
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViolationTicket'
+      tags:
+        - Violation Ticket
+components:
+  schemas:
+    AgenciesListResult:
+      type: object
+      properties:
+        agencyCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agency'
+    Agency:
+      type: object
+      properties:
+        agenId:
+          type: string
+          example: 83.0001
+        agenAgencyNm:
+          type: string
+          example: Kelowna Law Courts
+        cdatAgencyTypeCd:
+          type: string
+          example: CTH
+    CountriesListResult:
+      type: object
+      properties:
+        countryCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Country'
+    Country:
+      type: object
+      properties:
+        ctryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        ctryLongNm:
+          type: string
+          example: Canada
+    ProvincesListResult:
+      type: object
+      properties:
+        provinceCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Province'
+    Province:
+      type: object
+      properties:
+        ctryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        provSeqNo:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        provNm:
+          type: string
+          example: British Columbia
+        provAbbreviationCd:
+          type: string
+          example: BC
+    CitiesListResult:
+      type: object
+      properties:
+        cityCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/City'
+    City:
+      type: object
+      properties:
+        ctryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        citySeqNo:
+          type: string
+          example: 123
+          pattern: ^\d+$
+        cityLongNm:
+          type: string
+          example: Kelowna
+        provCtryId:
+          type: string
+          example: 1
+          pattern: ^\d+$
+        provSeqNo:
+          type: string
+          example: 1
+          pattern: ^\d+$
+    LanguageListResult:
+      type: object
+      properties:
+        languageCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+    Language:
+      type: object
+      properties:
+        cdlnLanguageCd:
+          type: string
+          example: ENG
+        cdlnLanguageDsc:
+          type: string
+          example: English
+    PingResult:
+      type: object
+      properties:
+        status:
+          type: string
+        currentTimestamp:
+          type: string
+          format: date-time
+    AuditBase:
+      type: object
+      properties:
+        entDtm:
+          type: string
+          format: date-time
+        entUserId:
+          type: string
+        updDtm:
+          type: string
+        updUserId:
+          type: string
+          format: nullable
+    Dispute:
+      type: object
+      properties:
+        addressCityCtryId:
+          type: string
+          format: nullable
+        addressCitySeqNo:
+          type: string
+          format: nullable
+        addressCtryId:
+          type: string
+        addressIntlCityTxt:
+          type: string
+        addressIntlProvTxt:
+          type: string
+          format: nullable
+        addressLine1Txt:
+          type: string
+        addressLine2Txt:
+          type: string
+          format: nullable
+        addressLine3Txt:
+          type: string
+          format: nullable
+        addressProvCtryId:
+          type: string
+        addressProvSeqNo:
+          type: string
+        courtAgenId:
+          type: string
+        detachmentLocationTxt:
+          type: string
+        disputantBirthDt:
+          type: string
+          format: date
+        disputantClientId:
+          type: string
+          format: nullable
+        disputantCommentTxt:
+          type: string
+          format: nullable
+        disputantDetectOcrIssuesYn:
+          type: string
+        disputantDrvLicNumberTxt:
+          type: string
+        disputantGiven1Nm:
+          type: string
+        disputantGiven2Nm:
+          type: string
+          format: nullable
+        disputantGiven3Nm:
+          type: string
+          format: nullable
+        disputantOcrIssuesTxt:
+          type: string
+        disputantOrganizationNm:
+          type: string
+          format: nullable
+        disputantSurnameNm:
+          type: string
+        disputeId:
+          type: string
+        disputeStatusTypeCd:
+          type: string
+        drvLicIssuedCtryId:
+          type: string
+        drvLicIssuedIntlProvTxt:
+          type: string
+          format: nullable
+        drvLicIssuedProvSeqNo:
+          type: string
+        emailAddressTxt:
+          type: string
+        emailVerificationGuid:
+          type: string
+        emailVerifiedYn:
+          type: string
+        filingDt:
+          type: string
+          format: nullable
+        fineReductionReasonTxt:
+          type: string
+        homePhoneNumberTxt:
+          type: string
+        interpreterRequiredYn:
+          type: string
+          format: nullable
+        issuedDt:
+          type: string
+          format: date
+        jjAssignedTo:
+          type: string
+          format: nullable
+        languageCd:
+          type: string
+          format: nullable
+        lawFirmAddrCityCtryId:
+          type: string
+          format: nullable
+        lawFirmAddrCitySeqNo:
+          type: string
+          format: nullable
+        lawFirmAddrCtryId:
+          type: string
+          format: nullable
+        lawFirmAddrIntlCityTxt:
+          type: string
+          format: nullable
+        lawFirmAddrIntlProvTxt:
+          type: string
+          format: nullable
+        lawFirmAddrLine1Txt:
+          type: string
+          format: nullable
+        lawFirmAddrLine2Txt:
+          type: string
+          format: nullable
+        lawFirmAddrLine3Txt:
+          type: string
+          format: nullable
+        lawFirmAddrPostalCodeTxt:
+          type: string
+          format: nullable
+        lawFirmAddrProvCtryId:
+          type: string
+          format: nullable
+        lawFirmAddrProvSeqNo:
+          type: string
+          format: nullable
+        lawFirmNm:
+          type: string
+          format: nullable
+        lawyerEmailAddressTxt:
+          type: string
+          format: nullable
+        lawyerGiven1Nm:
+          type: string
+          format: nullable
+        lawyerGiven2Nm:
+          type: string
+          format: nullable
+        lawyerGiven3Nm:
+          type: string
+          format: nullable
+        lawyerPhoneNumberTxt:
+          type: string
+          format: nullable
+        lawyerSurnameNm:
+          type: string
+          format: nullable
+        officerPinTxt:
+          type: string
+          format: nullable
+        postalCodeTxt:
+          type: string
+        rejectedReasonTxt:
+          type: string
+          format: nullable
+        representedByLawyerYn:
+          type: string
+          format: nullable
+        submittedDt:
+          type: string
+          format: date
+        systemDetectOcrIssuesYn:
+          type: string
+        timeToPayReasonTxt:
+          type: string
+        updDtm:
+          type: string
+        updUserId:
+          type: string
+          format: nullable
+        userAssignedDtm:
+          type: string
+          format: nullable
+        userAssignedTo:
+          type: string
+          format: nullable
+        witnessNo:
+          type: string
+          format: nullable
+        workPhoneNumberTxt:
+          type: string
+          format: nullable
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    DisputeCount:
+      type: object
+      properties:
+        pleaCd:
+          type: string
+        requestCourtAppearanceYn:
+          type: string
+        requestReductionYn:
+          type: string
+        requestTimeToPayYn:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    Statute:
+      type: object
+      properties:
+        actCd:
+          type: string
+          example: MVA
+          maxLength: 3
+        statCode:
+          type: string
+          example: MVA 10(1)
+        statDescriptionTxt:
+          type: string
+          example: >-
+            The superintendent may in respect of any motor vehicle known or described as a tractor grader loader shovel roller mixer crane
+            or other self propelled construction machinery used in performing work in or on a mine or industrial undertaking  cause a
+            licence to be issued permitting the operation of the motor vehicle for the purpose of proceeding to or returning from the work
+            without load and the form of the licence shall be varied accordingly.
+          maxLength: 2000
+        statId:
+          type: string
+        statParagraphTxt:
+          type: string
+          format: nullable
+          maxLength: 3
+          nullable: true
+        statSectionTxt:
+          type: string
+          example: 10
+          maxLength: 10
+        statShortDescriptionTxt:
+          type: string
+          example: Special licence for tractors etc.
+          maxLength: 50
+        statSubParagraphTxt:
+          type: string
+          format: nullable
+          maxLength: 5
+          nullable: true
+        statSubSectionTxt:
+          type: string
+          format: nullable
+          example: 1
+          maxLength: 4
+    StatutesListResult:
+      type: object
+      properties:
+        statuteCodeValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/Statute'
+    ViolationTicket:
+      properties:
+        addressCityTxt:
+          type: string
+        addressCountryTxt:
+          type: string
+        addressPostalCodeTxt:
+          type: string
+        addressProvinceTxt:
+          type: string
+        addressTxt:
+          type: string
+        courtLocationTxt:
+          type: string
+        detachmentLocationTxt:
+          type: string
+        disputantBirthDt:
+          type: string
+          format: date
+        disputantClientNumberTxt:
+          type: string
+          format: nullable
+        disputantDrvLicNumberTxt:
+          type: string
+        disputantGivenNamesTxt:
+          type: string
+        disputantOrganizationNmTxt:
+          type: string
+        disputantSurnameTxt:
+          type: string
+        dispute:
+          type: object
+          $ref: '#/components/schemas/Dispute'
+        drvLicExpiryYearNo:
+          type: string
+        drvLicIssuedCountryTxt:
+          type: string
+        drvLicIssuedProvinceTxt:
+          type: string
+        drvLicIssuedYearNo:
+          type: string
+        isChangeOfAddressYn:
+          type: string
+          format: nullable
+        isDriverYn:
+          type: string
+        isOwnerYn:
+          type: string
+        isYoungPersonYn:
+          type: string
+        issuedAtOrNearCityTxt:
+          type: string
+          format: nullable
+        issuedDt:
+          type: string
+          format: date
+        issuedOnRoadOrHighwayTxt:
+          type: string
+          format: nullable
+        officerPinTxt:
+          type: string
+          format: nullable
+        ticketNumberTxt:
+          type: string
+        violationTicketId:
+          type: string
+        violationTicketCounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ViolationTicketCount'
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
+    ViolationTicketCount:
+      type: object
+      properties:
+        actOrRegulationNameCd:
+          type: string
+        countNo:
+          type: string
+        descriptionTxt:
+          type: string
+        disputeCount:
+          type: object
+          $ref: '#/components/schemas/DisputeCount'
+        isActYn:
+          type: string
+        isRegulationYn:
+          type: string
+        statParagraphTxt:
+          type: string
+          format: nullable
+        statSectionTxt:
+          type: string
+        statSubParagraphTxt:
+          type: string
+          format: nullable
+        statSubSectionTxt:
+          type: string
+        ticketedAmt:
+          type: string
+        violationTicketCountId:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/AuditBase'
