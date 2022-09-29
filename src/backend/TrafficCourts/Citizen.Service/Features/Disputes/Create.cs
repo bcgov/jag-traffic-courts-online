@@ -68,6 +68,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             /// <param name="mapper"></param>
             /// <param name="clock"></param>
             /// <param name="logger"></param>
+            /// <param name="hashidsService"></param>
             /// <exception cref="ArgumentNullException"></exception>
             public Handler(IBus bus, IRedisCacheService redisCacheService, IFilePersistenceService filePersistenceService, IMapper mapper, IClock clock, ILogger<Handler> logger, IHashidsService hashidsService)
             {

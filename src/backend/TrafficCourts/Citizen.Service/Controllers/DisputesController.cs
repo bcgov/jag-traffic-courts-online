@@ -25,6 +25,7 @@ public class DisputesController : ControllerBase
     /// <param name="bus"></param>
     /// <param name="mediator"></param>
     /// <param name="logger"></param>
+    /// <param name="hashidsService"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
     public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashidsService hashidsService)
     {
