@@ -62,7 +62,7 @@
         }
       }
     },
-    "/api/disputes/email/{uuid}/resend": {
+    "/api/disputes/email/{uuidHash}/resend": {
       "put": {
         "tags": [
           "Disputes"
@@ -70,13 +70,13 @@
         "summary": "An endpoint for resending an email to a Disputant.",
         "parameters": [
           {
-            "name": "uuid",
+            "name": "uuidHash",
             "in": "path",
             "description": "",
             "required": true,
+            "style": "simple",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -107,18 +107,19 @@
         }
       }
     },
-    "/api/disputes/email/{uuid}/validate": {
+    "/api/disputes/email/{uuid}/verify": {
       "put": {
         "tags": [
           "Disputes"
         ],
-        "summary": "An endpoint for validating an email sent to a Disputant.",
+        "summary": "An endpoint for verifying an email sent to a Disputant.",
         "parameters": [
           {
             "name": "uuid",
             "in": "path",
             "description": "",
             "required": true,
+            "style": "simple",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -163,6 +164,7 @@
             "name": "section",
             "in": "query",
             "description": "Motor vehicle act Section text to query by, ie \"MVA 13(1)(a)\" returns \"Motor Vehicle or Trailer without Licence\" contravention, or blank for no filter.",
+            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -197,6 +199,7 @@
             "in": "query",
             "description": "The violation ticket number. Must start with two upper case letters and end with eight digits.",
             "required": true,
+            "style": "form",
             "schema": {
               "pattern": "^[A-Z]{2}[0-9]{8}$",
               "type": "string"
@@ -207,6 +210,7 @@
             "in": "query",
             "description": "The time the violation ticket number was issued. Must be formatted a valid 24-hour clock, HH:MM.",
             "required": true,
+            "style": "form",
             "schema": {
               "pattern": "^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$",
               "type": "string"

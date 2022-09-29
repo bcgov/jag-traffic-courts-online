@@ -9,7 +9,7 @@ export class AppRoutes {
   public static STEPPER = 'stepper';
   public static PHOTO = 'photo';
   public static EMAILVERIFICATIONREQUIRED = 'emailVerificationRequired';
-  public static EMAILVERIFICATION = 'emailVerification';
+  public static EMAILVERIFICATION = 'email/verify';
 
   public static MODULE_PATH = AppRoutes.TICKET;
 

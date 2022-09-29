@@ -16,6 +16,7 @@ using TrafficCourts.Messaging;
 using TicketStorageType = TrafficCourts.Citizen.Service.Configuration.TicketStorageType;
 using FluentValidation.AspNetCore;
 using TrafficCourts.Common.Features.FilePersistence;
+using HashidsNet;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -83,6 +84,10 @@ public static class Startup
         builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
         builder.Services.AddTransient<IConfigureOptions<JsonOptions>, ConfigureJsonOptions>();
+
+        // simple reversible hashing for passing information back and forth to client using salt from parameters
+        builder.Services.ConfigureValidatableSetting<HashidsOptions>(builder.Configuration.GetSection(HashidsOptions.Section));
+        builder.Services.AddTransient<IHashidsService, HashidsService>();
 
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 

@@ -44,15 +44,15 @@ const routes: Routes = [
         component: EmailVerificationRequiredComponent,
       },
       {
-        path: AppRoutes.EMAILVERIFICATION,
-        component: EmailVerificationComponent,
-      },
-      {
         path: '',
         redirectTo: AppRoutes.FIND,
         pathMatch: 'full',
       },
     ],
+  },
+  {
+    path: AppRoutes.EMAILVERIFICATION,
+    component: EmailVerificationComponent
   },
   {
     path: '',

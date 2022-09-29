@@ -5,6 +5,8 @@ using System.Net;
 using System.Threading;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Messaging.MessageContracts;
+using HashidsNet;
+using TrafficCourts.Citizen.Service.Services;
 
 namespace TrafficCourts.Citizen.Service.Controllers;
 
@@ -15,6 +17,7 @@ public class DisputesController : ControllerBase
     private readonly IBus _bus;
     private readonly IMediator _mediator;
     private readonly ILogger<DisputesController> _logger;
+    private readonly IHashidsService _hashidsService; 
 
     /// <summary>
     /// 
@@ -23,11 +26,12 @@ public class DisputesController : ControllerBase
     /// <param name="mediator"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
-    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger)
+    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashidsService hashidsService)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _hashidsService = hashidsService ?? throw new ArgumentNullException(nameof(hashidsService));
     }
 
     /// <summary>
@@ -61,19 +65,26 @@ public class DisputesController : ControllerBase
     /// <summary>
     /// An endpoint for resending an email to a Disputant.
     /// </summary>
-    /// <param name="uuid"></param>
+    /// <param name="uuidHash"></param>
     /// <param name="cancellationToken"></param>
     /// <returns>
     /// <response code="202">Resend email acknowledged.</response>
     /// <response code="400">The uuid doesn't appear to be a valid UUID.</response>
     /// <response code="500">There was a internal server error when triggering an email to resend.</response>
     /// </returns>
-    [HttpPut("/api/disputes/email/{uuid}/resend")]
+    [HttpPut("/api/disputes/email/{uuidHash}/resend")]
     [ProducesResponseType((int)HttpStatusCode.Accepted)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
+    public async Task<IActionResult> ResendEmailAsync(string uuidHash, CancellationToken cancellationToken)
     {
-        EmailVerificationSend emailVerificationSend = new(uuid);
+        int[] bytes = _hashidsService.GetHashids().Decode(uuidHash);
+        string uuid = "";
+        foreach (var singleByte in bytes)
+        {
+            var singleChar = Convert.ToChar(singleByte);
+            uuid = uuid + singleChar;
+        }
+        EmailVerificationSend emailVerificationSend = new(Guid.Parse(uuid));
         await _bus.Publish(emailVerificationSend, cancellationToken);
         return Accepted();
     }
