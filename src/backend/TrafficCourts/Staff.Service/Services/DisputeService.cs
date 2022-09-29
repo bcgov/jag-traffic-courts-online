@@ -2,13 +2,8 @@
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Mappers;
-using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Security.Claims;
-using Microsoft.Extensions.Options;
-using TrafficCourts.Common.Configuration;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -17,91 +12,39 @@ namespace TrafficCourts.Staff.Service.Services;
 /// </summary>
 public class DisputeService : IDisputeService
 {
-    private readonly OracleDataApiConfiguration _oracleDataApiConfiguration;
     private readonly ILogger<DisputeService> _logger;
+    private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DisputeService(
-        OracleDataApiConfiguration oracleDataApiConfiguration,
+        IOracleDataApiClient oracleDataApi,
         IBus bus,
         IFilePersistenceService filePersistenceService,
         IHttpContextAccessor httpContextAccessor,
         ILogger<DisputeService> logger)
     {
-        _oracleDataApiConfiguration = oracleDataApiConfiguration ?? throw new ArgumentNullException(nameof(oracleDataApiConfiguration));
+        _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <summary>
-    /// Returns a new inialized instance of the OracleDataApi_v1_0Client
-    /// </summary>
-    /// <returns></returns>
-    private OracleDataApiClient GetOracleDataApi()
-    {
-        var httpClient = new HttpClient { BaseAddress = new Uri(_oracleDataApiConfiguration.BaseUrl) };
-        OracleDataApiClient client = new(httpClient);
-
-        var user = _httpContextAccessor.HttpContext?.User;
-
-        var username = user?.Claims?.FirstOrDefault(_ => _.Type == "preferred_username")?.Value;
-        var fullName = user?.Claims?.FirstOrDefault(_ => _.Type == ClaimTypes.Name)?.Value;
-
-        if (username is not null && !string.IsNullOrWhiteSpace(username))
-        {
-            // we expect the username to be of the form: someone@domain
-            int index = username.IndexOf("@");
-            if (index > 0)
-            {
-                username = username[..index];
-            }
-
-            HttpRequestHeaders requestHeaders = httpClient.DefaultRequestHeaders;
-            requestHeaders.Add("x-username", username);
-
-            if (fullName is not null && !string.IsNullOrWhiteSpace(fullName))
-            {
-                requestHeaders.Add("x-fullName", fullName);
-            }
-        }
-        else
-        {
-            if (_httpContextAccessor.HttpContext is null)
-            {
-                // this is being executed outside of an web request
-                _logger.LogError("Cannot set x-username header, no HttpContext is available, the request not executing part of a HTTP web api request");
-            }
-            else
-            {                
-                using var scope = _logger.BeginScope(new Dictionary<string, object> {
-                    ["IsAuthenticated"] = _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated ?? false,
-                    ["AuthenticationType"] = _httpContextAccessor.HttpContext.User.Identity?.AuthenticationType ?? String.Empty
-                });
-
-                _logger.LogError("Could not find preferred_username claim on current user");
-            }
-        }
-
-        return client;
-    }
-
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
     {
-        return await GetOracleDataApi().GetAllDisputesAsync(null, excludeStatus, cancellationToken);
+        return await _oracleDataApi.GetAllDisputesAsync(null, excludeStatus, cancellationToken);
     }
 
     public async Task<long> SaveDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
     {
-        return await GetOracleDataApi().SaveDisputeAsync(dispute, cancellationToken);
+        return await _oracleDataApi.SaveDisputeAsync(dispute, cancellationToken);
     }
 
     public async Task<Dispute> GetDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
-        Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
 
         // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
         // If so, retrieve the image from object storage and return it as well.
@@ -180,21 +123,21 @@ public class DisputeService : IDisputeService
 
     public async Task<Dispute> UpdateDisputeAsync(long disputeId, Dispute dispute, CancellationToken cancellationToken)
     {
-        return await GetOracleDataApi().UpdateDisputeAsync(disputeId, dispute, cancellationToken);
+        return await _oracleDataApi.UpdateDisputeAsync(disputeId, dispute, cancellationToken);
     }
 
     public async Task ValidateDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute status setting to validated");
 
-        await GetOracleDataApi().ValidateDisputeAsync(disputeId, cancellationToken);
+        await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
     }
 
     public async Task CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Dispute cancelled");
 
-        Dispute dispute = await GetOracleDataApi().CancelDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
@@ -208,7 +151,7 @@ public class DisputeService : IDisputeService
     {
         _logger.LogDebug("Dispute rejected");
 
-        Dispute dispute = await GetOracleDataApi().RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
+        Dispute dispute = await _oracleDataApi.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
@@ -223,7 +166,7 @@ public class DisputeService : IDisputeService
         _logger.LogDebug("Dispute submitted for approval processing");
 
         // Save and status to PROCESSING
-        Dispute dispute = await GetOracleDataApi().SubmitDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
@@ -232,14 +175,14 @@ public class DisputeService : IDisputeService
 
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
     {
-        await GetOracleDataApi().DeleteDisputeAsync(disputeId, cancellationToken);
+        await _oracleDataApi.DeleteDisputeAsync(disputeId, cancellationToken);
     }
 
     public async Task<string> ResendEmailVerificationAsync(long disputeId, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Email verification sent");
 
-        Dispute dispute = await GetOracleDataApi().GetDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.EmailVerificationToken));

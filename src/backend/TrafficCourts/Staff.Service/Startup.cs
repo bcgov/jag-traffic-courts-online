@@ -1,3 +1,4 @@
+using FluentAssertions.Common;
 using MassTransit;
 using MediatR;
 using Microsoft.OpenApi.Models;
@@ -9,9 +10,10 @@ using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
-using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service;
@@ -34,6 +36,8 @@ public static class Startup
         builder.AddRedis();
 
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddOracleDataApiClient(builder.Configuration)
+            .AddHttpMessageHandler<UserIdentityProviderHandler>();
 
         builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger);
 
@@ -47,8 +51,6 @@ public static class Startup
 
         builder.Services.AddAuthentication(builder.Configuration);
 
-        builder.Services.AddSingleton(new OracleDataApiConfiguration());
-
         builder.Services.AddAuthorization(builder.Configuration);
 
         builder.Services.AddFilePersistence(builder.Configuration);
@@ -57,7 +59,6 @@ public static class Startup
         builder.Services.AddTransient<IKeycloakService, KeycloakService>();
 
         // Add DisputeService
-        builder.Services.ConfigureValidatableSetting<OracleDataApiConfiguration>(builder.Configuration.GetRequiredSection(OracleDataApiConfiguration.Section));
         builder.Services.AddTransient<IDisputeService, DisputeService>();
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
 
