@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
-using TrafficCourts.Citizen.Service.Models.Search;
 using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
 
@@ -34,9 +33,9 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="404">The violation ticket was not found.</response>
         /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(ViolationTicket), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(ViolationTicket), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SearchAsync(
             [FromQuery]
             [Required]
@@ -72,8 +71,8 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// the ticket title could not be found, the ticket number is invalid, the violation date is invalid or more than 
         /// 30 days ago, or MVA is not selected or not the only ACT selected.</response>
         [HttpPost]
-        [ProducesResponseType(typeof(OcrViolationTicket), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(OcrViolationTicket), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [RequestSizeLimit(10485760)]
         public async Task<IActionResult> AnalyseAsync(
             [Required][PermittedFileContentType(new string[] { "image/png", "image/jpeg", "application/pdf" })] IFormFile file,
@@ -100,7 +99,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
             {
                 _logger.LogError(e, "Exception invoking Azure Form Recognizer");
                 ProblemDetails problemDetails = new();
-                problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+                problemDetails.Status = StatusCodes.Status500InternalServerError;
                 problemDetails.Title = "Error invoking Azure Form Recognizer";
                 problemDetails.Instance = HttpContext?.Request?.Path;
                 string? innerExceptionMessage = e.InnerException?.Message;

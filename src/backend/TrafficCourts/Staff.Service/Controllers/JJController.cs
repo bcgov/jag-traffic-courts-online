@@ -8,8 +8,7 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-// implement role authorization by using TCOControllerBase class as in csrs project
-public class JJController : JJControllerBase<JJController>
+public class JJController : StaffControllerBase<JJController>
 {
     private readonly IJJDisputeService _JJDisputeService;
 
@@ -21,8 +20,7 @@ public class JJController : JJControllerBase<JJController>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
     public JJController(IJJDisputeService JJDisputeService, ILogger<JJController> logger) : base(logger)
     {
-        ArgumentNullException.ThrowIfNull(JJDisputeService);
-        _JJDisputeService = JJDisputeService;
+        _JJDisputeService = JJDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
     }
 
     /// <summary>
@@ -31,12 +29,13 @@ public class JJController : JJControllerBase<JJController>
     /// <param name="cancellationToken"></param>
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
     /// <response code="200">The JJ disputes were found.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of JJ dispute records</returns>
     [HttpGet("Disputes")]
     [ProducesResponseType(typeof(IList<JJDispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
@@ -65,13 +64,14 @@ public class JJController : JJControllerBase<JJController>
     /// <returns>A single JJ dispute record</returns>
     /// <response code="200">The JJ dispute was found.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{JJDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -129,6 +129,7 @@ public class JJController : JJControllerBase<JJController>
     /// <returns></returns>
     /// <response code="200">Admin resolution is submitted. The JJ Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jj-dispute:update permission.</response>
     /// <response code="404">The JJ Dispute to update was not found.</response>
     /// <response code="405">An invalid JJ Dispute status is provided. Update failed.</response>
@@ -136,6 +137,7 @@ public class JJController : JJControllerBase<JJController>
     [HttpPut("{ticketNumber}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
@@ -183,12 +185,14 @@ public class JJController : JJControllerBase<JJController>
     /// <returns></returns>
     /// <response code="200">JJ Disputes are assigned/unassigned to/from a JJ successfully. The JJ Disputes are updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="403">Forbidden, requires jj-dispute:update permission.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:assign permission.</response>
     /// <response code="404">The JJ Dispute(s) to update was not found.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     [HttpPut("Assign")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
@@ -233,7 +237,7 @@ public class JJController : JJControllerBase<JJController>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.</response>
@@ -242,6 +246,7 @@ public class JJController : JJControllerBase<JJController>
     [HttpPut("{ticketNumber}/review")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
@@ -295,8 +300,8 @@ public class JJController : JJControllerBase<JJController>
     /// <returns></returns>
     /// <response code="200">The JJDispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
-    /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
+    /// <response code="403">Forbidden, requires jjdispute:accept permission.</response>
     /// <response code="404">JJDispute record not found. Update failed.</response>
     /// <response code="405">A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.</response>
     /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
@@ -304,6 +309,7 @@ public class JJController : JJControllerBase<JJController>
     [HttpPut("{ticketNumber}/accept")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]

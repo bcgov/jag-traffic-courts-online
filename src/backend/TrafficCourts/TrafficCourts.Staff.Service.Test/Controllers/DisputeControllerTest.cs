@@ -229,7 +229,7 @@ public class DisputeControllerTest
         var _endpoints = new List<(Type, MethodInfo)>(); // All endpoints to check in DisputeController
 
         var assembly = Assembly.GetAssembly(typeof(DisputeController));
-        var allControllers = AllTypes.From(assembly).ThatDeriveFrom<VTCControllerBase<DisputeController>>();
+        var allControllers = AllTypes.From(assembly).ThatDeriveFrom<StaffControllerBase<DisputeController>>();
 
         foreach (Type type in allControllers)
         {
