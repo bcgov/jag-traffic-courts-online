@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -8,7 +7,6 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-// implement role authorization by using TCOControllerBase class as in csrs project
 public class DisputeController : StaffControllerBase<DisputeController>
 {
     private readonly IDisputeService _disputeService;
