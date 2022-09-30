@@ -3,10 +3,12 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -17,11 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeRemark;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 
 @Service
 public class JJDisputeService {
@@ -117,9 +121,98 @@ public class JJDisputeService {
 	@Transactional
 	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+		
+		// Update the status of the JJ Dispute if the status is not the same as current one
+		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
+			jjDisputeToUpdate = setStatus(id, jjDispute.getStatus(), principal, null);
+		}
 
-		JJDisputeStatus jjDisputeStatus = jjDispute.getStatus();
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status");
+		// Remove all existing jj disputed counts that are associated to this jj dispute
+		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
+			jjDisputeToUpdate.getJjDisputedCounts().clear();
+		}
+		// Add updated ticket counts
+		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
 
+		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
+
+			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
+				logger.error("Attempting to save a remark with no user data - bad method call.");
+				throw new NotAllowedException("Cannot set a remark from unknown user");
+			}
+
+			// Remove all existing remarks that are associated to this jj dispute
+			jjDisputeToUpdate.getRemarks().clear();
+
+			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
+			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
+				if(StringUtils.isBlank(remark.getUserFullName()))
+					remark.setUserFullName(principal.getName());
+			}
+
+			// Add updated remarks
+			jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
+		}
+
+		JJDispute updatedJJDispute = jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
+		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistence
+		entityManager.refresh(updatedJJDispute);
+
+		return updatedJJDispute;
+	}
+	
+	/**
+	 * Assigns a one or more {@link JJDispute} to the IDIR username of the JJ, or unassigns them if username not specified
+	 *
+	 * @param List of ticketNumber
+	 * @param IDIR username of the JJ
+	 */
+	public void assignJJDisputesToJJ(List<String> ids, String username) {
+		if (ids == null || ids.isEmpty()) {
+			logger.error("No JJDispute ids (ticket numbers) passed to assign to a username - bad method call.");
+			throw new ConstraintViolationException("Cannot set empty list of ticket numbers to username - bad method call.", null);
+		}
+		
+		for (String id : ids) {
+			// Find the jj-dispute to be assigned to the username
+			JJDispute jjDispute = jjDisputeRepository.findById(id).orElseThrow();
+			if (jjDispute == null) {
+				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id + " - element not found.");
+				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id);
+			}
+			
+			if (!StringUtils.isBlank(username)) {
+				
+				jjDispute.setJjAssignedTo(username);
+				jjDisputeRepository.save(jjDispute);
+				
+				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", id, username);
+			} else {
+				jjDispute.setJjAssignedTo(null);
+				jjDisputeRepository.save(jjDispute);
+				
+				logger.debug("Unassigned JJDispute with ticket number {} ", id);
+			}
+		}
+	}
+	
+	/**
+	 * Updates the status of a specific {@link JJDispute}
+	 *
+	 * @param id
+	 * @param JJDisputeStatus
+	 * @param remark note by the staff if the status is REVIEW.
+	 * @return the saved JJDispute
+	 */
+	public JJDispute setStatus(String id, JJDisputeStatus jjDisputeStatus, Principal principal, String remark) {
+		if (jjDisputeStatus == null) {
+			logger.error("Attempting to set JJDispute status to null - bad method call.");
+			throw new NotAllowedException("Cannot set JJDispute status to null");
+		}
+
+		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
+		
 		// TCVP-1435 - business rules
 		// - current status must be NEW, IN_PROGRESS to change to IN_PROGRESS
 		// - current status must be CONFIRMED, REVIEW to change to REVIEW
@@ -174,38 +267,29 @@ public class JJDisputeService {
 			throw new NotAllowedException("Unknown status of a JJ Dispute record: %s", jjDisputeToUpdate.getStatus());
 		}
 
-		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks");
-		// Remove all existing jj disputed counts that are associated to this jj dispute
-		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
-			jjDisputeToUpdate.getJjDisputedCounts().clear();
-		}
-		// Add updated ticket counts
-		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
-
-		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
-
+		jjDisputeToUpdate.setStatus(jjDisputeStatus);
+		
+		// Set remarks with user's full name if a remark note is provided along with the status update
+		if(!StringUtils.isBlank(remark)) {
 			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
 				logger.error("Attempting to save a remark with no user data - bad method call.");
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
-
-			// Remove all existing remarks that are associated to this jj dispute
-			jjDisputeToUpdate.getRemarks().clear();
-
-			// Add the authenticated user's full name to the remark if the remark's full name is empty (new remark)
-			for (JJDisputeRemark remark : jjDispute.getRemarks()) {
-				if(StringUtils.isBlank(remark.getUserFullName()))
-					remark.setUserFullName(principal.getName());
-			}
-
-			// Add updated remarks
-			jjDisputeToUpdate.addRemarks(jjDispute.getRemarks());
+			
+			JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
+			jjDisputeRemark.setNote(remark);
+			
+			PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
+			CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();
+			jjDisputeRemark.setUserFullName(user.getFullName());
+			
+			jjDisputeRemark.setJjDispute(jjDisputeToUpdate);
+			
+			List<JJDisputeRemark> remarks = jjDisputeToUpdate.getRemarks();
+			remarks.add(jjDisputeRemark);
+			jjDisputeToUpdate.setRemarks(remarks);
 		}
-
-		JJDispute updatedJJDispute = jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
-		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistence
-		entityManager.refresh(updatedJJDispute);
-
-		return updatedJJDispute;
+		
+		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
 }

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,11 +16,15 @@ import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.CustomUserDetails;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
+import ca.bc.gov.open.jag.tco.oracledataapi.security.PreAuthenticatedToken;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
 class JJDisputeControllerTest extends BaseTestSuite {
@@ -106,6 +111,93 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(JJDisputeStatus.IN_PROGRESS, jjDispute.getStatus());
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
+	}
+	
+	@Test
+	@Transactional
+	public void testAssignJJDisputesToJJ() {
+		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());			
+		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
+				 .jjAssignedTo("Tony Stark")
+				 .build());
+
+		// Get the ids of the jj disputes and call the AssignJJ endpoint to assign all jj disputes to a new JJ
+		List<String> ticketNumbers = new ArrayList<>();
+		ticketNumbers.add(dispute1.getTicketNumber());
+		ticketNumbers.add(dispute2.getTicketNumber());
+		jjDisputeController.assignJJDisputesToJJ(ticketNumbers, "Steven Strange");
+
+		// Assert JJ disputes updated with new assigned JJ
+		JJDispute jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
+		assertEquals("Steven Strange", jjDispute1.getJjAssignedTo());
+		JJDispute jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
+		assertEquals("Steven Strange", jjDispute2.getJjAssignedTo());
+		
+		// Unassign all disputes by calling the AssignJJ endpoint with null username
+		jjDisputeController.assignJJDisputesToJJ(ticketNumbers, null);
+		
+		// Assert JJ disputes are unassigned
+		jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
+		assertEquals(null, jjDispute1.getJjAssignedTo());
+		jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
+		assertEquals(null, jjDispute2.getJjAssignedTo());
+	}
+	
+	@Test
+	public void testSetJJDisputeStatusToReview() {
+		// Create a single JJ Dispute with status CONFIRMED
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+        authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		// Set valid status
+		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
+		jjDisputeRepository.save(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
+
+		// Set the status to REVIEW
+		jjDisputeController.reviewJJDispute(ticketNumber, "Test Remark", false, principal);
+
+		// Assert status and remark are set.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.REVIEW, jjDispute.getStatus());
+		assertEquals("Test Remark", jjDispute.getRemarks().get(0).getNote());
+		assertEquals("testUser", jjDispute.getRemarks().get(0).getUserFullName());
+	}
+	
+	@Test
+	public void testSetJJDisputeStatusToAccepted() {
+		// Create a single JJ Dispute with status CONFIRMED
+		JJDispute jjDispute = RandomUtil.createJJDispute();
+		String ticketNumber = jjDispute.getTicketNumber();
+		// Add the required authority role
+		List<GrantedAuthority> authority = new ArrayList<>();
+        authority.add(new SimpleGrantedAuthority("User"));
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", authority);
+		Principal principal = new PreAuthenticatedToken(user);
+		// Set valid status
+		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
+		jjDisputeRepository.save(jjDispute);
+
+		// Retrieve it from the controller's endpoint
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(ticketNumber, jjDispute.getTicketNumber());
+		assertEquals(JJDisputeStatus.CONFIRMED, jjDispute.getStatus());
+
+		// Set the status to ACCEPTED
+		jjDisputeController.acceptJJDispute(ticketNumber, false, principal);
+
+		// Assert status and remark are set.
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
+		assertEquals(JJDisputeStatus.ACCEPTED, jjDispute.getStatus());
 	}
 	
 	// Helper method to return an instance of Principal

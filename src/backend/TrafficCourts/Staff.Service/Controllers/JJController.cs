@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Authentication;
@@ -168,6 +170,178 @@ public class JJController : JJControllerBase<JJController>
         catch (Exception e)
         {
             _logger.LogError(e, "General Exception: server error submitting JJ Dispute Admin Resolution");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.
+    /// </summary>
+    /// <param name="ticketNumbers">List of Unique identifiers for JJ Dispute records to be assigend/unassigned.</param>
+    /// <param name="username">IDIR username of the JJ that JJ Dispute(s) will be assigned to, if specified. Otherwise JJ Disputes will be unassigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">JJ Disputes are assigned/unassigned to/from a JJ successfully. The JJ Disputes are updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="403">Forbidden, requires jj-dispute:update permission.</response>
+    /// <response code="404">The JJ Dispute(s) to update was not found.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("Assign")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Assign)]
+    public async Task<IActionResult> AssignJJDisputesToJJ([BindRequired, FromQuery(Name = "ticketNumbers")] List<string> ticketNumbers, string? username, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJ Dispute(s) in oracle-data-api for assigning/unassigning them to/from a JJ");
+
+        try
+        {
+            await _JJDisputeService.AssignJJDisputesToJJ(ticketNumbers, username, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "API Exception: error assigning/unassigning JJ Dispute to/from a JJ through oracle-data-api");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "General Exception: server error assigning/unassigning JJ Dispute to/from a JJ");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Updates the status of a particular JJDispute record to REVIEW as well as adds an optional remark that explaining why the status was set to REVIEW.
+    /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="remark">The remark or note (max 256 characters) the JJDispute was set to REVIEW.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJDispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
+    /// <response code="404">JJDispute record not found. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be less than or equal to 256 characters. Update failed.</response>
+    /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/review")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Review)]
+    public async Task<IActionResult> ReviewJJDisputeAsync(
+        string ticketNumber,
+        [FromForm]
+        [StringLength(256, ErrorMessage = "Remark note cannot exceed 256 characters.")] string remark,
+        bool checkVTC,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJDispute status to REVIEW");
+
+        try
+        {
+            await _JJDisputeService.ReviewJJDisputeAsync(ticketNumber, remark, checkVTC, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Updates the status of a particular JJDispute record to ACCEPTED.
+    /// </summary>
+    /// <param name="ticketNumber">Unique identifier for a specific JJ Dispute record.</param>
+    /// <param name="checkVTC">boolean to indicate need to check VTC assigned.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">The JJDispute is updated.</response>
+    /// <response code="400">The request was not well formed. Check the parameters.</response>
+    /// <response code="401">Unauthenticated.</response>
+    /// <response code="403">Forbidden, requires jjdispute:review permission.</response>
+    /// <response code="404">JJDispute record not found. Update failed.</response>
+    /// <response code="405">A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.</response>
+    /// <response code="409">The JJDispute has already been assigned to a different user. JJDispute cannot be modified until assigned time expires.</response>
+    /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
+    [HttpPut("{ticketNumber}/accept")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Accept)]
+    public async Task<IActionResult> AcceptJJDisputeAsync(
+        string ticketNumber,
+        bool checkVTC,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Updating the JJDispute status to ACCEPTED");
+
+        try
+        {
+            await _JJDisputeService.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+            return Ok();
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status400BadRequest)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status404NotFound)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e) when (e.StatusCode == StatusCodes.Status405MethodNotAllowed)
+        {
+            return new HttpError(e.StatusCode, e.Message);
+        }
+        catch (ApiException e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
+            return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating JJDispute status");
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }

@@ -5,6 +5,7 @@
 /// </summary>
 public static class Scopes
 {
+    public const string Accept = "accept";
     public const string Approve = "approve";
     public const string Assign = "assign";
 
