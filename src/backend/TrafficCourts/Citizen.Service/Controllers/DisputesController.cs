@@ -40,9 +40,9 @@ public class DisputesController : ControllerBase
     /// <response code="500">There was a internal server error that prevented creation of the dispute.</response>
     /// </returns>
     [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
         string host = HttpContext is not null ? HttpContext.Request.Host.Value : "testhost";
@@ -69,8 +69,8 @@ public class DisputesController : ControllerBase
     /// <response code="500">There was a internal server error when triggering an email to resend.</response>
     /// </returns>
     [HttpPut("/api/disputes/email/{uuid}/resend")]
-    [ProducesResponseType((int)HttpStatusCode.Accepted)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ResendEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
         EmailVerificationSend emailVerificationSend = new(uuid);
@@ -89,8 +89,8 @@ public class DisputesController : ControllerBase
     /// <response code="500">There was a internal server error when triggering a received email message.</response>
     /// </returns>
     [HttpPut("/api/disputes/email/{uuid}/verify")]
-    [ProducesResponseType((int)HttpStatusCode.Accepted)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> VerifyEmailAsync(Guid uuid, CancellationToken cancellationToken)
     {
         EmailVerificationReceived emailVerificationReceived = new(uuid);

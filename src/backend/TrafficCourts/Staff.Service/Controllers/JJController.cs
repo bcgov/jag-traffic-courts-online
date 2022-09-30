@@ -21,8 +21,7 @@ public class JJController : JJControllerBase<JJController>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
     public JJController(IJJDisputeService JJDisputeService, ILogger<JJController> logger) : base(logger)
     {
-        ArgumentNullException.ThrowIfNull(JJDisputeService);
-        _JJDisputeService = JJDisputeService;
+        _JJDisputeService = JJDisputeService ?? throw new ArgumentNullException(nameof(JJDisputeService));
     }
 
     /// <summary>
@@ -31,12 +30,13 @@ public class JJController : JJControllerBase<JJController>
     /// <param name="cancellationToken"></param>
     /// <param name="jjAssignedTo">If specified, will retrieve the records which are assigned to the specified jj staff</param>
     /// <response code="200">The JJ disputes were found.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of JJ dispute records</returns>
     [HttpGet("Disputes")]
     [ProducesResponseType(typeof(IList<JJDispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
@@ -65,13 +65,14 @@ public class JJController : JJControllerBase<JJController>
     /// <returns>A single JJ dispute record</returns>
     /// <response code="200">The JJ dispute was found.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires jj-dispute:read permission.</response>
     /// <response code="409">The JJDispute has already been assigned to a user. JJDispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{JJDisputeId}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -136,6 +137,7 @@ public class JJController : JJControllerBase<JJController>
     [HttpPut("{ticketNumber}")]
     [ProducesResponseType(typeof(JJDispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
