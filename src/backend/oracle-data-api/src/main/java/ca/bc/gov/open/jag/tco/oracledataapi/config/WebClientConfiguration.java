@@ -27,7 +27,7 @@ public class WebClientConfiguration {
 	private final Logger logger = LoggerFactory.getLogger(WebClientConfiguration.class);
 	
 	@Autowired
-    ConfigProperties properties;
+    WebClientProperties properties;
 	
 	@Bean
     public WebClient ordsWebClient() {
