@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiClient;
 
 @Configuration
