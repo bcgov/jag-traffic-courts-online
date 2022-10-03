@@ -11,7 +11,7 @@ public class HashidsOptions : IValidatable
     /// Salt
     /// </summary>
     [Required]
-    public string? Salt { get; set; } = "6e0589b9-a753-4182-aa6f-b350a9345bf5";
+    public string? Salt { get; set; } = "";
 
     public void Validate()
     {

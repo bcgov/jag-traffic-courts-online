@@ -35,6 +35,7 @@ public static class Startup
 
         builder.AddRedis();
 
+        builder.Services.AddTransient<UserIdentityProviderHandler>();
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddOracleDataApiClient(builder.Configuration)
             .AddHttpMessageHandler<UserIdentityProviderHandler>();

@@ -33,6 +33,7 @@ services:
       OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
       OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
       OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
+      HASHIDS__SALT: ${HASHIDS__SALT:-}
     ports:
       - "5000:8080"
     restart: always
@@ -72,7 +73,6 @@ services:
       OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
       OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__BUCKETNAME:-traffic-ticket-dev}
       OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
-      HASHIDS__SALT: ${HASHIDS__SALT:-6e0589b9-a753-4182-aa6f-b350a9345bf5}
     ports:
       - "5005:8080"
     restart: always
