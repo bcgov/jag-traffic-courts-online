@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.cfg.NotYetImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -17,9 +20,14 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 @Qualifier("disputeRepository")
 @Repository
 public class DisputeRepositoryImpl implements DisputeRepository {
+	
+	Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
 
-	public DisputeRepositoryImpl() {
-		// TODO pass in OpenAPI generated client that delegates implementation in each of the below methods.
+    private final ViolationTicketApi violationTicketApi;
+
+	public DisputeRepositoryImpl(ViolationTicketApi violationTicketApi) {
+		// Pass in OpenAPI generated client that delegates implementation in each of the below methods.
+		this.violationTicketApi = violationTicketApi;
 	}
 
 	@Override
