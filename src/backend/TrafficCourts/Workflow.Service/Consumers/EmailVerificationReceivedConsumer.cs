@@ -44,8 +44,9 @@ public class EmailVerificationReceivedConsumer : IConsumer<EmailVerificationRece
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             SendEmail email = _emailSenderService.ToConfirmationEmail(dispute);
-
             await context.Publish(email);
+
+            dispute.EmailAddressVerified = true;
         }
         catch (ApiException ex)
         {

@@ -7,6 +7,7 @@ using System.Threading;
 using TrafficCourts.Citizen.Service.Controllers;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Dispute;
+using TrafficCourts.Citizen.Service.Services;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Controllers
@@ -21,7 +22,8 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var mockBus = new Mock<IBus>();
-            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object);
+            var mockHashids = new Mock<IHashidsService>();
+            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object);
             var request = new Create.Request(mockTicketDispute.Object, "localhost");
             var createResponse = new Create.Response();
 

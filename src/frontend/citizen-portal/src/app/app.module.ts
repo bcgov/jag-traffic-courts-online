@@ -21,6 +21,7 @@ import { FindTicketComponent } from './components/find-ticket/find-ticket.compon
 import { DisputeSubmitSuccessComponent } from './components/dispute-submit-success/dispute-submit-success.component';
 import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
 import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
+import { EmailVerificationComponent } from './components/email-verification/email-verification.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -69,6 +70,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CountItemSummaryComponent,
     CountItemDisputeSummaryComponent,
     EmailVerificationRequiredComponent,
+    EmailVerificationComponent,
   ],
   imports: [
     CommonModule,

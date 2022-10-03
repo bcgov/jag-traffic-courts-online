@@ -10,6 +10,7 @@ import { InitiateResolutionComponent } from './components/initiate-resolution/in
 import { FindTicketComponent } from './components/find-ticket/find-ticket.component';
 import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
 import { LandingComponent } from './components/landing/landing.component';
+import { EmailVerificationComponent } from '@components/email-verification/email-verification.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
         pathMatch: 'full',
       },
     ],
+  },
+  {
+    path: AppRoutes.EMAILVERIFICATION,
+    component: EmailVerificationComponent
   },
   {
     path: '',

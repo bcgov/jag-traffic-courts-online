@@ -33,6 +33,7 @@ services:
       OBJECTSTORAGE__SECRETKEY: ${OBJECTSTORAGE__SECRETKEY:-password}
       OBJECTSTORAGE__BUCKETNAME: ${OBJECTSTORAGE__ENDPOINT:-traffic-ticket-dev}
       OBJECTSTORAGE__SSL: ${OBJECTSTORAGE__SSL:-false}
+      HASHIDS__SALT: ${HASHIDS__SALT:-}
     ports:
       - "5000:8080"
     restart: always
@@ -59,7 +60,7 @@ services:
       RABBITMQ__USERNAME: ${RABBITMQ__USERNAME:-guest}
       RABBITMQ__PASSWORD: ${RABBITMQ__PASSWORD:-guest}
       JWT__AUDIENCE: ${JWT__AUDIENCE:-staff-api}
-      JWT__AUTHORITY: ${JWT__AUTHORITY:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court}      
+      JWT__AUTHORITY: ${JWT__AUTHORITY:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court}     
       KEYCLOAKADMINAPI__BASEURI: ${KEYCLOAKADMINAPI__BASEURI:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/admin/realms/}
       KEYCLOAKADMINAPI__REALM: ${KEYCLOAKADMINAPI__REALM:-traffic-court}
       OAUTH__TOKENURI: ${OAUTH__TOKENURI:-https://oidc-0198bb-dev.apps.silver.devops.gov.bc.ca/realms/traffic-court/protocol/openid-connect/token}

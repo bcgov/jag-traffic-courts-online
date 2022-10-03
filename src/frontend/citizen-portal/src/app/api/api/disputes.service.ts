@@ -159,16 +159,16 @@ export class DisputesService {
 
     /**
      * An endpoint for resending an email to a Disputant.
-     * @param uuid 
+     * @param uuidHash 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputesEmailUuidResendPut(uuid: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiDisputesEmailUuidResendPut(uuid: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputesEmailUuidResendPut(uuid: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputesEmailUuidResendPut(uuid: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
-        if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling apiDisputesEmailUuidResendPut.');
+    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesEmailUuidHashResendPut(uuidHash: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+        if (uuidHash === null || uuidHash === undefined) {
+            throw new Error('Required parameter uuidHash was null or undefined when calling apiDisputesEmailUuidHashResendPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -204,7 +204,7 @@ export class DisputesService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/disputes/email/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}/resend`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/disputes/email/${this.configuration.encodeParam({name: "uuidHash", value: uuidHash, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/resend`,
             null,
             {
                 context: localVarHttpContext,
@@ -218,17 +218,17 @@ export class DisputesService {
     }
 
     /**
-     * An endpoint for validating an email sent to a Disputant.
+     * An endpoint for verifying an email sent to a Disputant.
      * @param uuid 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDisputesEmailUuidValidatePut(uuid: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
-    public apiDisputesEmailUuidValidatePut(uuid: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
-    public apiDisputesEmailUuidValidatePut(uuid: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
-    public apiDisputesEmailUuidValidatePut(uuid: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiDisputesEmailUuidVerifyPut(uuid: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any>;
+    public apiDisputesEmailUuidVerifyPut(uuid: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<any>>;
+    public apiDisputesEmailUuidVerifyPut(uuid: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<any>>;
+    public apiDisputesEmailUuidVerifyPut(uuid: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling apiDisputesEmailUuidValidatePut.');
+            throw new Error('Required parameter uuid was null or undefined when calling apiDisputesEmailUuidVerifyPut.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -264,7 +264,7 @@ export class DisputesService {
             }
         }
 
-        return this.httpClient.put<any>(`${this.configuration.basePath}/api/disputes/email/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}/validate`,
+        return this.httpClient.put<any>(`${this.configuration.basePath}/api/disputes/email/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}/verify`,
             null,
             {
                 context: localVarHttpContext,

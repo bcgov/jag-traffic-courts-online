@@ -31,13 +31,14 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
             var mockClock = new Mock<IClock>();
+            var mockHashids = new Mock<IHashidsService>();
 
-            Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.Handler(mockBus.Object, null!, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("filePersistenceService", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, null!, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("logger", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, null!));
-            Assert.Throws<ArgumentNullException>("clock", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, null!, _loggerMock.Object));
-            Assert.Throws<ArgumentNullException>("mapper", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, null!, mockClock.Object, _loggerMock.Object));
+            Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object, mockHashids.Object));
+            Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.Handler(mockBus.Object, null!, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object, mockHashids.Object));
+            Assert.Throws<ArgumentNullException>("filePersistenceService", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, null!, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object, mockHashids.Object));
+            Assert.Throws<ArgumentNullException>("logger", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, null!, mockHashids.Object));
+            Assert.Throws<ArgumentNullException>("clock", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, null!, _loggerMock.Object, mockHashids.Object));
+            Assert.Throws<ArgumentNullException>("mapper", () => new Create.Handler(mockBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, null!, mockClock.Object, _loggerMock.Object, mockHashids.Object));
         }
 
         [Fact]
@@ -46,6 +47,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockRedisCacheService = new Mock<IRedisCacheService>();
             var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
+            var mockHashids = new Mock<IHashidsService>();
             FakeClock clock = new FakeClock(Instant.FromDateTimeUtc(DateTime.UtcNow));
 
             mockAutoMapper.Setup(_ => _.Map<SubmitNoticeOfDispute>(It.IsAny<NoticeOfDispute>())).Returns(new SubmitNoticeOfDispute());
@@ -53,7 +55,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockDisputeBus = new Mock<IBus>();
             mockDisputeBus.Setup(x => x.Publish(It.IsAny<SubmitNoticeOfDispute>(), It.IsAny<CancellationToken>()));
 
-            var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object);
+            var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object, mockHashids.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
             string host = "localhost";

@@ -146,8 +146,12 @@ export class NoticeOfDisputeService {
       });
   }
 
-  public resendVerificationEmail(uuid: string): Observable<any> {
-    return this.disputesService.apiDisputesEmailUuidResendPut(uuid).pipe(map(res => res));
+  public resendVerificationEmail(uuidHash: string): Observable<any> {
+    return this.disputesService.apiDisputesEmailUuidHashResendPut(uuidHash).pipe(map(res => res));
+  }
+
+  public verifyEmail(uuid: string): Observable<any> {
+    return this.disputesService.apiDisputesEmailUuidVerifyPut(uuid).pipe(map(res => res));
   }
 
   public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {

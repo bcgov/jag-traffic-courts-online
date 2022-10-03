@@ -223,6 +223,7 @@ public class Dispute extends Auditable<String> {
 	 * A unique string (the PK + GUID) for email verification.
 	 */
 	@Column(length = 36) // GUID (36 characters)
+	@Schema(nullable = true)
 	private String emailVerificationToken;
 
 	@Column
