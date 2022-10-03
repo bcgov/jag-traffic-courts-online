@@ -20,4 +20,10 @@ public class ApiClientConfiguration {
         apiClient.setBasePath(configProperties.getOrdsRestApiUrl());
         return apiClient;
     }
+
+	@Bean
+	public ViolationTicketApi violationTicketApi(ApiClient ordsApiClient) {
+		return new ViolationTicketApi(ordsApiClient);
+	}
+	
 }
