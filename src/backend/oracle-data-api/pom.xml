@@ -21,6 +21,7 @@
   		<spring-cloud-sleuth-otel.version>1.1.0</spring-cloud-sleuth-otel.version>
   		<org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
   		<org.projectlombok.version>1.18.24</org.projectlombok.version>
+  		<default-package>ca.bc.gov.open.jag.tco.oracledataapi</default-package>
 	</properties>
 	
 	<dependencyManagement>
@@ -146,16 +147,73 @@
 	    	<artifactId>spring-cloud-sleuth-otel-autoconfigure</artifactId>
 	  	</dependency>
 	  	<dependency>
-	    	<groupId>io.opentelemetry</groupId>
+    		<groupId>io.opentelemetry</groupId>
 	    	<artifactId>opentelemetry-exporter-jaeger</artifactId>
 	  	</dependency>
 	  	
 	  	<!-- Mapstruct dependencies -->
 	  	<dependency>
-	         <groupId>org.mapstruct</groupId>
-	         <artifactId>mapstruct</artifactId>
-	         <version>${org.mapstruct.version}</version>
-	     </dependency>
+        	<groupId>org.mapstruct</groupId>
+        	<artifactId>mapstruct</artifactId>
+         	<version>${org.mapstruct.version}</version>
+     	</dependency>
+	     
+	    <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.3</version>
+    	</dependency>
+    	
+    	<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-annotations</artifactId>
+		    <version>1.6.7</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-base</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.google.code.findbugs</groupId>
+		    <artifactId>jsr305</artifactId>
+		    <version>3.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -225,6 +283,52 @@
 			            </path>
 			        </annotationProcessorPaths>
 			    </configuration>
+			</plugin>
+			
+			<!--openapi client generator-->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>6.2.0</version>
+                <executions>
+                    <execution>
+                        <id>spring-boot-api</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/occm-openapi-spec.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <configOptions>
+                                <useTags>true</useTags>
+                            </configOptions>
+                            <library>jersey2</library>
+                            <apiPackage>${default-package}.api</apiPackage>
+                            <modelPackage>${default-package}.api.model</modelPackage>
+                            <invokerPackage>${default-package}.api.handler</invokerPackage>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/annotations</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

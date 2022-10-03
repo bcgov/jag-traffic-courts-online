@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   description: This is an Oracle REST Data Services (ORDS) service for the Online Court Case Management solution.
   title: Online Court Case Management
