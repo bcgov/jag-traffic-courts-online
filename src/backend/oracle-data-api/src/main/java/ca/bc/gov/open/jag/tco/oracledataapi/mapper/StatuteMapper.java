@@ -6,14 +6,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import ca.bc.gov.open.jag.tco.oracledataapi.dto.StatuteDTO;
-import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
-
 @Mapper
 public interface StatuteMapper {
-	
+
 	StatuteMapper INSTANCE = Mappers.getMapper(StatuteMapper.class);
-	
+
 	@Mapping(source = "statId", target = "id")
 	@Mapping(source = "actCd", target = "actCode")
 	@Mapping(source = "statSectionTxt", target = "sectionText")
@@ -23,6 +20,7 @@ public interface StatuteMapper {
 	@Mapping(source = "statCode", target = "code")
 	@Mapping(source = "statShortDescriptionTxt", target = "shortDescriptionText")
 	@Mapping(source = "statDescriptionTxt", target = "descriptionText")
-	StatuteDTO convertStatute(Statute statute);
-	List<StatuteDTO> convertStatutes(List<Statute> statuteList);
+	/** Map from ORDS Statute to OracleDataAPI Statute */
+	ca.bc.gov.open.jag.tco.oracledataapi.model.Statute convertStatute(ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute statute);
+	List<ca.bc.gov.open.jag.tco.oracledataapi.model.Statute> convertStatutes(List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute> statuteList);
 }
