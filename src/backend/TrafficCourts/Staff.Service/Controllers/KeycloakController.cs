@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TrafficCourts.Common.OpenAPIs.KeycloakAdminApi.v18_0;
 using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class KeycloakController : VTCControllerBase<KeycloakController>
+public class KeycloakController : StaffControllerBase<KeycloakController>
 {
     private readonly IKeycloakService _keycloakService;
 
@@ -16,8 +17,7 @@ public class KeycloakController : VTCControllerBase<KeycloakController>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
     public KeycloakController(IKeycloakService keycloakService, ILogger<KeycloakController> logger) : base(logger)
     {
-        ArgumentNullException.ThrowIfNull(keycloakService);
-        _keycloakService = keycloakService;
+        _keycloakService = keycloakService ?? throw new ArgumentNullException(nameof(keycloakService));
     }
 
     /// <summary>
@@ -26,8 +26,10 @@ public class KeycloakController : VTCControllerBase<KeycloakController>
     /// <param name="groupName">A unique group name to query.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A collection of Users records</returns>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     [HttpGet("{groupName}/users")]
     [ProducesResponseType(typeof(IList<UserRepresentation>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetUsersAsync(string groupName, CancellationToken cancellationToken)
     {

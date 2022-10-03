@@ -30,8 +30,8 @@ public class TcoDisputeTicketController : ControllerBase
     /// <response code="200">TCO Dispute Ticket data extracted from JSON request, created the ARC file in proper format and uploaded it to the SFTP location successfully.</response>
     /// <response code="400">The request JSON data is empty or not valid that does not contain the required data to output an ARC file in proper format.</response>
     [HttpPost]
-    [ProducesResponseType(typeof(IList<ArcFileRecord>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(IList<ArcFileRecord>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateArcFile([Required][FromBody] TcoDisputeTicket disputeData, CancellationToken cancellationToken)
     {
         var arcFileRecords = _mapper.Map<List<ArcFileRecord>>(disputeData);

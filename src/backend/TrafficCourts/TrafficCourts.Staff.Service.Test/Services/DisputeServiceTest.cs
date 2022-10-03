@@ -2,15 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using TrafficCourts.Staff.Service.Configuration;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
 
@@ -26,8 +19,9 @@ public class DisputeServiceTest
     [InlineData(null, null)]
     public void TestGetViolationTicketImageFilename(string json, string? expectedFilename)
     {
+        var mockOracleDataApi = new Mock<IOracleDataApiClient>();
         //Given
-        DisputeService service = new(new OracleDataApiConfiguration(), new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, new Mock<IHttpContextAccessor>().Object, new Mock<ILogger<DisputeService>>().Object);
+        DisputeService service = new(mockOracleDataApi.Object, new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, new Mock<IHttpContextAccessor>().Object, new Mock<ILogger<DisputeService>>().Object);
         Dispute dispute = new();
         dispute.DisputeId = 1;
         dispute.ViolationTicket = new();

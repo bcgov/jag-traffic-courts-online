@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using TrafficCourts.Common.Authorization;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
@@ -8,8 +7,7 @@ using TrafficCourts.Staff.Service.Services;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-// implement role authorization by using TCOControllerBase class as in csrs project
-public class DisputeController : VTCControllerBase<DisputeController>
+public class DisputeController : StaffControllerBase<DisputeController>
 {
     private readonly IDisputeService _disputeService;
 
@@ -21,8 +19,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <exception cref="ArgumentNullException"><paramref name="logger"/> is null.</exception>
     public DisputeController(IDisputeService disputeService, ILogger<DisputeController> logger) : base(logger)
     {
-        ArgumentNullException.ThrowIfNull(disputeService);
-        _disputeService = disputeService;
+        _disputeService = disputeService ?? throw new ArgumentNullException(nameof(disputeService));
     }
 
     /// <summary>
@@ -31,12 +28,13 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <param name="excludeStatus"></param>
     /// <param name="cancellationToken"></param>
     /// <response code="200">The Disputes were found.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     /// <returns>A collection of Dispute records</returns>
     [HttpGet("disputes")]
     [ProducesResponseType(typeof(IList<Dispute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
@@ -64,13 +62,15 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns>A single Dispute record</returns>
     /// <response code="200">The Dispute was found.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:read permission.</response>
+    /// <response code="404">The dispute was not found.</response>
     /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
     /// <response code="500">There was a server error that prevented the search from completing successfully or no data found.</response>
     [HttpGet("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -127,7 +127,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:update permission.</response>
     /// <response code="404">The Dispute to update was not found.</response>
     /// <response code="409">The Dispute has already been assigned to a user. Dispute cannot be modified until assigned time expires.</response>
@@ -135,6 +135,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [HttpPut("{disputeId}")]
     [ProducesResponseType(typeof(Dispute), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -178,7 +179,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:reject permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to REJECTED iff status is NEW, CANCELLED, VALIDATED or REJECTED and the rejected reason must be &lt;= 256 characters. Update failed.</response>
@@ -187,6 +188,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [HttpPut("{disputeId}/reject")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
@@ -239,7 +241,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:validate permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.</response>
@@ -248,6 +250,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [HttpPut("{disputeId}/validate")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
@@ -295,7 +298,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:cancel permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute status can only be set to CANCELLED iff status is NEW, VALIDATED, REJECTED or PROCESSING.Update failed.</response>
@@ -304,6 +307,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     [HttpPut("{disputeId}/cancel")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
@@ -351,7 +355,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns>
     /// <response code="200">OK.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:submit permission.</response>
     /// <response code="500">There was a server error that prevented the update from completing successfully.</response>
     /// </returns>
@@ -404,7 +408,7 @@ public class DisputeController : VTCControllerBase<DisputeController>
     /// <returns></returns>
     /// <response code="200">The Dispute is updated.</response>
     /// <response code="400">The request was not well formed. Check the parameters.</response>
-    /// <response code="401">Unauthenticated.</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     /// <response code="403">Forbidden, requires dispute:submit permission.</response>
     /// <response code="404">Dispute record not found. Update failed.</response>
     /// <response code="405">A Dispute can only be submitted if the status is NEW or is already set to PROCESSING. Update failed.</response>
@@ -452,5 +456,4 @@ public class DisputeController : VTCControllerBase<DisputeController>
             return new HttpError(StatusCodes.Status500InternalServerError, e.Message);
         }
     }
-
 }

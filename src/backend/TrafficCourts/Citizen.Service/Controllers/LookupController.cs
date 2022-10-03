@@ -26,7 +26,7 @@ public class LookupController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(IList<Statute>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(IList<Statute>), StatusCodes.Status200OK)]
     public async Task<IActionResult> StatutesAsync(string? section, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving a Statutes");

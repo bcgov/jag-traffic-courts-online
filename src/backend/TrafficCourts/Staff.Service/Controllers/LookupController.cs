@@ -6,7 +6,7 @@ using MediatR;
 
 namespace TrafficCourts.Staff.Service.Controllers;
 
-public class LookupController : VTCControllerBase<LookupController>
+public class LookupController : StaffControllerBase<LookupController>
 {
     private readonly IMediator _mediator;
     
@@ -21,9 +21,12 @@ public class LookupController : VTCControllerBase<LookupController>
     /// <param name="section">Motor vehicle act Section text to query by, ie "13(1)(a)" returns "Motor Vehicle or Trailer without Licence" contravention, or blank for no filter.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    /// <response code="200">OK</response>
+    /// <response code="401">Request lacks valid authentication credentials.</response>
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(IList<Statute>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(IList<Statute>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> StatutesAsync(string? section, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving a Statutes");
@@ -34,4 +37,3 @@ public class LookupController : VTCControllerBase<LookupController>
         return Ok(response.Statutes);
     }
 }
-

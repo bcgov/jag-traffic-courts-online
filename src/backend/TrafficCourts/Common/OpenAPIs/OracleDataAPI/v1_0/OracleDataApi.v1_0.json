@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5010",
+      "url": "http://localhost:8080",
       "description": "Generated server url"
     }
   ],
@@ -52,6 +52,144 @@
             "description": "Ok",
             "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
           }
+        }
+      }
+    },
+    "/api/v1.0/jj/dispute/{ticketNumber}/review": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates the status of a particular JJDispute record to REVIEW.",
+        "operationId": "reviewJJDispute",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "checkVTCAssigned",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "boolean" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "maxLength": 256,
+                "minLength": 0,
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          }
+        }
+      }
+    },
+    "/api/v1.0/jj/dispute/{ticketNumber}/accept": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates the status of a particular JJDispute record to REVIEW.",
+        "operationId": "acceptJJDispute",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "checkVTCAssigned",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "boolean" }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok. Updated JJDispute record returned.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          },
+          "500": {
+            "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/JJDispute" } } }
+          }
+        }
+      }
+    },
+    "/api/v1.0/jj/dispute/assign": {
+      "put": {
+        "tags": [ "jj-dispute-controller" ],
+        "summary": "Updates each JJ Dispute based on the passed in IDs (ticket number) to assign them to a specific JJ or unassign them if JJ not specified.",
+        "operationId": "assignJJDisputesToJJ",
+        "parameters": [
+          {
+            "name": "ticketNumbers",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          {
+            "name": "jjUsername",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record(s) not found. Update failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": { "description": "Ok" },
+          "500": { "description": "Internal server error occured." }
         }
       }
     },
