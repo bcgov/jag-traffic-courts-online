@@ -208,9 +208,9 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-  ##  volumes:
-  ##  - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
-  ##  restart: always
+    volumes:
+      - data-rabbit:/var/lib/rabbitmq/mnesia/rabbit@app-rabbitmq:cached
+        restart: always
 
   #############################################################################################
   ###                           Minio                                                       ###
