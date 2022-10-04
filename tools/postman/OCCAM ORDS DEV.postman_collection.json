@@ -1,0 +1,390 @@
+{
+	"info": {
+		"_postman_id": "34f8ca1c-bade-45d1-ada4-dfe0f1cb9fc5",
+		"name": "OCCAM ORDS DEV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/ping",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Languages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/languages",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"languages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agencies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/agencies?agencyTypeCd=CTH",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"agencies"
+					],
+					"query": [
+						{
+							"key": "agencyTypeCd",
+							"value": "CTH"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Countries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/countries",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Provinces",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/provinces?countryId=1",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"provinces"
+					],
+					"query": [
+						{
+							"key": "countryId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Statutes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/statutes",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"statutes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/cities?countryId=1&provSeqNo=2",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"cities"
+					],
+					"query": [
+						{
+							"key": "countryId",
+							"value": "1"
+						},
+						{
+							"key": "provSeqNo",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketSearch",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/violationTicketList?fromDate=2022-09-10&excludeStatus=&ticketNumber=&emailVerificationGuid",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"violationTicketList"
+					],
+					"query": [
+						{
+							"key": "fromDate",
+							"value": "2022-09-10"
+						},
+						{
+							"key": "excludeStatus",
+							"value": ""
+						},
+						{
+							"key": "ticketNumber",
+							"value": ""
+						},
+						{
+							"key": "emailVerificationGuid",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketGet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/violationTicket?violationTicketId=&disputeId=5",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"violationTicket"
+					],
+					"query": [
+						{
+							"key": "violationTicketId",
+							"value": ""
+						},
+						{
+							"key": "disputeId",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketInsert",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"violationTicketId\" : null,\r\n    \"ticketNumberTxt\" : \"EA90999922\",\r\n    \"disputantSurnameTxt\" : \"McTesterson\",\r\n    \"disputantGivenNamesTxt\" : \"Testy\",\r\n    \"disputantOrganizationNmTxt\" : null,\r\n    \"isYoungPersonYn\" : \"N\",\r\n    \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n    \"disputantClientNumberTxt\" : null,\r\n    \"drvLicIssuedProvinceTxt\" : \"BC\",\r\n    \"drvLicIssuedCountryTxt\" : \"CAN\",\r\n    \"drvLicIssuedYearNo\" : \"2020\",\r\n    \"drvLicExpiryYearNo\" : \"2024\",\r\n    \"disputantBirthDt\" : \"2000-02-19\",\r\n    \"addressTxt\" : \"123 Fake St.\",\r\n    \"addressCityTxt\" : \"Colwood\",\r\n    \"addressProvinceTxt\" : \"BC\",\r\n    \"addressCountryTxt\" : \"CAN\",\r\n    \"addressPostalCodeTxt\" : \"V9T 8F8\",\r\n    \"officerPinTxt\" : null,\r\n    \"detachmentLocationTxt\" : \"Delta\",\r\n    \"issuedDt\" : \"2022-09-11\",\r\n    \"issuedOnRoadOrHighwayTxt\" : null,\r\n    \"issuedAtOrNearCityTxt\" : null,\r\n    \"isChangeOfAddressYn\" : null,\r\n    \"isDriverYn\" : \"Y\",\r\n    \"isOwnerYn\" : \"Y\",\r\n    \"courtLocationTxt\" : \"100 Mile House Law Courts\",\r\n    \"entDtm\" : null,\r\n    \"entUserId\" : \"EWong\",\r\n    \"updDtm\" : null,\r\n    \"updUserId\" : null,\r\n\r\n    \"violationTicketCounts\" : [\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"1\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    },\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"2\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc2\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc2\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    }\r\n    ],\r\n\r\n    \"dispute\" : {\r\n      \"disputeId\" : null,\r\n      \"disputeStatusTypeCd\" : \"NEW\",\r\n      \"courtAgenId\" : 19227.0734,\r\n      \"issuedDt\" : \"2022-09-11\",\r\n      \"submittedDt\" : \"2022-09-12\",\r\n      \"disputantSurnameNm\" : \"McTesterson\",\r\n      \"disputantGiven1Nm\" : \"Testy\",\r\n      \"disputantGiven2Nm\" : null,\r\n      \"disputantGiven3Nm\" : null,\r\n      \"disputantBirthDt\" : \"2000-02-19\",\r\n      \"disputantOrganizationNm\" : null,\r\n      \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n      \"drvLicIssuedCtryId\" : \"1\",\r\n      \"drvLicIssuedProvSeqNo\" : \"1\",\r\n      \"drvLicIssuedIntlProvTxt\" : null,\r\n      \"disputantClientId\" : null,\r\n      \"addressLine1Txt\" : \"123 Fake St.\",\r\n      \"addressLine2Txt\" : null,\r\n      \"addressLine3Txt\" : null,\r\n      \"addressCityCtryId\" : null,\r\n      \"addressCitySeqNo\" : null,\r\n      \"addressProvCtryId\" : 1,\r\n      \"addressProvSeqNo\" : 1,\r\n      \"addressIntlCityTxt\" : \"Colwood\",\r\n      \"addressIntlProvTxt\" : null,\r\n      \"addressCtryId\" : \"1\",\r\n      \"postalCodeTxt\" : \"V9V 8D9\",\r\n      \"homePhoneNumberTxt\" : \"250-886-0046\",\r\n      \"workPhoneNumberTxt\" : null,\r\n      \"emailAddressTxt\" : \"elaine.2.wong@gov.bc.ca\",\r\n      \"filingDt\" : null,\r\n      \"representedByLawyerYn\" : null,\r\n      \"lawFirmNm\" : null,\r\n      \"lawFirmAddrLine1Txt\" : null,\r\n      \"lawFirmAddrLine2Txt\" : null,\r\n      \"lawFirmAddrLine3Txt\" : null,\r\n      \"lawFirmAddrCityCtryId\" : null,\r\n      \"lawFirmAddrCitySeqNo\" : null,\r\n      \"lawFirmAddrProvCtryId\" : null,\r\n      \"lawFirmAddrProvSeqNo\" : null,\r\n      \"lawFirmAddrIntlCityTxt\" : null,\r\n      \"lawFirmAddrIntlProvTxt\" : null,\r\n      \"lawFirmAddrCtryId\" : null,\r\n      \"lawFirmAddrPostalCodeTxt\" : null,\r\n      \"lawyerSurnameNm\" : null,\r\n      \"lawyerGiven1Nm\" : null,\r\n      \"lawyerGiven2Nm\" : null,\r\n      \"lawyerGiven3Nm\" : null,\r\n      \"lawyerPhoneNumberTxt\" : null,\r\n      \"lawyerEmailAddressTxt\" : null,\r\n      \"officerPinTxt\" : null,\r\n      \"detachmentLocationTxt\" : \"Delta\",\r\n      \"languageCd\" : null,\r\n      \"interpreterRequiredYn\" : null,\r\n      \"witnessNo\" : null,\r\n      \"fineReductionReasonTxt\" : \"Limited Income\",\r\n      \"timeToPayReasonTxt\" : \"Currently unemployed\",\r\n      \"disputantCommentTxt\" : null,\r\n      \"rejectedReasonTxt\" : null,\r\n      \"jjAssignedTo\" : null,\r\n      \"userAssignedTo\" : null,\r\n      \"userAssignedDtm\" : null,\r\n      \"disputantDetectOcrIssuesYn\" : \"N\",\r\n      \"disputantOcrIssuesTxt\" : \"N\",\r\n      \"systemDetectOcrIssuesYn\" : \"N\",\r\n      \"ocrViolationTicketJsonTxt\" : null,\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongd\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null\r\n    }\r\n  }"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/processViolationTicket",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"processViolationTicket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketUpdate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"violationTicketId\": \"3\",\r\n    \"ticketNumberTxt\": \"EA90999922\",\r\n    \"disputantSurnameTxt\": \"McTesterson\",\r\n    \"disputantGivenNamesTxt\": \"Testy\",\r\n    \"disputantOrganizationNmTxt\": \"Federali\",\r\n    \"isYoungPersonYn\": \"N\",\r\n    \"disputantDrvLicNumberTxt\": \"6669999\",\r\n    \"disputantClientNumberTxt\": null,\r\n    \"drvLicIssuedProvinceTxt\": \"BC\",\r\n    \"drvLicIssuedCountryTxt\": \"CAN\",\r\n    \"drvLicIssuedYearNo\": \"2020\",\r\n    \"drvLicExpiryYearNo\": \"2024\",\r\n    \"disputantBirthDt\": \"2005-02-19\",\r\n    \"addressTxt\": \"123 Fake St.\",\r\n    \"addressCityTxt\": \"Colwood\",\r\n    \"addressProvinceTxt\": \"BC\",\r\n    \"addressCountryTxt\": \"CAN\",\r\n    \"addressPostalCodeTxt\": \"V9T 8F8\",\r\n    \"officerPinTxt\": null,\r\n    \"detachmentLocationTxt\": \"Delta\",\r\n    \"issuedDt\": \"2022-09-11\",\r\n    \"issuedOnRoadOrHighwayTxt\": null,\r\n    \"issuedAtOrNearCityTxt\": null,\r\n    \"isChangeOfAddressYn\": null,\r\n    \"isDriverYn\": \"Y\",\r\n    \"isOwnerYn\": \"Y\",\r\n    \"courtLocationTxt\": \"100 Mile House Law Courts\",\r\n    \"entDtm\": \"2022-09-15 17:13:58\",\r\n    \"entUserId\": \"EWong\",\r\n    \"updDtm\": \"2022-09-19 13:39:46\",\r\n    \"updUserId\": null,\r\n    \"dispute\": {\r\n        \"disputeId\": \"3\",\r\n        \"disputeStatusTypeCd\": \"NEW\",\r\n        \"courtAgenId\": \"19227.0734\",\r\n        \"issuedDt\": \"2022-09-11\",\r\n        \"submittedDt\": \"2022-09-12\",\r\n        \"disputantSurnameNm\": \"McTesterson\",\r\n        \"disputantGiven1Nm\": \"Testy\",\r\n        \"disputantGiven2Nm\": null,\r\n        \"disputantGiven3Nm\": null,\r\n        \"disputantBirthDt\": \"2000-02-19\",\r\n        \"disputantOrganizationNm\": null,\r\n        \"disputantDrvLicNumberTxt\": \"6669999\",\r\n        \"drvLicIssuedCtryId\": \"1\",\r\n        \"drvLicIssuedProvSeqNo\": \"1\",\r\n        \"drvLicIssuedIntlProvTxt\": null,\r\n        \"disputantClientId\": null,\r\n        \"addressLine1Txt\": \"123 Fake St.\",\r\n        \"addressLine2Txt\": null,\r\n        \"addressLine3Txt\": null,\r\n        \"addressCityCtryId\": null,\r\n        \"addressCitySeqNo\": null,\r\n        \"addressProvCtryId\": \"1\",\r\n        \"addressProvSeqNo\": \"1\",\r\n        \"addressIntlCityTxt\": \"Colwood\",\r\n        \"addressIntlProvTxt\": null,\r\n        \"addressCtryId\": \"1\",\r\n        \"postalCodeTxt\": \"V9V 8D9\",\r\n        \"homePhoneNumberTxt\": \"250-886-0046\",\r\n        \"workPhoneNumberTxt\": null,\r\n        \"emailAddressTxt\": \"elaine.2.wong@gov.bc.ca\",\r\n        \"emailVerifiedYn\": \"N\",\r\n        \"emailVerificationGuid\": \"ieroie389098iuewue89ur9e0\",\r\n        \"filingDt\": null,\r\n        \"representedByLawyerYn\": null,\r\n        \"lawFirmNm\": null,\r\n        \"lawFirmAddrLine1Txt\": null,\r\n        \"lawFirmAddrLine2Txt\": null,\r\n        \"lawFirmAddrLine3Txt\": null,\r\n        \"lawFirmAddrCityCtryId\": null,\r\n        \"lawFirmAddrCitySeqNo\": null,\r\n        \"lawFirmAddrProvCtryId\": null,\r\n        \"lawFirmAddrProvSeqNo\": null,\r\n        \"lawFirmAddrIntlCityTxt\": null,\r\n        \"lawFirmAddrIntlProvTxt\": null,\r\n        \"lawFirmAddrCtryId\": null,\r\n        \"lawFirmAddrPostalCodeTxt\": null,\r\n        \"lawyerSurnameNm\": null,\r\n        \"lawyerGiven1Nm\": null,\r\n        \"lawyerGiven2Nm\": null,\r\n        \"lawyerGiven3Nm\": null,\r\n        \"lawyerPhoneNumberTxt\": null,\r\n        \"lawyerEmailAddressTxt\": null,\r\n        \"officerPinTxt\": null,\r\n        \"detachmentLocationTxt\": \"Delta\",\r\n        \"languageCd\": null,\r\n        \"interpreterRequiredYn\": null,\r\n        \"witnessNo\": null,\r\n        \"fineReductionReasonTxt\": \"Limited Income\",\r\n        \"timeToPayReasonTxt\": \"Currently unemployed\",\r\n        \"disputantCommentTxt\": null,\r\n        \"rejectedReasonTxt\": null,\r\n        \"jjAssignedTo\": null,\r\n        \"userAssignedTo\": null,\r\n        \"userAssignedDtm\": null,\r\n        \"disputantDetectOcrIssuesYn\": \"N\",\r\n        \"disputantOcrIssuesTxt\": \"N\",\r\n        \"systemDetectOcrIssuesYn\": \"N\",\r\n        \"entDtm\": \"2022-09-15 17:13:58\",\r\n        \"entUserId\": \"EWongd\",\r\n        \"updDtm\": \"2022-09-19 13:39:46\",\r\n        \"updUserId\": null\r\n    },\r\n    \"violationTicketCounts\": [\r\n        {\r\n            \"violationTicketCountId\": \"3\",\r\n            \"countNo\": \"1\",\r\n            \"descriptionTxt\": \"Special licence for tractors, etc.\",\r\n            \"actOrRegulationNameCd\": \"MVA\",\r\n            \"isActYn\": \"Y\",\r\n            \"isRegulationYn\": \"N\",\r\n            \"statSectionTxt\": \"10\",\r\n            \"statSubSectionTxt\": \"1\",\r\n            \"statParagraphTxt\": null,\r\n            \"statSubParagraphTxt\": null,\r\n            \"ticketedAmt\": \"234.12\",\r\n            \"entDtm\": \"2022-09-15 17:13:58\",\r\n            \"entUserId\": \"EWongvc\",\r\n            \"updDtm\": \"2022-09-19 13:39:46\",\r\n            \"updUserId\": null,\r\n            \"disputeCount\": {\r\n                \"pleaCd\": \"G\",\r\n                \"requestTimeToPayYn\": \"Y\",\r\n                \"requestReductionYn\": \"Y\",\r\n                \"requestCourtAppearanceYn\": \"N\",\r\n                \"entDtm\": \"2022-09-15 17:13:58\",\r\n                \"entUserId\": \"EWongdc\",\r\n                \"updDtm\": \"2022-09-19 13:39:46\",\r\n                \"updUserId\": null\r\n            }\r\n        },\r\n        {\r\n            \"violationTicketCountId\": \"4\",\r\n            \"countNo\": \"2\",\r\n            \"descriptionTxt\": \"Special licence for tractors, etc.\",\r\n            \"actOrRegulationNameCd\": \"MVA\",\r\n            \"isActYn\": \"Y\",\r\n            \"isRegulationYn\": \"N\",\r\n            \"statSectionTxt\": \"10\",\r\n            \"statSubSectionTxt\": \"1\",\r\n            \"statParagraphTxt\": null,\r\n            \"statSubParagraphTxt\": null,\r\n            \"ticketedAmt\": \"234.12\",\r\n            \"entDtm\": \"2022-09-15 17:13:58\",\r\n            \"entUserId\": \"EWongvc2\",\r\n            \"updDtm\": \"2022-09-19 13:39:46\",\r\n            \"updUserId\": null,\r\n            \"disputeCount\": {\r\n                \"pleaCd\": \"G\",\r\n                \"requestTimeToPayYn\": \"Y\",\r\n                \"requestReductionYn\": \"Y\",\r\n                \"requestCourtAppearanceYn\": \"N\",\r\n                \"entDtm\": \"2022-09-15 17:13:58\",\r\n                \"entUserId\": \"EWongdc2\",\r\n                \"updDtm\": \"2022-09-19 13:39:46\",\r\n                \"updUserId\": null\r\n            }\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/updateViolationTicket",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"updateViolationTicket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketDelete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"violationTicketId\" : null,\r\n    \"ticketNumberTxt\" : \"EA90999922\",\r\n    \"disputantSurnameTxt\" : \"McTesterson\",\r\n    \"disputantGivenNamesTxt\" : \"Testy\",\r\n    \"disputantOrganizationNmTxt\" : null,\r\n    \"isYoungPersonYn\" : \"N\",\r\n    \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n    \"disputantClientNumberTxt\" : null,\r\n    \"drvLicIssuedProvinceTxt\" : \"BC\",\r\n    \"drvLicIssuedCountryTxt\" : \"CAN\",\r\n    \"drvLicIssuedYearNo\" : \"2020\",\r\n    \"drvLicExpiryYearNo\" : \"2024\",\r\n    \"disputantBirthDt\" : \"2000-02-19\",\r\n    \"addressTxt\" : \"123 Fake St.\",\r\n    \"addressCityTxt\" : \"Colwood\",\r\n    \"addressProvinceTxt\" : \"BC\",\r\n    \"addressCountryTxt\" : \"CAN\",\r\n    \"addressPostalCodeTxt\" : \"V9T 8F8\",\r\n    \"officerPinTxt\" : null,\r\n    \"detachmentLocationTxt\" : \"Delta\",\r\n    \"issuedDt\" : \"2022-09-11\",\r\n    \"issuedOnRoadOrHighwayTxt\" : null,\r\n    \"issuedAtOrNearCityTxt\" : null,\r\n    \"isChangeOfAddressYn\" : null,\r\n    \"isDriverYn\" : \"Y\",\r\n    \"isOwnerYn\" : \"Y\",\r\n    \"courtLocationTxt\" : \"100 Mile House Law Courts\",\r\n    \"entDtm\" : null,\r\n    \"entUserId\" : \"EWong\",\r\n    \"updDtm\" : null,\r\n    \"updUserId\" : null,\r\n\r\n    \"violationTicketCounts\" : [\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"1\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    },\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"2\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc2\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc2\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    }\r\n    ],\r\n\r\n    \"dispute\" : {\r\n      \"disputeId\" : null,\r\n      \"disputeStatusTypeCd\" : \"NEW\",\r\n      \"courtAgenId\" : 19227.0734,\r\n      \"issuedDt\" : \"2022-09-11\",\r\n      \"submittedDt\" : \"2022-09-12\",\r\n      \"disputantSurnameNm\" : \"McTesterson\",\r\n      \"disputantGiven1Nm\" : \"Testy\",\r\n      \"disputantGiven2Nm\" : null,\r\n      \"disputantGiven3Nm\" : null,\r\n      \"disputantBirthDt\" : \"2000-02-19\",\r\n      \"disputantOrganizationNm\" : null,\r\n      \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n      \"drvLicIssuedCtryId\" : \"1\",\r\n      \"drvLicIssuedProvSeqNo\" : \"1\",\r\n      \"drvLicIssuedIntlProvTxt\" : null,\r\n      \"disputantClientId\" : null,\r\n      \"addressLine1Txt\" : \"123 Fake St.\",\r\n      \"addressLine2Txt\" : null,\r\n      \"addressLine3Txt\" : null,\r\n      \"addressCityCtryId\" : null,\r\n      \"addressCitySeqNo\" : null,\r\n      \"addressProvCtryId\" : 1,\r\n      \"addressProvSeqNo\" : 1,\r\n      \"addressIntlCityTxt\" : \"Colwood\",\r\n      \"addressIntlProvTxt\" : null,\r\n      \"addressCtryId\" : \"1\",\r\n      \"postalCodeTxt\" : \"V9V 8D9\",\r\n      \"homePhoneNumberTxt\" : \"250-886-0046\",\r\n      \"workPhoneNumberTxt\" : null,\r\n      \"emailAddressTxt\" : \"elaine.2.wong@gov.bc.ca\",\r\n      \"filingDt\" : null,\r\n      \"representedByLawyerYn\" : null,\r\n      \"lawFirmNm\" : null,\r\n      \"lawFirmAddrLine1Txt\" : null,\r\n      \"lawFirmAddrLine2Txt\" : null,\r\n      \"lawFirmAddrLine3Txt\" : null,\r\n      \"lawFirmAddrCityCtryId\" : null,\r\n      \"lawFirmAddrCitySeqNo\" : null,\r\n      \"lawFirmAddrProvCtryId\" : null,\r\n      \"lawFirmAddrProvSeqNo\" : null,\r\n      \"lawFirmAddrIntlCityTxt\" : null,\r\n      \"lawFirmAddrIntlProvTxt\" : null,\r\n      \"lawFirmAddrCtryId\" : null,\r\n      \"lawFirmAddrPostalCodeTxt\" : null,\r\n      \"lawyerSurnameNm\" : null,\r\n      \"lawyerGiven1Nm\" : null,\r\n      \"lawyerGiven2Nm\" : null,\r\n      \"lawyerGiven3Nm\" : null,\r\n      \"lawyerPhoneNumberTxt\" : null,\r\n      \"lawyerEmailAddressTxt\" : null,\r\n      \"officerPinTxt\" : null,\r\n      \"detachmentLocationTxt\" : \"Delta\",\r\n      \"languageCd\" : null,\r\n      \"interpreterRequiredYn\" : null,\r\n      \"witnessNo\" : null,\r\n      \"fineReductionReasonTxt\" : \"Limited Income\",\r\n      \"timeToPayReasonTxt\" : \"Currently unemployed\",\r\n      \"disputantCommentTxt\" : null,\r\n      \"rejectedReasonTxt\" : null,\r\n      \"jjAssignedTo\" : null,\r\n      \"userAssignedTo\" : null,\r\n      \"userAssignedDtm\" : null,\r\n      \"disputantDetectOcrIssuesYn\" : \"N\",\r\n      \"disputantOcrIssuesTxt\" : \"N\",\r\n      \"systemDetectOcrIssuesYn\" : \"N\",\r\n      \"ocrViolationTicketJsonTxt\" : null,\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongd\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null\r\n    }\r\n  }"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/deleteViolationTicket?violationTicketId=&disputeId=24",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"deleteViolationTicket"
+					],
+					"query": [
+						{
+							"key": "violationTicketId",
+							"value": ""
+						},
+						{
+							"key": "disputeId",
+							"value": "24"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketUnassign",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"violationTicketId\" : null,\r\n    \"ticketNumberTxt\" : \"EA90999922\",\r\n    \"disputantSurnameTxt\" : \"McTesterson\",\r\n    \"disputantGivenNamesTxt\" : \"Testy\",\r\n    \"disputantOrganizationNmTxt\" : null,\r\n    \"isYoungPersonYn\" : \"N\",\r\n    \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n    \"disputantClientNumberTxt\" : null,\r\n    \"drvLicIssuedProvinceTxt\" : \"BC\",\r\n    \"drvLicIssuedCountryTxt\" : \"CAN\",\r\n    \"drvLicIssuedYearNo\" : \"2020\",\r\n    \"drvLicExpiryYearNo\" : \"2024\",\r\n    \"disputantBirthDt\" : \"2000-02-19\",\r\n    \"addressTxt\" : \"123 Fake St.\",\r\n    \"addressCityTxt\" : \"Colwood\",\r\n    \"addressProvinceTxt\" : \"BC\",\r\n    \"addressCountryTxt\" : \"CAN\",\r\n    \"addressPostalCodeTxt\" : \"V9T 8F8\",\r\n    \"officerPinTxt\" : null,\r\n    \"detachmentLocationTxt\" : \"Delta\",\r\n    \"issuedDt\" : \"2022-09-11\",\r\n    \"issuedOnRoadOrHighwayTxt\" : null,\r\n    \"issuedAtOrNearCityTxt\" : null,\r\n    \"isChangeOfAddressYn\" : null,\r\n    \"isDriverYn\" : \"Y\",\r\n    \"isOwnerYn\" : \"Y\",\r\n    \"courtLocationTxt\" : \"100 Mile House Law Courts\",\r\n    \"entDtm\" : null,\r\n    \"entUserId\" : \"EWong\",\r\n    \"updDtm\" : null,\r\n    \"updUserId\" : null,\r\n\r\n    \"violationTicketCounts\" : [\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"1\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    },\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"2\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc2\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc2\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    }\r\n    ],\r\n\r\n    \"dispute\" : {\r\n      \"disputeId\" : null,\r\n      \"disputeStatusTypeCd\" : \"NEW\",\r\n      \"courtAgenId\" : 19227.0734,\r\n      \"issuedDt\" : \"2022-09-11\",\r\n      \"submittedDt\" : \"2022-09-12\",\r\n      \"disputantSurnameNm\" : \"McTesterson\",\r\n      \"disputantGiven1Nm\" : \"Testy\",\r\n      \"disputantGiven2Nm\" : null,\r\n      \"disputantGiven3Nm\" : null,\r\n      \"disputantBirthDt\" : \"2000-02-19\",\r\n      \"disputantOrganizationNm\" : null,\r\n      \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n      \"drvLicIssuedCtryId\" : \"1\",\r\n      \"drvLicIssuedProvSeqNo\" : \"1\",\r\n      \"drvLicIssuedIntlProvTxt\" : null,\r\n      \"disputantClientId\" : null,\r\n      \"addressLine1Txt\" : \"123 Fake St.\",\r\n      \"addressLine2Txt\" : null,\r\n      \"addressLine3Txt\" : null,\r\n      \"addressCityCtryId\" : null,\r\n      \"addressCitySeqNo\" : null,\r\n      \"addressProvCtryId\" : 1,\r\n      \"addressProvSeqNo\" : 1,\r\n      \"addressIntlCityTxt\" : \"Colwood\",\r\n      \"addressIntlProvTxt\" : null,\r\n      \"addressCtryId\" : \"1\",\r\n      \"postalCodeTxt\" : \"V9V 8D9\",\r\n      \"homePhoneNumberTxt\" : \"250-886-0046\",\r\n      \"workPhoneNumberTxt\" : null,\r\n      \"emailAddressTxt\" : \"elaine.2.wong@gov.bc.ca\",\r\n      \"filingDt\" : null,\r\n      \"representedByLawyerYn\" : null,\r\n      \"lawFirmNm\" : null,\r\n      \"lawFirmAddrLine1Txt\" : null,\r\n      \"lawFirmAddrLine2Txt\" : null,\r\n      \"lawFirmAddrLine3Txt\" : null,\r\n      \"lawFirmAddrCityCtryId\" : null,\r\n      \"lawFirmAddrCitySeqNo\" : null,\r\n      \"lawFirmAddrProvCtryId\" : null,\r\n      \"lawFirmAddrProvSeqNo\" : null,\r\n      \"lawFirmAddrIntlCityTxt\" : null,\r\n      \"lawFirmAddrIntlProvTxt\" : null,\r\n      \"lawFirmAddrCtryId\" : null,\r\n      \"lawFirmAddrPostalCodeTxt\" : null,\r\n      \"lawyerSurnameNm\" : null,\r\n      \"lawyerGiven1Nm\" : null,\r\n      \"lawyerGiven2Nm\" : null,\r\n      \"lawyerGiven3Nm\" : null,\r\n      \"lawyerPhoneNumberTxt\" : null,\r\n      \"lawyerEmailAddressTxt\" : null,\r\n      \"officerPinTxt\" : null,\r\n      \"detachmentLocationTxt\" : \"Delta\",\r\n      \"languageCd\" : null,\r\n      \"interpreterRequiredYn\" : null,\r\n      \"witnessNo\" : null,\r\n      \"fineReductionReasonTxt\" : \"Limited Income\",\r\n      \"timeToPayReasonTxt\" : \"Currently unemployed\",\r\n      \"disputantCommentTxt\" : null,\r\n      \"rejectedReasonTxt\" : null,\r\n      \"jjAssignedTo\" : null,\r\n      \"userAssignedTo\" : null,\r\n      \"userAssignedDtm\" : null,\r\n      \"disputantDetectOcrIssuesYn\" : \"N\",\r\n      \"disputantOcrIssuesTxt\" : \"N\",\r\n      \"systemDetectOcrIssuesYn\" : \"N\",\r\n      \"ocrViolationTicketJsonTxt\" : null,\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongd\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null\r\n    }\r\n  }"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/unassignViolationTicket?assignedBeforeTs=2022-09-19 08:12:13",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"unassignViolationTicket"
+					],
+					"query": [
+						{
+							"key": "assignedBeforeTs",
+							"value": "2022-09-19 08:12:13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketAssign",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"violationTicketId\" : null,\r\n    \"ticketNumberTxt\" : \"EA90999922\",\r\n    \"disputantSurnameTxt\" : \"McTesterson\",\r\n    \"disputantGivenNamesTxt\" : \"Testy\",\r\n    \"disputantOrganizationNmTxt\" : null,\r\n    \"isYoungPersonYn\" : \"N\",\r\n    \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n    \"disputantClientNumberTxt\" : null,\r\n    \"drvLicIssuedProvinceTxt\" : \"BC\",\r\n    \"drvLicIssuedCountryTxt\" : \"CAN\",\r\n    \"drvLicIssuedYearNo\" : \"2020\",\r\n    \"drvLicExpiryYearNo\" : \"2024\",\r\n    \"disputantBirthDt\" : \"2000-02-19\",\r\n    \"addressTxt\" : \"123 Fake St.\",\r\n    \"addressCityTxt\" : \"Colwood\",\r\n    \"addressProvinceTxt\" : \"BC\",\r\n    \"addressCountryTxt\" : \"CAN\",\r\n    \"addressPostalCodeTxt\" : \"V9T 8F8\",\r\n    \"officerPinTxt\" : null,\r\n    \"detachmentLocationTxt\" : \"Delta\",\r\n    \"issuedDt\" : \"2022-09-11\",\r\n    \"issuedOnRoadOrHighwayTxt\" : null,\r\n    \"issuedAtOrNearCityTxt\" : null,\r\n    \"isChangeOfAddressYn\" : null,\r\n    \"isDriverYn\" : \"Y\",\r\n    \"isOwnerYn\" : \"Y\",\r\n    \"courtLocationTxt\" : \"100 Mile House Law Courts\",\r\n    \"entDtm\" : null,\r\n    \"entUserId\" : \"EWong\",\r\n    \"updDtm\" : null,\r\n    \"updUserId\" : null,\r\n\r\n    \"violationTicketCounts\" : [\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"1\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    },\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"2\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc2\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc2\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    }\r\n    ],\r\n\r\n    \"dispute\" : {\r\n      \"disputeId\" : null,\r\n      \"disputeStatusTypeCd\" : \"NEW\",\r\n      \"courtAgenId\" : 19227.0734,\r\n      \"issuedDt\" : \"2022-09-11\",\r\n      \"submittedDt\" : \"2022-09-12\",\r\n      \"disputantSurnameNm\" : \"McTesterson\",\r\n      \"disputantGiven1Nm\" : \"Testy\",\r\n      \"disputantGiven2Nm\" : null,\r\n      \"disputantGiven3Nm\" : null,\r\n      \"disputantBirthDt\" : \"2000-02-19\",\r\n      \"disputantOrganizationNm\" : null,\r\n      \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n      \"drvLicIssuedCtryId\" : \"1\",\r\n      \"drvLicIssuedProvSeqNo\" : \"1\",\r\n      \"drvLicIssuedIntlProvTxt\" : null,\r\n      \"disputantClientId\" : null,\r\n      \"addressLine1Txt\" : \"123 Fake St.\",\r\n      \"addressLine2Txt\" : null,\r\n      \"addressLine3Txt\" : null,\r\n      \"addressCityCtryId\" : null,\r\n      \"addressCitySeqNo\" : null,\r\n      \"addressProvCtryId\" : 1,\r\n      \"addressProvSeqNo\" : 1,\r\n      \"addressIntlCityTxt\" : \"Colwood\",\r\n      \"addressIntlProvTxt\" : null,\r\n      \"addressCtryId\" : \"1\",\r\n      \"postalCodeTxt\" : \"V9V 8D9\",\r\n      \"homePhoneNumberTxt\" : \"250-886-0046\",\r\n      \"workPhoneNumberTxt\" : null,\r\n      \"emailAddressTxt\" : \"elaine.2.wong@gov.bc.ca\",\r\n      \"filingDt\" : null,\r\n      \"representedByLawyerYn\" : null,\r\n      \"lawFirmNm\" : null,\r\n      \"lawFirmAddrLine1Txt\" : null,\r\n      \"lawFirmAddrLine2Txt\" : null,\r\n      \"lawFirmAddrLine3Txt\" : null,\r\n      \"lawFirmAddrCityCtryId\" : null,\r\n      \"lawFirmAddrCitySeqNo\" : null,\r\n      \"lawFirmAddrProvCtryId\" : null,\r\n      \"lawFirmAddrProvSeqNo\" : null,\r\n      \"lawFirmAddrIntlCityTxt\" : null,\r\n      \"lawFirmAddrIntlProvTxt\" : null,\r\n      \"lawFirmAddrCtryId\" : null,\r\n      \"lawFirmAddrPostalCodeTxt\" : null,\r\n      \"lawyerSurnameNm\" : null,\r\n      \"lawyerGiven1Nm\" : null,\r\n      \"lawyerGiven2Nm\" : null,\r\n      \"lawyerGiven3Nm\" : null,\r\n      \"lawyerPhoneNumberTxt\" : null,\r\n      \"lawyerEmailAddressTxt\" : null,\r\n      \"officerPinTxt\" : null,\r\n      \"detachmentLocationTxt\" : \"Delta\",\r\n      \"languageCd\" : null,\r\n      \"interpreterRequiredYn\" : null,\r\n      \"witnessNo\" : null,\r\n      \"fineReductionReasonTxt\" : \"Limited Income\",\r\n      \"timeToPayReasonTxt\" : \"Currently unemployed\",\r\n      \"disputantCommentTxt\" : null,\r\n      \"rejectedReasonTxt\" : null,\r\n      \"jjAssignedTo\" : null,\r\n      \"userAssignedTo\" : null,\r\n      \"userAssignedDtm\" : null,\r\n      \"disputantDetectOcrIssuesYn\" : \"N\",\r\n      \"disputantOcrIssuesTxt\" : \"N\",\r\n      \"systemDetectOcrIssuesYn\" : \"N\",\r\n      \"ocrViolationTicketJsonTxt\" : null,\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongd\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null\r\n    }\r\n  }"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/assignViolationTicket?violationTicketId=2&userId=staffUser1&disputeId",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"assignViolationTicket"
+					],
+					"query": [
+						{
+							"key": "violationTicketId",
+							"value": "2"
+						},
+						{
+							"key": "userId",
+							"value": "staffUser1"
+						},
+						{
+							"key": "disputeId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ViolationTicketStatusUpdate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"violationTicketId\" : null,\r\n    \"ticketNumberTxt\" : \"EA90999922\",\r\n    \"disputantSurnameTxt\" : \"McTesterson\",\r\n    \"disputantGivenNamesTxt\" : \"Testy\",\r\n    \"disputantOrganizationNmTxt\" : null,\r\n    \"isYoungPersonYn\" : \"N\",\r\n    \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n    \"disputantClientNumberTxt\" : null,\r\n    \"drvLicIssuedProvinceTxt\" : \"BC\",\r\n    \"drvLicIssuedCountryTxt\" : \"CAN\",\r\n    \"drvLicIssuedYearNo\" : \"2020\",\r\n    \"drvLicExpiryYearNo\" : \"2024\",\r\n    \"disputantBirthDt\" : \"2000-02-19\",\r\n    \"addressTxt\" : \"123 Fake St.\",\r\n    \"addressCityTxt\" : \"Colwood\",\r\n    \"addressProvinceTxt\" : \"BC\",\r\n    \"addressCountryTxt\" : \"CAN\",\r\n    \"addressPostalCodeTxt\" : \"V9T 8F8\",\r\n    \"officerPinTxt\" : null,\r\n    \"detachmentLocationTxt\" : \"Delta\",\r\n    \"issuedDt\" : \"2022-09-11\",\r\n    \"issuedOnRoadOrHighwayTxt\" : null,\r\n    \"issuedAtOrNearCityTxt\" : null,\r\n    \"isChangeOfAddressYn\" : null,\r\n    \"isDriverYn\" : \"Y\",\r\n    \"isOwnerYn\" : \"Y\",\r\n    \"courtLocationTxt\" : \"100 Mile House Law Courts\",\r\n    \"entDtm\" : null,\r\n    \"entUserId\" : \"EWong\",\r\n    \"updDtm\" : null,\r\n    \"updUserId\" : null,\r\n\r\n    \"violationTicketCounts\" : [\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"1\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    },\r\n    {\r\n      \"violationTicketCountId\" : null,\r\n      \"countNo\" : \"2\",\r\n      \"descriptionTxt\" : \"Special licence for tractors, etc.\",\r\n      \"actOrRegulationNameCd\" : \"MVA\",\r\n      \"isActYn\" : \"Y\",\r\n      \"isRegulationYn\" : \"N\",\r\n      \"statSectionTxt\" : \"10\",\r\n      \"statSubSectionTxt\" : \"1\",\r\n      \"statParagraphTxt\" : null,\r\n      \"statSubParagraphTxt\" : null,\r\n      \"ticketedAmt\" : \"234.12\",\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongvc2\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null,\r\n\r\n      \"disputeCount\" : {\r\n        \"pleaCd\" : \"G\",\r\n        \"requestTimeToPayYn\" : \"Y\",\r\n        \"requestReductionYn\" : \"Y\",\r\n        \"requestCourtAppearanceYn\" : \"N\",\r\n        \"entDtm\" : null,\r\n        \"entUserId\" : \"EWongdc2\",\r\n        \"updDtm\" : null,\r\n        \"updUserId\" : null\r\n      }\r\n    }\r\n    ],\r\n\r\n    \"dispute\" : {\r\n      \"disputeId\" : null,\r\n      \"disputeStatusTypeCd\" : \"NEW\",\r\n      \"courtAgenId\" : 19227.0734,\r\n      \"issuedDt\" : \"2022-09-11\",\r\n      \"submittedDt\" : \"2022-09-12\",\r\n      \"disputantSurnameNm\" : \"McTesterson\",\r\n      \"disputantGiven1Nm\" : \"Testy\",\r\n      \"disputantGiven2Nm\" : null,\r\n      \"disputantGiven3Nm\" : null,\r\n      \"disputantBirthDt\" : \"2000-02-19\",\r\n      \"disputantOrganizationNm\" : null,\r\n      \"disputantDrvLicNumberTxt\" : \"6669999\",\r\n      \"drvLicIssuedCtryId\" : \"1\",\r\n      \"drvLicIssuedProvSeqNo\" : \"1\",\r\n      \"drvLicIssuedIntlProvTxt\" : null,\r\n      \"disputantClientId\" : null,\r\n      \"addressLine1Txt\" : \"123 Fake St.\",\r\n      \"addressLine2Txt\" : null,\r\n      \"addressLine3Txt\" : null,\r\n      \"addressCityCtryId\" : null,\r\n      \"addressCitySeqNo\" : null,\r\n      \"addressProvCtryId\" : 1,\r\n      \"addressProvSeqNo\" : 1,\r\n      \"addressIntlCityTxt\" : \"Colwood\",\r\n      \"addressIntlProvTxt\" : null,\r\n      \"addressCtryId\" : \"1\",\r\n      \"postalCodeTxt\" : \"V9V 8D9\",\r\n      \"homePhoneNumberTxt\" : \"250-886-0046\",\r\n      \"workPhoneNumberTxt\" : null,\r\n      \"emailAddressTxt\" : \"elaine.2.wong@gov.bc.ca\",\r\n      \"filingDt\" : null,\r\n      \"representedByLawyerYn\" : null,\r\n      \"lawFirmNm\" : null,\r\n      \"lawFirmAddrLine1Txt\" : null,\r\n      \"lawFirmAddrLine2Txt\" : null,\r\n      \"lawFirmAddrLine3Txt\" : null,\r\n      \"lawFirmAddrCityCtryId\" : null,\r\n      \"lawFirmAddrCitySeqNo\" : null,\r\n      \"lawFirmAddrProvCtryId\" : null,\r\n      \"lawFirmAddrProvSeqNo\" : null,\r\n      \"lawFirmAddrIntlCityTxt\" : null,\r\n      \"lawFirmAddrIntlProvTxt\" : null,\r\n      \"lawFirmAddrCtryId\" : null,\r\n      \"lawFirmAddrPostalCodeTxt\" : null,\r\n      \"lawyerSurnameNm\" : null,\r\n      \"lawyerGiven1Nm\" : null,\r\n      \"lawyerGiven2Nm\" : null,\r\n      \"lawyerGiven3Nm\" : null,\r\n      \"lawyerPhoneNumberTxt\" : null,\r\n      \"lawyerEmailAddressTxt\" : null,\r\n      \"officerPinTxt\" : null,\r\n      \"detachmentLocationTxt\" : \"Delta\",\r\n      \"languageCd\" : null,\r\n      \"interpreterRequiredYn\" : null,\r\n      \"witnessNo\" : null,\r\n      \"fineReductionReasonTxt\" : \"Limited Income\",\r\n      \"timeToPayReasonTxt\" : \"Currently unemployed\",\r\n      \"disputantCommentTxt\" : null,\r\n      \"rejectedReasonTxt\" : null,\r\n      \"jjAssignedTo\" : null,\r\n      \"userAssignedTo\" : null,\r\n      \"userAssignedDtm\" : null,\r\n      \"disputantDetectOcrIssuesYn\" : \"N\",\r\n      \"disputantOcrIssuesTxt\" : \"N\",\r\n      \"systemDetectOcrIssuesYn\" : \"N\",\r\n      \"ocrViolationTicketJsonTxt\" : null,\r\n      \"entDtm\" : null,\r\n      \"entUserId\" : \"EWongd\",\r\n      \"updDtm\" : null,\r\n      \"updUserId\" : null\r\n    }\r\n  }"
+				},
+				"url": {
+					"raw": "{{JUSTIN-OCCAM}}/violationTicketStatus?violationTicketId=2&userId=staffUser1&statusCd=PROC&rejectReason&disputeId",
+					"host": [
+						"{{JUSTIN-OCCAM}}"
+					],
+					"path": [
+						"violationTicketStatus"
+					],
+					"query": [
+						{
+							"key": "violationTicketId",
+							"value": "2"
+						},
+						{
+							"key": "userId",
+							"value": "staffUser1"
+						},
+						{
+							"key": "statusCd",
+							"value": "PROC"
+						},
+						{
+							"key": "rejectReason",
+							"value": null
+						},
+						{
+							"key": "disputeId",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
