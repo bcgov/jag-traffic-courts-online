@@ -94,4 +94,4 @@ workflow-service:
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
     "EmailConfiguration__AllowList": ""
-    "EmailConfiguration__EmailVerificationURL": "http://citizen-api-0198bb-dev.apps.silver.devops.gov.bc.ca/email/verify"
+    "EmailConfiguration__EmailVerificationURL": "http://citizen-web-0198bb-dev.apps.silver.devops.gov.bc.ca/email/verify"
