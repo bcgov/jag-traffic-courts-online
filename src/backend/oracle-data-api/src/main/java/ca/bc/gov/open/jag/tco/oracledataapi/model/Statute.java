@@ -1,35 +1,33 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * A Statute is a Violation Ticket Fine Regulation as dictated by the BC Government.
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Statute {
 
-	private String statId;
+	private String id;
 
-	private String actCd;
+	private String actCode;
 
-	private String statSectionTxt;
+	private String sectionText;
 
-	private String statSubSectionTxt;
-	
-	private String statParagraphTxt;
-	
-	private String statSubParagraphTxt;
-	
-	private String statCode;
-	
-	private String statShortDescriptionTxt;
-	
-	private String statDescriptionTxt;
+	private String subsectionText;
 
+	private String paragraphText;
+
+	private String subparagraphText;
+
+	private String code;
+
+	private String shortDescriptionText;
+
+	private String descriptionText;
 }

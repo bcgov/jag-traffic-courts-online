@@ -18,6 +18,9 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 	@Value("${codetable.refresh.atStartup}")
 	private boolean refreshAtStartup;
 
+	@Value("${ords.enabled}")
+    protected boolean ordsEnabled;
+
 	@Autowired
 	private LookupService lookupService;
 
@@ -26,6 +29,13 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 		if (refreshAtStartup) {
 			logger.debug("Refreshing code tables at startup.");
 			lookupService.refresh();
+		}
+
+		if (ordsEnabled) {
+			logger.info("ORDS is enabled: using ORDS as the database repository.");
+		}
+		else {
+			logger.info("ORDS is disabled: using H2 as the database repository.");
 		}
 	}
 
