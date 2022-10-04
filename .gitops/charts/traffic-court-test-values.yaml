@@ -91,3 +91,7 @@ workflow-service:
   image:
     tag: "1.45.1"
     pullPolicy: Always
+  env:
+    "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
+    "EmailConfiguration__AllowList": ""
+    "EmailConfiguration__EmailVerificationURL": "http://citizen-api-0198bb-test.apps.silver.devops.gov.bc.ca/email/verify"
