@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
@@ -31,6 +32,7 @@ public interface DisputeRepository {
 	 * Deletes the entity with the given id.
 	 *
 	 * @param id must not be {@literal null}.
+	 * @throws NoSuchElementException if a Dispute with the given {@literal id} is not found.
 	 * @throws IllegalArgumentException in case the given {@literal id} is {@literal null}
 	 */
 	public void deleteById(Long id);

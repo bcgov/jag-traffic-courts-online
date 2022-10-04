@@ -89,6 +89,12 @@ public class DisputeController {
 	 *
 	 * @param id of the {@link Dispute} to be deleted
 	 */
+	@Operation(summary = "Deletes a particular Dispute record.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Dispute record deleted."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Delete failed.")
+	})
 	@DeleteMapping("/dispute/{id}")
 	public void deleteDispute(@PathVariable Long id) {
 		logger.debug("DELETE /dispute/{id} called");

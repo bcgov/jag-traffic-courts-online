@@ -2,7 +2,10 @@ package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import javax.ws.rs.InternalServerErrorException;
 
 import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
@@ -12,6 +15,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
+import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.api.model.DeleteResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -20,7 +25,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 @Qualifier("disputeRepository")
 @Repository
 public class DisputeRepositoryImpl implements DisputeRepository {
-	
+
 	Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
 
     private final ViolationTicketApi violationTicketApi;
@@ -61,8 +66,32 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public void deleteById(Long id) {
-		throw new NotYetImplementedException();
+	public void deleteById(Long disputeId) {
+		if (disputeId == null) {
+			throw new IllegalArgumentException("DisputeId is null.");
+		}
+		DeleteResult result = null;
+		try {
+			result = violationTicketApi.v1DeleteViolationTicketDelete(disputeId);
+		} catch (ApiException e) {
+			throw new InternalServerErrorException(e);
+		}
+		if (result == null) {
+			throw new InternalServerErrorException("Invalid DeleteResult object");
+		}
+		else if (result.getException() != null) {
+			// Known error if no data found
+			if ("0".equals(result.getStatus()) && result.getException().startsWith("ORA-01403")) {
+				throw new NoSuchElementException(result.getException());
+			}
+			// Unknown error
+			else {
+				throw new InternalServerErrorException(result.getException());
+			}
+		}
+		else if (!"1".equals(result.getStatus())) {
+			throw new InternalServerErrorException("Dispute deletion status is not 1 (success)");
+		}
 	}
 
 	@Override
