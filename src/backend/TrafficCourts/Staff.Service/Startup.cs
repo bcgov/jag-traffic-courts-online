@@ -61,6 +61,7 @@ public static class Startup
 
         // Add DisputeService
         builder.Services.AddTransient<IDisputeService, DisputeService>();
+        builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
 
         builder.Services.AddStatuteLookup();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using AutoMapper;
 using MimeKit;
 using MimeKit.Text;
 using TrafficCourts.Common.Features.Mail.Model;
@@ -15,6 +16,7 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly EmailConfiguration _emailConfiguration;
         private readonly ISmtpClientFactory _smptClientFactory;
         private readonly IOracleDataApiService _oracleDataApiService;
+        private readonly IMapper _mapper;
 
 
         public EmailSenderService(ILogger<EmailSenderService> logger, EmailConfiguration emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
@@ -23,7 +25,8 @@ namespace TrafficCourts.Workflow.Service.Services
             _emailConfiguration = emailConfiguration;
             _smptClientFactory = stmpClientFactory;
             _oracleDataApiService = oracleDataApiService;
-        }
+            _mapper = mapper;
+         }
 
         /// <summary>
         /// Task for handling of validating and sending of email message
@@ -33,34 +36,24 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <exception cref="EmailSendFailedException"></exception>
         public async Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken)
         {
+            bool sentSuccessfully = false;
             try
             {
-                // prepare email history record
-                EmailHistory emailHistory = new EmailHistory();
-                emailHistory.HtmlContent = emailMessage.HtmlContent;
-                emailHistory.PlainTextContent = emailMessage.PlainTextContent;
-                emailHistory.FromEmailAddress = emailMessage.From;
-                emailHistory.RecipientEmailAddress = emailMessage.To[0];
-                emailHistory.EmailSubject = emailMessage.Subject;
-                emailHistory.TicketNumber = emailMessage.TicketNumber;
-
                 // create email message
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(emailMessage.From ?? _emailConfiguration.Sender));
+                email.From.Add(MailboxAddress.Parse(emailMessage.FromEmailAddress ?? _emailConfiguration.Sender));
 
-                // 
-                bool toAdded = AddRecipients(emailMessage.To, email.To);
+                // add recipients
+                bool toAdded = AddRecipient(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty, email.To);
 
                 if (IsAllowedListConfigured)
                 {
                     // in development, some addresses many not allowed, add AddRecipients will filter out any unallowed email address
                     // we need to exit before an exception is thrown below due to noone left in the "To" address list.
-                    if (!toAdded && IsAnyEmailValid(emailMessage.To) && !IsAnyEmailAllowed(emailMessage.To))
+                    if (!toAdded && IsEmailValid(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty) && !IsEmailAllowed(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty))
                     {
                         // there is a valid to address, however, non of them are allowed, note we are really using only CC and BCC emails
                         _logger.LogInformation("Not sending email because none of the valid email addresses are allowed to be set to. See configuration AllowList");
-                        emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                        await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                         return;
                     }
                 }
@@ -80,15 +73,11 @@ namespace TrafficCourts.Workflow.Service.Services
                 if (String.IsNullOrEmpty(emailMessage.Subject) || email.Body is null)
                 {
                     _logger.LogError("No subject or message body provided.");
-                    emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                    await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                     throw new InvalidEmailMessageException("No subject or message body provided");
                 }
                 else if (email.To.Count == 0 && email.Cc.Count == 0 && email.Bcc.Count == 0)
                 {
                     _logger.LogError("Missing recipient info.  No To, Cc or Bcc provided");
-                    emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                    await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                     throw new InvalidEmailMessageException("Missing recipient info");
                 }
 
@@ -97,8 +86,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
 
-                emailHistory.SuccessfullySent = EmailHistorySuccessfullySent.Y;
-                await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
+                sentSuccessfully = true;
             }
             catch (ArgumentNullException ane)
             {
@@ -162,6 +150,10 @@ namespace TrafficCourts.Workflow.Service.Services
                 _logger.LogError(scfe, "An error connecting to the the SMTP Server");
                 throw new EmailSendFailedException("An error connecting to the the SMTP Server", scfe);
             }
+            finally
+            {
+                await SaveEmailtoHistory(emailMessage, sentSuccessfully);
+            }
         }
 
         /// <summary>
@@ -169,18 +161,15 @@ namespace TrafficCourts.Workflow.Service.Services
         /// </summary>
         /// <param name="recipients"></param>
         /// <returns><c>true</c> if there is a valid email address and is allowed to be set to, otherwise <c>false</c>.</returns>
-        private bool IsAnyEmailAllowed(IList<string> recipients)
+        private bool IsEmailAllowed(string recipient)
         {
-            if (recipients is not null)
+            if (recipient is not null)
             {
-                foreach (var recipient in recipients)
+                if (MailboxAddress.TryParse(recipient, out MailboxAddress mailboxAddress))
                 {
-                    if (MailboxAddress.TryParse(recipient, out MailboxAddress mailboxAddress))
+                    if (IsEmailAllowed(mailboxAddress))
                     {
-                        if (IsEmailAllowed(mailboxAddress))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -189,20 +178,46 @@ namespace TrafficCourts.Workflow.Service.Services
         }
 
         /// <summary>
+        /// Saves an email to record of emails sent
+        /// </summary>
+        /// <param name="emailMessage"></param>
+        /// <param name="sentSuccessfully"></param>
+        /// <returns>returns id of new email history record</returns>
+        private async Task<long> SaveEmailtoHistory(SendEmail emailMessage, bool sentSuccessfully)
+        {
+            try
+            {
+                // prepare file history record
+                if (sentSuccessfully)
+                {
+                    emailMessage.SuccessfullySent = EmailHistorySuccessfullySent.Y;
+                }
+                else
+                {
+                    emailMessage.SuccessfullySent = EmailHistorySuccessfullySent.N;
+                }
+                EmailHistory emailHistory = _mapper.Map<EmailHistory>(emailMessage);
+
+                long Id = await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
+                return Id;
+            } catch(Exception ex) {
+                _logger.LogError(ex, "Exception saving file history.");
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Determins if any of the recipients are valid email addresses
         /// </summary>
         /// <param name="recipients"></param>
         /// <returns><c>true</c> if there is a valid email address, otherwise <c>false</c>.</returns>
-        private bool IsAnyEmailValid(IList<string> recipients)
+        private bool IsEmailValid(string recipient)
         {
-            if (recipients is not null)
+            if (recipient is not null)
             {
-                foreach (var recipient in recipients)
+                if (MailboxAddress.TryParse(recipient, out _))
                 {
-                    if (MailboxAddress.TryParse(recipient, out _))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -240,6 +255,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
                 sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
                 sendEmail.TicketNumber = dispute.TicketNumber;
+                sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
             }
             return sendEmail;
         }
@@ -250,32 +266,29 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <param name="recipients"></param>
         /// <param name="addressList"></param>
         /// <returns><c>true</c> if any recipient was added to the <see cref="addressList"/>, otherwise <c>false</c>.</returns>
-        private bool AddRecipients(IList<string> recipients, InternetAddressList addressList)
+        private bool AddRecipient(string recipient, InternetAddressList addressList)
         {
             bool added = false;
 
-            if (recipients is not null)
+            if (recipient is not null)
             {
-                foreach (var recipient in recipients)
+                if (MailboxAddress.TryParse(recipient, out MailboxAddress mailboxAddress))
                 {
-                    if (MailboxAddress.TryParse(recipient, out MailboxAddress mailboxAddress))
+                    if (IsEmailAllowed(mailboxAddress))
                     {
-                        if (IsEmailAllowed(mailboxAddress))
-                        {
-                            addressList.Add(mailboxAddress);
-                            added = true;
-                        }
-                        else
-                        {
-                            // not allowed, metrics? logs?
-                            _logger.LogInformation("Recipient email was blocked from being sent to, due to not matching allow list: {Recipient}", recipient);
-                        }
+                        addressList.Add(mailboxAddress);
+                        added = true;
                     }
                     else
                     {
-                        // invalid email address, metrics? logs?
-                        _logger.LogInformation("Recipient email provided was invalid: {Recipient}", recipient);
+                        // not allowed, metrics? logs?
+                        _logger.LogInformation("Recipient email was blocked from being sent to, due to not matching allow list: {Recipient}", recipient);
                     }
+                }
+                else
+                {
+                    // invalid email address, metrics? logs?
+                    _logger.LogInformation("Recipient email provided was invalid: {Recipient}", recipient);
                 }
             }
 
@@ -295,7 +308,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 // configured with an allow list, does the email address end with any of the allowed domains?
                 // Note: assumes the emailAddress is valid.
                 return allowed.Any(_ => mailboxAddress.Address.EndsWith(_, StringComparison.OrdinalIgnoreCase));
-            }
+            }      
             return true; // no allow list, production mode, send to anyone
         }
 
@@ -315,6 +328,5 @@ namespace TrafficCourts.Workflow.Service.Services
     internal class InvalidEmailMessageException : Exception
     {
         public InvalidEmailMessageException(string? message) : base(message) { }
-    }
-
+    } 
 }

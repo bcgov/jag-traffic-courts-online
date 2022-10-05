@@ -8,6 +8,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.FileHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
@@ -192,12 +193,19 @@ public class RandomUtil {
 	public static EmailHistory createEmailHistory() {
 		EmailHistory emailHistory = new EmailHistory();
 		emailHistory.setTicketNumber(UUID.randomUUID().toString());
-		emailHistory.setEmailSubject(UUID.randomUUID().toString());
+		emailHistory.setSubject(UUID.randomUUID().toString());
 		emailHistory.setPlainTextContent(UUID.randomUUID().toString());
 		emailHistory.setSuccessfullySent(YesNo.N);
 		emailHistory.setFromEmailAddress(randomEmailAddress());
-		emailHistory.setRecipientEmailAddress(randomEmailAddress());
+		emailHistory.setToEmailAddress(randomEmailAddress());
 		return emailHistory;
+	}
+	
+	public static FileHistory createFileHistory() {
+		FileHistory fileHistory = new FileHistory();
+		fileHistory.setTicketNumber(UUID.randomUUID().toString());
+		fileHistory.setDescription(UUID.randomUUID().toString());
+		return fileHistory;
 	}
 	
 	public static String randomEmailAddress() {
