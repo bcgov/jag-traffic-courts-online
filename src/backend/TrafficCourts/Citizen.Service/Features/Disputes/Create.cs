@@ -57,7 +57,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             private readonly IFilePersistenceService _filePersistenceService;
             private readonly IMapper _mapper;
             private readonly IClock _clock;
-            private readonly IHashidsService _hashidsService;
+            private readonly IHashids _hashids;
 
             /// <summary>
             /// Creates the handler.
@@ -68,9 +68,9 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
             /// <param name="mapper"></param>
             /// <param name="clock"></param>
             /// <param name="logger"></param>
-            /// <param name="hashidsService"></param>
+            /// <param name="hashids"></param>
             /// <exception cref="ArgumentNullException"></exception>
-            public Handler(IBus bus, IRedisCacheService redisCacheService, IFilePersistenceService filePersistenceService, IMapper mapper, IClock clock, ILogger<Handler> logger, IHashidsService hashidsService)
+            public Handler(IBus bus, IRedisCacheService redisCacheService, IFilePersistenceService filePersistenceService, IMapper mapper, IClock clock, ILogger<Handler> logger, IHashids hashids)
             {
                 _bus = bus ?? throw new ArgumentNullException(nameof(bus));
                 _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
@@ -78,7 +78,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
                 _clock = clock ?? throw new ArgumentNullException(nameof(clock));
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-                _hashidsService = hashidsService ?? throw new ArgumentNullException(nameof(hashidsService));
+                _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -187,7 +187,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     for (int i=0; i < tokenLength; i++) {
                         intArray[i] = (int)submitNoticeOfDispute.EmailVerificationToken.ElementAt(i);
                     }
-                    var hash = _hashidsService.GetHashids().Encode(intArray);
+                    var hash = _hashids.Encode(intArray);
                     return new Response(hash);
                 }
                 catch (Exception exception)
