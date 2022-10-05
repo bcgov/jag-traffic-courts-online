@@ -40,17 +40,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "JJDispute record not found. Update failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -96,16 +91,16 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "JJDispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -139,16 +134,16 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "JJDispute record not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -185,16 +180,16 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "JJDispute record(s) not found. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "400": {
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "JJDispute record(s) not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -225,17 +220,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -272,17 +262,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Dispute record not found. Update failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -301,6 +286,7 @@
       },
       "delete": {
         "tags": [ "dispute-controller" ],
+        "summary": "Deletes a particular Dispute record.",
         "operationId": "deleteDispute",
         "parameters": [
           {
@@ -315,27 +301,22 @@
         ],
         "responses": {
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Dispute record not found. Delete failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
             "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "200": { "description": "OK" }
+          "200": { "description": "Ok. Dispute record deleted." }
         }
       }
     },
@@ -360,17 +341,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Dispute record not found. Update failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -409,17 +385,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Dispute record not found. Update failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -470,17 +441,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Dispute record not found. Update failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -519,17 +485,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Dispute record not found. Update failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -566,17 +527,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal server error occured.",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -605,88 +561,8 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "404": {
-            "description": "Not Found",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/FileHistory" }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [ "file-history-controller" ],
-        "summary": "Inserts a file history record for the given ticket number.",
-        "operationId": "insertFileHistory",
-        "parameters": [
-          {
-            "name": "ticketNumber",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FileHistory" } } },
-          "required": true
-        },
-        "responses": {
-          "400": {
-            "description": "Bad Request.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "404": {
-            "description": "An invalid file history record provided. Insert failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
-          "200": {
-            "description": "Ok",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-<<<<<<< HEAD
-=======
-    "/api/v1.0/fileHistory/{ticketNumber}": {
-      "get": {
-        "tags": [ "file-history-controller" ],
-        "operationId": "getFileHistoryByTicketNumber",
-        "parameters": [
-          {
-            "name": "ticketNumber",
-            "in": "path",
-            "description": "Ticket number to retrieve related file history.",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Bad Request",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
@@ -731,6 +607,10 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
+          "500": {
+            "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
           "404": {
             "description": "An invalid file history record provided. Insert failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
@@ -753,7 +633,6 @@
         }
       }
     },
->>>>>>> 32ed7c12f322b9ae084227ad3838b60f1a9f601f
     "/api/v1.0/emailHistory/{ticketNumber}": {
       "get": {
         "tags": [ "email-history-controller" ],
@@ -772,17 +651,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -823,17 +697,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "An invalid email history record provided. Insert failed.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request.",
+          "404": {
+            "description": "An invalid email history record provided. Insert failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -867,17 +736,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -916,17 +780,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -971,17 +830,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -1028,17 +882,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -1070,17 +919,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -1110,17 +954,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal server error occured.",
-=======
-          "404": {
-            "description": "Dispute could not be found.",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Dispute could not be found.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {
@@ -1145,17 +984,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-<<<<<<< refs/remotes/origin/main
           "500": {
             "description": "Internal Server Error",
-=======
-          "404": {
-            "description": "Not Found",
->>>>>>> log file
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "405": {

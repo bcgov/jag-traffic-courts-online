@@ -48,9 +48,36 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
-                    // TCVP-1529 Saving a dispute should also send a verification email to the Disputant.
+                    // File History
+                    FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
+                    fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                    fileHistoryRecord.Description = "Dispute initiated.";
+                    await _bus.Publish(fileHistoryRecord);
+
+                    // TCVP-1529 Saving a dispute should also send a verification email to the Disputant if email address is present.
                     SendEmail sendEmail = _emailSenderService.ToVerificationEmail(dispute);
                     await _bus.Publish(sendEmail);
+
+                    await context.RespondAsync<DisputeSubmitted>(new
+                    {
+                        context.MessageId,
+                        InVar.Timestamp,
+                        DisputeId = disputeId
+                    });
+                }
+                else if (disputeId > 0 && (dispute.EmailAddress is null || dispute.EmailAddress.Trim() == ""))
+                {
+                    _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
+
+                    // File History
+                    FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
+                    fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                    fileHistoryRecord.Description = "Dispute initiated.";
+                    await _bus.Publish(fileHistoryRecord);
+
+                    // File History
+                    fileHistoryRecord.Description = "Dispute submitted for staff review.";
+                    await _bus.Publish(fileHistoryRecord);
 
                     await context.RespondAsync<DisputeSubmitted>(new
                     {
@@ -62,6 +89,12 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 else
                 {
                     _logger.LogDebug("Failed to save the dispute");
+
+                    // File History
+                    FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
+                    fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                    fileHistoryRecord.Description = "Unable to submit ticket resolution request / notice of dispute via TCO.";
+                    await _bus.Publish(fileHistoryRecord);
 
                     await context.RespondAsync<DisputeRejected>(new
                     {

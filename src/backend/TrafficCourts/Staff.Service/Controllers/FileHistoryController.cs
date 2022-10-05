@@ -9,7 +9,7 @@ using TrafficCourts.Staff.Service.Services;
 namespace TrafficCourts.Staff.Service.Controllers;
 
 // implement role authorization by using TCOControllerBase class as in csrs project
-public class FileHistoryController : VTCControllerBase<FileHistoryController>
+public class FileHistoryController : StaffControllerBase<FileHistoryController>
 {
     private readonly IFileHistoryService _fileHistoryService;
 

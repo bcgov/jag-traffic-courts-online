@@ -42,6 +42,16 @@ public class EmailVerificationReceivedConsumer : IConsumer<EmailVerificationRece
 
             await _oracleDataApiService.VerifyDisputeEmailAsync(token);
 
+            // File History 
+            FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
+            fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+            fileHistoryRecord.Description = "Email verification complete.";
+            await context.Publish(fileHistoryRecord);
+
+            // File History 
+            fileHistoryRecord.Description = "Dispute submitted for staff review.";
+            await context.Publish(fileHistoryRecord);
+
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             SendEmail email = _emailSenderService.ToConfirmationEmail(dispute);
             await context.Publish(email);

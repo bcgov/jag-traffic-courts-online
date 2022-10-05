@@ -62,6 +62,14 @@ public class Mapper
         return disputeRejected;
     }
 
+    public static FileHistoryRecord ToFileHistory(string ticketNumber, string description)
+    {
+        FileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = ticketNumber;
+        fileHistoryRecord.Description = description;
+        return fileHistoryRecord;
+    }
+
     public static EmailVerificationSend ToEmailVerification(Guid uuid)
     {
         EmailVerificationSend emailVerificationSend = new(uuid);

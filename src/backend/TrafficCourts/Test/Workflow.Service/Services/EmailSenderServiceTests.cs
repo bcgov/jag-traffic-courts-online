@@ -13,12 +13,15 @@ using Moq;
 using Xunit;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using AutoMapper;
+using TrafficCourts.Workflow.Service.Configuration;
+
 
 namespace TrafficCourts.Test.Workflow.Service.Services
 {
     public class EmailSenderServiceTests
     {
         private readonly Mock<ILogger<EmailSenderService>> _mockLogger;
+        private readonly Mock<EmailConfiguration> _emailConfiguration;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
         private readonly Mock<IOracleDataApiService> _mockOracleDataApiService;
@@ -31,6 +34,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             _mockSmtpClient = new Mock<ISmtpClient>();
             _mockOracleDataApiService = new Mock<IOracleDataApiService>();
             _mockMapper = new Mock<IMapper>();  
+            _emailConfiguration = new Mock<EmailConfiguration>();
         }
 
         /// <summary>

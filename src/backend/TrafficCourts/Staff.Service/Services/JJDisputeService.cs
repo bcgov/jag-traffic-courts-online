@@ -1,6 +1,7 @@
 ﻿using MassTransit;
-using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Messaging.MessageContracts;
+using TrafficCourts.Staff.Service.Mappers;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -10,10 +11,13 @@ namespace TrafficCourts.Staff.Service.Services;
 public class JJDisputeService : IJJDisputeService
 {
     private readonly IOracleDataApiClient _oracleDataApi;
+    private readonly IBus _bus;
 
-    public JJDisputeService(IOracleDataApiClient oracleDataApi)
+
+    public JJDisputeService(IOracleDataApiClient oracleDataApi, IBus bus)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
+        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
     }
 
     public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
@@ -32,17 +36,37 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.UpdateJJDisputeAsync(ticketNumber, checkVTC, jjDispute, cancellationToken);
 
+        if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
+        {
+            FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details saved for later.");
+            await _bus.Publish(fileHistoryRecord, cancellationToken);
+        } else if (dispute.Status == JJDisputeStatus.CONFIRMED)
+        {
+            FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details confirmed / submitted by JJ.");
+            await _bus.Publish(fileHistoryRecord, cancellationToken);
+        }
+
         return dispute;
     }
 
     public async Task AssignJJDisputesToJJ(List<string> ticketNumbers, string? username, CancellationToken cancellationToken)
     {
         await _oracleDataApi.AssignJJDisputesToJJAsync(ticketNumbers, username, cancellationToken);
+
+        // Publish file history
+        foreach(string ticketNumber in ticketNumbers)
+        {
+            FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute assigned to JJ.");
+            await _bus.Publish(fileHistoryRecord, cancellationToken); 
+        }
     }
 
     public async Task<JJDispute> ReviewJJDisputeAsync(string ticketNumber, string remark, bool checkVTC, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
+
+        FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute returned to JJ for review.");
+        await _bus.Publish(fileHistoryRecord, cancellationToken);
 
         return dispute;
     }
@@ -50,6 +74,9 @@ public class JJDisputeService : IJJDisputeService
     public async Task<JJDispute> AcceptJJDisputeAsync(string ticketNumber, bool checkVTC, CancellationToken cancellationToken)
     {
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
+
+        FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute approved for resulting by staff.");
+        await _bus.Publish(fileHistoryRecord, cancellationToken);
 
         return dispute;
     }

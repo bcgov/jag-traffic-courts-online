@@ -19,7 +19,7 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly IMapper _mapper;
 
 
-        public EmailSenderService(ILogger<EmailSenderService> logger, EmailConfiguration emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService)
+        public EmailSenderService(ILogger<EmailSenderService> logger, EmailConfiguration emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _emailConfiguration = emailConfiguration;
@@ -93,6 +93,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 // host or message is null.
                 _logger.LogError(ane, "Host or message is null");
                 throw new EmailSendFailedException("Host or message is null", ane);
+
             }
             catch (ObjectDisposedException ode)
             {
@@ -231,8 +232,8 @@ namespace TrafficCourts.Workflow.Service.Services
             var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "VerificationEmailTemplate");
             if (template is not null)
             {
-                sendEmail.From = template.Sender;
-                sendEmail.To.Add(dispute.EmailAddress);
+                sendEmail.FromEmailAddress = template.Sender;
+                sendEmail.ToEmailAddress = dispute.EmailAddress;
                 sendEmail.Subject = template.SubjectTemplate.Replace("{ticketid}", dispute.TicketNumber);
                 sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("{ticketid}", dispute.TicketNumber);
                 sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("{ticketid}", dispute.TicketNumber);

@@ -39,6 +39,7 @@ import { JJDisputeAssignmentsComponent } from '@components/jj-workbench/jj-dispu
 import { JJDisputeComponent } from '@components/jj-dispute-info/jj-dispute/jj-dispute.component';
 import { JJCountComponent } from '@components/jj-dispute-info/jj-count/jj-count.component';
 import { JJDisputeRemarksComponent } from '@components/jj-dispute-info/jj-dispute-remarks/jj-dispute-remarks.component';
+import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-history/jj-file-history.component';
 import { AuthService } from './services/auth.service';
 
 registerLocaleData(localeEn, 'en');
@@ -74,7 +75,8 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     JJDisputeAssignmentsComponent,
     JJDisputeComponent,
     JJCountComponent,
-    JJDisputeRemarksComponent
+    JJDisputeRemarksComponent,
+    JJFileHistoryComponent
   ],
   imports: [
     CommonModule,

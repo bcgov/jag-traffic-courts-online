@@ -19,6 +19,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { ProblemDetails } from '../model/problemDetails.model';
+// @ts-ignore
 import { Statute } from '../model/statute.model';
 
 // @ts-ignore

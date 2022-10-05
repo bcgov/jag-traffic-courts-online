@@ -61,7 +61,7 @@ public class FileHistoryControllerTest
         var _endpoints = new List<(Type, MethodInfo)>(); // All endpoints to check in DisputeController
 
         var assembly = Assembly.GetAssembly(typeof(FileHistoryController));
-        var allControllers = AllTypes.From(assembly).ThatDeriveFrom<VTCControllerBase<FileHistoryController>>();
+        var allControllers = AllTypes.From(assembly).ThatDeriveFrom<StaffControllerBase<FileHistoryController>>();
 
         foreach (Type t in allControllers)
         {
