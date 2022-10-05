@@ -7,22 +7,14 @@ global:
 
 arc-dispute-api:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
   env: 
     "Swagger__Enabled": "true"
 
 citizen-api:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
   env: 
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
@@ -31,26 +23,14 @@ citizen-api:
 
 citizen-web:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
 
   appConfig: |  
     {
         "production": false,
         "environment": "Dev",
-<<<<<<< HEAD
-<<<<<<< refs/remotes/origin/main
         "version": "1.45.2",
-=======
-        "version": "1.44.5",
->>>>>>> log file
-=======
-        "version": "1.44.5",
->>>>>>> 32ed7c12f322b9ae084227ad3838b60f1a9f601f
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -63,11 +43,7 @@ citizen-web:
 
 oracle-data-api:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
   env:
     "ORDS_API_URL": "https://dev.jag.gov.bc.ca/ords/devj/occamords/occam/v1"
@@ -75,11 +51,7 @@ oracle-data-api:
 
 staff-api:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
   env:    
     "Jwt__Audience": "staff-api"
@@ -91,11 +63,7 @@ staff-api:
 
 staff-web:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
   keycloakConfig: |
     {
@@ -111,15 +79,7 @@ staff-web:
     {
         "production": false,
         "environment": "Dev",
-<<<<<<< HEAD
-<<<<<<< refs/remotes/origin/main
         "version": "1.45.2",
-=======
-        "version": "1.44.5",
->>>>>>> log file
-=======
-        "version": "1.44.5",
->>>>>>> 32ed7c12f322b9ae084227ad3838b60f1a9f601f
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {
@@ -129,11 +89,7 @@ staff-web:
 
 workflow-service:
   image:
-<<<<<<< refs/remotes/origin/main
     tag: "1.45.2"
-=======
-    tag: "1.44.5"
->>>>>>> log file
     pullPolicy: Always
   env:
     "EmailConfiguration__Sender": "DoNotReply@gov.bc.ca"
