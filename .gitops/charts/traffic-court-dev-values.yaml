@@ -42,11 +42,15 @@ citizen-web:
     {
         "production": false,
         "environment": "Dev",
+<<<<<<< HEAD
 <<<<<<< refs/remotes/origin/main
         "version": "1.45.2",
 =======
         "version": "1.44.5",
 >>>>>>> log file
+=======
+        "version": "1.44.5",
+>>>>>>> 32ed7c12f322b9ae084227ad3838b60f1a9f601f
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "understandYourTicketLink": "https://understandmyticket.gov.bc.ca/",
@@ -107,11 +111,15 @@ staff-web:
     {
         "production": false,
         "environment": "Dev",
+<<<<<<< HEAD
 <<<<<<< refs/remotes/origin/main
         "version": "1.45.2",
 =======
         "version": "1.44.5",
 >>>>>>> log file
+=======
+        "version": "1.44.5",
+>>>>>>> 32ed7c12f322b9ae084227ad3838b60f1a9f601f
         "useMockServices": false,
         "apiBaseUrl": "/api",
         "features": {

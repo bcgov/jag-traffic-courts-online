@@ -669,6 +669,91 @@
         }
       }
     },
+<<<<<<< HEAD
+=======
+    "/api/v1.0/fileHistory/{ticketNumber}": {
+      "get": {
+        "tags": [ "file-history-controller" ],
+        "operationId": "getFileHistoryByTicketNumber",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "description": "Ticket number to retrieve related file history.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/FileHistory" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [ "file-history-controller" ],
+        "summary": "Inserts a file history record for the given ticket number.",
+        "operationId": "insertFileHistory",
+        "parameters": [
+          {
+            "name": "ticketNumber",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/FileHistory" } } },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "404": {
+            "description": "An invalid file history record provided. Insert failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "200": {
+            "description": "Ok",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+>>>>>>> 32ed7c12f322b9ae084227ad3838b60f1a9f601f
     "/api/v1.0/emailHistory/{ticketNumber}": {
       "get": {
         "tags": [ "email-history-controller" ],
