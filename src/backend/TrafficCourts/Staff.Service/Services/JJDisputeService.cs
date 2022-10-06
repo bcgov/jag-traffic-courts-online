@@ -38,11 +38,11 @@ public class JJDisputeService : IJJDisputeService
 
         if (dispute.Status == JJDisputeStatus.IN_PROGRESS)
         {
-            FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details saved for later.");
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details saved for later.");
             await _bus.Publish(fileHistoryRecord, cancellationToken);
         } else if (dispute.Status == JJDisputeStatus.CONFIRMED)
         {
-            FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details confirmed / submitted by JJ.");
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute decision details confirmed / submitted by JJ.");
             await _bus.Publish(fileHistoryRecord, cancellationToken);
         }
 
@@ -56,7 +56,7 @@ public class JJDisputeService : IJJDisputeService
         // Publish file history
         foreach(string ticketNumber in ticketNumbers)
         {
-            FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute assigned to JJ.");
+            SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute assigned to JJ.");
             await _bus.Publish(fileHistoryRecord, cancellationToken); 
         }
     }
@@ -65,7 +65,7 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.ReviewJJDisputeAsync(ticketNumber, checkVTC, remark, cancellationToken);
 
-        FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute returned to JJ for review.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute returned to JJ for review.");
         await _bus.Publish(fileHistoryRecord, cancellationToken);
 
         return dispute;
@@ -75,7 +75,7 @@ public class JJDisputeService : IJJDisputeService
     {
         JJDispute dispute = await _oracleDataApi.AcceptJJDisputeAsync(ticketNumber, checkVTC, cancellationToken);
 
-        FileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute approved for resulting by staff.");
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(ticketNumber, "Dispute approved for resulting by staff.");
         await _bus.Publish(fileHistoryRecord, cancellationToken);
 
         return dispute;

@@ -62,9 +62,9 @@ public class Mapper
         return disputeRejected;
     }
 
-    public static FileHistoryRecord ToFileHistory(string ticketNumber, string description)
+    public static SaveFileHistoryRecord ToFileHistory(string ticketNumber, string description)
     {
-        FileHistoryRecord fileHistoryRecord = new();
+        SaveFileHistoryRecord fileHistoryRecord = new();
         fileHistoryRecord.TicketNumber = ticketNumber;
         fileHistoryRecord.Description = description;
         return fileHistoryRecord;

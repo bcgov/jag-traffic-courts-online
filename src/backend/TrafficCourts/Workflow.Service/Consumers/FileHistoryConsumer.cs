@@ -7,7 +7,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
     /// <summary>
     ///     Consumer for SendEmail message.
     /// </summary>
-    public class FileHistoryConsumer : IConsumer<FileHistoryRecord>
+    public class FileHistoryConsumer : IConsumer<SaveFileHistoryRecord>
     {
         private readonly IFileHistoryService _fileHistoryService;
 
@@ -16,7 +16,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
             _fileHistoryService = fileHistoryService ?? throw new ArgumentNullException(nameof(fileHistoryService));
         }
 
-        public async Task Consume(ConsumeContext<FileHistoryRecord> context)
+        public async Task Consume(ConsumeContext<SaveFileHistoryRecord> context)
         {
             await _fileHistoryService.SaveFileHistoryAsync(context.Message, context.CancellationToken);
         }

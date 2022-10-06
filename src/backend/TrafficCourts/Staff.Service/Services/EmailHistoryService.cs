@@ -11,20 +11,17 @@ public class EmailHistoryService : IEmailHistoryService
 {
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly ILogger<EmailHistoryService> _logger;
-    private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
 
     public EmailHistoryService(
         IOracleDataApiClient oracleDataApi,
-        IBus bus,
         IFilePersistenceService filePersistenceService,
         IHttpContextAccessor httpContextAccessor,
         ILogger<EmailHistoryService> logger)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
-        _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));

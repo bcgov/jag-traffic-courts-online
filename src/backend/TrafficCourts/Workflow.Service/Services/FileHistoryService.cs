@@ -29,7 +29,7 @@ namespace TrafficCourts.Workflow.Service.Services
         /// </summary>
         /// <param name="fileHistoryRecord"></param>
         /// <returns>returns id of new file history record</returns>
-        public async Task<long> SaveFileHistoryAsync(FileHistoryRecord fileHistoryRecord, CancellationToken cancellationToken)
+        public async Task<long> SaveFileHistoryAsync(SaveFileHistoryRecord fileHistoryRecord, CancellationToken cancellationToken)
         {
             try
             {

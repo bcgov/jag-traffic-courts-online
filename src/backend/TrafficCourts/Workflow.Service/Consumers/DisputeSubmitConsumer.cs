@@ -49,7 +49,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
                     // File History
-                    FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
+                    SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
                     fileHistoryRecord.TicketNumber = dispute.TicketNumber;
                     fileHistoryRecord.Description = "Dispute initiated.";
                     await _bus.Publish(fileHistoryRecord);
@@ -70,7 +70,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
                     // File History
-                    FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
+                    SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
                     fileHistoryRecord.TicketNumber = dispute.TicketNumber;
                     fileHistoryRecord.Description = "Dispute initiated.";
                     await _bus.Publish(fileHistoryRecord);
