@@ -28,7 +28,7 @@ public class OracleDataApiService : IOracleDataApiService
         try
         {
             return await _oracleDataApiClient.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory);
-        } catch (Exception ex)
+        } catch (Exception)
         {
             throw;
         }
