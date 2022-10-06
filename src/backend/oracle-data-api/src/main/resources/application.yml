@@ -101,7 +101,7 @@ cronjob:
 
 # ORDS CLIENT properties
 ords:
-  enabled: true
+  enabled: false
   rest-api:
     url: ${ORDS_API_URL:localhost}
     # The connection timeout limit in miliseconds
