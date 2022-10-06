@@ -128,13 +128,23 @@ public interface DisputeMapper {
 	@Mapping(source = "ticketedAmt", target = "ticketedAmount")
 	ViolationTicketCount convertViolationTicketCountDtoToViolationTicketCount (ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount violationTicketCountDto);
 	
-	// Custom mapping for mapping YesNo fields to Boolean value
+	/**
+	 * Custom mapping for mapping YesNo fields to Boolean value
+	 * 
+	 * @param value
+	 * @return Boolean value of {@link YesNo} enum
+	 */
 	@Named("mapYnToBoolean")
 	default Boolean mapYnToBoolean(YesNo value) {
 		return YesNo.Y.equals(value);
 	}
 	
-	// Custom mapping for dispute counts
+	/**
+	 * Custom mapping for dispute counts
+	 * 
+	 * @param violationTicketCounts
+	 * @return list of {@link DisputeCount}
+	 */
 	@Named("mapCounts")
 	default List<DisputeCount> mapCounts(List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount> violationTicketCounts) {
 		if ( violationTicketCounts == null || violationTicketCounts.isEmpty()) {

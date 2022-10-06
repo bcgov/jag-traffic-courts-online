@@ -107,7 +107,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			throw new IllegalArgumentException("Dispute ID is null.");
 		}
 		try {
-			ViolationTicket violationTicket = violationTicketApi.v1ViolationTicketGet(null, Long.toString(id.longValue()));
+			ViolationTicket violationTicket = violationTicketApi.v1ViolationTicketGet(null, id);
 			if (violationTicket == null || violationTicket.getViolationTicketId() == null) {
 				return Optional.empty();
 			} else {

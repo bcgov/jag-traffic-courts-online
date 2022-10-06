@@ -120,14 +120,14 @@ paths:
           in: query
           description: ''
           schema:
-            type: string
-            pattern: ^\d+$
+            type: integer
+            format: int64
         - name: disputeId
           in: query
           description: ''
           schema:
-            type: string
-            pattern: ^\d+$
+            type: integer
+            format: int64
       responses:
         '200':
           description: Ok
