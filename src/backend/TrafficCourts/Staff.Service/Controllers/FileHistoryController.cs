@@ -39,7 +39,7 @@ public class FileHistoryController : StaffControllerBase<FileHistoryController>
     [ProducesResponseType(typeof(IList<FileHistory>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [KeycloakAuthorize(Resources.Dispute, Scopes.Read)]
+    [KeycloakAuthorize(Resources.JJDispute, Scopes.Read)]
     public async Task<IActionResult> GetFileHistoryRecordsAsync(String ticketNumber, CancellationToken cancellationToken)
     {
         _logger.LogDebug("Retrieving all file history records from oracle-data-api for a specified ticket");

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { FileHistory, EmailHistory } from 'app/api';
+import { FileHistory, EmailHistory, EmailHistorySuccessfullySent } from 'app/api';
 import { catchError, map } from 'rxjs/operators';
 import { LoggerService } from '@core/services/logger.service';
 import { HistoryRecordService } from 'app/services/history-records.service';
@@ -68,7 +68,7 @@ export class JJFileHistoryComponent implements OnInit {
     this.emailHistory.forEach(emailHistoryRecord => {
       this.dataSource.data.push({
         createdTs: new Date(emailHistoryRecord.createdTs),
-        recordType: "Email Sent",
+        recordType: emailHistoryRecord.successfullySent == EmailHistorySuccessfullySent.Y ? "Email Sent" : "Email Not Sent",
         eventDescription: emailHistoryRecord.subject
       })
     })
@@ -77,8 +77,6 @@ export class JJFileHistoryComponent implements OnInit {
     this.dataSource.data = this.dataSource.data.sort((a,b) => {
       return (a.createdTs > b.createdTs) ? 1 : -1;
     })
-
-    console.log(this.dataSource.data);
   }
 
 }

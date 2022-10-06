@@ -44,7 +44,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
-                if (disputeId > 0 && dispute.EmailAddress is not null && dispute.EmailAddressVerified == false)
+                if (disputeId > 0 && (dispute.EmailAddress is not null && dispute.EmailAddress.Trim() != "") && dispute.EmailAddressVerified == false)
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
@@ -89,12 +89,6 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 else
                 {
                     _logger.LogDebug("Failed to save the dispute");
-
-                    // File History
-                    FileHistoryRecord fileHistoryRecord = new FileHistoryRecord();
-                    fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-                    fileHistoryRecord.Description = "Unable to submit ticket resolution request / notice of dispute via TCO.";
-                    await _bus.Publish(fileHistoryRecord);
 
                     await context.RespondAsync<DisputeRejected>(new
                     {

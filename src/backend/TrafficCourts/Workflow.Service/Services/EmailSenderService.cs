@@ -202,7 +202,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 long Id = await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
                 return Id;
             } catch(Exception ex) {
-                _logger.LogError(ex, "Exception saving file history.");
+                _logger.LogError(ex, "Exception saving email history.");
                 throw;
             }
         }
