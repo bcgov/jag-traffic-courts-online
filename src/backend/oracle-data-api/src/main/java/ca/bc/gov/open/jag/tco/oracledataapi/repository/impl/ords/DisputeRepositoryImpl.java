@@ -17,6 +17,8 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.DeleteResult;
+import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -101,7 +103,22 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public Optional<Dispute> findById(Long id) {
-		throw new NotYetImplementedException();
+		if (id == null) {
+			throw new IllegalArgumentException("Dispute ID is null.");
+		}
+		try {
+			ViolationTicket violationTicket = violationTicketApi.v1ViolationTicketGet(null, Long.toString(id.longValue()));
+			if (violationTicket == null || violationTicket.getViolationTicketId() == null) {
+				return Optional.empty();
+			} else {
+				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}", id);
+				Dispute dispute = DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket);
+				return Optional.ofNullable(dispute);
+			}
+		} catch (ApiException e) {
+			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}", id, e);
+			return Optional.empty();
+		}
 	}
 
 	@Override
