@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { FileHistory, EmailHistory, FileHistoryService, EmailHistoryService } from 'app/api';
+import { FileHistory, EmailHistory } from 'app/api';
 import { catchError, map } from 'rxjs/operators';
 import { LoggerService } from '@core/services/logger.service';
+import { HistoryRecordService } from 'app/services/history-records.service';
 
 
 @Component({
@@ -27,9 +28,8 @@ export class JJFileHistoryComponent implements OnInit {
   ]
 
   constructor(
-    private fileHistoryService: FileHistoryService,
     private logger: LoggerService,
-    private emailHistorySerivce: EmailHistoryService
+    private historyRecordService: HistoryRecordService
   ) {
   }
 
@@ -38,41 +38,19 @@ export class JJFileHistoryComponent implements OnInit {
   }
 
   getAllFileHistory() {
-    this.fileHistoryService.apiFilehistoryFilehistoryGet(this.ticketNumber)
-    .pipe(
-      map((response: any) => {
-        console.log(this.ticketNumber, this.fileHistory);
-        this.logger.info('FileHistoryComponent::getAllFileHistory', response)
-        this.fileHistory = response;
-        this.getAllEmailHistory();
-      }),
-      catchError((error: any) => {
-        this.logger.error(
-          'FileHistoryComponent::getAllFileHistory error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    this.historyRecordService.getFileHistories(this.ticketNumber).subscribe((response: FileHistory[]) => {
+      this.logger.info('FileHistoryComponent::getAllFileHistory', response)
+      this.fileHistory = response;
+      this.getAllEmailHistory();
+    });
   }
 
   getAllEmailHistory() {
-    this.emailHistorySerivce.apiEmailhistoryEmailhistoryGet(this.ticketNumber)
-    .pipe(
-      map((response: any) => {
-        console.log(this.ticketNumber, this.emailHistory);
-        this.logger.info('FileHistoryComponent::getAllEmailHistory', response)
-        this.emailHistory = response;
-        this.setDisplayHistory();
-      }),
-      catchError((error: any) => {
-        this.logger.error(
-          'FileHistoryComponent::getAllEmailHistory error has occurred: ',
-          error
-        );
-        throw error;
-      })
-    );
+    this.historyRecordService.getEmailHistories(this.ticketNumber).subscribe((response: EmailHistory[]) => {
+      this.logger.info('FileHistoryComponent::getAllEmailHistory', response)
+      this.emailHistory = response;
+      this.setDisplayHistory();
+    });
   }
 
   public setDisplayHistory() {
@@ -95,14 +73,12 @@ export class JJFileHistoryComponent implements OnInit {
       })
     })
 
-
     // sort by timestamp
-    this.dataSource.data.sort((a,b) => {
+    this.dataSource.data = this.dataSource.data.sort((a,b) => {
       return (a.createdTs > b.createdTs) ? 1 : -1;
     })
 
-    console.log("display history", this.dataSource.data);
-
+    console.log(this.dataSource.data);
   }
 
 }
