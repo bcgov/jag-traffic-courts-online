@@ -17,6 +17,7 @@ using TicketStorageType = TrafficCourts.Citizen.Service.Configuration.TicketStor
 using FluentValidation.AspNetCore;
 using TrafficCourts.Common.Features.FilePersistence;
 using HashidsNet;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -87,7 +88,11 @@ public static class Startup
 
         // simple reversible hashing for passing information back and forth to client using salt from parameters
         builder.Services.ConfigureValidatableSetting<HashidsOptions>(builder.Configuration.GetSection(HashidsOptions.Section));
-        builder.Services.AddTransient<IHashidsService, HashidsService>();
+        builder.Services.AddSingleton<IHashids>(services =>
+        {
+            var configuration = services.GetRequiredService<HashidsOptions>();
+            return new Hashids(configuration.Salt);
+        });
 
         builder.Services.AddSingleton<IClock>(SystemClock.Instance);
 
