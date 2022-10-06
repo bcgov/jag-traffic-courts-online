@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using HashidsNet;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,7 +23,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockMediator = new Mock<IMediator>();
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var mockBus = new Mock<IBus>();
-            var mockHashids = new Mock<IHashidsService>();
+            var mockHashids = new Mock<IHashids>();
             var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object);
             var request = new Create.Request(mockTicketDispute.Object, "localhost");
             var createResponse = new Create.Response();

@@ -16,6 +16,7 @@ using AutoMapper;
 using MediatR;
 using NodaTime;
 using NodaTime.Testing;
+using HashidsNet;
 
 namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
 {
@@ -31,7 +32,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
             var mockClock = new Mock<IClock>();
-            var mockHashids = new Mock<IHashidsService>();
+            var mockHashids = new Mock<IHashids>();
 
             Assert.Throws<ArgumentNullException>("bus", () => new Create.Handler(null!, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object, mockHashids.Object));
             Assert.Throws<ArgumentNullException>("redisCacheService", () => new Create.Handler(mockBus.Object, null!, mockFilePersistenceService.Object, mockAutoMapper.Object, mockClock.Object, _loggerMock.Object, mockHashids.Object));
@@ -47,7 +48,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var mockRedisCacheService = new Mock<IRedisCacheService>();
             var mockFilePersistenceService = new Mock<IFilePersistenceService>();
             var mockAutoMapper = new Mock<IMapper>();
-            var mockHashids = new Mock<IHashidsService>();
+            var mockHashids = new Mock<IHashids>();
             FakeClock clock = new FakeClock(Instant.FromDateTimeUtc(DateTime.UtcNow));
 
             mockAutoMapper.Setup(_ => _.Map<SubmitNoticeOfDispute>(It.IsAny<NoticeOfDispute>())).Returns(new SubmitNoticeOfDispute());

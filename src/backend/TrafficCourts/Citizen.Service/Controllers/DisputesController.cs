@@ -17,7 +17,7 @@ public class DisputesController : ControllerBase
     private readonly IBus _bus;
     private readonly IMediator _mediator;
     private readonly ILogger<DisputesController> _logger;
-    private readonly IHashidsService _hashidsService; 
+    private readonly IHashids _hashids; 
 
     /// <summary>
     /// 
@@ -25,14 +25,14 @@ public class DisputesController : ControllerBase
     /// <param name="bus"></param>
     /// <param name="mediator"></param>
     /// <param name="logger"></param>
-    /// <param name="hashidsService"></param>
+    /// <param name="hashids"></param>
     /// <exception cref="ArgumentNullException"> <paramref name="mediator"/> or <paramref name="logger"/> is null.</exception>
-    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashidsService hashidsService)
+    public DisputesController(IBus bus, IMediator mediator, ILogger<DisputesController> logger, IHashids hashids)
     {
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _hashidsService = hashidsService ?? throw new ArgumentNullException(nameof(hashidsService));
+        _hashids = hashids ?? throw new ArgumentNullException(nameof(hashids));
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> ResendEmailAsync(string uuidHash, CancellationToken cancellationToken)
     {
-        int[] bytes = _hashidsService.GetHashids().Decode(uuidHash);
+        int[] bytes = _hashids.Decode(uuidHash);
         string uuid = "";
         foreach (var singleByte in bytes)
         {
