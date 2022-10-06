@@ -153,7 +153,14 @@ namespace TrafficCourts.Workflow.Service.Services
             }
             finally
             {
-                await SaveEmailtoHistory(emailMessage, sentSuccessfully);
+                try
+                {
+                    await SaveEmailtoHistory(emailMessage, sentSuccessfully);
+                } catch(Exception ex)
+                {
+                    _logger.LogError(ex, "Exception saving email history.");
+                    // dont throw another exception
+                }
             }
         }
 
@@ -203,7 +210,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 return Id;
             } catch(Exception ex) {
                 _logger.LogError(ex, "Exception saving email history.");
-                throw;
+                return -1;
             }
         }
 
