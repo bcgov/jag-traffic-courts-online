@@ -130,7 +130,12 @@ public class DisputeService : IDisputeService
     {
         _logger.LogDebug("Dispute status setting to validated");
 
-        await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
+        Dispute dispute = await _oracleDataApi.ValidateDisputeAsync(disputeId, cancellationToken);
+
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Handwritten ticket OCR details validated by staff.");
+        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
+
     }
 
     public async Task CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
@@ -138,6 +143,10 @@ public class DisputeService : IDisputeService
         _logger.LogDebug("Dispute cancelled");
 
         Dispute dispute = await _oracleDataApi.CancelDisputeAsync(disputeId, cancellationToken);
+
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute cancelled by staff.");
+        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
@@ -153,6 +162,10 @@ public class DisputeService : IDisputeService
 
         Dispute dispute = await _oracleDataApi.RejectDisputeAsync(disputeId, rejectedReason, cancellationToken);
 
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute rejected by staff.");
+        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
+
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
         await _bus.Publish(rejectedEvent, cancellationToken);
@@ -167,6 +180,10 @@ public class DisputeService : IDisputeService
 
         // Save and status to PROCESSING
         Dispute dispute = await _oracleDataApi.SubmitDisputeAsync(disputeId, cancellationToken);
+
+        // Publish file history
+        SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute submitted to ARC by staff.");
+        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);

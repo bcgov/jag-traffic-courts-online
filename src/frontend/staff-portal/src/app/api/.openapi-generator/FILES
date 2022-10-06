@@ -3,6 +3,8 @@ README.md
 api.module.ts
 api/api.ts
 api/dispute.service.ts
+api/emailHistory.service.ts
+api/fileHistory.service.ts
 api/jJ.service.ts
 api/keycloak.service.ts
 api/lookup.service.ts
@@ -24,9 +26,12 @@ model/disputeInterpreterRequired.model.ts
 model/disputeRepresentedByLawyer.model.ts
 model/disputeStatus.model.ts
 model/disputeSystemDetectedOcrIssues.model.ts
+model/emailHistory.model.ts
+model/emailHistorySuccessfullySent.model.ts
 model/excludeStatus.model.ts
 model/federatedIdentityRepresentation.model.ts
 model/field.model.ts
+model/fileHistory.model.ts
 model/jJDispute.model.ts
 model/jJDisputeRemark.model.ts
 model/jJDisputeStatus.model.ts

@@ -44,13 +44,40 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
                 var disputeId = await _oracleDataApiService.CreateDisputeAsync(dispute);
 
-                if (disputeId > 0 && dispute.EmailAddress is not null && dispute.EmailAddressVerified == false)
+                if (disputeId > 0 && (dispute.EmailAddress is not null && dispute.EmailAddress.Trim() != "") && dispute.EmailAddressVerified == false)
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
-                    // TCVP-1529 Saving a dispute should also send a verification email to the Disputant.
+                    // File History
+                    SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
+                    fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                    fileHistoryRecord.Description = "Dispute initiated.";
+                    await _bus.Publish(fileHistoryRecord);
+
+                    // TCVP-1529 Saving a dispute should also send a verification email to the Disputant if email address is present.
                     SendEmail sendEmail = _emailSenderService.ToVerificationEmail(dispute);
                     await _bus.Publish(sendEmail);
+
+                    await context.RespondAsync<DisputeSubmitted>(new
+                    {
+                        context.MessageId,
+                        InVar.Timestamp,
+                        DisputeId = disputeId
+                    });
+                }
+                else if (disputeId > 0 && (dispute.EmailAddress is null || dispute.EmailAddress.Trim() == ""))
+                {
+                    _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
+
+                    // File History
+                    SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
+                    fileHistoryRecord.TicketNumber = dispute.TicketNumber;
+                    fileHistoryRecord.Description = "Dispute initiated.";
+                    await _bus.Publish(fileHistoryRecord);
+
+                    // File History
+                    fileHistoryRecord.Description = "Dispute submitted for staff review.";
+                    await _bus.Publish(fileHistoryRecord);
 
                     await context.RespondAsync<DisputeSubmitted>(new
                     {

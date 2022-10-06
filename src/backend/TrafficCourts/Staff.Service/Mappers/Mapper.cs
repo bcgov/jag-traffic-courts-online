@@ -62,6 +62,14 @@ public class Mapper
         return disputeRejected;
     }
 
+    public static SaveFileHistoryRecord ToFileHistory(string ticketNumber, string description)
+    {
+        SaveFileHistoryRecord fileHistoryRecord = new();
+        fileHistoryRecord.TicketNumber = ticketNumber;
+        fileHistoryRecord.Description = description;
+        return fileHistoryRecord;
+    }
+
     public static EmailVerificationSend ToEmailVerification(Guid uuid)
     {
         EmailVerificationSend emailVerificationSend = new(uuid);
@@ -99,13 +107,13 @@ public class Mapper
         if (template is not null)
         {
 
-            sendEmail.From = template.Sender;
-            sendEmail.To.Add(dispute.EmailAddress);
+            sendEmail.FromEmailAddress = template.Sender;
+            sendEmail.ToEmailAddress = dispute.EmailAddress;
             sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
             sendEmail.TicketNumber = dispute.TicketNumber;
-
+            sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
         }
         return sendEmail;
 

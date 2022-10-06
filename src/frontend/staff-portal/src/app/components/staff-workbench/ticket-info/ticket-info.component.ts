@@ -411,9 +411,9 @@ export class TicketInfoComponent implements OnInit {
     // look in list of statutes
     let statute = this.lookupsService.statutes.filter(x => x.__statuteString == __statuteString) as StatuteView[];
     if (statute && statute.length > 0) {
-      this.tempViolationTicketCount.description = statute[0].description;
-      this.tempViolationTicketCount.actOrRegulationNameCode = statute[0].act; // to do break down legal paragraphing
-      let parts = this.unLegalParagraph(statute[0].section);
+      this.tempViolationTicketCount.description = statute[0].descriptionText;
+      this.tempViolationTicketCount.actOrRegulationNameCode = statute[0].code; // to do break down legal paragraphing
+      let parts = this.unLegalParagraph(statute[0].sectionText);
       this.tempViolationTicketCount.subparagraph = parts.subparagraph;
       this.tempViolationTicketCount.section = parts.section;
       this.tempViolationTicketCount.subsection = parts.subsection;

@@ -158,12 +158,15 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
       </mat-expansion-panel>
-      <mat-expansion-panel *ngIf="type === 'ticket'" [expanded]="true" id="file-history" hideToggle>
+      <mat-expansion-panel [expanded]="true" id="file-history" hideToggle>
         <mat-expansion-panel-header>
           <mat-panel-title>
             <span style="color: black;"><b>File History </b></span>
           </mat-panel-title>
         </mat-expansion-panel-header>
+        <div>
+          <app-jj-file-history [ticketNumber]="lastUpdatedJJDispute.ticketNumber"></app-jj-file-history>
+        </div>
       </mat-expansion-panel>
       <mat-expansion-panel [expanded]="true" id="file-remarks" hideToggle>
         <mat-expansion-panel-header>

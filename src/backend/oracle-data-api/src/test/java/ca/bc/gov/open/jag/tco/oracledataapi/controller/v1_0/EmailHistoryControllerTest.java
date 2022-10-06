@@ -36,7 +36,7 @@ class EmailHistoryControllerTest extends BaseTestSuite {
 		allEmailHistory = emailHistoryRepository.findAll(); 
 		assertEquals(1, allEmailHistory.size());
 		assertEquals(emailHistoryId, allEmailHistory.get(0).getEmailHistoryId());
-		assertEquals(emailHistory.getRecipientEmailAddress(), allEmailHistory.get(0).getRecipientEmailAddress());
+		assertEquals(emailHistory.getToEmailAddress(), allEmailHistory.get(0).getToEmailAddress());
 
 		// Delete record
 		emailHistoryRepository.deleteById(emailHistoryId);

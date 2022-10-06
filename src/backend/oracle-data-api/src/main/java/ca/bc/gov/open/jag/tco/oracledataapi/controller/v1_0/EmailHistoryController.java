@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController(value = "EmailHistoryControllerV1_0")
-@RequestMapping("/api/v1.0/jj")
+@RequestMapping("/api/v1.0")
 public class EmailHistoryController {
 
 	@Autowired
@@ -50,7 +50,6 @@ public class EmailHistoryController {
 	 * POST endpoint that inserts an email history record for given ticketnumber.
 	 *
 	 * @param id (ticket number) of the saved {@link JJDispute} to update
-	 * @param principal user doing the updating
 	 * @return inserted {@link EmailHistory}
 	 */
 	@Operation(summary = "Inserts an email history record for the given ticket number.")
