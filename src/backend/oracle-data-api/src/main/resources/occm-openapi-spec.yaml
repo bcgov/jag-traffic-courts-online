@@ -120,8 +120,14 @@ paths:
           in: query
           description: ''
           schema:
-            type: string
-            pattern: ^\d+$
+            type: integer
+            format: int64
+        - name: disputeId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: Ok
@@ -277,10 +283,13 @@ components:
         entDtm:
           type: string
           format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\")"
         entUserId:
           type: string
         updDtm:
           type: string
+          format: date-time
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonFormat(pattern=\"yyyy-MM-dd HH:mm:ss\")"
         updUserId:
           type: string
           format: nullable
