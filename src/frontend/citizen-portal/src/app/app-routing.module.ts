@@ -11,6 +11,8 @@ import { FindTicketComponent } from './components/find-ticket/find-ticket.compon
 import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { EmailVerificationComponent } from '@components/email-verification/email-verification.component';
+import { DisputeLandingComponent } from '@components/dispute-landing/dispute-landing.component';
+import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 
 const routes: Routes = [
   {
@@ -19,6 +21,10 @@ const routes: Routes = [
     canActivate: [FeatureFlagGuard],
     data: { featureFlag: 'dispute' },
     children: [
+      {
+        path: AppRoutes.DISPUTE,
+        component: DisputeLandingComponent,
+      },
       {
         path: AppRoutes.FIND,
         component: FindTicketComponent,
@@ -44,8 +50,12 @@ const routes: Routes = [
         component: EmailVerificationRequiredComponent,
       },
       {
+        path: AppRoutes.FIND_DISPUTE,
+        component: FindDisputeComponent,
+      },
+      {
         path: '',
-        redirectTo: AppRoutes.FIND,
+        redirectTo: AppRoutes.DISPUTE,
         pathMatch: 'full',
       },
     ],

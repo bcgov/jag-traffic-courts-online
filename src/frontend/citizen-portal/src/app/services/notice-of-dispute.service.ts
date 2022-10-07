@@ -129,7 +129,7 @@ export class NoticeOfDisputeService {
               this.router.navigate([AppRoutes.disputePath(AppRoutes.EMAILVERIFICATIONREQUIRED)], {
                 queryParams: {
                   email: input.email_address,
-                  token: res.emailVerificationToken
+                  token: res.NoticeOfDisputeId
                 },
               });
             }

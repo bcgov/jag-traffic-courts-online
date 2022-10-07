@@ -38,9 +38,7 @@ export class EmailVerificationRequiredComponent implements OnInit {
   }
 
   resendEmail() {
-    this.noticeOfDisputeService.resendVerificationEmail(this.token).subscribe(() => {
-
-    });
+    this.noticeOfDisputeService.resendVerificationEmail(this.token).subscribe(() => { });
   }
 
   public onPrint(): void {

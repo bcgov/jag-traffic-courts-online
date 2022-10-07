@@ -1,60 +1,15 @@
 <app-page [busy]="busy">
   <app-tco-page-header>
-    <ng-container header>British Columbia Ticket Resolution</ng-container>
+    <ng-container header>Start a Traffic Ticket Dispute</ng-container>
     <ng-container subHeader>
-      <cdk-accordion>
-        <cdk-accordion-item
-          #accordionItem="cdkAccordionItem"
-          role="button"
-          tabindex="0"
-          [attr.id]="'accordion-header'"
-          [attr.aria-expanded]="accordionItem.expanded"
-          [attr.aria-controls]="'accordion-body'">
-          <div class="subheader-desc" (click)="accordionItem.toggle()">
-            Request fine reductions or time to pay, or dispute your Motor Vehicle Act violation ticket.<br>
-            <a style="color: #009CDE"><u>
-              {{ accordionItem.expanded ? ' - See less information' : ' + See more information' }}
-            </u>
-          </a>
-          </div>
-          <div
-            role="region"
-            [style.display]="accordionItem.expanded ? '' : 'none'"
-            [attr.id]="'accordion-body'"
-            [attr.aria-labelledby]="'accordion-header'">
-            <div class="col my-3">
-              <app-alert type="info"
-                         icon="info">
-                <ng-container #alertContent
-                              class="alert-content">
-                              The types of <strong>Motor Vehicle Act</strong> tickets you can make requests for are:
-                              <ul class="mt-3">
-                                <li>
-                                  <b>Handwritten tickets(start with A)</b>
-                                </li>
-                                <li>
-                                  <b>E-tickets (start with E)</b>
-                                </li>
-                                <li>
-                                  <b>Intersection Safety Camera tickets (start with S):</b> red light and speed camera tickets.
-                                </li>
-                              </ul>
-                </ng-container>
-              </app-alert>
-            </div>
-          </div>
-        </cdk-accordion-item>
-      </cdk-accordion>
+      Enter your contact information, then <b>choose the type of request you'd like to make.</b>
     </ng-container>
   </app-tco-page-header>
 
-  <div class="row d-sm-block d-md-none"
-       *ngIf="notFound">
+  <div class="row d-sm-block d-md-none" *ngIf="notFound">
     <div class="col">
-      <app-alert type="danger"
-                 icon="error">
-        <ng-container #alertContent
-                      class="alert-content">
+      <app-alert type="danger" icon="error">
+        <ng-container #alertContent class="alert-content">
           <strong>Ticket not found.</strong>
           <p>Please take photo or upload image.</p>
         </ng-container>
@@ -66,11 +21,7 @@
   <div class="row d-sm-block d-md-block d-lg-none">
     <h3 class="text-dark"><strong>If your ticket number starts with A:</strong></h3>
     <div class="col my-3">
-      <button type="button"
-              mat-raised-button
-              color="primary"
-              class="find-xlarge"
-              (click)="fileInput.click()">
+      <button type="button" mat-raised-button color="primary" class="find-xlarge" (click)="fileInput.click()">
         <mat-icon class="me-2">photo_camera</mat-icon>
         Take photo of ticket
       </button>
@@ -82,51 +33,40 @@
     </div>
     <div class="row">
       <div class="col">
-        <a class="view-link"
-           (click)="onViewImageRequirements()">
-          <img class="me-2"
-               src="/assets/image-requirements-icon.svg" />
+        <a class="view-link" (click)="onViewImageRequirements()">
+          <img class="me-2" src="/assets/image-requirements-icon.svg" />
           <span class="view-link-text">View image requirements</span>
         </a>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <a class="view-link"
-           (click)="onViewTicketExample()">
-          <img class="me-2"
-               src="/assets/ticket-example-icon.svg" />
+        <a class="view-link" (click)="onViewTicketExample()">
+          <img class="me-2" src="/assets/ticket-example-icon.svg" />
           <span class="view-link-text">View ticket examples</span>
         </a>
       </div>
     </div>
-    <div class="or-separator"><hr><span>OR</span><hr></div>
+    <div class="or-separator">
+      <hr><span>OR</span>
+      <hr>
+    </div>
   </div>
 
   <div class="flex flex-last">
     <div class="flex-2-col info">
       <div class="flex-last-info-content">
-        <form [formGroup]="form"
-              (ngSubmit)="onSearch()"
-              novalidate>
+        <form [formGroup]="form" (ngSubmit)="onSearch()" novalidate>
           <div class="row">
             <span class="text-dark mx-2"><strong>If your ticket number starts with E or S:</strong></span>
 
             <div class="col">
               <mat-form-field class="w-100">
                 <mat-label>Enter violation ticket number</mat-label>
-                <input formControlName="ticketNumber"
-                       placeholder="XX00000000"
-                       matInput
-                       type="text"
-                       oninput="this.value = this.value.toUpperCase()"
-                       mask="SS00000000"
-                       autocomplete="off" />
-                <button mat-button
-                        matSuffix
-                        mat-icon-button
-                        aria-label="Clear"
-                        (click)="form.controls.ticketNumber.setValue('')">
+                <input formControlName="ticketNumber" placeholder="XX00000000" matInput type="text"
+                  oninput="this.value = this.value.toUpperCase()" mask="SS00000000" autocomplete="off" />
+                <button mat-button matSuffix mat-icon-button aria-label="Clear"
+                  (click)="form.controls.ticketNumber.setValue('')">
                   <mat-icon>close</mat-icon>
                 </button>
                 <mat-error>{{ "error.required" | translate }}</mat-error>
@@ -135,24 +75,16 @@
           </div>
 
           <div class="row">
-                <mat-form-field style="width: 100%;">
-                  <mat-label>Enter violation time</mat-label>
-                  <input
-                      matInput
-                      hidden
-                      aria-label="default time"
-                      formControlName="time"
-                   />
-                   <ngx-timepicker-field formControlName="time" [format]="24"></ngx-timepicker-field>
-                   <mat-error>{{ "error.required" | translate }}</mat-error>
-              </mat-form-field>
+            <mat-form-field style="width: 100%;">
+              <mat-label>Enter violation time</mat-label>
+              <input matInput hidden aria-label="default time" formControlName="time" />
+              <ngx-timepicker-field formControlName="time" [format]="24"></ngx-timepicker-field>
+              <mat-error>{{ "error.required" | translate }}</mat-error>
+            </mat-form-field>
           </div>
           <div class="row">
             <div class="col">
-              <button type="submit"
-                      mat-flat-button
-                      color="primary"
-                      class="find-large">
+              <button type="submit" mat-flat-button color="primary" class="find-large">
                 <mat-icon class="me-2">search</mat-icon>
                 Find ticket
               </button>
@@ -165,13 +97,10 @@
       <div class="d-md-none d-lg-block vertical-or-separator">
         OR
       </div>
-      <div class="row"
-           *ngIf="notFound">
+      <div class="row" *ngIf="notFound">
         <div class="col">
-          <app-alert type="danger"
-                     icon="error">
-            <ng-container #alertContent
-                          class="alert-content">
+          <app-alert type="danger" icon="error">
+            <ng-container #alertContent class="alert-content">
               <strong>Ticket not found.</strong>
               <p>Please take photo or upload image.</p>
             </ng-container>
@@ -180,47 +109,34 @@
       </div>
       <div class="row">
         <span class="text-dark mb-2"><strong>If your ticket number starts with A:</strong></span>
-          </div>      
+      </div>
       <div class="row">
         <div class="col">
-          <button type="button"
-                  mat-flat-button
-                  color="primary"
-                  class="find-large"
-                  (click)="fileInput.click()">
+          <button type="button" mat-flat-button color="primary" class="find-large" (click)="fileInput.click()">
             <mat-icon class="icon-large me-2">upload_file</mat-icon>
             Upload ticket image
           </button>
           <div class="row my-4">
             <span>I can't upload an image of my ticket
-              <mat-icon class="tool-tip" mdTooltipPosition='above'
-              matTooltip='{{toolTipData}}'>info</mat-icon>
+              <mat-icon class="tool-tip" mdTooltipPosition='above' matTooltip='{{toolTipData}}'>info</mat-icon>
             </span>
-            </div>
-          <input hidden
-                 (change)="onFileChange($event)"
-                 #fileInput
-                 type="file"
-                 id="file" />
+          </div>
+          <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file" />
         </div>
       </div>
       <div class="row m-2">
         <hr style="opacity: 100%;">
-       </div>
+      </div>
       <div class="row">
         <div class="col">
-          <a class="view-link"
-            (click)="onViewImageRequirements()">
-            <img class="me-2"
-                src="/assets/image-requirements-icon.svg" />
+          <a class="view-link" (click)="onViewImageRequirements()">
+            <img class="me-2" src="/assets/image-requirements-icon.svg" />
             <span class="view-link-text">View image requirements</span>
           </a>
         </div>
         <div class="col">
-          <a class="view-link"
-             (click)="onViewTicketExample()">
-            <img class="me-2"
-                 src="/assets/ticket-example-icon.svg" />
+          <a class="view-link" (click)="onViewTicketExample()">
+            <img class="me-2" src="/assets/ticket-example-icon.svg" />
             <span class="view-link-text">View ticket examples</span>
           </a>
         </div>

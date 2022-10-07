@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NoticeOfDisputeService } from 'app/services/notice-of-dispute.service';
-import { AppRoutes } from 'app/app.routes';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-email-verification',
@@ -23,8 +21,9 @@ export class EmailVerificationComponent {
       this.noticeOfDisputeService.verifyEmail(this.token).subscribe(() => {
         this.checking = false;
         this.verified = true;
-      },
-      error => {this.checking = false;});
+      }, error => { 
+        this.checking = false; 
+      });
     });
   }
 }
