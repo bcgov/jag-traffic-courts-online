@@ -217,22 +217,9 @@ public class DisputeService {
 
 	/**
 	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
-	 * @return number of records modified.
 	 */
 	public void unassignDisputes() {
-		int count = 0;
-
-		// Find all Disputes with an assignedTs older than 1 hour ago.
-		Date hourAgo = DateUtils.addHours(new Date(), -1);
-		logger.debug("Unassigning all disputes older than {}", hourAgo.toInstant());
-		for (Dispute dispute : disputeRepository.findByUserAssignedTsBefore(hourAgo)) {
-			dispute.setUserAssignedTo(null);
-			dispute.setUserAssignedTs(null);
-			disputeRepository.saveAndFlush(dispute);
-			count++;
-		}
-
-		logger.debug("Unassigned {} record(s)", count);
+		disputeRepository.unassignDisputes(DateUtils.addHours(new Date(), -1));
 	}
 
 	/**

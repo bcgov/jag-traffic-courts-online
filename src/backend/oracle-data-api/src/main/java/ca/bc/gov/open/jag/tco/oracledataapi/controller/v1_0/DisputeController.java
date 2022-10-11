@@ -93,7 +93,8 @@ public class DisputeController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Dispute record deleted."),
 		@ApiResponse(responseCode = "400", description = "Bad Request."),
-		@ApiResponse(responseCode = "404", description = "Dispute record not found. Delete failed.")
+		@ApiResponse(responseCode = "404", description = "Dispute record not found. Delete failed."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Delete failed.")
 	})
 	@DeleteMapping("/dispute/{id}")
 	public void deleteDispute(@PathVariable Long id) {
@@ -300,6 +301,10 @@ public class DisputeController {
 			summary = "An endpoint hook to trigger the Unassign Dispute job.",
 			description = "A Dispute can be assigned to a specific user that \"locks\" the record for others. This endpoing manually triggers the Unassign Dispute job that clears the assignment of all Disputes that were assigned for more than 1 hour."
 			)
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Dispute record unassigned."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Unassigned failed.")
+	})
 	public void unassignDisputes() {
 		logger.debug("GET /disputes/unassign called");
 		disputeService.unassignDisputes();
