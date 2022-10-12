@@ -142,10 +142,37 @@ paths:
       parameters:
         - name: disputeId
           in: query
+          required: true
           description: ''
           schema:
             type: integer
             format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Violation Ticket
+  /v1/assignViolationTicket:
+    post:
+      parameters:
+        - name: disputeId
+          in: query
+          required: true
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: userId
+          in: query
+          required: true
+          description: 'This is actually userName, not a user ID.'
+          schema:
+            type: string
+            maxLength: 30
       responses:
         '200':
           description: Ok
@@ -164,6 +191,36 @@ paths:
           schema:
             type: string
             maxLength: 19
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Violation Ticket
+  /v1/violationTicketStatus:
+    post:
+      parameters:
+        - name: disputeId
+          in: query
+          description: ''
+          schema:
+            type: integer
+            format: int64
+        - name: statusCd
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: rejectReason
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 500
       responses:
         '200':
           description: Ok

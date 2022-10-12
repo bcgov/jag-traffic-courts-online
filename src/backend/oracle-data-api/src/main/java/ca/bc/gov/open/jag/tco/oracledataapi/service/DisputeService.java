@@ -181,9 +181,9 @@ public class DisputeService {
 			throw new NotAllowedException("Unknown status of a Dispute record: %s", dispute.getStatus());
 		}
 
-		dispute.setStatus(disputeStatus);
-		dispute.setRejectedReason(DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
-		return disputeRepository.saveAndFlush(dispute);
+		disputeRepository.setStatus(id, disputeStatus, DisputeStatus.REJECTED.equals(disputeStatus) ? rejectedReason : null);
+		disputeRepository.flushAndClear();
+		return disputeRepository.findById(id).orElseThrow();
 	}
 
 	/**
@@ -203,9 +203,8 @@ public class DisputeService {
 
 		if (StringUtils.isBlank(dispute.getUserAssignedTo()) || dispute.getUserAssignedTo().equals(principal.getName())) {
 
-			dispute.setUserAssignedTo(principal.getName());
-			dispute.setUserAssignedTs(new Date());
-			disputeRepository.saveAndFlush(dispute);
+			disputeRepository.assignDisputeToUser(id, principal.getName());
+			disputeRepository.flushAndClear();
 
 			logger.debug("Dispute with id {} has been assigned to {}", id, principal.getName());
 
