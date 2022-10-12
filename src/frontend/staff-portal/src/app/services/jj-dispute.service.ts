@@ -25,7 +25,7 @@ export class JJDisputeService {
     { idir: "philbold@idir", name: "Phil Bolduc" },
     { idir: "choban@idir", name: "Chris Hoban" },
     { idir: "kneufeld@idir", name: "Kevin Neufeld" },
-    { idir: "cohiggins@idir", name: "Colm O'Higgins" },
+    { idir: "colmohig@idir", name: "Colm O'Higgins" },
     { idir: "bkarahan@idir", name: "Burak Karahan" },
     { idir: "twwong@idir", name: "Tsunwai Wong" },
     { idir: "ewong@idir", name: "Elaine Wong" },
