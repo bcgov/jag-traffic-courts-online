@@ -301,6 +301,7 @@
                             <generatorName>java</generatorName>
                             <configOptions>
                                 <useTags>true</useTags>
+                                <useRuntimeException>true</useRuntimeException>
                             </configOptions>
                             <library>jersey2</library>
                             <apiPackage>${default-package}.api</apiPackage>

@@ -152,7 +152,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteResult'
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Violation Ticket
+  /v1/unassignViolationTicket:
+    post:
+      parameters:
+        - name: assignedBeforeTs
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 19
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
       tags:
         - Violation Ticket
 components:
@@ -270,7 +288,7 @@ components:
         currentTimestamp:
           type: string
           format: date-time
-    DeleteResult:
+    ResponseResult:
       type: object
       properties:
         status:

@@ -72,4 +72,9 @@ public interface DisputeRepository {
 	 */
 	public Dispute saveAndFlush(Dispute entity);
 
+	/**
+	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
+	 */
+	public void unassignDisputes(Date olderThan);
+
 }
