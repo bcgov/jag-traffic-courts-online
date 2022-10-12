@@ -57,18 +57,13 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan) {
-		throw new NotYetImplementedException();
-	}
-
-	@Override
 	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken) {
 		throw new NotYetImplementedException();
 	}
 
 	@Override
 	public void deleteAll() {
-		throw new NotYetImplementedException();
+		// no-op. Not needed for ORDS.
 	}
 
 	@Override

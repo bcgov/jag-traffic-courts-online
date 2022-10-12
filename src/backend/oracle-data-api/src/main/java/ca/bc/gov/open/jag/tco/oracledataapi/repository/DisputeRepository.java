@@ -19,9 +19,6 @@ public interface DisputeRepository {
     /** Fetch all records which do not have the specified status and older than the given date. */
     public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
-	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
-    public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan);
-
     /** Fetch all records that matches the emailVerificationToken. */
     public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
 
