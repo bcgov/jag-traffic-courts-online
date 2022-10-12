@@ -18,7 +18,7 @@ citizen-api:
     pullPolicy: Always
   env: 
     "FormRecognizer__ApiVersion": "2022-06-30-preview"
-    "FormRecognizer__ModelId": "ViolationTicket"ß
+    "FormRecognizer__ModelId": "ViolationTicket"
     "Swagger__Enabled": "true"
 
 citizen-web:
