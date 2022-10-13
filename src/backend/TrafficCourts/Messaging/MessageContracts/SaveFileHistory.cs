@@ -9,7 +9,7 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// <summary>
     /// Interface message contract for saving file history
     /// </summary>
-    public class SaveFileHistoryRecord : IMessage
+    public class SaveFileHistoryRecord
     {
         public string Description { get; set; } = String.Empty;
         public string TicketNumber { get; set; } = String.Empty;

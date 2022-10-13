@@ -2,6 +2,7 @@
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Common.Features.Mail.Model;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using TrafficCourts.Common.Features.Mail;
 
 namespace TrafficCourts.Workflow.Service.Consumers
 {
@@ -32,15 +33,13 @@ namespace TrafficCourts.Workflow.Service.Consumers
             if (template is not null)
             {
                 // TODO: there is future ability to opt-out of e-mails... may need to add check to skip over this, if disputant choses so.
-                var emailMessage = new SendEmail()
+                var emailMessage = new EmailMessage()
                 {
-                    FromEmailAddress = template.Sender,
-                    ToEmailAddress = context.Message.Email!,
+                    From = template.Sender,
+                    To = context.Message.Email!,
                     Subject = template.SubjectTemplate.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
+                    TextContent = template.PlainContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
                     HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
-                    TicketNumber = context.Message.TicketFileNumber,
-                    SuccessfullySent = EmailHistorySuccessfullySent.N
                 };
 
                 await context.Publish(emailMessage);

@@ -18,12 +18,10 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
         public class Request : IRequest<Response>
         {
             public NoticeOfDispute Dispute { get; init; }
-            public string Host { get; set; }
 
-            public Request(Models.Dispute.NoticeOfDispute dispute, string host)
+            public Request(NoticeOfDispute dispute)
             {
                 Dispute = dispute ?? throw new ArgumentNullException(nameof(dispute));
-                Host = host ?? throw new ArgumentNullException(nameof(host));
             }
         }
         public class Response
@@ -40,13 +38,14 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             }
 
-            public Response(string? emailVerificationToken)
+            public Response(string noticeOfDisputeId)
             {
-                EmailVerificationToken = emailVerificationToken;
+                NoticeOfDisputeId = EmailVerificationToken = noticeOfDisputeId;
             }
 
             public Exception? Exception { get; init; }
             public string? EmailVerificationToken { get; }
+            public string? NoticeOfDisputeId { get;}
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -155,23 +154,14 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     }
 
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
+                    submitNoticeOfDispute.NoticeOfDisputeId = NewId.NextGuid();
                     submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
-
-                    // TCVP-1686 Generate new email verification token here. The Dispute hasn't been saved yet so we don't yet have a DisputeId.
-                    //   This token is returned to the UI so the user can click a button to resend the verification email.
-                    if (!string.IsNullOrEmpty(submitNoticeOfDispute.EmailAddress))
-                    {
-                        submitNoticeOfDispute.EmailVerificationToken = Guid.NewGuid().ToString();
-                        
-                        // FIXME: this is wrong. The "Host" in this case resolves to the citizen-api. This should be the hostname of citizen-web (not api) in any of the environments (local, dev, test, or prod).
-                        submitNoticeOfDispute.Host = request.Host;
-                    }
+                    submitNoticeOfDispute.SubmittedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
 
                     if (lookedUpViolationTicket != null)
                     {
                         submitNoticeOfDispute.ViolationTicket = _mapper.Map<Messaging.MessageContracts.ViolationTicket>(lookedUpViolationTicket);
                     }
-                    submitNoticeOfDispute.SubmittedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
 
                     // Publish submit NoticeOfDispute event (consumer(s) will push event to Oracle Data API to save the Dispute and generate email)
                     await _bus.Publish(submitNoticeOfDispute, cancellationToken);
@@ -181,13 +171,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     // success, return true
                     activity?.SetStatus(ActivityStatusCode.Ok);
 
-                    // convert email verification to hashed array of ascii rep of characters
-                    int tokenLength = submitNoticeOfDispute.EmailVerificationToken is not null ? submitNoticeOfDispute.EmailVerificationToken.Length : 0;
-                    int[] intArray = new int[tokenLength];
-                    for (int i=0; i < tokenLength; i++) {
-                        intArray[i] = (int)submitNoticeOfDispute.EmailVerificationToken.ElementAt(i);
-                    }
-                    var hash = _hashids.Encode(intArray);
+                    var hash = _hashids.EncodeHex(submitNoticeOfDispute.NoticeOfDisputeId.ToString("n"));
                     return new Response(hash);
                 }
                 catch (Exception exception)

@@ -1,11 +1,14 @@
-﻿using System.Text.Json.Serialization;
-using TrafficCourts.Common.Converters;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Messaging.MessageContracts;
 
-public class SubmitNoticeOfDispute : IMessage
+public class SubmitNoticeOfDispute
 {
+    /// <summary>
+    /// The unique system generated notice of dispute identifer.
+    /// </summary>
+    public Guid NoticeOfDisputeId { get; set; }
+
     /// <summary>
     /// The status of the dispute. Defaults to <see cref="DisputeStatus.NEW"/>.
     /// </summary>
@@ -111,11 +114,6 @@ public class SubmitNoticeOfDispute : IMessage
     public string EmailAddress { get; set; } = null!;
 
     /// <summary>
-    /// The disputant's email address.
-    /// </summary>
-    public string? EmailVerificationToken { get; set; }
-
-    /// <summary>
     /// The disputant intends to be represented by a lawyer at the hearing.
     /// </summary>
     public DisputeRepresentedByLawyer RepresentedByLawyer { get; set; }
@@ -209,11 +207,6 @@ public class SubmitNoticeOfDispute : IMessage
     /// JSON serialized OCR data.
     /// </summary>
     public string? OcrViolationTicket { get; set; }
-
-    /// <summary>
-    /// Origin of request for sending email verification
-    /// </summary>
-    public string Host { get; set; } = String.Empty;
 
     public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 }

@@ -59,8 +59,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object, mockHashids.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
-            string host = "localhost";
-            var request = new Create.Request(dispute, host);
+            var request = new Create.Request(dispute);
 
             // Act
             Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);
@@ -68,7 +67,5 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             // Assert
             Assert.IsType<Create.Response>(response);
         }
-
-
     }
 }

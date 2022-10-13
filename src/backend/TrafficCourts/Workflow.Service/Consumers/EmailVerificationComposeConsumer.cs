@@ -1,4 +1,6 @@
 ﻿using MassTransit;
+using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -13,18 +15,13 @@ public class EmailVerificationComposeConsumer : IConsumer<EmailVerificationSend>
 {
     private readonly ILogger<EmailVerificationComposeConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IBus _bus;
-    private readonly IEmailSenderService _emailSenderService;
+    private readonly IVerificationEmailTemplate _verificationEmailTemplate;
 
-    public EmailVerificationComposeConsumer(ILogger<EmailVerificationComposeConsumer> logger, IOracleDataApiService oracleDataApiService, IBus bus, IEmailSenderService emailSenderService)
+    public EmailVerificationComposeConsumer(ILogger<EmailVerificationComposeConsumer> logger, IOracleDataApiService oracleDataApiService, IVerificationEmailTemplate verificationEmailTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        ArgumentNullException.ThrowIfNull(oracleDataApiService);
-        _oracleDataApiService = (oracleDataApiService);
-        ArgumentNullException.ThrowIfNull(bus);
-        _emailSenderService = (emailSenderService);
-        ArgumentNullException.ThrowIfNull(emailSenderService);
-        _bus = bus;
+        _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+        _verificationEmailTemplate = verificationEmailTemplate ?? throw new ArgumentNullException(nameof(verificationEmailTemplate));
     }
 
     public async Task Consume(ConsumeContext<EmailVerificationSend> context)
@@ -37,8 +34,14 @@ public class EmailVerificationComposeConsumer : IConsumer<EmailVerificationSend>
         try
         {
             Dispute dispute = await _oracleDataApiService.GetDisputeByEmailVerificationTokenAsync(message.EmailVerificationToken.ToString());
-            SendEmail sendEmail = _emailSenderService.ToVerificationEmail(dispute);
-            await _bus.Publish(sendEmail);
+
+            EmailMessage emailMessage = _verificationEmailTemplate.Create(dispute);
+            await context.Publish(new SendDispuantEmail
+            {
+                Message = emailMessage,
+                TicketNumber = dispute.TicketNumber,
+                NoticeOfDisputeId = Guid.Empty // TODO: set correct NoticeOfDisputeId
+            }, context.CancellationToken);
         }
         catch (ApiException ex) when (ex.StatusCode == StatusCodes.Status404NotFound)
         {

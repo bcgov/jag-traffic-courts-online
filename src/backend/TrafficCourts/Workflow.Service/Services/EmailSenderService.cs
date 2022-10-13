@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using TrafficCourts.Messaging.MessageContracts;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using AutoMapper;
+﻿using TrafficCourts.Messaging.MessageContracts;
 using MimeKit;
 using MimeKit.Text;
-using TrafficCourts.Common.Features.Mail.Model;
-using TrafficCourts.Common.Configuration;
 using TrafficCourts.Workflow.Service.Configuration;
+using TrafficCourts.Common.Features.Mail;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -15,17 +11,12 @@ namespace TrafficCourts.Workflow.Service.Services
         private readonly ILogger<EmailSenderService> _logger;
         private readonly EmailConfiguration _emailConfiguration;
         private readonly ISmtpClientFactory _smptClientFactory;
-        private readonly IOracleDataApiService _oracleDataApiService;
-        private readonly IMapper _mapper;
 
-
-        public EmailSenderService(ILogger<EmailSenderService> logger, EmailConfiguration emailConfiguration, ISmtpClientFactory stmpClientFactory, IOracleDataApiService oracleDataApiService, IMapper mapper)
+        public EmailSenderService(EmailConfiguration emailConfiguration, ISmtpClientFactory stmpClientFactory, ILogger<EmailSenderService> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _emailConfiguration = emailConfiguration;
-            _smptClientFactory = stmpClientFactory;
-            _oracleDataApiService = oracleDataApiService;
-            _mapper = mapper;
+            _emailConfiguration = emailConfiguration ?? throw new ArgumentNullException(nameof(emailConfiguration));
+            _smptClientFactory = stmpClientFactory ?? throw new ArgumentNullException(nameof(stmpClientFactory));
          }
 
         /// <summary>
@@ -34,35 +25,34 @@ namespace TrafficCourts.Workflow.Service.Services
         /// <param name="emailMessage"></param>
         /// <returns></returns>
         /// <exception cref="EmailSendFailedException"></exception>
-        public async Task SendEmailAsync(SendEmail emailMessage, CancellationToken cancellationToken)
+        public async Task<SendEmailResult> SendEmailAsync(EmailMessage emailMessage, CancellationToken cancellationToken)
         {
-            bool sentSuccessfully = false;
             try
             {
                 // create email message
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse(emailMessage.FromEmailAddress ?? _emailConfiguration.Sender));
+                email.From.Add(MailboxAddress.Parse(emailMessage.From ?? _emailConfiguration.Sender));
 
                 // add recipients
-                bool toAdded = AddRecipient(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty, email.To);
+                bool toAdded = AddRecipient(emailMessage.To, email.To);
 
                 if (IsAllowedListConfigured)
                 {
                     // in development, some addresses many not allowed, add AddRecipients will filter out any unallowed email address
                     // we need to exit before an exception is thrown below due to noone left in the "To" address list.
-                    if (!toAdded && IsEmailValid(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty) && !IsEmailAllowed(emailMessage.ToEmailAddress is not null ? emailMessage.ToEmailAddress : String.Empty))
+                    if (!toAdded && IsEmailValid(emailMessage.To) && !IsEmailAllowed(emailMessage.To))
                     {
                         // there is a valid to address, however, non of them are allowed, note we are really using only CC and BCC emails
                         _logger.LogInformation("Not sending email because none of the valid email addresses are allowed to be set to. See configuration AllowList");
-                        return;
+                        return SendEmailResult.Filtered;
                     }
                 }
 
                 email.Subject = emailMessage.Subject;
 
-                if (!String.IsNullOrEmpty(emailMessage.PlainTextContent))
+                if (!String.IsNullOrEmpty(emailMessage.TextContent))
                 {
-                    email.Body = new TextPart(TextFormat.Plain) { Text = emailMessage.PlainTextContent };
+                    email.Body = new TextPart(TextFormat.Plain) { Text = emailMessage.TextContent };
                 }
                 else if (!String.IsNullOrEmpty(emailMessage.HtmlContent))
                 {
@@ -86,7 +76,7 @@ namespace TrafficCourts.Workflow.Service.Services
                 await smtp.SendAsync(email, cancellationToken, null);
                 await smtp.DisconnectAsync(true);
 
-                sentSuccessfully = true;
+                return SendEmailResult.Success;
             }
             catch (ArgumentNullException ane)
             {
@@ -151,17 +141,6 @@ namespace TrafficCourts.Workflow.Service.Services
                 _logger.LogError(scfe, "An error connecting to the the SMTP Server");
                 throw new EmailSendFailedException("An error connecting to the the SMTP Server", scfe);
             }
-            finally
-            {
-                try
-                {
-                    await SaveEmailtoHistory(emailMessage, sentSuccessfully);
-                } catch(Exception ex)
-                {
-                    _logger.LogError(ex, "Exception saving email history.");
-                    // dont throw another exception
-                }
-            }
         }
 
         /// <summary>
@@ -186,35 +165,6 @@ namespace TrafficCourts.Workflow.Service.Services
         }
 
         /// <summary>
-        /// Saves an email to record of emails sent
-        /// </summary>
-        /// <param name="emailMessage"></param>
-        /// <param name="sentSuccessfully"></param>
-        /// <returns>returns id of new email history record</returns>
-        private async Task<long> SaveEmailtoHistory(SendEmail emailMessage, bool sentSuccessfully)
-        {
-            try
-            {
-                // prepare file history record
-                if (sentSuccessfully)
-                {
-                    emailMessage.SuccessfullySent = EmailHistorySuccessfullySent.Y;
-                }
-                else
-                {
-                    emailMessage.SuccessfullySent = EmailHistorySuccessfullySent.N;
-                }
-                EmailHistory emailHistory = _mapper.Map<EmailHistory>(emailMessage);
-
-                long Id = await _oracleDataApiService.CreateEmailHistoryAsync(emailHistory);
-                return Id;
-            } catch(Exception ex) {
-                _logger.LogError(ex, "Exception saving email history.");
-                return -1;
-            }
-        }
-
-        /// <summary>
         /// Determins if any of the recipients are valid email addresses
         /// </summary>
         /// <param name="recipients"></param>
@@ -232,40 +182,6 @@ namespace TrafficCourts.Workflow.Service.Services
             return false;
         }
 
-        public SendEmail ToVerificationEmail(Dispute dispute)
-        {
-            SendEmail sendEmail = new();
-            // Send email message to the submitter's entered email
-            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "VerificationEmailTemplate");
-            if (template is not null)
-            {
-                sendEmail.FromEmailAddress = template.Sender;
-                sendEmail.ToEmailAddress = dispute.EmailAddress;
-                sendEmail.Subject = template.SubjectTemplate.Replace("{ticketid}", dispute.TicketNumber);
-                sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("{ticketid}", dispute.TicketNumber);
-                sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("{ticketid}", dispute.TicketNumber);
-                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("{emailVerificationToken}", dispute.EmailVerificationToken);
-                sendEmail.HtmlContent = sendEmail.HtmlContent?.Replace("{emailVerificationUrl}", _emailConfiguration.EmailVerificationUrl);
-                sendEmail.TicketNumber = dispute.TicketNumber;
-            }
-            return sendEmail;
-        }
-
-        public SendEmail ToConfirmationEmail(Dispute dispute)
-        {
-            SendEmail sendEmail = new();
-            // Send email message to the submitter's entered email
-            var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == "SubmitDisputeTemplate");
-            if (template is not null)
-            {
-                sendEmail.FromEmailAddress = template.Sender;
-                sendEmail.ToEmailAddress = dispute.EmailAddress;
-                sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
-                sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-                sendEmail.TicketNumber = dispute.TicketNumber;
-            }
-            return sendEmail;
-        }
 
         /// <summary>
         /// Validate each recipient and if is a valid email address, adds to the <see cref="addressList"/>.

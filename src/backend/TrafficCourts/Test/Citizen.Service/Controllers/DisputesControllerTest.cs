@@ -25,7 +25,7 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockBus = new Mock<IBus>();
             var mockHashids = new Mock<IHashids>();
             var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object);
-            var request = new Create.Request(mockTicketDispute.Object, "localhost");
+            var request = new Create.Request(mockTicketDispute.Object);
             var createResponse = new Create.Response();
 
             mockMediator
