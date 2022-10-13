@@ -230,6 +230,24 @@ paths:
                 $ref: '#/components/schemas/ResponseResult'
       tags:
         - Violation Ticket
+  /v1/processViolationTicket:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViolationTicket'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Violation Ticket
 components:
   schemas:
     AgenciesListResult:
@@ -516,6 +534,9 @@ components:
           type: string
           format: nullable
         lawyerSurnameNm:
+          type: string
+          format: nullable
+        ocrViolationTicketJsonTxt:
           type: string
           format: nullable
         officerPinTxt:

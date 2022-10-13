@@ -21,6 +21,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -133,7 +134,30 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public Dispute saveAndFlush(Dispute entity) {
-		throw new NotYetImplementedException();
+		if (entity == null) {
+			throw new IllegalArgumentException("Dispute body is null.");
+		}
+		
+		ResponseResult result = null;
+		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(entity);
+		try {
+			result = violationTicketApi.v1ProcessViolationTicketPost(violationTicket);
+		} catch (ApiException e) {
+			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", violationTicket.toString(), e);
+			throw new InternalServerErrorException(e);
+		}
+		
+		if (result == null) {
+			throw new InternalServerErrorException("Invalid InsertResult object");
+		} else if (result.getException() != null) {
+			logger.error("ERROR inserting Dispute to ORDS", result.getException());
+			throw new InternalServerErrorException(result.getException());
+		} else if (!"1".equals(result.getStatus())) {
+			throw new InternalServerErrorException("Dispute insert response status is not 1 (success)");
+		} else {
+			
+		}
+		return null;
 	}
 
 	@Override
