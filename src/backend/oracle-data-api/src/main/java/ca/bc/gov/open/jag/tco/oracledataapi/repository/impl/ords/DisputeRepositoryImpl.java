@@ -121,9 +121,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 				return Optional.ofNullable(dispute);
 			}
 		} catch (ApiException e) {
-			// FIXME: this error should be propagated up so the caller (controller) can respond with a 500 InternalServerException
 			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}", id, e);
-			return Optional.empty();
+			throw new InternalServerErrorException(e);
 		}
 	}
 
