@@ -1,6 +1,4 @@
-﻿using TrafficCourts.Common.Configuration;
-using TrafficCourts.Common.Features.Mail.Model;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 
 namespace TrafficCourts.Staff.Service.Mappers;
@@ -82,40 +80,5 @@ public class Mapper
         disputeCancelled.Id = dispute.DisputeId;
         disputeCancelled.Email = dispute.EmailAddress;
         return disputeCancelled;
-    }
-
-    public static SendEmail ToCancelSendEmail(Dispute dispute)
-    {
-        return ToSendEmail(dispute, "CancelledDisputeTemplate");
-    }
-
-    public static SendEmail ToRejectSendEmail(Dispute dispute)
-    {
-        return ToSendEmail(dispute, "RejectedDisputeTemplate");
-    }
-
-    public static SendEmail ToProcessingSendEmail(Dispute dispute)
-    {
-        return ToSendEmail(dispute, "ProcessingDisputeTemplate");
-    }
-
-    private static SendEmail ToSendEmail(Dispute dispute, string messageTemplateName)
-    {
-        SendEmail sendEmail = new();
-        // Send email message to the submitter's entered email
-        var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == messageTemplateName);
-        if (template is not null)
-        {
-
-            sendEmail.FromEmailAddress = template.Sender;
-            sendEmail.ToEmailAddress = dispute.EmailAddress;
-            sendEmail.Subject = template.SubjectTemplate.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.PlainTextContent = template.PlainContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", dispute.TicketNumber);
-            sendEmail.TicketNumber = dispute.TicketNumber;
-            sendEmail.SuccessfullySent = EmailHistorySuccessfullySent.N;
-        }
-        return sendEmail;
-
     }
 }

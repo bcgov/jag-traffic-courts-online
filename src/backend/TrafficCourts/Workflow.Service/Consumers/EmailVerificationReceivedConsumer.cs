@@ -1,4 +1,6 @@
 ﻿using MassTransit;
+using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -14,18 +16,13 @@ public class EmailVerificationReceivedConsumer : IConsumer<EmailVerificationRece
 {
     private readonly ILogger<EmailVerificationReceivedConsumer> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IBus _bus;
-    private readonly IEmailSenderService _emailSenderService;
+    private readonly IConfirmationEmailTemplate _confirmationEmailTemplate;
 
-    public EmailVerificationReceivedConsumer(ILogger<EmailVerificationReceivedConsumer> logger, IOracleDataApiService oracleDataApiService, IBus bus, IEmailSenderService emailSenderService)
+    public EmailVerificationReceivedConsumer(ILogger<EmailVerificationReceivedConsumer> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        ArgumentNullException.ThrowIfNull(oracleDataApiService);
-        _oracleDataApiService = (oracleDataApiService);
-        ArgumentNullException.ThrowIfNull(bus);
-        _bus = bus;
-        ArgumentNullException.ThrowIfNull(emailSenderService);
-        _emailSenderService = emailSenderService;
+        _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+        _confirmationEmailTemplate = confirmationEmailTemplate;
     }
 
     public async Task Consume(ConsumeContext<EmailVerificationReceived> context)
@@ -46,15 +43,20 @@ public class EmailVerificationReceivedConsumer : IConsumer<EmailVerificationRece
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.TicketNumber = dispute.TicketNumber;
             fileHistoryRecord.Description = "Email verification complete.";
-            await context.Publish(fileHistoryRecord);
+            await context.Publish(fileHistoryRecord, context.CancellationToken);
 
             // File History 
             fileHistoryRecord.Description = "Dispute submitted for staff review.";
-            await context.Publish(fileHistoryRecord);
+            await context.Publish(fileHistoryRecord, context.CancellationToken);
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
-            SendEmail email = _emailSenderService.ToConfirmationEmail(dispute);
-            await context.Publish(email);
+            EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+            await context.Publish(new SendDispuantEmail
+            {
+                Message = emailMessage,
+                TicketNumber = dispute.TicketNumber,
+                NoticeOfDisputeId = Guid.Empty   // TODO: set correct NoticeOfDisputeId
+            }, context.CancellationToken);
 
             dispute.EmailAddressVerified = true;
         }

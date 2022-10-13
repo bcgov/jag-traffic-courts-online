@@ -50,8 +50,7 @@ public class DisputesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] Models.Dispute.NoticeOfDispute dispute, CancellationToken cancellationToken)
     {
-        string host = HttpContext is not null ? HttpContext.Request.Host.Value : "testhost";
-        Create.Request request = new Create.Request(dispute, host);
+        Create.Request request = new Create.Request(dispute);
         Create.Response response = await _mediator.Send(request, cancellationToken);
 
         if (response.Exception is not null)

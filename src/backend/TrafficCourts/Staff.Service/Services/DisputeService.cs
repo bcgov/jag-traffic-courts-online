@@ -4,6 +4,7 @@ using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Text.Json;
+using TrafficCourts.Common.Features.Mail.Templates;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -13,23 +14,26 @@ namespace TrafficCourts.Staff.Service.Services;
 public class DisputeService : IDisputeService
 {
     private readonly ILogger<DisputeService> _logger;
+    private readonly ICancelledDisputeEmailTemplate _cancelledDisputeEmailTemplate;
+    private readonly IRejectedDisputeEmailTemplate _rejectedDisputeEmailTemplate;
     private readonly IOracleDataApiClient _oracleDataApi;
     private readonly IBus _bus;
     private readonly IFilePersistenceService _filePersistenceService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public DisputeService(
         IOracleDataApiClient oracleDataApi,
         IBus bus,
         IFilePersistenceService filePersistenceService,
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<DisputeService> logger)
+        ILogger<DisputeService> logger,
+        ICancelledDisputeEmailTemplate cancelledDisputeEmailTemplate,
+        IRejectedDisputeEmailTemplate rejectedDisputeEmailTemplate)
     {
         _oracleDataApi = oracleDataApi ?? throw new ArgumentNullException(nameof(oracleDataApi));
         _bus = bus ?? throw new ArgumentNullException(nameof(bus));
         _filePersistenceService = filePersistenceService ?? throw new ArgumentNullException(nameof(filePersistenceService));
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _cancelledDisputeEmailTemplate = cancelledDisputeEmailTemplate;
+        _rejectedDisputeEmailTemplate = rejectedDisputeEmailTemplate;
     }
 
     public async Task<ICollection<Dispute>> GetAllDisputesAsync(ExcludeStatus? excludeStatus, CancellationToken cancellationToken)
@@ -151,9 +155,9 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
         await _bus.Publish(cancelledEvent, cancellationToken);
-
-        SendEmail cancelSendEmail = Mapper.ToCancelSendEmail(dispute);
-        await _bus.Publish(cancelSendEmail, cancellationToken);
+        
+        var emailMessage = _cancelledDisputeEmailTemplate.Create(dispute);
+        await _bus.Publish(emailMessage, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(long disputeId, string rejectedReason, CancellationToken cancellationToken)
@@ -169,9 +173,9 @@ public class DisputeService : IDisputeService
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
         await _bus.Publish(rejectedEvent, cancellationToken);
-
-        SendEmail rejectSendEmail = Mapper.ToRejectSendEmail(dispute);
-        await _bus.Publish(rejectSendEmail, cancellationToken);
+        
+        var emailMessage = _rejectedDisputeEmailTemplate.Create(dispute);
+        await _bus.Publish(emailMessage, cancellationToken);
     }
 
     public async Task SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)

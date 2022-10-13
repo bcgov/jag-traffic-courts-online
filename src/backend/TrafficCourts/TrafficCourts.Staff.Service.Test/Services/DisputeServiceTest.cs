@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TrafficCourts.Common.Features.FilePersistence;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Staff.Service.Services;
 using Xunit;
@@ -21,7 +22,12 @@ public class DisputeServiceTest
     {
         var mockOracleDataApi = new Mock<IOracleDataApiClient>();
         //Given
-        DisputeService service = new(mockOracleDataApi.Object, new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, new Mock<IHttpContextAccessor>().Object, new Mock<ILogger<DisputeService>>().Object);
+        DisputeService service = new(
+            mockOracleDataApi.Object, 
+            new Mock<IBus>().Object, new Mock<IFilePersistenceService>().Object, 
+            new Mock<ILogger<DisputeService>>().Object,
+            Mock.Of<ICancelledDisputeEmailTemplate>(),
+            Mock.Of<IRejectedDisputeEmailTemplate>());
         Dispute dispute = new();
         dispute.DisputeId = 1;
         dispute.ViolationTicket = new();

@@ -10,6 +10,7 @@ using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
 using TrafficCourts.Messaging;
@@ -64,6 +65,9 @@ public static class Startup
         builder.Services.AddTransient<IFileHistoryService, FileHistoryService>();
         builder.Services.AddTransient<IEmailHistoryService, EmailHistoryService>();
         builder.Services.AddTransient<IJJDisputeService, JJDisputeService>();
+
+        // staff service should not be creating emails, should send messages for workflow
+        builder.Services.AddEmailTemplates();
 
         builder.Services.AddStatuteLookup();
 
