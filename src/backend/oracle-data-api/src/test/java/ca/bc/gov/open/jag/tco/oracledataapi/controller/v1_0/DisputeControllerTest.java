@@ -124,7 +124,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		disputeController.submitDispute(disputeId, principal);
 
 		// Assert status is set, rejected reason is NOT set.
-		dispute = disputeController.getDispute(disputeId, principal).getBody();;
+		dispute = disputeController.getDispute(disputeId, principal).getBody();
 		assertEquals(DisputeStatus.PROCESSING, dispute.getStatus());
 		assertNull(dispute.getRejectedReason());
 	}
@@ -199,7 +199,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null, null);
 		assertEquals(1, IterableUtils.size(allDisputes));
 	}
-	
+
 	@Test
 	@Transactional
 	public void testGetAllDisputesByStatusAndCreatedTs() throws ParseException {
@@ -211,11 +211,11 @@ class DisputeControllerTest extends BaseTestSuite {
 		Long disputeId = disputeController.saveDispute(dispute);
 		dispute.setModifiedTs(DateUtils.addDays(now, -1));
 		disputeController.updateDispute(disputeId, dispute, principal);
-		
+
 		Dispute dispute2 = RandomUtil.createDispute();
 		dispute2.setStatus(DisputeStatus.PROCESSING);
 		disputeController.saveDispute(dispute2);
-		
+
 		Dispute dispute3 = RandomUtil.createDispute();
 		dispute3.setStatus(DisputeStatus.CANCELLED);
 		disputeController.saveDispute(dispute3);
@@ -223,11 +223,11 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Assert controller returns all the disputes that were saved if no parameters passed.
 		Iterable<Dispute> allDisputes = disputeController.getAllDisputes(null, null);
 		assertEquals(3, IterableUtils.size(allDisputes));
-		
+
 		// Assert controller returns all disputes which do not have the specified type.
 		List<Dispute> allDisputesWithStatusAndOlderThan = disputeController.getAllDisputes(null, DisputeStatus.CANCELLED);
 		assertEquals(2, IterableUtils.size(allDisputesWithStatusAndOlderThan));
-		
+
 		// Assert controller returns all disputes which do not have the specified type.
 		Iterable<Dispute> allDisputesWithStatus = disputeController.getAllDisputes(null, DisputeStatus.PROCESSING);
 		assertEquals(2, IterableUtils.size(allDisputesWithStatus));

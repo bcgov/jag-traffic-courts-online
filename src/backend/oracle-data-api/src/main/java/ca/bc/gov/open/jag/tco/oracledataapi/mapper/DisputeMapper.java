@@ -14,22 +14,24 @@ import org.mapstruct.factory.Mappers;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Plea;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
+import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
 @Mapper
 public interface DisputeMapper {
-	
+
 	DisputeMapper INSTANCE = Mappers.getMapper(DisputeMapper.class);
-	
+
 	// Map dispute data from ORDS to Oracle Data API dispute model
-	@Mapping(source = "dispute.entDtm", target = "createdTs")
+	@Mapping(source = "dispute.entDtm", target = "createdTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
 	@Mapping(source = "dispute.entUserId", target = "createdBy")
-	@Mapping(source = "dispute.updDtm", target = "modifiedTs")
+	@Mapping(source = "dispute.updDtm", target = "modifiedTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
 	@Mapping(source = "dispute.updUserId", target = "modifiedBy")
 	@Mapping(source = "dispute.disputeId", target = "disputeId")
-	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status")
+	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(source = "dispute.courtAgenId", target = "courtLocation")
 	@Mapping(source = "dispute.issuedDt", target = "issuedDate")
 	@Mapping(source = "dispute.submittedDt", target = "submittedDate")
@@ -71,7 +73,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.disputantCommentTxt", target = "disputantComment")
 	@Mapping(source = "dispute.rejectedReasonTxt", target = "rejectedReason")
 	@Mapping(source = "dispute.userAssignedTo", target = "userAssignedTo")
-	@Mapping(source = "dispute.userAssignedDtm", target = "userAssignedTs")
+	@Mapping(source = "dispute.userAssignedDtm", target = "userAssignedTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
 	@Mapping(source = "dispute.disputantDetectOcrIssuesYn", target = "disputantDetectedOcrIssues")
 	@Mapping(source = "dispute.disputantOcrIssuesTxt", target = "disputantOcrIssues")
 	@Mapping(source = "dispute.systemDetectOcrIssuesYn", target = "systemDetectedOcrIssues")
@@ -111,8 +113,8 @@ public interface DisputeMapper {
 	// Map dispute counts data from ORDS to Oracle Data API dispute count model
 	@Mapping(source = "violationTicketCounts", target = "disputeCounts", qualifiedByName="mapCounts")
 	Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
-	
-	
+
+
 	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
@@ -127,10 +129,10 @@ public interface DisputeMapper {
 	@Mapping(source = "statSubParagraphTxt", target = "subparagraph")
 	@Mapping(source = "ticketedAmt", target = "ticketedAmount")
 	ViolationTicketCount convertViolationTicketCountDtoToViolationTicketCount (ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount violationTicketCountDto);
-	
+
 	/**
 	 * Custom mapping for mapping YesNo fields to Boolean value
-	 * 
+	 *
 	 * @param value
 	 * @return Boolean value of {@link YesNo} enum
 	 */
@@ -138,10 +140,21 @@ public interface DisputeMapper {
 	default Boolean mapYnToBoolean(YesNo value) {
 		return YesNo.Y.equals(value);
 	}
-	
+
+	@Named("mapDisputeStatus")
+	default DisputeStatus mapYnToBoolean(String statusShortCd) {
+		DisputeStatus[] values = DisputeStatus.values();
+		for (DisputeStatus disputeStatus : values) {
+			if (disputeStatus.toShortName().equals(statusShortCd)) {
+				return disputeStatus;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Custom mapping for dispute counts
-	 * 
+	 *
 	 * @param violationTicketCounts
 	 * @return list of {@link DisputeCount}
 	 */
@@ -150,9 +163,9 @@ public interface DisputeMapper {
 		if ( violationTicketCounts == null || violationTicketCounts.isEmpty()) {
             return null;
         }
-		
+
 		List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
-		
+
 		for (ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount violationTicketCount : violationTicketCounts) {
 			ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount disputeCount = violationTicketCount.getDisputeCount();
 			if (disputeCount != null) {
@@ -196,8 +209,8 @@ public interface DisputeMapper {
 				dispute.setLawyerAddress(null);
 			} else {
 				dispute.setLawyerAddress(
-		        		addressLine1 == null ? "" : addressLine1 + " " + 
-		        		addressLine2 == null ? "" : addressLine2 + " " + 
+		        		addressLine1 == null ? "" : addressLine1 + " " +
+		        		addressLine2 == null ? "" : addressLine2 + " " +
 		        		addressLine3 == null ? "" : addressLine3);
 			}
 		}

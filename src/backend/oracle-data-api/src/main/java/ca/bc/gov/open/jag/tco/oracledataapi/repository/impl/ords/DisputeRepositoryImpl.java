@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.ws.rs.InternalServerErrorException;
 
@@ -29,7 +30,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 @Repository
 public class DisputeRepositoryImpl implements DisputeRepository {
 
-	Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	private static Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
 
 	// Delegate, OpenAPI generated client
 	private final ViolationTicketApi violationTicketApi;
@@ -54,18 +57,13 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan) {
-		throw new NotYetImplementedException();
-	}
-
-	@Override
 	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken) {
 		throw new NotYetImplementedException();
 	}
 
 	@Override
 	public void deleteAll() {
-		throw new NotYetImplementedException();
+		// no-op. Not needed for ORDS.
 	}
 
 	@Override
@@ -133,26 +131,46 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
+	public void assignDisputeToUser(Long disputeId, String userName) {
+		assertNoExceptions(() -> violationTicketApi.v1AssignViolationTicketPost(disputeId, userName));
+	}
+
+	@Override
 	public void unassignDisputes(Date olderThan) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
 		String dateStr = simpleDateFormat.format(olderThan);
 
-		// Propagate any ApiException to caller
-		ResponseResult result = violationTicketApi.v1UnassignViolationTicketPost(dateStr);
+		assertNoExceptions(() -> violationTicketApi.v1UnassignViolationTicketPost(dateStr));
+	}
+
+	@Override
+	public void setStatus(Long disputeId, DisputeStatus disputeStatus, String rejectedReason) {
+		assertNoExceptions(() -> violationTicketApi.v1ViolationTicketStatusPost(disputeId, disputeStatus.toShortName(), rejectedReason));
+	}
+
+	@Override
+	public void flushAndClear() {
+		// no-op. Not needed for ORDS.
+	}
+
+	/**
+	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
+	 */
+	private void assertNoExceptions(Supplier<ResponseResult> m) {
+		ResponseResult result = m.get();
 
 		if (result == null) {
-			// unknown if ORDS could unassign or not, missing response object.
+			// Missing response object.
 			throw new InternalServerErrorException("Invalid ResponseResult object");
 		}
 		else if (result.getException() != null) {
-			// ORDS could not unassign, error message in the response object.
+			// Exception in response exists
 			throw new InternalServerErrorException(result.getException());
 		}
 		else if (!"1".equals(result.getStatus())) {
-			// ORDS could not unassign, error message missing in the response object.
-			throw new InternalServerErrorException("Dispute unassign is not 1 (success)");
+			// Status is not 1 (success)
+			throw new InternalServerErrorException("Status is not 1 (success)");
 		}
-
 	}
 
 }

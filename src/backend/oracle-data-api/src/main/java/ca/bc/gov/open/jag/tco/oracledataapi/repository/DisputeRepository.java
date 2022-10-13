@@ -19,9 +19,6 @@ public interface DisputeRepository {
     /** Fetch all records which do not have the specified status and older than the given date. */
     public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
-	/** Fetch all records whose assignedTs has a timestamp older than the given date. */
-    public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan);
-
     /** Fetch all records that matches the emailVerificationToken. */
     public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
 
@@ -73,8 +70,28 @@ public interface DisputeRepository {
 	public Dispute saveAndFlush(Dispute entity);
 
 	/**
+	 * Assigns the given Dispute to the userName provided.
+	 * @param disputeId
+	 * @param userName
+	 */
+	public void assignDisputeToUser(Long disputeId, String userName);
+
+	/**
 	 * Unassigns all Disputes whose assignedTs is older than 1 hour ago, resetting the assignedTo and assignedTs fields.
 	 */
 	public void unassignDisputes(Date olderThan);
+
+	/**
+	 * Sets the status and rejectedReason fields on the given dispute.
+	 * @param disputeId
+	 * @param disputeStatus
+	 * @param rejectedReason
+	 */
+	public void setStatus(Long disputeId, DisputeStatus disputeStatus, String rejectedReason);
+
+	/**
+	 * Flushes all pending changes to the database and clears the session, if the underlying persistence layer needs it.
+	 */
+	void flushAndClear();
 
 }
