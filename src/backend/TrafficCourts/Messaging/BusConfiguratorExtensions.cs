@@ -137,11 +137,7 @@ public static class BusConfiguratorExtensions
         });
     }
 
-    public static void PublishedMessage<TMessage>(this ILogger logger, TMessage message)
-    {
-        ArgumentNullException.ThrowIfNull(logger);
-        logger.LogDebug("Published message of type {MessageType}", typeof(TMessage).FullName);
-    }
+
 
     /// <summary>
     /// Gets the connection name that will be displayed in the RabbitMq management console

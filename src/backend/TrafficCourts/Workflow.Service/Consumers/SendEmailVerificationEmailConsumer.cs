@@ -18,7 +18,7 @@ public class SendEmailVerificationEmailConsumer : IConsumer<SendEmailVerificatio
 
     public async Task Consume(ConsumeContext<SendEmailVerificationEmail> context)
     {
-        using var scope = _logger.BeginScope(context, message => message.NoticeOfDisputeId);
+        using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
 
         _logger.LogDebug("Creating email verification email");
 
@@ -31,7 +31,6 @@ public class SendEmailVerificationEmailConsumer : IConsumer<SendEmailVerificatio
             TicketNumber = context.Message.TicketNumber
         };
 
-        await context.Publish(message, context.CancellationToken);
-        _logger.PublishedMessage(message);
+        await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 }

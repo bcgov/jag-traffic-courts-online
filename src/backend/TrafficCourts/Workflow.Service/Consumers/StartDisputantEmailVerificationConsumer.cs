@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.Logging;
 using TrafficCourts.Messaging;
 using TrafficCourts.Messaging.MessageContracts;
 
@@ -18,7 +19,7 @@ public class StartDisputantEmailVerificationConsumer : IConsumer<SubmitNoticeOfD
 
     public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
     {
-        using var loggingScope = _logger.BeginScope(context, message => message.NoticeOfDisputeId);
+        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
 
         Guid noticeOfDisputeId = context.Message.NoticeOfDisputeId;
         string emailAddress = context.Message.EmailAddress;
@@ -46,7 +47,6 @@ public class StartDisputantEmailVerificationConsumer : IConsumer<SubmitNoticeOfD
             TicketNumber = ticketNumber
         };
 
-        await context.Publish(message, context.CancellationToken);
-        _logger.PublishedMessage(message);
+        await context.PublishWithLog(_logger, message, context.CancellationToken);
     }
 }

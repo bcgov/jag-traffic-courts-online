@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using TrafficCourts.Common.Features.Mail;
 using TrafficCourts.Messaging;
@@ -25,7 +26,7 @@ public class SendEmailToDispuantConsumer : IConsumer<SendDispuantEmail>
 
     public async Task Consume(ConsumeContext<SendDispuantEmail> context)
     {
-        using var scope = _logger.BeginScope(context, message => message.NoticeOfDisputeId);
+        using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
 
         EmailMessage emailMessage = context.Message.Message;
 
@@ -47,8 +48,7 @@ public class SendEmailToDispuantConsumer : IConsumer<SendDispuantEmail>
                 SentAt = now
             };
 
-            await context.Publish(message, context.CancellationToken);
-            _logger.PublishedMessage(message);
+            await context.PublishWithLog(_logger, message, context.CancellationToken);
         }
         else if (result == SendEmailResult.Filtered)
         {
@@ -62,8 +62,7 @@ public class SendEmailToDispuantConsumer : IConsumer<SendDispuantEmail>
                 FilteredAt = now
             };
 
-            await context.Publish(message, context.CancellationToken);
-            _logger.PublishedMessage(message);
+            await context.PublishWithLog(_logger, message, context.CancellationToken);
         }
     }
 }

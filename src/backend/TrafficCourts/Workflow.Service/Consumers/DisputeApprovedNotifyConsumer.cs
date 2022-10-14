@@ -28,7 +28,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
         /// <returns></returns>
         public async Task Consume(ConsumeContext<DisputeApproved> context)
         {
-            using var scope = ConsumerExtensions.BeginScope(_logger, context);
+            using var scope = _logger.BeginConsumeScope(context);
 
             // Send email message to the submitter's entered email to notify of dispute approval for processing
             var template = MailTemplateCollection.DefaultMailTemplateCollection.FirstOrDefault(t => t.TemplateName == _approveEmailTemplateName);
@@ -44,7 +44,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     HtmlContent = template.HtmlContentTemplate?.Replace("<ticketid>", context.Message.TicketFileNumber),
                 };
 
-                await context.Publish(emailMessage, context.CancellationToken);
+                await context.PublishWithLog(_logger, emailMessage, context.CancellationToken);
             }
             else
             {

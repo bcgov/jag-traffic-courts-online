@@ -167,7 +167,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     {
         var state = context.Saga;
 
-        await context.Publish(new SendEmailVerificationEmail
+        await context.PublishWithLog(_logger, new SendEmailVerificationEmail
         {
             NoticeOfDisputeId = state.NoticeOfDisputeId,
             EmailAddress = state.EmailAddress,
@@ -180,7 +180,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     {
         var state = context.Saga;
 
-        await context.Publish(new SendEmailVerificationEmail
+        await context.PublishWithLog(_logger, new SendEmailVerificationEmail
         {
             NoticeOfDisputeId = state.NoticeOfDisputeId,
             EmailAddress = state.EmailAddress,
@@ -234,7 +234,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         Debug.Assert(state.Verified);
         Debug.Assert(state.VerifiedAt is not null);
 
-        await context.Publish(new EmailVerificationSuccessful
+        await context.PublishWithLog(_logger, new EmailVerificationSuccessful
         {
             DisputeId = disputeId,
             NoticeOfDisputeId = state.NoticeOfDisputeId,

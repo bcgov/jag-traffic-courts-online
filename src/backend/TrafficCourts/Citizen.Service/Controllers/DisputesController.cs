@@ -90,8 +90,7 @@ public class DisputesController : ControllerBase
         }
 
         var message = new ResendEmailVerificationEmail { NoticeOfDisputeId = noticeOfDisputeId };
-        await _bus.Publish(message, cancellationToken);
-        _logger.PublishedMessage(message);
+        await _bus.PublishWithLog(_logger, message, cancellationToken);
 
         return Accepted();
     }

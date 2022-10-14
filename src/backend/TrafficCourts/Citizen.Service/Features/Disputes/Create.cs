@@ -165,8 +165,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     }
 
                     // Publish submit NoticeOfDispute event (consumer(s) will push event to Oracle Data API to save the Dispute and generate email)
-                    await _bus.Publish(submitNoticeOfDispute, cancellationToken);
-                    _logger.PublishedMessage(submitNoticeOfDispute);
+                    await _bus.PublishWithLog(_logger, submitNoticeOfDispute, cancellationToken);
 
                     // success, return true
                     activity?.SetStatus(ActivityStatusCode.Ok);

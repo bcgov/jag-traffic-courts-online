@@ -27,7 +27,7 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
 
     public async Task Consume(ConsumeContext<EmailVerificationSuccessful> context)
     {
-        using var loggingScope = _logger.BeginScope(context, message => message.NoticeOfDisputeId);
+        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
 
         var message = context.Message;
         try
@@ -45,15 +45,15 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.TicketNumber = dispute.TicketNumber;
             fileHistoryRecord.Description = "Email verification complete";
-            await context.Publish(fileHistoryRecord, context.CancellationToken);
+            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // File History 
             fileHistoryRecord.Description = "Dispute submitted for staff review";
-            await context.Publish(fileHistoryRecord, context.CancellationToken);
+            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
             EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
-            await context.Publish(new SendDispuantEmail
+            await context.PublishWithLog(_logger, new SendDispuantEmail
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,

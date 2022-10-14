@@ -5,6 +5,7 @@ using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Staff.Service.Mappers;
 using System.Text.Json;
 using TrafficCourts.Common.Features.Mail.Templates;
+using TrafficCourts.Common.Features.Mail;
 
 namespace TrafficCourts.Staff.Service.Services;
 
@@ -138,8 +139,7 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Handwritten ticket OCR details validated by staff.");
-        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
-
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
     }
 
     public async Task CancelDisputeAsync(long disputeId, CancellationToken cancellationToken)
@@ -150,14 +150,14 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute cancelled by staff.");
-        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeCancelled cancelledEvent = Mapper.ToDisputeCancelled(dispute);
-        await _bus.Publish(cancelledEvent, cancellationToken);
-        
+        await _bus.PublishWithLog(_logger, cancelledEvent, cancellationToken);
+
         var emailMessage = _cancelledDisputeEmailTemplate.Create(dispute);
-        await _bus.Publish(emailMessage, cancellationToken);
+        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
     public async Task RejectDisputeAsync(long disputeId, string rejectedReason, CancellationToken cancellationToken)
@@ -168,14 +168,14 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute rejected by staff.");
-        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will generate email, etc)
         DisputeRejected rejectedEvent = Mapper.ToDisputeRejected(dispute);
-        await _bus.Publish(rejectedEvent, cancellationToken);
-        
+        await _bus.PublishWithLog(_logger, rejectedEvent, cancellationToken);
+
         var emailMessage = _rejectedDisputeEmailTemplate.Create(dispute);
-        await _bus.Publish(emailMessage, cancellationToken);
+        await _bus.PublishWithLog(_logger, emailMessage, cancellationToken);
     }
 
     public async Task SubmitDisputeAsync(long disputeId, CancellationToken cancellationToken)
@@ -187,11 +187,11 @@ public class DisputeService : IDisputeService
 
         // Publish file history
         SaveFileHistoryRecord fileHistoryRecord = Mapper.ToFileHistory(dispute.TicketNumber, "Dispute submitted to ARC by staff.");
-        await _bus.Publish(fileHistoryRecord, cancellationToken); ;
+        await _bus.PublishWithLog(_logger, fileHistoryRecord, cancellationToken);
 
         // Publish submit event (consumer(s) will push event to ARC and generate email)
         DisputeApproved approvedEvent = Mapper.ToDisputeApproved(dispute);
-        await _bus.Publish(approvedEvent, cancellationToken);
+        await _bus.PublishWithLog(_logger, approvedEvent, cancellationToken);
     }
 
     public async Task DeleteDisputeAsync(long disputeId, CancellationToken cancellationToken)
@@ -207,7 +207,7 @@ public class DisputeService : IDisputeService
 
         // Publish submit event (consumer(s) will generate email, etc)
         EmailVerificationSend emailVerificationSentEvent = Mapper.ToEmailVerification(new Guid(dispute.EmailVerificationToken));
-        await _bus.Publish(emailVerificationSentEvent, cancellationToken);
+        await _bus.PublishWithLog(_logger, emailVerificationSentEvent, cancellationToken);
 
         return "Email verification sent";
     }

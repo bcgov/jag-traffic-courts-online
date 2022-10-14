@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            using var loggingScope = _logger.BeginScope(context, message => message.NoticeOfDisputeId);
+            using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
 
             try
             {
@@ -41,7 +41,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                 {
                     _logger.LogDebug("Dispute has been saved with {DisputeId}: ", disputeId);
 
-                    await context.Publish(new NoticeOfDisputeSubmitted
+                    await context.PublishWithLog(_logger, new NoticeOfDisputeSubmitted
                     {
                         DisputeId = disputeId,
                         NoticeOfDisputeId = context.Message.NoticeOfDisputeId,
