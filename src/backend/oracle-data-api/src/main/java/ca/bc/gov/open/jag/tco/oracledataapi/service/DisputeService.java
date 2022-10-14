@@ -3,6 +3,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -222,29 +223,33 @@ public class DisputeService {
 	}
 
 	/**
-	 * Flips the Dispute.emailAddressVerified flag to true where Dispute.emailVerificationToken matches the given parameter
+	 * Flips the Dispute.emailAddressVerified flag to true where on the target dispute if it exists
 	 * @param token the Dispute record to update
 	 */
-	public void verifyEmail(String emailVerificationToken) {
-		List<Dispute> emailVerificationTokens = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
-		for (Dispute dispute : emailVerificationTokens) {
+	public boolean verifyEmail(Long id) {
+		Optional<Dispute> findDispute = disputeRepository.findById(id);
+
+		if (findDispute.isPresent()) {
+			Dispute dispute = findDispute.get();
 			dispute.setEmailAddressVerified(Boolean.TRUE);
-			dispute.setEmailVerificationToken(null); // once verified, clear token
-			disputeRepository.save(dispute);
+			disputeRepository.save(dispute);	
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
-	 * Finds a Dispute by emailVerificationToken (UUID) or null if not found.
+	 * Finds a Dispute by noticeOfDisputeId (UUID) or null if not found.
 	 */
-	public Dispute getDisputeByEmailVerificationToken(String emailVerificationToken) {
-		List<Dispute> findByEmailVerificationToken = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
-		if (CollectionUtils.isEmpty(findByEmailVerificationToken)) {
-			String msg = String.format("Dispute could not be found with emailVerificationToken: {1}", emailVerificationToken);
+	public Dispute getDisputeByNoticeOfDisputeId(String noticeOfDisputeId) {
+		List<Dispute> findByNoticeOfDisputeId = disputeRepository.findByNoticeOfDisputeId(noticeOfDisputeId);
+		if (CollectionUtils.isEmpty(findByNoticeOfDisputeId)) {
+			String msg = String.format("Dispute could not be found with noticeOfDisputeId: {1}", noticeOfDisputeId);
 			logger.error(msg);
 			return null;
 		}
-		return findByEmailVerificationToken.get(0);
+		return findByNoticeOfDisputeId.get(0);
 	}
 
 }

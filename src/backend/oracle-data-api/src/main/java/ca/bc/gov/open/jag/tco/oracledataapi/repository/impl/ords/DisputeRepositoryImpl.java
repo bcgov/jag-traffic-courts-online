@@ -57,7 +57,18 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
+	public Iterable<Dispute> findByUserAssignedTsBefore(Date olderThan) {
+		throw new NotYetImplementedException();
+	}
+
+	@Override
+	@Deprecated	
 	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken) {
+		throw new NotYetImplementedException();
+	}
+
+	@Override	
+	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId) {
 		throw new NotYetImplementedException();
 	}
 

@@ -48,6 +48,13 @@ public class Dispute extends Auditable<String> {
 	@GeneratedValue
 	private Long disputeId;
 
+	/**
+	 * A unique string (the PK + GUID) for email verification.
+	 */
+	@Column(length = 36) // GUID (36 characters)
+	@Schema(nullable = false)
+	private String noticeOfDisputeId;
+
 	 /**
      * The violation ticket number.
      */

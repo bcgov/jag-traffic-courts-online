@@ -20,7 +20,11 @@ public interface DisputeRepository {
     public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
     /** Fetch all records that matches the emailVerificationToken. */
+	@Deprecated
     public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
+
+    /** Fetch all records that matches the noticeOfDisputeId. */
+	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId);
 
 	/** Deletes all entities managed by the repository. */
     public void deleteAll();
