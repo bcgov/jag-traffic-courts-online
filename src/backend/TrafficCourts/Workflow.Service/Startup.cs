@@ -7,6 +7,9 @@ using System.Reflection;
 using TrafficCourts.Arc.Dispute.Client;
 using TrafficCourts.Common.Features.Mail.Templates;
 using NodaTime;
+using TrafficCourts.Workflow.Service.Sagas;
+using TrafficCourts.Common;
+using TrafficCourts.Workflow.Service.Services.EmailTemplates;
 
 namespace TrafficCourts.Workflow.Service;
 
@@ -32,6 +35,12 @@ public static class Startup
         builder.Services.ConfigureValidatableSetting<EmailConfiguration>(builder.Configuration.GetRequiredSection(EmailConfiguration.Section));
         builder.Services.ConfigureValidatableSetting<SmtpConfiguration>(builder.Configuration.GetRequiredSection(SmtpConfiguration.Section));
 
+        builder.Services.AddHashids(builder.Configuration);
+        builder.Services.AddEmailVerificationTokens();
+        builder.AddRedis();
+
+        builder.Services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
+
         builder.Services.AddOracleDataApiClient(builder.Configuration);
 
         builder.Services.AddTransient<IOracleDataApiService, OracleDataApiService>();
@@ -45,7 +54,19 @@ public static class Startup
 
         builder.Services.AddEmailTemplates();
 
-        builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger, config => config.AddConsumers(assembly));
+        builder.Services.AddMassTransit(Diagnostics.Source.Name, builder.Configuration, logger, config =>
+        {
+            config.AddConsumers(assembly);
+
+            RedisOptions redis = new RedisOptions();
+            var section = builder.Configuration.GetSection(RedisOptions.Section);
+            section.Bind(redis);
+
+            config.AddSagaStateMachine<VerifyEmailAddressSagaStateMachine, VerifyEmailAddressSagaState>()
+                .RedisRepository(redis.ConnectionString);
+
+            config.AddSagas(assembly);
+        });
 
         builder.Services.AddAutoMapper(assembly); // Registering and Initializing AutoMapper
     }

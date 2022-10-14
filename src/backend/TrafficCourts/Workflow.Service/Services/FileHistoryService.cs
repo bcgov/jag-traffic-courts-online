@@ -35,7 +35,7 @@ namespace TrafficCourts.Workflow.Service.Services
             {
                 // prepare file history record
                 FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
-                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory);
+                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
                 return Id;
             }
             catch (Exception ex)

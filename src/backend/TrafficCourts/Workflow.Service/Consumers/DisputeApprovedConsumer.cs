@@ -23,10 +23,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<DisputeApproved> context)
         {
-            using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> { 
-                { "MessageId", context.MessageId! }, 
-                { "MessageType", nameof(DisputeApproved) } 
-            });
+            using var loggingScope = ConsumerExtensions.BeginScope(_logger, context);
 
             try
             {

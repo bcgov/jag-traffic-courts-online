@@ -4,10 +4,10 @@ namespace TrafficCourts.Workflow.Service.Services
 {
     public interface IOracleDataApiService
     {
-        Task<long> CreateDisputeAsync(Dispute disputeToSubmit);
-        Task<Dispute> GetDisputeByEmailVerificationTokenAsync(string emailVerificationToken);
-        Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory);
-        Task<long> CreateFileHistoryAsync(FileHistory fileHistory);
-        Task VerifyDisputeEmailAsync(string token);
+        Task<long> CreateDisputeAsync(Dispute disputeToSubmit, CancellationToken cancellationToken);
+        Task<Dispute?> GetDisputeByNoticeOfDisputeIdAsync(Guid noticeOfDisputeId, CancellationToken cancellationToken);
+        Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken);
+        Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken);
+        Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken);
     }
 }

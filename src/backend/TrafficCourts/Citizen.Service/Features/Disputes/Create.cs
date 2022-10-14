@@ -10,6 +10,7 @@ using AutoMapper;
 using System.Diagnostics;
 using NodaTime;
 using HashidsNet;
+using TrafficCourts.Messaging;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -165,8 +166,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                     // Publish submit NoticeOfDispute event (consumer(s) will push event to Oracle Data API to save the Dispute and generate email)
                     await _bus.Publish(submitNoticeOfDispute, cancellationToken);
-
-                    _logger.LogDebug("Dispute published to the queue for being consumed by consumers and saved in Oracle Data API");
+                    _logger.PublishedMessage(submitNoticeOfDispute);
 
                     // success, return true
                     activity?.SetStatus(ActivityStatusCode.Ok);

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Configuration;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -134,6 +135,12 @@ public static class BusConfiguratorExtensions
             // should we call the user's configuration at the start or end?
             configureBusFactory?.Invoke(configure);
         });
+    }
+
+    public static void PublishedMessage<TMessage>(this ILogger logger, TMessage message)
+    {
+        ArgumentNullException.ThrowIfNull(logger);
+        logger.LogDebug("Published message of type {MessageType}", typeof(TMessage).FullName);
     }
 
     /// <summary>

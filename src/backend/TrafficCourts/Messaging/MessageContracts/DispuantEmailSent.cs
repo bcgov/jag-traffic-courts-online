@@ -7,7 +7,6 @@ namespace TrafficCourts.Messaging.MessageContracts
     /// </summary>
     public class DispuantEmailSent
     {
-
         /// <summary>
         /// The email message.
         /// </summary>

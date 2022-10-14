@@ -2,6 +2,6 @@
 
 namespace TrafficCourts.Common.Features.Mail.Templates;
 
-public interface IVerificationEmailTemplate : IEmailTemplate<Dispute>
-{
-}
+//public interface IVerificationEmailTemplate : IEmailTemplate<Dispute>
+//{
+//}

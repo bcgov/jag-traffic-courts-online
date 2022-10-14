@@ -10,7 +10,6 @@ public static class EmailTemplateExtensions
         services.AddTransient<IConfirmationEmailTemplate, ConfirmationEmailTemplate>();
         services.AddTransient<IProcessingDisputeEmailTemplate, ProcessingDisputeEmailTemplate>();
         services.AddTransient<IRejectedDisputeEmailTemplate, RejectedDisputeEmailTemplate>();
-        services.AddTransient<IVerificationEmailTemplate, VerificationEmailTemplate>();
 
         return services;
     }

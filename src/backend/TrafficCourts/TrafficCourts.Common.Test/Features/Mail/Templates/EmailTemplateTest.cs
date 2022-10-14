@@ -25,7 +25,6 @@ namespace TrafficCourts.Common.Test.Features.Mail.Templates
             yield return new object[] { new ConfirmationEmailTemplate() };
             yield return new object[] { new ProcessingDisputeEmailTemplate() };
             yield return new object[] { new RejectedDisputeEmailTemplate() };
-            yield return new object[] { new VerificationEmailTemplate() };
         }
     }
 }
