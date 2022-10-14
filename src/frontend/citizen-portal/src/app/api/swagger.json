@@ -107,22 +107,21 @@
         }
       }
     },
-    "/api/disputes/email/{uuid}/verify": {
+    "/api/disputes/email/verify": {
       "put": {
         "tags": [
           "Disputes"
         ],
-        "summary": "An endpoint for verifying an email sent to a Disputant.",
+        "summary": "Verifies email address based on token sent to a Disputant.",
         "parameters": [
           {
-            "name": "uuid",
-            "in": "path",
-            "description": "",
+            "name": "token",
+            "in": "query",
+            "description": "The email verification token.",
             "required": true,
-            "style": "simple",
+            "style": "form",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],

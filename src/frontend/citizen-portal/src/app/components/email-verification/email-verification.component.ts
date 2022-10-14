@@ -17,7 +17,7 @@ export class EmailVerificationComponent {
     private noticeOfDisputeService: NoticeOfDisputeService,
   ) {
     this.route.queryParams.subscribe((params) => {
-      this.token = params.uuid;
+      this.token = params.token;
       this.noticeOfDisputeService.verifyEmail(this.token).subscribe(() => {
         this.checking = false;
         this.verified = true;
