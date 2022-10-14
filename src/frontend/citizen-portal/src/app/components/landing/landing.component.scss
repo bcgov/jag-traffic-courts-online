@@ -373,15 +373,15 @@ img {
 }
 
 .icon-size1 {
-  max-width: 162px;
+  max-width: 120px;
 }
 
 .icon-size2 {
-  max-width: 162px;
+  max-width: 120px;
 }
 
 .icon-size3 {
-  max-width: 162px;
+  max-width: 120px;
 }
 
 .bullet-list ul {
@@ -543,4 +543,16 @@ mat-expansion-panel-header {
   padding: 20px;
   background-color: #c2c2c2;
   color: #fff;
+}
+
+.divider {
+  border-top-color: theme-palette(grey, light);
+}
+
+.link-button {
+  color: #009cde;
+  font-size: 1.2em;
+  font-weight: 500;
+  padding: 16px 0;
+  text-align: left;
 }

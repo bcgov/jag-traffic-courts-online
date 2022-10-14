@@ -5,35 +5,21 @@
     <div class="container">
       <ul class="summary-header-links">
         <li>
-          <a
-            [attr.href]="understandYourTicketLink"
-            class="primary-navigation understand-your-ticket"
-            target="_blank"
-            rel="noopener"
-          >
+          <a [attr.href]="understandYourTicketLink" class="primary-navigation understand-your-ticket" target="_blank"
+            rel="noopener">
             Understand Your Ticket
           </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a
-            [attr.href]="paymentOptionsLink"
-            class="primary-navigation payment-options"
-            target="_blank"
-            rel="noopener"
-          >
+          <a [attr.href]="paymentOptionsLink" class="primary-navigation payment-options" target="_blank" rel="noopener">
             Pay Options
           </a>
         </li>
         <span class="divider">|</span>
         <li>
-          <a
-            [attr.href]="resolutionOptionsLink"
-            class="primary-navigation resolution-options"
-            target="_blank"
-            rel="noopener"
-          >
-            Resolution Options
+          <a routerLink="/ticket/" class="primary-navigation resolution-options">
+            Dispute Ticket
           </a>
         </li>
       </ul>
@@ -57,25 +43,15 @@
 
 <div class="container">
   <section>
-    <div *appFeatureFlag="'dispute'" class="center my-4">
-      <button
-        mat-flat-button
-        type="button"
-        class="large"
-        color="primary"
-        routerLink="/ticket/find"
-      >
+    <!-- <div *appFeatureFlag="'dispute'" class="center my-4">
+      <button mat-flat-button type="button" class="large" color="primary" routerLink="/ticket/find">
         TCO Ticket
       </button>
-    </div>
+    </div> -->
     <div class="flex flex-first">
       <div class="flex-3-col flex-info">
-        <a
-          [attr.href]="understandYourTicketLink"
-          class="main-body-navigation understand-your-ticket"
-          target="_blank"
-          rel="noopener"
-        >
+        <a [attr.href]="understandYourTicketLink" class="main-body-navigation understand-your-ticket" target="_blank"
+          rel="noopener">
           <div class="center">
             <div class="landing-card__image">
               <img class="icon-size1" src="/assets/understand-icon.svg" />
@@ -90,12 +66,7 @@
         </a>
       </div>
       <div class="flex-3-col flex-info">
-        <a
-          [attr.href]="paymentOptionsLink"
-          class="main-body-navigation payment-options"
-          target="_blank"
-          rel="noopener"
-        >
+        <a [attr.href]="paymentOptionsLink" class="main-body-navigation payment-options" target="_blank" rel="noopener">
           <div class="center">
             <div class="landing-card__image">
               <img class="icon-size2" src="/assets/pay-icon.svg" />
@@ -110,21 +81,16 @@
         </a>
       </div>
       <div class="flex-3-col flex-info">
-        <a
-          [attr.href]="resolutionOptionsLink"
-          class="main-body-navigation resolution-options"
-          target="_blank"
-          rel="noopener"
-        >
+        <a routerLink="/ticket/" class="main-body-navigation resolution-options">
           <div class="center">
             <div class="landing-card__image">
               <img class="icon-size3" src="/assets/resolution-icon.svg" />
             </div>
-            <h3>Resolution<br />Options</h3>
+            <h3>Dispute<br />Ticket</h3>
           </div>
           <div class="info__link center">
             <button mat-flat-button type="button" class="large" color="accent">
-              Learn your options
+              Dispute your ticket
             </button>
           </div>
         </a>
@@ -173,12 +139,8 @@
             working with partners to help reach the goal of zero traffic
             fatalities.
             <div class="text-right pt-2">
-              <a
-                [attr.href]="roadSafetyBCVisitUsLink"
-                target="_blank"
-                rel="noopener"
-                class="useful-links road-safety-bc"
-              >
+              <a [attr.href]="roadSafetyBCVisitUsLink" target="_blank" rel="noopener"
+                class="useful-links road-safety-bc">
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
               </a>
@@ -195,12 +157,7 @@
           <div class="landing-card-text my-2">
             Learn how to pay or dispute a ticket, and more.
             <div class="text-right pt-2">
-              <a
-                [attr.href]="icbcVisitUsLink"
-                target="_blank"
-                rel="noopener"
-                class="useful-links icbc"
-              >
+              <a [attr.href]="icbcVisitUsLink" target="_blank" rel="noopener" class="useful-links icbc">
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
               </a>
@@ -217,12 +174,8 @@
             (including traffic tickets), Federal Contravention Tickets and
             Municipal Tickets.
             <div class="text-right pt-2">
-              <a
-                [attr.href]="provincialCourtOfBCVisitUsLink"
-                target="_blank"
-                rel="noopener"
-                class="useful-links provincial-court-of-bc"
-              >
+              <a [attr.href]="provincialCourtOfBCVisitUsLink" target="_blank" rel="noopener"
+                class="useful-links provincial-court-of-bc">
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
               </a>
@@ -238,18 +191,19 @@
             Pay or dispute provincial violation or Federal Contravention
             Tickets.
             <div class="text-right pt-2">
-              <a
-                [attr.href]="courthouseServicesOfBCVisitUsLink"
-                target="_blank"
-                rel="noopener"
-                class="useful-links courthouse-services-of-bc"
-              >
+              <a [attr.href]="courthouseServicesOfBCVisitUsLink" target="_blank" rel="noopener"
+                class="useful-links courthouse-services-of-bc">
                 <mat-icon inline="true"> play_arrow</mat-icon>
                 View site
               </a>
             </div>
           </div>
         </mat-expansion-panel>
+
+        <button mat-button class="link-button" [routerLink]="['/ticket/findDispute']">
+          Manage or update my traffic dispute
+        </button>
+        <mat-divider class="divider"></mat-divider>
       </div>
     </div>
   </section>

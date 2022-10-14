@@ -56,17 +56,17 @@ describe("Testing the landing page components", () => {
         })
     })
 
-    context("Testing the resolution options section", () => {
+    context("Testing the dispute ticket section", () => {
         it("Clicking on section should take you to Dispute a Provincial Violation ticket page", () => {
             cy.get(".resolution-options").should('have.attr', 'href', 'https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket')
             // cy.get(".resolution-options").click({ multiple: true })
         })
         
-        it("Testing the Resolution Icon Image", () => {
+        it("Testing the Dispute Ticket Icon Image", () => {
             cy.get(".resolution-options .landing-card__image > img").should('have.attr', 'src', '/assets/resolution-icon.svg')
         })
         
-        it("Testing the Resolution Options Header Text", () => {
+        it("Testing the Dispute Ticket Header Text", () => {
             cy.get(".resolution-options h3").should('contain.text', 'Resolution');
             cy.get(".resolution-options h3").should('contain.text', 'Options');
         })

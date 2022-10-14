@@ -1,0 +1,43 @@
+<app-page>
+  <app-page-header>
+    <ng-container header>Do you want to dispute your traffic ticket?</ng-container>
+  </app-page-header>
+
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <div fxFlex="32">
+      <div style="margin-bottom: 1.2rem;">
+        <button type="button" style="width: 100%; padding: 8px 16px;" mat-flat-button color="primary"
+          routerLink="/ticket/find">
+          Traffic Ticket
+        </button>
+      </div>
+      <div>
+        Start a dispute for Motor Vehicle Act traffic violation ticket (ticket number starts with A, E or S)
+      </div>
+    </div>
+    <div fxFlex="32">
+      <div style="margin-bottom: 1.2rem;">
+        <a type="button" style="width: 100%; padding: 8px 16px;" mat-stroked-button
+          href="https://www2.gov.bc.ca/gov/content/justice/courthouse-services/fines-payments/pay-dispute-ticket/prov-violation-tickets/dispute-ticket"
+          target="_blank" rel="noopener">
+          Other Tickets
+        </a>
+      </div>
+      <div>
+        Instructions on how to dispute all other types of violation tickets
+      </div>
+    </div>
+    <div fxFlex="32">
+      <div style="margin-bottom: 1.2rem;">
+        <a type="button" style="width: 100%; padding: 8px 16px;" mat-stroked-button
+          href="https://understandmyticket.gov.bc.ca/" target="_blank" rel="noopener">
+          Not Sure
+        </a>
+      </div>
+      <div>
+        Understand types of violation tickets and explore options on how to resolve thme
+      </div>
+    </div>
+  </div>
+
+</app-page>

@@ -10,6 +10,8 @@ export class AppRoutes {
   public static PHOTO = 'photo';
   public static EMAILVERIFICATIONREQUIRED = 'emailVerificationRequired';
   public static EMAILVERIFICATION = 'email/verify';
+  public static DISPUTE = 'dispute';
+  public static FIND_DISPUTE = 'findDispute';
 
   public static MODULE_PATH = AppRoutes.TICKET;
 

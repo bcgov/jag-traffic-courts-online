@@ -11,7 +11,7 @@ export class LandingComponent implements AfterViewInit {
   // Urls for the various links
   public understandYourTicketLink: string;
   public paymentOptionsLink: string;
-  public resolutionOptionsLink: string;
+  public disputeTicketLink: string;
   public roadSafetyBCVisitUsLink: string;
   public icbcVisitUsLink: string;
   public provincialCourtOfBCVisitUsLink: string;
@@ -24,7 +24,7 @@ export class LandingComponent implements AfterViewInit {
     this.understandYourTicketLink =
       this.appConfigService.understandYourTicketLink;
     this.paymentOptionsLink = this.appConfigService.paymentOptionsLink;
-    this.resolutionOptionsLink = this.appConfigService.resolutionOptionsLink;
+    this.disputeTicketLink = this.appConfigService.resolutionOptionsLink;
     this.roadSafetyBCVisitUsLink =
       this.appConfigService.roadSafetyBCVisitUsLink;
     this.icbcVisitUsLink = this.appConfigService.icbcVisitUsLink;

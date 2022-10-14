@@ -22,6 +22,8 @@ import { DisputeSubmitSuccessComponent } from './components/dispute-submit-succe
 import { InitiateResolutionComponent } from './components/initiate-resolution/initiate-resolution.component';
 import { EmailVerificationRequiredComponent } from './components/email-verification-required/email-verification-required.component';
 import { EmailVerificationComponent } from './components/email-verification/email-verification.component';
+import { DisputeLandingComponent } from './components/dispute-landing/dispute-landing.component';
+import { FindDisputeComponent } from '@components/find-dispute/find-dispute.component';
 import { AppConfigService } from './services/app-config.service';
 
 import localeEn from '@angular/common/locales/en';
@@ -41,6 +43,7 @@ import { TicketTypePipe } from '@shared/pipes/ticket-type.pipe';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { FormsModule } from '@angular/forms';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -71,6 +74,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     CountItemDisputeSummaryComponent,
     EmailVerificationRequiredComponent,
     EmailVerificationComponent,
+    DisputeLandingComponent,
+    FindDisputeComponent
   ],
   imports: [
     CommonModule,
@@ -86,6 +91,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     NgxMaterialTimepickerModule,
     FormsModule,
     PdfViewerModule,
+    FlexLayoutModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
