@@ -235,7 +235,7 @@ public class Dispute extends Auditable<String> {
 
 	@Column
 	@Schema(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date filingDate;
 
 	//Legal Representation Section

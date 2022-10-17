@@ -32,8 +32,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.updUserId", target = "modifiedBy")
 	@Mapping(source = "dispute.disputeId", target = "disputeId")
 	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
-	//@Mapping(source = "dispute.noticeOfDisputeId", target = "noticeOfDisputeId")
-	@Mapping(source = "dispute.courtAgenId", target = "courtLocation")
+	@Mapping(source = "dispute.courtLocationTxt", target = "courtLocation")
 	@Mapping(source = "dispute.issuedDt", target = "issuedDate")
 	@Mapping(source = "dispute.submittedDt", target = "submittedDate")
 	@Mapping(source = "dispute.disputantSurnameNm", target = "disputantSurname")
@@ -144,7 +143,7 @@ public interface DisputeMapper {
 	}
 
 	@Named("mapDisputeStatus")
-	default DisputeStatus mapYnToBoolean(String statusShortCd) {
+	default DisputeStatus mapDisputeStatus(String statusShortCd) {
 		DisputeStatus[] values = DisputeStatus.values();
 		for (DisputeStatus disputeStatus : values) {
 			if (disputeStatus.toShortName().equals(statusShortCd)) {

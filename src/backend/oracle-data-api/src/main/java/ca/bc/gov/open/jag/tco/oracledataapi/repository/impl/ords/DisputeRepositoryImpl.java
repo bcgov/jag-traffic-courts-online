@@ -128,7 +128,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public Dispute save(Dispute dispute) {
-		throw new NotYetImplementedException();
+		return saveAndFlush(dispute);
 	}
 
 	@Override
@@ -137,25 +137,18 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			throw new IllegalArgumentException("Dispute body is null.");
 		}
 		
-		ResponseResult result = null;
 		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(entity);
 		try {
-			result = violationTicketApi.v1ProcessViolationTicketPost(violationTicket);
+			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1ProcessViolationTicketPost(violationTicket));
+			if (result.getDisputeId() != null) {
+				logger.debug("Successfully saved the dispute through ORDS with dispute id {}", result.getDisputeId());
+				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
+			}
 		} catch (ApiException e) {
 			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", violationTicket.toString(), e);
 			throw new InternalServerErrorException(e);
 		}
 		
-		if (result == null) {
-			throw new InternalServerErrorException("Invalid InsertResult object");
-		} else if (result.getException() != null) {
-			logger.error("ERROR inserting Dispute to ORDS", result.getException());
-			throw new InternalServerErrorException(result.getException());
-		} else if (!"1".equals(result.getStatus())) {
-			throw new InternalServerErrorException("Dispute insert response status is not 1 (success)");
-		} else {
-			
-		}
 		return null;
 	}
 
@@ -184,21 +177,22 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	/**
 	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
+	 * @return 
 	 */
-	private void assertNoExceptions(Supplier<ResponseResult> m) {
+	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
 		ResponseResult result = m.get();
 
 		if (result == null) {
 			// Missing response object.
 			throw new InternalServerErrorException("Invalid ResponseResult object");
-		}
-		else if (result.getException() != null) {
+		} else if (result.getException() != null) {
 			// Exception in response exists
 			throw new InternalServerErrorException(result.getException());
-		}
-		else if (!"1".equals(result.getStatus())) {
+		} else if (!"1".equals(result.getStatus())) {
 			// Status is not 1 (success)
 			throw new InternalServerErrorException("Status is not 1 (success)");
+		} else {
+			return result;
 		}
 	}
 

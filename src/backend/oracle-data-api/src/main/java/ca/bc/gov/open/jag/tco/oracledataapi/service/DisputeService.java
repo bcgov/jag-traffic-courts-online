@@ -69,7 +69,7 @@ public class DisputeService {
 	 *
 	 * @param dispute to be saved
 	 */
-	public void save(Dispute dispute) {
+	public Dispute save(Dispute dispute) {
 		// Ensure a new record is created, not updating an existing record. Updates are controlled by specific endpoints.
 		dispute.setDisputeId(null);
 		for (DisputeCount disputeCount : dispute.getDisputeCounts()) {
@@ -81,7 +81,7 @@ public class DisputeService {
 				violationTicketCount.setViolationTicketCountId(null);
 			}
 		}
-		disputeRepository.saveAndFlush(dispute);
+		return disputeRepository.saveAndFlush(dispute);
 	}
 
 	/**

@@ -368,8 +368,15 @@ components:
       properties:
         status:
           type: string
+        violationTicketId:
+          type: string
+          format: nullable
+        disputeId:
+          type: string
+          format: nullable
         exception:
           type: string
+          format: nullable
     AuditBase:
       type: object
       properties:
@@ -415,6 +422,8 @@ components:
         addressProvSeqNo:
           type: string
         courtAgenId:
+          type: string
+        courtLocationTxt:
           type: string
         detachmentLocationTxt:
           type: string
@@ -465,7 +474,7 @@ components:
           type: string
         filingDt:
           type: string
-          format: nullable
+          format: date
         fineReductionReasonTxt:
           type: string
         homePhoneNumberTxt:
