@@ -3,17 +3,13 @@ using Moq;
 using MassTransit;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Dispute;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Messaging.MessageContracts;
 using Xunit;
-using Xunit.Abstractions;
 using AutoMapper;
-using MediatR;
 using NodaTime;
 using NodaTime.Testing;
 using HashidsNet;
@@ -59,8 +55,7 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             var disputeHandler = new Create.Handler(mockDisputeBus.Object, mockRedisCacheService.Object, mockFilePersistenceService.Object, mockAutoMapper.Object, clock, _loggerMock.Object, mockHashids.Object);
 
             NoticeOfDispute dispute = new NoticeOfDispute();
-            string host = "localhost";
-            var request = new Create.Request(dispute, host);
+            var request = new Create.Request(dispute);
 
             // Act
             Create.Response response = await disputeHandler.Handle(request, CancellationToken.None);
@@ -68,7 +63,5 @@ namespace TrafficCourts.Test.Citizen.Service.Features.Disputes
             // Assert
             Assert.IsType<Create.Response>(response);
         }
-
-
     }
 }

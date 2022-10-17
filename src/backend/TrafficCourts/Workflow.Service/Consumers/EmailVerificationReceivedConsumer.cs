@@ -1,4 +1,6 @@
 ﻿using MassTransit;
+using TrafficCourts.Common.Features.Mail;
+using TrafficCourts.Common.Features.Mail.Templates;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
@@ -10,51 +12,53 @@ namespace TrafficCourts.Workflow.Service.Consumers;
 /// Consumer for a EmailReceivedVerification (produced when a Disputant confirms their email address).
 /// This Consumer simply updates the Disputant record for the given email verification token, setting the EmailVerification flag to true.
 /// </summary>
-public class EmailVerificationReceivedConsumer : IConsumer<EmailVerificationReceived>
+public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSuccessful>
 {
-    private readonly ILogger<EmailVerificationReceivedConsumer> _logger;
+    private readonly ILogger<SetEmailVerifiedOnDisputeInDatabase> _logger;
     private readonly IOracleDataApiService _oracleDataApiService;
-    private readonly IBus _bus;
-    private readonly IEmailSenderService _emailSenderService;
+    private readonly IConfirmationEmailTemplate _confirmationEmailTemplate;
 
-    public EmailVerificationReceivedConsumer(ILogger<EmailVerificationReceivedConsumer> logger, IOracleDataApiService oracleDataApiService, IBus bus, IEmailSenderService emailSenderService)
+    public SetEmailVerifiedOnDisputeInDatabase(ILogger<SetEmailVerifiedOnDisputeInDatabase> logger, IOracleDataApiService oracleDataApiService, IConfirmationEmailTemplate confirmationEmailTemplate)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        ArgumentNullException.ThrowIfNull(oracleDataApiService);
-        _oracleDataApiService = (oracleDataApiService);
-        ArgumentNullException.ThrowIfNull(bus);
-        _bus = bus;
-        ArgumentNullException.ThrowIfNull(emailSenderService);
-        _emailSenderService = emailSenderService;
+        _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+        _confirmationEmailTemplate = confirmationEmailTemplate ?? throw new ArgumentNullException(nameof(confirmationEmailTemplate));
     }
 
-    public async Task Consume(ConsumeContext<EmailVerificationReceived> context)
+    public async Task Consume(ConsumeContext<EmailVerificationSuccessful> context)
     {
-        using var messageIdScope = _logger.BeginScope(new Dictionary<string, object> {
-                { "MessageId", context.MessageId! },
-                { "MessageType", nameof(EmailVerificationReceived) }
-            });
-        EmailVerificationReceived message = context.Message;
+        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
+
+        var message = context.Message;
         try
         {
-            string token = message.EmailVerificationToken.ToString();
-            Dispute dispute = await _oracleDataApiService.GetDisputeByEmailVerificationTokenAsync(token);
+            Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeIdAsync(message.NoticeOfDisputeId, context.CancellationToken);
+            if (dispute is null)
+            {
+                _logger.LogInformation("Dispute not found");
+                return;
+            }
 
-            await _oracleDataApiService.VerifyDisputeEmailAsync(token);
+            await _oracleDataApiService.VerifyDisputeEmailAsync(dispute.DisputeId, context.CancellationToken);
 
             // File History 
             SaveFileHistoryRecord fileHistoryRecord = new SaveFileHistoryRecord();
             fileHistoryRecord.TicketNumber = dispute.TicketNumber;
-            fileHistoryRecord.Description = "Email verification complete.";
-            await context.Publish(fileHistoryRecord);
+            fileHistoryRecord.Description = "Email verification complete";
+            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // File History 
-            fileHistoryRecord.Description = "Dispute submitted for staff review.";
-            await context.Publish(fileHistoryRecord);
+            fileHistoryRecord.Description = "Dispute submitted for staff review";
+            await context.PublishWithLog(_logger, fileHistoryRecord, context.CancellationToken);
 
             // TCVP-1529 Send NoticeOfDisputeConfirmationEmail *after* validating Disputant's email
-            SendEmail email = _emailSenderService.ToConfirmationEmail(dispute);
-            await context.Publish(email);
+            EmailMessage emailMessage = _confirmationEmailTemplate.Create(dispute);
+            await context.PublishWithLog(_logger, new SendDispuantEmail
+            {
+                Message = emailMessage,
+                TicketNumber = dispute.TicketNumber,
+                NoticeOfDisputeId = Guid.Empty   // TODO: set correct NoticeOfDisputeId
+            }, context.CancellationToken);
 
             dispute.EmailAddressVerified = true;
         }

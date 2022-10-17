@@ -57,7 +57,13 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
+	@Deprecated	
 	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken) {
+		throw new NotYetImplementedException();
+	}
+
+	@Override	
+	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId) {
 		throw new NotYetImplementedException();
 	}
 

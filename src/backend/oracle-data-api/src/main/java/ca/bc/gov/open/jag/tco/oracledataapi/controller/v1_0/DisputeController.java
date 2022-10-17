@@ -167,24 +167,25 @@ public class DisputeController {
 		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.VALIDATED), HttpStatus.OK);
 	}
 
-	@Operation(summary = "Retrieves Dispute by the emailVerificationToken (UUID).")
+	@Operation(summary = "Retrieves Dispute by the noticeOfDisputeId (UUID).")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Dispute retrieved."),
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
-	@GetMapping("/dispute/email/{uuid}")
-	public ResponseEntity<Dispute> getDisputeByEmailVerificationToken(
-			@PathVariable(name = "uuid") @Parameter(description = "The emailVerificationToken of the Dispute to retreive.") String emailVerificationToken) {
-		logger.debug("GET /dispute/email/{uuid} called");
+
+	@GetMapping("/dispute/noticeOfDispute/{id}")
+	public ResponseEntity<Dispute> getDisputeByNoticeOfDisputeId(
+			@PathVariable(name = "id") @Parameter(description = "The noticeOfDisputeId of the Dispute to retreive.") String noticeOfDisputeId) {
+		logger.debug("GET /dispute/noticeOfDispute/{id} called");
 		try {
-			Dispute dispute = disputeService.getDisputeByEmailVerificationToken(emailVerificationToken);
+			Dispute dispute = disputeService.getDisputeByNoticeOfDisputeId(noticeOfDisputeId);
 			if (dispute == null) {
 				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<Dispute>(dispute, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR retrieving Dispute with emailVerificationToken {}", emailVerificationToken, e);
+			logger.error("ERROR retrieving Dispute with noticeOfDisputeId {}", noticeOfDisputeId, e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -192,15 +193,20 @@ public class DisputeController {
 	@Operation(summary = "Updates the emailVerification flag of a particular Dispute to true.")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Email verified."),
+		@ApiResponse(responseCode = "404", description = "Dispute with specified id not found"),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
-	@PutMapping("/dispute/email/{uuid}/verify")
-	public ResponseEntity<Void> verifyDisputeEmail(@PathVariable(name="uuid") @Parameter(description = "The emailVerificationToken of the Dispute to update.") String emailVerificationToken) {
-		logger.debug("PUT /dispute/email/{uuid}/verify called");
+	@PutMapping("/dispute/{id}/email/verify")
+	public ResponseEntity<Void> verifyDisputeEmail(@PathVariable(name="id") @Parameter(description = "The id of the Dispute to update.") Long id) {
+		logger.debug("PUT /dispute/{id}/email/verify called");
 		try {
-			disputeService.verifyEmail(emailVerificationToken);
+			if (disputeService.verifyEmail(id)) {
+				ResponseEntity.ok().build();
+			} else {
+				ResponseEntity.notFound().build();
+			}
 		} catch (Exception e) {
-			logger.error("ERROR validating email for uuid {}", emailVerificationToken, e);
+			logger.error("ERROR validating email for id {}", id, e);
 			return ResponseEntity.internalServerError().build();
 		}
 		return ResponseEntity.ok().build();

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Configuration;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -89,6 +90,10 @@ public static class BusConfiguratorExtensions
             var options = context.GetRequiredService<RabbitMqHostOptions>();
             string connectionName = GetConnectionName(options);
 
+            configure.MessageTopology.SetEntityNameFormatter(new PrefixEntityNameFormatter("Messages"));
+            configure.SendTopology.ErrorQueueNameFormatter = new ErrorQueueNameFormatter();
+            configure.SendTopology.DeadLetterQueueNameFormatter = new DeadLetterQueueNameFormatter();
+
             // enable instrumentation using the built-in .NET Meter class, which can be collected by OpenTelemetry
             configure.UseInstrumentation(serviceName: serviceName);
 
@@ -97,8 +102,6 @@ public static class BusConfiguratorExtensions
                 host.Username(options.Username);
                 host.Password(options.Password);
             });
-
-            RegisterEndpointConventions(options);
 
             configure.UseConcurrencyLimit(options.Retry.ConcurrencyLimit);
             
@@ -134,30 +137,7 @@ public static class BusConfiguratorExtensions
         });
     }
 
-    private static void RegisterEndpointConventions(RabbitMqHostOptions options)
-    {
-        var messageTypes = typeof(IMessage)
-            .Assembly
-            .GetTypes()
-            .Where(type => typeof(IMessage).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract);
 
-        MethodInfo method = typeof(EndpointConvention).GetMethod(nameof(EndpointConvention.Map), BindingFlags.Public | BindingFlags.Static, new Type[] { typeof(Uri)})!;
-
-        foreach (var messageType in messageTypes)
-        {
-            var attribute = messageType.GetCustomAttribute<EndpointConventionAttribute>();
-            if (attribute is null)
-            {
-                // no endpoint convention
-                continue;
-            }
-
-            // get the EndpointConvention.Map<messageType> method
-            MethodInfo typedMethod = method.MakeGenericMethod(messageType);
-            // call the static method
-            typedMethod.Invoke(null, new object[] { new Uri($"amqp://{options.Host}:{options.Port}/{attribute.Name}") });
-        }
-    }
 
     /// <summary>
     /// Gets the connection name that will be displayed in the RabbitMq management console
@@ -174,5 +154,37 @@ public static class BusConfiguratorExtensions
 
         connectionName += " (" + Environment.MachineName + ")";
         return connectionName;
+    }
+}
+
+public class DeadLetterQueueNameFormatter : IDeadLetterQueueNameFormatter
+{
+    public string FormatDeadLetterQueueName(string queueName)
+    {
+        return queueName + "-dead-letter";
+    }
+}
+
+public class ErrorQueueNameFormatter : IErrorQueueNameFormatter
+{
+    public string FormatErrorQueueName(string queueName)
+    {
+        return queueName + "-error";
+    }
+}
+
+
+public class PrefixEntityNameFormatter : IEntityNameFormatter
+{
+    private readonly string _prefix;
+
+    public PrefixEntityNameFormatter(string prefix)
+    {
+        _prefix = prefix;
+    }
+
+    public string FormatEntityName<T>()
+    {
+        return $"{_prefix}:{typeof(T).Name}";
     }
 }

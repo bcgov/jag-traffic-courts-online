@@ -4,14 +4,20 @@ namespace TrafficCourts.Workflow.Service.Services;
 
 public class OracleDataApiService : IOracleDataApiService
 {
-    private readonly IOracleDataApiClient _oracleDataApiClient;
+    /// <summary>
+    /// The format of a Guid when passed to Oracle data api
+    /// 32 digits separated by hyphens: 00000000-0000-0000-0000-000000000000
+    /// </summary>
+    private const string NoticeOfDisputeIdFormat = "d";
 
-    public OracleDataApiService(IOracleDataApiClient oracleDataApiClient)
+    private readonly IOracleDataApiClient _client;
+
+    public OracleDataApiService(IOracleDataApiClient client)
     {
-        _oracleDataApiClient = oracleDataApiClient ?? throw new ArgumentNullException(nameof(oracleDataApiClient));
+        _client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public async Task<long> CreateDisputeAsync(Dispute dispute)
+    public async Task<long> CreateDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
     {
         // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
         if (!string.IsNullOrEmpty(dispute.OcrViolationTicket))
@@ -21,23 +27,24 @@ public class OracleDataApiService : IOracleDataApiService
             // TODO: initialize ViolationTicket with data from OCR 
         }
 
-        return await _oracleDataApiClient.SaveDisputeAsync(dispute);
+        return await _client.SaveDisputeAsync(dispute, cancellationToken);
     }
-    public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory)
+    public async Task<long> CreateFileHistoryAsync(FileHistory fileHistory, CancellationToken cancellationToken)
     {
         try
         {
-            return await _oracleDataApiClient.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory);
-        } catch (Exception)
+            return await _client.InsertFileHistoryAsync(fileHistory.TicketNumber, fileHistory, cancellationToken);
+        } 
+        catch (Exception)
         {
             throw;
         }
     }
-    public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory)
+    public async Task<long> CreateEmailHistoryAsync(EmailHistory emailHistory, CancellationToken cancellationToken)
     {
         try
         {
-            return await _oracleDataApiClient.InsertEmailHistoryAsync(emailHistory.TicketNumber, emailHistory);
+            return await _client.InsertEmailHistoryAsync(emailHistory.TicketNumber, emailHistory, cancellationToken);
         }
         catch (Exception)
         {
@@ -45,13 +52,21 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<Dispute> GetDisputeByEmailVerificationTokenAsync(string emailVerificationToken)
+    public async Task<Dispute?> GetDisputeByNoticeOfDisputeIdAsync(Guid noticeOfDisputeId, CancellationToken cancellationToken)
     {
-        return await _oracleDataApiClient.GetDisputeByEmailVerificationTokenAsync(emailVerificationToken);
+        var id = noticeOfDisputeId.ToString(NoticeOfDisputeIdFormat);
+        try
+        {
+            return await _client.GetDisputeByNoticeOfDisputeIdAsync(id, cancellationToken);
+        }
+        catch (ApiException e) when (e.StatusCode == 404)
+        {
+            return null;
+        }
     }
 
-    public async Task VerifyDisputeEmailAsync(string emailVerificationToken)
+    public async Task VerifyDisputeEmailAsync(long disputeId, CancellationToken cancellationToken)
     {
-        await _oracleDataApiClient.VerifyDisputeEmailAsync(emailVerificationToken);
+        await _client.VerifyDisputeEmailAsync(disputeId);
     }
 }

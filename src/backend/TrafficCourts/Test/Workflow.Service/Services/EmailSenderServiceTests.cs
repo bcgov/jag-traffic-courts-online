@@ -1,20 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Workflow.Service.Services;
 using MailKit.Net.Smtp;
 using MimeKit;
-using MimeKit.Text;
 using Moq;
 using Xunit;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
-using AutoMapper;
 using TrafficCourts.Workflow.Service.Configuration;
-
+using TrafficCourts.Common.Features.Mail;
 
 namespace TrafficCourts.Test.Workflow.Service.Services
 {
@@ -24,16 +19,12 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         private readonly Mock<EmailConfiguration> _emailConfiguration;
         private readonly Mock<ISmtpClientFactory> _mockSmtpClientFactory;
         private readonly Mock<ISmtpClient> _mockSmtpClient;
-        private readonly Mock<IOracleDataApiService> _mockOracleDataApiService;
-        private readonly Mock<IMapper> _mockMapper;
 
         public EmailSenderServiceTests()
         {
             _mockLogger = new Mock<ILogger<EmailSenderService>>();
             _mockSmtpClientFactory = new Mock<ISmtpClientFactory>();
             _mockSmtpClient = new Mock<ISmtpClient>();
-            _mockOracleDataApiService = new Mock<IOracleDataApiService>();
-            _mockMapper = new Mock<IMapper>();  
             _emailConfiguration = new Mock<EmailConfiguration>();
         }
 
@@ -52,11 +43,9 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             IOptions<EmailConfiguration> options = Options.Create<EmailConfiguration>(configValues);
 
             return new EmailSenderService(
-                _mockLogger.Object,
                 options.Value,
                 _mockSmtpClientFactory.Object,
-                _mockOracleDataApiService.Object,
-                _mockMapper.Object);
+                _mockLogger.Object);
         }
 
         // Scenarios:
@@ -70,14 +59,12 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_WithCorrectParams_ShouldReturnTaskComplete()
         {
             // Arrange
-            var emailMessage = new SendEmail
+            var emailMessage = new EmailMessage
             {
-                FromEmailAddress = "mail@test.com",
-                ToEmailAddress = "something@test.com",
+                From = "mail@test.com",
+                To = "something@test.com",
                 Subject = "Test message",
-                PlainTextContent = "plain old message",
-                TicketNumber = "TestTicket01",
-                SuccessfullySent = EmailHistorySuccessfullySent.N
+                TextContent = "plain old message"
             };
 
             _mockSmtpClient.Setup(client => client.SendAsync(
@@ -106,14 +93,12 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_SmtpCancelled_ShouldReturnTaskFail()
         {
             // Arrange
-            var emailMessage = new SendEmail
+            var emailMessage = new EmailMessage
             {
-                FromEmailAddress = "mail@test.com",
-                ToEmailAddress = "something@test.com",
+                From = "mail@test.com",
+                To = "something@test.com",
                 Subject = "Test message",
-                PlainTextContent = "plain old message",
-                TicketNumber = "TestTicket01",
-                SuccessfullySent = EmailHistorySuccessfullySent.N
+                TextContent = "plain old message"
             };
 
             _mockSmtpClient.Setup(client => client.SendAsync(
@@ -149,14 +134,12 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task sending_email_to_only_not_allowed_list_will_not_fail()
         {
             // Arrange
-            var emailMessage = new SendEmail
+            var emailMessage = new EmailMessage
             {
-                FromEmailAddress = "mail@test.com",
-                ToEmailAddress = "fail@fail.com",
+                From = "mail@test.com",
+                To = "fail@fail.com",
                 Subject = "Test message",
-                PlainTextContent = "plain old message",
-                TicketNumber = "TestTicket01",
-                SuccessfullySent = EmailHistorySuccessfullySent.N
+                TextContent = "plain old message"
             };
 
             var service = CreateService();
@@ -171,29 +154,29 @@ namespace TrafficCourts.Test.Workflow.Service.Services
             // Arrange
             var emailMessage = new SendEmail
             {
-                FromEmailAddress = "mail@test.com",
-                ToEmailAddress = "works@test.com, fake@fake.com",
+                From = "mail@test.com",
+                To = "works@test.com, fake@fake.com",
                 Subject = "Test message",
-                PlainTextContent = "plain old message",
+                TextContent = "plain old message",
                 TicketNumber = "TestTicket01",
                 SuccessfullySent = EmailHistorySuccessfullySent.N
             };
 
             _mockSmtpClient.Setup(client => client.SendAsync(
                     It.Is<MimeMessage>(mailMessage =>
-                    mailMessage.From.ToString() == emailMessage.FromEmailAddress &&
+                    mailMessage.From.ToString() == emailMessage.From &&
                     mailMessage.To.Count() != 1 &&
                     mailMessage.Subject == emailMessage.Subject &&
-                    mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.PlainTextContent
+                    mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.TextContent
                 ), It.IsAny<CancellationToken>(), null))
                 .Throws(new InvalidOperationException());
 
             _mockSmtpClient.Setup(client => client.SendAsync(
                     It.Is<MimeMessage>(mailMessage =>
-                    mailMessage.From.ToString() == emailMessage.FromEmailAddress &&
+                    mailMessage.From.ToString() == emailMessage.From &&
                     mailMessage.To.Count() == 1 &&
                     mailMessage.Subject == emailMessage.Subject &&
-                    mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.PlainTextContent
+                    mailMessage.GetTextBody(TextFormat.Plain) == emailMessage.TextContent
                 ), It.IsAny<CancellationToken>(), null));
 
 
@@ -223,13 +206,11 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_TestDefaultSender_ShouldReturnSuccess()
         {
             // Arrange
-            var emailMessage = new SendEmail
+            var emailMessage = new EmailMessage
             {
-                ToEmailAddress = "works@test.com",
+                To = "works@test.com",
                 Subject = "Test message",
-                PlainTextContent = "plain old message",
-                TicketNumber = "TestTicket01",
-                SuccessfullySent = EmailHistorySuccessfullySent.N
+                TextContent = "plain old message"
             };
 
 
@@ -264,14 +245,12 @@ namespace TrafficCourts.Test.Workflow.Service.Services
         public async Task SendEmailAsync_WithBadToEmail_ShouldReturnFail()
         {
             // Arrange
-            var emailMessage = new SendEmail
+            var emailMessage = new EmailMessage
             {
-                FromEmailAddress = "mail@test.com",
-                ToEmailAddress = "just junk mail",
+                From = "mail@test.com",
+                To = "just junk mail",
                 Subject = "Test message",
-                PlainTextContent = "plain old message",
-                TicketNumber = "TestTicket01",
-                SuccessfullySent = EmailHistorySuccessfullySent.N
+                TextContent = "plain old message"
             };
 
             _mockSmtpClient.Setup(client => client.SendAsync(
@@ -310,7 +289,7 @@ namespace TrafficCourts.Test.Workflow.Service.Services
                 From = "mail@test.com",
                 To = new string[] { "test@test.com" },
                 Subject = "Test message",
-                PlainTextContent = "plain old message"
+                TextContent = "plain old message"
             };
 
             _mockSmtpClient.Setup(client => client.SendAsync(

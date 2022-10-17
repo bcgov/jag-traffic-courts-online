@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TrafficCourts.Messaging.MessageContracts
+﻿namespace TrafficCourts.Messaging.MessageContracts
 {
-    [EndpointConvention("dispute-approved")]
-    public class DisputeApproved: IMessage
+    public class DisputeApproved
     {
         public string CitizenName { get; set; } = String.Empty;
         public DateTime? TicketIssuanceDate { get; set; }

@@ -129,7 +129,7 @@ export class NoticeOfDisputeService {
               this.router.navigate([AppRoutes.disputePath(AppRoutes.EMAILVERIFICATIONREQUIRED)], {
                 queryParams: {
                   email: input.email_address,
-                  token: res.NoticeOfDisputeId
+                  token: res.noticeOfDisputeId
                 },
               });
             }
@@ -146,12 +146,12 @@ export class NoticeOfDisputeService {
       });
   }
 
-  public resendVerificationEmail(uuidHash: string): Observable<any> {
-    return this.disputesService.apiDisputesEmailUuidHashResendPut(uuidHash).pipe(map(res => res));
+  public resendVerificationEmail(noticeOfDisputeId: string): Observable<any> {
+    return this.disputesService.apiDisputesEmailUuidHashResendPut(noticeOfDisputeId).pipe(map(res => res));
   }
 
-  public verifyEmail(uuid: string): Observable<any> {
-    return this.disputesService.apiDisputesEmailUuidVerifyPut(uuid).pipe(map(res => res));
+  public verifyEmail(token: string): Observable<any> {
+    return this.disputesService.apiDisputesEmailVerifyPut(token).pipe(map(res => res));
   }
 
   public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {

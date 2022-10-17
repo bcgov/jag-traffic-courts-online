@@ -8,7 +8,7 @@ using System.Threading;
 using TrafficCourts.Citizen.Service.Controllers;
 using TrafficCourts.Citizen.Service.Features.Disputes;
 using TrafficCourts.Citizen.Service.Models.Dispute;
-using TrafficCourts.Citizen.Service.Services;
+using TrafficCourts.Common.Features.EmailVerificationToken;
 using Xunit;
 
 namespace TrafficCourts.Test.Citizen.Service.Controllers
@@ -24,8 +24,11 @@ namespace TrafficCourts.Test.Citizen.Service.Controllers
             var mockLogger = new Mock<ILogger<DisputesController>>();
             var mockBus = new Mock<IBus>();
             var mockHashids = new Mock<IHashids>();
-            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object);
-            var request = new Create.Request(mockTicketDispute.Object, "localhost");
+
+            var tokenEncoder = Mock.Of<IDisputeEmailVerificationTokenEncoder>();
+
+            var disputeController = new DisputesController(mockBus.Object, mockMediator.Object, mockLogger.Object, mockHashids.Object, tokenEncoder);
+            var request = new Create.Request(mockTicketDispute.Object);
             var createResponse = new Create.Response();
 
             mockMediator

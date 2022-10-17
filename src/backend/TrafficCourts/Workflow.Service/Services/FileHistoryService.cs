@@ -1,12 +1,6 @@
-﻿using Microsoft.Extensions.Options;
-using TrafficCourts.Messaging.MessageContracts;
+﻿using TrafficCourts.Messaging.MessageContracts;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using AutoMapper;
-using MimeKit;
-using MimeKit.Text;
-using TrafficCourts.Common.Features.Mail.Model;
-using TrafficCourts.Common.Configuration;
-using TrafficCourts.Workflow.Service.Configuration;
 
 namespace TrafficCourts.Workflow.Service.Services
 {
@@ -20,8 +14,8 @@ namespace TrafficCourts.Workflow.Service.Services
         public FileHistoryService(ILogger<FileHistoryService> logger, IOracleDataApiService oracleDataApiService, IMapper mapper)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _oracleDataApiService = oracleDataApiService;
-            _mapper = mapper;
+            _oracleDataApiService = oracleDataApiService ?? throw new ArgumentNullException(nameof(oracleDataApiService));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
@@ -35,8 +29,8 @@ namespace TrafficCourts.Workflow.Service.Services
             {
                 // prepare file history record
                 FileHistory fileHistory = _mapper.Map<FileHistory>(fileHistoryRecord);
-                long Id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory);
-                return Id;
+                long id = await _oracleDataApiService.CreateFileHistoryAsync(fileHistory, cancellationToken);
+                return id;
             }
             catch (Exception ex)
             {
