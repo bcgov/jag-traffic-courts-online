@@ -21,6 +21,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
+import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -120,20 +121,35 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 				return Optional.ofNullable(dispute);
 			}
 		} catch (ApiException e) {
-			// FIXME: this error should be propagated up so the caller (controller) can respond with a 500 InternalServerException
 			logger.error("ERROR retrieving Dispute from ORDS with dispute id {}", id, e);
-			return Optional.empty();
+			throw new InternalServerErrorException(e);
 		}
 	}
 
 	@Override
 	public Dispute save(Dispute dispute) {
-		throw new NotYetImplementedException();
+		return saveAndFlush(dispute);
 	}
 
 	@Override
 	public Dispute saveAndFlush(Dispute entity) {
-		throw new NotYetImplementedException();
+		if (entity == null) {
+			throw new IllegalArgumentException("Dispute body is null.");
+		}
+		
+		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(entity);
+		try {
+			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1ProcessViolationTicketPost(violationTicket));
+			if (result.getDisputeId() != null) {
+				logger.debug("Successfully saved the dispute through ORDS with dispute id {}", result.getDisputeId());
+				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
+			}
+		} catch (ApiException e) {
+			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", violationTicket.toString(), e);
+			throw new InternalServerErrorException(e);
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -161,21 +177,22 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	/**
 	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
+	 * @return 
 	 */
-	private void assertNoExceptions(Supplier<ResponseResult> m) {
+	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
 		ResponseResult result = m.get();
 
 		if (result == null) {
 			// Missing response object.
 			throw new InternalServerErrorException("Invalid ResponseResult object");
-		}
-		else if (result.getException() != null) {
+		} else if (result.getException() != null) {
 			// Exception in response exists
 			throw new InternalServerErrorException(result.getException());
-		}
-		else if (!"1".equals(result.getStatus())) {
+		} else if (!"1".equals(result.getStatus())) {
 			// Status is not 1 (success)
 			throw new InternalServerErrorException("Status is not 1 (success)");
+		} else {
+			return result;
 		}
 	}
 

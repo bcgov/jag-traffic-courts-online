@@ -111,8 +111,7 @@ public class DisputeController {
 	@PostMapping("/dispute")
 	public Long saveDispute(@RequestBody Dispute dispute) {
 		logger.debug("POST /dispute called");
-		disputeService.save(dispute);
-		return dispute.getDisputeId();
+		return disputeService.save(dispute).getDisputeId();
 	}
 
 	/**

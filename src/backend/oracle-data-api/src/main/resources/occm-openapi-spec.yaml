@@ -230,6 +230,24 @@ paths:
                 $ref: '#/components/schemas/ResponseResult'
       tags:
         - Violation Ticket
+  /v1/processViolationTicket:
+    post:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViolationTicket'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Violation Ticket
 components:
   schemas:
     AgenciesListResult:
@@ -350,8 +368,15 @@ components:
       properties:
         status:
           type: string
+        violationTicketId:
+          type: string
+          format: nullable
+        disputeId:
+          type: string
+          format: nullable
         exception:
           type: string
+          format: nullable
     AuditBase:
       type: object
       properties:
@@ -397,6 +422,8 @@ components:
         addressProvSeqNo:
           type: string
         courtAgenId:
+          type: string
+        courtLocationTxt:
           type: string
         detachmentLocationTxt:
           type: string
@@ -447,7 +474,7 @@ components:
           type: string
         filingDt:
           type: string
-          format: nullable
+          format: date
         fineReductionReasonTxt:
           type: string
         homePhoneNumberTxt:
@@ -516,6 +543,9 @@ components:
           type: string
           format: nullable
         lawyerSurnameNm:
+          type: string
+          format: nullable
+        ocrViolationTicketJsonTxt:
           type: string
           format: nullable
         officerPinTxt:
