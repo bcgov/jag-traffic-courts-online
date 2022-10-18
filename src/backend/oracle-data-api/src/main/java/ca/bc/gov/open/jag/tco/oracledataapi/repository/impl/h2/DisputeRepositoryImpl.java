@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.h2;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -11,12 +12,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @ConditionalOnProperty(name = "ords.enabled", havingValue = "false", matchIfMissing = true)
 @Qualifier("disputeRepository")
 public interface DisputeRepositoryImpl extends DisputeRepository, JpaRepository<Dispute, Long>, DisputeRepositoryCustom {
+
+	@Override
+	@Query("select new ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult(d.id, d.status) from Dispute d where d.ticketNumber = :ticketNumber and hour(d.issuedDate) = hour(:issuedTime) and minute(d.issuedDate) = minute(:issuedTime)")
+	public List<DisputeResult> findByTicketNumberAndTime(@Param(value = "ticketNumber") String ticketNumber, @Param(value = "issuedTime") Date issuedTime);
 
 	@Override
 	@Modifying

@@ -27,11 +27,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.DisputeService;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -82,6 +84,27 @@ public class DisputeController {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Dispute>(disputeService.getDisputeById(id), HttpStatus.OK);
+	}
+
+	/**
+	 * GET endpoint that finds Disputes by TicketNumber and IssuedTime.
+	 *
+	 * @param ticketNumber of the ViolationTicket.ticketNumber to search for
+	 * @param issuedTime the time portion of the ViolationTicket.issuedDate field
+	 * @return {@link Dispute}
+	 */
+	@Operation(summary = "Finds Disputes by TicketNumber and IssuedTime.")
+	@GetMapping("/dispute")
+	public ResponseEntity<List<DisputeResult>> findDispute(
+			@RequestParam
+			@Parameter(description = "The Violation TicketNumber to search for (of the format XX00000000)", example = "AX12345678")
+			String ticketNumber,
+			@RequestParam
+			@DateTimeFormat(pattern="HH:mm")
+			@Parameter(description = "The Violation IssuedDate to search for (of the format HH:mm)", example = "14:53", schema = @Schema(type="string"))
+			Date issuedTime) {
+		logger.debug("GET /disputes called");
+		return new ResponseEntity<List<DisputeResult>>(disputeService.findDispute(ticketNumber, issuedTime), HttpStatus.OK);
 	}
 
 	/**
@@ -172,7 +195,6 @@ public class DisputeController {
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
-
 	@GetMapping("/dispute/noticeOfDispute/{id}")
 	public ResponseEntity<Dispute> getDisputeByNoticeOfDisputeId(
 			@PathVariable(name = "id") @Parameter(description = "The noticeOfDisputeId of the Dispute to retreive.") String noticeOfDisputeId) {

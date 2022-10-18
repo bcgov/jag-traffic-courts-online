@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.controller.v1_0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -15,12 +16,18 @@ import javax.validation.ConstraintViolationException;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.util.RandomUtil;
 
@@ -28,6 +35,8 @@ class DisputeControllerTest extends BaseTestSuite {
 
 	@Autowired
 	@Qualifier("DisputeControllerV1_0")
+	// TODO: remove me in favour of issuing appropriate GET, POST, or DELETE requests to the DispatcherServlet - this also tests spring wiring.
+	// @see #findDispute()
 	private DisputeController disputeController;
 
 	@Test
@@ -231,6 +240,58 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Assert controller returns all disputes which do not have the specified type.
 		Iterable<Dispute> allDisputesWithStatus = disputeController.getAllDisputes(null, DisputeStatus.PROCESSING);
 		assertEquals(2, IterableUtils.size(allDisputesWithStatus));
+	}
+
+	@Test
+	public void testFindByTicketNumberAndTime() throws Exception {
+		// Happy path. Expect results on a valid match.
+
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setTicketNumber("AX12345678");
+		dispute.setIssuedDate(DateUtils.parseDate("14:54", "HH:mm"));
+		Long disputeId = saveDispute(dispute);
+
+		// try searching for exact match. Expect to find the dispute
+		ResponseEntity<List<DisputeResult>> responseEntity = findDispute("AX12345678", "14:54");
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertNotNull(responseEntity.getBody());
+		assertEquals(1, responseEntity.getBody().size());
+		assertEquals(disputeId, responseEntity.getBody().get(0).getDisputeId());
+		assertEquals(DisputeStatus.NEW, responseEntity.getBody().get(0).getDisputeStatus());
+
+		// try searching for a different ticketNumber. Expect no records.
+		responseEntity = findDispute("AX00000000", "14:54");
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertNotNull(responseEntity.getBody());
+		assertEquals(0, responseEntity.getBody().size());
+
+		// try searching for a different time. Expect no records.
+		responseEntity = findDispute("AX12345678", "14:55");
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		assertNotNull(responseEntity.getBody());
+		assertEquals(0, responseEntity.getBody().size());
+	}
+
+	@Test
+	@Disabled
+	// FIXME: this should work, but getting a RestClientException due to the validation error. It's trying to parse a json result but getting a 400 error page (as expected) but the restTemplate doens't know how to parse that.
+	public void testFindByTicketNumberAndTimeNull() throws Exception {
+		ResponseEntity<List<DisputeResult>> responseEntity = findDispute(null, null);
+		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+	}
+
+	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
+	private Long saveDispute(Dispute dispute) {
+		return postForObject(fromUriString("/dispute"), dispute, Long.class);
+	}
+
+	/** Issues a GET request to /api/v1.0/dispute with the required ticketNumber and time to find a Dispute. */
+	private ResponseEntity<List<DisputeResult>> findDispute(String ticketNumber, String issuedTime) {
+		UriComponentsBuilder uriBuilder = fromUriString("/dispute")
+				.queryParam("ticketNumber", ticketNumber)
+				.queryParam("issuedTime", issuedTime);
+		return getForEntity(uriBuilder, new ParameterizedTypeReference<List<DisputeResult>>() {});
 	}
 
 	// Helper method to return an instance of Principal
