@@ -43,7 +43,7 @@ public class DisputeService {
 	 *
 	 * @return
 	 */
-	public Iterable<Dispute> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
+	public List<Dispute> getAllDisputes(Date olderThan, DisputeStatus excludeStatus) {
 		if (olderThan == null && excludeStatus == null) {
 			return disputeRepository.findAll();
 		} else if (olderThan == null) {

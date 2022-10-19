@@ -12,13 +12,13 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 public interface DisputeRepository {
 
 	/** Fetch all records older than the given date. */
-    public Iterable<Dispute> findByCreatedTsBefore(Date olderThan);
+    public List<Dispute> findByCreatedTsBefore(Date olderThan);
 
     /** Fetch all records which do not have the specified status. */
-    public Iterable<Dispute> findByStatusNot(DisputeStatus excludeStatus);
+    public List<Dispute> findByStatusNot(DisputeStatus excludeStatus);
 
     /** Fetch all records which do not have the specified status and older than the given date. */
-    public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
+    public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
     /** Fetch all records that matches the emailVerificationToken. */
 	@Deprecated
@@ -47,7 +47,7 @@ public interface DisputeRepository {
 	 *
 	 * @return all entities
 	 */
-	public Iterable<Dispute> findAll();
+	public List<Dispute> findAll();
 
 	/**
 	 * Retrieves an entity by its id.

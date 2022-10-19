@@ -44,17 +44,17 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public Iterable<Dispute> findByCreatedTsBefore(Date olderThan) {
+	public List<Dispute> findByCreatedTsBefore(Date olderThan) {
 		throw new NotYetImplementedException();
 	}
 
 	@Override
-	public Iterable<Dispute> findByStatusNot(DisputeStatus excludeStatus) {
+	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus) {
 		throw new NotYetImplementedException();
 	}
 
 	@Override
-	public Iterable<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan) {
+	public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan) {
 		throw new NotYetImplementedException();
 	}
 
@@ -107,7 +107,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public Iterable<Dispute> findAll() {
+	public List<Dispute> findAll() {
 		throw new NotYetImplementedException();
 	}
 

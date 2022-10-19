@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +65,9 @@ public class DisputeController {
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
-		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
+		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
 		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
-		return IterableUtils.toList(allDisputes);
+		return allDisputes;
 	}
 
 	/**
