@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.security.Principal;
 import java.text.ParseException;
@@ -16,13 +18,15 @@ import javax.validation.ConstraintViolationException;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
@@ -38,6 +42,9 @@ class DisputeControllerTest extends BaseTestSuite {
 	// TODO: remove me in favour of issuing appropriate GET, POST, or DELETE requests to the DispatcherServlet - this also tests spring wiring.
 	// @see #findDispute()
 	private DisputeController disputeController;
+	
+	@Autowired
+	private MockMvc mvc;
 
 	@Test
 	public void testSaveDispute() {
@@ -274,11 +281,9 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
-	@Disabled
 	// FIXME: this should work, but getting a RestClientException due to the validation error. It's trying to parse a json result but getting a 400 error page (as expected) but the restTemplate doens't know how to parse that.
 	public void testFindByTicketNumberAndTimeNull() throws Exception {
-		ResponseEntity<List<DisputeResult>> responseEntity = findDispute(null, null);
-		assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+		findDisputeMock(null, null);
 	}
 
 	/** Issue a POST request to /api/v1.0/dispute. The appropriate controller is automatically called by the DispatchServlet */
@@ -292,6 +297,18 @@ class DisputeControllerTest extends BaseTestSuite {
 				.queryParam("ticketNumber", ticketNumber)
 				.queryParam("issuedTime", issuedTime);
 		return getForEntity(uriBuilder, new ParameterizedTypeReference<List<DisputeResult>>() {});
+	}
+	
+	// The mock find dispute method uses Mock MVC to test request
+	private void findDisputeMock(String ticketNumber, String issuedTime) throws Exception {
+		UriComponentsBuilder uriBuilder = fromUriString("/dispute")
+				.queryParam("ticketNumber", ticketNumber)
+				.queryParam("issuedTime", issuedTime);
+		
+		MvcResult result = mvc.perform(get(uriBuilder.build().encode().toUri())
+        		.contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest())
+    	.andReturn();
 	}
 
 	// Helper method to return an instance of Principal
