@@ -1,11 +1,13 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.InternalServerErrorException;
 
@@ -20,6 +22,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.ViolationTicketApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
+import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
@@ -34,6 +37,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+	public static final String DATE_FORMAT = "yyyy-MM-dd";
+
 	private static Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
 
 	// Delegate, OpenAPI generated client
@@ -45,17 +50,40 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByCreatedTsBefore(Date olderThan) {
-		throw new NotYetImplementedException();
+		return findByStatusNotAndCreatedTsBefore(null, olderThan);
 	}
 
 	@Override
 	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus) {
-		throw new NotYetImplementedException();
+		return findByStatusNotAndCreatedTsBefore(excludeStatus, null);
 	}
 
 	@Override
 	public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan) {
-		throw new NotYetImplementedException();
+		List<Dispute> disputesToReturn = new ArrayList<Dispute>();
+		String olderThanDate = null ;
+		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
+
+		if (olderThan != null) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+			olderThanDate = simpleDateFormat.format(olderThan);
+		}
+
+		try {
+			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, null);
+			if (response != null && !response.getViolationTickets().isEmpty()) {
+				logger.debug("Successfully returned disputes from ORDS that are older than " + olderThan + " and excluding the status: " + excludeStatus);
+
+				disputesToReturn = response.getViolationTickets().stream()
+						.map(violationTicket -> DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket))
+						.collect(Collectors.toList());
+			}
+			return disputesToReturn;
+
+		} catch (ApiException e) {
+			logger.error("ERROR retrieving Disputes from ORDS");
+			throw new InternalServerErrorException(e);
+		}
 	}
 
 	@Override
@@ -108,7 +136,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findAll() {
-		throw new NotYetImplementedException();
+		return findByStatusNotAndCreatedTsBefore(null, null);
 	}
 
 	@Override
