@@ -5,11 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService } from '../../../services/jj-dispute.service';
-import { JJDispute, JJDisputedCount } from 'app/api';
+import { JJDispute, JJDisputedCount, JJDisputedCountAppearInCourt, JJDisputedCountIncludesSurcharge, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay } from 'app/api';
 import { MatRadioChange } from '@angular/material/radio';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { MoreOptionsDialogComponent } from '@shared/dialogs/more-options-dialog/more-options-dialog.component';
-
 
 @Component({
   selector: 'app-jj-count',
@@ -31,6 +30,10 @@ export class JJCountComponent implements OnInit {
   public inclSurcharge: string = "yes";
   public lesserOrGreaterAmount: number = 0;
   public surcharge: number = 0;
+  public IncludesSurcharge = JJDisputedCountIncludesSurcharge;
+  public RequestReduction = JJDisputedCountRequestReduction;
+  public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
+  public AppearInCourt = JJDisputedCountAppearInCourt;
 
   constructor(
     protected route: ActivatedRoute,
@@ -46,6 +49,8 @@ export class JJCountComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.jjDisputedCount) this.violationDate = this.jjDisputeInfo.violationDate.split("T")[0];
+    if (this.jjDisputedCount.revisedDueDate?.split('T')?.length > 0) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.revisedDueDate.split('T')[0];
+    if (this.jjDisputedCount.dueDate?.split('T')?.length > 0) this.jjDisputedCount.dueDate = this.jjDisputedCount.dueDate.split('T')[0];
 
     this.form = this.formBuilder.group({
       totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
@@ -65,9 +70,11 @@ export class JJCountComponent implements OnInit {
 
       // initialize form, radio buttons
       this.form.patchValue(this.jjDisputedCount);
-      this.inclSurcharge = this.jjDisputedCount.includesSurcharge == true ? "yes" : "no";
+      this.inclSurcharge = this.jjDisputedCount.includesSurcharge == this.IncludesSurcharge.Y ? "yes" : "no";
       this.fineReduction = this.jjDisputedCount.totalFineAmount != this.jjDisputedCount.ticketedFineAmount ? "yes" : "no";
       this.timeToPay = this.jjDisputedCount.dueDate != this.jjDisputedCount.revisedDueDate ? "yes" : "no";
+      this.updateInclSurcharge(this.inclSurcharge);
+      this.form.get('revisedDueDate').setValue(this.jjDisputedCount.revisedDueDate);
 
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
@@ -75,7 +82,7 @@ export class JJCountComponent implements OnInit {
         this.jjDisputedCount.revisedDueDate = this.form.get('revisedDueDate').value;
         this.jjDisputedCount.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
         this.jjDisputedCount.totalFineAmount = this.form.get('totalFineAmount').value;
-        this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? true : false;
+        this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N;
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
     }
@@ -112,16 +119,19 @@ export class JJCountComponent implements OnInit {
   }
 
   updateFineAmount(event: MatRadioChange) {
-    // if they select no set it back to ticketed Amount
+    // if they select no set it back to ticketed Amount & includes surcharge
     // do nothing if yes
     if (event.value == "no") {
       this.form.get('totalFineAmount').setValue(this.jjDisputedCount.ticketedFineAmount);
+      this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount.ticketedFineAmount);
+      this.inclSurcharge = "yes";
+      this.updateInclSurcharge("yes");
     }
   }
 
-  updateInclSurcharge(event: MatRadioChange) {
+  updateInclSurcharge(eventValue: string) {
     // surcharge is always 15%
-    if (event.value == "yes") {
+    if (eventValue == "yes") {
       this.form.get('totalFineAmount').setValue(this.form.get('lesserOrGreaterAmount').value);
       this.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value / 1.15;
       this.surcharge = 0.15 * this.lesserOrGreaterAmount;

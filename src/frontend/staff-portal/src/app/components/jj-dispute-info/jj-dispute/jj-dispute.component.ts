@@ -7,7 +7,7 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService, JJTeamMember } from '../../../services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,6 +34,8 @@ export class JJDisputeComponent implements OnInit {
   public remarks: string = "";
   public jjList: JJTeamMember[];
   public selectedJJ: string;
+  public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
+  public RequestReduction = JJDisputedCountRequestReduction;
 
   constructor(
     protected route: ActivatedRoute,
@@ -64,7 +66,7 @@ export class JJDisputeComponent implements OnInit {
       this.lastUpdatedJJDispute.status = JJDisputeStatus.InProgress;
       this.putJJDispute();
     } else {
-      this.onAccept();
+      this.putJJDispute();
     }
   }
 
@@ -136,8 +138,8 @@ export class JJDisputeComponent implements OnInit {
 
       // set up headings for written reasons
       this.lastUpdatedJJDispute.jjDisputedCounts.forEach(disputedCount => {
-        if (disputedCount.requestTimeToPay == true) this.timeToPayCountsHeading += "Count " + disputedCount.count.toString() + ", ";
-        if (disputedCount.requestReduction == true) this.fineReductionCountsHeading += "Count " + disputedCount.count.toString() + ", ";
+        if (disputedCount.requestTimeToPay === this.RequestTimeToPay.Y) this.timeToPayCountsHeading += "Count " + disputedCount.count.toString() + ", ";
+        if (disputedCount.requestReduction === this.RequestReduction.Y) this.fineReductionCountsHeading += "Count " + disputedCount.count.toString() + ", ";
       });
       if (this.timeToPayCountsHeading.length > 0) {
         this.timeToPayCountsHeading = this.timeToPayCountsHeading.substring(0, this.timeToPayCountsHeading.lastIndexOf(","));

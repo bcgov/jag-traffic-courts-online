@@ -24,6 +24,7 @@ export interface Dispute {
     modifiedBy?: string | null;
     modifiedTs?: string;
     disputeId?: number;
+    noticeOfDisputeId?: string | null;
     ticketNumber?: string | null;
     courtLocation?: string | null;
     issuedDate?: string | null;
