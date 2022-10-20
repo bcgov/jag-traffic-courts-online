@@ -137,6 +137,42 @@ paths:
                 $ref: '#/components/schemas/ViolationTicket'
       tags:
         - Violation Ticket
+  /v1/violationTicketList:
+    get:
+      parameters:
+        - name: fromDate
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 10
+        - name: excludeStatus
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 4
+        - name: ticketNumber
+          in: query
+          description: ''
+          schema:
+            type: string
+        - name: noticeOfDisputeId
+          in: query
+          description: ''
+          schema:
+            type: string
+            maxLength: 36
+            minLength: 36
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViolationTicketListResponse'
+      tags:
+        - Violation Ticket
   /v1/deleteViolationTicket:
     delete:
       parameters:
@@ -377,6 +413,13 @@ components:
         exception:
           type: string
           format: nullable
+    ViolationTicketListResponse:
+      type: object
+      properties:
+        violationTickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ViolationTicket'
     AuditBase:
       type: object
       properties:
