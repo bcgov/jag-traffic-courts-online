@@ -55,10 +55,16 @@ public class DisputeController {
 	 * @param olderThan if specified, will filter the result set to those older than this date.
 	 * @return list of all dispute tickets
 	 */
+	@Operation(summary = "Returns all Dispute records based on the specified optional parameters.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Disputes are returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Getting disputes failed.")
+	})
 	@GetMapping("/disputes")
-	public List<Dispute> getAllDisputes(
+	public ResponseEntity<List<Dispute>> getAllDisputes(
 			@RequestParam(required = false)
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+			@DateTimeFormat(pattern = "yyyy-MM-dd")
 			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
 			Date olderThan,
 			@RequestParam(required = false)
@@ -66,8 +72,7 @@ public class DisputeController {
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
 		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
-		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
-		return allDisputes;
+		return new ResponseEntity<List<Dispute>>(allDisputes, HttpStatus.OK);
 	}
 
 	/**
