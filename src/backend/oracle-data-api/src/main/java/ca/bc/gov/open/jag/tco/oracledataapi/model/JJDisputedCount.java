@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -57,19 +59,25 @@ public class JJDisputedCount extends Auditable<String> {
 	 * The disputant is requesting time to pay the ticketed amount.
 	 */
 	@Column
-	private boolean requestTimeToPay;
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo requestTimeToPay;
 
 	/**
 	 * The disputant is requesting a reduction of the ticketed amount.
 	 */
 	@Column
-	private boolean requestReduction;
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo requestReduction;
 
 	/**
 	 * Does the want to appear in court?
 	 */
 	@Column
-	private boolean appearInCourt;
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo appearInCourt;
 	
 	/**
 	 * The description of the offence including the statute and act. 
@@ -106,7 +114,9 @@ public class JJDisputedCount extends Auditable<String> {
 	 * Surcharge is always 15% of the original fine amount.
 	 */
 	@Column
-	private boolean includesSurcharge;
+	@Schema(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private YesNo includesSurcharge;
 	
 	/**
      * Revised due date of the original due date for the offence to be paid.

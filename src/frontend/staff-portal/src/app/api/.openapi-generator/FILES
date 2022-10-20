@@ -36,7 +36,11 @@ model/jJDispute.model.ts
 model/jJDisputeRemark.model.ts
 model/jJDisputeStatus.model.ts
 model/jJDisputedCount.model.ts
+model/jJDisputedCountAppearInCourt.model.ts
+model/jJDisputedCountIncludesSurcharge.model.ts
 model/jJDisputedCountPlea.model.ts
+model/jJDisputedCountRequestReduction.model.ts
+model/jJDisputedCountRequestTimeToPay.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
 model/point.model.ts
