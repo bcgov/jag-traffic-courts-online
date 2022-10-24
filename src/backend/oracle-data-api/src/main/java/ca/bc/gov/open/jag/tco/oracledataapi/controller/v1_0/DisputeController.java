@@ -107,7 +107,6 @@ public class DisputeController {
 	@GetMapping("/dispute")
 	public ResponseEntity<List<DisputeResult>> findDispute(
 			@RequestParam
-			@Size(max = 10)
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
 			@Parameter(description = "The Violation TicketNumber to search for (of the format XX00000000)", example = "AX12345678")
 			String ticketNumber,

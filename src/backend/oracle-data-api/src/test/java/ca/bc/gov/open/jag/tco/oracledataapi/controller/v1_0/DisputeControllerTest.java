@@ -278,7 +278,7 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
-	public void testFindByTicketNumberAndTime_Invalid() throws Exception {
+	public void testFindByTicketNumberAndTime_Null() throws Exception {
 		mvc.perform(MockMvcRequestBuilders
 				.get("/api/v1.0/dispute")) // missing parameters
 				.andExpect(status().isBadRequest());
@@ -290,6 +290,8 @@ class DisputeControllerTest extends BaseTestSuite {
 		"AB12345678,55:99",  // invalid time
 		"AB123456789,14:23", // too long
 		"ABC1234567,14:23",  // invalid regex
+		",14:23",            // invalid ticketNumber
+		"ABC1234567,",       // invalid time
 		})
 	public void testFindByTicketNumberAndTime_Invalid(String ticketNumber, String issuedTime) throws Exception {
 		mvc.perform(MockMvcRequestBuilders
