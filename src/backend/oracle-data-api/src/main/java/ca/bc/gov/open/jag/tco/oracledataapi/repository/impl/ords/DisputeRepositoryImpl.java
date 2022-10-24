@@ -23,6 +23,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.DisputeMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
@@ -58,13 +59,18 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	@Deprecated	
+	@Deprecated
 	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken) {
 		throw new NotYetImplementedException();
 	}
 
-	@Override	
+	@Override
 	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId) {
+		throw new NotYetImplementedException();
+	}
+
+	@Override
+	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date time) {
 		throw new NotYetImplementedException();
 	}
 
@@ -136,7 +142,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		if (entity == null) {
 			throw new IllegalArgumentException("Dispute body is null.");
 		}
-		
+
 		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(entity);
 		try {
 			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1ProcessViolationTicketPost(violationTicket));
@@ -148,7 +154,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			logger.error("ERROR inserting Dispute to ORDS with dispute data: {}", violationTicket.toString(), e);
 			throw new InternalServerErrorException(e);
 		}
-		
+
 		return null;
 	}
 
@@ -177,7 +183,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	/**
 	 * A helper method that will throw an appropriate InternalServerErrorException based on the ResponseResult. Any RuntimeExceptions throw will propagate up to caller.
-	 * @return 
+	 * @return
 	 */
 	private ResponseResult assertNoExceptions(Supplier<ResponseResult> m) {
 		ResponseResult result = m.get();

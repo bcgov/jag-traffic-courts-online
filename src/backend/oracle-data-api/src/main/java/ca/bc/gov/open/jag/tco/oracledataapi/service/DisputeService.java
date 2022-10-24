@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
@@ -232,7 +233,7 @@ public class DisputeService {
 		if (findDispute.isPresent()) {
 			Dispute dispute = findDispute.get();
 			dispute.setEmailAddressVerified(Boolean.TRUE);
-			disputeRepository.save(dispute);	
+			disputeRepository.save(dispute);
 			return true;
 		}
 
@@ -250,6 +251,13 @@ public class DisputeService {
 			return null;
 		}
 		return findByNoticeOfDisputeId.get(0);
+	}
+
+	/**
+	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedDate.
+	 */
+	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
+		return disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);
 	}
 
 }
