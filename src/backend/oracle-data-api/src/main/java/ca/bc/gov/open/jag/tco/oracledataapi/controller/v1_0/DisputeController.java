@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -94,9 +95,16 @@ public class DisputeController {
 	 * @return {@link Dispute}
 	 */
 	@Operation(summary = "Finds Disputes by TicketNumber and IssuedTime.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok."),
+		@ApiResponse(responseCode = "400", description = "Bad Request, check parameters."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Search failed.")
+	})
 	@GetMapping("/dispute")
 	public ResponseEntity<List<DisputeResult>> findDispute(
 			@RequestParam
+			@Size(max = 10)
+			@Pattern(regexp = "[A-Z]{2}\\d{8}")
 			@Parameter(description = "The Violation TicketNumber to search for (of the format XX00000000)", example = "AX12345678")
 			String ticketNumber,
 			@RequestParam

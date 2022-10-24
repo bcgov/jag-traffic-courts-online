@@ -43,16 +43,16 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(0, allDisputes.size());
 
 		// Create a couple of JJDisputes
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());			
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
 		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute());
-		 
+
 		// Assert request returns one record
 		JJDispute jjDispute = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
 		assertNotNull(jjDispute);
 		assertNotEquals(dispute1.getTicketNumber(), jjDispute.getTicketNumber());
 		assertEquals(dispute2.getTicketNumber(), jjDispute.getTicketNumber());
 	}
-	
+
 	@Test
 	public void testGetAllJJDisputes() {
 		// Assert db is empty and clean
@@ -84,19 +84,19 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals(1, allDisputes.size());
 		assertEquals(dispute2.getTicketNumber(), allDisputes.get(0).getTicketNumber());
 	}
-	
+
 	@Test
 	@Transactional
 	public void testUpdateJJDispute() {
 		// Create a single JJ Dispute with a specified remark
 		JJDispute jjDispute = RandomUtil.createJJDispute();
 		String ticketNumber = jjDispute.getTicketNumber();
-		Principal principal = getPrincipal("testUser");
+		setPrincipal("testUser");
 		jjDispute.setCourthouseLocation("Vancouver");
 		jjDisputeRepository.save(jjDispute);
 
 		// Retrieve it from the controller's endpoint to do assignment
-		jjDispute = jjDisputeController.getJJDispute(ticketNumber, true, principal).getBody();
+		jjDispute = jjDisputeController.getJJDispute(ticketNumber, true, getPrincipal()).getBody();
 		assertEquals(ticketNumber, jjDispute.getTicketNumber());
 
 		// Create a new JJ Dispute with different remark value and update the existing JJ Dispute
@@ -112,12 +112,12 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		List<JJDispute> allJJDisputes = jjDisputeController.getAllJJDisputes(null);
 		assertEquals(1, IterableUtils.size(allJJDisputes));
 	}
-	
+
 	@Test
 	@Transactional
 	public void testAssignJJDisputesToJJ() {
 		// Create a couple of JJDisputes (one unassigned and one assigned to a JJ)
-		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());			
+		JJDispute dispute1 = jjDisputeRepository.save(RandomUtil.createJJDispute());
 		JJDispute dispute2 = jjDisputeRepository.save(RandomUtil.createJJDispute().toBuilder()
 				 .jjAssignedTo("Tony Stark")
 				 .build());
@@ -133,17 +133,17 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals("Steven Strange", jjDispute1.getJjAssignedTo());
 		JJDispute jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
 		assertEquals("Steven Strange", jjDispute2.getJjAssignedTo());
-		
+
 		// Unassign all disputes by calling the AssignJJ endpoint with null username
 		jjDisputeController.assignJJDisputesToJJ(ticketNumbers, null);
-		
+
 		// Assert JJ disputes are unassigned
 		jjDispute1 = jjDisputeController.getJJDispute(dispute1.getTicketNumber(), false, null).getBody();
 		assertEquals(null, jjDispute1.getJjAssignedTo());
 		jjDispute2 = jjDisputeController.getJJDispute(dispute2.getTicketNumber(), false, null).getBody();
 		assertEquals(null, jjDispute2.getJjAssignedTo());
 	}
-	
+
 	@Test
 	public void testSetJJDisputeStatusToReview() {
 		// Create a single JJ Dispute with status CONFIRMED
@@ -172,7 +172,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		assertEquals("Test Remark", jjDispute.getRemarks().get(0).getNote());
 		assertEquals("testUser", jjDispute.getRemarks().get(0).getUserFullName());
 	}
-	
+
 	@Test
 	public void testSetJJDisputeStatusToAccepted() {
 		// Create a single JJ Dispute with status CONFIRMED
@@ -199,15 +199,5 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		jjDispute = jjDisputeController.getJJDispute(ticketNumber, false, principal).getBody();
 		assertEquals(JJDisputeStatus.ACCEPTED, jjDispute.getStatus());
 	}
-	
-	// Helper method to return an instance of Principal
-		private Principal getPrincipal(String name) {
-			return new Principal() {
-				@Override
-				public String getName() {
-					return name;
-				}
-			};
-		}
 
 }
