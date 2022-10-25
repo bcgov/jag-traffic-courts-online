@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +55,24 @@ public class DisputeController {
 	 * @param olderThan if specified, will filter the result set to those older than this date.
 	 * @return list of all dispute tickets
 	 */
+	@Operation(summary = "Returns all Dispute records based on the specified optional parameters.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "Ok. Disputes are returned."),
+		@ApiResponse(responseCode = "400", description = "Bad Request."),
+		@ApiResponse(responseCode = "500", description = "Internal Server Error. Getting disputes failed.")
+	})
 	@GetMapping("/disputes")
-	public List<Dispute> getAllDisputes(
+	public ResponseEntity<List<Dispute>> getAllDisputes(
 			@RequestParam(required = false)
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+			@DateTimeFormat(pattern = "yyyy-MM-dd")
 			@Parameter(description = "If specified, will retrieve records older than this date (specified by yyyy-MM-dd)", example = "2022-03-15")
 			Date olderThan,
 			@RequestParam(required = false)
 			@Parameter(description = "If specified, will retrieve records which do not have the specified status", example = "CANCELLED")
 			DisputeStatus excludeStatus) {
 		logger.debug("GET /disputes called");
-		Iterable<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
-		// Swagger doesn't seem to know what an Iterable<Dispute> object is. Convert to an actual instantiated list to return a collection.
-		return IterableUtils.toList(allDisputes);
+		List<Dispute> allDisputes = disputeService.getAllDisputes(olderThan, excludeStatus);
+		return new ResponseEntity<List<Dispute>>(allDisputes, HttpStatus.OK);
 	}
 
 	/**
@@ -103,7 +107,6 @@ public class DisputeController {
 	@GetMapping("/dispute")
 	public ResponseEntity<List<DisputeResult>> findDispute(
 			@RequestParam
-			@Size(max = 10)
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
 			@Parameter(description = "The Violation TicketNumber to search for (of the format XX00000000)", example = "AX12345678")
 			String ticketNumber,
