@@ -23,6 +23,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
@@ -35,7 +36,7 @@ public class DisputeService {
 	DisputeRepository disputeRepository;
 
 	@PersistenceContext
-    private EntityManager entityManager;
+	private EntityManager entityManager;
 
 	/**
 	 * Retrieves all {@link Dispute} records, delegating to CrudRepository
@@ -95,18 +96,43 @@ public class DisputeService {
 	@Transactional
 	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
+		List<DisputeCount> disputeCountsToUpdate = disputeToUpdate.getDisputeCounts();
+		ViolationTicket violationTicketToUpdate = disputeToUpdate.getViolationTicket();
+		List<ViolationTicketCount> violationTicketCountsToUpdate = disputeToUpdate.getViolationTicket().getViolationTicketCounts();
 
-		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts");
-		// Remove all existing dispute counts that are associated to this dispute
-		if (disputeToUpdate.getDisputeCounts() != null) {
-			disputeToUpdate.getDisputeCounts().clear();
+		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts", "violationTicket");
+		// Copy all new dispute counts data to be saved from the request to disputeCountsToUpdate ignoring the disputeCountId, creation audit fields
+		if (dispute.getDisputeCounts() != null && disputeCountsToUpdate != null) {
+			if (dispute.getDisputeCounts().size() == disputeCountsToUpdate.size()) {
+				for (int i = 0; i < dispute.getDisputeCounts().size(); i++) {
+					BeanUtils.copyProperties(dispute.getDisputeCounts().get(i), disputeCountsToUpdate.get(i), "createdBy", "createdTs", "disputeCountId");
+				}
+			}
+			// TODO - determine what to do if the disputeCount list sizes don't match
 		}
-		// Add updated ticket counts
-		disputeToUpdate.addDisputeCounts(dispute.getDisputeCounts());
 
-		Dispute updatedDispute = disputeRepository.saveAndFlush(disputeToUpdate);
-		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistance
-		entityManager.refresh(updatedDispute);
+		if (dispute.getViolationTicket() != null) {
+			BeanUtils.copyProperties(dispute.getViolationTicket(), violationTicketToUpdate, "createdBy", "createdTs", "violationTicketId", "violationTicketCounts");
+
+			if (dispute.getViolationTicket().getViolationTicketCounts() != null && violationTicketCountsToUpdate != null) {
+				int violationTicketCountSize = dispute.getViolationTicket().getViolationTicketCounts().size();
+				if (violationTicketCountSize == violationTicketCountsToUpdate.size()) {
+					for (int i = 0; i < violationTicketCountSize; i++) {
+						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
+					}
+				}
+				// TODO - determine what to do if the violationTicketCount list sizes don't match
+			}
+		}
+
+		// Add updated ticket counts
+		disputeToUpdate.addDisputeCounts(disputeCountsToUpdate);
+		// Add updated violation ticket counts to parent violation ticket
+		violationTicketToUpdate.setViolationTicketCounts(violationTicketCountsToUpdate);
+		// Add updated violation ticket
+		disputeToUpdate.setViolationTicket(violationTicketToUpdate);
+
+		Dispute updatedDispute = disputeRepository.update(disputeToUpdate);
 
 		return updatedDispute;
 	}
