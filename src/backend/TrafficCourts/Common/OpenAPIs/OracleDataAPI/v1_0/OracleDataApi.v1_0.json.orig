@@ -1,4 +1,4 @@
-<<<<<<< refs/remotes/origin/main
+<<<<<<< HEAD
 {
   "openapi": "3.0.1",
   "info": {
@@ -3669,5 +3669,5 @@
       }
     }
   }
->>>>>>> revise jj dispute changes
+>>>>>>> 242da21eaca525a3e7af3f13c2013ae7358a96af
 }
