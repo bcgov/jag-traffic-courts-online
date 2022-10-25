@@ -47,6 +47,13 @@ yarn add @angular/cli
 
 ## Building and Running
 
+### Dev steps to run locally
+1. yarn install 
+2. yarn run api:clean (will clear out src/app/api folder)
+3. yarn run api:download (will pull the latest swagger.json file from the citizen-api)
+3. yarn run api:generate (will regenerate the API based off the swagger.json file)
+5. yarn start
+
 ### Client
 
 To build, run, and open the Angular application in the default browser at <http://localhost:4200> for development go to the Citizen Portal project repository in the terminal and type:
