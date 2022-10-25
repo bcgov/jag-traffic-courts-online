@@ -27,7 +27,7 @@ public interface DisputeRepository {
     /** Fetch all records that matches the noticeOfDisputeId. */
 	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId);
 
-	/** Fetch all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedDate. */
+	/** Fetch all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs. */
 	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date issuedTime);
 
 	/** Deletes all entities managed by the repository. */

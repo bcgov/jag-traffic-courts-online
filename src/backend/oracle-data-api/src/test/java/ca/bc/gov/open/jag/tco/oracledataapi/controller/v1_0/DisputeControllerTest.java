@@ -259,7 +259,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setTicketNumber("AX12345678");
-		dispute.setIssuedDate(DateUtils.parseDate("14:54", "HH:mm"));
+		dispute.setIssuedTs(DateUtils.parseDate("14:54", "HH:mm"));
 		Long disputeId = saveDispute(dispute);
 
 		// try searching for exact match. Expect to find the dispute

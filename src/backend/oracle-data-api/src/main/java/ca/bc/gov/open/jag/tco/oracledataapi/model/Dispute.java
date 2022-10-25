@@ -76,7 +76,7 @@ public class Dispute extends Auditable<String> {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@Schema(nullable=true)
-	private Date issuedDate;
+	private Date issuedTs;
 
 	/**
 	 * The date and time the citizen submitted the notice of dispute.

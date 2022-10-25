@@ -27,7 +27,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
     /// </summary>
-    public DateTime IssuedDate { get; set; }
+    public DateTime IssuedTs { get; set; }
 
     /// <summary>
     /// The date the disputant submitted the dispute.

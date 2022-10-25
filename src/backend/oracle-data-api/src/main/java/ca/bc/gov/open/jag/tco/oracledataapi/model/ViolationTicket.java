@@ -1,8 +1,9 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -50,7 +53,7 @@ public class ViolationTicket extends Auditable<String> {
     @Column(length = 50)
     @Schema(nullable = true)
     private String ticketNumber;
-    
+
     /**
 	 * Name of the organization of the disputant
 	 */
@@ -86,21 +89,21 @@ public class ViolationTicket extends Auditable<String> {
     @Column(length = 30)
     @Schema(nullable = true, minLength = 7, maxLength = 30)
     private String disputantDriversLicenceNumber;
-    
+
     /**
 	 * Disputant client number
 	 */
 	@Column(length = 30)
 	@Schema(nullable = true)
 	private String disputantClientNumber;
-	
+
 	 /**
      * The province or state the drivers licence was issued by.
      */
     @Column
     @Schema(nullable = true)
     private String driversLicenceProvince;
-    
+
     /**
      * The year the drivers licence was issued.
      */
@@ -149,34 +152,35 @@ public class ViolationTicket extends Auditable<String> {
     @Column(length = 10)
     @Schema(nullable = true)
     private String addressPostalCode;
-    
+
     /**
      * The address country.
      */
     @Column(length = 100)
     @Schema(nullable = true)
     private String addressCountry;
-    
+
     /**
 	 * Officer Pin
 	 */
 	@Column(length = 10)
 	@Schema(nullable = true)
 	private String officerPin;
-   
+
 	/**
      * Detachment location.
      */
     @Column(length = 150)
     @Schema(nullable = true)
     private String detachmentLocation;
-    
+
     /**
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     @Column
     @Schema(nullable = true)
-    private Date issuedDate;
+	@Temporal(TemporalType.TIMESTAMP)
+    private Date issuedTs;
 
     /**
      * The violation ticket was issued on this road or highway.
@@ -188,7 +192,7 @@ public class ViolationTicket extends Auditable<String> {
     @Column(length = 100)
     @Schema(nullable = true)
     private String issuedAtOrNearCity;
-     
+
     /**
 	 * The address represents a change of address. The address on the violation would be different from the address on the drivers licence or provided identification.
 	 */
@@ -216,7 +220,7 @@ public class ViolationTicket extends Auditable<String> {
     @Column(length = 150)
     @Schema(nullable = true)
     private String courtLocation;
-    
+
     @JsonManagedReference
     @OneToMany(targetEntity=ViolationTicketCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="violation_ticket_id", referencedColumnName="violationTicketId")

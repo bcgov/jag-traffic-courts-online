@@ -21,13 +21,13 @@ namespace TrafficCourts.Citizen.Service.Models.Search
                 throw new ArgumentException("Property TicketNumber cannot be empty", nameof(violationTicket));
             }
 
-            if (violationTicket.IssuedDate is null)
+            if (violationTicket.IssuedTs is null)
             {
-                throw new ArgumentException("Property IssuedDate cannot be null", nameof(violationTicket));
+                throw new ArgumentException("Property IssuedTs cannot be null", nameof(violationTicket));
             }
 
-            var date = DateOnly.FromDateTime(violationTicket.IssuedDate.Value);
-            var time = TimeOnly.FromDateTime(violationTicket.IssuedDate.Value);
+            var date = DateOnly.FromDateTime(violationTicket.IssuedTs.Value);
+            var time = TimeOnly.FromDateTime(violationTicket.IssuedTs.Value);
 
             ViolationTicketNumber = violationTicket.TicketNumber!;
             ViolationDate = new DateTime(date.Year, date.Month, date.Day);

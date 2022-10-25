@@ -23,7 +23,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         public string? AddressProvince { get; set; }
         public string? AddressPostalCode { get; set; }
         public string? DetachmentLocation { get; set; }
-        public DateTime? IssuedDate { get; set; }
+        public DateTime? IssuedTs { get; set; }
         public string? CourtLocation { get; set; }
         public IList<TicketCount> ViolationTicketCounts { get; set; } = new List<TicketCount>();
     }

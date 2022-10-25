@@ -44,7 +44,7 @@ export interface ViolationTicket {
     addressCountry?: string | null;
     officerPin?: string | null;
     detachmentLocation?: string | null;
-    issuedDate?: string | null;
+    issuedTs?: string | null;
     issuedOnRoadOrHighway?: string | null;
     issuedAtOrNearCity?: string | null;
     isChangeOfAddress?: ViolationTicketIsChangeOfAddress;

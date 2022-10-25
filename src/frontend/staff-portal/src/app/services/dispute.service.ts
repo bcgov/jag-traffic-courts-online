@@ -116,7 +116,7 @@ export class DisputeService implements IDisputeService {
   public putDispute(disputeId: number, dispute: DisputeExtended): Observable<DisputeExtended> {
 
     dispute.disputantBirthdate = this.datePipe.transform(dispute?.disputantBirthdate, "yyyy-MM-dd");
-    dispute.issuedDate = this.datePipe.transform(dispute?.issuedDate, "yyyy-MM-ddTHH:mm:ss");
+    dispute.issuedTs = this.datePipe.transform(dispute?.issuedTs, "yyyy-MM-ddTHH:mm:ss");
     dispute = this.splitGivenNames(dispute);
     dispute = this.splitLawyerNames(dispute);
     dispute = this.splitAddressLines(dispute);

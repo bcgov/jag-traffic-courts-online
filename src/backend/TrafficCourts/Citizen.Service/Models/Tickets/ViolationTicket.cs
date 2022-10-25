@@ -170,7 +170,7 @@ public class ViolationTicket
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
     /// </summary>
     [JsonPropertyName("issued_date")]
-    public DateTime? IssuedDate { get; set; }
+    public DateTime? IssuedTs { get; set; }
 
     /// <summary>
     /// Issued on Road or Highway
