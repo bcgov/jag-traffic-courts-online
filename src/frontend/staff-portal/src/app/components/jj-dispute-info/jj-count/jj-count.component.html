@@ -39,23 +39,23 @@
     <div style="display: grid; grid-template-columns: auto auto">
       <span class="section-grid-cell" style="grid-column: span 2">
         <p class="section-grid-header">For this count I would like to</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === true">I want to appear
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === AppearInCourt.Y">I want to appear
           in court</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === false">I do not want to
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.appearInCourt === AppearInCourt.N">I do not want to
           appear in court</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Request fine reduction</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction === true">yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction !== true">no</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction === RequestReduction.Y">yes</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestReduction !== RequestReduction.Y">no</p>
       </span>
       <span class="section-grid-cell">
         <p class="section-grid-header">Request time to pay</p>
         <p class="section-grid-text" *ngIf="!jjDisputedCount">&nbsp;</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay === true">yes</p>
-        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay !== true">no</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay === RequestTimeToPay.Y">yes</p>
+        <p class="section-grid-text" *ngIf="jjDisputedCount && jjDisputedCount.requestTimeToPay !== RequestTimeToPay.Y">no</p>
       </span>
     </div>
     <hr style="margin: 0 0 0 0" />
@@ -105,7 +105,7 @@
           <p class="section-grid-header"><span *ngIf="fineReduction=='no'">&nbsp;<br /><br /></span></p>
           <p class="section-jj-grid-text">
             <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
-              (change)="updateInclSurcharge($event)" *ngIf="fineReduction=='yes'" [disabled]="!jjDisputedCount">
+              (change)="updateInclSurcharge($event.value)" *ngIf="fineReduction=='yes'" [disabled]="!jjDisputedCount">
               <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
               <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
             </mat-radio-group>
@@ -141,7 +141,7 @@
           <p class="section-grid-header">&nbsp;</p>
           <p class="section-jj-grid-text">
             <input [formControl]="form.get('revisedDueDate')" type="date" [hidden]="!(timeToPay=='yes')"
-              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0">
+              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0" [value]="jjDisputedCount.revisedDueDate">
           </p>
         </span>
         <span class="section-grid-cell">
@@ -165,25 +165,26 @@
     <h3 style="padding-left: 0.2rem;">JJ decision</h3>
 
     <div class="section-grid-header">Fine calculation</div>
-    <div *ngIf="!jjDisputedCount?.lesserOrGreaterAmount" style="font-size: small;">
+    <div *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')" style="font-size: small;">
       <span class="section-grid-text">Ticketed amount: </span>
       {{ jjDisputedCount?.ticketedFineAmount | currency }}
     </div>
-    <div *ngIf="jjDisputedCount?.lesserOrGreaterAmount" style="font-size: small;">
+    <div *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')" style="font-size: small;">
       <span class="section-grid-text">Lesser/greater amount: </span>
       {{ jjDisputedCount?.lesserOrGreaterAmount | currency }}
     </div>
 
     <div class="section-grid-header" style="padding-top: 1rem !important;">Includes surcharge</div>
     <div style="font-size: small;">
-      <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge ? "Yes" : "No" }}</span>
-      <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.ticketedFineAmount | currency }}</span>
+      <span class="section-grid-text">{{ jjDisputedCount?.includesSurcharge === IncludesSurcharge.Y ? "Yes" : "No" }}</span>
+      <span style="padding-left: 0.5rem;" *ngIf="!(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{ jjDisputedCount?.ticketedFineAmount | currency }}</span>
+      <span style="padding-left: 0.5rem;" *ngIf="(jjDisputedCount?.lesserOrGreaterAmount === jjDisputedCount?.ticketedFineAmount && inclSurcharge === 'yes')">{{ jjDisputedCount?.lesserOrGreaterAmount | currency }}</span>
       <span style="color: #33BBFF !important;"> + <i>({{ surcharge | currency }})</i></span>
     </div>
 
     <div class="section-grid-header" style="padding-top: 1rem !important;">Time to pay</div>
     <div style="font-size: small;">
-      <span class="section-grid-text">{{ jjDisputedCount?.revisedDueDate ? "Yes" : "No" }}</span>
+      <span class="section-grid-text">{{ (jjDisputedCount?.revisedDueDate === jjDisputedCount?.dueDate) ? "No" : "Yes" }}</span>
       <span style="padding-left: 0.5rem;">{{ jjDisputedCount?.revisedDueDate | date: "MMM dd, yyyy" }}</span>
     </div>
 

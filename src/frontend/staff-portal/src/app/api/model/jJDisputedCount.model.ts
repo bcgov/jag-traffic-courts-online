@@ -9,7 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JJDisputedCountAppearInCourt } from './jJDisputedCountAppearInCourt.model';
 import { JJDisputedCountPlea } from './jJDisputedCountPlea.model';
+import { JJDisputedCountRequestReduction } from './jJDisputedCountRequestReduction.model';
+import { JJDisputedCountRequestTimeToPay } from './jJDisputedCountRequestTimeToPay.model';
+import { JJDisputedCountIncludesSurcharge } from './jJDisputedCountIncludesSurcharge.model';
 
 
 export interface JJDisputedCount { 
@@ -20,13 +24,13 @@ export interface JJDisputedCount {
     id?: number;
     plea?: JJDisputedCountPlea;
     count?: number;
-    requestTimeToPay?: boolean;
-    requestReduction?: boolean;
-    appearInCourt?: boolean;
+    requestTimeToPay?: JJDisputedCountRequestTimeToPay;
+    requestReduction?: JJDisputedCountRequestReduction;
+    appearInCourt?: JJDisputedCountAppearInCourt;
     description?: string | null;
     dueDate?: string | null;
     ticketedFineAmount?: number | null;
-    includesSurcharge?: boolean;
+    includesSurcharge?: JJDisputedCountIncludesSurcharge;
     revisedDueDate?: string | null;
     totalFineAmount?: number | null;
     comments?: string | null;

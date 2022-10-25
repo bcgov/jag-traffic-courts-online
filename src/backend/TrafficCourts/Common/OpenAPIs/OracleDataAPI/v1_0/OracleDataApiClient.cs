@@ -3791,13 +3791,16 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         public int Count { get; set; }
 
         [Newtonsoft.Json.JsonProperty("requestTimeToPay", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool RequestTimeToPay { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountRequestTimeToPay RequestTimeToPay { get; set; }
 
         [Newtonsoft.Json.JsonProperty("requestReduction", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool RequestReduction { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountRequestReduction RequestReduction { get; set; }
 
         [Newtonsoft.Json.JsonProperty("appearInCourt", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool AppearInCourt { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountAppearInCourt AppearInCourt { get; set; }
 
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Description { get; set; }
@@ -3809,7 +3812,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         public float? TicketedFineAmount { get; set; }
 
         [Newtonsoft.Json.JsonProperty("includesSurcharge", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool IncludesSurcharge { get; set; }
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public JJDisputedCountIncludesSurcharge IncludesSurcharge { get; set; }
 
         [Newtonsoft.Json.JsonProperty("revisedDueDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? RevisedDueDate { get; set; }
@@ -4437,6 +4441,54 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
 
         [System.Runtime.Serialization.EnumMember(Value = @"G")]
         G = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountRequestTimeToPay
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountRequestReduction
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountAppearInCourt
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"N")]
+        N = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum JJDisputedCountIncludesSurcharge
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Y")]
+        Y = 0,
 
         [System.Runtime.Serialization.EnumMember(Value = @"N")]
         N = 1,

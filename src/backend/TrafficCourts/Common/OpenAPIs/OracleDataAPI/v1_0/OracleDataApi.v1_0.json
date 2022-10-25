@@ -1252,9 +1252,18 @@
             "type": "integer",
             "format": "int32"
           },
-          "requestTimeToPay": { "type": "boolean" },
-          "requestReduction": { "type": "boolean" },
-          "appearInCourt": { "type": "boolean" },
+          "requestTimeToPay": {
+            "type": "string",
+            "enum": [ "Y", "N" ]
+          },
+          "requestReduction": {
+            "type": "string",
+            "enum": [ "Y", "N" ]
+          },
+          "appearInCourt": {
+            "type": "string",
+            "enum": [ "Y", "N" ]
+          },
           "description": {
             "type": "string",
             "nullable": true
@@ -1269,7 +1278,10 @@
             "format": "float",
             "nullable": true
           },
-          "includesSurcharge": { "type": "boolean" },
+          "includesSurcharge": {
+            "type": "string",
+            "enum": [ "Y", "N" ]
+          },
           "revisedDueDate": {
             "type": "string",
             "format": "date-time",
