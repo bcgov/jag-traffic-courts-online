@@ -253,8 +253,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// Finds Disputes by TicketNumber and IssuedTime.
         /// </summary>
-        /// <param name="ticketNumber">The Violation TicketNumber to search for (of the format XX00000000)</param>
-        /// <param name="issuedTime">The Violation IssuedDate to search for (of the format HH:mm)</param>
+        /// <param name="ticketNumber">The TicketNumber to search for (of the format XX00000000)</param>
+        /// <param name="issuedTime">The time portion of the IssuedTs field to search for (of the format HH:mm)</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime);
@@ -263,8 +263,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// Finds Disputes by TicketNumber and IssuedTime.
         /// </summary>
-        /// <param name="ticketNumber">The Violation TicketNumber to search for (of the format XX00000000)</param>
-        /// <param name="issuedTime">The Violation IssuedDate to search for (of the format HH:mm)</param>
+        /// <param name="ticketNumber">The TicketNumber to search for (of the format XX00000000)</param>
+        /// <param name="issuedTime">The time portion of the IssuedTs field to search for (of the format HH:mm)</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, System.Threading.CancellationToken cancellationToken);
@@ -2482,8 +2482,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// Finds Disputes by TicketNumber and IssuedTime.
         /// </summary>
-        /// <param name="ticketNumber">The Violation TicketNumber to search for (of the format XX00000000)</param>
-        /// <param name="issuedTime">The Violation IssuedDate to search for (of the format HH:mm)</param>
+        /// <param name="ticketNumber">The TicketNumber to search for (of the format XX00000000)</param>
+        /// <param name="issuedTime">The time portion of the IssuedTs field to search for (of the format HH:mm)</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime)
@@ -2495,8 +2495,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         /// <summary>
         /// Finds Disputes by TicketNumber and IssuedTime.
         /// </summary>
-        /// <param name="ticketNumber">The Violation TicketNumber to search for (of the format XX00000000)</param>
-        /// <param name="issuedTime">The Violation IssuedDate to search for (of the format HH:mm)</param>
+        /// <param name="ticketNumber">The TicketNumber to search for (of the format XX00000000)</param>
+        /// <param name="issuedTime">The time portion of the IssuedTs field to search for (of the format HH:mm)</param>
         /// <returns>Ok.</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<DisputeResult>> FindDisputeAsync(string ticketNumber, string issuedTime, System.Threading.CancellationToken cancellationToken)
@@ -3869,8 +3869,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("courtLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string CourtLocation { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("issuedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? IssuedDate { get; set; }
+        [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? SubmittedDate { get; set; }
@@ -4168,8 +4168,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonProperty("detachmentLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string DetachmentLocation { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("issuedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? IssuedDate { get; set; }
+        [Newtonsoft.Json.JsonProperty("issuedTs", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? IssuedTs { get; set; }
 
         [Newtonsoft.Json.JsonProperty("issuedOnRoadOrHighway", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string IssuedOnRoadOrHighway { get; set; }

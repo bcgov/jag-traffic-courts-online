@@ -95,7 +95,7 @@ public class DisputeController {
 	 * GET endpoint that finds Disputes by TicketNumber and IssuedTime.
 	 *
 	 * @param ticketNumber of the ViolationTicket.ticketNumber to search for
-	 * @param issuedTime the time portion of the ViolationTicket.issuedDate field
+	 * @param issuedTime the time portion of the ViolationTicket.issuedTs field
 	 * @return {@link Dispute}
 	 */
 	@Operation(summary = "Finds Disputes by TicketNumber and IssuedTime.")
@@ -108,11 +108,11 @@ public class DisputeController {
 	public ResponseEntity<List<DisputeResult>> findDispute(
 			@RequestParam
 			@Pattern(regexp = "[A-Z]{2}\\d{8}")
-			@Parameter(description = "The Violation TicketNumber to search for (of the format XX00000000)", example = "AX12345678")
+			@Parameter(description = "The TicketNumber to search for (of the format XX00000000)", example = "AX12345678")
 			String ticketNumber,
 			@RequestParam
 			@DateTimeFormat(pattern="HH:mm")
-			@Parameter(description = "The Violation IssuedDate to search for (of the format HH:mm)", example = "14:53", schema = @Schema(type="string"))
+			@Parameter(description = "The time portion of the IssuedTs field to search for (of the format HH:mm)", example = "14:53", schema = @Schema(type="string"))
 			Date issuedTime) {
 		logger.debug("GET /disputes called");
 		return new ResponseEntity<List<DisputeResult>>(disputeService.findDispute(ticketNumber, issuedTime), HttpStatus.OK);

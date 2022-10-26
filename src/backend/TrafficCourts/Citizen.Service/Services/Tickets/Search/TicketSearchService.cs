@@ -72,7 +72,7 @@ public class TicketSearchService : ITicketSearchService
 
         if (DateTime.TryParseExact(invoices[0].ViolationDateTime, "yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime violationDateTime))
         {
-            ticket.IssuedDate = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
+            ticket.IssuedTs = DateTime.SpecifyKind(violationDateTime, DateTimeKind.Unspecified);
         }
 
         foreach (var invoice in invoices)

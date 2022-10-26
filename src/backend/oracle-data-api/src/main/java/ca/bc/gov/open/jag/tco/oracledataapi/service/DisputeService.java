@@ -254,7 +254,7 @@ public class DisputeService {
 	}
 
 	/**
-	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedDate.
+	 * Finds all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs.
 	 */
 	public List<DisputeResult> findDispute(String ticketNumber, Date issuedTime) {
 		return disputeRepository.findByTicketNumberAndTime(ticketNumber, issuedTime);

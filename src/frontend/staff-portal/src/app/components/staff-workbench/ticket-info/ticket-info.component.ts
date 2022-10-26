@@ -117,7 +117,7 @@ export class TicketInfoComponent implements OnInit {
         disputantGivenNames: [null, Validators.required],
         disputantDriversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
         driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
-        issuedDate: [null, Validators.required],
+        issuedTs: [null, Validators.required],
         violationTicketCount1: this.formBuilder.group({
           description: [null],
           actOrRegulationNameCode: [null],
@@ -300,7 +300,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
 
     // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
-    putDispute.violationTicket.issuedDate =
+    putDispute.violationTicket.issuedTs =
       this.form.get('violationTicket').get('violationDate').value +
       "T" +
       this.form.get('violationTicket').get('violationTime').value.substring(0, 2)
@@ -676,8 +676,8 @@ export class TicketInfoComponent implements OnInit {
         this.form.patchValue(this.initialDisputeValues);
 
         // set violation date and time
-        let violationDate = response.issuedDate.split("T");
-        this.form.get('violationTicket').get('issuedDate').setValue(response.issuedDate);
+        let violationDate = response.issuedTs.split("T");
+        this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
         this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
         this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
 

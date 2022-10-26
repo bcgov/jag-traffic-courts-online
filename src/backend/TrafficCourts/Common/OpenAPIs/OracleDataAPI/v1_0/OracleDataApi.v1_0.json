@@ -735,7 +735,7 @@
           {
             "name": "ticketNumber",
             "in": "query",
-            "description": "The Violation TicketNumber to search for (of the format XX00000000)",
+            "description": "The TicketNumber to search for (of the format XX00000000)",
             "required": true,
             "schema": {
               "pattern": "[A-Z]{2}\\d{8}",
@@ -746,7 +746,7 @@
           {
             "name": "issuedTime",
             "in": "query",
-            "description": "The Violation IssuedDate to search for (of the format HH:mm)",
+            "description": "The time portion of the IssuedTs field to search for (of the format HH:mm)",
             "required": true,
             "schema": { "type": "string" },
             "example": "14:53"
@@ -1329,7 +1329,7 @@
             "type": "string",
             "nullable": true
           },
-          "issuedDate": {
+          "issuedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -1679,7 +1679,7 @@
             "type": "string",
             "nullable": true
           },
-          "issuedDate": {
+          "issuedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true

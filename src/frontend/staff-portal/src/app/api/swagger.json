@@ -2477,7 +2477,7 @@
             "type": "string",
             "nullable": true
           },
-          "issuedDate": {
+          "issuedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -3697,7 +3697,7 @@
             "type": "string",
             "nullable": true
           },
-          "issuedDate": {
+          "issuedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true
