@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.service.impl.ords;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketListResponse;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
@@ -358,6 +360,87 @@ class DisputeServiceImplTest extends BaseTestSuite {
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.findByStatusNotAndCreatedTsBefore(excludedStatus, now);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect200() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("1");
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
+
+		assertDoesNotThrow(() -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_InternalServerError() throws Exception {
+		Long disputeId = Long.valueOf(1);
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenThrow(ApiException.class);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_noErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure) and no message
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_nullResponse() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(null);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
+		});
+	}
+
+	@Test
+	public void testUpdateDisputeExpect500_withErrorMsg() throws Exception {
+		Long disputeId = Long.valueOf(1);
+		ResponseResult response = new ResponseResult();
+		response.setStatus("0"); // 0 status (meaning failure)
+		response.setException("some failure cause");
+
+		Dispute disputeToUpdate = new Dispute();
+		disputeToUpdate.setDisputeId(disputeId);
+		disputeToUpdate.setStatus(DisputeStatus.PROCESSING);
+
+		Mockito.when(violationTicketApi.v1UpdateViolationTicketPut(any())).thenReturn(response);
+
+		assertThrows(InternalServerErrorException.class, () -> {
+			repository.update(disputeToUpdate);
 		});
 	}
 
