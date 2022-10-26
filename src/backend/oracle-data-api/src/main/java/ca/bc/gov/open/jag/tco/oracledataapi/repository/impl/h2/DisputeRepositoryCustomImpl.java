@@ -27,17 +27,24 @@ public class DisputeRepositoryCustomImpl implements DisputeRepositoryCustom {
 	@Override
 	public Dispute update(Dispute dispute) {
 		Session session = entityManager.unwrap(Session.class);
-		List<ViolationTicketCount> mergedTicketCounts = dispute.getViolationTicket().getViolationTicketCounts();
-		for (ViolationTicketCount violationTicketCount : mergedTicketCounts) {
-			ViolationTicketCount mergedCount = (ViolationTicketCount) session.merge(violationTicketCount);
-			mergedCount.setViolationTicket(dispute.getViolationTicket());
+		ViolationTicket mergedTicket = null;
+
+		if (dispute.getViolationTicket() != null && dispute.getViolationTicket().getViolationTicketCounts() != null) {
+			List<ViolationTicketCount> mergedTicketCounts = dispute.getViolationTicket().getViolationTicketCounts();
+			for (ViolationTicketCount violationTicketCount : mergedTicketCounts) {
+				ViolationTicketCount mergedCount = (ViolationTicketCount) session.merge(violationTicketCount);
+				mergedCount.setViolationTicket(dispute.getViolationTicket());
+			}
+			mergedTicket = (ViolationTicket) session.merge(dispute.getViolationTicket());
+		} else if (dispute.getViolationTicket() != null) {
+			mergedTicket = (ViolationTicket) session.merge(dispute.getViolationTicket());
 		}
-		ViolationTicket mergedTicket = (ViolationTicket) session.merge(dispute.getViolationTicket());
+
 		dispute.setViolationTicket(mergedTicket);
 		Dispute managedDispute = (Dispute) session.merge(dispute);
 		session.saveOrUpdate(managedDispute);
 		entityManager.flush();
-		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistance
+		// We need to refresh the state of the instance from the database in order to return the fully updated object after persistence
 		entityManager.refresh(dispute);
 		return dispute;
 	}

@@ -96,9 +96,18 @@ public class DisputeService {
 	@Transactional
 	public Dispute update(Long id, Dispute dispute) {
 		Dispute disputeToUpdate = disputeRepository.findById(id).orElseThrow();
-		List<DisputeCount> disputeCountsToUpdate = disputeToUpdate.getDisputeCounts();
-		ViolationTicket violationTicketToUpdate = disputeToUpdate.getViolationTicket();
-		List<ViolationTicketCount> violationTicketCountsToUpdate = disputeToUpdate.getViolationTicket().getViolationTicketCounts();
+		List<DisputeCount> disputeCountsToUpdate = null;
+		if (disputeToUpdate.getDisputeCounts() != null) {
+			disputeCountsToUpdate = disputeToUpdate.getDisputeCounts();
+		}
+		ViolationTicket violationTicketToUpdate = null;
+		List<ViolationTicketCount> violationTicketCountsToUpdate = null;
+		if (disputeToUpdate.getViolationTicket() != null) {
+			violationTicketToUpdate = disputeToUpdate.getViolationTicket();
+			if (disputeToUpdate.getViolationTicket().getViolationTicketCounts() != null) {
+				violationTicketCountsToUpdate = disputeToUpdate.getViolationTicket().getViolationTicketCounts();
+			}
+		}
 
 		BeanUtils.copyProperties(dispute, disputeToUpdate, "createdBy", "createdTs", "disputeId", "disputeCounts", "violationTicket");
 		// Copy all new dispute counts data to be saved from the request to disputeCountsToUpdate ignoring the disputeCountId, creation audit fields
@@ -127,8 +136,11 @@ public class DisputeService {
 
 		// Add updated ticket counts
 		disputeToUpdate.addDisputeCounts(disputeCountsToUpdate);
-		// Add updated violation ticket counts to parent violation ticket
-		violationTicketToUpdate.setViolationTicketCounts(violationTicketCountsToUpdate);
+
+		if (violationTicketToUpdate != null && violationTicketCountsToUpdate != null) {
+			// Add updated violation ticket counts to parent violation ticket
+			violationTicketToUpdate.setViolationTicketCounts(violationTicketCountsToUpdate);
+		}
 		// Add updated violation ticket
 		disputeToUpdate.setViolationTicket(violationTicketToUpdate);
 
