@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.EmailHistory;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.EmailHistoryRepository;
 
-@ConditionalOnProperty(name = "ords.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(name = "repository.history", havingValue = "ords", matchIfMissing = false)
 @Qualifier("disputeRepository")
 @Repository
 public class EmailHistoryRepositoryImpl implements EmailHistoryRepository {

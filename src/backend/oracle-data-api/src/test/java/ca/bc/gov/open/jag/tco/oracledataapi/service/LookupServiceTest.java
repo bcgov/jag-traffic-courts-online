@@ -26,7 +26,7 @@ public class LookupServiceTest extends BaseTestSuite {
 
 	@Test
 	public void testGetAllStatutes() throws ApiException {
-		if (ordsEnabled) {
+		if ("ords".equals(lookupRepositorySrc)) {
 			List<Statute> statutes = new ArrayList<>();
 			Statute statute = new Statute();
 			statute.setStatId("20153");

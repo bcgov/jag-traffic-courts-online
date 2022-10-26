@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
-@ConditionalOnProperty(name = "ords.enabled", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(name = "repository.jjdispute", havingValue = "h2", matchIfMissing = true)
 @Qualifier("jjDisputeRepository")
 public interface JJDisputeRepositoryImpl extends JJDisputeRepository, JpaRepository<JJDispute, String> {
 }

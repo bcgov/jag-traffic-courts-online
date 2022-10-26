@@ -40,16 +40,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "An invalid JJ Dispute status is provided. Update failed.",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "An invalid JJ Dispute status is provided. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -95,16 +95,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal server error occured.",
+          "405": {
+            "description": "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -138,16 +138,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
+          "500": {
+            "description": "Internal server error occured.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "JJDispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal server error occured.",
+          "405": {
+            "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -184,16 +184,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal server error occured.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "JJDispute record(s) not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal server error occured.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok" }
@@ -220,16 +220,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -262,16 +262,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "409": {
@@ -304,16 +304,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error. Delete failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Delete failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error. Delete failed.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok. Dispute record deleted." }
@@ -341,16 +341,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -385,16 +385,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -441,16 +441,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -486,16 +486,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal server error occured.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute with specified id not found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal server error occured.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok. Email verified." }
@@ -523,16 +523,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute record not found. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -564,16 +564,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -610,16 +610,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "An invalid file history record provided. Insert failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -654,16 +654,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -700,16 +700,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "An invalid email history record provided. Insert failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -757,16 +757,16 @@
             "description": "Bad Request, check parameters.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error. Search failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error. Search failed.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -794,16 +794,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -838,16 +838,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -888,16 +888,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -941,16 +941,16 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error. Getting disputes failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error. Getting disputes failed.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -978,16 +978,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error. Unassigned failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error. Unassigned failed.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok. Dispute record unassigned." }
@@ -1013,16 +1013,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal server error occured.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Dispute could not be found.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal server error occured.",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -1043,16 +1043,16 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
+          "500": {
+            "description": "Internal Server Error",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "404": {
             "description": "Not Found",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "500": {
-            "description": "Internal Server Error",
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -1070,10 +1070,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -1110,10 +1114,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "ticketNumber": { "type": "string" },
           "status": {
@@ -1204,10 +1212,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -1231,10 +1243,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -1312,10 +1328,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "disputeId": {
             "type": "integer",
@@ -1323,7 +1343,10 @@
             "format": "int64",
             "readOnly": true
           },
-          "noticeOfDisputeId": { "type": "string" },
+          "noticeOfDisputeId": {
+            "type": "string",
+            "nullable": true
+          },
           "ticketNumber": { "type": "string" },
           "courtLocation": {
             "type": "string",
@@ -1547,16 +1570,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
-          },
-          "disputeCountId": {
-            "type": "integer",
-            "description": "ID",
-            "format": "int64",
-            "readOnly": true
+            "format": "date-time",
+            "nullable": true
           },
           "countNo": {
             "maximum": 3,
@@ -1590,10 +1611,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "violationTicketId": {
             "type": "integer",
@@ -1726,10 +1751,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "violationTicketCountId": {
             "type": "integer",
@@ -1796,10 +1825,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "fileHistoryId": {
             "type": "integer",
@@ -1822,10 +1855,14 @@
             "type": "string",
             "format": "date-time"
           },
-          "modifiedBy": { "type": "string" },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "emailHistoryId": {
             "type": "integer",

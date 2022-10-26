@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.cfg.NotYetImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
@@ -12,10 +14,12 @@ import org.springframework.stereotype.Repository;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.JJDispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.JJDisputeRepository;
 
-@ConditionalOnProperty(name = "ords.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(name = "repository.jjdispute", havingValue = "ords", matchIfMissing = false)
 @Qualifier("jjDisputeRepository")
 @Repository
 public class JJDisputeRepositoryImpl implements JJDisputeRepository {
+
+	private static Logger logger = LoggerFactory.getLogger(JJDisputeRepositoryImpl.class);
 
 	public JJDisputeRepositoryImpl() {
 		// TODO pass in OpenAPI generated client that delegates implementation in each of the below methods.

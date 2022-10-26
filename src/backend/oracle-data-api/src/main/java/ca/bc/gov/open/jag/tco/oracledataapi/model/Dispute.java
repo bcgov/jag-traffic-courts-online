@@ -52,7 +52,7 @@ public class Dispute extends Auditable<String> {
 	 * A unique string (the PK + GUID) for email verification.
 	 */
 	@Column(length = 36) // GUID (36 characters)
-	@Schema(nullable = false)
+	@Schema(nullable = true) // FIXME: this field should not be nullable (temp nullable for now to get things working).
 	private String noticeOfDisputeId;
 
 	 /**
@@ -439,7 +439,7 @@ public class Dispute extends Auditable<String> {
     @OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="dispute_id", referencedColumnName="disputeId")
     private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
-    
+
 	public void setViolationTicket(ViolationTicket ticket) {
 		if (ticket == null) {
 			if (this.violationTicket != null) {
