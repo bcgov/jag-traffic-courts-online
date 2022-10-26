@@ -52,7 +52,7 @@ public class DisputeService {
 		} else if (excludeStatus == null) {
 			return disputeRepository.findByCreatedTsBefore(olderThan);
 		} else {
-			return disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludeStatus, olderThan, null);
+			return disputeRepository.findByStatusNotAndCreatedTsBefore(excludeStatus, olderThan);
 		}
 	}
 
@@ -293,9 +293,6 @@ public class DisputeService {
 			String msg = String.format("Dispute could not be found with noticeOfDisputeId: {1}", noticeOfDisputeId);
 			logger.error(msg);
 			return null;
-		}
-		if (findByNoticeOfDisputeId.size() > 1) {
-			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeId: " + noticeOfDisputeId);
 		}
 		return findByNoticeOfDisputeId.get(0);
 	}

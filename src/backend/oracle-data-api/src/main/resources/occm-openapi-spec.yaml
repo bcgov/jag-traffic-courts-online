@@ -157,7 +157,7 @@ paths:
           description: ''
           schema:
             type: string
-        - name: emailVerificationGuid
+        - name: noticeOfDisputeId
           in: query
           description: ''
           schema:

@@ -336,15 +336,14 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Date now = new Date();
 		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
-		String noticeOfDisputeId = java.util.UUID.randomUUID().toString();
 		ViolationTicketListResponse response = new ViolationTicketListResponse();
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeId)).thenReturn(response);
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, null)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
-			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludedStatus, now, noticeOfDisputeId);
+			repository.findByStatusNotAndCreatedTsBefore(excludedStatus, now);
 		});
 	}
 
@@ -353,15 +352,14 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Date now = new Date();
 		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
-		String noticeOfDisputeId = java.util.UUID.randomUUID().toString();
 		ViolationTicketListResponse response = new ViolationTicketListResponse();
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeId)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, null)).thenThrow(ApiException.class);
 
 		assertThrows(InternalServerErrorException.class, () -> {
-			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludedStatus, now, noticeOfDisputeId);
+			repository.findByStatusNotAndCreatedTsBefore(excludedStatus, now);
 		});
 	}
 

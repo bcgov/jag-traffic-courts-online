@@ -50,16 +50,16 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByCreatedTsBefore(Date olderThan) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(null, olderThan, null);
+		return findByStatusNotAndCreatedTsBefore(null, olderThan);
 	}
 
 	@Override
 	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludeStatus, null, null);
+		return findByStatusNotAndCreatedTsBefore(excludeStatus, null);
 	}
 
 	@Override
-	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeId) {
+	public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan) {
 		List<Dispute> disputesToReturn = new ArrayList<Dispute>();
 		String olderThanDate = null ;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
@@ -70,7 +70,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		}
 
 		try {
-			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, noticeOfDisputeId);
+			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, null);
 			if (response != null && !response.getViolationTickets().isEmpty()) {
 				logger.debug("Successfully returned disputes from ORDS that are older than " + olderThan + " and excluding the status: " + excludeStatus);
 
@@ -94,7 +94,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(null, null, noticeOfDisputeId);
+		throw new NotYetImplementedException();
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findAll() {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(null, null, null);
+		return findByStatusNotAndCreatedTsBefore(null, null);
 	}
 
 	@Override
