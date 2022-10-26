@@ -205,6 +205,27 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
+	public Dispute update(Dispute dispute) {
+		if (dispute == null) {
+			throw new IllegalArgumentException("Dispute body is null.");
+		}
+
+		ViolationTicket violationTicket = ViolationTicketMapper.INSTANCE.convertDisputeToViolationTicketDto(dispute);
+		try {
+			ResponseResult result = assertNoExceptions(() -> violationTicketApi.v1UpdateViolationTicketPut(violationTicket));
+			if (result.getDisputeId() != null) {
+				logger.debug("Successfully updated the dispute through ORDS with dispute id {}", result.getDisputeId());
+				return findById(Long.valueOf(result.getDisputeId()).longValue()).orElse(null);
+			}
+		} catch (ApiException e) {
+			logger.error("ERROR updating Dispute through ORDS with dispute data: {}", violationTicket.toString(), e);
+			throw new InternalServerErrorException(e);
+		}
+
+		return null;
+	}
+
+	@Override
 	public void flushAndClear() {
 		// no-op. Not needed for ORDS.
 	}

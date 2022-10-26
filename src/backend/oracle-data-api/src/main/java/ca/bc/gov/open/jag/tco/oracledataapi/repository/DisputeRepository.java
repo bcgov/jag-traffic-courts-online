@@ -12,26 +12,26 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 public interface DisputeRepository {
 
 	/** Fetch all records older than the given date. */
-    public List<Dispute> findByCreatedTsBefore(Date olderThan);
+	public List<Dispute> findByCreatedTsBefore(Date olderThan);
 
-    /** Fetch all records which do not have the specified status. */
-    public List<Dispute> findByStatusNot(DisputeStatus excludeStatus);
+	/** Fetch all records which do not have the specified status. */
+	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus);
 
-    /** Fetch all records which do not have the specified status and older than the given date. */
-    public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
+	/** Fetch all records which do not have the specified status and older than the given date. */
+	public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
 
-    /** Fetch all records that matches the emailVerificationToken. */
+	/** Fetch all records that matches the emailVerificationToken. */
 	@Deprecated
-    public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
+	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
 
-    /** Fetch all records that matches the noticeOfDisputeId. */
+	/** Fetch all records that matches the noticeOfDisputeId. */
 	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId);
 
 	/** Fetch all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs. */
 	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date issuedTime);
 
 	/** Deletes all entities managed by the repository. */
-    public void deleteAll();
+	public void deleteAll();
 
 	/**
 	 * Deletes the entity with the given id.
@@ -101,5 +101,13 @@ public interface DisputeRepository {
 	 * Flushes all pending changes to the database and clears the session, if the underlying persistence layer needs it.
 	 */
 	void flushAndClear();
+
+	/**
+	 * Updates the given dispute entity.
+	 *
+	 * @param dispute entity to be updated. Must not be {@literal null}.
+	 * @return the updated entity
+	 */
+	public Dispute update(Dispute dispute);
 
 }

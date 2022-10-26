@@ -284,6 +284,24 @@ paths:
                 $ref: '#/components/schemas/ResponseResult'
       tags:
         - Violation Ticket
+  /v1/updateViolationTicket:
+    put:
+      requestBody:
+        description: body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViolationTicket'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseResult'
+      tags:
+        - Violation Ticket
 components:
   schemas:
     AgenciesListResult:
