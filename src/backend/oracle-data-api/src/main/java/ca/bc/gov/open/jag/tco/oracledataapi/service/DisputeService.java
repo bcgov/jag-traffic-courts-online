@@ -116,8 +116,11 @@ public class DisputeService {
 				for (int i = 0; i < dispute.getDisputeCounts().size(); i++) {
 					BeanUtils.copyProperties(dispute.getDisputeCounts().get(i), disputeCountsToUpdate.get(i), "createdBy", "createdTs", "disputeCountId");
 				}
+				logger.warn("Unexpected number of disputeCounts: " + dispute.getDisputeCounts().size() +
+						" received from the request whereas updatable number of disputeCounts from database is: " + disputeCountsToUpdate.size() +
+						". This should not happen with current dispute update use case unless something has been changed");
+				// TODO - determine what to do if the disputeCount list sizes don't match
 			}
-			// TODO - determine what to do if the disputeCount list sizes don't match
 		}
 
 		if (dispute.getViolationTicket() != null) {
@@ -130,6 +133,9 @@ public class DisputeService {
 						BeanUtils.copyProperties(dispute.getViolationTicket().getViolationTicketCounts().get(i), violationTicketCountsToUpdate.get(i), "createdBy", "createdTs", "violationTicketCountId");
 					}
 				}
+				logger.warn("Unexpected number of violationTicketCounts: " + violationTicketCountSize +
+						" received from the request whereas updatable number of violationTicketCounts from database is: " + violationTicketCountsToUpdate.size() +
+						". This should not happen with current dispute update use case unless something has been changed");
 				// TODO - determine what to do if the violationTicketCount list sizes don't match
 			}
 		}
