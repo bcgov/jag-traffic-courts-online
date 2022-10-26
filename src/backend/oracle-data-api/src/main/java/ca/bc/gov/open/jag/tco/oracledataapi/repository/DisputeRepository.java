@@ -18,7 +18,7 @@ public interface DisputeRepository {
 	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus);
 
 	/** Fetch all records which do not have the specified status and older than the given date. */
-	public List<Dispute> findByStatusNotAndCreatedTsBefore(DisputeStatus excludeStatus, Date olderThan);
+	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeId);
 
 	/** Fetch all records that matches the emailVerificationToken. */
 	@Deprecated
