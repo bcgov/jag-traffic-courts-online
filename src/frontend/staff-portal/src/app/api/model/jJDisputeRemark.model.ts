@@ -15,7 +15,7 @@ export interface JJDisputeRemark {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     id?: number;
     userFullName?: string | null;
     note?: string | null;

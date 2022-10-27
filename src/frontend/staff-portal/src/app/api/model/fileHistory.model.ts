@@ -15,7 +15,7 @@ export interface FileHistory {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     fileHistoryId?: number;
     ticketNumber?: string | null;
     description?: string | null;

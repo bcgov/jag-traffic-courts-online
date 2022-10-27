@@ -19,7 +19,7 @@ export interface JJDispute {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     ticketNumber?: string | null;
     status?: JJDisputeStatus;
     submittedDate?: string | null;

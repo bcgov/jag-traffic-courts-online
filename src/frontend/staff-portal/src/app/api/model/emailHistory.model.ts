@@ -16,7 +16,7 @@ export interface EmailHistory {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     emailHistoryId?: number;
     fromEmailAddress?: string | null;
     toEmailAddress?: string | null;

@@ -49,8 +49,8 @@ export class JJCountComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.jjDisputedCount) this.violationDate = this.jjDisputeInfo.violationDate.split("T")[0];
-    if (this.jjDisputedCount.revisedDueDate?.split('T')?.length > 0) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.revisedDueDate.split('T')[0];
-    if (this.jjDisputedCount.dueDate?.split('T')?.length > 0) this.jjDisputedCount.dueDate = this.jjDisputedCount.dueDate.split('T')[0];
+    if (this.jjDisputedCount?.revisedDueDate?.split('T')?.length > 0) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.revisedDueDate.split('T')[0];
+    if (this.jjDisputedCount?.dueDate?.split('T')?.length > 0) this.jjDisputedCount.dueDate = this.jjDisputedCount.dueDate.split('T')[0];
 
     this.form = this.formBuilder.group({
       totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
@@ -122,8 +122,8 @@ export class JJCountComponent implements OnInit {
     // if they select no set it back to ticketed Amount & includes surcharge
     // do nothing if yes
     if (event.value == "no") {
-      this.form.get('totalFineAmount').setValue(this.jjDisputedCount.ticketedFineAmount);
-      this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount.ticketedFineAmount);
+      this.form.get('totalFineAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
+      this.form.get('lesserOrGreaterAmount').setValue(this.jjDisputedCount?.ticketedFineAmount);
       this.inclSurcharge = "yes";
       this.updateInclSurcharge("yes");
     }
@@ -145,7 +145,7 @@ export class JJCountComponent implements OnInit {
   updateRevisedDueDate(event: MatRadioChange) {
     // if they select no set it back to passed in due date
     if (event.value == "no") {
-      this.form.get('revisedDueDate').setValue(this.jjDisputedCount.dueDate);
+      this.form.get('revisedDueDate').setValue(this.jjDisputedCount?.dueDate);
     }
   }
 }

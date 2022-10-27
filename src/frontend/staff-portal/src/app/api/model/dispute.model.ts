@@ -22,7 +22,7 @@ export interface Dispute {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     disputeId?: number;
     noticeOfDisputeId?: string | null;
     ticketNumber?: string | null;

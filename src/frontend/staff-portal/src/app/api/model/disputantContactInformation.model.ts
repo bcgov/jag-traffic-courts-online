@@ -15,7 +15,7 @@ export interface DisputantContactInformation {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     id?: number;
     surname?: string | null;
     givenNames?: string | null;
