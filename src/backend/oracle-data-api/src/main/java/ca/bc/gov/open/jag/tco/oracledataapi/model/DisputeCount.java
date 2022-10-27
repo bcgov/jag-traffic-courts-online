@@ -13,6 +13,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -27,22 +28,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class DisputeCount extends Auditable<String> {
-	
+
 	/**
 	 * Primary key
 	 */
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
 	@GeneratedValue
+	@JsonIgnore // FIXME: this field should not be excluded (temp excluded for now to get things working).
 	private Long disputeCountId;
-	
+
 	/**
 	 * The count number.
 	 */
 	@Column
 	@Min(1) @Max(3)
 	private int countNo;
-	
+
 	/**
 	 * Represents the disputant plea on count.
 	 */
@@ -58,7 +60,7 @@ public class DisputeCount extends Auditable<String> {
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
     private YesNo requestTimeToPay;
-	
+
 	/**
 	 * The disputant is requesting a reduction of the ticketed amount.
 	 */
@@ -66,7 +68,7 @@ public class DisputeCount extends Auditable<String> {
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
     private YesNo requestReduction;
-	
+
 	/**
 	 * Does the disputant want to appear in court?
 	 */
@@ -74,7 +76,7 @@ public class DisputeCount extends Auditable<String> {
 	@Schema(nullable = false)
 	@Enumerated(EnumType.STRING)
     private YesNo requestCourtAppearance;
-	
+
 	@JsonBackReference(value="dispute_count_reference")
 	@ManyToOne(targetEntity=Dispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)

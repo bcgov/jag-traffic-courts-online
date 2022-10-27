@@ -44,8 +44,14 @@ public class BaseTestSuite {
 	@Autowired
 	protected MockMvc mvc;
 
-	@Value("${ords.enabled}")
-	protected boolean ordsEnabled;
+	@Value("${repository.dispute}")
+    protected String disputeRepositorySrc;
+
+	@Value("${repository.jjdispute}")
+    protected String jjdisputeRepositorySrc;
+
+	@Value("${repository.lookup}")
+    protected String lookupRepositorySrc;
 
 	@Autowired
 	protected DisputeRepository disputeRepository;
@@ -58,8 +64,10 @@ public class BaseTestSuite {
 	@BeforeEach
 	protected void beforeEach() throws Exception {
 		// only delete the repo if this is a local H2 repository.
-		if (!ordsEnabled) {
+		if ("h2".equals(disputeRepositorySrc)) {
 			disputeRepository.deleteAll();
+		}
+		if ("h2".equals(jjdisputeRepositorySrc)) {
 			jjDisputeRepository.deleteAll();
 		}
 

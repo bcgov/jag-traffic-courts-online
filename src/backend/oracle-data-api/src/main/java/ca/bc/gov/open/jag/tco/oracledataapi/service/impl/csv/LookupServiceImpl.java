@@ -15,7 +15,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
 
 @Service
-@ConditionalOnProperty(name = "ords.enabled", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(name = "repository.lookup", havingValue = "csv", matchIfMissing = true)
 public class LookupServiceImpl extends BaseLookupService {
 
 	@Override

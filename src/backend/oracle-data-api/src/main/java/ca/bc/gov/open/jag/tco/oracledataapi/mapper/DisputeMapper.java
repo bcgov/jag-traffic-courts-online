@@ -84,6 +84,7 @@ public interface DisputeMapper {
 	@Mapping(source = "updUserId", target = "violationTicket.modifiedBy")
 	@Mapping(source = "updDtm", target = "violationTicket.modifiedTs")
 	@Mapping(source = "violationTicketId", target = "violationTicket.violationTicketId")
+	@Mapping(source = "ticketNumberTxt", target = "ticketNumber")
 	@Mapping(source = "ticketNumberTxt", target = "violationTicket.ticketNumber")
 	@Mapping(source = "disputantOrganizationNmTxt", target = "violationTicket.disputantOrganizationName")
 	@Mapping(source = "disputantSurnameTxt", target = "violationTicket.disputantSurname")

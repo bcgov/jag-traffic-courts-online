@@ -12,10 +12,15 @@ spring:
   sql:
     init:
       mode: never
-      
+
+repository:
+  lookup: csv
+  dispute: h2
+  jjdispute: h2
+  history: h2
+  
 # ORDS CLIENT properties
 ords:
-  enabled: false
   rest-api:
     url: localhost
     timeout: 2000

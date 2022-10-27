@@ -18,8 +18,17 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 	@Value("${codetable.refresh.atStartup}")
 	private boolean refreshAtStartup;
 
-	@Value("${ords.enabled}")
-    protected boolean ordsEnabled;
+	@Value("${repository.lookup}")
+    protected String lookupRepositorySrc;
+
+	@Value("${repository.dispute}")
+    protected String disputeRepositorySrc;
+
+	@Value("${repository.jjdispute}")
+    protected String jjdisputeRepositorySrc;
+
+	@Value("${repository.history}")
+    protected String historypRepositorySrc;
 
 	@Autowired
 	private LookupService lookupService;
@@ -31,12 +40,10 @@ public class StartupTasks implements ApplicationListener<ApplicationReadyEvent> 
 			lookupService.refresh();
 		}
 
-		if (ordsEnabled) {
-			logger.info("ORDS is enabled: using ORDS as the database repository.");
-		}
-		else {
-			logger.info("ORDS is disabled: using H2 as the database repository.");
-		}
+		logger.info("Lookup repository: {}", lookupRepositorySrc);
+		logger.info("Dispute repository: {}", disputeRepositorySrc);
+		logger.info("JJDispute repository: {}", jjdisputeRepositorySrc);
+		logger.info("History repository: {}", historypRepositorySrc);
 	}
 
 }
