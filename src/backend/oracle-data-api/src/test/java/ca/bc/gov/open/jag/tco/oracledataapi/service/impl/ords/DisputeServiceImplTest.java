@@ -336,14 +336,15 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Date now = new Date();
 		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
+		String noticeOfDisputeId = java.util.UUID.randomUUID().toString();
 		ViolationTicketListResponse response = new ViolationTicketListResponse();
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, null)).thenReturn(response);
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeId)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
-			repository.findByStatusNotAndCreatedTsBefore(excludedStatus, now);
+			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludedStatus, now, noticeOfDisputeId);
 		});
 	}
 
@@ -352,14 +353,15 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		Date now = new Date();
 		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
 		DisputeStatus excludedStatus = DisputeStatus.CANCELLED;
+		String noticeOfDisputeId = java.util.UUID.randomUUID().toString();
 		ViolationTicketListResponse response = new ViolationTicketListResponse();
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, null)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeId)).thenThrow(ApiException.class);
 
 		assertThrows(InternalServerErrorException.class, () -> {
-			repository.findByStatusNotAndCreatedTsBefore(excludedStatus, now);
+			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludedStatus, now, noticeOfDisputeId);
 		});
 	}
 
