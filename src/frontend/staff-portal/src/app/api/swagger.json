@@ -2396,7 +2396,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -2459,7 +2460,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "disputeId": {
             "type": "integer",
@@ -2712,11 +2714,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
-          },
-          "disputeCountId": {
-            "type": "integer",
-            "format": "int64"
+            "format": "date-time",
+            "nullable": true
           },
           "countNo": {
             "maximum": 3,
@@ -2827,7 +2826,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "emailHistoryId": {
             "type": "integer",
@@ -2958,7 +2958,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "fileHistoryId": {
             "type": "integer",
@@ -2997,7 +2998,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "ticketNumber": {
             "type": "string",
@@ -3113,7 +3115,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -3167,7 +3170,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -3615,7 +3619,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "violationTicketId": {
             "type": "integer",
@@ -3755,7 +3760,8 @@
           },
           "modifiedTs": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "violationTicketCountId": {
             "type": "integer",

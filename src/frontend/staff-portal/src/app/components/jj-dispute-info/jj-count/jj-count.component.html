@@ -141,7 +141,7 @@
           <p class="section-grid-header">&nbsp;</p>
           <p class="section-jj-grid-text">
             <input [formControl]="form.get('revisedDueDate')" type="date" [hidden]="!(timeToPay=='yes')"
-              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0" [value]="jjDisputedCount.revisedDueDate">
+              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0" [value]="jjDisputedCount?.revisedDueDate">
           </p>
         </span>
         <span class="section-grid-cell">

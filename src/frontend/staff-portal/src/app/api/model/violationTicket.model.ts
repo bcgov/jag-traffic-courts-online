@@ -24,7 +24,7 @@ export interface ViolationTicket {
     createdBy?: string | null;
     createdTs?: string;
     modifiedBy?: string | null;
-    modifiedTs?: string;
+    modifiedTs?: string | null;
     violationTicketId?: number;
     ticketNumber?: string | null;
     disputantOrganizationName?: string | null;
