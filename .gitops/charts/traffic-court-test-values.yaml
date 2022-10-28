@@ -23,7 +23,7 @@ citizen-api:
 
 citizen-web:
   image:
-    tag: "1.46.1"
+    tag: "1.47.1"
     pullPolicy: Always
 
   appConfig: |  
