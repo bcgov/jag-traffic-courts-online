@@ -52,7 +52,7 @@ public class DisputeService {
 		} else if (excludeStatus == null) {
 			return disputeRepository.findByCreatedTsBefore(olderThan);
 		} else {
-			return disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludeStatus, olderThan, null);
+			return disputeRepository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, olderThan, null);
 		}
 	}
 
@@ -277,7 +277,7 @@ public class DisputeService {
 		if (findDispute.isPresent()) {
 			Dispute dispute = findDispute.get();
 			dispute.setEmailAddressVerified(Boolean.TRUE);
-			disputeRepository.save(dispute);
+			disputeRepository.update(dispute);
 			return true;
 		}
 
@@ -287,15 +287,15 @@ public class DisputeService {
 	/**
 	 * Finds a Dispute by noticeOfDisputeId (UUID) or null if not found.
 	 */
-	public Dispute getDisputeByNoticeOfDisputeId(String noticeOfDisputeId) {
-		List<Dispute> findByNoticeOfDisputeId = disputeRepository.findByNoticeOfDisputeId(noticeOfDisputeId);
+	public Dispute getDisputeByNoticeOfDisputeGuid(String noticeOfDisputeGuid) {
+		List<Dispute> findByNoticeOfDisputeId = disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid);
 		if (CollectionUtils.isEmpty(findByNoticeOfDisputeId)) {
-			String msg = String.format("Dispute could not be found with noticeOfDisputeId: {1}", noticeOfDisputeId);
+			String msg = String.format("Dispute could not be found with noticeOfDisputeGuid: %s", noticeOfDisputeGuid);
 			logger.error(msg);
 			return null;
 		}
 		if (findByNoticeOfDisputeId.size() > 1) {
-			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeId: " + noticeOfDisputeId);
+			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: " + noticeOfDisputeGuid);
 		}
 		return findByNoticeOfDisputeId.get(0);
 	}

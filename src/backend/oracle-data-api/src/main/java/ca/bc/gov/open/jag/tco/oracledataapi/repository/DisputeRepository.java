@@ -18,14 +18,10 @@ public interface DisputeRepository {
 	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus);
 
 	/** Fetch all records which do not have the specified status and older than the given date. */
-	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeId);
+	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid);
 
-	/** Fetch all records that matches the emailVerificationToken. */
-	@Deprecated
-	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken);
-
-	/** Fetch all records that matches the noticeOfDisputeId. */
-	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId);
+	/** Fetch all records that matches the noticeOfDisputeGuid. */
+	public List<Dispute> findByNoticeOfDisputeGuid(String noticeOfDisputeGuid);
 
 	/** Fetch all records that match by Dispute.ticketNumber and the time portion of the Dispute.issuedTs. */
 	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date issuedTime);

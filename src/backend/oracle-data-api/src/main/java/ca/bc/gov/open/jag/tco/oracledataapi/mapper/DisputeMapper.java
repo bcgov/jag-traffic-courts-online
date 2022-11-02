@@ -52,7 +52,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.homePhoneNumberTxt", target = "homePhoneNumber")
 	@Mapping(source = "dispute.workPhoneNumberTxt", target = "workPhoneNumber")
 	@Mapping(source = "dispute.emailAddressTxt", target = "emailAddress")
-	@Mapping(source = "dispute.emailVerificationGuid", target = "emailVerificationToken")
+	@Mapping(source = "dispute.noticeOfDisputeGuid", target = "noticeOfDisputeGuid")
 	@Mapping(source = "dispute.emailVerifiedYn", target = "emailAddressVerified", qualifiedByName="mapYnToBoolean")
 	@Mapping(source = "dispute.filingDt", target = "filingDate")
 	@Mapping(source = "dispute.representedByLawyerYn", target = "representedByLawyer")

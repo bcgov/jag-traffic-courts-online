@@ -132,7 +132,7 @@ public class DisputeController {
 	})
 	@DeleteMapping("/dispute/{id}")
 	public void deleteDispute(@PathVariable Long id) {
-		logger.debug("DELETE /dispute/{id} called");
+		logger.debug("DELETE /dispute/{} called", id);
 		disputeService.delete(id);
 	}
 
@@ -193,14 +193,14 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}/validate")
 	public ResponseEntity<Dispute> validateDispute(@PathVariable Long id, Principal principal) {
-		logger.debug("PUT /dispute/{id}/validate called");
+		logger.debug("PUT /dispute/{}/validate called", id);
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<Dispute>(disputeService.setStatus(id, DisputeStatus.VALIDATED), HttpStatus.OK);
 	}
 
-	@Operation(summary = "Retrieves Dispute by the noticeOfDisputeId (UUID).")
+	@Operation(summary = "Retrieves Dispute by the noticeOfDisputeGuid (UUID).")
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "Ok. Dispute retrieved."),
 		@ApiResponse(responseCode = "404", description = "Dispute could not be found."),
@@ -208,16 +208,16 @@ public class DisputeController {
 	})
 	@GetMapping("/dispute/noticeOfDispute/{id}")
 	public ResponseEntity<Dispute> getDisputeByNoticeOfDisputeId(
-			@PathVariable(name = "id") @Parameter(description = "The noticeOfDisputeId of the Dispute to retreive.") String noticeOfDisputeId) {
+			@PathVariable(name = "id") @Parameter(description = "The noticeOfDisputeGuid of the Dispute to retreive.") String noticeOfDisputeGuid) {
 		logger.debug("GET /dispute/noticeOfDispute/{id} called");
 		try {
-			Dispute dispute = disputeService.getDisputeByNoticeOfDisputeId(noticeOfDisputeId);
+			Dispute dispute = disputeService.getDisputeByNoticeOfDisputeGuid(noticeOfDisputeGuid);
 			if (dispute == null) {
 				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<Dispute>(dispute, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("ERROR retrieving Dispute with noticeOfDisputeId {}", noticeOfDisputeId, e);
+			logger.error("ERROR retrieving Dispute with noticeOfDisputeGuid {}", noticeOfDisputeGuid, e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -230,7 +230,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}/email/verify")
 	public ResponseEntity<Void> verifyDisputeEmail(@PathVariable(name="id") @Parameter(description = "The id of the Dispute to update.") Long id) {
-		logger.debug("PUT /dispute/{id}/email/verify called");
+		logger.debug("PUT /dispute/{}/email/verify called", id);
 		try {
 			if (disputeService.verifyEmail(id)) {
 				ResponseEntity.ok().build();
@@ -311,7 +311,7 @@ public class DisputeController {
 	})
 	@PutMapping("/dispute/{id}")
 	public ResponseEntity<Dispute> updateDispute(@PathVariable Long id, @RequestBody Dispute dispute, Principal principal) {
-		logger.debug("PUT /dispute/{id} called");
+		logger.debug("PUT /dispute/{} called", id);
 		if (!disputeService.assignDisputeToUser(id, principal)) {
 			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 		}

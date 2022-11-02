@@ -24,7 +24,7 @@ export interface Dispute {
     modifiedBy?: string | null;
     modifiedTs?: string | null;
     disputeId?: number;
-    noticeOfDisputeId?: string | null;
+    noticeOfDisputeGuid?: string | null;
     ticketNumber?: string | null;
     courtLocation?: string | null;
     issuedTs?: string | null;
@@ -49,7 +49,6 @@ export interface Dispute {
     workPhoneNumber?: string | null;
     emailAddress?: string | null;
     emailAddressVerified?: boolean;
-    emailVerificationToken?: string | null;
     filingDate?: string | null;
     representedByLawyer?: DisputeRepresentedByLawyer;
     lawFirmName?: string | null;

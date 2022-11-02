@@ -20,6 +20,10 @@ public class ApiClientConfiguration {
         //Setting this to null will make it use the baseUrl instead
         apiClient.setServerIndex(null);
         apiClient.setBasePath(configProperties.getOrdsRestApiUrl());
+
+        // Set to true to see actual request/response messages sent/received from ORDs.
+        apiClient.setDebugging(false);
+
         return apiClient;
     }
 

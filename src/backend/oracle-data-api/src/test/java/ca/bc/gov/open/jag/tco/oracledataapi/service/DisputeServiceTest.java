@@ -1,12 +1,6 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -101,26 +95,6 @@ class DisputeServiceTest extends BaseTestSuite {
 		assertThrows(NotAllowedException.class, () -> {
 			disputeService.setStatus(id, null);
 		});
-	}
-
-	@Test
-	void testEmailVerification() {
-		String emailVerificationToken = UUID.randomUUID().toString();
-		Dispute dispute = new Dispute();
-		dispute.setEmailVerificationToken(emailVerificationToken);
-
-		assertNotNull(dispute.getEmailAddressVerified());
-		assertFalse(dispute.getEmailAddressVerified().booleanValue(), "emailAddressVerified should default to false");
-		assertEquals(36, emailVerificationToken.length(), "expect emailVerificationToken to have a max length of 36 characters");
-
-		// Try persisting and loading
-		Long id = disputeRepository.save(dispute).getDisputeId();
-		List<Dispute> findBy = disputeRepository.findByEmailVerificationToken(emailVerificationToken);
-		assertEquals(1, findBy.size());
-		assertEquals(id, findBy.get(0).getDisputeId());
-
-		Dispute disputeDb = findBy.get(0);
-		assertEquals(emailVerificationToken, disputeDb.getEmailVerificationToken());
 	}
 
 	private Long saveDispute(DisputeStatus disputeStatus) {
