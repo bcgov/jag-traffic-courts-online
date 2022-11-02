@@ -78,8 +78,8 @@ export class DisputeDecisionInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.data;
 
       this.data.forEach(x => {
-        x.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === x.jjAssignedTo)[0]?.name;
-        x.vtcAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === x.vtcAssignedTo)[0]?.name;
+        x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
+        x.vtcAssignedToName = this.authService.getFullName(this.jjDisputeService.vtcList?.filter(y => this.authService.getIDIR(y) === x.vtcAssignedTo)[0]);
       });
 
       // initially sort by decision date within status

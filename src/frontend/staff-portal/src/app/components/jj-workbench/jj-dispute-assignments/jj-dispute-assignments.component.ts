@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
-import { JJDisputeService, JJTeamMember } from 'app/services/jj-dispute.service';
+import { JJDisputeService } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-dispute-assignments',
@@ -43,6 +44,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
     public mockConfigService: MockConfigService,
+    public authService: AuthService
 
   ) {
 
@@ -58,7 +60,6 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit(): void {
-    this.jjDisputeService.jjList = this.jjDisputeService.jjList.sort((a: JJTeamMember, b: JJTeamMember) => { if (a.name < b.name) { return -1; } else { return 1 } });
     this.getAll("A");
   }
 
@@ -116,7 +117,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
       this.data = response.filter(x => this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0);
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
       this.data.forEach(x => {
-          x.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === x.jjAssignedTo)[0]?.name;
+          x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
           x.bulkAssign = false;
         });
       this.resetAssignedUnassigned();
@@ -182,7 +183,8 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
         'JJDisputeAssignmentsComponent::putJJDispute response',
         response
       );
-      updateDispute.jjAssignedToName = this.jjDisputeService.jjList.filter(y => y.idir === updateDispute.jjAssignedTo)[0]?.name;
+      const jjFound = this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === updateDispute.jjAssignedTo)[0];
+      updateDispute.jjAssignedToName = this.authService.getFullName(jjFound);
       this.data[index] = updateDispute;
       this.resetAssignedUnassigned();
     });

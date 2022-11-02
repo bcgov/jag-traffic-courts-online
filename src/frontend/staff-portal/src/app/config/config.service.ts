@@ -22,6 +22,7 @@ export class ConfigService implements IConfigService {
     ''
   );
   private disputeError: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private keycloakError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private historyError: BehaviorSubject<string> = new BehaviorSubject<string>('');
   private disputeCreateError: BehaviorSubject<string> =
     new BehaviorSubject<string>('');
@@ -54,6 +55,10 @@ export class ConfigService implements IConfigService {
 
   public get dispute_error(): string {
     return this.disputeError.value;
+  }
+
+  public get keycloak_error(): string {
+    return this.keycloakError.value;
   }
 
   public get history_error(): string {
