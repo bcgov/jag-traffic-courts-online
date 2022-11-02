@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
+import { UserRepresentation } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { KeycloakService } from 'keycloak-angular';
+import { KeycloakService as KeycloakAPIService} from 'app/api'
 import { KeycloakProfile } from 'keycloak-js';
-import { BehaviorSubject, from, Observable, map } from 'rxjs';
+import { BehaviorSubject, from, Observable, map, catchError } from 'rxjs';
+import { LoggerService } from '@core/services/logger.service';
+import { ToastService } from '@core/services/toast.service';
+import { ConfigService } from '@config/config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +23,11 @@ export class AuthService {
   ]
 
   constructor(
-    private keycloak: KeycloakService
+    private keycloak: KeycloakService,
+    private keycloakAPI: KeycloakAPIService,
+    private toastService: ToastService,
+    private logger: LoggerService,
+    private configService: ConfigService,
   ) { }
 
   public checkAuth(): Observable<boolean> {
@@ -101,5 +110,34 @@ export class AuthService {
 
   public checkRole(role: string): boolean {
     return this.keycloak.isUserInRole(role, this.site);
+  }
+
+  public getIDIR(user: UserRepresentation): string {
+    return user.username.split("@")[0];
+  }
+
+  public getFullName(user: UserRepresentation): string {
+    return (user?.firstName ? user?.firstName + " " : "") + (user?.lastName ? user?.lastName : "");
+  }
+
+  public getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
+
+    return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
+    .pipe(
+      map((response: any) => {
+        this.logger.info('KeycloakService::getUsersInGroup', response)
+        return response ? response : null
+      }),
+      catchError((error: any) => {
+        var errorMsg = error.error.detail != null ? error.error.detail : this.configService.keycloak_error;
+        this.toastService.openErrorToast(errorMsg);
+        this.toastService.openErrorToast(this.configService.keycloak_error);
+        this.logger.error(
+          'KeycloakService::getUsersInGroup Error has occured ',
+          error
+        );
+        throw error;
+      })
+    );
   }
 }

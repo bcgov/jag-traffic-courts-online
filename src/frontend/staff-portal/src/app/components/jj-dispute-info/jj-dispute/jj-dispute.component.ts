@@ -4,13 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
-import { JJDisputeService, JJTeamMember } from '../../../services/jj-dispute.service';
+import { JJDisputeService } from '../../../services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
 import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UserRepresentation } from 'app/api/model/models';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -32,7 +34,7 @@ export class JJDisputeComponent implements OnInit {
   public timeToPayCountsHeading: string = "";
   public fineReductionCountsHeading: string = "";
   public remarks: string = "";
-  public jjList: JJTeamMember[];
+  public jjList: UserRepresentation[];
   public selectedJJ: string;
   public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   public RequestReduction = JJDisputedCountRequestReduction;
@@ -45,6 +47,7 @@ export class JJDisputeComponent implements OnInit {
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
     private logger: LoggerService,
+    public authService: AuthService
   ) {
     this.isMobile = this.utilsService.isMobile();
     this.jjList = this.jjDisputeService.jjList;

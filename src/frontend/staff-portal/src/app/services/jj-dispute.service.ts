@@ -4,7 +4,7 @@ import { ToastService } from '@core/services/toast.service';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark } from 'app/api';
+import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark, UserRepresentation } from 'app/api';
 import { AuthService } from './auth.service';
 import { cloneDeep } from 'lodash';
 
@@ -18,20 +18,8 @@ export class JJDisputeService {
   public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress];
   public JJDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
-
-  // TODO dynamically get list of JJs
-  public jjList: JJTeamMember[] = [
-    { idir: "ldame@idir", name: "Lorraine Dame" },
-    { idir: "philbold@idir", name: "Phil Bolduc" },
-    { idir: "choban@idir", name: "Chris Hoban" },
-    { idir: "kneufeld@idir", name: "Kevin Neufeld" },
-    { idir: "colmohig@idir", name: "Colm O'Higgins" },
-    { idir: "bkarahan@idir", name: "Burak Karahan" },
-    { idir: "twwong@idir", name: "Tsunwai Wong" },
-    { idir: "ewong@idir", name: "Elaine Wong" },
-    { idir: "jmoffet@idir", name: "Jeffrey Moffet" },
-    { idir: "rspress@idir", name: "Roberta Press" },
-  ];
+  public jjList: Array<UserRepresentation>;
+  public vtcList: Array<UserRepresentation>;
 
   constructor(
     private toastService: ToastService,
@@ -40,6 +28,13 @@ export class JJDisputeService {
     private jjApiService: JJService,
     private authService: AuthService
   ) {
+    this.authService.getUsersInGroup("judicial-justice").subscribe(results => {
+      this.jjList = results;
+      this.jjList = this.jjList.sort((a: UserRepresentation, b: UserRepresentation) => { if (this.authService.getFullName(a) < this.authService.getFullName(b)) { return -1; } else { return 1 } });
+    });
+    this.authService.getUsersInGroup("vtc-staff").subscribe(results => {
+      this.vtcList = results;
+    });
   }
 
   /**
@@ -177,5 +172,3 @@ export class JJDisputeService {
     return futureDate;
   }
 }
-
-export interface JJTeamMember { idir: string, name: string; }
