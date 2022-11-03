@@ -35,7 +35,7 @@ exclude_patterns:
   # Generated Files
   - "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client/ArcDisputeClient.generated.cs"
   - "src/backend/TrafficCourts/Common/OpenAPIs/Keycloak/v18_0/KeycloakAdminApiClient.cs"
-  - "src/backend/TrafficCourts/Common/OpenAPIs/Keycloak/v18_0/KeycloakAdminApiClient.cs"
+  - "src/backend/TrafficCourts/Common/OpenAPIs/OracleDataAPI/v1_0/OracleDataApiClient.cs"
 
   # Frontend Pattern Excludes
   - "src/frontend/*/karma.conf.js"
