@@ -28,6 +28,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.mapper.ViolationTicketMapper;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.DisputeRepository;
 
 @ConditionalOnProperty(name = "repository.dispute", havingValue = "ords", matchIfMissing = false)
@@ -50,16 +51,16 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByCreatedTsBefore(Date olderThan) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(null, olderThan, null);
+		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, olderThan, null);
 	}
 
 	@Override
 	public List<Dispute> findByStatusNot(DisputeStatus excludeStatus) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(excludeStatus, null, null);
+		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludeStatus, null, null);
 	}
 
 	@Override
-	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeId) {
+	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid) {
 		List<Dispute> disputesToReturn = new ArrayList<Dispute>();
 		String olderThanDate = null ;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
@@ -70,13 +71,23 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		}
 
 		try {
-			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, noticeOfDisputeId);
+			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, noticeOfDisputeGuid);
 			if (response != null && !response.getViolationTickets().isEmpty()) {
 				logger.debug("Successfully returned disputes from ORDS that are older than " + olderThan + " and excluding the status: " + excludeStatus);
 
 				disputesToReturn = response.getViolationTickets().stream()
 						.map(violationTicket -> DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket))
 						.collect(Collectors.toList());
+
+				// NPE fix - Some Disputes have missing counts. This should be impossible - presumably bad data.
+				if (disputesToReturn != null) {
+					for (Dispute dispute : disputesToReturn) {
+						if (dispute.getDisputeCounts() == null) {
+							logger.error("Dispute missing counts. Bad data? DisputeId: {}", dispute.getDisputeId());
+							dispute.setDisputeCounts(new ArrayList<>());
+						}
+					}
+				}
 			}
 			return disputesToReturn;
 
@@ -87,14 +98,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	@Deprecated
-	public List<Dispute> findByEmailVerificationToken(String emailVerificationToken) {
-		throw new NotYetImplementedException();
-	}
-
-	@Override
-	public List<Dispute> findByNoticeOfDisputeId(String noticeOfDisputeId) {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(null, null, noticeOfDisputeId);
+	public List<Dispute> findByNoticeOfDisputeGuid(String noticeOfDisputeGuid) {
+		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, null, noticeOfDisputeGuid);
 	}
 
 	@Override
@@ -136,7 +141,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findAll() {
-		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeId(null, null, null);
+		return findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(null, null, null);
 	}
 
 	@Override
@@ -152,6 +157,20 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 			else {
 				logger.debug("Successfully returned the violation ticket from ORDS with dispute id {}", id);
 				Dispute dispute = DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket);
+
+				// Set missing back reference
+				if (dispute != null) {
+					ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicket vt = dispute.getViolationTicket();
+					if (vt != null) {
+						for (ViolationTicketCount violationTicketCount : vt.getViolationTicketCounts()) {
+							if (violationTicketCount.getViolationTicket() == null) {
+								violationTicketCount.setViolationTicket(vt);
+							}
+						}
+
+					}
+				}
+
 				return Optional.ofNullable(dispute);
 			}
 		} catch (ApiException e) {

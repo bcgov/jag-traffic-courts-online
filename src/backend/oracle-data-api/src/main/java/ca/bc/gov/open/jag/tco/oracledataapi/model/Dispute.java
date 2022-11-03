@@ -49,11 +49,11 @@ public class Dispute extends Auditable<String> {
 	private Long disputeId;
 
 	/**
-	 * A unique string (the PK + GUID) for email verification.
+	 * A unique string (GUID) for this Dispute.
 	 */
 	@Column(length = 36) // GUID (36 characters)
 	@Schema(nullable = true) // FIXME: this field should not be nullable (temp nullable for now to get things working).
-	private String noticeOfDisputeId;
+	private String noticeOfDisputeGuid;
 
 	 /**
      * The violation ticket number.
@@ -225,13 +225,6 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Column
 	private Boolean emailAddressVerified = Boolean.FALSE;
-
-	/**
-	 * A unique string (the PK + GUID) for email verification.
-	 */
-	@Column(length = 36) // GUID (36 characters)
-	@Schema(nullable = true)
-	private String emailVerificationToken;
 
 	@Column
 	@Schema(nullable = true)

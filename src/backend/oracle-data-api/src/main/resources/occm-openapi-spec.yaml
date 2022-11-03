@@ -157,7 +157,7 @@ paths:
           description: ''
           schema:
             type: string
-        - name: emailVerificationGuid
+        - name: noticeOfDisputeGuid
           in: query
           description: ''
           schema:
@@ -529,8 +529,6 @@ components:
           type: string
         emailAddressTxt:
           type: string
-        emailVerificationGuid:
-          type: string
         emailVerifiedYn:
           type: string
         filingDt:
@@ -606,6 +604,8 @@ components:
         lawyerSurnameNm:
           type: string
           format: nullable
+        noticeOfDisputeGuid:
+          type: string
         ocrViolationTicketJsonTxt:
           type: string
           format: nullable
@@ -649,6 +649,8 @@ components:
     DisputeCount:
       type: object
       properties:
+        disputeCountId:
+          type: string
         pleaCd:
           type: string
         requestCourtAppearanceYn:

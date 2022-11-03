@@ -2467,7 +2467,7 @@
             "type": "integer",
             "format": "int64"
           },
-          "noticeOfDisputeId": {
+          "noticeOfDisputeGuid": {
             "type": "string",
             "nullable": true
           },
@@ -2575,10 +2575,6 @@
           },
           "emailAddressVerified": {
             "type": "boolean"
-          },
-          "emailVerificationToken": {
-            "type": "string",
-            "nullable": true
           },
           "filingDate": {
             "type": "string",
