@@ -32,6 +32,11 @@ exclude_patterns:
   - "src/backend/TrafficCourts/TrafficCourts.Staff.Service.Test/"
   - "src/backend/TrafficCourts/TrafficCourts.Workflow.Service.IntegrationTests/"
   
+  # Generated Files
+  - "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client/ArcDisputeClient.generated.cs"
+  - "src/backend/TrafficCourts/Common/OpenAPIs/Keycloak/v18_0/KeycloakAdminApiClient.cs"
+  - "src/backend/TrafficCourts/Common/OpenAPIs/Keycloak/v18_0/KeycloakAdminApiClient.cs"
+
   # Frontend Pattern Excludes
   - "src/frontend/*/karma.conf.js"
   - "src/frontend/*/package.json"
