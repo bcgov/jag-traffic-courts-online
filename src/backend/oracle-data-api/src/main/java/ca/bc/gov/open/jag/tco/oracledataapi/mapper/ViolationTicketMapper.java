@@ -2,11 +2,8 @@ package ca.bc.gov.open.jag.tco.oracledataapi.mapper;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -20,9 +17,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeReposito
 
 @Mapper
 public interface ViolationTicketMapper {
-
+	
 	ViolationTicketMapper INSTANCE = Mappers.getMapper(ViolationTicketMapper.class);
-
+	
 	// Map from Oracle Data API dispute model to ORDS dispute data
 	@Mapping(target = "dispute.entDtm", source = "createdTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
 	@Mapping(target = "dispute.entUserId", source = "createdBy")
@@ -55,7 +52,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.filingDt", source = "filingDate")
 	@Mapping(target = "dispute.representedByLawyerYn", source = "representedByLawyer")
 	@Mapping(target = "dispute.lawFirmNm", source = "lawFirmName")
-	// After mapping method to parse address source into multiple address fields
+	// TODO - need add an after mapping method to parse address source into multiple address fields
 	@Mapping(target = "dispute.lawFirmAddrLine1Txt", ignore = true)
 	@Mapping(target = "dispute.lawFirmAddrLine2Txt", ignore = true)
 	@Mapping(target = "dispute.lawFirmAddrLine3Txt", ignore = true)
@@ -119,7 +116,7 @@ public interface ViolationTicketMapper {
 	// Map from Oracle Data API violation ticket count model to ORDS violation ticket counts data
 	@Mapping(target = "violationTicketCounts", source = "violationTicket.violationTicketCounts")
 	ViolationTicket convertDisputeToViolationTicketDto (Dispute dispute);
-
+	
 	@Mapping(target = "entUserId", source = "createdBy")
 	@Mapping(target = "entDtm", source = "createdTs")
 	@Mapping(target = "updUserId", source = "modifiedBy")
@@ -167,10 +164,10 @@ public interface ViolationTicketMapper {
 	default ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount mapDisputeCount(ViolationTicketCount violationTicketCount) {
 		int countNo = violationTicketCount.getCountNo();
 		List<DisputeCount> disputeCounts = violationTicketCount.getViolationTicket().getDispute().getDisputeCounts();
-
+		
 		if ( disputeCounts == null || disputeCounts.isEmpty()) {
-			return null;
-		}
+            return null;
+        }
 
 		for (DisputeCount disputeCount : disputeCounts) {
 			if (disputeCount.getCountNo() == countNo) {
@@ -179,7 +176,7 @@ public interface ViolationTicketMapper {
 				count.setEntUserId(disputeCount.getCreatedBy());
 				count.setUpdDtm(disputeCount.getModifiedTs());
 				count.setUpdUserId(disputeCount.getModifiedBy());
-
+				
 				if (disputeCount.getPleaCode() != null) {
 					count.setPleaCd(disputeCount.getPleaCode().toString());
 				}
@@ -195,30 +192,6 @@ public interface ViolationTicketMapper {
 				return count;
 			}
 		}
-		return null;
-	}
-
-	@AfterMapping
-	default void setLawyerAddress(@MappingTarget ViolationTicket violationTicket, Dispute dispute) {
-		if (dispute != null && violationTicket != null && violationTicket.getDispute() != null && !StringUtils.isBlank(dispute.getLawyerAddress())) {
-			int addressLength = dispute.getLawyerAddress().length();
-			String lawyerAddress = dispute.getLawyerAddress();
-			String addressLine1 = "";
-			String addressLine2 = "";
-			String addressLine3 = "";
-			if (addressLength > 200) {
-				addressLine1 = lawyerAddress.substring(0, 100);
-				addressLine2 = lawyerAddress.substring(100, 200);
-				addressLine3 = lawyerAddress.substring(200, addressLength);
-			} else if (addressLength > 100) {
-				addressLine1 = lawyerAddress.substring(0, 100);
-				addressLine2 = lawyerAddress.substring(100, addressLength);
-			} else {
-				addressLine1 = lawyerAddress;
-			}
-			violationTicket.getDispute().setLawFirmAddrLine1Txt(addressLine1);
-			violationTicket.getDispute().setLawFirmAddrLine2Txt(addressLine2);
-			violationTicket.getDispute().setLawFirmAddrLine3Txt(addressLine3);
-		}
+	    return null;
 	}
 }

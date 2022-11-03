@@ -55,21 +55,21 @@ public class Dispute extends Auditable<String> {
 	@Schema(nullable = true) // FIXME: this field should not be nullable (temp nullable for now to get things working).
 	private String noticeOfDisputeId;
 
-	/**
-	 * The violation ticket number.
-	 */
-	@Column(length = 50)
-	@Schema(nullable = false)
-	private String ticketNumber;
+	 /**
+     * The violation ticket number.
+     */
+    @Column(length = 50)
+    @Schema(nullable = false)
+    private String ticketNumber;
 
 	/**
-	 * Court location.
-	 */
-	@Column(length = 150)
-	@Schema(nullable = true)
-	private String courtLocation;
+     * Court location.
+     */
+    @Column(length = 150)
+    @Schema(nullable = true)
+    private String courtLocation;
 
-	/**
+    /**
 	 * The date and time the violation ticket was issue. Time must only be hours and
 	 * minutes.
 	 */
@@ -246,7 +246,7 @@ public class Dispute extends Auditable<String> {
 	@Column
 	@Enumerated(EnumType.STRING)
 	@Schema(nullable = true)
-	private YesNo representedByLawyer;
+    private YesNo representedByLawyer;
 
 	/**
 	 * Name of the law firm that will represent the disputant at the hearing.
@@ -287,9 +287,8 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * Address of the lawyer who will represent the disputant at the hearing.
 	 */
-	@Size(max = 300)
-	@Column(length = 300)
-	@Schema(maxLength = 300, nullable = true)
+	@Column(length = 200)
+	@Schema(nullable = true)
 	private String lawyerAddress;
 
 	/**
@@ -336,7 +335,7 @@ public class Dispute extends Auditable<String> {
 	 */
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
-	private YesNo interpreterRequired;
+    private YesNo interpreterRequired;
 
 	/**
 	 * Number of witness that the disputant intends to call.
@@ -398,7 +397,7 @@ public class Dispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
-	private YesNo disputantDetectedOcrIssues;
+    private YesNo disputantDetectedOcrIssues;
 
 	/**
 	 * The description of the issue with OCR ticket if the citizen has detected any.
@@ -414,7 +413,7 @@ public class Dispute extends Auditable<String> {
 	@Column
 	@Schema(nullable= false)
 	@Enumerated(EnumType.STRING)
-	private YesNo systemDetectedOcrIssues;
+    private YesNo systemDetectedOcrIssues;
 
 	/**
 	 * All OCR Violation ticket data serialized into a JSON string.
@@ -436,10 +435,10 @@ public class Dispute extends Auditable<String> {
 	@JoinColumn(name = "dispute_status_type_cd", referencedColumnName="disputeStatusTypeCode")
 	private DisputeStatusType disputeStatusType;
 
-	@JsonManagedReference(value="dispute_count_reference")
-	@OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	@JoinColumn(name="dispute_id", referencedColumnName="disputeId")
-	private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
+    @JsonManagedReference(value="dispute_count_reference")
+    @OneToMany(targetEntity=DisputeCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="dispute_id", referencedColumnName="disputeId")
+    private List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
 
 	public void setViolationTicket(ViolationTicket ticket) {
 		if (ticket == null) {
