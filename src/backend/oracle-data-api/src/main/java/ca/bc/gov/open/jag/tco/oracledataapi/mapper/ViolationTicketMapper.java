@@ -17,9 +17,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeReposito
 
 @Mapper
 public interface ViolationTicketMapper {
-	
+
 	ViolationTicketMapper INSTANCE = Mappers.getMapper(ViolationTicketMapper.class);
-	
+
 	// Map from Oracle Data API dispute model to ORDS dispute data
 	@Mapping(target = "dispute.entDtm", source = "createdTs", dateFormat = DisputeRepositoryImpl.DATE_TIME_FORMAT)
 	@Mapping(target = "dispute.entUserId", source = "createdBy")
@@ -47,7 +47,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.homePhoneNumberTxt", source = "homePhoneNumber")
 	@Mapping(target = "dispute.workPhoneNumberTxt", source = "workPhoneNumber")
 	@Mapping(target = "dispute.emailAddressTxt", source = "emailAddress")
-	@Mapping(target = "dispute.emailVerificationGuid", source = "emailVerificationToken")
+	@Mapping(target = "dispute.noticeOfDisputeGuid", source = "noticeOfDisputeGuid")
 	@Mapping(target = "dispute.emailVerifiedYn", source = "emailAddressVerified", qualifiedByName="mapBooleanToYn")
 	@Mapping(target = "dispute.filingDt", source = "filingDate")
 	@Mapping(target = "dispute.representedByLawyerYn", source = "representedByLawyer")
@@ -116,7 +116,7 @@ public interface ViolationTicketMapper {
 	// Map from Oracle Data API violation ticket count model to ORDS violation ticket counts data
 	@Mapping(target = "violationTicketCounts", source = "violationTicket.violationTicketCounts")
 	ViolationTicket convertDisputeToViolationTicketDto (Dispute dispute);
-	
+
 	@Mapping(target = "entUserId", source = "createdBy")
 	@Mapping(target = "entDtm", source = "createdTs")
 	@Mapping(target = "updUserId", source = "modifiedBy")
@@ -163,11 +163,16 @@ public interface ViolationTicketMapper {
 	@Named("mapDisputeCount")
 	default ca.bc.gov.open.jag.tco.oracledataapi.api.model.DisputeCount mapDisputeCount(ViolationTicketCount violationTicketCount) {
 		int countNo = violationTicketCount.getCountNo();
-		List<DisputeCount> disputeCounts = violationTicketCount.getViolationTicket().getDispute().getDisputeCounts();
-		
-		if ( disputeCounts == null || disputeCounts.isEmpty()) {
+
+		if ( violationTicketCount == null
+				|| violationTicketCount.getViolationTicket() == null
+				|| violationTicketCount.getViolationTicket().getDispute() == null
+				|| violationTicketCount.getViolationTicket().getDispute().getDisputeCounts() == null
+				|| violationTicketCount.getViolationTicket().getDispute().getDisputeCounts().isEmpty()) {
             return null;
         }
+
+		List<DisputeCount> disputeCounts = violationTicketCount.getViolationTicket().getDispute().getDisputeCounts();
 
 		for (DisputeCount disputeCount : disputeCounts) {
 			if (disputeCount.getCountNo() == countNo) {
@@ -176,7 +181,7 @@ public interface ViolationTicketMapper {
 				count.setEntUserId(disputeCount.getCreatedBy());
 				count.setUpdDtm(disputeCount.getModifiedTs());
 				count.setUpdUserId(disputeCount.getModifiedBy());
-				
+
 				if (disputeCount.getPleaCode() != null) {
 					count.setPleaCd(disputeCount.getPleaCode().toString());
 				}

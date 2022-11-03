@@ -34,8 +34,8 @@ public class DisputeCount extends Auditable<String> {
 	 */
 	@Schema(description = "ID", accessMode = Schema.AccessMode.READ_ONLY)
 	@Id
-	@GeneratedValue
 	@JsonIgnore // FIXME: this field should not be excluded (temp excluded for now to get things working).
+	@GeneratedValue
 	private Long disputeCountId;
 
 	/**

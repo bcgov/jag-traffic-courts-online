@@ -23,6 +23,7 @@ public class OracleDataApiService : IOracleDataApiService
         if (!string.IsNullOrEmpty(dispute.OcrViolationTicket))
         {
             dispute.ViolationTicket = new();
+            dispute.ViolationTicket.TicketNumber = dispute.TicketNumber;
 
             // TODO: initialize ViolationTicket with data from OCR 
         }
