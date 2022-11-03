@@ -25,7 +25,13 @@ plugins:
 
 exclude_patterns:
   # Backend File Specific Excludes
-  - "src/backend/BcGov.TrafficCourts.Api/DisputeApi.Web.Test/"
+  - "src/backend/TrafficCourts/Test/"
+  - "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client.Test/"
+  - "src/backend/TrafficCourts/TrafficCourts.Common.Test/"
+  - "src/backend/TrafficCourts/TrafficCourts.Messaging.Test/"
+  - "src/backend/TrafficCourts/TrafficCourts.Staff.Service.Test/"
+  - "src/backend/TrafficCourts/TrafficCourts.Workflow.Service.IntegrationTests/"
+  
   # Frontend Pattern Excludes
   - "src/frontend/*/karma.conf.js"
   - "src/frontend/*/package.json"
