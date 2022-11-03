@@ -26,6 +26,8 @@ FROM eclipse-temurin:11
 WORKDIR /app
 EXPOSE 8080
 
+ENV TZ=America/Vancouver
+
 COPY --from=build ./target/oracle-data-api.jar .
 COPY --from=build ./entrypoint.sh .
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh

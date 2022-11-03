@@ -22,7 +22,7 @@ public class JJDisputeTasks {
 	private JJDisputeService jjDisputeService;
 
 	@Scheduled(cron = "${cronjob.jj-dispute.unassign.cron}")
-	public void refresh() {
+	public void unassignJJDisputes() {
 		logger.debug("Scheduled 'unassignJJDisputes' cron job called.");
 		jjDisputeService.unassignJJDisputes();
 	}
