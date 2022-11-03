@@ -26,7 +26,7 @@ public class SendEmailToDispuantConsumer : IConsumer<SendDispuantEmail>
 
     public async Task Consume(ConsumeContext<SendDispuantEmail> context)
     {
-        using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
+        using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
 
         EmailMessage emailMessage = context.Message.Message;
 
@@ -44,7 +44,7 @@ public class SendEmailToDispuantConsumer : IConsumer<SendDispuantEmail>
             {
                 Message = emailMessage,
                 TicketNumber = context.Message.TicketNumber,
-                NoticeOfDisputeId = context.Message.NoticeOfDisputeId,
+                NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
                 SentAt = now
             };
 
@@ -58,7 +58,7 @@ public class SendEmailToDispuantConsumer : IConsumer<SendDispuantEmail>
             {
                 Message = emailMessage,
                 TicketNumber = context.Message.TicketNumber,
-                NoticeOfDisputeId = context.Message.NoticeOfDisputeId,
+                NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
                 FilteredAt = now
             };
 

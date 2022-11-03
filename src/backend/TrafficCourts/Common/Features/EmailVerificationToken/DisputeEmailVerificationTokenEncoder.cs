@@ -17,7 +17,7 @@ public class DisputeEmailVerificationTokenEncoder : IDisputeEmailVerificationTok
     public string Encode(DisputeEmailVerificationToken token)
     {
         ArgumentNullException.ThrowIfNull(token);
-        string hex = token.NoticeOfDisputeId.ToString(GuidFormat) + token.Token.ToString(GuidFormat);
+        string hex = token.NoticeOfDisputeGuid.ToString(GuidFormat) + token.Token.ToString(GuidFormat);
         return _hashids.EncodeHex(hex);
     }
 
@@ -40,7 +40,7 @@ public class DisputeEmailVerificationTokenEncoder : IDisputeEmailVerificationTok
 
         token = new DisputeEmailVerificationToken
         {
-            NoticeOfDisputeId = new Guid(hex[..GuidLength]),
+            NoticeOfDisputeGuid = new Guid(hex[..GuidLength]),
             Token = new Guid(hex.Substring(GuidLength, GuidLength))
         };
 

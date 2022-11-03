@@ -7,7 +7,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The unique system generated notice of dispute identifer.
     /// </summary>
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
 
     /// <summary>
     /// The status of the dispute. Defaults to <see cref="DisputeStatus.NEW"/>.

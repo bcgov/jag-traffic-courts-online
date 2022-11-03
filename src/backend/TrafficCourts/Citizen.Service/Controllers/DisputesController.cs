@@ -84,12 +84,12 @@ public class DisputesController : ControllerBase
     public async Task<IActionResult> ResendEmailAsync(string uuidHash, CancellationToken cancellationToken)
     {
         var hex = _hashids.DecodeHex(uuidHash);
-        if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out Guid noticeOfDisputeId))
+        if (hex == String.Empty || hex.Length != 32 || !Guid.TryParse(hex, out Guid noticeOfDisputeGuid))
         {
             return BadRequest("Invalid dispute id");
         }
 
-        var message = new ResendEmailVerificationEmail { NoticeOfDisputeId = noticeOfDisputeId };
+        var message = new ResendEmailVerificationEmail { NoticeOfDisputeGuid = noticeOfDisputeGuid };
         await _bus.PublishWithLog(_logger, message, cancellationToken);
 
         return Accepted();
@@ -112,11 +112,11 @@ public class DisputesController : ControllerBase
             return BadRequest("Invalid verification token");
         }
 
-        using var scope = _logger.BeginScope(verificationToken, _ => _.NoticeOfDisputeId);
+        using var scope = _logger.BeginScope(verificationToken, _ => _.NoticeOfDisputeGuid);
 
         CheckEmailVerificationTokenRequest emailVerificationReceived = new CheckEmailVerificationTokenRequest
         {
-            NoticeOfDisputeId = verificationToken.NoticeOfDisputeId,
+            NoticeOfDisputeGuid = verificationToken.NoticeOfDisputeGuid,
             Token = verificationToken.Token
         };
 

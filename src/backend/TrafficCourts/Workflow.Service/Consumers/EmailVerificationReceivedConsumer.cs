@@ -27,12 +27,12 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
 
     public async Task Consume(ConsumeContext<EmailVerificationSuccessful> context)
     {
-        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
+        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
 
         var message = context.Message;
         try
         {
-            Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeIdAsync(message.NoticeOfDisputeId, context.CancellationToken);
+            Dispute? dispute = await _oracleDataApiService.GetDisputeByNoticeOfDisputeGuidAsync(message.NoticeOfDisputeGuid, context.CancellationToken);
             if (dispute is null)
             {
                 _logger.LogInformation("Dispute not found");
@@ -57,7 +57,7 @@ public class SetEmailVerifiedOnDisputeInDatabase : IConsumer<EmailVerificationSu
             {
                 Message = emailMessage,
                 TicketNumber = dispute.TicketNumber,
-                NoticeOfDisputeId = Guid.Empty   // TODO: set correct NoticeOfDisputeId
+                NoticeOfDisputeGuid = Guid.Empty   // TODO: set correct NoticeOfDisputeGuid
             }, context.CancellationToken);
 
             dispute.EmailAddressVerified = true;

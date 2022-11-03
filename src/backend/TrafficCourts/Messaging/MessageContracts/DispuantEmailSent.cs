@@ -19,7 +19,7 @@ namespace TrafficCourts.Messaging.MessageContracts
         /// <summary>
         /// The notice of dispute identifer.
         /// </summary>
-        public Guid NoticeOfDisputeId { get; set; }
+        public Guid NoticeOfDisputeGuid { get; set; }
 
         /// <summary>
         /// The date and time the message was sent at.

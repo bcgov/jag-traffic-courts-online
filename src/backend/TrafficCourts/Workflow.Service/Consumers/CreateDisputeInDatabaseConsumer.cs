@@ -24,7 +24,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
 
         public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
         {
-            using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
+            using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
 
             try
             {
@@ -44,7 +44,7 @@ namespace TrafficCourts.Workflow.Service.Consumers
                     await context.PublishWithLog(_logger, new NoticeOfDisputeSubmitted
                     {
                         DisputeId = disputeId,
-                        NoticeOfDisputeId = context.Message.NoticeOfDisputeId,
+                        NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
                     }, cancellationToken);
                 }
                 else

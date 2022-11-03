@@ -2,7 +2,7 @@
 
 public class VerifyEmailAddressSagaState : BaseStateMachineState
 {
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
 
     public string EmailAddress { get; set; } = String.Empty;
 

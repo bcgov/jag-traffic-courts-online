@@ -18,7 +18,7 @@ public class SendEmailVerificationEmailConsumer : IConsumer<SendEmailVerificatio
 
     public async Task Consume(ConsumeContext<SendEmailVerificationEmail> context)
     {
-        using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
+        using var scope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
 
         _logger.LogDebug("Creating email verification email");
 
@@ -27,7 +27,7 @@ public class SendEmailVerificationEmailConsumer : IConsumer<SendEmailVerificatio
         var message = new SendDispuantEmail
         {
             Message = emailMessage,
-            NoticeOfDisputeId = context.Message.NoticeOfDisputeId,
+            NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid,
             TicketNumber = context.Message.TicketNumber
         };
 
