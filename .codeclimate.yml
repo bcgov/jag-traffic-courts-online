@@ -24,6 +24,15 @@ plugins:
     enabled: false
 
 exclude_patterns:
+  # Non Code Folders
+  - ".docker/"
+  - ".github/"
+  - ".gitops/"
+  - ".settings/"
+  - "infrastructure/"
+  - "splunk-dash-board/"
+  - "tools/"
+  
   # Backend File Specific Excludes
   - "src/backend/TrafficCourts/Test/"
   - "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client.Test/"
