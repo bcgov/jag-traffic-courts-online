@@ -207,7 +207,7 @@ public class DisputeController {
 		@ApiResponse(responseCode = "500", description = "Internal server error occured.")
 	})
 	@GetMapping("/dispute/noticeOfDispute/{id}")
-	public ResponseEntity<Dispute> getDisputeByNoticeOfDisputeId(
+	public ResponseEntity<Dispute> getDisputeByNoticeOfDisputeGuid(
 			@PathVariable(name = "id") @Parameter(description = "The noticeOfDisputeGuid of the Dispute to retreive.") String noticeOfDisputeGuid) {
 		logger.debug("GET /dispute/noticeOfDispute/{id} called");
 		try {

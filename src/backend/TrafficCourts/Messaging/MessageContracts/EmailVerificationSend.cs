@@ -5,10 +5,10 @@
 /// </summary>
 public class EmailVerificationSend
 {
-    public EmailVerificationSend(Guid noticeOfDisputeId)
+    public EmailVerificationSend(Guid noticeOfDisputeGuid)
     {
-        NoticeOfDisputeId = noticeOfDisputeId;
+        NoticeOfDisputeGuid = noticeOfDisputeGuid;
     }
 
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
 }

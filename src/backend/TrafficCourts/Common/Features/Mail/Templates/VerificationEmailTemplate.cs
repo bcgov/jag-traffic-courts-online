@@ -52,7 +52,7 @@
 //            throw new InvalidOperationException($"Cannot create email validation link. Configuration {property} is null or empty.");
 //        }
 
-//        var token = _encoder.Encode(new DisputeEmailVerificationToken { NoticeOfDisputeId = data.NoticeOfDisputeId, Token = data.Token });
+//        var token = _encoder.Encode(new DisputeEmailVerificationToken { NoticeOfDisputeGuid = data.NoticeOfDisputeGuid, Token = data.Token });
 //        string uri = format + "?token=" + token;
 
 //        return new Uri(uri);

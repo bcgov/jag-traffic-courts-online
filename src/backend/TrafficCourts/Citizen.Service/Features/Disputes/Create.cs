@@ -39,14 +39,14 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                 Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             }
 
-            public Response(string noticeOfDisputeId)
+            public Response(string noticeOfDisputeGuid)
             {
-                NoticeOfDisputeId = EmailVerificationToken = noticeOfDisputeId;
+                NoticeOfDisputeGuid = EmailVerificationToken = noticeOfDisputeGuid;
             }
 
             public Exception? Exception { get; init; }
             public string? EmailVerificationToken { get; }
-            public string? NoticeOfDisputeId { get;}
+            public string? NoticeOfDisputeGuid { get;}
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -155,7 +155,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     }
 
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
-                    submitNoticeOfDispute.NoticeOfDisputeId = NewId.NextGuid();
+                    submitNoticeOfDispute.NoticeOfDisputeGuid = NewId.NextGuid();
                     submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
                     submitNoticeOfDispute.SubmittedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
 
@@ -170,7 +170,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     // success, return true
                     activity?.SetStatus(ActivityStatusCode.Ok);
 
-                    var hash = _hashids.EncodeHex(submitNoticeOfDispute.NoticeOfDisputeId.ToString("n"));
+                    var hash = _hashids.EncodeHex(submitNoticeOfDispute.NoticeOfDisputeGuid.ToString("n"));
                     return new Response(hash);
                 }
                 catch (Exception exception)

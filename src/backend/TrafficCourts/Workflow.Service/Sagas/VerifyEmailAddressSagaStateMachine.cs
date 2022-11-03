@@ -48,18 +48,18 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
 
         // TODO: CorrelationId is the key in Redis, so need to ensure the CorrelationId used is unique for this saga
 
-        Event(() => RequestEmailVerification, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeId)));
-        Event(() => ResendEmailVerificationEmail, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeId)));
-        Event(() => SendEmailVerificationFailed, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeId)));
-        Event(() => EmailVerificationSuccessful, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeId)));
-        Event(() => NoticeOfDisputeSubmitted, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeId)));
+        Event(() => RequestEmailVerification, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
+        Event(() => ResendEmailVerificationEmail, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
+        Event(() => SendEmailVerificationFailed, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
+        Event(() => EmailVerificationSuccessful, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
+        Event(() => NoticeOfDisputeSubmitted, x => x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid)));
 
         Event(() => CheckEmailVerificationToken, x =>
         {
-            x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeId));
+            x.CorrelateById(context => ToCorrelationId(context.Message.NoticeOfDisputeGuid));
             x.OnMissingInstance(m => m.ExecuteAsync(context =>
             {
-                _logger.LogInformation("Count not find an instance for {NoticeOfDisputeId}", context.Message.NoticeOfDisputeId);
+                _logger.LogInformation("Count not find an instance for {NoticeOfDisputeGuid}", context.Message.NoticeOfDisputeGuid);
                 return SendResponse(context, CheckEmailVerificationTokenStatus.NotFound);
             }));
         });
@@ -108,14 +108,14 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     /// Two different sagas using the same key would clobber each other's state.
     /// </summary>
     /// <typeparam name="TStateMachine"></typeparam>
-    /// <param name="noticeOfDisputeId"></param>
+    /// <param name="NoticeOfDisputeGuid"></param>
     /// <returns></returns>
-    internal static Guid ToCorrelationId(Guid noticeOfDisputeId)
+    internal static Guid ToCorrelationId(Guid NoticeOfDisputeGuid)
     {
         var buffer = new byte[16 * 2];
 
         Array.Copy(SagaGuid.ToByteArray(), 0, buffer, 0, 16);
-        Array.Copy(noticeOfDisputeId.ToByteArray(), 0, buffer, 16, 16);
+        Array.Copy(NoticeOfDisputeGuid.ToByteArray(), 0, buffer, 16, 16);
 
         Guid correlationId = new Guid(MD5.HashData(buffer));
         return correlationId;
@@ -131,7 +131,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
     private void CreateToken(BehaviorContext<VerifyEmailAddressSagaState, RequestEmailVerification> context)
     {
         var state = context.Saga;
-        state.NoticeOfDisputeId = context.Message.NoticeOfDisputeId;
+        state.NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid;
         state.EmailAddress = context.Message.EmailAddress;
         state.TicketNumber = context.Message.TicketNumber;
         state.Token = Guid.NewGuid();
@@ -169,7 +169,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
 
         await context.PublishWithLog(_logger, new SendEmailVerificationEmail
         {
-            NoticeOfDisputeId = state.NoticeOfDisputeId,
+            NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
             EmailAddress = state.EmailAddress,
             TicketNumber = state.TicketNumber,
             Token = state.Token
@@ -182,7 +182,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
 
         await context.PublishWithLog(_logger, new SendEmailVerificationEmail
         {
-            NoticeOfDisputeId = state.NoticeOfDisputeId,
+            NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
             EmailAddress = state.EmailAddress,
             TicketNumber = state.TicketNumber,
             Token = state.Token
@@ -237,7 +237,7 @@ public class VerifyEmailAddressSagaStateMachine : MassTransitStateMachine<Verify
         await context.PublishWithLog(_logger, new EmailVerificationSuccessful
         {
             DisputeId = disputeId,
-            NoticeOfDisputeId = state.NoticeOfDisputeId,
+            NoticeOfDisputeGuid = state.NoticeOfDisputeGuid,
             TicketNumber = state.TicketNumber,
             EmailAddress = state.EmailAddress,
             VerifiedAt = state.VerifiedAt.Value

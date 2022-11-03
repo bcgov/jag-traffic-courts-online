@@ -285,19 +285,19 @@ public class DisputeService {
 	}
 
 	/**
-	 * Finds a Dispute by noticeOfDisputeId (UUID) or null if not found.
+	 * Finds a Dispute by noticeOfDisputeGuid (UUID) or null if not found.
 	 */
 	public Dispute getDisputeByNoticeOfDisputeGuid(String noticeOfDisputeGuid) {
-		List<Dispute> findByNoticeOfDisputeId = disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid);
-		if (CollectionUtils.isEmpty(findByNoticeOfDisputeId)) {
+		List<Dispute> findByNoticeOfDisputeGuid = disputeRepository.findByNoticeOfDisputeGuid(noticeOfDisputeGuid);
+		if (CollectionUtils.isEmpty(findByNoticeOfDisputeGuid)) {
 			String msg = String.format("Dispute could not be found with noticeOfDisputeGuid: %s", noticeOfDisputeGuid);
 			logger.error(msg);
 			return null;
 		}
-		if (findByNoticeOfDisputeId.size() > 1) {
+		if (findByNoticeOfDisputeGuid.size() > 1) {
 			logger.warn("Unexpected number of disputes returned. More than 1 dispute have been returned based on the provided noticeOfDisputeGuid: " + noticeOfDisputeGuid);
 		}
-		return findByNoticeOfDisputeId.get(0);
+		return findByNoticeOfDisputeGuid.get(0);
 	}
 
 	/**

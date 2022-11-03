@@ -8,7 +8,7 @@ public class CheckEmailVerificationTokenRequest
     /// <summary>
     /// The notice of dispute id.
     /// </summary>
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
 
     /// <summary>
     /// The token encoded in the email used to validate the 
@@ -32,7 +32,7 @@ public abstract class EmailVerificationMessage
     /// <summary>
     /// The notice of dispute id.
     /// </summary>
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
 
     /// <summary>
     /// The ticket number associated with the dispute.
@@ -59,7 +59,7 @@ public class EmailVerificationSuccessful : EmailVerificationMessage
 public class NoticeOfDisputeSubmitted
 {
     public long DisputeId { get; set; }
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
     public string EmailAddress { get; set; } = string.Empty;
     public bool RequiresEmailVerification { get; set; } = true;
 }

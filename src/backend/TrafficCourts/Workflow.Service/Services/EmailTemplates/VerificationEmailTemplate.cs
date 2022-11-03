@@ -51,7 +51,7 @@ If you need more help, contact the Violation Ticket Centre toll free 1-877-661-8
             throw new InvalidOperationException($"Cannot create email validation link. Configuration {property} is null or empty.");
         }
 
-        var token = _encoder.Encode(new DisputeEmailVerificationToken { NoticeOfDisputeId = data.NoticeOfDisputeId, Token = data.Token });
+        var token = _encoder.Encode(new DisputeEmailVerificationToken { NoticeOfDisputeGuid = data.NoticeOfDisputeGuid, Token = data.Token });
         string uri = format + "?token=" + token;
 
         return new Uri(uri);

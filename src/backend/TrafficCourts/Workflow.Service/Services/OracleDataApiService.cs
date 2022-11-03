@@ -8,7 +8,7 @@ public class OracleDataApiService : IOracleDataApiService
     /// The format of a Guid when passed to Oracle data api
     /// 32 digits separated by hyphens: 00000000-0000-0000-0000-000000000000
     /// </summary>
-    private const string NoticeOfDisputeIdFormat = "d";
+    private const string NoticeOfDisputeGuidFormat = "d";
 
     private readonly IOracleDataApiClient _client;
 
@@ -53,12 +53,12 @@ public class OracleDataApiService : IOracleDataApiService
         }
     }
 
-    public async Task<Dispute?> GetDisputeByNoticeOfDisputeIdAsync(Guid noticeOfDisputeId, CancellationToken cancellationToken)
+    public async Task<Dispute?> GetDisputeByNoticeOfDisputeGuidAsync(Guid NoticeOfDisputeGuid, CancellationToken cancellationToken)
     {
-        var id = noticeOfDisputeId.ToString(NoticeOfDisputeIdFormat);
+        var id = NoticeOfDisputeGuid.ToString(NoticeOfDisputeGuidFormat);
         try
         {
-            return await _client.GetDisputeByNoticeOfDisputeIdAsync(id, cancellationToken);
+            return await _client.GetDisputeByNoticeOfDisputeGuidAsync(id, cancellationToken);
         }
         catch (ApiException e) when (e.StatusCode == 404)
         {

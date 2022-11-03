@@ -19,9 +19,9 @@ public class StartDisputantEmailVerificationConsumer : IConsumer<SubmitNoticeOfD
 
     public async Task Consume(ConsumeContext<SubmitNoticeOfDispute> context)
     {
-        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeId);
+        using var loggingScope = _logger.BeginConsumeScope(context, message => message.NoticeOfDisputeGuid);
 
-        Guid noticeOfDisputeId = context.Message.NoticeOfDisputeId;
+        Guid NoticeOfDisputeGuid = context.Message.NoticeOfDisputeGuid;
         string emailAddress = context.Message.EmailAddress;
         string ticketNumber = context.Message.TicketNumber ?? string.Empty;
 
@@ -42,7 +42,7 @@ public class StartDisputantEmailVerificationConsumer : IConsumer<SubmitNoticeOfD
         // TCVP-1529 Saving a dispute should send a verification email to the Disputant.
         var message = new RequestEmailVerification
         {
-            NoticeOfDisputeId = noticeOfDisputeId,
+            NoticeOfDisputeGuid = NoticeOfDisputeGuid,
             EmailAddress = emailAddress,
             TicketNumber = ticketNumber
         };

@@ -5,6 +5,6 @@
 /// </summary>
 public class DisputeEmailVerificationToken
 {
-    public Guid NoticeOfDisputeId { get; set; }
+    public Guid NoticeOfDisputeGuid { get; set; }
     public Guid Token { get; set; }
 }

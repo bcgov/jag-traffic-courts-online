@@ -9,7 +9,7 @@
     "build-dev": "yarn run configure --environment=dev && ng build --source-map=false",
     "build-prod": "yarn run configure --environment=prod && ng build --configuration production --source-map=false",
     "api:clean": "npx del-cli \"src/app/api/**\" \"!src/app/api/templates\"",
-    "api:download": "npx download -o src/app/api http://localhost:7005/swagger/v1/swagger.json",
+    "api:download": "npx download -o src/app/api http://localhost:5000/swagger/v1/swagger.json",
     "api:generate": "npx openapi-generator-cli generate -i src/app/api/swagger.json -g typescript-angular -t src/app/api/templates --additional-properties=modelFileSuffix=.model -o src/app/api",
     "test": "ng test",
     "lint": "ng lint",
