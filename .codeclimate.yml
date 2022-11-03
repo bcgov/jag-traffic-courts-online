@@ -34,6 +34,7 @@ exclude_patterns:
   - "tools/"
   
   # Backend File Specific Excludes
+  - "src/backend/oracle-data-api/src/test"
   - "src/backend/TrafficCourts/Test/"
   - "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client.Test/"
   - "src/backend/TrafficCourts/TrafficCourts.Common.Test/"
@@ -45,6 +46,7 @@ exclude_patterns:
   - "src/backend/TrafficCourts/TrafficCourts.Arc.Dispute.Client/ArcDisputeClient.generated.cs"
   - "src/backend/TrafficCourts/Common/OpenAPIs/Keycloak/v18_0/KeycloakAdminApiClient.cs"
   - "src/backend/TrafficCourts/Common/OpenAPIs/OracleDataAPI/v1_0/OracleDataApiClient.cs"
+  - "src/frontend/*/src/app/api"
 
   # Frontend Pattern Excludes
   - "src/frontend/*/karma.conf.js"
