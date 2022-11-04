@@ -35,7 +35,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
         this.userProfile = userProfile;
         this.fullName = this.authService.userFullName;
         this.jjAdminRole = this.authService.checkRole("admin-judicial-justice");
-        this.jjIDIR = this.authService.userIDIR;
+        this.jjIDIR = this.authService.userIDIR.split("@")[0];
       }
     })
   }

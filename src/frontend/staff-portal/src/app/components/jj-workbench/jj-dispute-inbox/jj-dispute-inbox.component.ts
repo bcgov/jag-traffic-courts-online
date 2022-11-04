@@ -45,7 +45,7 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.authService.userProfile$.subscribe(userProfile => {
       if (userProfile) {
-        this.jjIDIR = this.authService.userIDIR;
+        this.jjIDIR = this.authService.userIDIR.split("@")[0];
         this.getAll();
       }
     })
