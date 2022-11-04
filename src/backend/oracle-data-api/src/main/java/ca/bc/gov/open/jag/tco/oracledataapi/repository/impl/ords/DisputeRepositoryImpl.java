@@ -215,6 +215,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
 		String dateStr = simpleDateFormat.format(olderThan);
 
+		logger.debug("Unassigning Disputes older than '{}'", dateStr);
+
 		assertNoExceptions(() -> violationTicketApi.v1UnassignViolationTicketPost(dateStr));
 	}
 

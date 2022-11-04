@@ -22,7 +22,7 @@ public class DisputeTasks {
 	private DisputeService disputeService;
 
 	@Scheduled(cron = "${cronjob.dispute.unassign.cron}")
-	public void refresh() {
+	public void unassignDisputes() {
 		logger.debug("Scheduled 'unassignDisputes' cron job called.");
 		disputeService.unassignDisputes();
 	}
