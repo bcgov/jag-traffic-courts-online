@@ -24,6 +24,15 @@ public class OracleDataApiService : IOracleDataApiService
         {
             dispute.ViolationTicket = new();
             dispute.ViolationTicket.TicketNumber = dispute.TicketNumber;
+            // Stub out the violationsTicketCounts with default count no for mapping dispute counts properly in Oracle API
+            List<ViolationTicketCount> violationTicketCounts = new();
+            for (int i = 1; i <= 3; i++)
+            {
+                ViolationTicketCount violationTicketCount = new();
+                violationTicketCount.CountNo = i;
+                violationTicketCounts.Add(violationTicketCount);
+            }
+            dispute.ViolationTicket.ViolationTicketCounts = violationTicketCounts;
 
             // TODO: initialize ViolationTicket with data from OCR 
         }
