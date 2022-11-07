@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import javax.ws.rs.InternalServerErrorException;
 
-import org.hibernate.cfg.NotYetImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,6 +38,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
+	public static final String TIME_FORMAT = "HH:mm";
 
 	private static Logger logger = LoggerFactory.getLogger(DisputeRepositoryImpl.class);
 
@@ -61,8 +61,7 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 
 	@Override
 	public List<Dispute> findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(DisputeStatus excludeStatus, Date olderThan, String noticeOfDisputeGuid) {
-		List<Dispute> disputesToReturn = new ArrayList<Dispute>();
-		String olderThanDate = null ;
+				String olderThanDate = null ;
 		String statusShortName = excludeStatus != null ? excludeStatus.toShortName() : null;
 
 		if (olderThan != null) {
@@ -71,25 +70,8 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		}
 
 		try {
-			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, noticeOfDisputeGuid);
-			if (response != null && !response.getViolationTickets().isEmpty()) {
-				logger.debug("Successfully returned disputes from ORDS that are older than " + olderThan + " and excluding the status: " + excludeStatus);
-
-				disputesToReturn = response.getViolationTickets().stream()
-						.map(violationTicket -> DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket))
-						.collect(Collectors.toList());
-
-				// NPE fix - Some Disputes have missing counts. This should be impossible - presumably bad data.
-				if (disputesToReturn != null) {
-					for (Dispute dispute : disputesToReturn) {
-						if (dispute.getDisputeCounts() == null) {
-							logger.error("Dispute missing counts. Bad data? DisputeId: {}", dispute.getDisputeId());
-							dispute.setDisputeCounts(new ArrayList<>());
-						}
-					}
-				}
-			}
-			return disputesToReturn;
+			ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(olderThanDate, statusShortName, null, noticeOfDisputeGuid, null);
+			return extractDisputes(response);
 
 		} catch (ApiException e) {
 			logger.error("ERROR retrieving Disputes from ORDS");
@@ -103,8 +85,18 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 	}
 
 	@Override
-	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date time) {
-		throw new NotYetImplementedException();
+	public List<DisputeResult> findByTicketNumberAndTime(String ticketNumber, Date issuedTime) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_FORMAT);
+		String time = simpleDateFormat.format(issuedTime);
+		ViolationTicketListResponse response = violationTicketApi.v1ViolationTicketListGet(null, null, ticketNumber, null, time);
+		List<Dispute> extractedDisputes = extractDisputes(response);
+
+		// Convert Disputes to DisputeResult objects
+		List<DisputeResult> disputeResults = extractedDisputes.stream()
+				.map(dispute -> new DisputeResult(dispute.getDisputeId(), dispute.getStatus()))
+				.collect(Collectors.toList());
+
+		return disputeResults;
 	}
 
 	@Override
@@ -270,6 +262,31 @@ public class DisputeRepositoryImpl implements DisputeRepository {
 		} else {
 			return result;
 		}
+	}
+
+	/**
+	 * Helper method to convert a ViolationTicketListResponse to a List of Disputes
+	 */
+	private List<Dispute> extractDisputes(ViolationTicketListResponse response) {
+		List<Dispute> disputesToReturn = new ArrayList<Dispute>();
+		if (response != null && !response.getViolationTickets().isEmpty()) {
+			logger.debug("Successfully returned disputes from ORDS");
+
+			disputesToReturn = response.getViolationTickets().stream()
+					.map(violationTicket -> DisputeMapper.INSTANCE.convertViolationTicketDtoToDispute(violationTicket))
+					.collect(Collectors.toList());
+
+			// NPE fix - Some Disputes have missing counts. This should be impossible - presumably bad data.
+			if (disputesToReturn != null) {
+				for (Dispute dispute : disputesToReturn) {
+					if (dispute.getDisputeCounts() == null) {
+						logger.error("Dispute missing counts. Bad data? DisputeId: {}", dispute.getDisputeId());
+						dispute.setDisputeCounts(new ArrayList<>());
+					}
+				}
+			}
+		}
+		return disputesToReturn;
 	}
 
 }
