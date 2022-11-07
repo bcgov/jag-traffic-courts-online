@@ -23,7 +23,7 @@ public class JJDisputeService : IJJDisputeService
 
     public async Task<ICollection<JJDispute>> GetAllJJDisputesAsync(string? jjAssignedTo, CancellationToken cancellationToken)
     {
-        return await _oracleDataApi.GetAllJJDisputesAsync(jjAssignedTo, cancellationToken);
+        return await _oracleDataApi.GetJJDisputesAsync(jjAssignedTo, null, null, cancellationToken);
     }
 
     public async Task<JJDispute> GetJJDisputeAsync(string disputeId, bool assignVTC, CancellationToken cancellationToken)
