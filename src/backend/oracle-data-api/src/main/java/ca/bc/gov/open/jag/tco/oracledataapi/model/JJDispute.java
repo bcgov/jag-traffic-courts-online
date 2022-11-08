@@ -249,7 +249,7 @@ public class JJDispute extends Auditable<String>{
 		this.remarks.addAll(remarks);
 	}
 
-	@JsonManagedReference(value="jj_dispute_court_appearance_reference")
+	@JsonManagedReference(value="jj_dispute_court_appearance_rop_reference")
 	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	@Builder.Default
