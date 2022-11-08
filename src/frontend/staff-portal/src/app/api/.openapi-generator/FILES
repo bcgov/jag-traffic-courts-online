@@ -33,6 +33,10 @@ model/federatedIdentityRepresentation.model.ts
 model/field.model.ts
 model/fileHistory.model.ts
 model/jJDispute.model.ts
+model/jJDisputeCourtAppearanceRoP.model.ts
+model/jJDisputeCourtAppearanceRoPApp.model.ts
+model/jJDisputeCourtAppearanceRoPCrown.model.ts
+model/jJDisputeHearingType.model.ts
 model/jJDisputeRemark.model.ts
 model/jJDisputeStatus.model.ts
 model/jJDisputedCount.model.ts
@@ -41,6 +45,13 @@ model/jJDisputedCountIncludesSurcharge.model.ts
 model/jJDisputedCountPlea.model.ts
 model/jJDisputedCountRequestReduction.model.ts
 model/jJDisputedCountRequestTimeToPay.model.ts
+model/jJDisputedCountRoP.model.ts
+model/jJDisputedCountRoPAbatement.model.ts
+model/jJDisputedCountRoPDismissed.model.ts
+model/jJDisputedCountRoPFinding.model.ts
+model/jJDisputedCountRoPForWantOfProsecution.model.ts
+model/jJDisputedCountRoPJailIntermittent.model.ts
+model/jJDisputedCountRoPWithdrawn.model.ts
 model/models.ts
 model/ocrViolationTicket.model.ts
 model/point.model.ts

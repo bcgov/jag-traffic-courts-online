@@ -59,14 +59,14 @@ public class JJDisputeController {
 	}
 	
 	/**
-	 * GET endpoint that retrieves all the jj disputes optionally filtered by jjAssignedTo from the database
+	 * GET endpoint that retrieves all the jj disputes for Written Reasons optionally filtered by jjAssignedTo from the database
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
-	 * @return list of all jj disputes
+	 * @return list of all jj disputes for written reasons
 	 */
 	@GetMapping("/disputes")
 	public List<JJDispute> getAllJJDisputes(
 			@RequestParam(required = false)
-			@Parameter(description = "If specified, will retrieve the records which are assigned to the specified jj staff")
+			@Parameter(description = "If specified, will retrieve the written Reasons records which are assigned to the specified jj staff")
 			String jjAssignedTo) {
 		logger.debug("getAllJJDisputes called");
 

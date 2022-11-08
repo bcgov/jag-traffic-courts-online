@@ -9,9 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JJDisputeCourtAppearanceRoP } from './jJDisputeCourtAppearanceRoP.model';
 import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputedCount } from './jJDisputedCount.model';
 import { DisputantContactInformation } from './disputantContactInformation.model';
+import { JJDisputeHearingType } from './jJDisputeHearingType.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
 
 
@@ -22,6 +24,7 @@ export interface JJDispute {
     modifiedTs?: string | null;
     ticketNumber?: string | null;
     status?: JJDisputeStatus;
+    hearingType?: JJDisputeHearingType;
     submittedDate?: string | null;
     violationDate?: string | null;
     icbcReceivedDate?: string | null;
@@ -37,9 +40,17 @@ export interface JJDispute {
     vtcAssignedTs?: string | null;
     fineReductionReason?: string | null;
     timeToPayReason?: string | null;
+    lawFirmName?: string | null;
+    lawyerSurname?: string | null;
+    lawyerGivenName1?: string | null;
+    lawyerGivenName2?: string | null;
+    lawyerGivenName3?: string | null;
+    interpreterLanguage?: string | null;
+    witnessNo?: number | null;
     remarks?: Array<JJDisputeRemark> | null;
     contactInformation?: DisputantContactInformation;
     jjDisputedCounts?: Array<JJDisputedCount> | null;
+    jjDisputeCourtAppearanceRoPs?: Array<JJDisputeCourtAppearanceRoP> | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

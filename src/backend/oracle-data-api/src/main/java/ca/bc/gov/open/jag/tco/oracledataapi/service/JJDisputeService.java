@@ -48,7 +48,7 @@ public class JJDisputeService {
 	}
 
 	/**
-	 * Retrieves all {@link JJDispute} records, delegating to CrudRepository
+	 * Retrieves all {@link JJDispute} records for written reasons, delegating to CrudRepository
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
 	 * @return
 	 */
@@ -127,13 +127,20 @@ public class JJDisputeService {
 			jjDisputeToUpdate = setStatus(id, jjDispute.getStatus(), principal, null);
 		}
 
-		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status");
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearances");
 		// Remove all existing jj disputed counts that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
 			jjDisputeToUpdate.getJjDisputedCounts().clear();
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
+
+		// Remove all existing jj dispute court appearances that are associated to this jj dispute
+		if (jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs() != null) {
+			jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs().clear();
+		}
+		// Add updated court appearances
+		jjDisputeToUpdate.addJJDisputeCourtAppearances(jjDispute.getJjDisputeCourtAppearanceRoPs());
 
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 

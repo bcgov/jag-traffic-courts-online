@@ -9,6 +9,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { AuthService } from 'app/services/auth.service';
+import { JJDisputeHearingType } from 'app/api';
 
 @Component({
   selector: 'app-jj-dispute-assignments',
@@ -24,6 +25,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
   public courtLocations: CourthouseConfig[];
   public currentTeam: string = "A";
   public bulkjjAssignedTo: string = "unassigned";
+  public HearingType = JJDisputeHearingType;
   public teamCounts: teamCounts[] = [];
   assignedDataSource = new MatTableDataSource();
   unassignedDataSource = new MatTableDataSource();
@@ -114,7 +116,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
       // filter jj disputes only show new, review, in_progress
-      this.data = response.filter(x => this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0);
+      this.data = response.filter(x => (this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
       this.data.forEach(x => {
           x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
