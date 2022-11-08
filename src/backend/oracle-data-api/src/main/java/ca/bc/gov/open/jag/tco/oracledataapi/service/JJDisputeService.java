@@ -48,7 +48,7 @@ public class JJDisputeService {
 	}
 
 	/**
-	 * Retrieves all {@link JJDispute} records for written reasons, delegating to CrudRepository
+	 * Retrieves all {@link JJDispute} records, delegating to CrudRepository
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
 	 * @return
 	 */
