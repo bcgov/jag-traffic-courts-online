@@ -50,12 +50,18 @@ public class JJDisputeService {
 	/**
 	 * Retrieves all {@link JJDispute} records, delegating to CrudRepository
 	 * @param jjAssignedTo if specified, will filter the result set to those assigned to the specified jj staff.
+	 * @param ticketNumber if specified, will filter results by JJDispute.ticketNumber
+	 * @param violationTime if specified, will filter results by the time portion of JJDispute.violationDate
 	 * @return
 	 */
-	public List<JJDispute> getAllJJDisputes(String jjAssignedTo) {
-		if (jjAssignedTo == null) {
+	public List<JJDispute> getJJDisputes(String jjAssignedTo, String ticketNumber, Date violationTime) {
+		if (!StringUtils.isBlank(jjAssignedTo)) {
+			return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
+		} else if (!StringUtils.isBlank(ticketNumber) || violationTime != null) {
+			return jjDisputeRepository.findByTicketNumberAndTime(ticketNumber, violationTime);
+		} else {
 			return (List<JJDispute>) jjDisputeRepository.findAll();
-		} else return jjDisputeRepository.findByJjAssignedToIgnoreCase(jjAssignedTo);
+		}
 	}
 
 	/**
@@ -121,7 +127,7 @@ public class JJDisputeService {
 	@Transactional
 	public JJDispute updateJJDispute(String id, JJDispute jjDispute, Principal principal) {
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
-		
+
 		// Update the status of the JJ Dispute if the status is not the same as current one
 		if (jjDispute.getStatus() != null &&  jjDisputeToUpdate.getStatus() != jjDispute.getStatus()) {
 			jjDisputeToUpdate = setStatus(id, jjDispute.getStatus(), principal, null);
@@ -168,7 +174,7 @@ public class JJDisputeService {
 
 		return updatedJJDispute;
 	}
-	
+
 	/**
 	 * Assigns a one or more {@link JJDispute} to the IDIR username of the JJ, or unassigns them if username not specified
 	 *
@@ -180,7 +186,7 @@ public class JJDisputeService {
 			logger.error("No JJDispute ids (ticket numbers) passed to assign to a username - bad method call.");
 			throw new ConstraintViolationException("Cannot set empty list of ticket numbers to username - bad method call.", null);
 		}
-		
+
 		for (String id : ids) {
 			// Find the jj-dispute to be assigned to the username
 			JJDispute jjDispute = jjDisputeRepository.findById(id).orElseThrow();
@@ -188,22 +194,22 @@ public class JJDisputeService {
 				logger.error("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id + " - element not found.");
 				throw new NoSuchElementException("Could not find JJDispute to be assigned to the JJ for the given ticket number: " + id);
 			}
-			
+
 			if (!StringUtils.isBlank(username)) {
-				
+
 				jjDispute.setJjAssignedTo(username);
 				jjDisputeRepository.save(jjDispute);
-				
+
 				logger.debug("JJDispute with ticket number {} has been assigned to JJ {}", id, username);
 			} else {
 				jjDispute.setJjAssignedTo(null);
 				jjDisputeRepository.save(jjDispute);
-				
+
 				logger.debug("Unassigned JJDispute with ticket number {} ", id);
 			}
 		}
 	}
-	
+
 	/**
 	 * Updates the status of a specific {@link JJDispute}
 	 *
@@ -219,7 +225,7 @@ public class JJDisputeService {
 		}
 
 		JJDispute jjDisputeToUpdate = jjDisputeRepository.findById(id).orElseThrow();
-		
+
 		// TCVP-1435 - business rules
 		// - current status must be NEW, IN_PROGRESS to change to IN_PROGRESS
 		// - current status must be CONFIRMED, REVIEW to change to REVIEW
@@ -275,28 +281,28 @@ public class JJDisputeService {
 		}
 
 		jjDisputeToUpdate.setStatus(jjDisputeStatus);
-		
+
 		// Set remarks with user's full name if a remark note is provided along with the status update
 		if(!StringUtils.isBlank(remark)) {
 			if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
 				logger.error("Attempting to save a remark with no user data - bad method call.");
 				throw new NotAllowedException("Cannot set a remark from unknown user");
 			}
-			
+
 			JJDisputeRemark jjDisputeRemark = new JJDisputeRemark();
 			jjDisputeRemark.setNote(remark);
-			
+
 			PreAuthenticatedToken pat = (PreAuthenticatedToken) principal;
 			CustomUserDetails user = (CustomUserDetails) pat.getPrincipal();
 			jjDisputeRemark.setUserFullName(user.getFullName());
-			
+
 			jjDisputeRemark.setJjDispute(jjDisputeToUpdate);
-			
+
 			List<JJDisputeRemark> remarks = jjDisputeToUpdate.getRemarks();
 			remarks.add(jjDisputeRemark);
 			jjDisputeToUpdate.setRemarks(remarks);
 		}
-		
+
 		return jjDisputeRepository.saveAndFlush(jjDisputeToUpdate);
 	}
 }

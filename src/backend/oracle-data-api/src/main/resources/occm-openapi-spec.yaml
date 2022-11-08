@@ -164,6 +164,13 @@ paths:
             type: string
             maxLength: 36
             minLength: 36
+        - name: issueTime
+          in: query
+          description: 'Not issueTime, but issuedTime. This is the time portion of the issuedTs field.'
+          schema:
+            type: string
+            maxLength: 5
+            minLength: 5
       responses:
         '200':
           description: Ok

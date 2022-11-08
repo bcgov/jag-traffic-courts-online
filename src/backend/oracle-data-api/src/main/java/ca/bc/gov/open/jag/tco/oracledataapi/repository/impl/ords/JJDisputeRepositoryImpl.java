@@ -46,6 +46,11 @@ public class JJDisputeRepositoryImpl implements JJDisputeRepository {
 	}
 
 	@Override
+	public List<JJDispute> findByTicketNumberAndTime(String ticketNumber, Date violationTime) {
+		throw new NotYetImplementedException();
+	}
+
+	@Override
 	public Optional<JJDispute> findById(String id) {
 		throw new NotYetImplementedException();
 	}

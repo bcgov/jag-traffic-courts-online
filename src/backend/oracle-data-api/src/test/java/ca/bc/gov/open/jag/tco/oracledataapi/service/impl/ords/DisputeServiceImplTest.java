@@ -1,6 +1,7 @@
 package ca.bc.gov.open.jag.tco.oracledataapi.service.impl.ords;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -12,6 +13,7 @@ import java.util.NoSuchElementException;
 
 import javax.ws.rs.InternalServerErrorException;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,6 +26,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ResponseResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicket;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketListResponse;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
@@ -332,6 +335,53 @@ class DisputeServiceImplTest extends BaseTestSuite {
 	}
 
 	@Test
+	public void testFindByTicketNumberAndTime200() throws Exception {
+		Long disputeId = Long.valueOf(1001L);
+		DisputeStatus disputeStatus = DisputeStatus.PROCESSING;
+		String ticketNumber = "AX00000000";
+		String issuedDateStr = "13:54";
+		Date issuedDate = DateUtils.parseDate(issuedDateStr, "HH:mm");
+
+		ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute dispute = new ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute();
+		dispute.setDisputeId(disputeId.toString());
+		dispute.setDisputeStatusTypeCd(disputeStatus.toShortName());
+
+		ViolationTicket violationTicket = new ViolationTicket();
+		violationTicket.setDispute(dispute);
+		violationTicket.setTicketNumberTxt(ticketNumber);
+		violationTicket.setIssuedDt(new java.sql.Date(issuedDate.getTime()));
+
+		ViolationTicketListResponse validResponse = new ViolationTicketListResponse();
+		validResponse.setViolationTickets(new ArrayList<ViolationTicket>());
+		validResponse.getViolationTickets().add(violationTicket);
+
+		ViolationTicketListResponse emptyResponse = new ViolationTicketListResponse();
+		emptyResponse.setViolationTickets(new ArrayList<ViolationTicket>());
+
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(null, null, ticketNumber, null, issuedDateStr)).thenReturn(validResponse);
+
+		List<DisputeResult> disputeResults = repository.findByTicketNumberAndTime(ticketNumber, issuedDate);
+		assertEquals(1, disputeResults.size());
+		assertEquals(disputeId, disputeResults.get(0).getDisputeId());
+		assertEquals(disputeStatus, disputeResults.get(0).getDisputeStatus());
+
+		disputeResults = repository.findByTicketNumberAndTime("AX", issuedDate);
+		assertEquals(0, disputeResults.size());
+
+		disputeResults = repository.findByTicketNumberAndTime(ticketNumber, DateUtils.parseDate("13:55", "HH:mm"));
+		assertEquals(0, disputeResults.size());
+	}
+
+	@Test
+	public void testFindByTicketNumberAndTime500() throws Exception {
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(any(), any(), any(), any(), any())).thenThrow(ApiException.class);
+
+		assertThrows(ApiException.class, () -> {
+			repository.findByTicketNumberAndTime("AX00000000", new Date());
+		});
+	}
+
+	@Test
 	public void testGetAllDisputesExpect200() throws Exception {
 		Date now = new Date();
 		String olderThanDate = dateToString(now, DisputeRepositoryImpl.DATE_FORMAT);
@@ -341,7 +391,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid)).thenReturn(response);
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenReturn(response);
 
 		assertDoesNotThrow(() -> {
 			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
@@ -358,7 +408,7 @@ class DisputeServiceImplTest extends BaseTestSuite {
 		List<ViolationTicket> violationTickets = new ArrayList<ViolationTicket>();
 		response.setViolationTickets(violationTickets);
 
-		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid)).thenThrow(ApiException.class);
+		Mockito.when(violationTicketApi.v1ViolationTicketListGet(olderThanDate, excludedStatus.toShortName(), null, noticeOfDisputeGuid, null)).thenThrow(ApiException.class);
 
 		assertThrows(InternalServerErrorException.class, () -> {
 			repository.findByStatusNotAndCreatedTsBeforeAndNoticeOfDisputeGuid(excludedStatus, now, noticeOfDisputeGuid);
