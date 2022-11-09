@@ -44,12 +44,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "An invalid JJ Dispute status is provided. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "An invalid JJ Dispute status is provided. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -99,12 +99,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A JJDispute status can only be set to REVIEW iff status is NEW or VALIDATED and the remark must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -142,12 +142,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A JJDispute status can only be set to ACCEPTED iff status is CONFIRMED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -188,12 +188,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok" }
@@ -224,12 +224,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -266,12 +266,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "409": {
@@ -308,12 +308,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error. Delete failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok. Dispute record deleted." }
@@ -345,12 +345,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to VALIDATED iff status is NEW. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -389,12 +389,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to PROCESSING iff status is NEW or REJECTED. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -445,12 +445,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to REJECTED iff status is NEW or VALIDATED and the rejected reason must be <= 256 characters. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -490,12 +490,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok. Email verified." }
@@ -527,12 +527,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "A Dispute status can only be set to CANCELLED iff status is NEW, REJECTED or PROCESSING. Update failed.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -568,12 +568,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -614,12 +614,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -658,12 +658,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -704,12 +704,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -761,12 +761,12 @@
             "description": "Bad Request, check parameters.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error. Search failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -798,12 +798,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -861,12 +861,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -911,12 +911,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -964,12 +964,12 @@
             "description": "Bad Request.",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error. Getting disputes failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -1001,12 +1001,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error. Unassigned failed.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "Ok. Dispute record unassigned." }
@@ -1036,12 +1036,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal server error occured.",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": {
@@ -1066,12 +1066,12 @@
             "description": "Bad Request",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
-          "405": {
-            "description": "Method Not Allowed",
-            "content": { "*/*": { "schema": { "type": "object" } } }
-          },
           "500": {
             "description": "Internal Server Error",
+            "content": { "*/*": { "schema": { "type": "object" } } }
+          },
+          "405": {
+            "description": "Method Not Allowed",
             "content": { "*/*": { "schema": { "type": "object" } } }
           },
           "200": { "description": "OK" }
@@ -1145,7 +1145,7 @@
           "ticketNumber": { "type": "string" },
           "status": {
             "type": "string",
-            "enum": [ "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW" ]
+            "enum": [ "NEW", "IN_PROGRESS", "DATA_UPDATE", "CONFIRMED", "REQUIRE_COURT_HEARING", "REQUIRE_MORE_INFO", "ACCEPTED", "REVIEW", "HEARING_SCHEDULED" ]
           },
           "hearingType": {
             "type": "string",
@@ -1290,6 +1290,11 @@
           },
           "room": {
             "type": "string",
+            "nullable": true
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "reason": {

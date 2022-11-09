@@ -3168,6 +3168,11 @@
             "type": "string",
             "nullable": true
           },
+          "duration": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "reason": {
             "type": "string",
             "nullable": true
@@ -3286,7 +3291,8 @@
           "REQUIRE_COURT_HEARING",
           "REQUIRE_MORE_INFO",
           "ACCEPTED",
-          "REVIEW"
+          "REVIEW",
+          "HEARING_SCHEDULED"
         ],
         "type": "string"
       },

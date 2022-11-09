@@ -21,6 +21,7 @@ export interface JJDisputeCourtAppearanceRoP {
     id?: number;
     appearanceTs?: string | null;
     room?: string | null;
+    duration?: number | null;
     reason?: string | null;
     app?: JJDisputeCourtAppearanceRoPApp;
     noAppTs?: string | null;

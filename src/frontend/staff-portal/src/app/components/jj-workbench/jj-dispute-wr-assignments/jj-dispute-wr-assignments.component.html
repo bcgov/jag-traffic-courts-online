@@ -14,7 +14,7 @@
 <div style="display: flex; flex-direction: row; justify-content: space-between; vertical-align: top; width:97%">
   <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
     <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
-      <mat-option value="unassigned"><i>choose a person</i></mat-option>
+      <mat-option value="unassigned"><i>choose a jj</i></mat-option>
       <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="authService.getIDIR(jj)"><i>JJ {{ authService.getFullName(jj) }}</i></mat-option>
     </mat-select>
     &nbsp;<button mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()" style="width: 100px"><b>Submit</b></button>

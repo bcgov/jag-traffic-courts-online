@@ -33,9 +33,10 @@ import { TicketStatusComponent } from './components/staff-workbench/ticket-statu
 import { TicketRequestComponent } from '@components/staff-workbench/ticket-request/ticket-request.component';
 import { JjWorkbenchDashboardComponent } from '@components/jj-workbench/jj-workbench-dashboard/jj-workbench-dashboard.component';
 import { StaffWorkbenchDashboardComponent } from '@components/staff-workbench/staff-workbench-dashboard/staff-workbench-dashboard.component';
-import { JJDisputeInboxComponent } from '@components/jj-workbench/jj-dispute-inbox/jj-dispute-inbox.component';
+import { JJDisputeWRInboxComponent } from '@components/jj-workbench/jj-dispute-wr-inbox/jj-dispute-wr-inbox.component';
+import { JJDisputeHearingInboxComponent } from '@components/jj-workbench/jj-dispute-hearing-inbox/jj-dispute-hearing-inbox.component';
 import { DisputeDecisionInboxComponent } from '@components/staff-workbench/dispute-decision-inbox/dispute-decision-inbox.component';
-import { JJDisputeAssignmentsComponent } from '@components/jj-workbench/jj-dispute-assignments/jj-dispute-assignments.component';
+import { JJDisputeWRAssignmentsComponent } from '@components/jj-workbench/jj-dispute-wr-assignments/jj-dispute-wr-assignments.component';
 import { JJDisputeComponent } from '@components/jj-dispute-info/jj-dispute/jj-dispute.component';
 import { JJCountComponent } from '@components/jj-dispute-info/jj-count/jj-count.component';
 import { JJDisputeRemarksComponent } from '@components/jj-dispute-info/jj-dispute-remarks/jj-dispute-remarks.component';
@@ -70,9 +71,10 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     TicketRequestComponent,
     JjWorkbenchDashboardComponent,
     StaffWorkbenchDashboardComponent,
-    JJDisputeInboxComponent,
+    JJDisputeWRInboxComponent,
+    JJDisputeHearingInboxComponent,
     DisputeDecisionInboxComponent,
-    JJDisputeAssignmentsComponent,
+    JJDisputeWRAssignmentsComponent,
     JJDisputeComponent,
     JJCountComponent,
     JJDisputeRemarksComponent,

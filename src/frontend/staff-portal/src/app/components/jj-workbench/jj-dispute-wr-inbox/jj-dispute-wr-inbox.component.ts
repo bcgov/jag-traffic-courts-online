@@ -8,15 +8,14 @@ import { JJDisputeStatus, JJDispute, JJDisputeHearingType } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 
 @Component({
-  selector: 'app-jj-dispute-inbox',
-  templateUrl: './jj-dispute-inbox.component.html',
-  styleUrls: ['./jj-dispute-inbox.component.scss'],
+  selector: 'app-jj-dispute-wr-inbox',
+  templateUrl: './jj-dispute-wr-inbox.component.html',
+  styleUrls: ['./jj-dispute-wr-inbox.component.scss'],
 })
-export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
+export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
   @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @Input() public jjIDIR: string;
   public HearingType = JJDisputeHearingType;
-
   busy: Subscription;
   data = [] as JJDispute[];
   dataSource = new MatTableDataSource();
@@ -34,7 +33,7 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   constructor(
     public jjDisputeService: JJDisputeService,
     private logger: LoggerService,
-    private authService: AuthService
+    public authService: AuthService
   ) {
     // listen for when to refresh from db
     this.jjDisputeService.refreshDisputes.subscribe(x => {
@@ -60,7 +59,8 @@ export class JJDisputeInboxComponent implements OnInit, AfterViewInit {
   }
 
   getAll(): void {
-    this.logger.log('JJDisputeDecisionComponent::getAllDisputes');
+    this.logger.log('JJDisputeWRInboxComponent::getAllDisputes');
+    console.log(this.jjIDIR);
 
     this.jjDisputeService.getJJDisputesByIDIR(this.jjIDIR).subscribe((response: JJDispute[]) => {
       // filter jj disputes only show those for the current JJ

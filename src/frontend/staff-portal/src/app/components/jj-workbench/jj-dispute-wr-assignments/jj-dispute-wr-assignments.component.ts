@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { CourthouseConfig } from '@config/config.model';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { LoggerService } from '@core/services/logger.service';
@@ -12,11 +12,11 @@ import { AuthService } from 'app/services/auth.service';
 import { JJDisputeHearingType } from 'app/api';
 
 @Component({
-  selector: 'app-jj-dispute-assignments',
-  templateUrl: './jj-dispute-assignments.component.html',
-  styleUrls: ['./jj-dispute-assignments.component.scss'],
+  selector: 'app-jj-dispute-wr-assignments',
+  templateUrl: './jj-dispute-wr-assignments.component.html',
+  styleUrls: ['./jj-dispute-wr-assignments.component.scss'],
 })
-export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
+export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @Input() public IDIR: string;
 
@@ -112,7 +112,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   getAll(team: string): void {
-    this.logger.log('JJDisputeAssignmentsComponent::getAllDisputes');
+    this.logger.log('JJDisputeWRAssignmentsComponent::getAllDisputes');
 
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
       // filter jj disputes only show new, review, in_progress
@@ -154,7 +154,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
     this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
       this.resetAssignedUnassigned();
       this.logger.info(
-        'JJDisputeAssignmentsComponent::putJJDispute response',
+        'JJDisputeWRAssignmentsComponent::putJJDispute response',
         response
       );
     });
@@ -182,7 +182,7 @@ export class JJDisputeAssignmentsComponent implements OnInit, AfterViewInit {
 
     this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
       this.logger.info(
-        'JJDisputeAssignmentsComponent::putJJDispute response',
+        'JJDisputeWRAssignmentsComponent::putJJDispute response',
         response
       );
       const jjFound = this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === updateDispute.jjAssignedTo)[0];
@@ -214,8 +214,4 @@ export interface teamCounts {
   team: string;
   assignedCount: number;
   unassignedCount: number;
-}
-export interface JJDisputeView extends JJDispute {
-  jjAssignedToName: string;
-  bulkAssign: boolean;
 }
