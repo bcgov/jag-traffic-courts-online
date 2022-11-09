@@ -26,6 +26,8 @@ repository:
 # ORDS CLIENT properties
 ords:
   rest-api:
+    # If true, will enable debugging for all API calls to see request/response objects 
+    debug: ${ORDS_API_DEBUG:false}
     url: ${ORDS_API_URL:localhost}
     timeout: 2000
     retry:

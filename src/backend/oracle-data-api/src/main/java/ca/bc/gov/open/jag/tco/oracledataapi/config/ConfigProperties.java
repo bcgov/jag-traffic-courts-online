@@ -9,7 +9,7 @@ import lombok.Setter;
 
 /**
  * Externalized configuration for easy access to properties
- * 
+ *
  * @author 237563
  *
  */
@@ -18,17 +18,21 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ConfigProperties {
-	
+
 	// ORDS Service properties
 	@Value("${ords.rest-api.url}")
     private String ordsRestApiUrl;
-    
+
     @Value("${ords.rest-api.timeout}")
     private int ordsRestApiTimeout;
-    
+
     @Value("${ords.rest-api.retry.count}")
     private long ordsRestApiRetryCount;
-    
+
     @Value("${ords.rest-api.retry.delay}")
     private long ordsRestApiRetryDelay;
+
+    @Value("${ords.rest-api.debug}")
+    private boolean ordsRestApiDebug;
+
 }

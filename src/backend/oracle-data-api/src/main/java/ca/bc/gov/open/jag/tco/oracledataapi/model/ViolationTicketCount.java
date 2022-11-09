@@ -60,7 +60,7 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Column(length = 5)
 	@Schema(nullable = true)
     private String actOrRegulationNameCode;
-	
+
 	/**
 	 * The count is flagged as an offence to an act. Cannot be true, if is_regulation is true.
 	 */
@@ -68,7 +68,7 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
     private YesNo isAct;
-	
+
 	/**
 	 * The count is flagged as an offence to a regulation. Cannot be true, if is_act is true.
 	 */
@@ -76,32 +76,32 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
     private YesNo isRegulation;
-	
+
 	/**
 	 * The section part of the full section. For example, "127"
 	 */
-	@Column
+	@Column(length = 15)
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String section;
 
 	/**
 	 * The subsection part of the full section. For example, "(1)"
 	 */
-	@Column
+	@Column(length = 4)
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String subsection;
 
 	/**
 	 * The paragraph part of the full section. For example, "(a)"
 	 */
-	@Column
+	@Column(length = 3)
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String paragraph;
-	
+
 	/**
 	 * The subparagraph part of the full section. For example, "(ii)"
 	 */
-	@Column
+	@Column(length = 5)
 	@Schema(nullable = true, accessMode = Schema.AccessMode.READ_ONLY)
     private String subparagraph;
 
@@ -111,7 +111,7 @@ public class ViolationTicketCount extends Auditable<String> {
 	@Column(precision = 8, scale = 2)
 	@Schema(nullable = true)
     private Float ticketedAmount;
-	
+
 	@JsonBackReference
 	@ManyToOne(targetEntity=ViolationTicket.class, fetch = FetchType.LAZY)
     @JoinColumn(name="violation_ticket_id", referencedColumnName="violationTicketId")
