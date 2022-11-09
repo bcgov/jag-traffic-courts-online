@@ -61,6 +61,13 @@ public class JJDisputeCourtAppearanceRoP extends Auditable<String> {
     private String room;
 	
 	/**
+	 * Expected Duration in minutes
+	 */
+	@Column
+	@Schema(nullable = true)
+	private short duration;
+	
+	/**
      * Reason
      */
     @Column

@@ -14,8 +14,8 @@ import { cloneDeep } from 'lodash';
 export class JJDisputeService {
   private _JJDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
   private _JJDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
-  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
-  public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress];
+  public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
+  public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
   public JJDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
   public refreshDisputes: EventEmitter<any> = new EventEmitter();
   public jjList: Array<UserRepresentation>;
@@ -171,4 +171,12 @@ export class JJDisputeService {
     futureDate.setDate(futureDate.getDate() + numDays);
     return futureDate;
   }
+}
+
+export interface JJDisputeView extends JJDispute {
+  jjAssignedToName?: string;
+  bulkAssign?: boolean;
+  appearanceTs?: Date;
+  duration?: number;
+  room?: string;
 }

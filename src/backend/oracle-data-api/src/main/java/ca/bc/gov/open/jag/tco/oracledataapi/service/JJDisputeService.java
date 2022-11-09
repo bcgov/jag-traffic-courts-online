@@ -235,7 +235,7 @@ public class JJDisputeService {
 		// - current status must be CONFIRMED to change to ACCEPTED
 		switch (jjDisputeStatus) {
 		case IN_PROGRESS:
-			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.NEW, jjDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.IN_PROGRESS).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
@@ -245,7 +245,7 @@ public class JJDisputeService {
 			}
 			break;
 		case CONFIRMED:
-			if (!List.of(JJDisputeStatus.REVIEW, JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.CONFIRMED).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.REVIEW, JJDisputeStatus.NEW, jjDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.CONFIRMED).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
@@ -255,22 +255,27 @@ public class JJDisputeService {
 			}
 			break;
 		case DATA_UPDATE:
-			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.DATA_UPDATE).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.NEW, jjDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.DATA_UPDATE).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
 		case REQUIRE_COURT_HEARING:
-			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.REQUIRE_COURT_HEARING).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.NEW, jjDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.REQUIRE_COURT_HEARING).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
 		case REQUIRE_MORE_INFO:
-			if (!List.of(JJDisputeStatus.NEW, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.REQUIRE_MORE_INFO).contains(jjDisputeToUpdate.getStatus())) {
+			if (!List.of(JJDisputeStatus.NEW, jjDisputeStatus.HEARING_SCHEDULED, JJDisputeStatus.IN_PROGRESS, JJDisputeStatus.REVIEW, JJDisputeStatus.REQUIRE_MORE_INFO).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;
 		case ACCEPTED:
 			if (!List.of(JJDisputeStatus.CONFIRMED, JJDisputeStatus.ACCEPTED).contains(jjDisputeToUpdate.getStatus())) {
+				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
+			}
+			break;
+		case HEARING_SCHEDULED:
+			if (!List.of(JJDisputeStatus.HEARING_SCHEDULED).contains(jjDisputeToUpdate.getStatus())) {
 				throw new NotAllowedException("Changing the status of a JJ Dispute record from %s to %s is not permitted.", jjDisputeToUpdate.getStatus(), jjDisputeStatus);
 			}
 			break;

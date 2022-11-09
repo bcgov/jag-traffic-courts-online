@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'app/services/auth.service';
 import { DisputeExtended } from 'app/services/dispute.service';
-import { JJDisputeView } from '@components/jj-workbench/jj-dispute-assignments/jj-dispute-assignments.component';
+import { JJDisputeView } from 'app/services/jj-dispute.service';
 import { DisputeDecisionInboxComponent } from '../dispute-decision-inbox/dispute-decision-inbox.component';
 import { TicketInboxComponent } from '../ticket-inbox/ticket-inbox.component';
 import { DisputeService } from 'app/services/dispute.service';

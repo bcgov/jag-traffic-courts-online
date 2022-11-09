@@ -3,8 +3,7 @@ import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { KeycloakProfile } from 'keycloak-js';
 import { AuthService } from 'app/services/auth.service';
-import { JJDisputeView } from '../jj-dispute-assignments/jj-dispute-assignments.component';
-import { JJDisputeService } from 'app/services/jj-dispute.service';
+import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
