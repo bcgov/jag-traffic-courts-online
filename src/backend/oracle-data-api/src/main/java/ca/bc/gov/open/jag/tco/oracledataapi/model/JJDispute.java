@@ -52,6 +52,9 @@ public class JJDispute extends Auditable<String>{
     @Enumerated(EnumType.STRING)
 	private JJDisputeStatus status;
     
+    @Enumerated(EnumType.STRING)
+    private JJDisputeHearingType hearingType;
+    
     /**
      * The date submitted by disputant in TCO.
      */
@@ -164,6 +167,56 @@ public class JJDispute extends Auditable<String>{
 	private String timeToPayReason;
 	
 	/**
+	 * Name of the law firm that will represent the disputant at the hearing.
+	 */
+	@Column(length = 200)
+	@Schema(nullable = true)
+	private String lawFirmName;
+
+	/**
+	 * Surname of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerSurname;
+
+	/**
+	 * First given name of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerGivenName1;
+
+	/**
+	 * Second given name of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerGivenName2;
+
+	/**
+	 * Third given name of the lawyer
+	 */
+	@Column(length = 30)
+	@Schema(nullable = true)
+	private String lawyerGivenName3;
+
+	/**
+	 * The disputant requires spoken language interpreter. The language name is
+	 * indicated in this field.
+	 */
+	@Column
+	@Schema(nullable = true)
+	private String interpreterLanguage;
+
+	/**
+	 * Number of witness that the disputant intends to call.
+	 */
+	@Column(length = 3)
+	@Schema(nullable = true)
+	private Integer witnessNo;
+	
+	/**
 	 * All the remarks for this jj dispute that are for internal use of JJs.
 	 */
 	@JsonManagedReference
@@ -176,7 +229,7 @@ public class JJDispute extends Auditable<String>{
 	@Schema(nullable = true)
 	private DisputantContactInformation contactInformation;
 	
-	@JsonManagedReference
+	@JsonManagedReference(value="jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	@Builder.Default
@@ -196,4 +249,17 @@ public class JJDispute extends Auditable<String>{
 		this.remarks.addAll(remarks);
 	}
 
+	@JsonManagedReference(value="jj_dispute_court_appearance_rop_reference")
+	@OneToMany(targetEntity = JJDisputeCourtAppearanceRoP.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "jjdispute_id")
+	@Builder.Default
+	private List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
+	
+	public void addJJDisputeCourtAppearances(List<JJDisputeCourtAppearanceRoP> disputeCourtAppearanceRoPs) {
+		for (JJDisputeCourtAppearanceRoP disputeCourtAppearanceRoP : disputeCourtAppearanceRoPs) {
+			disputeCourtAppearanceRoP.setJjDispute(this);
+		}
+		this.jjDisputeCourtAppearanceRoPs.addAll(disputeCourtAppearanceRoPs);
+	}
+	
 }

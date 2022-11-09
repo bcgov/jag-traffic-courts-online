@@ -133,13 +133,20 @@ public class JJDisputeService {
 			jjDisputeToUpdate = setStatus(id, jjDispute.getStatus(), principal, null);
 		}
 
-		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status");
+		BeanUtils.copyProperties(jjDispute, jjDisputeToUpdate, "createdBy", "createdTs", "ticketNumber", "jjDisputedCounts", "remarks", "status", "jjDisputeCourtAppearanceRoPs");
 		// Remove all existing jj disputed counts that are associated to this jj dispute
 		if (jjDisputeToUpdate.getJjDisputedCounts() != null) {
 			jjDisputeToUpdate.getJjDisputedCounts().clear();
 		}
 		// Add updated ticket counts
 		jjDisputeToUpdate.addJJDisputedCounts(jjDispute.getJjDisputedCounts());
+
+		// Remove all existing jj dispute court appearances that are associated to this jj dispute
+		if (jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs() != null) {
+			jjDisputeToUpdate.getJjDisputeCourtAppearanceRoPs().clear();
+		}
+		// Add updated court appearances
+		jjDisputeToUpdate.addJJDisputeCourtAppearances(jjDispute.getJjDisputeCourtAppearanceRoPs());
 
 		if (jjDispute.getRemarks() != null && jjDispute.getRemarks().size() > 0) {
 

@@ -14,6 +14,7 @@ import { JJDisputedCountPlea } from './jJDisputedCountPlea.model';
 import { JJDisputedCountRequestReduction } from './jJDisputedCountRequestReduction.model';
 import { JJDisputedCountRequestTimeToPay } from './jJDisputedCountRequestTimeToPay.model';
 import { JJDisputedCountIncludesSurcharge } from './jJDisputedCountIncludesSurcharge.model';
+import { JJDisputedCountRoP } from './jJDisputedCountRoP.model';
 
 
 export interface JJDisputedCount { 
@@ -34,6 +35,7 @@ export interface JJDisputedCount {
     revisedDueDate?: string | null;
     totalFineAmount?: number | null;
     comments?: string | null;
+    jjDisputedCountRoP?: JJDisputedCountRoP;
     lesserOrGreaterAmount?: number;
     additionalProperties?: { [key: string]: any; } | null;
 }

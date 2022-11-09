@@ -2,6 +2,7 @@ package ca.bc.gov.open.jag.tco.oracledataapi.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,6 +19,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -141,9 +144,14 @@ public class JJDisputedCount extends Auditable<String> {
 	@Schema(nullable = true, maxLength = 500)
 	private String comments;
 
-	@JsonBackReference
+	@JsonBackReference(value="jj_dispute_count_reference")
 	@ManyToOne(targetEntity=JJDispute.class, fetch = FetchType.LAZY)
 	@Schema(hidden = true)
 	private JJDispute jjDispute;
+	
+	@JsonManagedReference
+	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "jjDisputedCount")
+	@Schema(nullable = true)
+	private JJDisputedCountRoP jjDisputedCountRoP;
 
 }

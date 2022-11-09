@@ -2605,6 +2605,8 @@
             "nullable": true
           },
           "lawyerAddress": {
+            "maxLength": 300,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -3004,6 +3006,9 @@
           "status": {
             "$ref": "#/components/schemas/JJDisputeStatus"
           },
+          "hearingType": {
+            "$ref": "#/components/schemas/JJDisputeHearingType"
+          },
           "submittedDate": {
             "type": "string",
             "format": "date-time",
@@ -3069,6 +3074,35 @@
             "type": "string",
             "nullable": true
           },
+          "lawFirmName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName1": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName2": {
+            "type": "string",
+            "nullable": true
+          },
+          "lawyerGivenName3": {
+            "type": "string",
+            "nullable": true
+          },
+          "interpreterLanguage": {
+            "type": "string",
+            "nullable": true
+          },
+          "witnessNo": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "remarks": {
             "type": "array",
             "items": {
@@ -3086,6 +3120,13 @@
             },
             "nullable": true
           },
+          "jjDisputeCourtAppearanceRoPs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoP"
+            },
+            "nullable": true
+          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },
@@ -3093,6 +3134,106 @@
           }
         },
         "additionalProperties": false
+      },
+      "JJDisputeCourtAppearanceRoP": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "appearanceTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "room": {
+            "type": "string",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "app": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPApp"
+          },
+          "noAppTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "clerkRecord": {
+            "type": "string",
+            "nullable": true
+          },
+          "defenseCounsel": {
+            "type": "string",
+            "nullable": true
+          },
+          "crown": {
+            "$ref": "#/components/schemas/JJDisputeCourtAppearanceRoPCrown"
+          },
+          "jjSeized": {
+            "type": "string",
+            "nullable": true
+          },
+          "adjudicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "comments": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputeCourtAppearanceRoPApp": {
+        "enum": [
+          "A",
+          "P",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeCourtAppearanceRoPCrown": {
+        "enum": [
+          "P",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeHearingType": {
+        "enum": [
+          "COURT_APPEARANCE",
+          "WRITTEN_REASONS"
+        ],
+        "type": "string"
       },
       "JJDisputeRemark": {
         "type": "object",
@@ -3224,6 +3365,9 @@
             "type": "string",
             "nullable": true
           },
+          "jjDisputedCountRoP": {
+            "$ref": "#/components/schemas/JJDisputedCountRoP"
+          },
           "lesserOrGreaterAmount": {
             "type": "number",
             "format": "float"
@@ -3265,6 +3409,143 @@
         "type": "string"
       },
       "JJDisputedCountRequestTimeToPay": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountRoP": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdTs": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedTs": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "finding": {
+            "$ref": "#/components/schemas/JJDisputedCountRoPFinding"
+          },
+          "lesserDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "ssProbationDuration": {
+            "type": "string",
+            "nullable": true
+          },
+          "ssProbationConditions": {
+            "type": "string",
+            "nullable": true
+          },
+          "jailDuration": {
+            "type": "string",
+            "nullable": true
+          },
+          "jailIntermittent": {
+            "$ref": "#/components/schemas/JJDisputedCountRoPJailIntermittent"
+          },
+          "probationDuration": {
+            "type": "string",
+            "nullable": true
+          },
+          "probationConditions": {
+            "type": "string",
+            "nullable": true
+          },
+          "drivingProhibition": {
+            "type": "string",
+            "nullable": true
+          },
+          "drivingProhibitionMVASection": {
+            "type": "string",
+            "nullable": true
+          },
+          "dismissed": {
+            "$ref": "#/components/schemas/JJDisputedCountRoPDismissed"
+          },
+          "forWantOfProsecution": {
+            "$ref": "#/components/schemas/JJDisputedCountRoPForWantOfProsecution"
+          },
+          "withdrawn": {
+            "$ref": "#/components/schemas/JJDisputedCountRoPWithdrawn"
+          },
+          "abatement": {
+            "$ref": "#/components/schemas/JJDisputedCountRoPAbatement"
+          },
+          "stayOfProceedingsBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "other": {
+            "type": "string",
+            "nullable": true
+          },
+          "jjRemarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "JJDisputedCountRoPAbatement": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountRoPDismissed": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountRoPFinding": {
+        "enum": [
+          "GUILTY",
+          "NOT_GUILTY",
+          "GUILTY_LESSER"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountRoPForWantOfProsecution": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountRoPJailIntermittent": {
+        "enum": [
+          "Y",
+          "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputedCountRoPWithdrawn": {
         "enum": [
           "Y",
           "N"
