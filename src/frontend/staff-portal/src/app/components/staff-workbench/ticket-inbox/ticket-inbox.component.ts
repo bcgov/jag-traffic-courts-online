@@ -141,47 +141,50 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   // systemDetectedOcrIssues should be set to Y if any OCR'd field has less than 80% confidence
   // so this routine will exit with true at the first field of the fields collection that has an OCR error
   getSystemDetectedOcrIssues(ocrViolationTicket?: string): DisputeSystemDetectedOcrIssues {
-    var objOcrViolationTicket = JSON.parse(ocrViolationTicket)
+    try {
+      var objOcrViolationTicket = JSON.parse(ocrViolationTicket, );
+      let fields = objOcrViolationTicket?.Fields;
+      if (fields && fields !== undefined) {
 
-    let fields = objOcrViolationTicket?.Fields;
-    if (fields) {
+        if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.ticket_number)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.disputant_surname)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.disputant_given_names)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.violation_time)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.violation_date)) { return this.SystemDetectedOcrIssues.Y; }
 
-      if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.ticket_number)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.disputant_surname)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.disputant_given_names)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.drivers_licence_province)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.drivers_licence_number)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.violation_time)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.violation_date)) { return this.SystemDetectedOcrIssues.Y; }
+        // seems like a goofy way to process these but this is how the JSON parse returns it
+        // count 1
+        if (this.getOcrViolationErrors(fields["counts.count_no_1.description"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
-      // seems like a goofy way to process these but this is how the JSON parse returns it
-      // count 1
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.description"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.section"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_1.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
+        // count 2
+        if (this.getOcrViolationErrors(fields["counts.count_no_2.description"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
-      // count 2
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.description"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.section"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_2.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
+        // count 3
+        if (this.getOcrViolationErrors(fields["counts.count_no_3.description"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
 
-      // count 3
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.description"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.act_or_regulation_name_code"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.is_act"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.is_regulation"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.section"])) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields["counts.count_no_3.ticketed_amount"])) { return this.SystemDetectedOcrIssues.Y; }
-
-      if (this.getOcrViolationErrors(fields.court_location)) { return this.SystemDetectedOcrIssues.Y; }
-      if (this.getOcrViolationErrors(fields.detachment_location)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.court_location)) { return this.SystemDetectedOcrIssues.Y; }
+        if (this.getOcrViolationErrors(fields.detachment_location)) { return this.SystemDetectedOcrIssues.Y; }
+      }
+    } catch (e) {
+      return this.SystemDetectedOcrIssues.Y;
     }
 
     // step through fields in deserialized object and look for validation errors

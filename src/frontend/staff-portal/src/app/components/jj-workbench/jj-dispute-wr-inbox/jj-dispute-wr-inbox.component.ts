@@ -60,7 +60,6 @@ export class JJDisputeWRInboxComponent implements OnInit, AfterViewInit {
 
   getAll(): void {
     this.logger.log('JJDisputeWRInboxComponent::getAllDisputes');
-    console.log(this.jjIDIR);
 
     this.jjDisputeService.getJJDisputesByIDIR(this.jjIDIR).subscribe((response: JJDispute[]) => {
       // filter jj disputes only show those for the current JJ
