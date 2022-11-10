@@ -46,4 +46,8 @@ public class InMemoryFilePersistenceService : FilePersistenceService
         return Task.FromResult(string.Empty);
     }
 
+    public override Task<string> SaveJsonFileAsync<T>(T data, string filename, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

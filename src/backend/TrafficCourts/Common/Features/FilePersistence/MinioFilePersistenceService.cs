@@ -4,6 +4,8 @@ using Minio;
 using Minio.DataModel;
 using Minio.Exceptions;
 using NodaTime;
+using System.Text;
+using System.Text.Json;
 
 namespace TrafficCourts.Common.Features.FilePersistence;
 
@@ -16,6 +18,7 @@ public class MinioFilePersistenceService : FilePersistenceService
     private readonly IMemoryStreamManager _memoryStreamManager;
     private readonly IClock _clock;
     private readonly string _bucketName;
+    private const string CreatedAtDateTimeFormat = "yyyy-MM-ddTHH:mm";
 
     public MinioFilePersistenceService(
         IObjectOperations objectOperations,
@@ -110,6 +113,68 @@ public class MinioFilePersistenceService : FilePersistenceService
 
             await _objectOperations.PutObjectAsync(putObjectArgs, cancellationToken);
             return objectName;
+        }
+        catch (BucketNotFoundException exception)
+        {
+            _logger.LogWarning(exception, "Object Store bucket not found");
+            throw new FileNotFoundException("File not found", filename, exception);
+        }
+        catch (MinioException exception)
+        {
+            _logger.LogError(exception, "Failed to upload file to object storage");
+            throw new MinioFilePersistenceException("Failed to upload file to object storage", exception);
+        }
+    }
+
+    public override async Task<string> SaveJsonFileAsync<T>(T data, string filename, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(filename);
+
+        // The type of the data that can be dynamically determined and used to deserialize
+        Type dataType = typeof(T);
+        string? objectType = dataType.FullName;
+        _logger.LogInformation("The object type of the saved data is {ObjectType}", objectType);
+
+        string createdAt = _clock.GetCurrentInstant().ToDateTimeUtc().ToString(CreatedAtDateTimeFormat);
+
+        // Serialize data to a JSON string
+        string serializedJsonData = JsonSerializer.Serialize(data);
+        // Convert serialized string data into byte stream to save as a file
+        MemoryStream dataJsonStream = new(Encoding.UTF8.GetBytes(serializedJsonData));
+
+        if (dataJsonStream.Length == 0) throw new ArgumentException("No data to save", nameof(dataJsonStream));
+
+        // The metadata (object type and created timestamp) of the json object that will be saved in object store
+        Dictionary<string, string> headers = new();
+        headers.Add("CreatedAt", createdAt);
+        if (objectType != null)
+        {
+            headers.Add("Type", objectType);
+        }
+
+        using var scope = _logger.BeginScope(new Dictionary<string, object>
+        {
+            ["FileName"] = filename,
+            ["BucketName"] = _bucketName,
+        });
+
+        try
+        {
+            // bucket must exist prior to calling this otherwise BucketNotFoundException will be thrown
+            // in the shared services object store, we are not giving permissions to list or create buckets
+
+            // Upload a file to bucket.
+            PutObjectArgs putObjectArgs = new PutObjectArgs()
+                    .WithBucket(_bucketName)
+                    .WithObject(filename)
+                    .WithContentType("application/json")
+                    .WithObjectSize(dataJsonStream.Length)
+                    .WithStreamData(dataJsonStream)
+                    .WithHeaders(headers);
+
+            await _objectOperations.PutObjectAsync(putObjectArgs, cancellationToken);
+            return filename;
         }
         catch (BucketNotFoundException exception)
         {
