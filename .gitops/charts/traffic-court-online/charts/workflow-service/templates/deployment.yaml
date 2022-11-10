@@ -50,8 +50,8 @@ spec:
             value: {{ .Release.Name }}-arc-dispute-api.{{ .Values.global.namespace }}.svc.cluster.local
           - name: ArcApiConfiguration__Port
             value: "8080"
-          - name: DOTNET_DiagnosticPorts
-            value: /diag/port.sock
+          - name: ASPNETCORE_URLS
+            value: http://*:8080;http://*:52325
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -61,36 +61,3 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-          - mountPath: /diag
-            name: diagnostics
-        - name: dotnet-monitor
-          image: mcr.microsoft.com/dotnet/monitor
-          # DO NOT use the --no-auth argument for deployments in production; this argument is used for demonstration
-          # purposes only in this example. Please continue reading after this example for further details.
-          args: [ "--no-auth" ]
-          env:
-          - name: DOTNETMONITOR_DiagnosticPort__ConnectionMode
-            value: Listen
-          - name: DOTNETMONITOR_DiagnosticPort__EndpointName
-            value: /diag/port.sock
-          - name: DOTNETMONITOR_Storage__DumpTempFolder
-            value: /diag/dumps
-          - name: DOTNETMONITOR_Urls
-            value: http://localhost:52323
-          imagePullPolicy: Always
-          ports:
-          - containerPort: 52325
-          volumeMounts:
-          - mountPath: /diag
-            name: diagnostics
-          resources:
-            requests:
-              cpu: 50m
-              memory: 32Mi
-            limits:
-              cpu: 250m
-              memory: 256Mi
-      volumes:
-      - name: diagnostics
-        emptyDir: {}      

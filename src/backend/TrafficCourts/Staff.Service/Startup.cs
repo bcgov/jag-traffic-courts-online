@@ -1,4 +1,3 @@
-using FluentAssertions.Common;
 using MassTransit;
 using MediatR;
 using Microsoft.OpenApi.Models;
@@ -9,9 +8,7 @@ using TrafficCourts.Common;
 using TrafficCourts.Common.Authentication;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Features.FilePersistence;
-using TrafficCourts.Common.Features.Lookups;
 using TrafficCourts.Common.Features.Mail.Templates;
-using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 using TrafficCourts.Common.OpenAPIs.OracleDataAPI;
 using TrafficCourts.Messaging;
 using TrafficCourts.Staff.Service.Authentication;
@@ -32,7 +29,7 @@ public static class Startup
         {
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        });
+        }, meters: "MassTransit");
 
         builder.AddRedis();
 

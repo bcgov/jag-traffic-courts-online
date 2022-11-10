@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
@@ -10,6 +11,7 @@ using Serilog.Exceptions.Core;
 using Serilog.Exceptions.Destructurers;
 using StackExchange.Redis;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 
 namespace TrafficCourts.Common.Configuration;
 
@@ -127,18 +129,25 @@ public static class Extensions
     public static void AddOpenTelemetry(
         this WebApplicationBuilder builder, 
         ActivitySource activitySource, 
-        Serilog.ILogger logger, 
-        Action<TracerProviderBuilder>? configure = null)
+        ILogger logger, 
+        Action<TracerProviderBuilder>? configure = null,
+        params string[] meters)
     {
         ArgumentNullException.ThrowIfNull(builder);
         ArgumentNullException.ThrowIfNull(activitySource);
         ArgumentNullException.ThrowIfNull(logger);
 
+        AddTracing(builder, activitySource, logger, configure);
+        AddMetrics(builder.Services, meters);
+    }
+
+    private static void AddTracing(WebApplicationBuilder builder, ActivitySource activitySource, ILogger logger, Action<TracerProviderBuilder>? configure = null)
+    {
         string? endpoint = builder.Configuration["OTEL_EXPORTER_JAEGER_ENDPOINT"];
 
         if (string.IsNullOrEmpty(endpoint))
         {
-            logger.Information("Jaeger endpoint is not configured, no telemetry will be collected.");
+            logger.Information("Jaeger endpoint is not configured, no telemetry traces will be collected.");
             return;
         }
 
@@ -153,7 +162,7 @@ public static class Extensions
                 .AddHttpClientInstrumentation(options =>
                 {
                     // do not trace calls to splunk
-                    options.Filter = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
+                    options.FilterHttpRequestMessage = (message) => message.RequestUri?.Host != "hec.monitoring.ag.gov.bc.ca";
                 })
                 .AddAspNetCoreInstrumentation()
                 .AddSource(activitySource.Name)
@@ -162,7 +171,25 @@ public static class Extensions
             if (configure is not null)
             {
                 configure(options);
-            }            
+            }
+        });
+    }
+    private static void AddMetrics(IServiceCollection services, params string[] meters)
+    {
+        services.AddOpenTelemetryMetrics(mb =>
+        {
+            mb
+                .AddProcessInstrumentation()
+                .AddRuntimeInstrumentation()
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation();
+
+            if (meters.Length != 0)
+            {
+                mb.AddMeter(meters);
+            }
+
+            mb.AddPrometheusExporter();
         });
     }
 }

@@ -16,6 +16,7 @@ using TrafficCourts.Messaging;
 using FluentValidation.AspNetCore;
 using TrafficCourts.Common.Features.FilePersistence;
 using HashidsNet;
+using OpenTelemetry.Metrics;
 
 namespace TrafficCourts.Citizen.Service;
 
@@ -38,10 +39,9 @@ public static class Startup
         builder.AddSerilog();
         builder.AddOpenTelemetry(Diagnostics.Source, logger, options =>
         {
-            // add MassTransit source
             options.AddSource(MassTransit.Logging.DiagnosticHeaders.DefaultListenerName)
                 .AddRedisInstrumentation();
-        });
+        }, meters: "MassTransit");
 
         // Redis
         builder.AddRedis();

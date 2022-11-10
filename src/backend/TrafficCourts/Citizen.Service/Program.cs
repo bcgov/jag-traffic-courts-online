@@ -1,6 +1,7 @@
 using TrafficCourts.Citizen.Service;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Common.Diagnostics;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Serilog.ILogger logger = builder.GetProgramLogger();
@@ -18,7 +19,7 @@ if (swagger.Enabled)
 }
 
 app.MapControllers();
-
+app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
 
 bool isDevelopment = app.Environment.IsDevelopment();
 try
