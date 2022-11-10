@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenTelemetry.Metrics;
@@ -11,34 +10,13 @@ using Serilog.Exceptions.Core;
 using Serilog.Exceptions.Destructurers;
 using StackExchange.Redis;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace TrafficCourts.Common.Configuration;
 
+[ExcludeFromCodeCoverage]
 public static class Extensions
 {
-    /// <summary>
-    /// Adds ini formatted Vault Secrets to the configuration
-    /// </summary>
-    /// <param name="configurationManager"></param>
-    public static void AddVaultSecrets(this ConfigurationManager configurationManager, Serilog.ILogger logger)
-    {
-        // standard directory Vault stores secrets
-        const string vaultSecrets = "/vault/secrets";
-
-        if (!Directory.Exists(vaultSecrets))
-        {
-            logger.Information("Vault {Directory} does not exist, will not load Vault secrets", vaultSecrets);
-            return;
-        }
-
-        foreach (var file in Directory.EnumerateFiles(vaultSecrets, "*.ini", SearchOption.TopDirectoryOnly))
-        {
-            logger.Debug("Loading secrets from {File}", file);
-            configurationManager.AddIniFile(file, optional: false, reloadOnChange: false); // assume we can read
-        }
-    }
-
     /// <summary>
     /// Adds Redis and provides <see cref="IConnectionMultiplexer"/> in dependency injection.
     /// </summary>

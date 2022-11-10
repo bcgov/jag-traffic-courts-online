@@ -33,12 +33,6 @@
 		<None Update="swagger.json" JsonLibrary="SystemTextJson" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Content Include="ArcDisputeClient.generated.cs">
-			<DependentUpon>ArcDisputeClient.cs</DependentUpon>
-		</Content>
-	</ItemGroup>
-
 	<Target Name="NSwag" BeforeTargets="BeforeBuild">
 		<Exec Command="$(NSwagExe_Net60) run TrafficCourts.Arc.Dispute.Client.nswag" />
 	</Target>

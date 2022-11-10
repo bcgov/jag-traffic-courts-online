@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace TrafficCourts.Common.Converters;
 
+[ExcludeFromCodeCoverage]
 public abstract class StringTypeConverterBase<T> : TypeConverter
 {
     protected abstract T Parse(string s);

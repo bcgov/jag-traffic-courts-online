@@ -1,15 +1,16 @@
-﻿namespace TrafficCourts.Common.Features.Lookups
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TrafficCourts.Common.Features.Lookups;
+
+/// <summary>
+/// A cached look up service.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface ICachedLookupService<T>
 {
     /// <summary>
-    /// A cached look up service.
+    /// 
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ICachedLookupService<T>
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        Task<IList<T>> GetListAsync();
-    }
+    /// <returns></returns>
+    Task<IList<T>> GetListAsync();
 }
