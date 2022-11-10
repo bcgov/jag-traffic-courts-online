@@ -2,10 +2,12 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using TrafficCourts.Common.Converters;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
+[ExcludeFromCodeCoverage]
 public static class Extensions
 {
     /// <summary>

@@ -1,8 +1,11 @@
-﻿namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 /// <summary>
 /// A class that contains the byte[] data (raw image) that is retrieved from the object store.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class ViolationTicketImage
 {
     public ViolationTicketImage(byte[] image, string mimeType)

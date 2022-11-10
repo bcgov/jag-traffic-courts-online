@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -5,6 +6,7 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 /// <summary>
 /// A model representation of the extracted OCR results.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class OcrViolationTicket
 {
 

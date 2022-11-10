@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using TrafficCourts.Common.Configuration;
 using TrafficCourts.Common.Configuration.Validation;
+using TrafficCourts.Common.Diagnostics;
 using TrafficCourts.Workflow.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ if (swagger.Enabled)
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseOpenTelemetryPrometheusScrapingEndpoint(PrometheusScraping.EndpointFilter);
 
 app.UseHealthChecks("/health/ready", new HealthCheckOptions()
 {

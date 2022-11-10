@@ -1,5 +1,8 @@
-﻿namespace TrafficCourts.Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace TrafficCourts.Common.Models;
+
+[ExcludeFromCodeCoverage]
 public record Statute(
     string Id, 
     string ActCode, 

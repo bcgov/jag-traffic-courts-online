@@ -1,8 +1,11 @@
-﻿namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 /// <summary>
 /// An extension of the ViolationTicket object to include a ViolationTicketImage object.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public partial class ViolationTicket
 {
     /// <summary>

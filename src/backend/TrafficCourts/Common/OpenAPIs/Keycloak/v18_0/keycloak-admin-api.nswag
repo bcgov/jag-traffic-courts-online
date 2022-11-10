@@ -92,7 +92,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "KeycloakAdminApiClient.cs",
+      "output": "KeycloakAdminApiClient.g.cs",
       "newLineBehavior": "Auto"
     }
   }

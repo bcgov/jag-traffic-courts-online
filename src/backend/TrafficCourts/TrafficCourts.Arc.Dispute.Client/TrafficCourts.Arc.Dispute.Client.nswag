@@ -92,7 +92,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "ArcDisputeClient.generated.cs",
+      "output": "ArcDisputeClient.g.cs",
       "newLineBehavior": "Auto"
     }
   }

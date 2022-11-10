@@ -1,9 +1,9 @@
-﻿using TrafficCourts.Common.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using TrafficCourts.Common.Models;
 
-namespace TrafficCourts.Common.Features.Lookups
+namespace TrafficCourts.Common.Features.Lookups;
+
+public interface IStatuteLookupService : ICachedLookupService<Statute>
 {
-    public interface IStatuteLookupService : ICachedLookupService<Statute>
-    {
-        Task<Statute?> GetBySectionAsync(string section);
-    }
+    Task<Statute?> GetBySectionAsync(string section);
 }

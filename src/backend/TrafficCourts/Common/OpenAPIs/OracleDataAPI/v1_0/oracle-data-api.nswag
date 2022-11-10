@@ -95,7 +95,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "OracleDataApiClient.cs",
+      "output": "OracleDataApiClient.g.cs",
       "newLineBehavior": "Auto"
     }
   }
