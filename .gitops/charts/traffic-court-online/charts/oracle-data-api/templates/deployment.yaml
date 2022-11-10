@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "oracle-data-api.fullname" . }}
   labels:
+    app.openshift.io/runtime: java
     {{- include "oracle-data-api.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
