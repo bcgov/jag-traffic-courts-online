@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using TrafficCourts.Common.Features.FilePersistence;
 using Xunit;
 using Microsoft.Extensions.Options;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Common.Test.Features.FilePersistence
 {
@@ -105,6 +106,60 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             Assert.Equal(stream.ToArray(), actual.ToArray());
         }
 
+        [Theory]
+        [MemberData(nameof(JsonObjectsToSaveWithFilename))]
+        public async Task should_create_json_file_with_correct_filename<T>(T data, string filename)
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+
+            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
+
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
+
+            var actual = await sut.SaveJsonFileAsync(data, filename, CancellationToken.None);
+
+            Assert.NotNull(actual);
+            Assert.Equal(filename, actual);
+        }
+
+        [Fact]
+        public async Task save_json_file_should_throw_if_no_data_to_save()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+
+            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
+
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
+
+            string filename = "";
+
+            var actual = await Assert.ThrowsAsync<ArgumentNullException>(() => sut.SaveJsonFileAsync<object>(null!, filename, CancellationToken.None));
+        }
+
+        [Theory]
+        [MemberData(nameof(JsonObjectsToSaveWithNoFilename))]
+        public async Task save_json_file_should_throw_if_no_filename_provided<T>(T data, string filename)
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+
+            Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
+
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
+
+
+            var actual = await Assert.ThrowsAsync<ArgumentException>(() => sut.SaveJsonFileAsync(data, filename, CancellationToken.None));
+            Assert.Equal("No filename provided to save (Parameter 'filename')", actual.Message);
+        }
+
         private MemoryStream GetFile(byte[] bytes)
         {
             var stream = new MemoryStream();
@@ -125,6 +180,17 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
                 yield return new object[] { new byte[] { 0xff, 0xd8, 0xff }, ".jpg" };
                 yield return new object[] { new byte[] { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a }, ".png" };
             }
+        }
+
+        public static IEnumerable<object[]> JsonObjectsToSaveWithFilename()
+        {
+            yield return new object[] { new OcrViolationTicket(), "test-json-file" };
+        }
+
+        public static IEnumerable<object[]> JsonObjectsToSaveWithNoFilename()
+        {
+            yield return new object[] { new OcrViolationTicket(), "" };
+            yield return new object[] { new OcrViolationTicket(), null! };
         }
     }
 }

@@ -129,7 +129,7 @@ public class MinioFilePersistenceService : FilePersistenceService
     public override async Task<string> SaveJsonFileAsync<T>(T data, string filename, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(data);
-        ArgumentNullException.ThrowIfNull(filename);
+        if (string.IsNullOrEmpty(filename)) throw new ArgumentException("No filename provided to save", nameof(filename));
 
         // The type of the data that can be dynamically determined and used to deserialize
         Type dataType = typeof(T);
@@ -246,7 +246,7 @@ public class MinioFilePersistenceService : FilePersistenceService
         catch (Exception exception)
         {
             _logger.LogWarning(exception, "Error fetching file from object storage");
-            throw new MinioFilePersistenceException("Error getting file", exception); // TODO: add exception parameter that handles Exception data type
+            throw new MinioFilePersistenceException("Error getting file", exception);
         }
     }
 }
