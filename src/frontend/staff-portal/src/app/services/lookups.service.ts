@@ -69,7 +69,7 @@ export class LookupsService implements ILookupsService {
   }
 
   public get__statuteString(statute: Statute): string {
-    return statute.code + " " + statute.sectionText + " " + statute.descriptionText;
+    return statute.code + " " + statute.descriptionText;
   }
 }
 

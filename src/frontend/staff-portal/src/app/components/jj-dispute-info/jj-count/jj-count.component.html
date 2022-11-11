@@ -1,4 +1,5 @@
 <div class="contact-info">
+  <!-- Count Information -->
   <section style="background-color: #f1f1f1 !important;">
     <ng-container subHeader>
       <span class="count-text">
@@ -30,6 +31,7 @@
     </div>
     <hr style="margin: 0 0 0 0" />
   </section>
+  <!-- Disputant Request -->
   <section style="background-color: #f1f1f1 !important;">
     <ng-container subHeader>
       <span class="count-text">
@@ -60,7 +62,8 @@
     </div>
     <hr style="margin: 0 0 0 0" />
   </section>
-  <section *ngIf="type !== 'ticket'">
+  <!-- JJ Decision for Written Reasons -->
+  <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons">
     <ng-container subHeader>
       <span class="count-text">
         <h3>&nbsp;JJ decision</h3>
@@ -161,7 +164,8 @@
     </form>
     <br />
   </section>
-  <div *ngIf="type === 'ticket'" fxLayout="column" style="padding: 0 0.2rem;">
+  <!-- JJ Decision (read only) for Written Reasons -->
+  <div *ngIf="type === 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons" fxLayout="column" style="padding: 0 0.2rem;">
     <h3 style="padding-left: 0.2rem;">JJ decision</h3>
 
     <div class="section-grid-header">Fine calculation</div>
@@ -194,12 +198,231 @@
     </mat-label>
     <div class="section-grid-text" style="padding-bottom: 2rem !important;">{{ jjDisputedCount?.comments }}</div>
   </div>
+  <!-- JJ RoP for Court Appearance -->
+  <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.CourtAppearance" style="padding: 0 0.2rem;">
+    <ng-container subHeader>
+      <span class="count-text">
+        <h3>&nbsp;Findings</h3>
+      </span>
+    </ng-container>
+    <mat-radio-group [formControl]="form.get('jjDisputedCountRoP').get('finding')" fxLayout="column">
+      <mat-radio-button [value]="Finding.Guilty">Guilty as charged</mat-radio-button>
+      <mat-radio-button [value]="Finding.NotGuilty">Not guilty</mat-radio-button>
+      <mat-radio-button [value]="Finding.GuiltyLesser">Not guilty as charged <br/>but guilty of lesser / included offense section</mat-radio-button>
+    </mat-radio-group>
+    <div style="width:100%; margin-left: 20px">
+      <input
+        matInput
+        placeholder="start typing section, then select"
+        [readonly]="form.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty || form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty || !form.get('jjDisputedCountRoP').get('finding').value"
+        [formControl]="form.get('jjDisputedCountRoP').get('lesserDescription')"
+        style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;"
+        [matAutocomplete]="auto"
+        (keyup)="onLesserDescriptionKeyup()"
+        [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let statute of lesserDescriptionFilteredStatutes"
+          [value]="statute.__statuteString">
+          {{ statute.__statuteString }}</mat-option>
+      </mat-autocomplete><br />
+      <mat-tooltip *ngIf="form.get('jjDisputedCountRoP').get('lesserDescription').value" style="font-size:x-small">Hover over section to see full description</mat-tooltip>
+    </div><br />
+    <hr style="margin: 0 0 0 0" />
+  </section>
   <section>
     <ng-container subHeader>
       <span class="count-text">
         <h3>&nbsp;Final disposition</h3>
       </span>
     </ng-container>
+    <!-- Final disposition input for court appeaances -->
+    <form name="form" novalidate *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      <!-- Fine amount -->
+      <div style="display: grid; grid-template-columns: 33% 33% 33%">
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">Revise fine</p>
+          <p class="section-jj-grid-text">
+            <mat-radio-group [(ngModel)]="fineReduction" [ngModelOptions]="{standalone: true}"
+              (change)="updateFineAmount($event)" [disabled]="!jjDisputedCount">
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+            </mat-radio-group>
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Offence Amt</p>
+          <p class="section-jj-grid-text">
+            {{ jjDisputedCount?.ticketedFineAmount | currency }}<br /><br />
+            <span
+              [hidden]="!(fineReduction=='yes' && !(form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
+              class="section-grid-header">Lesser/Greater<br /></span>
+            <span
+              [hidden]="!(fineReduction=='yes' && (form.get('lesserOrGreaterAmount').hasError('min') || form.get('lesserOrGreaterAmount').hasError('max')))"
+              class="section-grid-header" style="color: red;">0
+              < Fine < 9999.99<br />
+            </span>
+            <span [hidden]="!(fineReduction=='yes')">$ </span><input type="number" [hidden]="!(fineReduction=='yes')"
+              [formControl]="form.get('lesserOrGreaterAmount')" max="9999.99" min="0.00"
+              (change)="onChangelesserOrGreaterAmount()"
+              style="background-color:#e4f2ff; width: 80%; font-size: smaller; border: 0" />
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header"><span *ngIf="fineReduction=='yes'">Includes surcharge</span></p>
+          <p class="section-grid-header"><span *ngIf="fineReduction=='no'">&nbsp;<br /><br /></span></p>
+          <p class="section-jj-grid-text">
+            <mat-radio-group [(ngModel)]="inclSurcharge" [ngModelOptions]="{standalone: true}"
+              (change)="updateInclSurcharge($event.value)" *ngIf="fineReduction=='yes'" [disabled]="!jjDisputedCount">
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+            </mat-radio-group>
+            <span *ngIf="fineReduction=='no'"><br /><br /><br /><br /></span>
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;<br /><br /></p>
+          <p class="section-jj-grid-text">
+            <span *ngIf="fineReduction=='yes'">{{ lesserOrGreaterAmount | currency }}</span>
+            <span *ngIf="fineReduction=='no'"><br /></span>
+          </p>
+          <p class="section-jj-grid-text2">
+            <span *ngIf="fineReduction=='yes'">&nbsp;+&nbsp;({{ surcharge | currency }})</span>
+            <span *ngIf="fineReduction=='no'"><br /></span>
+          </p>
+        </span>
+        <!-- Time to pay -->
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">Time to pay</p>
+          <p class="section-jj-grid-text">
+            <mat-radio-group [(ngModel)]="timeToPay" [ngModelOptions]="{standalone: true}" layout="row"
+              (change)="updateRevisedDueDate($event)" [disabled]="!jjDisputedCount">
+              <mat-radio-button value="yes" style="padding-right: 5px; font-size: small">yes</mat-radio-button>
+              <mat-radio-button value="no" style="font-size: small">no</mat-radio-button>
+            </mat-radio-group>
+          </p>
+        </span>
+        <span class="section-jj-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">
+            <input [formControl]="form.get('revisedDueDate')" type="date" [hidden]="!(timeToPay=='yes')"
+              style="background-color:#e4f2ff; width: 100%; font-size: smaller; border: 0" [value]="jjDisputedCount?.revisedDueDate">
+          </p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-jj-grid-text">&nbsp;</p>
+        </span>
+        <!-- Suspended Sentence -->
+        <span class="section-grid-cell" style="grid-column: span 3">
+          <span class="count-text" style="font-size: small">
+            <b>&nbsp;Suspended Sentence</b>
+          </span><br/>
+          &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Probation</mat-label><br />
+          &nbsp;&nbsp;&nbsp;<input
+            matInput
+            placeholder="duration"
+            [formControl]="form.get('jjDisputedCountRoP').get('ssProbationDuration')"
+            style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
+            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Conditions</mat-label><br />
+            &nbsp;&nbsp;&nbsp;<textarea matInput [formControl]="form.get('jjDisputedCountRoP').get('ssProbationConditions')" maxlength="500"
+            style="background-color:#e4f2ff; background: #fffee6; width: 80%; font-size: small; resize: none;"
+            rows="5">
+          </textarea>
+        </span>
+        <!-- Jail -->
+        <span class="section-grid-cell" style="grid-column: span 3">
+          <span class="count-text" style="font-size: small">
+            <b>&nbsp;Jail</b>
+          </span><br/>
+          &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Duration</mat-label><br />
+          &nbsp;&nbsp;&nbsp;<input
+            matInput
+            [formControl]="form.get('jjDisputedCountRoP').get('jailDuration')"
+            style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
+            &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y" color="primary" (change)="onJailIntermittentChange($event.value)"><span class="section-grid-header">Intermittent</span></mat-checkbox>
+        </span>
+        <!-- Probation -->
+        <span class="section-grid-cell" style="grid-column: span 3">
+          <span class="count-text" style="font-size: small">
+            <b>&nbsp;Probation</b>
+          </span><br/>
+          &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Duration</mat-label><br />
+          &nbsp;&nbsp;&nbsp;<input
+            matInput
+            placeholder="duration"
+            [formControl]="form.get('jjDisputedCountRoP').get('probationDuration')"
+            style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
+            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Conditions</mat-label><br />
+            &nbsp;&nbsp;&nbsp;<textarea matInput [formControl]="form.get('jjDisputedCountRoP').get('probationConditions')" maxlength="500"
+            style="background-color:#e4f2ff; background: #fffee6; width: 80%; font-size: small; resize: none;"
+            rows="5">
+          </textarea>
+        </span>
+        <!-- Driving Prohibition -->
+        <span class="section-grid-cell" style="grid-column: span 3">
+          <span class="count-text" style="font-size: small">
+            <b>&nbsp;Driving Prohibition</b>
+          </span><br/>
+            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Duration</mat-label><br />
+            &nbsp;&nbsp;&nbsp;<input
+            matInput
+            placeholder="duration"
+            [formControl]="form.get('jjDisputedCountRoP').get('drivingProhibition')"
+            style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
+            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">MVA Section</mat-label><br />
+            &nbsp;&nbsp;&nbsp;<input
+              matInput
+              placeholder="start typing section, then select"
+              [formControl]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection')"
+              style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;"
+              [matAutocomplete]="auto"
+              (keyup)="onDrivingProhibitionMVASectionKeyup()"
+              [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let statute of drivingProhibitionFilteredStatutes"
+                [value]="statute.__statuteString">
+                {{ statute.__statuteString }}</mat-option>
+            </mat-autocomplete><br />
+            &nbsp;&nbsp;&nbsp;<mat-tooltip *ngIf="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" style="font-size:x-small">Hover over section to see full description</mat-tooltip>
+            <br />
+        </span>
+        <span class="section-grid-cell" style="grid-column: span 3">
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y" color="primary" (change)="onDismissedChange($event.value)"><span class="section-grid-header">Dismissed</span></mat-checkbox>
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y" color="primary" (change)="onForWantOfProsecutionChange($event.value)"><span class="section-grid-header">For Want of Prosecution</span></mat-checkbox><br />
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y" color="primary" (change)="onWithdrawnChange($event.value)"><span class="section-grid-header">Withdrawn</span></mat-checkbox>
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y" color="primary" (change)="onAbatementChange($event.value)"><span class="section-grid-header">Abatement</span></mat-checkbox><br />
+          &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Stay of Proceedings By</mat-label><br />
+          &nbsp;&nbsp;&nbsp;<input
+            matInput
+            placeholder="JJ"
+            [formControl]="form.get('jjDisputedCountRoP').get('stayOfProceedingsBy')"
+            style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
+          &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Other</mat-label><br />
+          &nbsp;&nbsp;&nbsp;<input
+            matInput
+            [formControl]="form.get('jjDisputedCountRoP').get('other')"
+            style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
+        </span>
+        <!-- Remarks -->
+        <span class="section-grid-cell" style="grid-column: span 3">
+          <mat-label class="section-grid-header">Remarks</mat-label><br />
+          <mat-label class="small-note"><i><span style="color:red;">*</span> These comments will be shared to
+              all parties</i></mat-label>
+          <textarea matInput [formControl]="form.get('comments')" maxlength="1500"
+            style="background-color:#e4f2ff; background: #fffee6; width: 100%; font-size: small; resize: none;"
+            rows="5">
+          </textarea>
+        </span>
+      </div>
+    </form>
     <div style="display: grid; grid-template-columns: 33% 33% 33%">
       <span class="section-jj-grid-cell">
         <p class="section-jj-grid-text">

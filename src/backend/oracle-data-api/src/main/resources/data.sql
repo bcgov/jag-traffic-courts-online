@@ -87,8 +87,8 @@ DEFENSE_COUNSEL, CROWN, JJ_SEIZED, ADJUDICATOR, COMMENTS, DURATION) VALUES
 
 INSERT INTO JJDISPUTED_COUNT_ROP (ID, JJDISPUTEDCOUNT_ID, CREATED_BY, CREATED_TS, MODIFIED_BY, MODIFIED_TS, FINDING, LESSER_DESCRIPTION, SS_PROBATION_DURATION, SS_PROBATION_CONDITIONS,
 JAIL_DURATION, JAIL_INTERMITTENT, PROBATION_DURATION, PROBATION_CONDITIONS, DRIVING_PROHIBITION, DRIVING_PROHIBITIONMVASECTION, DISMISSED, FOR_WANT_OF_PROSECUTION, WITHDRAWN,
-ABATEMENT, STAY_OF_PROCEEDINGS_BY, OTHER, JJ_REMARKS) VALUES
-(1, 28, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', 'N', '', 'N', 'N', 'N', 'N', '', '', ''),
-(2, 29, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', 'N', '', 'N', 'N', 'N', 'N', '', '', ''),
-(3, 30, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', 'N', '', 'N', 'N', 'N', 'N', '', '', '');
+ABATEMENT, STAY_OF_PROCEEDINGS_BY, OTHER) VALUES
+(1, 28, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(2, 29, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', ''),
+(3, 30, 'System', LOCALTIMESTAMP, 'System', LOCALTIMESTAMP, null, '', '', '', '', 'N', '', '', '', '', 'N', 'N', 'N', 'N', '', '');
 

@@ -39,7 +39,6 @@ export interface JJDisputedCountRoP {
     abatement?: JJDisputedCountRoPAbatement;
     stayOfProceedingsBy?: string | null;
     other?: string | null;
-    jjRemarks?: string | null;
     additionalProperties?: { [key: string]: any; } | null;
 }
 

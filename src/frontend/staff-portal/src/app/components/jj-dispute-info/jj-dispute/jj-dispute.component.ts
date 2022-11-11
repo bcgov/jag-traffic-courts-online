@@ -111,6 +111,7 @@ export class JJDisputeComponent implements OnInit {
   }
 
   private putJJDispute(): void {
+    console.log(this.lastUpdatedJJDispute);
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
