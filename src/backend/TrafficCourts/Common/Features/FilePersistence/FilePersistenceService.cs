@@ -22,4 +22,6 @@ public abstract class FilePersistenceService : IFilePersistenceService
         string id = Guid.NewGuid().ToString("n");
         return $"{id}.{mimeType.Extension}";
     }
+
+    public abstract Task<T?> GetJsonDataAsync<T>(string filename, CancellationToken cancellationToken) where T : class;
 }

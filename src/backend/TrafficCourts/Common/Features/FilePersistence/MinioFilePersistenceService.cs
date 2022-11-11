@@ -133,7 +133,7 @@ public class MinioFilePersistenceService : FilePersistenceService
 
         // The type of the data that can be dynamically determined and used to deserialize
         Type dataType = typeof(T);
-        string? objectType = dataType.FullName;
+        string? objectType = dataType.Name;
         _logger.LogInformation("The object type of the saved data is {ObjectType}", objectType);
 
         string createdAt = _clock.GetCurrentInstant().ToDateTimeUtc().ToString(CreatedAtDateTimeFormat);
@@ -185,6 +185,68 @@ public class MinioFilePersistenceService : FilePersistenceService
         {
             _logger.LogError(exception, "Failed to upload file to object storage");
             throw new MinioFilePersistenceException("Failed to upload file to object storage", exception);
+        }
+    }
+
+    public override async Task<T?> GetJsonDataAsync<T>(string filename, CancellationToken cancellationToken) where T : class
+    {
+        ArgumentNullException.ThrowIfNull(filename);
+
+        Type targetType = typeof(T);
+
+        using var scope = _logger.BeginScope(new Dictionary<string, object>
+        {
+            ["FileName"] = filename,
+            ["BucketName"] = _bucketName,
+        });
+
+        try
+        {
+            MemoryStream objectStream = _memoryStreamManager.GetStream();
+
+            GetObjectArgs args = new GetObjectArgs()
+                .WithBucket(_bucketName)
+                .WithObject(filename)
+                .WithCallbackStream((stream) => { stream.CopyTo(objectStream); });
+
+            ObjectStat? status = await _objectOperations.GetObjectAsync(args, cancellationToken);
+            if (status == null)
+            {
+                _logger.LogInformation("Could not fetch object from object storage with objectStat and headers");
+                return null;
+            }
+            Dictionary<string, string> headers = status.MetaData;
+            if (headers.TryGetValue("type", out string? objectType))
+            {
+                if (objectType != targetType.Name)
+                {
+                    _logger.LogWarning("Target object type to return: {targetType} does not match the type of json object fetched from object storage: {objectType}", targetType.Name, objectType);
+                    return null;
+                }
+            }
+            string jsonString = Encoding.UTF8.GetString(objectStream.ToArray());
+
+            return JsonSerializer.Deserialize<T>(jsonString);
+        }
+        catch (BucketNotFoundException exception)
+        {
+            _logger.LogInformation(exception, "Bucket not found");
+            throw new FileNotFoundException("File not found", filename, exception);
+        }
+        catch (ObjectNotFoundException exception)
+        {
+            _logger.LogInformation(exception, "Object not found");
+            throw new FileNotFoundException("File not found", filename, exception);
+        }
+        catch (DirectoryNotFoundException exception)
+        {
+            _logger.LogInformation(exception, "Directory not found");
+            throw new FileNotFoundException("File not found", filename, exception);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(exception, "Error fetching file from object storage");
+            throw new MinioFilePersistenceException("Error getting file", exception); // TODO: add exception parameter that handles Exception data type
         }
     }
 }

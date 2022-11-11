@@ -29,6 +29,11 @@ public class InMemoryFilePersistenceService : FilePersistenceService
         return Task.FromResult(stream);
     }
 
+    public override Task<T?> GetJsonDataAsync<T>(string filename, CancellationToken cancellationToken) where T : class
+    {
+        throw new NotImplementedException();
+    }
+
     public override Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken)
     {
         var mimeType = data.GetMimeType();

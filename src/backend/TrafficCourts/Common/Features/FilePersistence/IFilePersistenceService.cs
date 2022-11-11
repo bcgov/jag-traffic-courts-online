@@ -31,4 +31,13 @@ public interface IFilePersistenceService
     /// <returns></returns>
     /// <exception cref="FileNotFoundException">The file was not found.</exception>
     Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets generic deserialized json object by filename if target deserialization object type matches.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="filename"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<T?> GetJsonDataAsync<T>(string filename, CancellationToken cancellationToken) where T : class;
 }
