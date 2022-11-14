@@ -19,6 +19,8 @@ public class MinioFilePersistenceService : FilePersistenceService
     private readonly IClock _clock;
     private readonly string _bucketName;
     private const string CreatedAtDateTimeFormat = "yyyy-MM-ddTHH:mm";
+    private const string CreatedAtHeader = "createdAt";
+    private const string TypeHeader = "type";
 
     public MinioFilePersistenceService(
         IObjectOperations objectOperations,
@@ -146,10 +148,10 @@ public class MinioFilePersistenceService : FilePersistenceService
 
         // The metadata (object type and created timestamp) of the json object that will be saved in object store
         Dictionary<string, string> headers = new();
-        headers.Add("CreatedAt", createdAt);
+        headers.Add(CreatedAtHeader, createdAt);
         if (objectType != null)
         {
-            headers.Add("Type", objectType);
+            headers.Add(TypeHeader, objectType);
         }
 
         using var scope = _logger.BeginScope(new Dictionary<string, object>
@@ -215,7 +217,7 @@ public class MinioFilePersistenceService : FilePersistenceService
                 return null;
             }
             Dictionary<string, string> headers = status.MetaData;
-            if (headers.TryGetValue("type", out string? objectType))
+            if (headers.TryGetValue(TypeHeader, out string? objectType))
             {
                 if (objectType != targetType.Name)
                 {
