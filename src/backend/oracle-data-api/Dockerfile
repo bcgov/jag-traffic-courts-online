@@ -28,13 +28,12 @@ WORKDIR /app
 EXPOSE 8080
 
 ADD https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_AGENT_VERSION}/jmx_prometheus_javaagent-${PROMETHEUS_AGENT_VERSION}.jar /app/jmx_prometheus_javaagent.jar
-RUN printf "Generate settings.xml\n" & \
-    echo -e " \
-        startDelaySeconds: 0 \n \
-        ssl: false \n \
-        lowercaseOutputName: false \n \
-        lowercaseOutputLabelNames: false \n \
-        " > /app/jmx_prometheus_javaagent_config.yaml
+RUN printf "Generate jmx_prometheus_javaagent_config.yaml\n" & \
+ echo "startDelaySeconds: 0 \n\
+ssl: false \n\
+lowercaseOutputName: false \n\
+lowercaseOutputLabelNames: false \n\
+" > /app/jmx_prometheus_javaagent_config.yaml
 
 # permissions - are these correct?
 # a+rw - all users rw
