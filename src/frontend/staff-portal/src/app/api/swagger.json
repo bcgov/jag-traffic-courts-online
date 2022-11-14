@@ -3503,10 +3503,6 @@
             "type": "string",
             "nullable": true
           },
-          "jjRemarks": {
-            "type": "string",
-            "nullable": true
-          },
           "additionalProperties": {
             "type": "object",
             "additionalProperties": { },

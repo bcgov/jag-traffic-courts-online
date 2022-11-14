@@ -146,11 +146,6 @@ public class JJDisputedCountRoP extends Auditable<String> {
 	 */
 	private String other;
 	
-	/**
-	 * JJ Remarks
-	 */
-	private String jjRemarks;
-	
 	@JsonBackReference
 	@OneToOne
 	@JoinColumn(name = "jjdisputedcount_id", referencedColumnName = "id")
