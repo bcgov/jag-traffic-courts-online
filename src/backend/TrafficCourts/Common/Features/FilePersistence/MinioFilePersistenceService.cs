@@ -138,10 +138,9 @@ public class MinioFilePersistenceService : FilePersistenceService
 
         string createdAt = _clock.GetCurrentInstant().ToDateTimeUtc().ToString(CreatedAtDateTimeFormat);
 
-        // Serialize data to a JSON string
-        string serializedJsonData = JsonSerializer.Serialize(data);
-        // Convert serialized string data into byte stream to save as a file
-        MemoryStream dataJsonStream = new(Encoding.UTF8.GetBytes(serializedJsonData));
+        // Convert the provided data into UTF-8 encoded JSON and write it to stream to save as a file
+        var dataJsonStream = _memoryStreamManager.GetStream();
+        JsonSerializer.Serialize(dataJsonStream, data);
 
         if (dataJsonStream.Length == 0) throw new ArgumentException("No data to save", nameof(dataJsonStream));
 
