@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "arc-dispute-api.fullname" . }}
   labels:
+    app.openshift.io/runtime: dotnet
     {{- include "arc-dispute-api.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}

@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "staff-api.fullname" . }}
   labels:
+    app.openshift.io/runtime: dotnet
     {{- include "staff-api.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -14,6 +15,7 @@ spec:
   template:
     metadata:
       annotations:
+        
         prometheus.io/scrape: 'true'
         prometheus.io/port: "52325"
         vault.hashicorp.com/agent-inject: 'true'
