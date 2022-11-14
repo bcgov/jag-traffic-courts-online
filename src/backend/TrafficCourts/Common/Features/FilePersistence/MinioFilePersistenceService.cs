@@ -4,6 +4,7 @@ using Minio;
 using Minio.DataModel;
 using Minio.Exceptions;
 using NodaTime;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
@@ -136,15 +137,17 @@ public class MinioFilePersistenceService : FilePersistenceService
         // The type of the data that can be dynamically determined and used to deserialize
         Type dataType = typeof(T);
         string? objectType = dataType.Name;
-        _logger.LogInformation("The object type of the saved data is {ObjectType}", objectType);
+        _logger.LogDebug("The object type of the saved data is {ObjectType}", objectType);
 
         string createdAt = _clock.GetCurrentInstant().ToDateTimeUtc().ToString(CreatedAtDateTimeFormat);
 
         // Convert the provided data into UTF-8 encoded JSON and write it to stream to save as a file
-        var dataJsonStream = _memoryStreamManager.GetStream();
+        using var dataJsonStream = _memoryStreamManager.GetStream();
         JsonSerializer.Serialize(dataJsonStream, data);
+        // Reset file position
+        dataJsonStream.Position = 0L;
 
-        if (dataJsonStream.Length == 0) throw new ArgumentException("No data to save", nameof(dataJsonStream));
+        Debug.Assert(dataJsonStream.Length != 0);
 
         // The metadata (object type and created timestamp) of the json object that will be saved in object store
         Dictionary<string, string> headers = new();
@@ -175,6 +178,7 @@ public class MinioFilePersistenceService : FilePersistenceService
                     .WithHeaders(headers);
 
             await _objectOperations.PutObjectAsync(putObjectArgs, cancellationToken);
+            
             return filename;
         }
         catch (BucketNotFoundException exception)
