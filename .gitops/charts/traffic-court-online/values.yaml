@@ -17,7 +17,6 @@ arc-dispute-api:
     pullPolicy: IfNotPresent
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
-    "ASPNETCORE_URLS": "http://*:8080"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
     "Serilog__Using__0": "Serilog.Sinks.Splunk"
@@ -35,7 +34,6 @@ citizen-api:
     pullPolicy: IfNotPresent
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
-    "ASPNETCORE_URLS": "http://*:8080"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
     "RabbitMq__Host": "rabbitmq"
@@ -80,7 +78,6 @@ staff-api:
     pullPolicy: IfNotPresent
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
-    "ASPNETCORE_URLS": "http://*:8080"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
     "RabbitMq__Host": "rabbitmq"
@@ -106,7 +103,6 @@ workflow-service:
     pullPolicy: IfNotPresent
   env:
     "ASPNETCORE_ENVIRONMENT": "Production"
-    "ASPNETCORE_URLS": "http://*:8080"
     "OTEL_EXPORTER_JAEGER_ENDPOINT": "http://jaeger-collector:14268/api/traces"
     "OTEL_EXPORTER_JAEGER_PROTOCOL": "http/thrift.binary"
     "RabbitMq__Host": "rabbitmq"

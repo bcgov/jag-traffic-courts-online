@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "staff-web.fullname" . }}
   labels:
+    app.openshift.io/runtime: nginx
     {{- include "staff-web.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
