@@ -183,24 +183,6 @@ export class JJCountComponent implements OnInit {
     return this.lookupsService.statutes.filter(option => option.__statuteString.indexOf(val) >= 0);
   }
 
-  // decompose string into subparagraph, section, subsection, paragraph
-  public unLegalParagraph(statuteLegalParagraphing: string): { subparagraph: string, section: string, subsection: string, paragraph: string } {
-    let allParts = statuteLegalParagraphing.split("(");
-    let subparagraph = "";
-    let section = "";
-    let subsection = "";
-    let paragraph = "";
-
-    // parts are section(section)(subsection)(paragraph)(subparagraph) if all are present
-    // extract substrings but dont include final ')' of each part
-    if (allParts.length > 0) section = allParts[0].substring(0, allParts[0].length);
-    if (allParts.length > 1) subsection = allParts[1].substring(0, allParts[1].length - 1);
-    if (allParts.length > 2) paragraph = allParts[2].substring(0, allParts[2].length - 1);
-    if (allParts.length > 3) subparagraph = allParts[3].substring(0, allParts[3].length - 1);
-
-    return { subparagraph: subparagraph, section: section, subsection: subsection, paragraph: paragraph };
-  }
-
   onMoreOptions() {
     const data: DialogOptions = {
       titleKey: "Response to Written Reasons Dispute",
