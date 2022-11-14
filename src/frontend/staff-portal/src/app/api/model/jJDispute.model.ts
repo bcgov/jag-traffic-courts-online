@@ -13,6 +13,7 @@ import { JJDisputeCourtAppearanceRoP } from './jJDisputeCourtAppearanceRoP.model
 import { JJDisputeRemark } from './jJDisputeRemark.model';
 import { JJDisputedCount } from './jJDisputedCount.model';
 import { DisputantContactInformation } from './disputantContactInformation.model';
+import { JJDisputeDisputantAttendanceType } from './jJDisputeDisputantAttendanceType.model';
 import { JJDisputeHearingType } from './jJDisputeHearingType.model';
 import { JJDisputeStatus } from './jJDisputeStatus.model';
 
@@ -47,6 +48,7 @@ export interface JJDispute {
     lawyerGivenName3?: string | null;
     interpreterLanguage?: string | null;
     witnessNo?: number | null;
+    disputantAttendanceType?: JJDisputeDisputantAttendanceType;
     remarks?: Array<JJDisputeRemark> | null;
     contactInformation?: DisputantContactInformation;
     jjDisputedCounts?: Array<JJDisputedCount> | null;

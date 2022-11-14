@@ -22,6 +22,7 @@ export * from './jJDispute.model';
 export * from './jJDisputeCourtAppearanceRoP.model';
 export * from './jJDisputeCourtAppearanceRoPApp.model';
 export * from './jJDisputeCourtAppearanceRoPCrown.model';
+export * from './jJDisputeDisputantAttendanceType.model';
 export * from './jJDisputeHearingType.model';
 export * from './jJDisputeRemark.model';
 export * from './jJDisputeStatus.model';

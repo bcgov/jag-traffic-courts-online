@@ -7,12 +7,13 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService } from '../../../services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRepresentation } from 'app/api/model/models';
 import { AuthService } from 'app/services/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -26,6 +27,7 @@ export class JJDisputeComponent implements OnInit {
 
   public isMobile: boolean;
   public busy: Subscription;
+  public courtAppearanceForm: FormGroup;
   public lastUpdatedJJDispute: JJDispute;
   public todayDate: Date = new Date();
   public retrieving: boolean = true;
@@ -38,11 +40,13 @@ export class JJDisputeComponent implements OnInit {
   public selectedJJ: string;
   public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   public RequestReduction = JJDisputedCountRequestReduction;
+  public HearingType = JJDisputeHearingType;
 
   constructor(
     protected route: ActivatedRoute,
     private utilsService: UtilsService,
     public mockConfigService: MockConfigService,
+    public formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private jjDisputeService: JJDisputeService,
     private dialog: MatDialog,
@@ -55,6 +59,31 @@ export class JJDisputeComponent implements OnInit {
 
   public ngOnInit() {
     this.getJJDispute();
+
+    this.courtAppearanceForm = this.formBuilder.group({
+        appearanceDate: [null],
+        appearanceTime: [null],
+        room: [null],
+        reason: [null],
+        app: [null],
+        noAppTs: [null],
+        clerkRecord: [null],
+        defenseCounsel: [null],
+        crown: [null],
+        jjSeized: [null],
+        adjudicator: [null],
+        comments: [null]
+      })
+
+    if (this.lastUpdatedJJDispute?.jjDisputeCourtAppearanceRoPs?.length > 0) {
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
+        return Date.parse(a.appearanceTs) - Date.parse(b.appearanceTs)
+      });
+
+      this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
+      this.courtAppearanceForm.get('appearanceDate').setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
+      this.courtAppearanceForm.get('appearanceTime').setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
+    }
   }
 
   public onSubmit(): void {

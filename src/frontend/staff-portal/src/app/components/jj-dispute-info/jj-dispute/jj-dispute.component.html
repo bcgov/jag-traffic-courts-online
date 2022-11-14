@@ -10,8 +10,11 @@
   <div *ngIf="lastUpdatedJJDispute && retrieving === false">
     <div style="float:inline">
       <span style="float:left">
-        <h1><b>Written Reasons Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{
-            lastUpdatedJJDispute.surname}}</b></h1>
+        <h1><b>
+          <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons</span>
+          <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">Hearing Ticket</span>
+           Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
+        </b></h1>
       </span>
       <span style="float:right">
         <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
@@ -106,6 +109,63 @@
         </span>
       </div>
     </section><br />
+    <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      <ng-container subHeader>
+        <span>
+          <h3>Court Options</h3>
+        </span>
+      </ng-container>
+      <div style="display: grid; grid-template-columns: auto auto auto auto">
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Legal Counsel Name</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.lawyerGivenName1 }}&nbsp;{{ lastUpdatedJJDispute.lawyerSurname }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Legal Counsel Firm</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.lawFirmName }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Defence Witnesses</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.witnessNo }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-grid-text">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Interpreter</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.interpreterLanguage }}
+          </p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">Disputant Attendance Type</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.disputantAttendanceType }}</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-grid-text">&nbsp;</p>
+        </span>
+        <span class="section-grid-cell">
+          <p class="section-grid-header">&nbsp;</p>
+          <p class="section-grid-text">&nbsp;</p>
+        </span>
+      </div>
+    </section><br />
+    <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      <ng-container subHeader>
+        <span>
+          <h3>Court Appearance</h3>
+        </span>
+      </ng-container>
+    </section>
+    <section *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">
+      <ng-container subHeader>
+        <span>
+          <h3>Court Appearances History</h3>
+        </span>
+      </ng-container>
+      <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs"></app-jj-dispute-court-appearances>
+    </section>
     <section>
       <ng-container subHeader>
         <span>
