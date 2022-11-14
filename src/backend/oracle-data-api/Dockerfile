@@ -1,7 +1,7 @@
 #############################################################################################
 ###              Stage where Docker is building spring boot app using maven               ###
 #############################################################################################
-FROM docker.io/maven:3.8.3-jdk-11 as build
+FROM docker.io/maven:3.8.6-jdk-11 as build
 
 ARG SKIP_TESTS=true
 
@@ -23,8 +23,24 @@ RUN mvn -B clean package \
 ### Stage where Docker is running a java process to run a service built in previous stage ###
 #############################################################################################
 FROM eclipse-temurin:11
+ARG PROMETHEUS_AGENT_VERSION=0.17.2
 WORKDIR /app
 EXPOSE 8080
+
+ADD https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/${PROMETHEUS_AGENT_VERSION}/jmx_prometheus_javaagent-${PROMETHEUS_AGENT_VERSION}.jar /app/jmx_prometheus_javaagent.jar
+RUN printf "Generate settings.xml\n" & \
+    echo -e " \
+        startDelaySeconds: 0 \n \
+        ssl: false \n \
+        lowercaseOutputName: false \n \
+        lowercaseOutputLabelNames: false \n \
+        " > /app/jmx_prometheus_javaagent_config.yaml
+
+# permissions - are these correct?
+# a+rw - all users rw
+# o-rw - other users remove rw
+RUN chgrp 0 /app/jmx_prometheus_javaagent.jar         && chmod a+rw,o-rw /app/jmx_prometheus_javaagent.jar
+RUN chgrp 0 /app/jmx_prometheus_javaagent_config.yaml && chmod a+rw,o-rw /app/jmx_prometheus_javaagent_config.yaml
 
 ENV TZ=America/Vancouver
 
@@ -32,5 +48,5 @@ COPY --from=build ./target/oracle-data-api.jar .
 COPY --from=build ./entrypoint.sh .
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
 # use CMD "shell form" so we can expand env vars
-CMD ./entrypoint.sh java $JAVA_OPTS -jar /app/oracle-data-api.jar
+CMD ./entrypoint.sh java -javaagent:/app/jmx_prometheus_javaagent.jar=8088:/app/jmx_prometheus_javaagent_config.yaml $JAVA_OPTS -jar /app/oracle-data-api.jar
 #############################################################################################
