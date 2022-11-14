@@ -347,7 +347,7 @@
             matInput
             [formControl]="form.get('jjDisputedCountRoP').get('jailDuration')"
             style="background-color:#ebebeb; font-size: smaller; border-bottom: 1; width: 80%; align-self: center;" /><br />
-            &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y" color="primary" (change)="onJailIntermittentChange($event.value)"><span class="section-grid-header">Intermittent</span></mat-checkbox>
+            &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y" color="primary" (change)="onJailIntermittentChange($event.checked)"><span class="section-grid-header">Intermittent</span></mat-checkbox>
         </span>
         <!-- Probation -->
         <span class="section-grid-cell" style="grid-column: span 3">
@@ -395,10 +395,10 @@
             <br />
         </span>
         <span class="section-grid-cell" style="grid-column: span 3">
-          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y" color="primary" (change)="onDismissedChange($event.value)"><span class="section-grid-header">Dismissed</span></mat-checkbox>
-          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y" color="primary" (change)="onForWantOfProsecutionChange($event.value)"><span class="section-grid-header">For Want of Prosecution</span></mat-checkbox><br />
-          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y" color="primary" (change)="onWithdrawnChange($event.value)"><span class="section-grid-header">Withdrawn</span></mat-checkbox>
-          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y" color="primary" (change)="onAbatementChange($event.value)"><span class="section-grid-header">Abatement</span></mat-checkbox><br />
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y" color="primary" (change)="onDismissedChange($event.checked)"><span class="section-grid-header">Dismissed</span></mat-checkbox>
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y" color="primary" (change)="onForWantOfProsecutionChange($event.checked)"><span class="section-grid-header">For Want of Prosecution</span></mat-checkbox><br />
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y" color="primary" (change)="onWithdrawnChange($event.checked)"><span class="section-grid-header">Withdrawn</span></mat-checkbox>
+          &nbsp;&nbsp;&nbsp;<mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y" color="primary" (change)="onAbatementChange($event.checked)"><span class="section-grid-header">Abatement</span></mat-checkbox><br />
           &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Stay of Proceedings By</mat-label><br />
           &nbsp;&nbsp;&nbsp;<input
             matInput
