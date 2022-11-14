@@ -225,9 +225,8 @@ public class MinioFilePersistenceService : FilePersistenceService
                     return null;
                 }
             }
-            string jsonString = Encoding.UTF8.GetString(objectStream.ToArray());
 
-            return JsonSerializer.Deserialize<T>(jsonString);
+            return JsonSerializer.Deserialize<T>(objectStream);
         }
         catch (BucketNotFoundException exception)
         {
