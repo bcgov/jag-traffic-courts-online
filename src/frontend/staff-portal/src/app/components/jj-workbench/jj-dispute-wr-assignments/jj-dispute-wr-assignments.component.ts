@@ -35,7 +35,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     "jjAssignedTo",
     "bulkAssign",
     "ticketNumber",
-    "submittedDate",
+    "submittedTs",
     "surname",
     "courthouseLocation",
     "policeDetachment",
@@ -117,7 +117,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
     this.jjDisputeService.getJJDisputes().subscribe((response: JJDisputeView[]) => {
       // filter jj disputes only show new, review, in_progress
       this.data = response.filter(x => (this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
-      this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
+      this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
       this.data.forEach(x => {
           x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
           x.bulkAssign = false;

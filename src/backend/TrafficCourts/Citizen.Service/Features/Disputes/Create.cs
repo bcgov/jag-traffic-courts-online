@@ -157,7 +157,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
                     submitNoticeOfDispute.NoticeOfDisputeGuid = NewId.NextGuid();
                     submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
-                    submitNoticeOfDispute.SubmittedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
+                    submitNoticeOfDispute.SubmittedTs = _clock.GetCurrentInstant().ToDateTimeUtc();
 
                     if (lookedUpViolationTicket != null)
                     {

@@ -84,7 +84,7 @@ public class Dispute extends Auditable<String> {
 	@Column
 	@Schema(nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date submittedDate;
+	private Date submittedTs;
 
 	/**
 	 * The surname or corporate name.

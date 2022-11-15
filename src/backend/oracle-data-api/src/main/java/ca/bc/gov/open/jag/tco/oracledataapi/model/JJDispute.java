@@ -48,20 +48,20 @@ public class JJDispute extends Auditable<String>{
      */
     @Id
     private String ticketNumber;
-    
+
     @Enumerated(EnumType.STRING)
 	private JJDisputeStatus status;
-    
+
     @Enumerated(EnumType.STRING)
     private JJDisputeHearingType hearingType;
-    
+
     /**
      * The date submitted by disputant in TCO.
      */
     @Column
     @Schema(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date submittedDate;
+    private Date submittedTs;
 
     /**
      * The date and time the violation ticket was issued.
@@ -70,7 +70,7 @@ public class JJDispute extends Auditable<String>{
     @Schema(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date violationDate;
-    
+
     /**
      * The date received in TRM from ICBC.
      */
@@ -78,7 +78,7 @@ public class JJDispute extends Auditable<String>{
     @Schema(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date icbcReceivedDate;
-    
+
     /**
 	 * The surname or corporate name of the disputant.
 	 */
@@ -113,7 +113,7 @@ public class JJDispute extends Auditable<String>{
     @Column
     @Schema(nullable = true)
     private String courthouseLocation;
-    
+
     /**
      * The location where the offence took place.
      */
@@ -135,14 +135,14 @@ public class JJDispute extends Auditable<String>{
 	@Schema(nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date jjDecisionDate;
-	
-	/** 
+
+	/**
 	 * VTC assigned to review JJ Decision
 	 */
 	@Column
 	@Schema(nullable = true)
 	private String vtcAssignedTo;
-	
+
 	/**
 	 * Date and Time that VTC was assigned
 	 */
@@ -150,7 +150,7 @@ public class JJDispute extends Auditable<String>{
 	@Schema(nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date vtcAssignedTs;
-	
+
 	/**
 	 * Reason indicating why the fine reduction requested for the ticket.
 	 */
@@ -165,7 +165,7 @@ public class JJDispute extends Auditable<String>{
 	@Column(length = 256)
 	@Schema(nullable = true)
 	private String timeToPayReason;
-	
+
 	/**
 	 * Name of the law firm that will represent the disputant at the hearing.
 	 */
@@ -215,7 +215,7 @@ public class JJDispute extends Auditable<String>{
 	@Column(length = 3)
 	@Schema(nullable = true)
 	private Integer witnessNo;
-	
+
 	/**
 	 * The disputants attendance type.
 	 */
@@ -223,7 +223,7 @@ public class JJDispute extends Auditable<String>{
 	@Schema(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private JJDisputeAttendanceType disputantAttendanceType;
-	
+
 	/**
 	 * All the remarks for this jj dispute that are for internal use of JJs.
 	 */
@@ -231,25 +231,25 @@ public class JJDispute extends Auditable<String>{
 	@OneToMany(targetEntity = JJDisputeRemark.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "jjDispute")
 	@Builder.Default
 	private List<JJDisputeRemark> remarks = new ArrayList<JJDisputeRemark>();
-	
+
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "jjDispute")
 	@Schema(nullable = true)
 	private DisputantContactInformation contactInformation;
-	
+
 	@JsonManagedReference(value="jj_dispute_count_reference")
 	@OneToMany(targetEntity = JJDisputedCount.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "jjdispute_id")
 	@Builder.Default
 	private List<JJDisputedCount> jjDisputedCounts = new ArrayList<JJDisputedCount>();
-	
+
 	public void addJJDisputedCounts(List<JJDisputedCount> disputedCounts) {
 		for (JJDisputedCount disputedCount : disputedCounts) {
 			disputedCount.setJjDispute(this);
 		}
 		this.jjDisputedCounts.addAll(disputedCounts);
 	}
-	
+
 	public void addRemarks(List<JJDisputeRemark> remarks) {
 		for (JJDisputeRemark remark : remarks) {
 			remark.setJjDispute(this);
@@ -262,12 +262,12 @@ public class JJDispute extends Auditable<String>{
 	@JoinColumn(name = "jjdispute_id")
 	@Builder.Default
 	private List<JJDisputeCourtAppearanceRoP> jjDisputeCourtAppearanceRoPs = new ArrayList<JJDisputeCourtAppearanceRoP>();
-	
+
 	public void addJJDisputeCourtAppearances(List<JJDisputeCourtAppearanceRoP> disputeCourtAppearanceRoPs) {
 		for (JJDisputeCourtAppearanceRoP disputeCourtAppearanceRoP : disputeCourtAppearanceRoPs) {
 			disputeCourtAppearanceRoP.setJjDispute(this);
 		}
 		this.jjDisputeCourtAppearanceRoPs.addAll(disputeCourtAppearanceRoPs);
 	}
-	
+
 }

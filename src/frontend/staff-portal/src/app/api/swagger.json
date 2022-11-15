@@ -2484,7 +2484,7 @@
             "format": "date-time",
             "nullable": true
           },
-          "submittedDate": {
+          "submittedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -3009,7 +3009,7 @@
           "hearingType": {
             "$ref": "#/components/schemas/JJDisputeHearingType"
           },
-          "submittedDate": {
+          "submittedTs": {
             "type": "string",
             "format": "date-time",
             "nullable": true

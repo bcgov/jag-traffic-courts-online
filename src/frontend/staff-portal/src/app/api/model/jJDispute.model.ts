@@ -26,7 +26,7 @@ export interface JJDispute {
     ticketNumber?: string | null;
     status?: JJDisputeStatus;
     hearingType?: JJDisputeHearingType;
-    submittedDate?: string | null;
+    submittedTs?: string | null;
     violationDate?: string | null;
     icbcReceivedDate?: string | null;
     surname?: string | null;
