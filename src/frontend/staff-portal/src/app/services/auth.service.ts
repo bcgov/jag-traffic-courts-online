@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UserRepresentation } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { KeycloakService } from 'keycloak-angular';
-import { KeycloakService as KeycloakAPIService} from 'app/api'
+import { KeycloakService as KeycloakAPIService } from 'app/api'
 import { KeycloakProfile } from 'keycloak-js';
 import { BehaviorSubject, from, Observable, map, catchError } from 'rxjs';
 import { LoggerService } from '@core/services/logger.service';
@@ -120,24 +120,30 @@ export class AuthService {
     return (user?.firstName ? user?.firstName + " " : "") + (user?.lastName ? user?.lastName : "");
   }
 
-  public getUsersInGroup(group: string): Observable<Array<UserRepresentation>> {
-
+  public getUsersInGroup(group: string): Observable<Array<UserRepresentationView>> {
     return this.keycloakAPI.apiKeycloakGroupNameUsersGet(group)
-    .pipe(
-      map((response: any) => {
-        this.logger.info('KeycloakService::getUsersInGroup', response)
-        return response ? response : null
-      }),
-      catchError((error: any) => {
-        var errorMsg = error.error.detail != null ? error.error.detail : this.configService.keycloak_error;
-        this.toastService.openErrorToast(errorMsg);
-        this.toastService.openErrorToast(this.configService.keycloak_error);
-        this.logger.error(
-          'KeycloakService::getUsersInGroup Error has occured ',
-          error
-        );
-        throw error;
-      })
-    );
+      .pipe(
+        map((response: UserRepresentationView[]) => {
+          this.logger.info('KeycloakService::getUsersInGroup', response)
+          response.map((user: UserRepresentationView) => {
+            user.idir = this.getIDIR(user);
+          })
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error.error.detail != null ? error.error.detail : this.configService.keycloak_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.keycloak_error);
+          this.logger.error(
+            'KeycloakService::getUsersInGroup Error has occured ',
+            error
+          );
+          throw error;
+        })
+      );
   }
+}
+
+export interface UserRepresentationView extends UserRepresentation {
+  idir?: string;
 }

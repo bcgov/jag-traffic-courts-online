@@ -7,13 +7,14 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark, UserRepresentation } from 'app/api';
 import { AuthService } from './auth.service';
 import { cloneDeep } from 'lodash';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JJDisputeService {
-  private _JJDisputes: BehaviorSubject<JJDispute[]> = new BehaviorSubject<JJDispute[]>(null);
-  private _JJDispute: BehaviorSubject<JJDispute> = new BehaviorSubject<JJDispute>(null);
+  private _JJDisputes: BehaviorSubject<JJDisputeView[]> = new BehaviorSubject<JJDisputeView[]>(null);
+  private _JJDispute: BehaviorSubject<JJDisputeView> = new BehaviorSubject<JJDisputeView>(null);
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
   public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
   public JJDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
@@ -30,7 +31,10 @@ export class JJDisputeService {
   ) {
     this.authService.getUsersInGroup("judicial-justice").subscribe(results => {
       this.jjList = results;
-      this.jjList = this.jjList.sort((a: UserRepresentation, b: UserRepresentation) => { if (this.authService.getFullName(a) < this.authService.getFullName(b)) { return -1; } else { return 1 } });
+      this.jjList = this.jjList
+        .sort((a: UserRepresentation, b: UserRepresentation) => {
+          if (this.authService.getFullName(a) < this.authService.getFullName(b)) { return -1; } else { return 1 }
+        })
     });
     this.authService.getUsersInGroup("vtc-staff").subscribe(results => {
       this.vtcList = results;
@@ -42,11 +46,12 @@ export class JJDisputeService {
      *
      * @param none
      */
-  public getJJDisputes(): Observable<JJDispute[]> {
+  public getJJDisputes(): Observable<JJDisputeView[]> {
     return this.jjApiService.apiJjDisputesGet()
       .pipe(
-        map((response: JJDispute[]) => {
+        map((response: JJDisputeView[]) => {
           this.logger.info('jj-DisputeService::getJJDisputes', response);
+          response.map(jJDispute => this.toDisplay(jJDispute));
           this._JJDisputes.next(response);
           return response;
         }),
@@ -66,10 +71,10 @@ export class JJDisputeService {
    *
    * @param none
    */
-  public getJJDisputesByIDIR(idir: string): Observable<JJDispute[]> {
+  public getJJDisputesByIDIR(idir: string): Observable<JJDisputeView[]> {
     return this.jjApiService.apiJjDisputesGet(idir)
       .pipe(
-        map((response: JJDispute[]) => {
+        map((response: JJDisputeView[]) => {
           this.logger.info('jj-DisputeService::getJJDisputes', response);
           this._JJDisputes.next(response);
           return response;
@@ -90,7 +95,7 @@ export class JJDisputeService {
      *
      * @param ticketNumber, jjDispute
      */
-  public putJJDispute(ticketNumber: string, jjDispute: JJDispute, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
+  public putJJDispute(ticketNumber: string, jjDispute: JJDisputeView, checkVTC: boolean, remarks?: string): Observable<JJDispute> {
     let input = cloneDeep(jjDispute);
     if (remarks) {
       this.addRemarks(input, remarks);
@@ -114,11 +119,11 @@ export class JJDisputeService {
       );
   }
 
-  public get JJDisputes$(): Observable<JJDispute[]> {
+  public get JJDisputes$(): Observable<JJDisputeView[]> {
     return this._JJDisputes.asObservable();
   }
 
-  public get JJDisputes(): JJDispute[] {
+  public get JJDisputes(): JJDisputeView[] {
     return this._JJDisputes.value;
   }
 
@@ -127,7 +132,7 @@ export class JJDisputeService {
    *
    * @param disputeId
    */
-  public getJJDispute(disputeId: string, assignVTC: boolean): Observable<JJDispute> {
+  public getJJDispute(disputeId: string, assignVTC: boolean): Observable<JJDisputeView> {
     return this.jjApiService.apiJjJJDisputeIdGet(disputeId, assignVTC)
       .pipe(
         map((response: JJDispute) => {
@@ -146,15 +151,15 @@ export class JJDisputeService {
       );
   }
 
-  public get JJDispute$(): Observable<JJDispute> {
+  public get JJDispute$(): Observable<JJDisputeView> {
     return this._JJDispute.asObservable();
   }
 
-  public get JJDispute(): JJDispute {
+  public get JJDispute(): JJDisputeView {
     return this._JJDispute.value;
   }
 
-  public addRemarks(jJDispute: JJDispute, remarksText: string): JJDispute {
+  public addRemarks(jJDispute: JJDisputeView, remarksText: string): JJDisputeView {
     if (!jJDispute.remarks) {
       jJDispute.remarks = [];
     }
@@ -171,6 +176,12 @@ export class JJDisputeService {
     futureDate.setDate(futureDate.getDate() + numDays);
     return futureDate;
   }
+
+  private toDisplay(jJDispute: JJDisputeView): JJDisputeView {
+    jJDispute.isEditable = this.JJDisputeStatusEditable.indexOf(jJDispute.status) > -1;
+    jJDispute.isCompleted = this.JJDisputeStatusComplete.indexOf(jJDispute.status) > -1;
+    return jJDispute;
+  }
 }
 
 export interface JJDisputeView extends JJDispute {
@@ -179,4 +190,6 @@ export interface JJDisputeView extends JJDispute {
   appearanceTs?: Date;
   duration?: number;
   room?: string;
+  isEditable?: boolean;
+  isCompleted?: boolean;
 }
