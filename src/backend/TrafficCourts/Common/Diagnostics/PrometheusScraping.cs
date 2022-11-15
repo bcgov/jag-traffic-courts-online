@@ -4,7 +4,7 @@ namespace TrafficCourts.Common.Diagnostics
 {
     public static class PrometheusScraping
     {
-        private const int DefaultLocalPort = 52325;
+        private const int DefaultLocalPort = 9090;
 
         /// <summary>
         /// Determines if metrics should be exposed on the context.

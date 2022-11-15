@@ -17,7 +17,7 @@ spec:
       annotations:
         
         prometheus.io/scrape: 'true'
-        prometheus.io/port: "52325"
+        prometheus.io/port: "9090"
         vault.hashicorp.com/agent-inject: 'true'
         vault.hashicorp.com/agent-inject-token: 'true'
         vault.hashicorp.com/auth-path: auth/k8s-silver
@@ -49,7 +49,7 @@ spec:
           - name: OracleDataApi__BaseUrl
             value: http://{{ .Release.Name }}-oracle-data-api.{{ .Values.global.namespace }}.svc.cluster.local:8080
           - name: ASPNETCORE_URLS
-            value: http://*:8080;http://*:52325
+            value: http://*:8080;http://*:9090
           name: {{ .Chart.Name }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
