@@ -350,7 +350,7 @@ public class RandomUtil {
 		dispute.setFilingDate(randomDate());
 		dispute.setFineReductionReason(randomAlphabetic(500));
 		dispute.setHomePhoneNumber(randomNumeric(20));
-		dispute.setInterpreterLanguage(randomAlphabetic(10)); // TODO: what is the max length of this field?
+		dispute.setInterpreterLanguageCd(randomAlphabetic(3));
 		dispute.setInterpreterRequired(randomYN());
 		dispute.setIssuedTs(randomDateTime());
 		dispute.setLawyerAddress(randomAlphanumeric(300));
