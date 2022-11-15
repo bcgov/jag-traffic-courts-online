@@ -47,5 +47,5 @@ COPY --from=build ./target/oracle-data-api.jar .
 COPY --from=build ./entrypoint.sh .
 RUN chgrp 0 entrypoint.sh && chmod a+rwx,o-rwx entrypoint.sh
 # use CMD "shell form" so we can expand env vars
-CMD ./entrypoint.sh java -javaagent:/app/jmx_prometheus_javaagent.jar=8088:/app/jmx_prometheus_javaagent_config.yaml $JAVA_OPTS -jar /app/oracle-data-api.jar
+CMD ./entrypoint.sh java -javaagent:/app/jmx_prometheus_javaagent.jar=9090:/app/jmx_prometheus_javaagent_config.yaml $JAVA_OPTS -jar /app/oracle-data-api.jar
 #############################################################################################
