@@ -7,13 +7,14 @@ import { MockConfigService } from 'tests/mocks/mock-config.service';
 import { JJDisputeService } from '../../../services/jj-dispute.service';
 import { JJDispute } from '../../../api/model/jJDispute.model';
 import { Subscription } from 'rxjs';
-import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP } from 'app/api/model/models';
+import { JJDisputedCount, JJDisputeStatus, JJDisputedCountRequestReduction, JJDisputedCountRequestTimeToPay, JJDisputeHearingType, JJDisputeCourtAppearanceRoP, JJDisputeCourtAppearanceRoPApp, JJDisputeCourtAppearanceRoPCrown } from 'app/api/model/models';
 import { DialogOptions } from '@shared/dialogs/dialog-options.model';
 import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRepresentation } from 'app/api/model/models';
 import { AuthService } from 'app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { last } from 'lodash';
 
 @Component({
   selector: 'app-jj-dispute',
@@ -41,6 +42,8 @@ export class JJDisputeComponent implements OnInit {
   public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
   public RequestReduction = JJDisputedCountRequestReduction;
   public HearingType = JJDisputeHearingType;
+  public RoPApp = JJDisputeCourtAppearanceRoPApp;
+  public RoPCrown = JJDisputeCourtAppearanceRoPCrown;
 
   constructor(
     protected route: ActivatedRoute,
@@ -61,8 +64,7 @@ export class JJDisputeComponent implements OnInit {
     this.getJJDispute();
 
     this.courtAppearanceForm = this.formBuilder.group({
-        appearanceDate: [null],
-        appearanceTime: [null],
+        appearanceTs: [null],
         room: [null],
         reason: [null],
         app: [null],
@@ -73,23 +75,21 @@ export class JJDisputeComponent implements OnInit {
         jjSeized: [null],
         adjudicator: [null],
         comments: [null]
-      })
-
-    if (this.lastUpdatedJJDispute?.jjDisputeCourtAppearanceRoPs?.length > 0) {
-      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
-        return Date.parse(a.appearanceTs) - Date.parse(b.appearanceTs)
       });
-
-      this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
-      this.courtAppearanceForm.get('appearanceDate').setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
-      this.courtAppearanceForm.get('appearanceTime').setValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0].appearanceTs);
-    }
   }
 
   public onSubmit(): void {
     this.lastUpdatedJJDispute.status = JJDisputeStatus.Confirmed;  // Send to VTC Staff for review
     this.lastUpdatedJJDispute.jjDecisionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd"); // record date of decision
     this.putJJDispute();
+  }
+
+  public updateAppearanceTs() {
+    this.courtAppearanceForm.get('appearanceTs').setValue(new Date());
+  }
+
+  public updateNoAPPTs() {
+    this.courtAppearanceForm.get('noAppTs').setValue(new Date());
   }
 
   public onSave(): void {
@@ -140,6 +140,10 @@ export class JJDisputeComponent implements OnInit {
   }
 
   private putJJDispute(): void {
+    // update court appearance data
+    if (this.lastUpdatedJJDispute.hearingType === this.HearingType.CourtAppearance) {
+      this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0] = this.courtAppearanceForm.value;
+    }
     this.busy = this.jjDisputeService.putJJDispute(this.lastUpdatedJJDispute.ticketNumber, this.lastUpdatedJJDispute, this.type === "ticket", this.remarks).subscribe((response: JJDispute) => {
       this.lastUpdatedJJDispute = response;
       this.logger.info(
@@ -178,6 +182,13 @@ export class JJDisputeComponent implements OnInit {
       }
       if (this.fineReductionCountsHeading.length > 0) {
         this.fineReductionCountsHeading = this.fineReductionCountsHeading.substring(0, this.fineReductionCountsHeading.lastIndexOf(","));
+      }
+
+      if (this.lastUpdatedJJDispute?.jjDisputeCourtAppearanceRoPs?.length > 0) {
+        this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs = this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs.sort((a: JJDisputeCourtAppearanceRoP, b: JJDisputeCourtAppearanceRoP) => {
+          return Date.parse(a.appearanceTs) - Date.parse(b.appearanceTs)
+        });
+        this.courtAppearanceForm.patchValue(this.lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs[0]);
       }
     });
   }
