@@ -314,9 +314,10 @@ public class Dispute extends Auditable<String> {
 	 * The disputant requires spoken language interpreter. The language name is
 	 * indicated in this field.
 	 */
-	@Column
-	@Schema(nullable = true)
-	private String interpreterLanguage;
+	@Size(max = 3)
+	@Column(length = 3)
+	@Schema(maxLength = 3, nullable = true)
+	private String interpreterLanguageCd;
 
 	/**
 	 * Indicates that whether an interpreter is required by the disputant or not
