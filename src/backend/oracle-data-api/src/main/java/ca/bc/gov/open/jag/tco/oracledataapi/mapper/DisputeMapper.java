@@ -71,6 +71,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.officerPinTxt", target = "officerPin")
 	@Mapping(source = "dispute.detachmentLocationTxt", target = "detachmentLocation")
 	@Mapping(source = "dispute.interpreterRequiredYn", target = "interpreterRequired")
+	@Mapping(source = "dispute.languageCd", target = "interpreterLanguageCd")
 	@Mapping(source = "dispute.witnessNo", target = "witnessNo")
 	@Mapping(source = "dispute.fineReductionReasonTxt", target = "fineReductionReason")
 	@Mapping(source = "dispute.timeToPayReasonTxt", target = "timeToPayReason")
