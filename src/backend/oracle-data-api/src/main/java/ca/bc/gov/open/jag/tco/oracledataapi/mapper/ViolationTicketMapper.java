@@ -71,6 +71,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.officerPinTxt", source = "officerPin")
 	@Mapping(target = "dispute.detachmentLocationTxt", source = "detachmentLocation")
 	@Mapping(target = "dispute.interpreterRequiredYn", source = "interpreterRequired")
+	@Mapping(target = "dispute.languageCd", source = "interpreterLanguageCd")
 	@Mapping(target = "dispute.witnessNo", source = "witnessNo")
 	@Mapping(target = "dispute.fineReductionReasonTxt", source = "fineReductionReason")
 	@Mapping(target = "dispute.timeToPayReasonTxt", source = "timeToPayReason")

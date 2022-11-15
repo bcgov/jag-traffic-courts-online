@@ -207,7 +207,7 @@ public class JJDispute extends Auditable<String>{
 	 */
 	@Column
 	@Schema(nullable = true)
-	private String interpreterLanguage;
+	private String interpreterLanguageCd;
 
 	/**
 	 * Number of witness that the disputant intends to call.
