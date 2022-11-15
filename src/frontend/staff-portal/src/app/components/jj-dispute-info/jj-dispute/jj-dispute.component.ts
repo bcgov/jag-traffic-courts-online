@@ -13,8 +13,7 @@ import { ConfirmDialogComponent } from '@shared/dialogs/confirm-dialog/confirm-d
 import { MatDialog } from '@angular/material/dialog';
 import { UserRepresentation } from 'app/api/model/models';
 import { AuthService } from 'app/services/auth.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { last } from 'lodash';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-jj-dispute',
