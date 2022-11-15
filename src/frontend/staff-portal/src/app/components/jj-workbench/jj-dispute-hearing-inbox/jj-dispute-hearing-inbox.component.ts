@@ -6,6 +6,7 @@ import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { JJDisputeStatus, JJDispute, JJDisputeHearingType, JJDisputeCourtAppearanceRoP } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-jj-dispute-hearing-inbox',
@@ -16,8 +17,13 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
   @Output() public jjDisputeInfo: EventEmitter<JJDispute> = new EventEmitter();
   @Input() public jjIDIR: string;
   public HearingType = JJDisputeHearingType;
-  public jjAssignedToFilter: string;
+  public filterValues: any = {
+    jjAssignedTo: '',
+    appearanceTs: new Date()
+  }
   busy: Subscription;
+  public appearanceDateFilter = new FormControl('');
+  public jjAssignedToFilter = new FormControl('');
   data = [] as JJDisputeView[];
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort) sort = new MatSort();
@@ -42,6 +48,26 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     this.jjDisputeService.refreshDisputes.subscribe(x => {
       this.getAll();
     });
+
+    // listen for changes in jj Assigned
+    this.jjAssignedToFilter.valueChanges
+      .subscribe(
+        value => {
+          this.filterValues.jjAssignedTo = this.jjAssignedToFilter.value;
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+          console.log("jj assigned changed", this.filterValues);
+        }
+      )
+
+    // listen for changes in appearance Date
+    this.appearanceDateFilter.valueChanges
+      .subscribe(
+        value => {
+          this.filterValues.appearanceTs = this.appearanceDateFilter.value;
+          this.dataSource.filter =JSON.stringify(this.filterValues);
+          console.log("appearance date changed", value, this.filterValues);
+        }
+      )
   }
 
   ngOnInit(): void {
@@ -70,7 +96,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         'JJDisputeHearingInboxComponent::putJJDispute response',
         response
       );
-      this.applyFilter(this.jjAssignedToFilter);
     });
   }
 
@@ -82,10 +107,24 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
     this.jjDisputeInfo.emit(element);
   }
 
-  // called on change in selection of JJ
-  applyFilter(jjIDIR) {
-    this.dataSource.filter = jjIDIR.trim().toLowerCase();
+  private createFilter(): (record: JJDisputeView, filter: string) => boolean {
+    let filterFunction = function (record, filter): boolean {
+      let searchTerms = JSON.parse(filter);
+      let searchDate = new Date(searchTerms.appearanceTs);
+
+      return (record.jjAssignedTo?.toLocaleLowerCase().indexOf(searchTerms.jjAssignedTo?.toLocaleLowerCase()) > -1)
+        && record.appearanceTs?.getFullYear() === searchDate.getFullYear()
+        && record.appearanceTs?.getMonth() === searchDate.getMonth()
+        && record.appearanceTs?.getDate() === searchDate.getDate();
+    }
+
+    return filterFunction;
   }
+
+
+  function (record: JJDisputeView, filter) {
+  }
+
 
   getAll(): void {
     this.logger.log('JJDisputeHearingInboxComponent::getAllDisputes');
@@ -124,11 +163,10 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         });
 
       // this section allows filtering only on jj IDIR
-      this.jjAssignedToFilter = this.jjIDIR;
-      this.dataSource.filterPredicate = function (record: JJDispute, filter) {
-        return record.jjAssignedTo?.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1;
-      }
-      this.applyFilter(this.jjIDIR);
+      this.dataSource.filterPredicate = this.createFilter();
+
+      this.jjAssignedToFilter.setValue(this.jjIDIR);
+      this.appearanceDateFilter.setValue(new Date());
     });
   }
 }

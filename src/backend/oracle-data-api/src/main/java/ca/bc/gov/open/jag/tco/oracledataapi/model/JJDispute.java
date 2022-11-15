@@ -217,6 +217,14 @@ public class JJDispute extends Auditable<String>{
 	private Integer witnessNo;
 	
 	/**
+	 * The disputants attendance type.
+	 */
+	@Column
+	@Schema(nullable = true)
+	@Enumerated(EnumType.STRING)
+	private JJDisputeAttendanceType disputantAttendanceType;
+	
+	/**
 	 * All the remarks for this jj dispute that are for internal use of JJs.
 	 */
 	@JsonManagedReference

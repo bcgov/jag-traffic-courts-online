@@ -3103,6 +3103,9 @@
             "format": "int32",
             "nullable": true
           },
+          "disputantAttendanceType": {
+            "$ref": "#/components/schemas/JJDisputeDisputantAttendanceType"
+          },
           "remarks": {
             "type": "array",
             "items": {
@@ -3230,6 +3233,17 @@
         "enum": [
           "P",
           "N"
+        ],
+        "type": "string"
+      },
+      "JJDisputeDisputantAttendanceType": {
+        "enum": [
+          "WRITTEN_REASONS",
+          "VIDEO_CONFERENCE",
+          "TELEPHONE_CONFERENCE",
+          "MSTEAMS_AUDIO",
+          "MSTEAMS_VIDEO",
+          "IN_PERSON"
         ],
         "type": "string"
       },
