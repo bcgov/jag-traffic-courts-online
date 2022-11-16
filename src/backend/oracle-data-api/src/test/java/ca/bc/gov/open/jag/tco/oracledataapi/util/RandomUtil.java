@@ -320,7 +320,7 @@ public class RandomUtil {
 	public static Dispute createFullyPopulatedDispute() {
 		Dispute dispute = new Dispute();
 
-		dispute.setAddressCity(randomCity()); // TODO: what is the max length of this field?
+		dispute.setAddressCity(randomAlphanumeric(30));
 		dispute.setAddressLine1(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressLine2(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressLine3(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
@@ -349,7 +349,7 @@ public class RandomUtil {
 		dispute.setInterpreterRequired(randomYN());
 		dispute.setIssuedTs(randomDateTime());
 		dispute.setLawyerAddress(randomAlphanumeric(300));
-		dispute.setLawyerEmail(randomAlphanumeric(20)); // TODO: what is the max length of this field?
+		dispute.setLawyerEmail(randomAlphanumeric(100));
 		dispute.setLawyerGivenName1(randomAlphabetic(30));
 		dispute.setLawyerGivenName2(randomAlphabetic(30));
 		dispute.setLawyerGivenName3(randomAlphabetic(30));
@@ -380,7 +380,7 @@ public class RandomUtil {
 
 	public static ViolationTicket createViolationTicket(Dispute dispute) {
 		ViolationTicket violationTicket = new ViolationTicket();
-		violationTicket.setAddress(randomAlphanumeric(30)); // TODO: what is the max length of this field?
+		violationTicket.setAddress(randomAlphanumeric(100));
 		violationTicket.setAddressCity(randomAlphanumeric(100));
 		violationTicket.setAddressCountry(randomAlphanumeric(100));
 		violationTicket.setAddressPostalCode(randomAlphanumeric(10));
@@ -392,7 +392,7 @@ public class RandomUtil {
 		violationTicket.setDisputantGivenNames(randomAlphabetic(200));
 		violationTicket.setDisputantDriversLicenceNumber(randomAlphanumeric(30));
 		violationTicket.setDisputantClientNumber(randomAlphanumeric(30));
-		violationTicket.setDriversLicenceProvince(randomAlphabetic(2)); // TODO: what is the max length of this field?
+		violationTicket.setDriversLicenceProvince(randomAlphabetic(100));
 		violationTicket.setDriversLicenceIssuedYear(Integer.valueOf(randomNumeric(4)));
 		violationTicket.setDriversLicenceExpiryYear(Integer.valueOf(randomNumeric(4)));
 		violationTicket.setDisputantBirthdate(randomDate());

@@ -100,7 +100,8 @@ public class ViolationTicket extends Auditable<String> {
 	 /**
      * The province or state the drivers licence was issued by.
      */
-    @Column
+	@Size(max = 100)
+	@Column(length = 100)
     @Schema(nullable = true)
     private String driversLicenceProvince;
 
@@ -128,7 +129,8 @@ public class ViolationTicket extends Auditable<String> {
     /**
      * The address of the individual the violation ticket was issued to.
      */
-    @Column
+    @Size(max = 100)
+    @Column(length = 100)
     @Schema(nullable = true)
     private String address;
 

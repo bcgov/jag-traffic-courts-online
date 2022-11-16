@@ -179,7 +179,8 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The mailing address city of the disputant.
 	 */
-	@Column
+	@Size(max = 30)
+	@Column(length = 30)
 	@Schema(nullable = true)
 	private String addressCity;
 
@@ -295,7 +296,8 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * Email address of the lawyer who will represent the disputant at the hearing.
 	 */
-	@Column
+	@Size(max = 100)
+	@Column(length = 100)
 	@Schema(nullable = true)
 	private String lawyerEmail;
 
