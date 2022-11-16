@@ -16,10 +16,12 @@ public class CustomUserDetails extends User {
 	private static final long serialVersionUID = 1L;
 	
 	private String fullName;
+	private String partId; // JUSTIN participant id
 	
-	public CustomUserDetails(String username, String password, String fullName, Collection<? extends GrantedAuthority> authorities) {
+	public CustomUserDetails(String username, String password, String fullName, String partId, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
 		this.fullName = fullName;
+		this.partId = partId;
 	}
 
 	public String getFullName() {
@@ -28,6 +30,14 @@ public class CustomUserDetails extends User {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	
+	public String getPartId() {
+		return partId;
+	}
+	
+	public void setPartId(String partId) {
+		this.partId = partId;
 	}
 	
 }
