@@ -15,7 +15,7 @@
   <div style="display: flex; flex-direction: row; flex-direction: flex-start;">
     <mat-select [(ngModel)]="bulkjjAssignedTo" style="width:250px; background-color: #f2f2f2;">
       <mat-option value="unassigned"><i>choose a jj</i></mat-option>
-      <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="authService.getIDIR(jj)"><i>JJ {{ authService.getFullName(jj) }}</i></mat-option>
+      <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="jj.idir"><i>JJ {{ authService.getFullName(jj) }}</i></mat-option>
     </mat-select>
     &nbsp;<button mat-raised-button [disabled]="getBulkButtonDisabled()" (click)="onBulkAssign()" style="width: 100px"><b>Submit</b></button>
   </div>
@@ -46,7 +46,7 @@
       <td mat-cell *matCellDef="let element" style="width:200px !important">
         <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo==='' || bulkjjAssignedTo === 'unassigned'">
           <mat-option value="unassigned">unassigned</mat-option>
-          <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="authService.getIDIR(jj)">JJ {{ authService.getFullName(jj) }}</mat-option>
+          <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="jj.idir">JJ {{ authService.getFullName(jj) }}</mat-option>
         </mat-select>
         <div *ngIf="bulkjjAssignedTo !== '' && bulkjjAssignedTo !== 'unassigned'">
           <span *ngIf="element.jjAssignedTo !== null && element.jjAssignedTo !== 'unassigned'">JJ {{ element.jjAssignedToName }}</span>
@@ -151,7 +151,7 @@
       <td mat-cell *matCellDef="let element" style="width:200px !important">
         <mat-select [(ngModel)]="element.jjAssignedTo" (selectionChange)="onAssign(element)" *ngIf="bulkjjAssignedTo==='' || bulkjjAssignedTo=== 'unassigned'">
           <mat-option value="unassigned">unassigned</mat-option>
-          <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="authService.getIDIR(jj)">JJ {{ authService.getFullName(jj) }}</mat-option>
+          <mat-option *ngFor="let jj of jjDisputeService.jjList" [value]="jj.idir">JJ {{ authService.getFullName(jj) }}</mat-option>
         </mat-select>
         <div *ngIf="bulkjjAssignedTo !== '' && bulkjjAssignedTo !== 'unassigned'">
           <span *ngIf="element.jjAssignedTo !== null && element.jjAssignedTo !== 'unassigned'">JJ {{ element.jjAssignedToName }}</span>
