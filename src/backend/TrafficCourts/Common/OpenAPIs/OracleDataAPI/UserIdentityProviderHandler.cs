@@ -32,11 +32,11 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
                 return await base.SendAsync(request, cancellationToken);
             }
 
-            if (AddUsernameHeader(request, httpContext.User))
-            {
-                AddFullNameHeader(request, httpContext.User);
-            }
-            else
+            if (!(
+                AddUsernameHeader(request, httpContext.User) 
+                && AddFullNameHeader(request, httpContext.User) 
+                && AddPartIdHeader(request, httpContext)
+                ))
             {
                 using var scope = _logger.BeginScope(new Dictionary<string, object>
                 {
@@ -80,6 +80,21 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
             }
 
             request.Headers.Add("x-fullName", fullName);
+            return true;
+        }
+
+        private bool AddPartIdHeader(HttpRequestMessage request, HttpContext httpContext)
+        {
+            string partId = "";
+            httpContext.Request.Headers.TryGetValue("partid", out var partIdHeader);
+            partId = partIdHeader.ToString();
+            
+            if (string.IsNullOrWhiteSpace(partId))
+            {
+                return false;
+            }
+
+            request.Headers.Add("x-partId", partId);
             return true;
         }
     }

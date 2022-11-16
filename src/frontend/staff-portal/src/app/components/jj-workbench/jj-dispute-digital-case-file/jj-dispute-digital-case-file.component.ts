@@ -100,7 +100,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
       this.dataSource.data = this.dataSource.data.sort((a: JJDispute, b: JJDispute) => {
         // if they have the same status
         if (a.status === b.status) {
-          if (a.submittedDate > b.submittedDate) { return 1; } else { return -1; }
+          if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
         }
 
         // compare statuses

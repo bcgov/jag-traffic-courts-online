@@ -5,8 +5,7 @@ import { DisputeService, DisputeExtended } from 'app/services/dispute.service';
 import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { KeycloakProfile } from 'keycloak-js';
-import { AuthService } from 'app/services/auth.service';
+import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-ticket-inbox',
