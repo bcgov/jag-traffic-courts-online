@@ -6,13 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.error.NotAllowedException;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Dispute;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.DisputeStatus;
 
-class DisputeServiceTest extends BaseTestSuite {
+@ConditionalOnProperty(name = "repository.dispute", havingValue = "h2", matchIfMissing = true)
+class DisputeServiceH2Test extends BaseTestSuite {
 
 	@Autowired
 	private DisputeService disputeService;

@@ -32,7 +32,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.updUserId", target = "modifiedBy")
 	@Mapping(source = "dispute.disputeId", target = "disputeId")
 	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
-	@Mapping(source = "dispute.courtLocationTxt", target = "courtLocation")
+	@Mapping(source = "courtLocationTxt", target = "courtLocation")
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
 	@Mapping(source = "dispute.disputantSurnameNm", target = "disputantSurname")

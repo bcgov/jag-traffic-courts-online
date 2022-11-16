@@ -550,6 +550,7 @@ components:
           format: nullable
         issuedDt:
           type: string
+          # FIXME: this should be date-time but can't at the moment - ORDS is unable to parse ISO format, ie, "2022-10-31T01:30:00.000-07:00"
           format: date
         jjAssignedTo:
           type: string
@@ -773,6 +774,7 @@ components:
           format: nullable
         issuedDt:
           type: string
+          # FIXME: this should be date-time but can't at the moment - ORDS is unable to parse ISO format, ie, "2022-10-31T01:30:00.000-07:00"
           format: date
         issuedOnRoadOrHighwayTxt:
           type: string

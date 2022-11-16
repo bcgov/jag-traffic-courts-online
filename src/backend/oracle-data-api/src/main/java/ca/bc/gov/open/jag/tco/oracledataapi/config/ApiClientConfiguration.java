@@ -22,7 +22,7 @@ public class ApiClientConfiguration {
         apiClient.setBasePath(configProperties.getOrdsRestApiUrl());
 
         // Set to true to see actual request/response messages sent/received from ORDs.
-        apiClient.setDebugging(false);
+        apiClient.setDebugging(configProperties.isOrdsRestApiDebug());
 
         return apiClient;
     }
