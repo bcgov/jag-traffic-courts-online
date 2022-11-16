@@ -229,8 +229,9 @@ public class RandomUtil {
 		return (int) Math.round((Math.random() * (max - min)) + min);
 	}
 
-	public static float randomFloat(double min, double max) {
-		return (float) ((Math.random() * (max - min)) + min);
+	public static Float randomCurrency(double min, double max) {
+		double amount = ((Math.random() * (max - min)) + min);
+		return Float.valueOf((float) (Math.round(amount * 100.0) / 100.0));
 	}
 
 	public static long randomLong(long min, long max) {
@@ -424,7 +425,7 @@ public class RandomUtil {
 		count.setSubsection(randomAlphanumeric(4));
 		count.setParagraph(randomAlphanumeric(3));
 		count.setSubparagraph(randomAlphanumeric(5));
-		count.setTicketedAmount(Float.valueOf(randomFloat(0.01, 999999.99)));
+		count.setTicketedAmount(randomCurrency(0.01, 999999.99));
 		count.setViolationTicket(violationTicket);
 
 		violationTickets.add(count);
