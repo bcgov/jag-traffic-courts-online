@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { JJDisputeService, JJDisputeView as JJDispute } from 'app/services/jj-dispute.service';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { JJDisputeStatus, JJDisputeHearingType, JJDisputeCourtAppearanceRoP } from 'app/api';
+import { JJDisputeStatus, JJDisputeHearingType } from 'app/api';
 import { AuthService } from 'app/services/auth.service';
 
 @Component({
@@ -69,7 +69,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   }
 
   backWorkbench(element) {
-    this.jjDisputeInfo.emit(element);
+    // this.jjDisputeInfo.emit(element);
   }
 
   // called on change in selection of JJ
