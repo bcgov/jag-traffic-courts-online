@@ -32,7 +32,7 @@ public class SubmitNoticeOfDispute
     /// <summary>
     /// The date the disputant submitted the dispute.
     /// </summary>
-    public DateTime? SubmittedDate { get; set; }
+    public DateTime? SubmittedTs { get; set; }
 
     /// <summary>
     /// The surname or corporate name.

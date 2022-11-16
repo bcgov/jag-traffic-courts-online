@@ -28,7 +28,7 @@ export interface Dispute {
     ticketNumber?: string | null;
     courtLocation?: string | null;
     issuedTs?: string | null;
-    submittedDate?: string | null;
+    submittedTs?: string | null;
     disputantSurname?: string | null;
     disputantGivenName1?: string | null;
     disputantGivenName2?: string | null;

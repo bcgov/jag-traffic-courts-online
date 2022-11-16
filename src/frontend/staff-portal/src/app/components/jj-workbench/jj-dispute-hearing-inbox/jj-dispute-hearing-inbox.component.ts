@@ -153,7 +153,7 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         {
           // if they have the same status
           if (a.status === b.status) {
-            if (a.submittedDate > b.submittedDate) { return 1; } else { return -1; }
+            if (a.submittedTs > b.submittedTs) { return 1; } else { return -1; }
           }
 
           // compare statuses

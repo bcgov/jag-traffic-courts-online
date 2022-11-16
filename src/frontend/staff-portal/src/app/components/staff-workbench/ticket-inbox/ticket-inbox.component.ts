@@ -101,7 +101,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             emailAddress: d.emailAddress,
             systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
             __CourtHearing: false,
-            __DateSubmitted: new Date(d.submittedDate),
+            __DateSubmitted: new Date(d.submittedTs),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
@@ -125,7 +125,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
       this.dataSource.data = this.disputes;
 
       // initially sort data by Date Submitted
-      this.dataSource.data = this.dataSource.data.sort((a: DisputeExtended, b: DisputeExtended) => { if (a.submittedDate > b.submittedDate) { return -1; } else { return 1 } });
+      this.dataSource.data = this.dataSource.data.sort((a: DisputeExtended, b: DisputeExtended) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
 
       // this section allows filtering only on ticket number or partial ticket number by setting the filter predicate
       this.dataSource.filterPredicate = function (record: DisputeExtended, filter) {

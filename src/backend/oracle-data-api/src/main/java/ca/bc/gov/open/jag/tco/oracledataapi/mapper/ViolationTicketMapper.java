@@ -32,7 +32,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputeStatusTypeCd", source = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(target = "dispute.courtLocationTxt", source = "courtLocation")
 	@Mapping(target = "dispute.issuedDt", source = "issuedTs")
-	@Mapping(target = "dispute.submittedDt", source = "submittedDate")
+	@Mapping(target = "dispute.submittedDt", source = "submittedTs")
 	@Mapping(target = "dispute.disputantSurnameNm", source = "disputantSurname")
 	@Mapping(target = "dispute.disputantGiven1Nm", source = "disputantGivenName1")
 	@Mapping(target = "dispute.disputantGiven2Nm", source = "disputantGivenName2")
