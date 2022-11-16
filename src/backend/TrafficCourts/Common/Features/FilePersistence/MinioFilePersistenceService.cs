@@ -136,7 +136,7 @@ public class MinioFilePersistenceService : FilePersistenceService
 
         // The type of the data that can be dynamically determined and used to deserialize
         Type dataType = typeof(T);
-        string? objectType = dataType.Name;
+        string? objectType = dataType.FullName;
         _logger.LogDebug("The object type of the saved data is {ObjectType}", objectType);
 
         string createdAt = _clock.GetCurrentInstant().ToDateTimeUtc().ToString(CreatedAtDateTimeFormat);
@@ -215,6 +215,7 @@ public class MinioFilePersistenceService : FilePersistenceService
                 .WithCallbackStream((stream) => { stream.CopyTo(objectStream); });
 
             ObjectStat? status = await _objectOperations.GetObjectAsync(args, cancellationToken);
+
             if (status == null)
             {
                 _logger.LogInformation("Could not fetch object from object storage with objectStat and headers");
@@ -223,12 +224,14 @@ public class MinioFilePersistenceService : FilePersistenceService
             Dictionary<string, string> headers = status.MetaData;
             if (headers.TryGetValue(TypeHeader, out string? objectType))
             {
-                if (objectType != targetType.Name)
+                if (objectType != targetType.FullName)
                 {
-                    _logger.LogWarning("Target object type to return: {targetType} does not match the type of json object fetched from object storage: {objectType}", targetType.Name, objectType);
+                    _logger.LogWarning("Target object type to return: {targetType} does not match the type of json object fetched from object storage: {objectType}", targetType.FullName, objectType);
                     return null;
                 }
             }
+            // Reset file position
+            objectStream.Position = 0L;
 
             return JsonSerializer.Deserialize<T>(objectStream);
         }
