@@ -14,6 +14,9 @@ using TrafficCourts.Common.Features.FilePersistence;
 using Xunit;
 using Microsoft.Extensions.Options;
 using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
+using Minio.DataModel;
+using System.Text.Json;
+using AutoFixture;
 
 namespace TrafficCourts.Common.Test.Features.FilePersistence
 {
@@ -21,6 +24,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
     {
         private readonly Mock<ILogger<MinioFilePersistenceService>> _loggerMock = new Mock<ILogger<MinioFilePersistenceService>>();
         private readonly IMemoryStreamManager _memoryStreamManager = new SimpleMemoryStreamManager();
+        private const string _bucketName = "traffic-ticket-dev";
 
         [Theory]
         [MemberData(nameof(FileTypes))]
@@ -31,7 +35,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
 
-            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = _bucketName });
 
             MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
 
@@ -52,7 +56,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>(MockBehavior.Strict); // do not expect any operations to be called on this
 
-            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = _bucketName });
 
             MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
 
@@ -74,7 +78,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
 
-            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = _bucketName });
 
             MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
 
@@ -94,12 +98,14 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             MinioClient client = new MinioClient()
                 .WithEndpoint("localhost:9000")
-                .WithCredentials("username", "password");
+                .WithCredentials("username", "password")
+                .WithRegion("BC")
+                .Build();
 
-            var options = Options.Create(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" }); 
+            var options = Options.Create(new ObjectBucketConfiguration { BucketName = _bucketName }); 
 
             MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, _memoryStreamManager, clock, _loggerMock.Object);
-            var stream = new MemoryStream(File.ReadAllBytes("D:\\Pictures\\bear.jpg"));
+            var stream = new MemoryStream(File.ReadAllBytes("C:\\Pictures\\bear.jpg"));
             var filename = await sut.SaveFileAsync(stream, CancellationToken.None);
             var actual = await sut.GetFileAsync(filename, CancellationToken.None);
 
@@ -107,7 +113,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
         }
 
         [Theory]
-        [MemberData(nameof(JsonObjectsToSaveWithFilename))]
+        [MemberData(nameof(JsonObjectsWithFilename))]
         public async Task should_create_json_file_with_correct_filename<T>(T data, string filename)
         {
             var now = DateTimeOffset.Now;
@@ -115,7 +121,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
 
-            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = _bucketName });
 
             MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
 
@@ -133,7 +139,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
 
-            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = _bucketName });
 
             MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
 
@@ -143,7 +149,7 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
         }
 
         [Theory]
-        [MemberData(nameof(JsonObjectsToSaveWithNoFilename))]
+        [MemberData(nameof(JsonObjectsWithNoFilename))]
         public async Task save_json_file_should_throw_if_no_filename_provided<T>(T data, string filename)
         {
             var now = DateTimeOffset.Now;
@@ -151,13 +157,101 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
 
             Mock<IObjectOperations> objectOperationsMock = new Mock<IObjectOperations>();
 
-            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = "traffic-ticket-dev" });
+            IOptions<ObjectBucketConfiguration> options = Options.Create<ObjectBucketConfiguration>(new ObjectBucketConfiguration { BucketName = _bucketName });
 
-            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object);
-
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(objectOperationsMock.Object, options, _memoryStreamManager, clock, _loggerMock.Object); 
 
             var actual = await Assert.ThrowsAsync<ArgumentException>(() => sut.SaveJsonFileAsync(data, filename, CancellationToken.None));
             Assert.Equal("No filename provided to save (Parameter 'filename')", actual.Message);
+        }
+
+        [Fact(Skip = "Integration Test")]
+        public async Task should_be_able_to_save_json_file_and_get_it_back()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+            // be sure to run minio AND createbuckets via docker compose
+
+            MinioClient client = new MinioClient()
+                .WithEndpoint("localhost:9000")
+                .WithCredentials("username", "password")
+                .WithRegion("BC")
+                .Build();
+
+            var options = Options.Create(new ObjectBucketConfiguration { BucketName = _bucketName });
+
+            var fixture = new Fixture();
+            var ocrViolationTicket = fixture.Create<OcrViolationTicket>();
+            var filename = "test-filename";
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, _memoryStreamManager, clock, _loggerMock.Object);
+            var filenameFromStorage = await sut.SaveJsonFileAsync(ocrViolationTicket, filename, CancellationToken.None);
+            var actual = await sut.GetJsonDataAsync<OcrViolationTicket>(filename, CancellationToken.None);
+
+            Assert.NotNull(actual);
+            Assert.Equal(JsonSerializer.Serialize(ocrViolationTicket), JsonSerializer.Serialize(actual));
+        }
+
+        [Fact(Skip = "Integration Test")]
+        public async Task get_json_file_should_return_null_if_object_type_does_not_match()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+            // be sure to run minio AND createbuckets via docker compose
+
+            MinioClient client = new MinioClient()
+                .WithEndpoint("localhost:9000")
+                .WithCredentials("username", "password")
+                .WithRegion("BC")
+                .Build();
+
+            var options = Options.Create(new ObjectBucketConfiguration { BucketName = _bucketName });
+
+            var fixture = new Fixture();
+            var violationTicket = fixture.Create<ViolationTicket>();
+            var filename = "test-filename";
+            Type targetType = typeof(OcrViolationTicket);
+            Type actualType = typeof(ViolationTicket);
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, _memoryStreamManager, clock, _loggerMock.Object);
+            var filenameFromStorage = await sut.SaveJsonFileAsync(violationTicket, filename, CancellationToken.None);
+            var actual = await sut.GetJsonDataAsync<OcrViolationTicket>(filename, CancellationToken.None);
+
+
+            Assert.Null(actual);
+            _loggerMock.Verify(
+                x => x.Log(
+                    It.Is<LogLevel>(l => l == LogLevel.Warning),
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString() == $"Target object type to return: {targetType.FullName} does not match the type of json object fetched from object storage: {actualType.FullName}"),
+                    null,
+                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()), Times.Exactly(1));
+        }
+
+        [Fact(Skip = "Integration Test")]
+        public async Task get_json_file_should_throw_if_no_object_found()
+        {
+            var now = DateTimeOffset.Now;
+            var clock = new FakeClock(Instant.FromDateTimeOffset(now));
+            // be sure to run minio AND createbuckets via docker compose
+
+            MinioClient client = new MinioClient()
+                .WithEndpoint("localhost:9000")
+                .WithCredentials("username", "password")
+                .WithRegion("BC")
+                .Build();
+
+            var options = Options.Create(new ObjectBucketConfiguration { BucketName = _bucketName });
+
+            var fixture = new Fixture();
+            var ocrViolationTicket = fixture.Create<OcrViolationTicket>();
+            var filename = "test-filename";
+
+            MinioFilePersistenceService sut = new MinioFilePersistenceService(client, options, _memoryStreamManager, clock, _loggerMock.Object);
+            var filenameFromStorage = await sut.SaveJsonFileAsync(ocrViolationTicket, filename, CancellationToken.None);
+
+            var actual = await Assert.ThrowsAsync<FileNotFoundException>(() => sut.GetJsonDataAsync<OcrViolationTicket>("incorrect-filename", CancellationToken.None));
+            Assert.Equal("File not found", actual.Message);
         }
 
         private MemoryStream GetFile(byte[] bytes)
@@ -182,12 +276,12 @@ namespace TrafficCourts.Common.Test.Features.FilePersistence
             }
         }
 
-        public static IEnumerable<object[]> JsonObjectsToSaveWithFilename()
+        public static IEnumerable<object[]> JsonObjectsWithFilename()
         {
             yield return new object[] { new OcrViolationTicket(), "test-json-file" };
         }
 
-        public static IEnumerable<object[]> JsonObjectsToSaveWithNoFilename()
+        public static IEnumerable<object[]> JsonObjectsWithNoFilename()
         {
             yield return new object[] { new OcrViolationTicket(), "" };
             yield return new object[] { new OcrViolationTicket(), null! };
