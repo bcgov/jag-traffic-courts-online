@@ -32,11 +32,11 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
                 return await base.SendAsync(request, cancellationToken);
             }
 
-            if (!(
-                AddUsernameHeader(request, httpContext.User) 
-                && AddFullNameHeader(request, httpContext.User) 
-                && AddPartIdHeader(request, httpContext)
-                ))
+            if (AddUsernameHeader(request, httpContext.User))
+            {
+                AddFullNameHeader(request, httpContext.User);
+            }
+            else
             {
                 using var scope = _logger.BeginScope(new Dictionary<string, object>
                 {
@@ -46,6 +46,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
 
                 _logger.LogError("Could not find preferred_username claim on current user");
             }
+
+            AddPartIdHeader(request, httpContext);
 
             return await base.SendAsync(request, cancellationToken);
         }
@@ -83,19 +85,15 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
             return true;
         }
 
-        private bool AddPartIdHeader(HttpRequestMessage request, HttpContext httpContext)
+        private void AddPartIdHeader(HttpRequestMessage request, HttpContext httpContext)
         {
-            string partId = "";
             httpContext.Request.Headers.TryGetValue("partid", out var partIdHeader);
-            partId = partIdHeader.ToString();
+            string partId = partIdHeader.ToString();
             
-            if (string.IsNullOrWhiteSpace(partId))
+            if (!string.IsNullOrWhiteSpace(partId))
             {
-                return false;
+                request.Headers.Add("x-partId", partId);
             }
-
-            request.Headers.Add("x-partId", partId);
-            return true;
         }
     }
 }
