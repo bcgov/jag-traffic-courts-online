@@ -35,7 +35,6 @@ public class MappingTests
 
         Assert.Equal(source.Status.ToString().ToUpper(), target.Status.ToString().ToUpper());
         Assert.Equal(source.TicketNumber, target.TicketNumber);
-        Assert.Equal(source.CourtLocation, target.CourtLocation);
         Assert.Equal(source.IssuedTs, target.IssuedTs);
         Assert.Equal(source.SubmittedTs, target.SubmittedTs);
         Assert.Equal(source.DisputantSurname, target.DisputantSurname);
@@ -75,6 +74,7 @@ public class MappingTests
         Assert.Equal(source.ViolationTicket?.AddressPostalCode, target.ViolationTicket.AddressPostalCode);
         Assert.Equal(source.ViolationTicket?.IssuedTs, target.ViolationTicket.IssuedTs);
         Assert.Equal(source.ViolationTicket?.DetachmentLocation, target.ViolationTicket.DetachmentLocation);
+        Assert.Equal(source.ViolationTicket?.CourtLocation, target.ViolationTicket.CourtLocation);
         Assert.Equal(source.ViolationTicket?.ViolationTicketCounts.Count, target.ViolationTicket.ViolationTicketCounts.Count);
         List<ViolationTicketCount> ticketCounts = new(target.ViolationTicket.ViolationTicketCounts);
         for (int i = 0; i < source.ViolationTicket?.ViolationTicketCounts.Count; i++)

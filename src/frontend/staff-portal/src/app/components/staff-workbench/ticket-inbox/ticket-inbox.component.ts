@@ -105,7 +105,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
-            courtLocation: d.courtLocation,
             status: d.status,
             __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
             userAssignedTs: d.userAssignedTs

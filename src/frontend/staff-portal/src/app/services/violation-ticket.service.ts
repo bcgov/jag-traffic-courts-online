@@ -93,6 +93,7 @@ export class ViolationTicketService implements IViolationTicketService {
       if (!violationTicket.driversLicenceProvince) violationTicket.driversLicenceProvince = ocrViolationTicket?.fields["drivers_licence_province"].value;
       if (!violationTicket.disputantDriversLicenceNumber) violationTicket.disputantDriversLicenceNumber = ocrViolationTicket?.fields["drivers_licence_number"].value;
       if (!violationTicket.detachmentLocation) violationTicket.detachmentLocation = ocrViolationTicket?.fields["detachment_location"].value;
+      if (!violationTicket.courtLocation) violationTicket.courtLocation = ocrViolationTicket?.fields["court_location"].value;
 
       // set up ticket count 1
       if (ocrViolationTicket?.fields["counts.count_no_1.description"]) {

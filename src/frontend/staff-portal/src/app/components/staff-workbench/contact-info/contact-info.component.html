@@ -171,7 +171,7 @@
                     <mat-label
                       *ngIf="form.get('country').value!=='United States' && form.get('country').value !== 'Canada'">
                       Province/State</mat-label>
-                    <input matInput formControlName="province"
+                    <input matInput formControlName="addressProvince"
                       *ngIf="form.get('country').value !== 'United States' && form.get('country').value !== 'Canada'"
                       maxlength="30" />
                     <mat-error>{{ "error.required" | translate }}</mat-error>
