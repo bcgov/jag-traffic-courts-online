@@ -41,23 +41,23 @@ namespace TrafficCourts.Citizen.Service.Validators
             // Validation rules for Legal Representation
             RuleFor(_ => _.LawFirmName).NotNull()
                 .When(_ => _.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y)
-                .WithMessage("'Law Firm Name' is required since disputant selected to be represted by lawyer");
+                .WithMessage("'Law Firm Name' is required since disputant selected to be represented by lawyer");
             RuleFor(_ => _.LawyerSurname).NotEmpty()
                 .When(_ => _.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y)
-                .WithMessage("'Lawyer Surname' is required since disputant selected to be represted by lawyer");
+                .WithMessage("'Lawyer Surname' is required since disputant selected to be represented by lawyer");
             RuleFor(_ => _.LawyerGivenName1).NotEmpty()
                 .When(_ => _.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y)
-                .WithMessage("'Lawyer Given Name' is required since disputant selected to be represted by lawyer");
+                .WithMessage("'Lawyer Given Name' is required since disputant selected to be represented by lawyer");
             RuleFor(_ => _.LawyerEmail).NotEmpty().EmailAddress()
                 .When(_ => _.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y)
-                .WithMessage("'Lawyer Email' is required and must be a proper email address since disputant selected to be represted by lawyer");
+                .WithMessage("'Lawyer Email' is required and must be a proper email address since disputant selected to be represented by lawyer");
             RuleFor(_ => _.LawyerPhoneNumber).NotEmpty()
                 .Matches(new Regex(@"\(?\d{3}\)?-? *\d{3}-? *-?\d{4}"))
                 .When(_ => _.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y)
-                .WithMessage("'Lawyer phone number' is required and must be a proper phone number since disputant selected to be represted by lawyer");
+                .WithMessage("'Lawyer phone number' is required and must be a proper phone number since disputant selected to be represented by lawyer");
             RuleFor(_ => _.LawyerAddress).NotEmpty()
                 .When(_ => _.RepresentedByLawyer == Common.OpenAPIs.OracleDataApi.v1_0.DisputeRepresentedByLawyer.Y)
-                .WithMessage("'Lawyer Address' is required since disputant selected to be represted by lawyer");
+                .WithMessage("'Lawyer Address' is required since disputant selected to be represented by lawyer");
 
             // Validation rules for Disputed Counts
             RuleFor(_ => _.DisputeCounts)
