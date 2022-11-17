@@ -20,11 +20,6 @@ public class SubmitNoticeOfDispute
     public string? TicketNumber { get; set; } = null!;
 
     /// <summary>
-    /// The provincial court hearing location named on the violation ticket.
-    /// </summary>
-    public string? CourtLocation { get; set; }
-
-    /// <summary>
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
     /// </summary>
     public DateTime IssuedTs { get; set; }

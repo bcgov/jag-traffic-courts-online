@@ -36,7 +36,6 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.disputeId", target = "disputeId")
 	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
 	@Mapping(target = "disputeStatusType", ignore = true) // ignore back reference mapping
-	@Mapping(source = "courtLocationTxt", target = "courtLocation")
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
 	@Mapping(source = "dispute.disputantClientId", target = "disputantClientId")

@@ -18,12 +18,6 @@ namespace TrafficCourts.Citizen.Service.Models.Dispute
         public string? TicketNumber { get; set; } = null!;
 
         /// <summary>
-        /// The provincial court hearing location named on the violation ticket.
-        /// </summary>
-        [JsonPropertyName("court_location")]
-        public string? CourtLocation { get; set; }
-
-        /// <summary>
         /// The date and time the violation ticket was issue. Time must only be hours and minutes.
         /// </summary>
         [JsonPropertyName("issued_date")]

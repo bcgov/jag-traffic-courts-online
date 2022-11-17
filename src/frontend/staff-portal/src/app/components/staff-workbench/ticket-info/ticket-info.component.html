@@ -303,8 +303,8 @@
                           [ngClass]="{'underErrThreshold': applyUnderErrThreshold('court_location'), 'overErrThreshold': applyOverErrThreshold('court_location')}">
                           <mat-select [formControl]="form.get('violationTicket').get('courtLocation')"
                             [readonly]="lastUpdatedDispute.status === 'VALIDATED'">
-                            <mat-option [value]="initialDisputeValues.courtLocation">{{
-                              initialDisputeValues.courtLocation }}</mat-option>
+                            <mat-option [value]="initialDisputeValues.violationTicket.courtLocation">{{
+                              initialDisputeValues.violationTicket.courtLocation }}</mat-option>
                             <mat-option *ngFor="let courtLocation of courtLocations" [value]="courtLocation.name">{{
                               courtLocation.name }}</mat-option>
                           </mat-select>
