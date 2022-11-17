@@ -11,6 +11,7 @@ using System.Diagnostics;
 using NodaTime;
 using HashidsNet;
 using TrafficCourts.Messaging;
+using System.Text;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {
@@ -89,7 +90,6 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                 NoticeOfDispute dispute = request.Dispute;
                 string? ticketId = dispute.TicketId;
-                string? ocrViolationTicketJson = null;
                 OcrViolationTicket? violationTicket = null;
                 Models.Tickets.ViolationTicket? lookedUpViolationTicket = null;
                 MemoryStream? ticketImageStream = null;
@@ -125,9 +125,6 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                                 // re-set the imagefilename, as it may have potentially changed.
                                 violationTicket.ImageFilename = filename;
                             }
-
-                            // Serialize OCR violation ticket to a JSON string
-                            ocrViolationTicketJson = JsonSerializer.Serialize(violationTicket);
                         }
                         // Check if the ticket id belongs to a Looked Up type of ticket
                         else if (ticketId.EndsWith("-l"))
@@ -146,7 +143,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                         }
                     }
 
-                    if (ocrViolationTicketJson == null && lookedUpViolationTicket == null)
+                    if (violationTicket == null && lookedUpViolationTicket == null)
                     {
                         Exception ex = new TicketLookupFailedException("No associated Violation Ticket has been found");
                         _logger.LogError(ex, "Error creating dispute - No associated Violation Ticket has been found");
@@ -155,9 +152,12 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     }
 
                     SubmitNoticeOfDispute submitNoticeOfDispute = _mapper.Map<SubmitNoticeOfDispute>(dispute);
-                    submitNoticeOfDispute.NoticeOfDisputeGuid = NewId.NextGuid();
-                    submitNoticeOfDispute.OcrViolationTicket = ocrViolationTicketJson;
+
+                    Guid noticeOfDisputeGuid = NewId.NextSequentialGuid();
+                    submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeGuid;
                     submitNoticeOfDispute.SubmittedTs = _clock.GetCurrentInstant().ToDateTimeUtc();
+
+                    var ocrTicketFilename = await _filePersistenceService.SaveJsonFileAsync(violationTicket, noticeOfDisputeGuid.ToString(), cancellationToken);
 
                     if (lookedUpViolationTicket != null)
                     {
