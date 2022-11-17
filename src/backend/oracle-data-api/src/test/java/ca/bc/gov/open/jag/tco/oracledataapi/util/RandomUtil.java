@@ -329,7 +329,7 @@ public class RandomUtil {
 		dispute.setCourtLocation(randomAlphabetic(150));
 		dispute.setDetachmentLocation(randomAlphabetic(150));
 		dispute.setDisputantBirthdate(randomDate());
-		dispute.setDisputantClientId(null);
+		dispute.setDisputantClientId(randomNumeric(5));
 		dispute.setDisputantComment(randomAlphabetic(4000));
 		dispute.setDisputantDetectedOcrIssues(randomYN());
 		dispute.setDisputantGivenName1(randomAlphabetic(30));
@@ -394,6 +394,7 @@ public class RandomUtil {
 		violationTicket.setDisputantDriversLicenceNumber(randomAlphanumeric(30));
 		violationTicket.setDisputantClientNumber(randomAlphanumeric(30));
 		violationTicket.setDriversLicenceProvince(randomAlphabetic(100));
+		violationTicket.setDriversLicenceCountry(randomAlphabetic(100));
 		violationTicket.setDriversLicenceIssuedYear(Integer.valueOf(randomNumeric(4)));
 		violationTicket.setDriversLicenceExpiryYear(Integer.valueOf(randomNumeric(4)));
 		violationTicket.setDisputantBirthdate(randomDate());

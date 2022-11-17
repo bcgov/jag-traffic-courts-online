@@ -20,6 +20,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
+/**
+ * This mapper maps from ORDS dispute model to Oracle Data API dispute model
+ */
 @Mapper
 public interface DisputeMapper {
 
@@ -32,9 +35,11 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.updUserId", target = "modifiedBy")
 	@Mapping(source = "dispute.disputeId", target = "disputeId")
 	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
+	@Mapping(target = "disputeStatusType", ignore = true) // ignore back reference mapping
 	@Mapping(source = "courtLocationTxt", target = "courtLocation")
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
+	@Mapping(source = "dispute.disputantClientId", target = "disputantClientId")
 	@Mapping(source = "dispute.disputantSurnameNm", target = "disputantSurname")
 	@Mapping(source = "dispute.disputantGiven1Nm", target = "disputantGivenName1")
 	@Mapping(source = "dispute.disputantGiven2Nm", target = "disputantGivenName2")
@@ -93,6 +98,7 @@ public interface DisputeMapper {
 	@Mapping(source = "disputantDrvLicNumberTxt", target = "violationTicket.disputantDriversLicenceNumber")
 	@Mapping(source = "disputantClientNumberTxt", target = "violationTicket.disputantClientNumber")
 	@Mapping(source = "drvLicIssuedProvinceTxt", target = "violationTicket.driversLicenceProvince")
+	@Mapping(source = "drvLicIssuedCountryTxt", target = "violationTicket.driversLicenceCountry")
 	@Mapping(source = "drvLicIssuedYearNo", target = "violationTicket.driversLicenceIssuedYear")
 	@Mapping(source = "drvLicExpiryYearNo", target = "violationTicket.driversLicenceExpiryYear")
 	@Mapping(source = "disputantBirthDt", target = "violationTicket.disputantBirthdate")
@@ -117,6 +123,7 @@ public interface DisputeMapper {
 	Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
 
 
+	@Mapping(target = "violationTicket", ignore = true) // ignore back reference mapping
 	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
