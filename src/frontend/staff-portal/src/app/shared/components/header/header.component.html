@@ -22,7 +22,7 @@
     </button>
     <div style="line-height: 0.1" *ngIf="isLoggedIn">
       <p>{{ fullName }}</p>
-      <p><span style="font-size: small">{{ todayDate | customDate:"EEEE, MMMM ddd y" }}</span></p>
+      <p><span style="font-size: small">{{ todayDate | date:"EEEE, MMMM ddd y" }}</span></p>
     </div>
     <button mat-button *ngIf="isLoggedIn" (click)="logout()">
       <mat-icon class="auth" inline="true">logout</mat-icon>Sign out

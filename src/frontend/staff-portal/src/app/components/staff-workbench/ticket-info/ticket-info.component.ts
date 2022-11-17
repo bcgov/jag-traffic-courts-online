@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
 import { FormControlValidators } from '@core/validators/form-control.validators';
-import { DatePipe } from '@angular/common';
 import { DisputeExtended, DisputeService } from '../../../services/dispute.service';
 import { Subscription } from 'rxjs';
 import { ProvinceConfig, CourthouseConfig } from '@config/config.model';
@@ -65,7 +64,6 @@ export class TicketInfoComponent implements OnInit {
     protected route: ActivatedRoute,
     protected formBuilder: FormBuilder,
     private utilsService: UtilsService,
-    private datePipe: DatePipe,
     private dialog: MatDialog,
     private logger: LoggerService,
     public violationTicketService: ViolationTicketService,

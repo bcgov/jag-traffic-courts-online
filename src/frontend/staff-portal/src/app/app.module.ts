@@ -5,11 +5,12 @@ import { NgBusyModule } from 'ng-busy';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
-import { SharedModule, } from './shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LandingComponent } from './components/landing/landing.component';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 

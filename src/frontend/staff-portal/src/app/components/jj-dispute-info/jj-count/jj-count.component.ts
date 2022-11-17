@@ -21,17 +21,11 @@ export class JJCountComponent implements OnInit {
   @Input() public jjDisputeInfo: JJDispute;
   @Input() public count: number;
   @Input() public type: string;
+  @Input() public isViewOnly: boolean = false;
   @Input() public jjDisputedCount: JJDisputedCount;
   @Output() public jjDisputedCountUpdate: EventEmitter<JJDisputedCount> = new EventEmitter<JJDisputedCount>();
-  public isMobile: boolean;
-  public todayDate: Date = new Date();
-  public violationDate: string = "";
-  public form: FormGroup;
-  public timeToPay: string = "no";
-  public fineReduction: string = "no";
-  public inclSurcharge: string = "yes";
-  public lesserOrGreaterAmount: number = 0;
-  public surcharge: number = 0;
+
+  // Enums
   public IncludesSurcharge = JJDisputedCountIncludesSurcharge;
   public RequestReduction = JJDisputedCountRequestReduction;
   public RequestTimeToPay = JJDisputedCountRequestTimeToPay;
@@ -42,8 +36,18 @@ export class JJCountComponent implements OnInit {
   public Withdrawn = JJDisputedCountRoPWithdrawn;
   public ForWantOfProsecution = JJDisputedCountRoPForWantOfProsecution;
   public Dismissed = JJDisputedCountRoPDismissed;
-  public busy: Subscription;
   public Finding = JJDisputedCountRoPFinding;
+
+  // Variables
+  public isMobile: boolean;
+  public todayDate: Date = new Date();
+  public form: FormGroup;
+  public timeToPay: string = "no";
+  public fineReduction: string = "no";
+  public inclSurcharge: string = "yes";
+  public lesserOrGreaterAmount: number = 0;
+  public surcharge: number = 0;
+  public busy: Subscription;
   public lesserDescriptionFilteredStatutes: StatuteView[];
   public drivingProhibitionFilteredStatutes: StatuteView[];
 
@@ -65,11 +69,7 @@ export class JJCountComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    if (this.jjDisputedCount) this.violationDate = this.jjDisputeInfo.violationDate.split("T")[0];
-    if (this.jjDisputedCount?.revisedDueDate?.split('T')?.length > 0) this.jjDisputedCount.revisedDueDate = this.jjDisputedCount.revisedDueDate.split('T')[0];
-    if (this.jjDisputedCount?.dueDate?.split('T')?.length > 0) this.jjDisputedCount.dueDate = this.jjDisputedCount.dueDate.split('T')[0];
-
+  ngOnInit(): void {  
     this.form = this.jjDisputeInfo.hearingType == this.HearingType.WrittenReasons ?
       this.formBuilder.group({
         totalFineAmount: [null, [Validators.required, Validators.max(9999.99), Validators.min(0.00)]],
@@ -121,53 +121,31 @@ export class JJCountComponent implements OnInit {
 
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
-        this.jjDisputedCount.comments = this.form.get('comments').value;
-        this.jjDisputedCount.revisedDueDate = this.form.get('revisedDueDate').value;
-        this.jjDisputedCount.lesserOrGreaterAmount = this.form.get('lesserOrGreaterAmount').value;
-        this.jjDisputedCount.totalFineAmount = this.form.get('totalFineAmount').value;
+        Object.assign(this.jjDisputedCount, this.form.value);
         this.jjDisputedCount.includesSurcharge = this.inclSurcharge == "yes" ? this.IncludesSurcharge.Y : this.IncludesSurcharge.N;
-        if (this.jjDisputeInfo.hearingType === this.HearingType.CourtAppearance) {
-          let jjDisputedCountRoP = this.form.get('jjDisputedCountRoP') as FormGroup;
-          this.jjDisputedCount.jjDisputedCountRoP.finding = jjDisputedCountRoP.get('finding').value;
-          this.jjDisputedCount.jjDisputedCountRoP.lesserDescription = jjDisputedCountRoP.get('lesserDescription').value;
-          this.jjDisputedCount.jjDisputedCountRoP.ssProbationDuration = jjDisputedCountRoP.get('ssProbationDuration').value;
-          this.jjDisputedCount.jjDisputedCountRoP.ssProbationConditions = jjDisputedCountRoP.get('ssProbationConditions').value;
-          this.jjDisputedCount.jjDisputedCountRoP.jailDuration = jjDisputedCountRoP.get('jailDuration').value;
-          this.jjDisputedCount.jjDisputedCountRoP.jailIntermittent = jjDisputedCountRoP.get('jailIntermittent').value;
-          this.jjDisputedCount.jjDisputedCountRoP.probationDuration = jjDisputedCountRoP.get('probationDuration').value;
-          this.jjDisputedCount.jjDisputedCountRoP.probationConditions = jjDisputedCountRoP.get('probationConditions').value;
-          this.jjDisputedCount.jjDisputedCountRoP.drivingProhibition = jjDisputedCountRoP.get('drivingProhibition').value;
-          this.jjDisputedCount.jjDisputedCountRoP.drivingProhibitionMVASection = jjDisputedCountRoP.get('drivingProhibitionMVASection').value;
-          this.jjDisputedCount.jjDisputedCountRoP.dismissed = jjDisputedCountRoP.get('dismissed').value;
-          this.jjDisputedCount.jjDisputedCountRoP.forWantOfProsecution = jjDisputedCountRoP.get('forWantOfProsecution').value;
-          this.jjDisputedCount.jjDisputedCountRoP.withdrawn = jjDisputedCountRoP.get('withdrawn').value;
-          this.jjDisputedCount.jjDisputedCountRoP.abatement = jjDisputedCountRoP.get('abatement').value;
-          this.jjDisputedCount.jjDisputedCountRoP.stayOfProceedingsBy = jjDisputedCountRoP.get('stayOfProceedingsBy').value;
-          this.jjDisputedCount.jjDisputedCountRoP.other = jjDisputedCountRoP.get('other').value;
-        }
         this.jjDisputedCountUpdate.emit(this.jjDisputedCount);
       });
     }
   }
 
   onDismissedChange(value: any) {
-    this.form.get('jjDisputedCountRoP').get('dismissed').setValue(value === true ? this.Dismissed.Y : this.Dismissed.N );
+    this.form.get('jjDisputedCountRoP').get('dismissed').setValue(value === true ? this.Dismissed.Y : this.Dismissed.N);
   }
 
   onAbatementChange(value: any) {
-    this.form.get('jjDisputedCountRoP').get('abatement').setValue(value === true ? this.Abatement.Y : this.Abatement.N );
+    this.form.get('jjDisputedCountRoP').get('abatement').setValue(value === true ? this.Abatement.Y : this.Abatement.N);
   }
 
   onWithdrawnChange(value: any) {
-    this.form.get('jjDisputedCountRoP').get('withdrawn').setValue(value === true ? this.Withdrawn.Y : this.Withdrawn.N );
+    this.form.get('jjDisputedCountRoP').get('withdrawn').setValue(value === true ? this.Withdrawn.Y : this.Withdrawn.N);
   }
 
   onForWantOfProsecutionChange(value: any) {
-    this.form.get('jjDisputedCountRoP').get('forWantOfProsecution').setValue(value === true ? this.ForWantOfProsecution.Y : this.ForWantOfProsecution.N );
+    this.form.get('jjDisputedCountRoP').get('forWantOfProsecution').setValue(value === true ? this.ForWantOfProsecution.Y : this.ForWantOfProsecution.N);
   }
 
   onJailIntermittentChange(value: any) {
-    this.form.get('jjDisputedCountRoP').get('jailIntermittent').setValue(value === true ? this.JailIntermittent.Y : this.JailIntermittent.N );
+    this.form.get('jjDisputedCountRoP').get('jailIntermittent').setValue(value === true ? this.JailIntermittent.Y : this.JailIntermittent.N);
   }
 
   onLesserDescriptionKeyup() {

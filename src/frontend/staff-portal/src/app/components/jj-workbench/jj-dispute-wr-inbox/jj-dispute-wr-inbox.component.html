@@ -15,7 +15,7 @@
       SUBMITTED DATE
     </th>
     <td mat-cell *matCellDef="let element">
-      <span>{{ element.submittedTs.split("T")[0] | date: "dd-MMM-yyyy" }}</span>
+      <span>{{ element.submittedTs | date: "dd-MMM-yyyy" }}</span>
     </td>
   </ng-container>
 
@@ -24,7 +24,7 @@
       VIOLATION DATE
     </th>
     <td mat-cell *matCellDef="let element">
-      <span>{{ element.violationDate.split("T")[0] | date: "dd-MMM-yyyy" }}</span>
+      <span>{{ element.violationDate | date: "dd-MMM-yyyy" }}</span>
     </td>
   </ng-container>
 

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output, Inject } from '@angular
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormControlValidators } from '@core/validators/form-control.validators';
 import { MatDialog } from '@angular/material/dialog';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { UtilsService } from '@core/services/utils.service';
@@ -43,7 +42,6 @@ export class ContactInfoComponent implements OnInit {
     private dialog: MatDialog,
     private utilsService: UtilsService,
     public mockConfigService: MockConfigService,
-    private datePipe: DatePipe,
     private disputeService: DisputeService,
     private logger: LoggerService,
     @Inject(Router) private router,

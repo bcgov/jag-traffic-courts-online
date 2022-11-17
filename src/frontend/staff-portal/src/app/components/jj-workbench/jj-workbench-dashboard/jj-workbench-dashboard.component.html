@@ -21,7 +21,7 @@
           <br/>
           <app-jj-dispute-hearing-inbox [jjIDIR]="jjIDIR" (jjDisputeInfo)="changeJJDispute($event)"></app-jj-dispute-hearing-inbox>
         </mat-tab>
-        <mat-tab>
+        <mat-tab #DCF>
           <ng-template mat-tab-label><h2>DCF</h2></ng-template>
           <br/>
           <app-jj-dispute-digital-case-file [jjIDIR]="jjIDIR" (jjDisputeInfo)="changeJJDispute($event)"></app-jj-dispute-digital-case-file>
@@ -29,7 +29,7 @@
       </mat-tab-group>
     </div>
     <div style="padding-left:5%; padding-right:5%" *ngIf="showDispute">
-      <app-jj-dispute (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo"></app-jj-dispute>
+      <app-jj-dispute (onBack)="backInbox()" [jjDisputeInfo]="jjDisputeInfo" [isViewOnly]="!isInfoEditable"></app-jj-dispute>
     </div>
     <div class="flex-footer d-print-none mb-40">
       <app-footer></app-footer>

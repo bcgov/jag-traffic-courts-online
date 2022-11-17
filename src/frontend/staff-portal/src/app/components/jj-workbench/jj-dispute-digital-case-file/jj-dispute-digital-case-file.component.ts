@@ -69,7 +69,7 @@ export class JJDisputeDigitalCaseFileComponent implements OnInit, AfterViewInit 
   }
 
   backWorkbench(element) {
-    // this.jjDisputeInfo.emit(element);
+    this.jjDisputeInfo.emit(element);
   }
 
   // called on change in selection of JJ

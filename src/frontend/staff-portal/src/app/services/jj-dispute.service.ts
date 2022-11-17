@@ -7,7 +7,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark, UserRepresentation } from 'app/api';
 import { AuthService } from './auth.service';
 import { cloneDeep } from 'lodash';
-import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -76,6 +75,7 @@ export class JJDisputeService {
       .pipe(
         map((response: JJDisputeView[]) => {
           this.logger.info('jj-DisputeService::getJJDisputes', response);
+          response.map(jJDispute => this.toDisplay(jJDispute));
           this._JJDisputes.next(response);
           return response;
         }),

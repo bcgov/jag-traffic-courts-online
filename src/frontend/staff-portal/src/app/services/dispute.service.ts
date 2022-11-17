@@ -5,7 +5,7 @@ import { DisputeService as DisputeApiService, Dispute } from 'app/api';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 
 export interface IDisputeService {
   disputes$: Observable<DisputeExtended[]>;

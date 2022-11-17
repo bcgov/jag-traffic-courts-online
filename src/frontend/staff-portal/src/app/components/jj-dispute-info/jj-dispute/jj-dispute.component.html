@@ -11,10 +11,10 @@
     <div style="float:inline">
       <span style="float:left">
         <h1><b>
-          <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons</span>
-          <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">Hearing Ticket</span>
-           Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
-        </b></h1>
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.WrittenReasons">Written Reasons</span>
+            <span *ngIf="jjDisputeInfo.hearingType === HearingType.CourtAppearance">Hearing Ticket</span>
+            Dispute - {{ lastUpdatedJJDispute.givenNames }}&nbsp;{{ lastUpdatedJJDispute.surname}}
+          </b></h1>
       </span>
       <span style="float:right">
         <h1><b>Ticket Number: {{ lastUpdatedJJDispute.ticketNumber }} </b></h1>
@@ -118,7 +118,8 @@
       <div style="display: grid; grid-template-columns: auto auto auto auto">
         <span class="section-grid-cell">
           <p class="section-grid-header">Legal Counsel Name</p>
-          <p class="section-grid-text">{{ lastUpdatedJJDispute.lawyerGivenName1 }}&nbsp;{{ lastUpdatedJJDispute.lawyerSurname }}</p>
+          <p class="section-grid-text">{{ lastUpdatedJJDispute.lawyerGivenName1 }}&nbsp;{{
+            lastUpdatedJJDispute.lawyerSurname }}</p>
         </span>
         <span class="section-grid-cell">
           <p class="section-grid-header">Legal Counsel Firm</p>
@@ -157,62 +158,89 @@
           <h3>Court Appearance</h3>
         </span>
       </ng-container>
-      <form name="courtAppearanceForm" novalidate>
+      <form [formGroup]="courtAppearanceForm" novalidate>
         <div style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto">
           <span class="section-grid-cell">
             <p class="section-grid-header">Appearance Date/Time</p>
-            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm" }}&nbsp;<button style="background:#fffee6" type="button" (click)="updateAppearanceTs()">Now</button></p>
+            <p class="section-grid-text">{{ courtAppearanceForm.get('appearanceTs').value | date: "MM/dd/YYYY HH:mm"
+              }}&nbsp;<button *ngIf="!isViewOnly" style="background:#fffee6" type="button"
+                (click)="updateAppearanceTs()">Now</button></p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Room</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('room')" style="width:75px; background:#fffee6"/></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="room" style="width:75px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('room').value }}</span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Reason</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('reason')" style="width:75px; background:#fffee6"/></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="reason" style="width:75px; background:#777775" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('room').value }}</span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">APP (P/N/A)</p>
             <p class="section-grid-text">
-              <mat-select [formControl]="courtAppearanceForm.get('app')" style="background:#fffee6">
+              <mat-select *ngIf="!isViewOnly" formControlName="app" style="background:#fffee6">
                 <mat-option [value]="RoPApp.P">{{ RoPApp.P }}</mat-option>
                 <mat-option [value]="RoPApp.N">{{ RoPApp.N }}</mat-option>
                 <mat-option [value]="RoPApp.A">{{ RoPApp.A }}</mat-option>
               </mat-select>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('app').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">No APP</p>
-            <p class="section-grid-text">{{ courtAppearanceForm.get('noAppTs').value | date: "MM/dd/YYYY HH:mm" }}&nbsp;<button type="button" style="background:#fffee6" (click)="updateNoAPPTs()">Now</button></p>
+            <p class="section-grid-text">{{ courtAppearanceForm.get('noAppTs').value | date: "MM/dd/YYYY HH:mm"
+              }}&nbsp;<button *ngIf="!isViewOnly" type="button" style="background:#fffee6"
+                (click)="updateNoAPPTs()">Now</button></p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">CLERK REC.</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('clerkRecord')" style="width:75px; background:#fffee6"/></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="clerkRecord" style="width:75px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('clerkRecord').value }}</span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">DEF. COUNSEL</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('defenseCounsel')" style="width:75px; background:#fffee6" /></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="defenseCounsel" style="width:75px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('defenseCounsel').value }}</span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Crown</p>
             <p class="section-grid-text">
-              <mat-select [formControl]="courtAppearanceForm.get('app')" style="background:#fffee6">
+              <mat-select *ngIf="!isViewOnly" formControlName="crown" style="background:#fffee6">
                 <mat-option [value]="RoPCrown.P">{{ RoPCrown.P }}</mat-option>
                 <mat-option [value]="RoPCrown.N">{{ RoPCrown.N }}</mat-option>
               </mat-select>
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('crown').value }}</span>
             </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Seized</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('jjSeized')" style="width:75px; background:#fffee6" /></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="jjSeized" style="width:75px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('jjSeized').value }}</span>
+            </p>
           </span>
           <span class="section-grid-cell">
             <p class="section-grid-header">Judicial Justice</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('adjudicator')" style="width:150px; background:#fffee6"/></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="adjudicator" style="width:150px; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('adjudicator').value }}</span>
+            </p>
           </span>
           <span class="section-grid-cell" style="grid-column: span 10">
             <p class="section-grid-header">Comments:</p>
-            <p class="section-grid-text"><input [formControl]="courtAppearanceForm.get('comments')" style="width:95%; background:#fffee6"/></p>
+            <p class="section-grid-text">
+              <input *ngIf="!isViewOnly" formControlName="comments" style="width:95%; background:#fffee6" />
+              <span *ngIf="isViewOnly">{{ courtAppearanceForm.get('comments').value }}</span>
+            </p>
           </span>
         </div>
       </form>
@@ -223,7 +251,8 @@
           <h3>Court Appearances History</h3>
         </span>
       </ng-container>
-      <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs"></app-jj-dispute-court-appearances>
+      <app-jj-dispute-court-appearances [data]="lastUpdatedJJDispute.jjDisputeCourtAppearanceRoPs">
+      </app-jj-dispute-court-appearances>
     </section>
     <section>
       <ng-container subHeader>
@@ -232,14 +261,16 @@
         </span>
       </ng-container>
       <div>
-        <h4><b>Fine Reduction</b><span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{
-            fineReductionCountsHeading }}</span></h4>
+        <h4><b>Fine Reduction</b>
+          <span *ngIf="fineReductionCountsHeading.length>0">&nbsp;-&nbsp;{{ fineReductionCountsHeading }}</span>
+        </h4>
         <span style="font-size: small">{{ lastUpdatedJJDispute.fineReductionReason }}</span>
         <br /><br />
       </div>
       <div>
-        <h4><b>Time to Pay</b><span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading
-            }}</span></h4>
+        <h4><b>Time to Pay</b>
+          <span *ngIf="timeToPayCountsHeading.length>0">&nbsp;-&nbsp;{{ timeToPayCountsHeading}}</span>
+        </h4>
         <span style="font-size: small">{{ lastUpdatedJJDispute.timeToPayReason }}</span>
       </div>
     </section><br />
@@ -252,7 +283,8 @@
       <div style="display: grid; grid-template-columns: 33% 33% 33%">
         <span *ngFor="let i of [1,2,3]" style="border:1px solid black; ">
           <app-jj-count [count]="i" [jjDisputeInfo]="lastUpdatedJJDispute" [jjDisputedCount]="getJJDisputedCount(i)"
-            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type"></app-jj-count>
+            (jjDisputedCountUpdate)="updateFinalDispositionCount($event)" [type]="type" [isViewOnly]="isViewOnly">
+          </app-jj-count>
         </span>
       </div>
     </section><br />
@@ -304,7 +336,7 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-    <section style="padding-top: 2rem;">
+    <section style="padding-top: 2rem;" *ngIf="!isViewOnly">
       <ng-container subHeader>
         <span>
           <h3>Add Remarks<br />
@@ -317,13 +349,14 @@
       <textarea matInput [(ngModel)]="remarks" maxlength="1500" rows="6"
         style="background: #fffee6; width: 100%"></textarea>
     </section>
-    <div fxLayout="row">
+    <div fxLayout="row" *ngIf="!isViewOnly">
       <div *ngIf="type === 'ticket'" fxFlex="40" fxLayout="row">
         <div style="margin-right: 1rem;">
           <mat-form-field class="select-box-only">
             <mat-select [(ngModel)]="selectedJJ" placeholder="choose a JJ">
               <mat-option [value]=""></mat-option>
-              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>JJ {{ authService.getFullName(jj) }}</i></mat-option>
+              <mat-option *ngFor="let jj of jjList" [value]="jj.idir"><i>JJ {{ authService.getFullName(jj) }}</i>
+              </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
