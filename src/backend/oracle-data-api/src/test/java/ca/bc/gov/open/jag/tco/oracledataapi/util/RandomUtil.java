@@ -186,6 +186,7 @@ public class RandomUtil {
 		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setDisputantGivenName1(randomGivenName());
 		dispute.setDisputantSurname(randomSurname());
+		dispute.setViolationTicket(new ViolationTicket());
 		return dispute;
 	}
 
@@ -405,7 +406,7 @@ public class RandomUtil {
 		violationTicket.setIsOwner(randomYN());
 		violationTicket.setIsYoungPerson(randomYN());
 		violationTicket.setOfficerPin(randomAlphanumeric(10));
-		violationTicket.setTicketNumber(randomTicketNumber());
+		violationTicket.setTicketNumber(dispute.getTicketNumber());
 		violationTicket.setViolationTicketCounts(createViolationTicketCounts(violationTicket));
 		violationTicket.setDispute(dispute);
 
