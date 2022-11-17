@@ -157,7 +157,10 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
                     submitNoticeOfDispute.NoticeOfDisputeGuid = noticeOfDisputeGuid;
                     submitNoticeOfDispute.SubmittedTs = _clock.GetCurrentInstant().ToDateTimeUtc();
 
-                    var ocrTicketFilename = await _filePersistenceService.SaveJsonFileAsync(violationTicket, noticeOfDisputeGuid.ToString(), cancellationToken);
+                    if (violationTicket != null)
+                    {
+                        var ocrTicketFilename = await _filePersistenceService.SaveJsonFileAsync(violationTicket, noticeOfDisputeGuid.ToString(), cancellationToken);
+                    }
 
                     if (lookedUpViolationTicket != null)
                     {
