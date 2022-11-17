@@ -18,6 +18,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
+/**
+ * This mapper maps from Oracle Data API dispute model to ORDS dispute data
+ */
 @Mapper
 public interface ViolationTicketMapper {
 
@@ -33,6 +36,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.courtLocationTxt", source = "courtLocation")
 	@Mapping(target = "dispute.issuedDt", source = "issuedTs")
 	@Mapping(target = "dispute.submittedDt", source = "submittedTs")
+	@Mapping(target = "dispute.disputantClientId", source = "disputantClientId")
 	@Mapping(target = "dispute.disputantSurnameNm", source = "disputantSurname")
 	@Mapping(target = "dispute.disputantGiven1Nm", source = "disputantGivenName1")
 	@Mapping(target = "dispute.disputantGiven2Nm", source = "disputantGivenName2")
@@ -99,6 +103,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "disputantDrvLicNumberTxt", source = "violationTicket.disputantDriversLicenceNumber")
 	@Mapping(target = "disputantClientNumberTxt", source = "violationTicket.disputantClientNumber")
 	@Mapping(target = "drvLicIssuedProvinceTxt", source = "violationTicket.driversLicenceProvince")
+	@Mapping(target = "drvLicIssuedCountryTxt", source = "violationTicket.driversLicenceCountry")
 	@Mapping(target = "drvLicIssuedYearNo", source = "violationTicket.driversLicenceIssuedYear")
 	@Mapping(target = "drvLicExpiryYearNo", source = "violationTicket.driversLicenceExpiryYear")
 	@Mapping(target = "disputantBirthDt", source = "violationTicket.disputantBirthdate")
