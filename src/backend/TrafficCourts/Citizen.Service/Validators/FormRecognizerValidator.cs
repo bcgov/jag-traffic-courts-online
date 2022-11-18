@@ -1,7 +1,6 @@
-using TrafficCourts.Citizen.Service.Models.Tickets;
-using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Citizen.Service.Validators.Rules;
 using TrafficCourts.Common.Features.Lookups;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Validators;
 

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using TrafficCourts.Citizen.Service.Features.Tickets;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Validators;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Controllers
 {
@@ -33,7 +33,7 @@ namespace TrafficCourts.Citizen.Service.Controllers
         /// <response code="404">The violation ticket was not found.</response>
         /// <response code="500">There was a server error that prevented the search from completing successfully.</response>
         [HttpGet]
-        [ProducesResponseType(typeof(ViolationTicket), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.Tickets.ViolationTicket), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> SearchAsync(

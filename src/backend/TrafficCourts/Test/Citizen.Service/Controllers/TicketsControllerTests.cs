@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using System.Threading;
 using TrafficCourts.Citizen.Service.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Test.Citizen.Service.Controllers;
 

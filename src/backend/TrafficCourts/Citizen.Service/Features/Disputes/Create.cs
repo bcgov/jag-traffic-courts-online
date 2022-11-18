@@ -1,17 +1,14 @@
 using MassTransit;
 using MediatR;
-using System.Text.Json;
 using TrafficCourts.Common.Features.FilePersistence;
 using TrafficCourts.Citizen.Service.Models.Dispute;
-using TrafficCourts.Citizen.Service.Models.Tickets;
 using TrafficCourts.Citizen.Service.Services;
 using TrafficCourts.Messaging.MessageContracts;
 using AutoMapper;
 using System.Diagnostics;
 using NodaTime;
 using HashidsNet;
-using TrafficCourts.Messaging;
-using System.Text;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Features.Disputes
 {

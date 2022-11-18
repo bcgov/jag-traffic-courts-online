@@ -1,16 +1,16 @@
-using static TrafficCourts.Citizen.Service.Models.Tickets.OcrViolationTicket;
+using TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0;
 
 namespace TrafficCourts.Citizen.Service.Validators.Rules;
 
 public abstract class ValidationRule
 {
 
-    public ValidationRule(Models.Tickets.Field field)
+    public ValidationRule(Field field)
     {
         Field = field;
     }
 
-    public Models.Tickets.Field Field { get; }
+    public Field Field { get; }
 
     public bool IsValid()
     {
