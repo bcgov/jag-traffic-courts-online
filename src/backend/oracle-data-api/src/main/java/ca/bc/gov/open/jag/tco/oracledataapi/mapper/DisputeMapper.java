@@ -81,7 +81,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.disputantDetectOcrIssuesYn", target = "disputantDetectedOcrIssues")
 	@Mapping(source = "dispute.disputantOcrIssuesTxt", target = "disputantOcrIssues")
 	@Mapping(source = "dispute.systemDetectOcrIssuesYn", target = "systemDetectedOcrIssues")
-	@Mapping(source = "dispute.ocrViolationTicketJsonTxt", target = "ocrViolationTicket")
+	@Mapping(source = "dispute.ocrViolationTicketJsonTxt", target = "ocrTicketFilename")
 	// Map violation ticket data from ORDS to Oracle Data API violation ticket model
 	@Mapping(source = "entUserId", target = "violationTicket.createdBy")
 	@Mapping(source = "entDtm", target = "violationTicket.createdTs")
@@ -169,8 +169,8 @@ public interface DisputeMapper {
 	@Named("mapCounts")
 	default List<DisputeCount> mapCounts(List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount> violationTicketCounts) {
 		if ( violationTicketCounts == null || violationTicketCounts.isEmpty()) {
-            return null;
-        }
+			return null;
+		}
 
 		List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
 
@@ -203,11 +203,11 @@ public interface DisputeMapper {
 				disputeCounts.add(count);
 			}
 		}
-	    return disputeCounts;
+		return disputeCounts;
 	}
 
 	@AfterMapping
-    default void setLawyerAddress(@MappingTarget Dispute dispute, ViolationTicket violationTicket) {
+	default void setLawyerAddress(@MappingTarget Dispute dispute, ViolationTicket violationTicket) {
 		ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute disputeFromApi = violationTicket.getDispute();
 		if (dispute != null && violationTicket != null && disputeFromApi != null) {
 			String addressLine1 = disputeFromApi.getLawFirmAddrLine1Txt();
@@ -217,10 +217,10 @@ public interface DisputeMapper {
 				dispute.setLawyerAddress(null);
 			} else {
 				dispute.setLawyerAddress(
-		        		addressLine1 == null ? "" : addressLine1 + " " +
-		        		addressLine2 == null ? "" : addressLine2 + " " +
-		        		addressLine3 == null ? "" : addressLine3);
+						addressLine1 == null ? "" : addressLine1 + " " +
+								addressLine2 == null ? "" : addressLine2 + " " +
+										addressLine3 == null ? "" : addressLine3);
 			}
 		}
-    }
+	}
 }

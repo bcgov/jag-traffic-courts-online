@@ -61,7 +61,7 @@ public class MappingTests
         Assert.Equal(source.TimeToPayReason, target.TimeToPayReason);
         Assert.Equal(source.DisputantDetectedOcrIssues, target.DisputantDetectedOcrIssues);
         Assert.Equal(source.DisputantOcrIssues, target.DisputantOcrIssues);
-        Assert.Equal(source.OcrViolationTicket, target.OcrViolationTicket);
+        Assert.Equal(source.OcrTicketFilename, target.OcrTicketFilename);
         Assert.Equal(source.ViolationTicket?.TicketNumber, target.ViolationTicket.TicketNumber);
         Assert.Equal(source.ViolationTicket?.DisputantSurname, target.ViolationTicket.DisputantSurname);
         Assert.Equal(source.ViolationTicket?.DisputantGivenNames, target.ViolationTicket.DisputantGivenNames);

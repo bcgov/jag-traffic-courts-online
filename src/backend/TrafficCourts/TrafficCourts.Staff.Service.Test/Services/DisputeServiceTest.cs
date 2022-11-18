@@ -31,10 +31,9 @@ public class DisputeServiceTest
         Dispute dispute = new();
         dispute.DisputeId = 1;
         dispute.ViolationTicket = new();
-        dispute.OcrViolationTicket = json;
 
         //When
-        string? filename = service.GetViolationTicketImageFilename(dispute);
+        string? filename = service.GetViolationTicketImageFilename(json);
 
         //Then
         Assert.Equal(expectedFilename, filename);

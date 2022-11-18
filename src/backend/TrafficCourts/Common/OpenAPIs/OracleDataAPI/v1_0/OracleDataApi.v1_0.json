@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5010",
+      "url": "http://localhost:8080",
       "description": "Generated server url"
     }
   ],
@@ -1755,7 +1755,9 @@
             "type": "string",
             "enum": [ "Y", "N" ]
           },
-          "ocrViolationTicket": {
+          "ocrTicketFilename": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },

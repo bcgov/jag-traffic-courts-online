@@ -159,7 +159,7 @@ namespace TrafficCourts.Citizen.Service.Features.Disputes
 
                     if (violationTicket != null)
                     {
-                        var ocrTicketFilename = await _filePersistenceService.SaveJsonFileAsync(violationTicket, noticeOfDisputeGuid.ToString(), cancellationToken);
+                        submitNoticeOfDispute.OcrTicketFilename = await _filePersistenceService.SaveJsonFileAsync(violationTicket, noticeOfDisputeGuid.ToString(), cancellationToken);
                     }
 
                     if (lookedUpViolationTicket != null)

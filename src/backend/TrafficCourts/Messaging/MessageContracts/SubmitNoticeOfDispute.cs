@@ -199,9 +199,9 @@ public class SubmitNoticeOfDispute
     public ViolationTicket? ViolationTicket { get; set; }
 
     /// <summary>
-    /// JSON serialized OCR data.
+    /// Filename of JSON serialized OCR data that is saved in object storage.
     /// </summary>
-    public string? OcrViolationTicket { get; set; }
+    public string? OcrTicketFilename { get; set; }
 
     public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 }
