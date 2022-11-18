@@ -117,12 +117,12 @@ public class RandomUtil {
 	};
 
 	public final static String[] COMMON_EMAIL_ADDRESSES = new String[] {
-		"1@1.com",
-		"2@2.ca",
-		"3@3.com",
-		"Lucas@4.com",
-		"Stacy@5.com",
-		"Arlington@6.com"
+			"1@1.com",
+			"2@2.ca",
+			"3@3.com",
+			"Lucas@4.com",
+			"Stacy@5.com",
+			"Arlington@6.com"
 	};
 
 	public final static String[] COMMON_CITY_NAMES = new String[] {
@@ -357,7 +357,7 @@ public class RandomUtil {
 		dispute.setLawyerPhoneNumber(randomNumeric(20));
 		dispute.setLawyerSurname(randomAlphabetic(30));
 		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
-		dispute.setOcrViolationTicket(randomAlphabetic(4000));
+		dispute.setOcrTicketFilename(randomAlphabetic(100));
 		dispute.setOfficerPin(randomAlphabetic(10));
 		dispute.setPostalCode(randomAlphanumeric(10));
 		dispute.setRejectedReason(randomAlphabetic(500));

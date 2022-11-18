@@ -4224,8 +4224,9 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataApi.v1_0
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DisputeSystemDetectedOcrIssues SystemDetectedOcrIssues { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ocrViolationTicket", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string OcrViolationTicket { get; set; }
+        [Newtonsoft.Json.JsonProperty("ocrTicketFilename", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(100)]
+        public string OcrTicketFilename { get; set; }
 
         [Newtonsoft.Json.JsonProperty("violationTicket", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public ViolationTicket ViolationTicket { get; set; }

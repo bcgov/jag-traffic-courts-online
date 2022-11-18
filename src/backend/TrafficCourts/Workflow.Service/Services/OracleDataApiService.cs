@@ -20,7 +20,7 @@ public class OracleDataApiService : IOracleDataApiService
     public async Task<long> CreateDisputeAsync(Dispute dispute, CancellationToken cancellationToken)
     {
         // stub out the ViolationTicket if the submitted Dispute has associated OCR scan results.
-        if (!string.IsNullOrEmpty(dispute.OcrViolationTicket))
+        if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
         {
             dispute.ViolationTicket = new();
             dispute.ViolationTicket.TicketNumber = dispute.TicketNumber;
