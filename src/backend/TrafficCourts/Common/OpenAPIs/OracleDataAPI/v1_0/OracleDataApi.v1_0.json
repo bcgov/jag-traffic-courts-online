@@ -1554,10 +1554,6 @@
             "nullable": true
           },
           "ticketNumber": { "type": "string" },
-          "courtLocation": {
-            "type": "string",
-            "nullable": true
-          },
           "issuedTs": {
             "type": "string",
             "format": "date-time",
@@ -1870,6 +1866,11 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "driversLicenceCountry": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "driversLicenceIssuedYear": {
             "type": "integer",

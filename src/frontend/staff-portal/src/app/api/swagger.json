@@ -2475,10 +2475,6 @@
             "type": "string",
             "nullable": true
           },
-          "courtLocation": {
-            "type": "string",
-            "nullable": true
-          },
           "issuedTs": {
             "type": "string",
             "format": "date-time",
@@ -3953,6 +3949,12 @@
             "nullable": true
           },
           "driversLicenceProvince": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceCountry": {
             "maxLength": 100,
             "minLength": 0,
             "type": "string",

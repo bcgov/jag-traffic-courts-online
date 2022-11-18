@@ -51,12 +51,16 @@ public class DisputeService : IDisputeService
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
 
+        // Try to retrieve OCR Violation Ticket Data from object storage for the given NoticeOfDisputeGuid (filename)
+        OcrViolationTicket? ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.NoticeOfDisputeGuid, cancellationToken);
+        dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+
         // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
         // If so, retrieve the image from object storage and return it as well.
-
-        // Get the object store reference of the image (iff this is a scanned ViolationTicket)
-        string? imageFilename = GetViolationTicketImageFilename(dispute);
-        dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(imageFilename, cancellationToken);
+        if (ocrViolationTicket != null)
+        {
+            dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(ocrViolationTicket.ImageFilename, cancellationToken);
+        }
         
         // deserialize json string to violation ticket fields
         if (dispute.OcrViolationTicket != null) dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);

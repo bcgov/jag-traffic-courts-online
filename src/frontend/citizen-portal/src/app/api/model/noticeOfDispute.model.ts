@@ -24,10 +24,6 @@ export interface NoticeOfDispute {
      */
     ticket_number?: string | null;
     /**
-     * The provincial court hearing location named on the violation ticket.
-     */
-    court_location?: string | null;
-    /**
      * The date and time the violation ticket was issue. Time must only be hours and minutes.
      */
     issued_date?: string;

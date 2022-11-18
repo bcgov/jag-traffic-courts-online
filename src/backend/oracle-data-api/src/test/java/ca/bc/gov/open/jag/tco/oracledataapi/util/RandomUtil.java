@@ -326,7 +326,6 @@ public class RandomUtil {
 		dispute.setAddressLine2(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressLine3(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressProvince(randomAlphabetic(30));
-		dispute.setCourtLocation(randomAlphabetic(150));
 		dispute.setDetachmentLocation(randomAlphabetic(150));
 		dispute.setDisputantBirthdate(randomDate());
 		dispute.setDisputantClientId(randomNumeric(5));

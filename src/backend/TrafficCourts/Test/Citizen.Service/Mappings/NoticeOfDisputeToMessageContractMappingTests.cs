@@ -25,7 +25,6 @@ namespace TrafficCourts.Test.Citizen.Service.Mappings
 
             Assert.Equal(noticeOfDispute.TicketNumber, actual.TicketNumber);
             Assert.Equal(DisputeStatus.NEW, actual.Status);
-            Assert.Equal(noticeOfDispute.CourtLocation, actual.CourtLocation);
             Assert.Equal(noticeOfDispute.IssuedTs, actual.IssuedTs);
             Assert.Equal(noticeOfDispute.DisputantSurname, actual.DisputantSurname);
             Assert.Equal(noticeOfDispute.DisputantGivenName1, actual.DisputantGivenName1);

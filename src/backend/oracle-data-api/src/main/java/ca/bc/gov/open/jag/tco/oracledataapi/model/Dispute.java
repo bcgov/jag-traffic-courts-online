@@ -63,13 +63,6 @@ public class Dispute extends Auditable<String> {
 	private String ticketNumber;
 
 	/**
-	 * Court location.
-	 */
-	@Column(length = 150)
-	@Schema(nullable = true)
-	private String courtLocation;
-
-	/**
 	 * The date and time the violation ticket was issue. Time must only be hours and
 	 * minutes.
 	 */
