@@ -3,7 +3,7 @@ import { UserRepresentation } from 'app/api';
 import { AppRoutes } from 'app/app.routes';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakService as KeycloakAPIService } from 'app/api'
-import { KeycloakProfile } from 'keycloak-js';
+import { KeycloakProfile as KeycloakProfileJS } from 'keycloak-js';
 import { BehaviorSubject, from, Observable, map, catchError } from 'rxjs';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
@@ -146,4 +146,8 @@ export class AuthService {
 
 export interface UserRepresentationView extends UserRepresentation {
   idir?: string;
+}
+
+export interface KeycloakProfile extends KeycloakProfileJS {
+  attributes?: any;
 }
