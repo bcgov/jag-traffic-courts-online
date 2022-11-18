@@ -8,8 +8,10 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -81,6 +83,13 @@ public class DisputeService {
 			dispute.getViolationTicket().setViolationTicketId(null);
 			for (ViolationTicketCount violationTicketCount : dispute.getViolationTicket().getViolationTicketCounts()) {
 				violationTicketCount.setViolationTicketCountId(null);
+			}
+
+			// It is an error if the duplicate field TicketNumber has different values.
+			if (ObjectUtils.compare(dispute.getTicketNumber(), dispute.getViolationTicket().getTicketNumber()) != 0) {
+				String msg = String.format("TicketNumber of the Dispute (%s) and ViolationTicket (%s) are different!", dispute.getTicketNumber(), dispute.getViolationTicket().getTicketNumber());
+				logger.error(msg);
+				throw new ConstraintViolationException(msg, null);
 			}
 		}
 		return disputeRepository.saveAndFlush(dispute);

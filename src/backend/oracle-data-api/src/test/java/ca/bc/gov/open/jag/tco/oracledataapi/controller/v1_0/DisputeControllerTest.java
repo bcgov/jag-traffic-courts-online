@@ -57,6 +57,24 @@ class DisputeControllerTest extends BaseTestSuite {
 	}
 
 	@Test
+	public void testSaveDispute_InvalidTicketNumber() throws Exception {
+		// TCVP-1918 mismatched ticketNumber should yield a 400 BAD REQUEST
+
+		// Create a single Dispute
+		Dispute dispute = RandomUtil.createDispute();
+		dispute.setTicketNumber("AX00000000");
+		dispute.getViolationTicket().setTicketNumber("AB11111111");
+
+		mvc.perform(MockMvcRequestBuilders
+				.post("/api/v1.0/dispute")
+				.principal(getPrincipal())
+				.content(asJsonString(dispute))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	public void testRejectDispute() throws Exception {
 		// Create a single Dispute
 		Dispute dispute = RandomUtil.createDispute();
@@ -260,6 +278,7 @@ class DisputeControllerTest extends BaseTestSuite {
 		Dispute dispute = RandomUtil.createDispute();
 		dispute.setTicketNumber("AX12345678");
 		dispute.setIssuedTs(DateUtils.parseDate("14:54", "HH:mm"));
+		dispute.setViolationTicket(null);
 		Long disputeId = saveDispute(dispute);
 
 		// try searching for exact match. Expect to find the dispute
