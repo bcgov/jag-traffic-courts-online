@@ -223,29 +223,27 @@
       </span>
     </ng-container>
     <div [formGroup]="form?.get('jjDisputedCountRoP')">
-      <ng-container>
-        <mat-radio-group formControlName="finding" fxLayout="column">
-          <mat-radio-button [value]="Finding.Guilty">Guilty as charged</mat-radio-button>
-          <mat-radio-button [value]="Finding.NotGuilty">Not guilty</mat-radio-button>
-          <mat-radio-button [value]="Finding.GuiltyLesser">Not guilty as charged <br />but guilty of lesser / included
-            offense section</mat-radio-button>
-        </mat-radio-group>
-        <div style="width:100%; margin-left: 20px">
-          <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-            [readonly]="form.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty || form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty || !form.get('jjDisputedCountRoP').get('finding').value"
-            formControlName="lesserDescription" [matAutocomplete]="auto" (keyup)="onLesserDescriptionKeyup()"
-            [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let statute of lesserDescriptionFilteredStatutes" [value]="statute.__statuteString">
-              {{ statute.__statuteString }}</mat-option>
-          </mat-autocomplete><br />
-          <mat-tooltip style="font-size:x-small">Hover over section to see full description</mat-tooltip>
-        </div><br />
-      </ng-container>
+      <mat-radio-group formControlName="finding" fxLayout="column">
+        <mat-radio-button [value]="Finding.Guilty">Guilty as charged</mat-radio-button>
+        <mat-radio-button [value]="Finding.NotGuilty">Not guilty</mat-radio-button>
+        <mat-radio-button [value]="Finding.GuiltyLesser">Not guilty as charged <br />but guilty of lesser / included
+          offense section</mat-radio-button>
+      </mat-radio-group>
+      <div style="width:100%; margin-left: 20px">
+        <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
+          [readonly]="form.get('jjDisputedCountRoP').get('finding').value === Finding.Guilty || form.get('jjDisputedCountRoP').get('finding').value === Finding.NotGuilty || !form.get('jjDisputedCountRoP').get('finding').value"
+          formControlName="lesserDescription" [matAutocomplete]="auto" (keyup)="onLesserDescriptionKeyup()"
+          [matTooltip]="form.get('jjDisputedCountRoP').get('lesserDescription').value" />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let statute of lesserDescriptionFilteredStatutes" [value]="statute.__statuteString">
+            {{ statute.__statuteString }}</mat-option>
+        </mat-autocomplete><br />
+        <mat-tooltip style="font-size:x-small">Hover over section to see full description</mat-tooltip>
+      </div><br />
     </div>
     <hr style="margin: 0 0 0 0" />
   </section>
-  <section [ngClass]="{'readOnly': isViewOnly}">
+  <section>
     <ng-container subHeader>
       <span class="count-text">
         <h3>Final disposition</h3>
