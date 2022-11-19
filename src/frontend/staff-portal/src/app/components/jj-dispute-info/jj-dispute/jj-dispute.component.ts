@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, Inject, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CustomDatePipe as DatePipe } from '@shared/pipes/custom-date.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
@@ -63,18 +63,18 @@ export class JJDisputeComponent implements OnInit {
     this.getJJDispute();
 
     this.courtAppearanceForm = this.formBuilder.group({
-        appearanceTs: [null],
-        room: [null],
-        reason: [null],
-        app: [null],
-        noAppTs: [null],
-        clerkRecord: [null],
-        defenseCounsel: [null],
-        crown: [null],
-        jjSeized: [null],
-        adjudicator: [null],
-        comments: [null]
-      });
+      appearanceTs: [null],
+      room: [null],
+      reason: [null],
+      app: [null],
+      noAppTs: [null],
+      clerkRecord: [null],
+      defenseCounsel: [null],
+      crown: [null],
+      jjSeized: [null],
+      adjudicator: [null],
+      comments: [null]
+    });
   }
 
   public onSubmit(): void {
@@ -113,8 +113,9 @@ export class JJDisputeComponent implements OnInit {
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.status = JJDisputeStatus.Accepted;
-          this.putJJDispute();
+          this.jjDisputeService.apiJjTicketNumberAcceptPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket").subscribe(response => {
+            this.onBackClicked();
+          });
         }
       });
   }
@@ -128,12 +129,15 @@ export class JJDisputeComponent implements OnInit {
       cancelTextKey: "Go back",
       icon: ""
     };
+
     this.dialog.open(ConfirmDialogComponent, { data, width: "40%" }).afterClosed()
       .subscribe((action: any) => {
         if (action) {
-          this.lastUpdatedJJDispute.status = JJDisputeStatus.Review;
-          this.lastUpdatedJJDispute.jjAssignedTo = this.selectedJJ;
-          this.putJJDispute();
+          this.jjDisputeService.apiJjTicketNumberReviewPut(this.lastUpdatedJJDispute.ticketNumber, this.type === "ticket", this.remarks).subscribe(() => {
+            this.jjDisputeService.apiJjAssignPut([this.lastUpdatedJJDispute.ticketNumber], this.selectedJJ).subscribe(response => {
+              this.onBackClicked();
+            })
+          })
         }
       });
   }
@@ -204,7 +208,6 @@ export class JJDisputeComponent implements OnInit {
       }
     });
   }
-
 
   public onBackClicked() {
     this.onBack.emit();

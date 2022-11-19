@@ -1,11 +1,11 @@
 import { ConfigService } from '@config/config.service';
 import { LoggerService } from '@core/services/logger.service';
 import { ToastService } from '@core/services/toast.service';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { EventEmitter, Injectable } from '@angular/core';
-import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark, UserRepresentation } from 'app/api';
-import { AuthService } from './auth.service';
+import { JJService, JJDispute, JJDisputeStatus, JJDisputeRemark } from 'app/api';
+import { AuthService, UserRepresentationView as UserRepresentation } from './auth.service';
 import { cloneDeep } from 'lodash';
 
 @Injectable({
@@ -14,10 +14,11 @@ import { cloneDeep } from 'lodash';
 export class JJDisputeService {
   private _JJDisputes: BehaviorSubject<JJDisputeView[]> = new BehaviorSubject<JJDisputeView[]>(null);
   private _JJDispute: BehaviorSubject<JJDisputeView> = new BehaviorSubject<JJDisputeView>(null);
+  public refreshDisputes: EventEmitter<any> = new EventEmitter();
+
   public jjDisputeStatusesSorted: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.HearingScheduled, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo, JJDisputeStatus.DataUpdate, JJDisputeStatus.Accepted];
   public JJDisputeStatusEditable: JJDisputeStatus[] = [JJDisputeStatus.New, JJDisputeStatus.Review, JJDisputeStatus.InProgress, JJDisputeStatus.HearingScheduled];
   public JJDisputeStatusComplete: JJDisputeStatus[] = [JJDisputeStatus.Confirmed, JJDisputeStatus.RequireCourtHearing, JJDisputeStatus.RequireMoreInfo];
-  public refreshDisputes: EventEmitter<any> = new EventEmitter();
   public jjList: Array<UserRepresentation>;
   public vtcList: Array<UserRepresentation>;
 
@@ -112,6 +113,66 @@ export class JJDisputeService {
           this.toastService.openErrorToast(this.configService.dispute_error);
           this.logger.error(
             'jj-DisputeService::putJJDispute error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  public apiJjTicketNumberReviewPut(ticketNumber: string, checkVTC: boolean, remarks?: string): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberReviewPut(ticketNumber, checkVTC, remarks)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberReviewPut', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberReviewPut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  public apiJjAssignPut(ticketNumbers: Array<string>, username: string): Observable<any> {
+    return this.jjApiService.apiJjAssignPut(ticketNumbers, username)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjAssignPut', response)
+          return response;
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjAssignPut error has occurred: ',
+            error
+          );
+          throw error;
+        })
+      );
+  }
+
+  public apiJjTicketNumberAcceptPut(ticketNumber: string, checkVTC: boolean): Observable<any> {
+    return this.jjApiService.apiJjTicketNumberAcceptPut(ticketNumber, checkVTC)
+      .pipe(
+        map((response: any) => {
+          this.logger.info('jj-DisputeService::apiJjTicketNumberAcceptPut', response)
+          return response ? response : null
+        }),
+        catchError((error: any) => {
+          var errorMsg = error?.error?.detail != null ? error.error.detail : this.configService.dispute_error;
+          this.toastService.openErrorToast(errorMsg);
+          this.toastService.openErrorToast(this.configService.dispute_error);
+          this.logger.error(
+            'jj-DisputeService::apiJjTicketNumberAcceptPut error has occurred: ',
             error
           );
           throw error;

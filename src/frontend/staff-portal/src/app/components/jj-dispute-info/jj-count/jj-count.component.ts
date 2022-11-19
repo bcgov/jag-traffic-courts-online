@@ -119,6 +119,10 @@ export class JJCountComponent implements OnInit {
       this.updateInclSurcharge(this.inclSurcharge);
       this.form.get('revisedDueDate').setValue(this.jjDisputedCount.revisedDueDate);
 
+      if(this.isViewOnly) {
+        this.form.disable();
+      }
+
       // listen for form changes
       this.form.valueChanges.subscribe(() => {
         Object.assign(this.jjDisputedCount, this.form.value);
