@@ -5,8 +5,7 @@ import { DisputeService, DisputeExtended } from 'app/services/dispute.service';
 import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
-import { KeycloakProfile } from 'keycloak-js';
-import { AuthService } from 'app/services/auth.service';
+import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 
 @Component({
   selector: 'app-ticket-inbox',
@@ -105,7 +104,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
             __UserAssignedTs: d.userAssignedTs != null ? new Date(d.userAssignedTs) : null,
             additionalProperties: d.additionalProperties,
-            courtLocation: d.courtLocation,
             status: d.status,
             __RedGreenAlert: d.status == DisputeStatus.New ? 'Green' : '',
             userAssignedTs: d.userAssignedTs

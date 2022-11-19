@@ -189,7 +189,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Add the required authority role
 		List<GrantedAuthority> authority = new ArrayList<>();
         authority.add(new SimpleGrantedAuthority("User"));
-		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", authority);
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
 		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);
@@ -218,7 +218,7 @@ class JJDisputeControllerTest extends BaseTestSuite {
 		// Add the required authority role
 		List<GrantedAuthority> authority = new ArrayList<>();
         authority.add(new SimpleGrantedAuthority("User"));
-		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", authority);
+		CustomUserDetails user = new CustomUserDetails("testUser", "password", "testUser", "partId", authority);
 		Principal principal = new PreAuthenticatedToken(user);
 		// Set valid status
 		jjDispute.setStatus(JJDisputeStatus.CONFIRMED);

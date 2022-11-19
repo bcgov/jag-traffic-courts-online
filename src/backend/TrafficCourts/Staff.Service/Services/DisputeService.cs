@@ -51,31 +51,36 @@ public class DisputeService : IDisputeService
     {
         Dispute dispute = await _oracleDataApi.GetDisputeAsync(disputeId, cancellationToken);
 
+        OcrViolationTicket? ocrViolationTicket = null;
+        if (!string.IsNullOrEmpty(dispute.OcrTicketFilename))
+        {
+            // Retrieve deserialized OCR Violation Ticket JSON Data from object storage for the given filename (NoticeOfDisputeGuid)
+            ocrViolationTicket = await _filePersistenceService.GetJsonDataAsync<OcrViolationTicket>(dispute.OcrTicketFilename, cancellationToken);
+            dispute.ViolationTicket.OcrViolationTicket = ocrViolationTicket;
+        }
+
         // If OcrViolationTicket != null, then this Violation Ticket was scanned using the Azure OCR Form Recognizer at one point.
         // If so, retrieve the image from object storage and return it as well.
-
-        // Get the object store reference of the image (iff this is a scanned ViolationTicket)
-        string? imageFilename = GetViolationTicketImageFilename(dispute);
-        dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(imageFilename, cancellationToken);
-        
-        // deserialize json string to violation ticket fields
-        if (dispute.OcrViolationTicket != null) dispute.ViolationTicket.OcrViolationTicket = System.Text.Json.JsonSerializer.Deserialize<OcrViolationTicket>(dispute.OcrViolationTicket);
+        if (ocrViolationTicket != null)
+        {
+            dispute.ViolationTicket.ViolationTicketImage = await GetViolationTicketImageAsync(ocrViolationTicket.ImageFilename, cancellationToken);
+        }
 
         return dispute;
     }
 
     /// <summary>
-    /// Extracts the path to the image located in the object store from the dispute record, or null if not filename could be found.
+    /// Extracts the path to the image located in the object store from the JSON string, or null if not filename could be found.
     /// </summary>
-    /// <param name="dispute"></param>
+    /// <param name="json"></param>
     /// <returns></returns>
-    public string? GetViolationTicketImageFilename(Dispute dispute)
+    public string? GetViolationTicketImageFilename(string json)
     {
-        if (dispute.OcrViolationTicket is not null)
+        if (json is not null)
         {
             try
             {
-                JsonElement element = JsonSerializer.Deserialize<JsonElement>(dispute.OcrViolationTicket);
+                JsonElement element = JsonSerializer.Deserialize<JsonElement>(json);
                 if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("ImageFilename", out JsonElement imageFilename))
                 {
                     return imageFilename.GetString();
@@ -99,7 +104,7 @@ public class DisputeService : IDisputeService
     /// <returns></returns>
     private async Task<ViolationTicketImage?> GetViolationTicketImageAsync(string? imageFilename, CancellationToken cancellationToken)
     {
-        if (String.IsNullOrEmpty(imageFilename))
+        if (string.IsNullOrEmpty(imageFilename))
         {
             return null;
         }

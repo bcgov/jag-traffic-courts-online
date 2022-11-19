@@ -2475,10 +2475,6 @@
             "type": "string",
             "nullable": true
           },
-          "courtLocation": {
-            "type": "string",
-            "nullable": true
-          },
           "issuedTs": {
             "type": "string",
             "format": "date-time",
@@ -2546,6 +2542,8 @@
             "nullable": true
           },
           "addressCity": {
+            "maxLength": 30,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -2615,6 +2613,8 @@
             "nullable": true
           },
           "lawyerEmail": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -3949,6 +3949,14 @@
             "nullable": true
           },
           "driversLicenceProvince": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "driversLicenceCountry": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -3968,6 +3976,8 @@
             "nullable": true
           },
           "address": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },

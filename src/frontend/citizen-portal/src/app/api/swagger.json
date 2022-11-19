@@ -470,11 +470,6 @@
             "description": "The violation ticket number.",
             "nullable": true
           },
-          "court_location": {
-            "type": "string",
-            "description": "The provincial court hearing location named on the violation ticket.",
-            "nullable": true
-          },
           "issued_date": {
             "type": "string",
             "description": "The date and time the violation ticket was issue. Time must only be hours and minutes.",

@@ -20,6 +20,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
+/**
+ * This mapper maps from ORDS dispute model to Oracle Data API dispute model
+ */
 @Mapper
 public interface DisputeMapper {
 
@@ -32,9 +35,10 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.updUserId", target = "modifiedBy")
 	@Mapping(source = "dispute.disputeId", target = "disputeId")
 	@Mapping(source = "dispute.disputeStatusTypeCd", target = "status", qualifiedByName="mapDisputeStatus")
-	@Mapping(source = "courtLocationTxt", target = "courtLocation")
+	@Mapping(target = "disputeStatusType", ignore = true) // ignore back reference mapping
 	@Mapping(source = "dispute.issuedDt", target = "issuedTs")
 	@Mapping(source = "dispute.submittedDt", target = "submittedTs")
+	@Mapping(source = "dispute.disputantClientId", target = "disputantClientId")
 	@Mapping(source = "dispute.disputantSurnameNm", target = "disputantSurname")
 	@Mapping(source = "dispute.disputantGiven1Nm", target = "disputantGivenName1")
 	@Mapping(source = "dispute.disputantGiven2Nm", target = "disputantGivenName2")
@@ -77,7 +81,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.disputantDetectOcrIssuesYn", target = "disputantDetectedOcrIssues")
 	@Mapping(source = "dispute.disputantOcrIssuesTxt", target = "disputantOcrIssues")
 	@Mapping(source = "dispute.systemDetectOcrIssuesYn", target = "systemDetectedOcrIssues")
-	@Mapping(source = "dispute.ocrViolationTicketJsonTxt", target = "ocrViolationTicket")
+	@Mapping(source = "dispute.ocrViolationTicketJsonTxt", target = "ocrTicketFilename")
 	// Map violation ticket data from ORDS to Oracle Data API violation ticket model
 	@Mapping(source = "entUserId", target = "violationTicket.createdBy")
 	@Mapping(source = "entDtm", target = "violationTicket.createdTs")
@@ -93,6 +97,7 @@ public interface DisputeMapper {
 	@Mapping(source = "disputantDrvLicNumberTxt", target = "violationTicket.disputantDriversLicenceNumber")
 	@Mapping(source = "disputantClientNumberTxt", target = "violationTicket.disputantClientNumber")
 	@Mapping(source = "drvLicIssuedProvinceTxt", target = "violationTicket.driversLicenceProvince")
+	@Mapping(source = "drvLicIssuedCountryTxt", target = "violationTicket.driversLicenceCountry")
 	@Mapping(source = "drvLicIssuedYearNo", target = "violationTicket.driversLicenceIssuedYear")
 	@Mapping(source = "drvLicExpiryYearNo", target = "violationTicket.driversLicenceExpiryYear")
 	@Mapping(source = "disputantBirthDt", target = "violationTicket.disputantBirthdate")
@@ -117,6 +122,7 @@ public interface DisputeMapper {
 	Dispute convertViolationTicketDtoToDispute (ViolationTicket violationTicketDto);
 
 
+	@Mapping(target = "violationTicket", ignore = true) // ignore back reference mapping
 	@Mapping(source = "entUserId", target = "createdBy")
 	@Mapping(source = "entDtm", target = "createdTs")
 	@Mapping(source = "updUserId", target = "modifiedBy")
@@ -163,8 +169,8 @@ public interface DisputeMapper {
 	@Named("mapCounts")
 	default List<DisputeCount> mapCounts(List<ca.bc.gov.open.jag.tco.oracledataapi.api.model.ViolationTicketCount> violationTicketCounts) {
 		if ( violationTicketCounts == null || violationTicketCounts.isEmpty()) {
-            return null;
-        }
+			return null;
+		}
 
 		List<DisputeCount> disputeCounts = new ArrayList<DisputeCount>();
 
@@ -197,11 +203,11 @@ public interface DisputeMapper {
 				disputeCounts.add(count);
 			}
 		}
-	    return disputeCounts;
+		return disputeCounts;
 	}
 
 	@AfterMapping
-    default void setLawyerAddress(@MappingTarget Dispute dispute, ViolationTicket violationTicket) {
+	default void setLawyerAddress(@MappingTarget Dispute dispute, ViolationTicket violationTicket) {
 		ca.bc.gov.open.jag.tco.oracledataapi.api.model.Dispute disputeFromApi = violationTicket.getDispute();
 		if (dispute != null && violationTicket != null && disputeFromApi != null) {
 			String addressLine1 = disputeFromApi.getLawFirmAddrLine1Txt();
@@ -211,10 +217,10 @@ public interface DisputeMapper {
 				dispute.setLawyerAddress(null);
 			} else {
 				dispute.setLawyerAddress(
-		        		addressLine1 == null ? "" : addressLine1 + " " +
-		        		addressLine2 == null ? "" : addressLine2 + " " +
-		        		addressLine3 == null ? "" : addressLine3);
+						addressLine1 == null ? "" : addressLine1 + " " +
+								addressLine2 == null ? "" : addressLine2 + " " +
+										addressLine3 == null ? "" : addressLine3);
 			}
 		}
-    }
+	}
 }

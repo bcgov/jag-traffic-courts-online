@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { KeycloakProfile } from 'keycloak-js';
-import { AuthService } from 'app/services/auth.service';
+import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
 import { MatTab } from '@angular/material/tabs';
 

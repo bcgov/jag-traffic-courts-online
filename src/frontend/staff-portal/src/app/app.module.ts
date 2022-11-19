@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgBusyModule } from 'ng-busy';
@@ -45,6 +45,7 @@ import { JJDisputeCourtAppearancesComponent } from '@components/jj-dispute-info/
 import { JJFileHistoryComponent } from '@components/jj-dispute-info/jj-file-history/jj-file-history.component';
 import { JJDisputeDigitalCaseFileComponent } from '@components/jj-workbench/jj-dispute-digital-case-file/jj-dispute-digital-case-file.component';
 import { AuthService } from './services/auth.service';
+import { AppHttpInterceptor } from '@core/interceptors/http-interceptor';
 
 registerLocaleData(localeEn, 'en');
 registerLocaleData(localeFr, 'fr');
@@ -115,6 +116,11 @@ function initializeKeycloak(keycloak: KeycloakService): () => Promise<void> {
     CurrencyPipe,
     DatePipe,
     MockConfigService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AppHttpInterceptor,
+      multi: true
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,

@@ -14,6 +14,7 @@ public abstract class FilePersistenceService : IFilePersistenceService
     }
 
     public abstract Task<string> SaveFileAsync(MemoryStream data, CancellationToken cancellationToken);
+    public abstract Task<string> SaveJsonFileAsync<T>(T data, string filename, CancellationToken cancellationToken);
     public abstract Task<MemoryStream> GetFileAsync(string filename, CancellationToken cancellationToken);
 
     protected string GetFileName(FileMimeType mimeType)
@@ -21,4 +22,6 @@ public abstract class FilePersistenceService : IFilePersistenceService
         string id = Guid.NewGuid().ToString("n");
         return $"{id}.{mimeType.Extension}";
     }
+
+    public abstract Task<T?> GetJsonDataAsync<T>(string filename, CancellationToken cancellationToken) where T : class;
 }

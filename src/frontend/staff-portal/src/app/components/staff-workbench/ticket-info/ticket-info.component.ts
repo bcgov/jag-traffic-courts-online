@@ -106,7 +106,6 @@ export class TicketInfoComponent implements OnInit {
       postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
       driversLicenceNumber: [null, [Validators.required, Validators.minLength(7), Validators.maxLength(9)]],
       driversLicenceProvince: [null, [Validators.required, Validators.maxLength(30)]],
-      courtLocation: [null, [Validators.required]],
       rejectedReason: [null, Validators.maxLength(256)],
       violationTicket: this.formBuilder.group({
         ticketNumber: [null, Validators.required],
@@ -292,10 +291,7 @@ export class TicketInfoComponent implements OnInit {
     putDispute.violationTicket.disputantGivenNames = this.form.get('violationTicket').get('disputantGivenNames').value;
     putDispute.violationTicket.disputantDriversLicenceNumber = this.form.get('violationTicket').get('disputantDriversLicenceNumber').value;
     putDispute.violationTicket.driversLicenceProvince = this.form.get('violationTicket').get('driversLicenceProvince').value;
-
-    // provincial court hearing is returned by the GET at the level of notice of dispute but is to be saved with
-    // violation Ticket fields not notice of dispute fields
-    putDispute.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
+    putDispute.violationTicket.courtLocation = this.form.get('violationTicket').get('courtLocation').value;
 
     // reconstruct issued date as string from violation date and violation time format yyyy-mm-ddThh:mm
     putDispute.violationTicket.issuedTs =
@@ -528,8 +524,6 @@ export class TicketInfoComponent implements OnInit {
     if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
       var fields = objOcrViolationTicket.Fields;
 
-      if (!dispute.courtLocation) dispute.courtLocation = fields["court_location"].value;
-
       dispute.violationTicket = this.violationTicketService.setViolationTicketFromJSON(dispute.violationTicket.ocrViolationTicket, dispute.violationTicket);
     }
 
@@ -688,11 +682,6 @@ export class TicketInfoComponent implements OnInit {
 
         // set disputant detected ocr issues
         this.flagsForm.get('disputantOcrIssues').setValue(response.disputantOcrIssues);
-
-        // set provincial court hearing location in violation ticket subform
-        this.form.get('violationTicket').get('courtLocation').setValue(
-          this.form.get('courtLocation').value
-        );
 
         // set counts 1,2,3 of violation ticket
         this.initialDisputeValues.violationTicket.violationTicketCounts.forEach(violationTicketCount => {

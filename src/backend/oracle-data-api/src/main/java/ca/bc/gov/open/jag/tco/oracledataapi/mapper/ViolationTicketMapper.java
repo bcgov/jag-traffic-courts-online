@@ -18,6 +18,9 @@ import ca.bc.gov.open.jag.tco.oracledataapi.model.ViolationTicketCount;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.YesNo;
 import ca.bc.gov.open.jag.tco.oracledataapi.repository.impl.ords.DisputeRepositoryImpl;
 
+/**
+ * This mapper maps from Oracle Data API dispute model to ORDS dispute data
+ */
 @Mapper
 public interface ViolationTicketMapper {
 
@@ -30,9 +33,9 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.updUserId", source = "modifiedBy")
 	@Mapping(target = "dispute.disputeId", source = "disputeId")
 	@Mapping(target = "dispute.disputeStatusTypeCd", source = "status", qualifiedByName="mapDisputeStatus")
-	@Mapping(target = "dispute.courtLocationTxt", source = "courtLocation")
 	@Mapping(target = "dispute.issuedDt", source = "issuedTs")
 	@Mapping(target = "dispute.submittedDt", source = "submittedTs")
+	@Mapping(target = "dispute.disputantClientId", source = "disputantClientId")
 	@Mapping(target = "dispute.disputantSurnameNm", source = "disputantSurname")
 	@Mapping(target = "dispute.disputantGiven1Nm", source = "disputantGivenName1")
 	@Mapping(target = "dispute.disputantGiven2Nm", source = "disputantGivenName2")
@@ -78,7 +81,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantDetectOcrIssuesYn", source = "disputantDetectedOcrIssues")
 	@Mapping(target = "dispute.disputantOcrIssuesTxt", source = "disputantOcrIssues")
 	@Mapping(target = "dispute.systemDetectOcrIssuesYn", source = "systemDetectedOcrIssues")
-	@Mapping(target = "dispute.ocrViolationTicketJsonTxt", source = "ocrViolationTicket")
+	@Mapping(target = "dispute.ocrViolationTicketJsonTxt", source = "ocrTicketFilename")
 	// TODO - need replace the default constant values below to set the IDs from the actual dispute model source from request
 	@Mapping(target = "dispute.addressCtryId", constant = "1")
 	@Mapping(target = "dispute.drvLicIssuedCtryId", constant = "1")
@@ -91,7 +94,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "updUserId", source = "violationTicket.modifiedBy")
 	@Mapping(target = "updDtm", source = "violationTicket.modifiedTs")
 	@Mapping(target = "violationTicketId", source = "violationTicket.violationTicketId")
-	@Mapping(target = "ticketNumberTxt", source = "violationTicket.ticketNumber")
+	@Mapping(target = "ticketNumberTxt", source = "ticketNumber")
 	@Mapping(target = "disputantOrganizationNmTxt", source = "violationTicket.disputantOrganizationName")
 	@Mapping(target = "disputantSurnameTxt", source = "violationTicket.disputantSurname")
 	@Mapping(target = "disputantGivenNamesTxt", source = "violationTicket.disputantGivenNames")
@@ -99,6 +102,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "disputantDrvLicNumberTxt", source = "violationTicket.disputantDriversLicenceNumber")
 	@Mapping(target = "disputantClientNumberTxt", source = "violationTicket.disputantClientNumber")
 	@Mapping(target = "drvLicIssuedProvinceTxt", source = "violationTicket.driversLicenceProvince")
+	@Mapping(target = "drvLicIssuedCountryTxt", source = "violationTicket.driversLicenceCountry")
 	@Mapping(target = "drvLicIssuedYearNo", source = "violationTicket.driversLicenceIssuedYear")
 	@Mapping(target = "drvLicExpiryYearNo", source = "violationTicket.driversLicenceExpiryYear")
 	@Mapping(target = "disputantBirthDt", source = "violationTicket.disputantBirthdate")

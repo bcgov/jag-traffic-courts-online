@@ -34,6 +34,7 @@ export interface ViolationTicket {
     disputantDriversLicenceNumber?: string | null;
     disputantClientNumber?: string | null;
     driversLicenceProvince?: string | null;
+    driversLicenceCountry?: string | null;
     driversLicenceIssuedYear?: number | null;
     driversLicenceExpiryYear?: number | null;
     disputantBirthdate?: string | null;

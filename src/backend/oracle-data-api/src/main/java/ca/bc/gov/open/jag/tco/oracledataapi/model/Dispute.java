@@ -13,7 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -61,13 +60,6 @@ public class Dispute extends Auditable<String> {
 	@Column(length = 50)
 	@Schema(nullable = false)
 	private String ticketNumber;
-
-	/**
-	 * Court location.
-	 */
-	@Column(length = 150)
-	@Schema(nullable = true)
-	private String courtLocation;
 
 	/**
 	 * The date and time the violation ticket was issue. Time must only be hours and
@@ -412,12 +404,12 @@ public class Dispute extends Auditable<String> {
 	private YesNo systemDetectedOcrIssues;
 
 	/**
-	 * All OCR Violation ticket data serialized into a JSON string.
+	 * Filename of JSON serialized OCR data that is saved in object storage.
 	 */
-	@Column
-	@Lob
-	@Schema(nullable = true)
-	private String ocrViolationTicket;
+	@Size(max = 100)
+	@Column(length = 100)
+	@Schema(maxLength = 100, nullable = true)
+	private String ocrTicketFilename;
 
 	@JsonManagedReference
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "dispute")

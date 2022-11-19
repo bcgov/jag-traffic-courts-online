@@ -47,6 +47,8 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
                 _logger.LogError("Could not find preferred_username claim on current user");
             }
 
+            AddPartIdHeader(request, httpContext);
+
             return await base.SendAsync(request, cancellationToken);
         }
 
@@ -81,6 +83,17 @@ namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
 
             request.Headers.Add("x-fullName", fullName);
             return true;
+        }
+
+        private void AddPartIdHeader(HttpRequestMessage request, HttpContext httpContext)
+        {
+            httpContext.Request.Headers.TryGetValue("partid", out var partIdHeader);
+            string partId = partIdHeader.ToString();
+            
+            if (!string.IsNullOrWhiteSpace(partId))
+            {
+                request.Headers.Add("x-partId", partId);
+            }
         }
     }
 }

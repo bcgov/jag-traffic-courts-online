@@ -20,11 +20,6 @@ public class SubmitNoticeOfDispute
     public string? TicketNumber { get; set; } = null!;
 
     /// <summary>
-    /// The provincial court hearing location named on the violation ticket.
-    /// </summary>
-    public string? CourtLocation { get; set; }
-
-    /// <summary>
     /// The date and time the violation ticket was issue. Time must only be hours and minutes.
     /// </summary>
     public DateTime IssuedTs { get; set; }
@@ -204,9 +199,9 @@ public class SubmitNoticeOfDispute
     public ViolationTicket? ViolationTicket { get; set; }
 
     /// <summary>
-    /// JSON serialized OCR data.
+    /// Filename of JSON serialized OCR data that is saved in object storage.
     /// </summary>
-    public string? OcrViolationTicket { get; set; }
+    public string? OcrTicketFilename { get; set; }
 
     public IList<DisputeCount> DisputeCounts { get; set; } = new List<DisputeCount>();
 }

@@ -3,9 +3,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { LoggerService } from '@core/services/logger.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfigService } from 'app/services/app-config.service';
-import { AuthService } from 'app/services/auth.service';
+import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { KeycloakService } from 'keycloak-angular';
-import { KeycloakProfile } from 'keycloak-js';
 import { filter } from 'rxjs';
 
 @Component({

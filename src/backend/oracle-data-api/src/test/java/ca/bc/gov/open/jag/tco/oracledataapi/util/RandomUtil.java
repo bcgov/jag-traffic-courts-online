@@ -117,12 +117,12 @@ public class RandomUtil {
 	};
 
 	public final static String[] COMMON_EMAIL_ADDRESSES = new String[] {
-		"1@1.com",
-		"2@2.ca",
-		"3@3.com",
-		"Lucas@4.com",
-		"Stacy@5.com",
-		"Arlington@6.com"
+			"1@1.com",
+			"2@2.ca",
+			"3@3.com",
+			"Lucas@4.com",
+			"Stacy@5.com",
+			"Arlington@6.com"
 	};
 
 	public final static String[] COMMON_CITY_NAMES = new String[] {
@@ -186,6 +186,7 @@ public class RandomUtil {
 		dispute.setStatus(DisputeStatus.NEW);
 		dispute.setDisputantGivenName1(randomGivenName());
 		dispute.setDisputantSurname(randomSurname());
+		dispute.setViolationTicket(new ViolationTicket());
 		return dispute;
 	}
 
@@ -326,10 +327,9 @@ public class RandomUtil {
 		dispute.setAddressLine2(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressLine3(randomAlphanumeric(100)); // FIXME: Column length disparity - ORDs is 100, H2 is 500
 		dispute.setAddressProvince(randomAlphabetic(30));
-		dispute.setCourtLocation(randomAlphabetic(150));
 		dispute.setDetachmentLocation(randomAlphabetic(150));
 		dispute.setDisputantBirthdate(randomDate());
-		dispute.setDisputantClientId(null);
+		dispute.setDisputantClientId(randomNumeric(5));
 		dispute.setDisputantComment(randomAlphabetic(4000));
 		dispute.setDisputantDetectedOcrIssues(randomYN());
 		dispute.setDisputantGivenName1(randomAlphabetic(30));
@@ -357,7 +357,7 @@ public class RandomUtil {
 		dispute.setLawyerPhoneNumber(randomNumeric(20));
 		dispute.setLawyerSurname(randomAlphabetic(30));
 		dispute.setNoticeOfDisputeGuid(UUID.randomUUID().toString());
-		dispute.setOcrViolationTicket(randomAlphabetic(4000));
+		dispute.setOcrTicketFilename(randomAlphabetic(100));
 		dispute.setOfficerPin(randomAlphabetic(10));
 		dispute.setPostalCode(randomAlphanumeric(10));
 		dispute.setRejectedReason(randomAlphabetic(500));
@@ -394,6 +394,7 @@ public class RandomUtil {
 		violationTicket.setDisputantDriversLicenceNumber(randomAlphanumeric(30));
 		violationTicket.setDisputantClientNumber(randomAlphanumeric(30));
 		violationTicket.setDriversLicenceProvince(randomAlphabetic(100));
+		violationTicket.setDriversLicenceCountry(randomAlphabetic(100));
 		violationTicket.setDriversLicenceIssuedYear(Integer.valueOf(randomNumeric(4)));
 		violationTicket.setDriversLicenceExpiryYear(Integer.valueOf(randomNumeric(4)));
 		violationTicket.setDisputantBirthdate(randomDate());
@@ -405,7 +406,7 @@ public class RandomUtil {
 		violationTicket.setIsOwner(randomYN());
 		violationTicket.setIsYoungPerson(randomYN());
 		violationTicket.setOfficerPin(randomAlphanumeric(10));
-		violationTicket.setTicketNumber(randomTicketNumber());
+		violationTicket.setTicketNumber(dispute.getTicketNumber());
 		violationTicket.setViolationTicketCounts(createViolationTicketCounts(violationTicket));
 		violationTicket.setDispute(dispute);
 
