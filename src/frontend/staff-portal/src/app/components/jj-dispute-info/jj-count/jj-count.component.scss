@@ -76,6 +76,11 @@ p {
 
 .count-text {
   color: #1d4a77 !important;
+  padding-left: 0.25rem;
+
+  h3 {
+    padding-left: 0.25rem;
+  }
 }
 
 .disputre {
@@ -163,5 +168,11 @@ p {
   .mat-input-element:disabled {
     background-color: transparent;
     background: transparent;
+  }
+
+  .checkboxes {
+    .mat-checkbox {
+      padding-left: 0.75rem;
+    }
   }
 }

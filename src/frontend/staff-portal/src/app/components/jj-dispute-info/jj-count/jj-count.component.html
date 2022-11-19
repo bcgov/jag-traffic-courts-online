@@ -3,7 +3,7 @@
   <section style="background-color: #f1f1f1 !important;">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>&nbsp;Count {{ count }} </h3>
+        <h3>Count {{ count }} </h3>
       </span>
     </ng-container>
     <div style="display: grid; grid-template-columns: auto auto">
@@ -35,7 +35,7 @@
   <section style="background-color: #f1f1f1 !important;">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>&nbsp;Disputant Request</h3>
+        <h3>Disputant Request</h3>
       </span>
     </ng-container>
     <div style="display: grid; grid-template-columns: auto auto">
@@ -70,7 +70,7 @@
   <section *ngIf="type !== 'ticket' && jjDisputeInfo.hearingType === HearingType.WrittenReasons && !isViewOnly">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>&nbsp;JJ decision</h3>
+        <h3>JJ decision</h3>
       </span>
     </ng-container>
     <form [formGroup]="form" novalidate>
@@ -219,7 +219,7 @@
     style="padding: 0 0.2rem;">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>&nbsp;Findings</h3>
+        <h3>Findings</h3>
       </span>
     </ng-container>
     <div [formGroup]="form?.get('jjDisputedCountRoP')">
@@ -248,7 +248,7 @@
   <section [ngClass]="{'readOnly': isViewOnly}">
     <ng-container subHeader>
       <span class="count-text">
-        <h3>&nbsp;Final disposition</h3>
+        <h3>Final disposition</h3>
       </span>
     </ng-container>
     <!-- Final disposition input for court appeaances -->
@@ -378,85 +378,85 @@
           <!-- Suspended Sentence -->
           <span class="section-grid-cell" style="grid-column: span 3">
             <span class="count-text" style="font-size: small">
-              <b>&nbsp;Suspended Sentence</b>
+              <b>Suspended Sentence</b>
             </span><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Probation</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-              formControlName="ssProbationDuration" /><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Conditions</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5">
-          </textarea>
+            <div style="padding-left: 0.75rem;">
+              <mat-label class="section-grid-header">Probation</mat-label><br />
+              <input matInput (placeholder)="isViewOnly ? '' : 'duration'"
+                formControlName="ssProbationDuration" /><br />
+              <mat-label class="section-grid-header">Conditions</mat-label><br />
+              <textarea matInput formControlName="ssProbationConditions" maxlength="500" rows="5"></textarea>
+            </div>
           </span>
           <!-- Jail -->
           <span class="section-grid-cell" style="grid-column: span 3">
             <span class="count-text" style="font-size: small">
-              <b>&nbsp;Jail</b>
+              <b>Jail</b>
             </span><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Duration</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput formControlName="jailDuration" /><br />
-            &nbsp;&nbsp;&nbsp;<mat-checkbox
-              [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
-              color="primary" (change)="onJailIntermittentChange($event.checked)" [disabled]="isViewOnly"><span
-                class="section-grid-header">Intermittent</span></mat-checkbox>
+            <div style="padding-left: 0.75rem;">
+              <mat-label class="section-grid-header">Duration</mat-label><br />
+              <input matInput formControlName="jailDuration" /><br />
+              <mat-checkbox
+                [checked]="form.get('jjDisputedCountRoP').get('jailIntermittent').value === JailIntermittent.Y"
+                color="primary" (change)="onJailIntermittentChange($event.checked)" [disabled]="isViewOnly"><span
+                  class="section-grid-header">Intermittent</span></mat-checkbox>
+            </div>
           </span>
           <!-- Probation -->
           <span class="section-grid-cell" style="grid-column: span 3">
             <span class="count-text" style="font-size: small">
-              <b>&nbsp;Probation</b>
+              <b>Probation</b>
             </span><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Duration</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-              formControlName="probationDuration" /><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Conditions</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<textarea matInput formControlName="probationConditions" maxlength="500" rows="5">
-          </textarea>
+            <div style="padding-left: 0.75rem;">
+              <mat-label class="section-grid-header">Duration</mat-label><br />
+              <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="probationDuration" /><br />
+              <mat-label class="section-grid-header">Conditions</mat-label><br />
+              <textarea matInput formControlName="probationConditions" maxlength="500" rows="5"></textarea>
+            </div>
           </span>
           <!-- Driving Prohibition -->
           <span class="section-grid-cell" style="grid-column: span 3">
             <span class="count-text" style="font-size: small">
-              <b>&nbsp;Driving Prohibition</b>
+              <b>Driving Prohibition</b>
             </span><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Duration</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput (placeholder)="isViewOnly ? '' : 'duration'"
-              formControlName="drivingProhibition" /><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">MVA Section</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
-              formControlName="drivingProhibitionMVASection" [matAutocomplete]="auto"
-              (keyup)="onDrivingProhibitionMVASectionKeyup()"
-              [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let statute of drivingProhibitionFilteredStatutes" [value]="statute.__statuteString">
-                {{ statute.__statuteString }}</mat-option>
-            </mat-autocomplete><br />
-            &nbsp;&nbsp;&nbsp;<mat-tooltip style="font-size:x-small">Hover over section to see full description
-            </mat-tooltip>
-            <br />
+            <div style="padding-left: 0.75rem;">
+              <mat-label class="section-grid-header">Duration</mat-label><br />
+              <input matInput (placeholder)="isViewOnly ? '' : 'duration'" formControlName="drivingProhibition" /><br />
+              <mat-label class="section-grid-header">MVA Section</mat-label><br />
+              <input matInput (placeholder)="isViewOnly ? '' : 'start typing section, then select'"
+                formControlName="drivingProhibitionMVASection" [matAutocomplete]="auto"
+                (keyup)="onDrivingProhibitionMVASectionKeyup()"
+                [matTooltip]="form.get('jjDisputedCountRoP').get('drivingProhibitionMVASection').value" />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let statute of drivingProhibitionFilteredStatutes"
+                  [value]="statute.__statuteString">
+                  {{ statute.__statuteString }}</mat-option>
+              </mat-autocomplete><br />
+              <mat-tooltip style="font-size:x-small">Hover over section to see full description
+              </mat-tooltip>
+            </div>
           </span>
-          <span class="section-grid-cell" style="grid-column: span 3">
-            &nbsp;&nbsp;&nbsp;<mat-checkbox
-              [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y" color="primary"
-              (change)="onDismissedChange($event.checked)" [disabled]="isViewOnly"><span
+          <span class="section-grid-cell checkboxes" style="grid-column: span 3;">
+            <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('dismissed').value === Dismissed.Y"
+              color="primary" (change)="onDismissedChange($event.checked)" [disabled]="isViewOnly"><span
                 class="section-grid-header">Dismissed</span>
             </mat-checkbox>
-            &nbsp;&nbsp;&nbsp;<mat-checkbox
+            <mat-checkbox
               [checked]="form.get('jjDisputedCountRoP').get('forWantOfProsecution').value === ForWantOfProsecution.Y"
               color="primary" (change)="onForWantOfProsecutionChange($event.checked)" [disabled]="isViewOnly"><span
                 class="section-grid-header">For Want of Prosecution</span></mat-checkbox><br />
-            &nbsp;&nbsp;&nbsp;<mat-checkbox
-              [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y" color="primary"
-              (change)="onWithdrawnChange($event.checked)" [disabled]="isViewOnly"><span
+            <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('withdrawn').value === Withdrawn.Y"
+              color="primary" (change)="onWithdrawnChange($event.checked)" [disabled]="isViewOnly"><span
                 class="section-grid-header">Withdrawn</span>
             </mat-checkbox>
-            &nbsp;&nbsp;&nbsp;<mat-checkbox
-              [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y" color="primary"
-              (change)="onAbatementChange($event.checked)" [disabled]="isViewOnly"><span
+            <mat-checkbox [checked]="form.get('jjDisputedCountRoP').get('abatement').value === Abatement.Y"
+              color="primary" (change)="onAbatementChange($event.checked)" [disabled]="isViewOnly"><span
                 class="section-grid-header">Abatement</span>
             </mat-checkbox><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Stay of Proceedings By</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput (placeholder)="isViewOnly ? '' : 'JJ'"
-              formControlName="stayOfProceedingsBy" /><br />
-            &nbsp;&nbsp;&nbsp;<mat-label class="section-grid-header">Other</mat-label><br />
-            &nbsp;&nbsp;&nbsp;<input matInput formControlName="other" /><br />
+            <mat-label class="section-grid-header">Stay of Proceedings By</mat-label><br />
+            <input matInput (placeholder)="isViewOnly ? '' : 'JJ'" formControlName="stayOfProceedingsBy" /><br />
+            <mat-label class="section-grid-header">Other</mat-label><br />
+            <input matInput formControlName="other" /><br />
           </span>
         </ng-container>
         <!-- Remarks -->
