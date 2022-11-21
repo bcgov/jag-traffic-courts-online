@@ -15,9 +15,6 @@ import { BoundingBox } from './boundingBox.model';
 export interface Field { 
     value?: string | null;
     fieldConfidence?: number | null;
-    /**
-     * A list of field-specific reasons why the field Confidence may be low
-     */
     validationErrors?: Array<string> | null;
     type?: string | null;
     boundingBoxes?: Array<BoundingBox> | null;
