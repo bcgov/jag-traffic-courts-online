@@ -29,7 +29,7 @@ export class NoticeOfDisputeService {
   public ticketFormFields = {
     disputant_surname: [null, [Validators.required]],
     disputant_given_names: [null, [Validators.required]],
-    address: [null, [Validators.required]],
+    address: [null, [Validators.required, Validators.maxLength(300)]],
     address_city: [null, [Validators.required]],
     address_province: [null, [Validators.required, Validators.maxLength(30)]],
     country: ["Canada", [Validators.required]],
@@ -157,12 +157,13 @@ export class NoticeOfDisputeService {
   public splitAddressLines(noticeOfDisputeExtended: NoticeOfDisputeExtended): NoticeOfDisputeExtended {
     let noticeOfDispute = noticeOfDisputeExtended;
 
-    // split up where spaces occur and stuff in given names 1,2,3
+    // split up where commas occur and stuff in address lines 1,2,3
+    // Canada post guidelines state that each address line should be no more than 40 chars, we are chopping each line at 100
     if (noticeOfDisputeExtended.address) {
       let addressLines = noticeOfDisputeExtended.address.split(",");
-      if (addressLines.length > 0) noticeOfDispute.address_line1 = addressLines[0];
-      if (addressLines.length > 1) noticeOfDispute.address_line2 = addressLines[1];
-      if (addressLines.length > 2) noticeOfDispute.address_line3 = addressLines[2];
+      if (addressLines.length > 0) noticeOfDispute.address_line1 = addressLines[0].length > 100 ? addressLines[0].substring(0,100) : addressLines[0];
+      if (addressLines.length > 1) noticeOfDispute.address_line2 = addressLines[1].length > 100 ? addressLines[1].substring(0,100) : addressLines[1];
+      if (addressLines.length > 2) noticeOfDispute.address_line3 = addressLines[2].length > 100 ? addressLines[2].substring(0,100) : addressLines[2];
     }
 
     return noticeOfDispute;

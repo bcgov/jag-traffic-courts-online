@@ -150,21 +150,21 @@ public class Dispute extends Auditable<String> {
 	/**
 	 * The mailing address line one of the disputant.
 	 */
-	@Column(length = 500)
+	@Column(length = 100)
 	@Schema(nullable = true)
 	private String addressLine1;
 
 	/**
 	 * The mailing address line two of the disputant.
 	 */
-	@Column(length = 500)
+	@Column(length = 100)
 	@Schema(nullable = true)
 	private String addressLine2;
 
 	/**
 	 * The mailing address line three of the disputant.
 	 */
-	@Column(length = 500)
+	@Column(length = 100)
 	@Schema(nullable = true)
 	private String addressLine3;
 

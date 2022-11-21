@@ -2673,7 +2673,9 @@
           "systemDetectedOcrIssues": {
             "$ref": "#/components/schemas/DisputeSystemDetectedOcrIssues"
           },
-          "ocrViolationTicket": {
+          "ocrTicketFilename": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
