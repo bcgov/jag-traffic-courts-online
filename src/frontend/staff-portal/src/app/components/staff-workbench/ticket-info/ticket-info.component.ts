@@ -102,7 +102,7 @@ export class TicketInfoComponent implements OnInit {
       disputantGivenNames: [null, [Validators.required]],
       country: [null, [Validators.required]],
       disputantBirthdate: [null, [Validators.required]], // Optional
-      address: [null, [Validators.required]],
+      address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       postalCode: [null, [Validators.required, Validators.maxLength(6), Validators.minLength(6)]], // space needs to be added back to the middle for display
@@ -521,10 +521,10 @@ export class TicketInfoComponent implements OnInit {
 
   // use violationTicket Service
   setFieldsFromJSON(dispute: DisputeExtended): DisputeExtended {
-    var objOcrViolationTicket = JSON.parse(dispute.ocrViolationTicket);
+    var objOcrViolationTicket = dispute.violationTicket.ocrViolationTicket;
 
-    if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
-      var fields = objOcrViolationTicket.Fields;
+    if (objOcrViolationTicket && objOcrViolationTicket.fields) {
+      var fields = objOcrViolationTicket.fields;
 
       dispute.violationTicket = this.violationTicketService.setViolationTicketFromJSON(dispute.violationTicket.ocrViolationTicket, dispute.violationTicket);
     }
@@ -670,10 +670,12 @@ export class TicketInfoComponent implements OnInit {
         this.form.patchValue(this.initialDisputeValues);
 
         // set violation date and time
-        let violationDate = response.issuedTs.split("T");
-        this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
-        this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
-        this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
+        let violationDate = response.issuedTs?.split("T");
+        if (violationDate) {
+          this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
+          this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
+          this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
+        }
 
         // ticket image
         if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {

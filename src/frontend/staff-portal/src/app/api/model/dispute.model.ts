@@ -72,7 +72,7 @@ export interface Dispute {
     disputantDetectedOcrIssues?: DisputeDisputantDetectedOcrIssues;
     disputantOcrIssues?: string | null;
     systemDetectedOcrIssues?: DisputeSystemDetectedOcrIssues;
-    ocrViolationTicket?: string | null;
+    ocrTicketFilename?: string | null;
     violationTicket?: ViolationTicket;
     disputeCounts?: Array<DisputeCount> | null;
     additionalProperties?: { [key: string]: any; } | null;

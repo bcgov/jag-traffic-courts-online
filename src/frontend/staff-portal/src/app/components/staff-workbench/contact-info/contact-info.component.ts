@@ -65,7 +65,7 @@ export class ContactInfoComponent implements OnInit {
       disputantSurname: [null, [Validators.required]],
       disputantGivenNames: [null, [Validators.required]],
       disputantBirthdate: [null, [Validators.required]],
-      address: [null, [Validators.required]],
+      address: [null, [Validators.required, Validators.maxLength(300)]],
       addressCity: [null, [Validators.required]],
       addressProvince: [null, [Validators.required, Validators.maxLength(30)]],
       rejectedReason: [null, Validators.maxLength(256)], // Optional
