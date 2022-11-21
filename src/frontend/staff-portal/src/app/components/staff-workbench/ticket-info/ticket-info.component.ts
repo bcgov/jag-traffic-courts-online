@@ -519,9 +519,8 @@ export class TicketInfoComponent implements OnInit {
 
   // use violationTicket Service
   setFieldsFromJSON(dispute: DisputeExtended): DisputeExtended {
-    var objOcrViolationTicket = JSON.parse(dispute.ocrViolationTicket);
-    if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
-      var fields = objOcrViolationTicket.Fields;
+    if (dispute.violationTicket?.ocrViolationTicket && dispute.violationTicket?.ocrViolationTicket?.fields) {
+      var fields = dispute.violationTicket?.ocrViolationTicket.fields;
 
       dispute.violationTicket = this.violationTicketService.setViolationTicketFromJSON(dispute.violationTicket.ocrViolationTicket, dispute.violationTicket);
     }
