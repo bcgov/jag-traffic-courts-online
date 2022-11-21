@@ -59,7 +59,7 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
       this.getAll("A");
     });
 
-   }
+  }
 
   ngOnInit(): void {
     this.getAll("A");
@@ -119,9 +119,9 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
       this.data = response.filter(x => (this.jjDisputeService.JJDisputeStatusEditable.indexOf(x.status) >= 0) && x.hearingType === this.HearingType.WrittenReasons);
       this.data = this.data.sort((a: JJDisputeView, b: JJDisputeView) => { if (a.submittedTs > b.submittedTs) { return -1; } else { return 1 } });
       this.data.forEach(x => {
-          x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
-          x.bulkAssign = false;
-        });
+        x.jjAssignedToName = this.authService.getFullName(this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === x.jjAssignedTo)[0]);
+        x.bulkAssign = false;
+      });
       this.resetAssignedUnassigned();
 
       this.filterByTeam(team); // initialize
@@ -148,65 +148,46 @@ export class JJDisputeWRAssignmentsComponent implements OnInit, AfterViewInit {
   }
 
   public onAssign(element: JJDisputeView): void {
-    let updateDispute = this.data.filter(x => x.ticketNumber === element.ticketNumber)[0];
-    if (element.jjAssignedTo === "unassigned") updateDispute.jjAssignedTo = null;
-    else updateDispute.jjAssignedTo = element.jjAssignedTo;
-    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
-      this.resetAssignedUnassigned();
-      this.logger.info(
-        'JJDisputeWRAssignmentsComponent::putJJDispute response',
-        response
-      );
-    });
+    this.bulkUpdateJJAssignedTo([element.ticketNumber], element.jjAssignedTo);
   }
 
   onSelectAll(event: MatCheckboxChange) {
     if (event.checked === true) {
       this.assignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = true);
-      this.unassignedDataSource.data.forEach((x: JJDisputeView)=> x.bulkAssign = true);
+      this.unassignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = true);
     } else {
       this.assignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = false);
-      this.unassignedDataSource.data.forEach((x: JJDisputeView)=> x.bulkAssign = false);
+      this.unassignedDataSource.data.forEach((x: JJDisputeView) => x.bulkAssign = false);
     }
   }
 
-  bulkUpdateJJAssignedTo(jjDispute: JJDisputeView) {
-    let updateDispute = this.data.filter(x => x.ticketNumber === jjDispute.ticketNumber )[0];
-    let index = this.data.indexOf(updateDispute);
-    if (this.bulkjjAssignedTo === "unassigned") {
-      updateDispute.jjAssignedTo = null;
-    }
-    else {
-      updateDispute.jjAssignedTo = this.bulkjjAssignedTo;
-    }
-
-    this.busy = this.jjDisputeService.putJJDispute(updateDispute.ticketNumber, updateDispute, false).subscribe((response: JJDispute) => {
+  bulkUpdateJJAssignedTo(ticketNumbers: string[], assignTo: string) {
+    this.busy = this.jjDisputeService.apiJjAssignPut(ticketNumbers, assignTo).subscribe((response) => {
       this.logger.info(
-        'JJDisputeWRAssignmentsComponent::putJJDispute response',
+        'JJDisputeWRAssignmentsComponent::onBulkAssign response',
         response
       );
-      const jjFound = this.jjDisputeService.jjList?.filter(y => this.authService.getIDIR(y) === updateDispute.jjAssignedTo)[0];
-      updateDispute.jjAssignedToName = this.authService.getFullName(jjFound);
-      this.data[index] = updateDispute;
-      this.resetAssignedUnassigned();
+      this.getAll("A");
+      this.bulkjjAssignedTo = "unassigned";
     });
   }
 
   getBulkButtonDisabled() {
     if (this.assignedDataSource.data.filter((x: JJDisputeView) => x.bulkAssign === true)?.length == 0 &&
-    this.unassignedDataSource.data.filter((x: JJDisputeView)=> x.bulkAssign === true)?.length === 0)
+      this.unassignedDataSource.data.filter((x: JJDisputeView) => x.bulkAssign === true)?.length === 0)
       return true;
     else return false;
   }
 
-  onBulkAssign () {
+  onBulkAssign() {
+    let ticketNumbers = [];
     this.assignedDataSource.data.forEach((jjDispute: JJDisputeView) => {
-     if (jjDispute.bulkAssign === true) this.bulkUpdateJJAssignedTo(jjDispute);
+      if (jjDispute.bulkAssign === true) ticketNumbers.push(jjDispute.ticketNumber);
     })
     this.unassignedDataSource.data.forEach((jjDispute: JJDisputeView) => {
-      if (jjDispute.bulkAssign === true) this.bulkUpdateJJAssignedTo(jjDispute);
+      if (jjDispute.bulkAssign === true) ticketNumbers.push(jjDispute.ticketNumber);
     });
-    this.bulkjjAssignedTo = "unassigned";
+    this.bulkUpdateJJAssignedTo(ticketNumbers, this.bulkjjAssignedTo);
   }
 }
 

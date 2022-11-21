@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { JJDisputeCourtAppearanceRoP, JJDisputeRemark } from 'app/api';
+import { JJDisputeCourtAppearanceRoP } from 'app/api';
 
 @Component({
   selector: 'app-jj-dispute-court-appearances',

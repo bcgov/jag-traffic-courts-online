@@ -1,8 +1,9 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
 import { JJDisputeService, JJDisputeView } from 'app/services/jj-dispute.service';
+import { MatTab } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-jj-workbench-dashboard',
@@ -19,7 +20,8 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   public jjIDIR: string = "";
   public userProfile: KeycloakProfile = {};
   public jjDisputeInfo: JJDisputeView;
-
+  @ViewChild("DCF") private dcfTab: MatTab;
+  public isInfoEditable;
 
   constructor(
     private authService: AuthService,
@@ -39,6 +41,7 @@ export class JjWorkbenchDashboardComponent implements OnInit {
   }
 
   changeJJDispute(jjDispute: JJDisputeView) {
+    this.isInfoEditable = !this.dcfTab.isActive;
     this.jjDisputeInfo = jjDispute;
     this.showDispute = true;
   }

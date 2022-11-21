@@ -76,6 +76,11 @@ p {
 
 .count-text {
   color: #1d4a77 !important;
+  padding-left: 0.25rem;
+
+  h3 {
+    padding-left: 0.25rem;
+  }
 }
 
 .disputre {
@@ -144,5 +149,30 @@ p {
   mat-expansion-panel-header {
     padding-left: 0;
     padding-right: 0.5em;
+  }
+
+  input.mat-input-element {
+    background-color: #ebebeb;
+    font-size: smaller;
+    width: 80%;
+    align-self: center;
+  }
+
+  textarea.mat-input-element {
+    background: #fffee6;
+    width: 80%;
+    font-size: small;
+    resize: none;
+  }
+
+  .mat-input-element:disabled {
+    background-color: transparent;
+    background: transparent;
+  }
+
+  .checkboxes {
+    .mat-checkbox {
+      padding-left: 0.75rem;
+    }
   }
 }

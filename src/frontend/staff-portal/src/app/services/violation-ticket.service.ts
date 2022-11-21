@@ -1,9 +1,6 @@
 import { LoggerService } from '@core/services/logger.service';
-import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ViolationTicket, OcrViolationTicket, Field, ViolationTicketCount, ViolationTicketCountIsAct, ViolationTicketCountIsRegulation } from 'app/api';
-import { DatePipe } from '@angular/common';
-import { tick } from '@angular/core/testing';
 
 export interface IViolationTicketService {
   getAllOCRMessages(ocrViolationTicket: OcrViolationTicket);
@@ -44,7 +41,6 @@ export class ViolationTicketService implements IViolationTicketService {
   public IsRegulation = ViolationTicketCountIsRegulation;
 
   constructor(
-    private datePipe: DatePipe,
     private logger: LoggerService,
   ) {
   }
