@@ -55,7 +55,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.jjAssignedTo = this.jjAssignedToFilter.value;
           this.dataSource.filter = JSON.stringify(this.filterValues);
-          console.log("jj assigned changed", this.filterValues);
         }
       )
 
@@ -65,7 +64,6 @@ export class JJDisputeHearingInboxComponent implements OnInit, AfterViewInit {
         value => {
           this.filterValues.appearanceTs = this.appearanceDateFilter.value;
           this.dataSource.filter =JSON.stringify(this.filterValues);
-          console.log("appearance date changed", value, this.filterValues);
         }
       )
   }

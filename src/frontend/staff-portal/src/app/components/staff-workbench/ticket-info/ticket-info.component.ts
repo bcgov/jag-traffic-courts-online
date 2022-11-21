@@ -667,15 +667,17 @@ export class TicketInfoComponent implements OnInit {
 
         // set violation date and time
         let violationDate = response.issuedTs?.split("T");
-        this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
-        this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
-        this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
+        if (violationDate && violationDate.length > 1) {
+          this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
+          this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
+          this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
+        }
 
         // ticket image
-        if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
+        if (this.initialDisputeValues?.violationTicket?.violationTicketImage?.mimeType) {
           this.imageToShow = "data:" + this.initialDisputeValues.violationTicket.violationTicketImage.mimeType + ";base64," + this.initialDisputeValues.violationTicket.violationTicketImage.image;
-        } else {
-          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues.violationTicket.violationTicketImage.image;
+        } else if (this.initialDisputeValues?.violationTicket?.violationTicketImage?.image) {
+          this.imageToShow = 'data:image/png;base64,' + this.initialDisputeValues?.violationTicket?.violationTicketImage?.image;
         }
 
         // set disputant detected ocr issues

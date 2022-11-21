@@ -37,7 +37,7 @@
             <ng-container subHeader>
               <h3>Ticket Image</h3>
             </ng-container>
-            <div data-toggle="modal" data-target="#exampleModal" width="150 !important">
+            <div data-toggle="modal" data-target="#exampleModal" width="150 !important" *ngIf="imageToShow">
               <img [src]="imageToShow" width="150" height="200"><br />
               <span style="font-size:10px; color:#009cde; align-content: center;" width="150">
                 <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>

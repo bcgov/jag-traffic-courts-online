@@ -81,7 +81,7 @@ public interface ViolationTicketMapper {
 	@Mapping(target = "dispute.disputantDetectOcrIssuesYn", source = "disputantDetectedOcrIssues")
 	@Mapping(target = "dispute.disputantOcrIssuesTxt", source = "disputantOcrIssues")
 	@Mapping(target = "dispute.systemDetectOcrIssuesYn", source = "systemDetectedOcrIssues")
-	@Mapping(target = "dispute.ocrViolationTicketJsonTxt", source = "ocrTicketFilename")
+	@Mapping(target = "dispute.ocrTicketJsonFilenameTxt", source = "ocrTicketFilename")
 	// TODO - need replace the default constant values below to set the IDs from the actual dispute model source from request
 	@Mapping(target = "dispute.addressCtryId", constant = "1")
 	@Mapping(target = "dispute.drvLicIssuedCtryId", constant = "1")

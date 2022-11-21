@@ -614,7 +614,7 @@ components:
           format: nullable
         noticeOfDisputeGuid:
           type: string
-        ocrViolationTicketJsonTxt:
+        ocrTicketJsonFilenameTxt:
           type: string
           format: nullable
         officerPinTxt:
