@@ -22,4 +22,19 @@ public static partial class Extensions
 
         return services;
     }
+
+    /// <summary>
+    /// Adds language lookup. Callers must ensure Redis is registered.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddLanguageLookup(this IServiceCollection services)
+    {
+        services.AddTransient<ILanguageLookupService, LanguageLookupService>();
+        services.AddMemoryCache();
+
+        services.AddTransient<IRequestHandler<LanguageLookup.Request, LanguageLookup.Response>, LanguageLookup.Handler>();
+
+        return services;
+    }
 }
