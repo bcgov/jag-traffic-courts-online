@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ca.bc.gov.open.jag.tco.oracledataapi.BaseTestSuite;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.LookupValuesApi;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.api.model.Language;
+import ca.bc.gov.open.jag.tco.oracledataapi.api.model.LanguageListResult;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.api.model.StatutesListResult;
 
@@ -25,7 +27,7 @@ public class LookupServiceTest extends BaseTestSuite {
 	private LookupService service;
 
 	@Test
-	public void testGetAllStatutes() throws ApiException {
+	public void testGetStatutes() throws ApiException {
 		if ("ords".equals(lookupRepositorySrc)) {
 			List<Statute> statutes = new ArrayList<>();
 			Statute statute = new Statute();
@@ -45,11 +47,33 @@ public class LookupServiceTest extends BaseTestSuite {
 			when(this.lookupValuesApi.statutesList()).thenReturn(statutesListResult);
 		}
 
-		var result = service.getAllStatutes();
+		var result = service.getStatutes();
 
 		assertThat(result).isNotNull();
 		assertThat(result.size() > 0);
 		assertThat("20153".equals(result.get(0).getId()));
+	}
+
+	@Test
+	public void testGetLanguages() throws ApiException {
+		if ("ords".equals(lookupRepositorySrc)) {
+			List<Language> languages = new ArrayList<>();
+			Language language = new Language();
+			language.setCdlnLanguageCd("ALB");
+			language.setCdlnLanguageDsc("Albanian");
+			languages.add(language);
+
+			LanguageListResult languageListResult = new LanguageListResult();
+			languageListResult.setLanguageCodeValues(languages);
+			when(this.lookupValuesApi.languagesList()).thenReturn(languageListResult);
+		}
+
+		var result = service.getLanguages();
+
+		assertThat(result).isNotNull();
+		assertThat(result.size() > 0);
+		assertThat("ALB".equals(result.get(0).getCode()));
+		assertThat("Albanian".equals(result.get(0).getDescription()));
 	}
 
 }

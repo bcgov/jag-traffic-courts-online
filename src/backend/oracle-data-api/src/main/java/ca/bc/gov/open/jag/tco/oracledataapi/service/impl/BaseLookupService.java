@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.LookupService;
 import io.swagger.v3.core.util.Json;
@@ -17,6 +18,7 @@ public abstract class BaseLookupService implements LookupService {
 	protected static Logger log = LoggerFactory.getLogger(LookupService.class);
 
 	private static final String STATUTES = "Statutes";
+	private static final String LANGUAGES = "Languages";
 
 	@Autowired
 	private RedisTemplate<String, String> redis;
@@ -26,19 +28,24 @@ public abstract class BaseLookupService implements LookupService {
 		log.debug("Refreshing code tables in redis.");
 
 		try {
-			List<Statute> statutes = getAllStatutes();
-			String json = Json.pretty(statutes);
-
 			// replace the Statutes key with a new json-serialized version of the statutes list.
-			redis.opsForValue().set(STATUTES, json);
+			log.debug("  refreshing Statutes...");
+			redis.opsForValue().set(STATUTES, Json.pretty(getStatutes()));
+
+			// replace the Languages key with a new json-serialized version of the languages list.
+			log.debug("  refreshing Languages...");
+			redis.opsForValue().set(LANGUAGES, Json.pretty(getLanguages()));
 
 			log.debug("Code tables in redis refreshed.");
 		} catch (Exception e) {
-			log.error("Could not update redis", e);
+			log.error("Could not update code tables in redis", e);
 		}
 	}
 
 	@Override
-	public abstract List<Statute> getAllStatutes() throws ApiException;
+	public abstract List<Statute> getStatutes() throws ApiException;
+
+	@Override
+	public abstract List<Language> getLanguages() throws ApiException;
 
 }
