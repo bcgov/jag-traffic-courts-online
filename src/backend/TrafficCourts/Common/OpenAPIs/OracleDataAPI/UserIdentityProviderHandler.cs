@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
-using static TrafficCourts.Common.Features.Lookups.StatuteLookup;
-using System.Transactions;
 
 namespace TrafficCourts.Common.OpenAPIs.OracleDataAPI
 {
