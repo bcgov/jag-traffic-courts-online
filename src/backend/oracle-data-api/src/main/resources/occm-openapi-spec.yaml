@@ -614,6 +614,8 @@ components:
           format: nullable
         noticeOfDisputeGuid:
           type: string
+          format: nullable
+          maxLength: 36
         ocrTicketJsonFilenameTxt:
           type: string
           format: nullable
