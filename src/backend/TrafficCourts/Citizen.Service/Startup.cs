@@ -72,6 +72,7 @@ public static class Startup
 
         builder.Services.AddTransient<IFormRecognizerValidator, FormRecognizerValidator>();
 
+        builder.Services.AddLanguageLookup();
         builder.Services.AddStatuteLookup();
         builder.Services.AddTransient<IRedisCacheService, RedisCacheService>();
 
