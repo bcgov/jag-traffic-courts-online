@@ -98,7 +98,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
             emailAddressVerified: d.emailAddressVerified,
             emailAddress: d.emailAddress,
-            systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.violationTicket.ocrViolationTicket),
+            systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
             __CourtHearing: false,
             __DateSubmitted: new Date(d.submittedTs),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,

@@ -521,10 +521,9 @@ export class TicketInfoComponent implements OnInit {
 
   // use violationTicket Service
   setFieldsFromJSON(dispute: DisputeExtended): DisputeExtended {
-    var objOcrViolationTicket = dispute.violationTicket.ocrViolationTicket;
-
-    if (objOcrViolationTicket && objOcrViolationTicket.fields) {
-      var fields = objOcrViolationTicket.fields;
+    var objOcrViolationTicket = JSON.parse(dispute.ocrViolationTicket);
+    if (objOcrViolationTicket && objOcrViolationTicket.Fields) {
+      var fields = objOcrViolationTicket.Fields;
 
       dispute.violationTicket = this.violationTicketService.setViolationTicketFromJSON(dispute.violationTicket.ocrViolationTicket, dispute.violationTicket);
     }
@@ -671,11 +670,9 @@ export class TicketInfoComponent implements OnInit {
 
         // set violation date and time
         let violationDate = response.issuedTs?.split("T");
-        if (violationDate) {
-          this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
-          this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
-          this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
-        }
+        this.form.get('violationTicket').get('issuedTs').setValue(response.issuedTs);
+        this.form.get('violationTicket').get('violationDate').setValue(violationDate[0]);
+        this.form.get('violationTicket').get('violationTime').setValue(violationDate[1].split(":")[0] + violationDate[1].split(":")[1]);
 
         // ticket image
         if (this.initialDisputeValues.violationTicket.violationTicketImage.mimeType) {
