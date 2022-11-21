@@ -321,12 +321,12 @@ export class DisputeService implements IDisputeService {
   public splitAddressLines(disputeExtended: DisputeExtended): DisputeExtended {
     let dispute = disputeExtended;
 
-    // split up where spaces occur and stuff in given names 1,2,3
+    // split up where commas occur and stuff in address lines 1,2,3
     if (disputeExtended.address) {
       let addressLines = disputeExtended.address.split(",");
-      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0];
-      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1];
-      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2];
+      if (addressLines.length > 0) dispute.addressLine1 = addressLines[0].length > 100 ? addressLines[0].substring(0,100) : addressLines[0];
+      if (addressLines.length > 1) dispute.addressLine2 = addressLines[1].length > 100 ? addressLines[1].substring(0,100) : addressLines[1];
+      if (addressLines.length > 2) dispute.addressLine3 = addressLines[2].length > 100 ? addressLines[2].substring(0,100) : addressLines[2];
     }
 
     return dispute;

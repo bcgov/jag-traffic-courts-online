@@ -37,7 +37,7 @@
             <ng-container subHeader>
               <h3>Ticket Image</h3>
             </ng-container>
-            <div data-toggle="modal" data-target="#exampleModal" width="150 !important">
+            <div data-toggle="modal" data-target="#exampleModal" width="150 !important" *ngIf="imageToShow">
               <img [src]="imageToShow" width="150" height="200"><br />
               <span style="font-size:10px; color:#009cde; align-content: center;" width="150">
                 <i class="fa fa-plus-circle" style="font-size:18px; color:#009cde"></i>
@@ -426,7 +426,7 @@
                   <div class="col-md-6">
                     <mat-form-field class="w-100">
                       <mat-label>Mailing address</mat-label>
-                      <input matInput formControlName="address" />
+                      <input matInput formControlName="address" maxlength="300" />
                       <mat-error>{{ "error.required" | translate }}</mat-error>
                     </mat-form-field>
                   </div>

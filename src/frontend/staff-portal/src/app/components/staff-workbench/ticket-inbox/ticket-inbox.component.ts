@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter, Inpu
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { DisputeService, DisputeExtended } from 'app/services/dispute.service';
-import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues } from 'app/api';
+import { DisputeCountRequestCourtAppearance, DisputeDisputantDetectedOcrIssues, DisputeStatus, DisputeSystemDetectedOcrIssues, OcrViolationTicket, Field } from 'app/api';
 import { LoggerService } from '@core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { AuthService, KeycloakProfile } from 'app/services/auth.service';
@@ -98,7 +98,7 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
             disputantDetectedOcrIssues: d.disputantDetectedOcrIssues,
             emailAddressVerified: d.emailAddressVerified,
             emailAddress: d.emailAddress,
-            systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.ocrViolationTicket),
+            systemDetectedOcrIssues: this.getSystemDetectedOcrIssues(d.violationTicket.ocrViolationTicket),
             __CourtHearing: false,
             __DateSubmitted: new Date(d.submittedTs),
             __FilingDate: d.filingDate != null ? new Date(d.filingDate) : null,
@@ -138,10 +138,9 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   // which is the JSON string for the Azure OCR'd version of a paper ticket
   // systemDetectedOcrIssues should be set to Y if any OCR'd field has less than 80% confidence
   // so this routine will exit with true at the first field of the fields collection that has an OCR error
-  getSystemDetectedOcrIssues(ocrViolationTicket?: string): DisputeSystemDetectedOcrIssues {
+  getSystemDetectedOcrIssues(ocrViolationTicket?: OcrViolationTicket): DisputeSystemDetectedOcrIssues {
     try {
-      var objOcrViolationTicket = JSON.parse(ocrViolationTicket, );
-      let fields = objOcrViolationTicket?.Fields;
+      let fields = ocrViolationTicket?.fields;
       if (fields && fields !== undefined) {
 
         if (this.getOcrViolationErrors(fields.violationTicketTitle)) { return this.SystemDetectedOcrIssues.Y; }
@@ -190,9 +189,9 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
   // return number of validation errors
-  getOcrViolationErrors(field?: RecognizedField): DisputeSystemDetectedOcrIssues {
+  getOcrViolationErrors(field?: Field): DisputeSystemDetectedOcrIssues {
     if (field == undefined || field == null) return this.SystemDetectedOcrIssues.N;
-    if (field.FieldConfidence && field.FieldConfidence < 0.8) {
+    if (field.fieldConfidence && field.fieldConfidence < 0.8) {
       return this.SystemDetectedOcrIssues.Y;
     } else return this.SystemDetectedOcrIssues.N;
   }
@@ -218,13 +217,6 @@ export class TicketInboxComponent implements OnInit, AfterViewInit {
   }
 
 }
-export interface RecognizedField {
-  Value?: any;
-  FieldConfidence?: number;
-  ValidationErrors?: string[];
-  Type?: string;
-  BoundingBoxes?: Point[];
-}
 
 export interface Point {
   x?: number;
@@ -232,10 +224,10 @@ export interface Point {
 }
 
 export interface OcrCount {
-  description?: RecognizedField;
-  act_or_regulation_name_code?: RecognizedField;
-  is_act?: RecognizedField;
-  is_regulation?: RecognizedField;
-  section?: RecognizedField;
-  ticketed_amount?: RecognizedField;
+  description?: Field;
+  act_or_regulation_name_code?: Field;
+  is_act?: Field;
+  is_regulation?: Field;
+  section?: Field;
+  ticketed_amount?: Field;
 }
