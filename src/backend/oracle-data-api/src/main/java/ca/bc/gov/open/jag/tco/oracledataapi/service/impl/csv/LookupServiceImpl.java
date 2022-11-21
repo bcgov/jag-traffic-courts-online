@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.opencsv.CSVReaderBuilder;
 
+import ca.bc.gov.open.jag.tco.oracledataapi.api.handler.ApiException;
+import ca.bc.gov.open.jag.tco.oracledataapi.model.Language;
 import ca.bc.gov.open.jag.tco.oracledataapi.model.Statute;
 import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
 
@@ -19,7 +21,7 @@ import ca.bc.gov.open.jag.tco.oracledataapi.service.impl.BaseLookupService;
 public class LookupServiceImpl extends BaseLookupService {
 
 	@Override
-	public List<Statute> getAllStatutes() {
+	public List<Statute> getStatutes() {
 		List<Statute> statutes = new ArrayList<Statute>();
 		try (InputStream stream = getClass().getClassLoader().getResourceAsStream("data/statutes.csv");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
@@ -37,6 +39,25 @@ public class LookupServiceImpl extends BaseLookupService {
 			return new ArrayList<Statute>();
 		}
 		return statutes;
+	}
+
+	@Override
+	public List<Language> getLanguages() throws ApiException {
+		List<Language> languages = new ArrayList<Language>();
+		try (InputStream stream = getClass().getClassLoader().getResourceAsStream("data/languages.csv");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			for (String[] row : new CSVReaderBuilder(reader).withSkipLines(1).build()) {
+				Language language = new Language();
+				language.setCode(row.length > 0 ? row[0] : null);
+				language.setDescription(row.length > 1 ? row[1] : null);
+				languages.add(language);
+			}
+		}
+		catch (Exception e) {
+			log.error("Could not read languages.csv", e);
+			return new ArrayList<Language>();
+		}
+		return languages;
 	}
 
 }
