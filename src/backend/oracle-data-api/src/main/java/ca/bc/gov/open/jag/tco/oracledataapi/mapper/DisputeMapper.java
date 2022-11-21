@@ -81,7 +81,7 @@ public interface DisputeMapper {
 	@Mapping(source = "dispute.disputantDetectOcrIssuesYn", target = "disputantDetectedOcrIssues")
 	@Mapping(source = "dispute.disputantOcrIssuesTxt", target = "disputantOcrIssues")
 	@Mapping(source = "dispute.systemDetectOcrIssuesYn", target = "systemDetectedOcrIssues")
-	@Mapping(source = "dispute.ocrViolationTicketJsonTxt", target = "ocrTicketFilename")
+	@Mapping(source = "dispute.ocrTicketJsonFilenameTxt", target = "ocrTicketFilename")
 	// Map violation ticket data from ORDS to Oracle Data API violation ticket model
 	@Mapping(source = "entUserId", target = "violationTicket.createdBy")
 	@Mapping(source = "entDtm", target = "violationTicket.createdTs")
